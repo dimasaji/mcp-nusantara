@@ -1,4 +1,4 @@
-# NUSANTARA AI V1 — GATES
+# NUSANTARA AI V1 ï¿½ GATES
 
 **Document ID:** NUSANTARA-GATES-V1  
 **Repository:** mcp-starter  
@@ -78,7 +78,7 @@ Development harus dihentikan apabila ditemukan:
 9. Critical integration belum terverifikasi.
 10. Tidak tersedia rollback untuk perubahan berisiko.
 
-## 6. GATE 0 — DISCOVERY & BASELINE
+## 6. GATE 0 ï¿½ DISCOVERY & BASELINE
 
 Tujuan:
 Memahami kondisi repository sebelum perubahan.
@@ -93,7 +93,7 @@ Acceptance:
 
 Status: PASS.
 
-## 7. GATE 1 — ARCHITECTURE
+## 7. GATE 1 ï¿½ ARCHITECTURE
 
 Tujuan:
 Mengunci arsitektur resmi NUSANTARA AI.
@@ -108,7 +108,7 @@ Acceptance:
 
 Status: PASS.
 
-## 8. GATE 2 — CORE HARDENING
+## 8. GATE 2 ï¿½ CORE HARDENING
 
 Komponen:
 - validator
@@ -127,7 +127,7 @@ Acceptance:
 
 Status: TO VERIFY.
 
-## 9. GATE 3 — OBSERVABILITY
+## 9. GATE 3 ï¿½ OBSERVABILITY
 
 Acceptance:
 - request_id tersedia.
@@ -139,7 +139,7 @@ Acceptance:
 
 Status: TO VERIFY.
 
-## 10. GATE 4 — TRUST
+## 10. GATE 4 ï¿½ TRUST
 
 Acceptance:
 - Evidence provenance tersedia.
@@ -151,7 +151,7 @@ Acceptance:
 
 Status: TO VERIFY.
 
-## 11. GATE 5 — POLICY
+## 11. GATE 5 ï¿½ POLICY
 
 Acceptance:
 - Policy terpisah dari execution.
@@ -161,7 +161,7 @@ Acceptance:
 
 Status: TO VERIFY.
 
-## 12. GATE 6 — MEMORY
+## 12. GATE 6 ï¿½ MEMORY
 
 Acceptance:
 - Session boundary jelas.
@@ -172,7 +172,7 @@ Acceptance:
 
 Status: NOT VERIFIED.
 
-## 13. GATE 7 — RAG
+## 13. GATE 7 ï¿½ RAG
 
 Acceptance:
 - Knowledge ingestion dapat diverifikasi.
@@ -184,7 +184,7 @@ Acceptance:
 
 Status: PARTIAL.
 
-## 14. GATE 8 — MCP
+## 14. GATE 8 ï¿½ MCP
 
 Acceptance:
 - MCP client/server path terverifikasi.
@@ -196,7 +196,7 @@ Acceptance:
 
 Status: NOT VERIFIED.
 
-## 15. GATE 9 — TOOL GOVERNANCE
+## 15. GATE 9 ï¿½ TOOL GOVERNANCE
 
 Acceptance:
 - Tool memiliki identity.
@@ -208,7 +208,7 @@ Acceptance:
 
 Status: NOT VERIFIED.
 
-## 16. GATE 10 — EXPERIENCE
+## 16. GATE 10 ï¿½ EXPERIENCE
 
 Scope:
 - metadata
@@ -223,7 +223,7 @@ Acceptance:
 
 Status: PARTIAL.
 
-## 17. GATE 11 — FEEDBACK
+## 17. GATE 11 ï¿½ FEEDBACK
 
 Acceptance:
 - Feedback dapat diterima.
@@ -233,7 +233,7 @@ Acceptance:
 
 Status: PARTIAL.
 
-## 18. GATE 12 — EVALUATION
+## 18. GATE 12 ï¿½ EVALUATION
 
 Minimal metric:
 - correctness
@@ -251,7 +251,7 @@ Acceptance:
 
 Status: PARTIAL.
 
-## 19. GATE 13 — FAILURE ANALYSIS
+## 19. GATE 13 ï¿½ FAILURE ANALYSIS
 
 Acceptance:
 - Failure dapat dikategorikan.
@@ -261,7 +261,7 @@ Acceptance:
 
 Status: TO VERIFY.
 
-## 20. GATE 14 — GAP DETECTION
+## 20. GATE 14 ï¿½ GAP DETECTION
 
 Acceptance:
 - Gap knowledge/behavior dapat diidentifikasi.
@@ -270,9 +270,21 @@ Acceptance:
 
 Status: TO VERIFY.
 
-## 21. GATE 15 — KNOWLEDGE DISCOVERY
+## 21. GATE 15 â€” KNOWLEDGE DISCOVERY
 
-Acceptance:
+Gate 15 uses sub-gate numbering (hybrid resolution, see
+CLAUDE_CONTRACT.MD Section 10â€“11).
+
+Sub-gates 15.1, 15.2, 15.3, 15.4 and Gate 15 FINAL belong to
+Knowledge Discovery and must remain locked once validated PASS:
+
+- Gate 15.1 â€” Runtime Health Truth
+- Gate 15.2 â€” Engine Runtime Truth
+- Gate 15.3 â€” Graph Operational Truth
+- Gate 15.4 â€” Operational Synthesis
+- Gate 15 FINAL â€” Knowledge Discovery Final Contract
+
+Acceptance (15.1â€“15.4 + FINAL):
 - Candidate knowledge dapat dipisahkan dari approved knowledge.
 - Source/provenance tersedia.
 - Verification status tersedia.
@@ -280,7 +292,29 @@ Acceptance:
 
 Status: TO VERIFY.
 
-## 22. GATE 16 — EXPERIMENT
+## 21.1 GATE 15.5â€“15.7 â€” CHANGE PLANNING / CHANGE GOVERNANCE
+
+Sub-gates 15.5, 15.6, 15.7 and Gate 15 CHANGE PLANNING FINAL are
+new under hybrid resolution:
+
+- Gate 15.5 â€” Change Plan Schema
+- Gate 15.6 â€” Change Plan Validator (deterministic, no LLM
+  per Section 44)
+- Gate 15.7 â€” Approval Wiring (ApprovalQueue + AuditTrail)
+- Gate 15 CHANGE PLANNING FINAL â€” Change Planning Engine Final
+  Contract
+
+Acceptance:
+- ChangePlan schema completeness (14 fields per CLAUDE_CONTRACT.MD
+  Section 11).
+- Status transitions PROPOSED â†’ VALIDATED â†’ APPROVED â†’ IMPLEMENTED.
+- No LLM in the validator (deterministic only).
+- No autonomous source modification.
+- APPROVED must never be inferred from an LLM response alone.
+
+Status: TO VERIFY.
+
+## 22. GATE 16 ï¿½ EXPERIMENT
 
 Acceptance:
 - Experiment terisolasi dari production.
@@ -290,7 +324,7 @@ Acceptance:
 
 Status: TO VERIFY.
 
-## 23. GATE 17 — IMPROVEMENT PROPOSAL
+## 23. GATE 17 ï¿½ IMPROVEMENT PROPOSAL
 
 Acceptance:
 - Proposal memiliki problem statement.
@@ -301,7 +335,7 @@ Acceptance:
 
 Status: TO VERIFY.
 
-## 24. GATE 18 — HUMAN APPROVAL
+## 24. GATE 18 ï¿½ HUMAN APPROVAL
 
 Approval diperlukan untuk perubahan yang mempengaruhi:
 
@@ -317,7 +351,7 @@ Approval diperlukan untuk perubahan yang mempengaruhi:
 
 Status: TO VERIFY.
 
-## 25. GATE 19 — V1.x DEVELOPMENT
+## 25. GATE 19 ï¿½ V1.x DEVELOPMENT
 
 Development hanya dimulai setelah proposal dan approval yang diperlukan tersedia.
 
@@ -331,7 +365,7 @@ Acceptance:
 
 Status: NOT STARTED.
 
-## 26. GATE 20 — REGRESSION & SECURITY
+## 26. GATE 20 ï¿½ REGRESSION & SECURITY
 
 Acceptance:
 - Unit test.
@@ -344,7 +378,7 @@ Acceptance:
 
 Status: TO VERIFY.
 
-## 27. GATE 21 — RELEASE & ROLLBACK
+## 27. GATE 21 ï¿½ RELEASE & ROLLBACK
 
 Acceptance:
 - Release checklist tersedia.
@@ -407,7 +441,7 @@ Setiap pekerjaan harus menjawab:
 
 R&D boleh menemukan masalah dan mengusulkan improvement, tetapi perubahan production tetap berada di bawah kontrol manusia.
 
-## 31. GATE 2 — CORE HARDENING AUDIT RESULT
+## 31. GATE 2 ï¿½ CORE HARDENING AUDIT RESULT
 
 **Status:** PASS WITH GAP
 
@@ -456,7 +490,7 @@ The remaining gap is retry runtime integration. This does not justify automatica
 
 
 
-## 31. GATE 2 — CORE HARDENING AUDIT RESULT
+## 31. GATE 2 ï¿½ CORE HARDENING AUDIT RESULT
 
 **Status:** PASS WITH GAP
 
@@ -502,7 +536,7 @@ The remaining gap is retry runtime integration. This does not justify automatica
 - No duplicate Hermes Engine introduced.
 
 
-## 32. GATE 3 — OBSERVABILITY AUDIT RESULT
+## 32. GATE 3 ï¿½ OBSERVABILITY AUDIT RESULT
 
 **Status:** PASS
 
@@ -550,7 +584,7 @@ Observability implementation and runtime integration have test evidence.
 - No duplicate Core Engine introduced.
 - No duplicate Hermes Engine introduced.
 
-## 33. GATE 4 — TRUST AUDIT RESULT
+## 33. GATE 4 ï¿½ TRUST AUDIT RESULT
 
 **Status:** PASS WITH GAP
 
@@ -605,7 +639,7 @@ The remaining gap must be verified at the Knowledge/RAG provenance boundary befo
 - No duplicate Hermes Engine introduced.
 - No duplicate Trust Engine introduced.
 
-## 34. GATE 5 — POLICY AUDIT RESULT
+## 34. GATE 5 ï¿½ POLICY AUDIT RESULT
 
 **Status:** PASS
 
@@ -670,7 +704,7 @@ GATE 5 is recorded as **PASS**.
 - No duplicate Policy Engine introduced.
 
 
-## 35. GATE 6 — MEMORY AUDIT RESULT
+## 35. GATE 6 ï¿½ MEMORY AUDIT RESULT
 
 **Status:** PASS WITH GAP
 
@@ -740,7 +774,7 @@ Integrasi Memory ke runtime harus dilakukan sebagai pekerjaan terpisah setelah d
 - No duplicate Memory Engine introduced.
 
 
-## 33. GATE 4 — TRUST AUDIT RESULT
+## 33. GATE 4 ï¿½ TRUST AUDIT RESULT
 
 **Status:** PASS WITH GAP
 

@@ -295,6 +295,39 @@ Verify:
 
 Discovered knowledge tidak otomatis menjadi trusted knowledge.
 
+Gate 15 sub-gate numbering (hybrid resolution):
+
+- Gate 15.1 — Runtime Health Truth
+- Gate 15.2 — Engine Runtime Truth
+- Gate 15.3 — Graph Operational Truth
+- Gate 15.4 — Operational Synthesis
+- Gate 15 FINAL — Knowledge Discovery Final Contract
+
+All five belong to Knowledge Discovery. They must remain locked
+once validated PASS. Do not retroactively renumber.
+
+### Phase 15.5–15.7 — Change Planning / Change Governance
+
+Verify:
+
+- ChangePlan schema completeness (14 fields per Section 11
+  of CLAUDE_CONTRACT.MD);
+- deterministic validator without LLM lookup (Section 44);
+- approval wiring into existing ApprovalQueue + AuditTrail;
+- status transitions PROPOSED → VALIDATED → APPROVED → IMPLEMENTED;
+- rejection of transitions that bypass approval or skip evidence;
+- no autonomous source modification;
+- evidence attachment required for VALIDATED and APPROVED;
+- APPROVED must never be inferred from LLM response alone.
+
+Sub-gate numbering:
+
+- Gate 15.5 — Change Plan Schema
+- Gate 15.6 — Change Plan Validator
+- Gate 15.7 — Approval Wiring
+- Gate 15 CHANGE PLANNING FINAL — Change Planning Engine Final
+  Contract
+
 ### Phase 16 — Experiment
 
 Verify:

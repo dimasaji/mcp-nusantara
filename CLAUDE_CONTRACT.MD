@@ -305,9 +305,27 @@ HUMAN APPROVAL
 IMPLEMENT
 10. CURRENT NEXT DEVELOPMENT TARGET
 
-After Gate 14, the next logical capability is:
+After Gate 14, the next logical capabilities span multiple sub-gates of Gate 15.
 
-GATE 15 — CHANGE PLANNING / CHANGE GOVERNANCE ENGINE
+Gate 15 uses sub-gate numbering to separate distinct capabilities:
+
+Gate 15.1 — RUNTIME HEALTH TRUTH
+Gate 15.2 — ENGINE RUNTIME TRUTH
+Gate 15.3 — GRAPH OPERATIONAL TRUTH
+Gate 15.4 — OPERATIONAL SYNTHESIS
+Gate 15   FINAL — Knowledge Discovery Final Contract
+(existing sub-gates; do not alter; see scripts/validate_gate15_*.py
+and app/research/knowledge_discovery.py)
+
+Gate 15.5 — CHANGE PLAN SCHEMA
+Gate 15.6 — CHANGE PLAN VALIDATOR
+Gate 15.7 — APPROVAL WIRING
+Gate 15   CHANGE PLANNING FINAL — Change Planning Engine Final Contract
+(new sub-gates; introduced under hybrid resolution; see Section 11)
+
+The next capability after Gate 14 FINAL is:
+
+GATE 15.5+ — CHANGE PLANNING / CHANGE GOVERNANCE ENGINE
 
 The objective is to transform Developer Core from:
 
@@ -325,9 +343,20 @@ VALIDATE
 
 without immediately granting uncontrolled autonomous modification.
 
-Gate 15 should initially be read-only and deterministic.
+Gate 15.5+ sub-gates must initially be read-only and deterministic.
 
-11. GATE 15 OBJECTIVE
+11. GATE 15 SUB-GATE OBJECTIVES
+
+11.1 GATE 15.1–15.4 (existing — Knowledge Discovery)
+
+Sub-gates 15.1, 15.2, 15.3, 15.4 and Gate 15 FINAL belong to
+Knowledge Discovery. The objective is to transform Developer Core
+from ad-hoc source analysis into a validated knowledge discovery
+pipeline: GAP → source validation → extraction → provenance →
+CANDIDATE. These sub-gates must not be modified to satisfy a new
+requirement; they are locked once validated PASS.
+
+11.2 GATE 15.5–15.7 + CHANGE PLANNING FINAL (new — Change Planning)
 
 The Change Planning Engine must be able to receive a requested engineering change and determine:
 
@@ -357,6 +386,28 @@ REJECTED
 FAILED
 
 APPROVED must never be inferred solely from an LLM response.
+
+Sub-gate responsibilities:
+
+Gate 15.5 defines the ChangePlan dataclass with the 14 fields above
+and the status enum. No execution. No LLM involvement.
+
+Gate 15.6 provides a deterministic validator that checks the plan
+against the runtime graph, scope, evidence, and rollback boundary.
+The validator must not invoke an LLM to answer a graph lookup
+(Section 44).
+
+Gate 15.7 wires the ChangePlan into the existing ApprovalQueue +
+ReviewWorkflow + AuditTrail pipeline so that a plan can only reach
+APPROVED status via an explicit approved ChangeRequest.
+
+Gate 15 CHANGE PLANNING FINAL combines the three sub-gates into a
+single end-to-end contract:
+
+  PROPOSED → VALIDATED → APPROVED → IMPLEMENTED
+
+and rejects transitions that bypass approval or skip evidence
+attachment.
 
 12. TARGET ARCHITECTURE
 
