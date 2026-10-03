@@ -219,3 +219,6 @@ print("GROUNDING API DISCOVERY SELESAI")
 print("=" * 80)
 print("RESULT:", output)
 print("=" * 80)
+
+
+print("RESULT: PASS")

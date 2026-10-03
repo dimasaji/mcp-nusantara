@@ -222,6 +222,25 @@ class EvidenceGroundingGuard:
 
         sentences = self._split_sentences(text)
 
+        # --------------------------------------------------------
+        # VALID EVIDENCE-BASED ABSTENTION
+        # --------------------------------------------------------
+        # A pure abstention is allowed only when it does not contain
+        # a requirement, procedure, or numeric claim. This prevents
+        # the guard from treating a legitimate "information is not
+        # available" response as hallucinated content while keeping
+        # high-risk claims fail-closed.
+        if (
+            len(sentences) == 1
+            and self._is_valid_abstention(sentences[0])
+        ):
+            return GroundingResult(
+                text=text,
+                grounded=True,
+                reason="grounded_abstention",
+                unsupported_sentences=[],
+            )
+
         if not sentences:
             sentences = [text]
 
@@ -559,6 +578,71 @@ class EvidenceGroundingGuard:
         return str(intent_name).strip().lower()
 
     # ============================================================
+    # ABSTENTION VALIDATION
+    # ============================================================
+
+    def _is_valid_abstention(
+        self,
+        sentence: str,
+    ) -> bool:
+        """
+        Accept a pure evidence-based abstention without requiring
+        lexical overlap with the evidence.
+
+        This is intentionally narrow:
+        - accepts statements that explicitly say information is
+          unavailable / not present in evidence
+        - rejects abstentions that themselves contain requirement,
+          procedure, or numeric claims
+
+        Example accepted:
+            "Informasi tersebut belum tersedia dalam EVIDENCE."
+
+        Example rejected:
+            "Syarat membuat KTP-el adalah ..."
+        """
+        lower = self._normalize_text(sentence).lower()
+
+        if not lower:
+            return False
+
+        abstention_markers = (
+            "tidak tersedia",
+            "belum tersedia",
+            "tidak ada informasi",
+            "belum ada informasi",
+            "tidak ditemukan informasi",
+            "belum ditemukan informasi",
+            "informasi tidak tersedia",
+            "informasi tersebut tidak tersedia",
+            "informasi tersebut belum tersedia",
+            "evidence tidak memenuhi",
+            "evidence tidak memiliki",
+            "tidak terdapat informasi",
+            "tidak terdapat data",
+            "belum terdapat informasi",
+        )
+
+        if not any(
+            marker in lower
+            for marker in abstention_markers
+        ):
+            return False
+
+        # A refusal containing a concrete high-risk claim is NOT
+        # a pure abstention and must still be grounded normally.
+        if self._contains_requirement_claim(sentence):
+            return False
+
+        if self._contains_procedure_claim(sentence):
+            return False
+
+        if self._contains_numeric_claim(sentence):
+            return False
+
+        return True
+
+    # ============================================================
     # REQUIREMENT VALIDATION
     # ============================================================
 
@@ -630,22 +714,112 @@ class EvidenceGroundingGuard:
         self,
         sentence: str,
     ) -> bool:
-        lower = sentence.lower()
+        """
+        Detect procedural/action claims.
 
-        return any(
-            marker in lower
-            for marker in self.PROCEDURE_MARKERS
+        A sentence is procedural when it contains explicit
+        action/instruction language OR an obligation combined
+        with an action.
+        """
+
+        lower = self._normalize_text(sentence).lower()
+
+        # Explicit procedural markers.
+        explicit_markers = (
+            "langkah",
+            "cara",
+            "prosedur",
+            "tahapan",
+            "ikuti",
+            "lakukan",
+            "melakukan",
+            "klik",
+            "buka",
+            "pilih",
+            "masukkan",
+            "isi",
+            "unggah",
+            "upload",
+            "ajukan",
+            "mengajukan",
+            "datang",
+            "bawa",
+            "periksa",
+            "cek",
+            "mengecek",
         )
+
+        # Obligation + action is definitely procedural.
+        obligation_markers = (
+            "harus",
+            "wajib",
+            "perlu",
+            "diharuskan",
+        )
+
+        has_explicit = any(
+            marker in lower
+            for marker in explicit_markers
+        )
+
+        has_obligation = any(
+            marker in lower
+            for marker in obligation_markers
+        )
+
+        # Critical rule:
+        # "harus melakukan ...", "wajib mengajukan ...",
+        # etc. are procedural claims.
+        if has_obligation and has_explicit:
+            return True
+
+        return has_explicit
 
     def _evidence_contains_procedure_claim(
         self,
         evidence: str,
     ) -> bool:
-        lower = evidence.lower()
+        """
+        Detect EXPLICIT procedural instructions in evidence.
+
+        Capability/status statements such as:
+            "status dapat diperiksa melalui layanan"
+
+        are NOT considered procedural evidence.
+
+        Procedural evidence requires explicit action/instruction
+        language such as:
+            langkah, cara, lakukan, klik, buka, pilih, masukkan,
+            unggah, isi, ajukan, datang, bawa, ikuti, tahapan,
+            prosedur.
+        """
+
+        lower = self._normalize_text(evidence).lower()
+
+        explicit_procedure_markers = (
+            "langkah",
+            "cara",
+            "prosedur",
+            "tahapan",
+            "ikuti",
+            "lakukan",
+            "melakukan langkah",
+            "klik",
+            "buka",
+            "pilih",
+            "masukkan",
+            "isi",
+            "unggah",
+            "upload",
+            "ajukan",
+            "mengajukan",
+            "datang",
+            "bawa",
+        )
 
         return any(
             marker in lower
-            for marker in self.PROCEDURE_MARKERS
+            for marker in explicit_procedure_markers
         )
 
     def _procedure_claim_supported(
@@ -653,30 +827,41 @@ class EvidenceGroundingGuard:
         sentence: str,
         evidence: str,
     ) -> bool:
-        if not self._contains_procedure_claim(
-            sentence
-        ):
+        """
+        Procedure claims require explicit procedural evidence.
+
+        Lexical overlap of one token is NOT sufficient.
+        Evidence must contain procedural language and provide
+        meaningful lexical support for the claimed action.
+        """
+
+        if not self._contains_procedure_claim(sentence):
             return True
 
-        if not self._evidence_contains_procedure_claim(
-            evidence
-        ):
+        # Evidence must explicitly describe a procedure/action.
+        if not self._evidence_contains_procedure_claim(evidence):
             return False
 
-        sentence_tokens = (
-            self._meaningful_tokens(sentence)
-        )
+        sentence_tokens = self._meaningful_tokens(sentence)
+        evidence_tokens = self._meaningful_tokens(evidence)
 
-        evidence_tokens = (
-            self._meaningful_tokens(evidence)
-        )
+        if not sentence_tokens or not evidence_tokens:
+            return False
 
-        overlap = (
-            sentence_tokens
-            & evidence_tokens
-        )
+        overlap = sentence_tokens & evidence_tokens
 
-        return len(overlap) >= 1
+        # One shared token is too weak for a procedural claim.
+        # Require at least 2 meaningful overlapping tokens.
+        if len(overlap) < 2:
+            return False
+
+        # Require meaningful lexical coverage of the claim.
+        coverage = len(overlap) / max(len(sentence_tokens), 1)
+
+        # Procedure claims need stronger evidence than ordinary
+        # informational statements.
+        return coverage >= 0.30
+
 
     # ============================================================
     # NUMERIC VALIDATION

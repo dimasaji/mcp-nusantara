@@ -1,10 +1,5 @@
-﻿from pathlib import Path
-import sys
-
-ROOT = Path(__file__).resolve().parents[1]
-
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+from pathlib import Path
+import json
 
 from app.developer_core.mapper import RuntimeGraphMapper
 from app.developer_core.impact import RuntimeImpactAnalyzer
@@ -14,7 +9,7 @@ print("=" * 64)
 print("NUSANTARA GATE 14.2 - RUNTIME GRAPH MAPPING")
 print("=" * 64)
 
-graph = ROOT / "graphify-out" / "graph.json"
+graph = Path("graphify-out/graph.json")
 
 print("Graphify :", graph)
 print("Exists   :", graph.exists())
@@ -85,7 +80,6 @@ for name, item in mapping["mappings"].items():
     )
 
 impact = RuntimeImpactAnalyzer(graph)
-
 impact_result = impact.analyze_mapping(mapping)
 
 print("")

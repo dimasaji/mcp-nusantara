@@ -1,188 +1,187 @@
 ﻿from pathlib import Path
 import sys
-import json
-import traceback
+import asyncio
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(PROJECT_ROOT))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
-print("=" * 80)
-print("NUSANTARA AI — GROUNDING → HERMES INTEGRATION TEST")
-print("=" * 80)
+from app.knowledge.engine import KnowledgeEngine
+from app.knowledge.grounding import EvidenceGroundingGuard
+from app.models.ollama import OllamaProvider
 
-try:
-    from app.knowledge.engine import KnowledgeEngine
-    from app.knowledge.grounding import EvidenceGroundingGuard
-    from app.models.ollama import OllamaClient
+MODEL = "llama3.2:1b"
 
-    print("[IMPORT] KnowledgeEngine          : PASS")
-    print("[IMPORT] EvidenceGroundingGuard   : PASS")
-    print("[IMPORT] OllamaClient              : PASS")
 
-except Exception:
-    print("[IMPORT] FAIL")
-    traceback.print_exc()
-    raise SystemExit(1)
+async def main():
+    print("=" * 78)
+    print("NUSANTARA AI — HERMES GROUNDING INTEGRATION TEST")
+    print("=" * 78)
 
-# ---------------------------------------------------------------------------
-# INITIALIZE
-# ---------------------------------------------------------------------------
+    # ============================================================
+    # INIT
+    # ============================================================
 
-try:
     engine = KnowledgeEngine()
-    grounding = EvidenceGroundingGuard()
+    guard = EvidenceGroundingGuard()
 
-    print("[INIT] KnowledgeEngine            : PASS")
-    print("[INIT] EvidenceGroundingGuard     : PASS")
+    provider = OllamaProvider(
+        base_url="http://localhost:11434",
+        model=MODEL,
+        timeout=120.0,
+    )
 
-except Exception:
-    print("[INIT] FAIL")
-    traceback.print_exc()
-    raise SystemExit(2)
+    print("[IMPORT] KnowledgeEngine        : PASS")
+    print("[IMPORT] EvidenceGroundingGuard : PASS")
+    print("[IMPORT] OllamaProvider          : PASS")
 
-# ---------------------------------------------------------------------------
-# DISCOVER OLLAMA CLIENT
-# ---------------------------------------------------------------------------
+    # ============================================================
+    # OLLAMA
+    # ============================================================
 
-import inspect
+    print("")
+    print("-" * 78)
+    print("OLLAMA HEALTH")
+    print("-" * 78)
 
-print()
-print("[OLLAMA CLIENT]")
-print("class:", OllamaClient)
+    health = await provider.health_check()
+    print(health)
 
-try:
-    print("constructor:", inspect.signature(OllamaClient))
-except Exception:
-    pass
+    available = (
+        health.get("available", False)
+        if isinstance(health, dict)
+        else getattr(health, "available", False)
+    )
 
-# ---------------------------------------------------------------------------
-# TEST CASES
-# ---------------------------------------------------------------------------
+    if not available:
+        await provider.close()
+        raise SystemExit("OLLAMA: FAIL")
 
-tests = [
-    {
-        "id": "grounded-info",
-        "query": "Apa itu KTP-el?",
-        "must_have_evidence": True,
-    },
-    {
-        "id": "grounded-status",
-        "query": "Bagaimana cara mengecek status KTP?",
-        "must_have_evidence": True,
-    },
-    {
-        "id": "unsupported-requirements",
-        "query": "Apa syarat membuat KTP-el?",
-        "must_have_evidence": False,
-    },
-]
+    print("OLLAMA: PASS")
 
-results = []
+    # ============================================================
+    # RETRIEVAL
+    # ============================================================
 
-for test in tests:
+    query = "Apa itu KTP-el?"
 
-    print()
-    print("=" * 80)
-    print(f"[TEST] {test['id']}")
-    print(f"QUERY: {test['query']}")
-    print("=" * 80)
+    print("")
+    print("-" * 78)
+    print("KNOWLEDGE RETRIEVAL")
+    print("-" * 78)
+    print("QUERY:", query)
 
-    try:
+    # KnowledgeEngine API aktual
+    results = engine.search_knowledge(query)
 
-        # ------------------------------------------------------------
-        # RETRIEVE
-        # ------------------------------------------------------------
+    print("RESULT TYPE:", type(results).__name__)
+    print("EVIDENCE COUNT:", len(results))
 
-        evidence = engine.search_knowledge(test["query"])
+    if not results:
+        await provider.close()
+        raise SystemExit("RETRIEVAL: FAIL")
 
-        print()
-        print("[EVIDENCE COUNT]", len(evidence))
+    evidence_parts = []
 
-        # ------------------------------------------------------------
-        # BUILD GROUNDING CONTEXT
-        # ------------------------------------------------------------
+    for i, item in enumerate(results, 1):
+        title = getattr(item, "title", "Evidence")
+        chunk = getattr(item, "chunk", None)
 
-        context = grounding.build_grounded_context(evidence)
+        if not chunk:
+            chunk = getattr(item, "source", "")
 
-        print()
-        print("[GROUNDED CONTEXT]")
-        print(context[:6000])
+        print("")
+        print(f"[EVIDENCE {i}] {title}")
+        print(chunk)
 
-        # ------------------------------------------------------------
-        # GROUNDING VALIDATION
-        # ------------------------------------------------------------
+        if chunk:
+            evidence_parts.append(str(chunk))
 
-        validation = grounding.validate(
-            test["query"],
-            context,
+    evidence = "\n".join(evidence_parts)
+
+    print("")
+    print("RETRIEVAL: PASS")
+
+    # ============================================================
+    # SUPPORTED CLAIM
+    # ============================================================
+
+    supported_answer = "KTP-el adalah dokumen identitas penduduk."
+
+    print("")
+    print("-" * 78)
+    print("SUPPORTED GROUNDING")
+    print("-" * 78)
+    print("ANSWER:", supported_answer)
+
+    result = guard.validate(
+        supported_answer,
+        evidence,
+    )
+
+    print("")
+    print("grounded :", result.grounded)
+    print("reason   :", result.reason)
+
+    if not result.grounded:
+        await provider.close()
+        raise SystemExit(
+            "SUPPORTED GROUNDING: FAIL"
         )
 
-        print()
-        print("[VALIDATION]")
-        print(validation)
+    print("SUPPORTED GROUNDING: PASS")
 
-        # ------------------------------------------------------------
-        # RECORD
-        # ------------------------------------------------------------
+    # ============================================================
+    # UNSUPPORTED PROCEDURE
+    # ============================================================
 
-        results.append(
-            {
-                "id": test["id"],
-                "query": test["query"],
-                "evidence_count": len(evidence),
-                "grounded_context": context,
-                "validation": str(validation),
-                "status": "PASS",
-            }
+    unsupported_answer = (
+        "Untuk mengecek status KTP, pengguna harus melakukan "
+        "pemeriksaan status melalui sistem layanan."
+    )
+
+    print("")
+    print("-" * 78)
+    print("UNSUPPORTED PROCEDURE / ANTI-HALLUCINATION")
+    print("-" * 78)
+    print("ANSWER:", unsupported_answer)
+
+    rejected = guard.validate(
+        unsupported_answer,
+        evidence,
+    )
+
+    print("")
+    print("grounded :", rejected.grounded)
+    print("reason   :", rejected.reason)
+    print("unsupported:", rejected.unsupported_sentences)
+
+    if rejected.grounded:
+        await provider.close()
+        raise SystemExit(
+            "ANTI-HALLUCINATION: FAIL"
         )
 
-    except Exception as exc:
+    print("ANTI-HALLUCINATION: PASS")
 
-        print()
-        print("[ERROR]", type(exc).__name__, str(exc))
-        traceback.print_exc()
+    # ============================================================
+    # CLEANUP
+    # ============================================================
 
-        results.append(
-            {
-                "id": test["id"],
-                "query": test["query"],
-                "status": "FAIL",
-                "error": str(exc),
-            }
-        )
+    await provider.close()
 
-# ---------------------------------------------------------------------------
-# SAVE
-# ---------------------------------------------------------------------------
+    print("")
+    print("=" * 78)
+    print("HERMES GROUNDING INTEGRATION RESULT")
+    print("=" * 78)
+    print("KnowledgeEngine         : PASS")
+    print("OllamaProvider          : PASS")
+    print("Knowledge Retrieval     : PASS")
+    print("Supported Grounding     : PASS")
+    print("Anti-Hallucination      : PASS")
+    print("")
+    print("RESULT: PASS")
+    print("=" * 78)
 
-output = (
-    PROJECT_ROOT
-    / "data"
-    / "knowledge"
-    / "grounding_hermes_integration_test.json"
-)
 
-output.write_text(
-    json.dumps(
-        results,
-        ensure_ascii=False,
-        indent=2,
-        default=str,
-    ),
-    encoding="utf-8",
-)
-
-passed = sum(
-    1
-    for item in results
-    if item["status"] == "PASS"
-)
-
-print()
-print("=" * 80)
-print("GROUNDING INTEGRATION TEST SELESAI")
-print("=" * 80)
-print(f"PASS : {passed}/{len(results)}")
-print(f"FAIL : {len(results) - passed}/{len(results)}")
-print(f"FILE : {output}")
-print("=" * 80)
+if __name__ == "__main__":
+    asyncio.run(main())

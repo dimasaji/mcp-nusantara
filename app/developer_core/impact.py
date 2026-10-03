@@ -66,7 +66,7 @@ class RuntimeImpactAnalyzer:
         graph = self._load_graph()
 
         nodes = graph.get("nodes", [])
-        edges = graph.get("links", graph.get("edges", []))
+        edges = graph.get("edges", [])
 
         if not isinstance(nodes, list):
             nodes = []
