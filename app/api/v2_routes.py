@@ -1,0 +1,173 @@
+"""NUSANTARA AI V2 API (/v2). Endpoint /v1 tetap utuh (backward compatible).
+
+CATATAN: modul ini butuh fastapi/pydantic; lihat docs/v2/ROADMAP_STATUS.md untuk status verifikasi.
+"""
+from __future__ import annotations
+
+import hmac
+import os
+from pathlib import Path
+from typing import Any
+
+from fastapi import APIRouter, Header, HTTPException
+from pydantic import BaseModel, Field
+
+from app.approval import ApprovalError, ApprovalQueue, AuditTrail
+from app.core.config import settings
+from app.devcore import DevCore
+from app.experience import EventRecorder, FeedbackRejected, FeedbackStore
+from app.research.failure_analysis import analyze
+from app.research.gap_detection import detect_gaps
+from app.knowledge.engine import KnowledgeEngine
+from app.language.engine import LanguageEngine
+from app.models.ollama import OllamaProvider
+from app.observability import metrics
+from app.v2 import VERSION
+from app.v2.orchestrator import V2Orchestrator
+from app.v2.wiring import v1_policy_check, v1_trust_check
+
+router = APIRouter(prefix="/v2", tags=["v2"])
+
+_DATA_DIR = Path(os.getenv("NUSANTARA_DATA_DIR", "data"))
+audit = AuditTrail(_DATA_DIR / "audit" / "audit.jsonl")
+approvals = ApprovalQueue(audit)
+_recorder = EventRecorder(_DATA_DIR / "experience" / "events.jsonl")
+_feedback = FeedbackStore(_DATA_DIR / "experience" / "feedback.jsonl")
+_knowledge = KnowledgeEngine()
+_language = LanguageEngine()
+_policy = v1_policy_check()
+_trust = v1_trust_check()
+
+
+def _require_admin(token: str | None) -> None:
+    """Fail-closed: tanpa NUSANTARA_ADMIN_TOKEN terkonfigurasi, endpoint admin selalu ditolak."""
+    expected = os.getenv("NUSANTARA_ADMIN_TOKEN", "")
+    if not expected or not token or not hmac.compare_digest(token, expected):
+        raise HTTPException(status_code=403, detail="admin token diperlukan")
+
+
+class ChatV2Request(BaseModel):
+    session_id: str = Field(default="web", min_length=1, max_length=128)
+    user_input: str = Field(..., min_length=1, max_length=20000)
+    model: str | None = None
+
+
+class DecisionRequest(BaseModel):
+    reviewer: str = Field(..., min_length=1, max_length=128)
+    decision: str
+    reason: str = Field(..., min_length=1, max_length=2000)
+
+
+@router.get("/health")
+async def health() -> dict[str, Any]:
+    return {"status": "ok", "version": VERSION, "audit_chain_valid": audit.verify()}
+
+
+@router.post("/chat")
+async def chat(req: ChatV2Request) -> dict[str, Any]:
+    provider = OllamaProvider(base_url=settings.llm_base_url, model=req.model or settings.llm_model)
+
+    async def generate(prompt: str) -> str:
+        out = await provider.generate({"prompt": prompt, "temperature": 0.2, "max_tokens": 800})
+        return out["content"]
+
+    def retrieve(text: str) -> list[dict[str, Any]]:
+        return [{"document_id": e.document_id, "title": e.title, "source": e.source,
+                 "chunk": e.chunk, "score": e.score}
+                for e in _knowledge.search_knowledge(text, top_k=settings.retrieval_top_k)]
+
+    orch = V2Orchestrator(generate=generate, understand=_language.process, retrieve=retrieve,
+                          policy_check=_policy, trust_check=_trust, audit=audit,
+                          recorder=_recorder)
+    try:
+        r = await orch.handle(req.user_input, req.session_id)
+    finally:
+        await provider.close()
+    und = r.understanding
+    return {"request_id": r.request_id, "session_id": r.session_id, "status": r.status,
+            "response": r.response, "trust": r.trust, "evidence": r.evidence,
+            "degraded": r.degraded, "stages_ms": r.stages,
+            "understanding": und.model_dump() if hasattr(und, "model_dump") else und}
+
+
+@router.get("/metrics")
+async def get_metrics() -> dict[str, Any]:
+    return metrics.snapshot()
+
+
+@router.get("/approvals/pending")
+async def pending(x_admin_token: str | None = Header(default=None)) -> dict[str, Any]:
+    _require_admin(x_admin_token)
+    return {"pending": [{"approval_id": r.approval_id, "kind": r.kind, "risk": r.risk,
+                         "summary": r.summary, "requested_by": r.requested_by,
+                         "expires_at": r.expires_at.isoformat()} for r in approvals.pending()]}
+
+
+@router.post("/approvals/{approval_id}/decision")
+async def decide(approval_id: str, body: DecisionRequest,
+                 x_admin_token: str | None = Header(default=None)) -> dict[str, Any]:
+    _require_admin(x_admin_token)
+    try:
+        r = approvals.decide(approval_id, reviewer=body.reviewer, decision=body.decision, reason=body.reason)
+    except ApprovalError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return {"approval_id": r.approval_id, "status": r.status, "reviewer": r.reviewer}
+
+
+@router.get("/audit/verify")
+async def audit_verify(x_admin_token: str | None = Header(default=None)) -> dict[str, Any]:
+    _require_admin(x_admin_token)
+    return {"valid": audit.verify(), "entries": len(audit.entries())}
+
+
+class FeedbackRequest(BaseModel):
+    request_id: str = Field(..., min_length=1, max_length=64)
+    type: str
+    comment: str = Field(default="", max_length=2000)
+    session_id: str = "-"
+    user: str = Field(default="anonymous", max_length=128)
+
+
+@router.post("/feedback")
+async def submit_feedback(body: FeedbackRequest) -> dict[str, Any]:
+    """Endpoint publik: sumber dipaksa 'user' sehingga klien tidak bisa memalsukan feedback system/evaluator."""
+    try:
+        rec = _feedback.submit(body.type, body.request_id, source="user", submitted_by=body.user,
+                               comment=body.comment, session_id=body.session_id)
+    except FeedbackRejected as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    _recorder.emit("feedback_received", "feedback", "ok", 0.0, {"type": rec.type})
+    return {"feedback_id": rec.feedback_id, "type": rec.type}
+
+
+@router.get("/experience/analysis")
+async def experience_analysis(x_admin_token: str | None = Header(default=None)) -> dict[str, Any]:
+    _require_admin(x_admin_token)
+    events = EventRecorder.load(_DATA_DIR / "experience" / "events.jsonl")
+    fb = [r.__dict__ for r in _feedback.all()]
+    rep = analyze(events, fb)
+    return {"feedback": _feedback.summary(),
+            "patterns": [p.__dict__ for p in rep.patterns],
+            "gaps": [g.__dict__ for g in detect_gaps(rep)]}
+
+
+class DevRequest(BaseModel):
+    session_id: str = Field(default="dev", min_length=1, max_length=128)
+    user_input: str = Field(..., min_length=1, max_length=4000)
+
+
+@router.post("/dev")
+async def dev_chat(req: DevRequest) -> dict[str, Any]:
+    """Developer Core (read-only): baca/cari/list file di NUSANTARA_WORKSPACE dengan grounding."""
+    provider = OllamaProvider(base_url=settings.llm_base_url, model=settings.llm_model)
+
+    async def generate(prompt: str) -> str:
+        out = await provider.generate({"prompt": prompt, "temperature": 0.1, "max_tokens": 700})
+        return out["content"]
+
+    core = DevCore(os.getenv("NUSANTARA_WORKSPACE", os.getcwd()), generate=generate,
+                   model_name=settings.llm_model, audit=audit, recorder=_recorder)
+    try:
+        return await core.handle(req.user_input, req.session_id)
+    finally:
+        await provider.close()

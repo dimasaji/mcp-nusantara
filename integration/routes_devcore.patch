@@ -1,0 +1,102 @@
+--- app/api/routes.py	2026-09-30 03:30:39.650357551 +0000
++++ app/api/routes.py	2026-09-30 03:30:39.671863207 +0000
+@@ -154,51 +154,45 @@
+         )
+ 
+         # -------------------------------------------------
+-        # 4. DEVELOPER TOOL
++        # 4. DEVELOPER TOOL (Developer Core: generik, read-only)
+         # -------------------------------------------------
+ 
+-        user_text = request.user_input.lower()
++        # Routing deterministik GENERIK (tanpa hard-code nama file):
++        # referensi file diekstrak dari teks, path divalidasi (workspace
++        # boundary), lalu read_file / find_file / list_directory dijalankan
++        # lewat ToolRegistry. Analisis di-grounding dan diverifikasi.
++        # Permintaan mengubah file TIDAK dijalankan (read-only).
+ 
+         tool_result = None
+         tool_name = None
++        dev = None
+ 
+-        file_keywords = [
+-            "baca file",
+-            "baca ",
+-            "lihat file",
+-            "cek file",
+-            "periksa file",
+-            "analisis file",
+-            "isi file",
+-        ]
+-
+-        wants_file = any(
+-            keyword in user_text
+-            for keyword in file_keywords
+-        )
+-
+-        # Untuk tahap awal kita gunakan deterministic tool routing.
+-        # Ini lebih stabil untuk llama3.2:1b daripada meminta model
+-        # kecil memilih function/tool sendiri.
+-
+-        if wants_file:
++        if agent.is_dev_request(request.user_input):
+ 
+-            if "healthcheck.py" in user_text:
++            if not health["available"]:
++                # Tanpa Ollama: jawab dari fakta statis, jangan memanggil LLM.
++                agent.devcore.generate = None
+ 
+-                tool_name = "read_file"
++            dev = await agent.run_dev(
++                request.user_input,
++                request.session_id,
++            )
+ 
+-                tool_result = agent.execute_tool(
+-                    "read_file",
+-                    {
+-                        "path": "scripts/healthcheck.py",
+-                    },
+-                )
++            tool_name = dev["tool"]["name"]
++            tool_result = dev["tool"]["result"]
+ 
+         # -------------------------------------------------
+         # 5. OLLAMA
+         # -------------------------------------------------
+ 
+-        if health["available"]:
++        if dev is not None:
++
++            response_text = dev["answer"]
++            model_status = "ollama" if health["available"] else "offline"
++            model_used = provider.model
++            latency_ms = dev.get("latency_ms", 0)
++
++        elif health["available"]:
+ 
+             evidence_text = "\n".join(
+                 f"- {e.title}: {e.chunk}"
+@@ -306,6 +300,22 @@
+                 "result": tool_result,
+             },
+ 
++            "developer": (
++                {
++                    key: dev[key]
++                    for key in (
++                        "intent",
++                        "file_references",
++                        "verification",
++                        "modify_blocked",
++                        "original_text",
++                        "normalized_text",
++                    )
++                }
++                if dev is not None
++                else None
++            ),
++
+             "available_tools": agent.list_tools(),
+ 
+             "evidence": [

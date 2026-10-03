@@ -1,0 +1,42 @@
+﻿# ============================================================
+# Nusantara Core - Graphify Ignore
+# Tujuan: graph hanya merepresentasikan source aktif project.
+# File/folder tetap ada di disk dan TIDAK dihapus.
+# ============================================================
+
+# Git / environment
+.git/
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build / temporary
+build/
+dist/
+*.egg-info/
+*.pyc
+*.pyo
+
+# Backup source lama
+backup/
+app_backup_before_openrouter/
+
+# Integration snapshots / experimental copies
+integration/
+
+# Generated Graphify output
+graphify-out/
+
+# Local temporary files
+tmp/
+temp/
+
+# IDE / editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

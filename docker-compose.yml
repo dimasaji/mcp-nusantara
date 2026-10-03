@@ -1,0 +1,26 @@
+services:
+  nusantara-api:
+    build: .
+    ports: ["8000:8000"]
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    networks: [nusantara]
+    depends_on: [redis, database]
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nusantara
+      POSTGRES_USER: nusantara
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    networks: [nusantara]
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks: [nusantara]
+volumes: {pgdata: {}}
+networks: {nusantara: {}}

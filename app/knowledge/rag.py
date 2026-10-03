@@ -1,4 +1,4 @@
-﻿"""
+"""
 RAG - Retrieval Augmented Generation orchestration.
 Pipeline: Document â†’ Parser â†’ Chunker â†’ Embedding â†’ Vector Store â†’ Retriever â†’ Reranker â†’ Evidence Pack.
 """
@@ -548,6 +548,17 @@ class RAG:
                 query_text,
             )
 
+        evidence_list = self._apply_relevance_gate(
+            evidence_list,
+            min_score=0.30,
+            relative_threshold=0.50,
+        )
+
+        seen_documents = {
+            ev.document_id
+            for ev in evidence_list
+        }
+
         elapsed_ms = int(
             (time.time() - start_time) * 1000
         )
@@ -577,6 +588,49 @@ class RAG:
             chunks_retrieved=len(evidence_list),
             documents_retrieved=len(seen_documents),
         )
+
+    def _apply_relevance_gate(
+        self,
+        evidence: List[Evidence],
+        min_score: float = 0.30,
+        relative_threshold: float = 0.50,
+    ) -> List[Evidence]:
+        """
+        Buang evidence yang terlalu lemah agar dokumen tidak relevan
+        tidak ikut dikirim ke LLM.
+        """
+        if not evidence:
+            return []
+
+        evidence = sorted(
+            evidence,
+            key=lambda item: item.score,
+            reverse=True,
+        )
+
+        top_score = float(evidence[0].score)
+
+        threshold = max(
+            float(min_score),
+            top_score * float(relative_threshold),
+        )
+
+        filtered = [
+            ev
+            for ev in evidence
+            if float(ev.score) >= threshold
+        ]
+
+        logger.info(
+            "RAG relevance gate: top_score=%.4f threshold=%.4f "
+            "before=%d after=%d",
+            top_score,
+            threshold,
+            len(evidence),
+            len(filtered),
+        )
+
+        return filtered
 
     def _simple_rerank(
         self,
@@ -650,13 +704,13 @@ def create_rag(
     """Factory function untuk membuat RAG instance."""
     return RAG(config=config, vector_store=vector_store)
 
+# ---------------------------------------------------------------------------
+# NUSANTARA CANONICAL RAG API
+# ---------------------------------------------------------------------------
+# Canonical public interface for Nusantara Core.
+# The implementation remains in RAG.
+# This is only a compatibility alias.
+# ---------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
+HybridRAG = RAG
 

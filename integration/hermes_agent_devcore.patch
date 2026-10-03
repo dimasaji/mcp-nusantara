@@ -1,0 +1,66 @@
+--- app/hermes/agent.py	2026-09-30 03:28:01.348566208 +0000
++++ app/hermes/agent.py	2026-09-30 03:28:27.962683123 +0000
+@@ -1,5 +1,6 @@
+ from __future__ import annotations
+ 
++import inspect
+ from pathlib import Path
+ from typing import Any, Dict, Optional
+ 
+@@ -11,6 +12,7 @@
+ from app.problem.classifier import ProblemClassifier
+ from app.reasoning.engine import ReasoningEngine
+ from app.tools.registry import ToolRegistry
++from app.devcore import DevCore, RegistryBackend, plan as dev_plan
+ 
+ 
+ class HermesAgent:
+@@ -42,6 +44,14 @@
+             workspace=str(workspace)
+         )
+ 
++        # Developer Core (read-only, grounded): memakai self.tools lewat adapter.
++        self.devcore = DevCore(
++            str(workspace),
++            backend=RegistryBackend(self.tools),
++            generate=self._dev_generate,
++            model_name=type(self.provider).__name__,
++        )
++
+     def list_tools(self) -> list[str]:
+         """Mengembalikan daftar tool yang tersedia."""
+         return self.tools.list_tools()
+@@ -107,3 +117,33 @@
+ 
+             "available_tools": self.list_tools(),
+         }
++
++    async def _dev_generate(self, prompt: str) -> str:
++        """Teks dari provider untuk analisis kode. Kegagalan ditangani DevCore (fallback fakta statis)."""
++        out = self.provider.generate(
++            {"prompt": prompt, "temperature": 0.1, "max_tokens": 700}
++        )
++        if inspect.isawaitable(out):
++            out = await out
++        if isinstance(out, dict):
++            return out["content"]
++        return getattr(out, "content", str(out))
++
++    def is_dev_request(self, user_input: str) -> bool:
++        """True jika teks meminta baca/cari/list file (routing generik, bukan hard-code nama file)."""
++        return dev_plan(user_input).handled
++
++    async def run_dev(
++        self,
++        user_input: str,
++        session_id: str = "default",
++    ) -> Dict[str, Any]:
++        """Jalur developer (read-only). run() TIDAK diubah."""
++        return await self.devcore.handle(user_input, session_id)
++
++    def run_dev_sync(
++        self,
++        user_input: str,
++        session_id: str = "default",
++    ) -> Dict[str, Any]:
++        return self.devcore.handle_sync(user_input, session_id)
