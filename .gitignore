@@ -1,0 +1,113 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.tox/
+.nox/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Virtualenvs & env ---
+.venv/
+venv/
+.env
+.env.local
+.env.*.local
+
+# --- Editor / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Runtime data (not source) ---
+data/
+*.tmp
+*.log
+logs/
+
+# --- Backup file inline ---
+*.bak
+*.bak2
+*.before_*.py
+*_BEFORE_*.py
+*_SOURCE_BACKUP.txt
+*_backup.txt
+*.lexical-*.bak
+*_SOURCE_BACKUP.txt
+
+# --- Output dumps / audit logs (root) ---
+audit_*.txt
+audit_*.log
+engine_source.txt
+routes_current_backup.txt
+
+# --- Root dev scripts & snapshots (see archive/ for history) ---
+developer_core_engine.py
+developer_core_engine*.py
+patch_*.py
+fix_*.py
+restore_*.py
+master_engine_ai.py
+nusantara_*.py
+sop_*.py
+build_all.py
+build_all.py.backup_*
+
+# --- SOP / OCR eksperimen di root ---
+sop_parser_engine.py
+sop_parser_v2.py
+sop_parser_v3.py
+sop_parser_v4.py
+sop_parser_v5.py
+sop_ocr_layout_engine.py
+sop_pdf_geometry_inspector.py
+sop_governance_ocr_engine.py
+sop_ingestion_engine.py
+sop_table_reconstruction_engine.py
+sop_table_reconstruction_engine_v2.py
+sop_table_reconstruction_engine_v3.py
+sop_visual_evidence_inspector.py
+sop_cv_table_detector.py
+nusantara_master_engine.py
+nusantara_master_pdf_sop_engine.py
+nusantara_sop_semantic_engine_v2.py
+
+# --- Backup folders (lihat archive/ kalau perlu history) ---
+backup/
+backup_*/
+app_backup_before_openrouter/
+legacy_v1_artifacts/
+nusantara-models/
+.nusantara/
+.mcp-starter/
+
+# --- Audit ps1 scripts di root (lihat scripts/audit/) ---
+INSTALL_GROUNDING_SAFETY.ps1
+NUSANTARA-MASTER-AUDIT.ps1
+NUSANTARA-MASTER-AUDIT-V2.ps1
+phase2_bug_p2_001.ps1
+graph-viewer.ps1
+graph-viewer/
+setup_nusantara_local_ai.ps1
+
+# --- Misc root artifacts ---
+test-chat.json
+test-general.json
+test-grounding.json
+test-requirements.json
+test-status.json
+
+# --- Build / coverage ---
+.mcp-starter
+htmlcov/
+.coverage
