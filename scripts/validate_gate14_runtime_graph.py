@@ -12,7 +12,7 @@ runtime = json.loads(RUNTIME.read_text(encoding="utf-8"))
 e2e = json.loads(E2E.read_text(encoding="utf-8"))
 
 nodes = graph.get("nodes", [])
-edges = graph.get("edges", [])
+edges = graph.get("links", graph.get("edges", []))
 
 node_text = []
 
@@ -32,7 +32,7 @@ targets = [
     "graph_bridge.py",
     "gate_integration.py",
     "rag.py",
-    "developer_core_engine.py",
+    "developer_core/engine.py",
 ]
 
 matches = {}
@@ -135,4 +135,6 @@ status = (
 print(f"GATE 14.2 STATUS  : {status}")
 print(f"Output            : {OUT}")
 print("GATE 14.2 RUNTIME GRAPH TRUTH: COMPLETE")
+
+
 

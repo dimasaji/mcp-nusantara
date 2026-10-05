@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -80,7 +80,7 @@ class DeveloperCoreEngine:
     @staticmethod
     def _count_graph(data: dict[str, Any]) -> tuple[int, int]:
         nodes = data.get("nodes", [])
-        edges = data.get("edges", [])
+        edges = data.get("links", data.get("edges", []))
 
         if not isinstance(nodes, list):
             nodes = []
@@ -230,3 +230,4 @@ class DeveloperCoreEngine:
             "risks": analysis.risks,
             "recommendations": analysis.recommendations,
         }
+
