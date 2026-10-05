@@ -215,7 +215,7 @@ mcp-starter/
 - Phase 18: Deployment scripts (start.sh refined, actual docker run tested)
 
 ## Summary
-Project **LENGKAP** dari Phase 0 sampai Phase 18 sesuai blueprint PDF.
+Catatan audit 2026-10-05: daftar Phase 0–18 di laporan ini mencatat keberadaan file dan modul, bukan bukti bahwa semua fitur telah selesai dan terintegrasi. Status kelengkapan aplikasi masih sebagian; lihat `docs/v2/ROADMAP_STATUS.md` dan `audit_reports/PHASE_GAP_AUDIT_2026-10-05.txt` untuk pekerjaan lanjutan.
 - **50 files** dibuat
 - **12 evaluation tests** lulus
 - **API berjalan** di localhost:8000

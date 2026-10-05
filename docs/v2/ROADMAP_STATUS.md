@@ -1,5 +1,7 @@
 # ROADMAP_STATUS — Phase 0–21 (V2.0.0-alpha.2)
 
+> Pembaruan audit 2026-10-05: tabel di bawah adalah baseline historis V2, bukan status terbaru seluruh aplikasi. Pengujian HTTP, auth, RAG dengan embedding nyata, Docker, dan persistensi restart kini memiliki bukti pada `audit_reports/AUDIT_DOCKER_2026-10-05.json` serta `audit_reports/PYTEST_DOCKER_FIX_FULL_2026-10-05.xml`. Karena itu, pernyataan lama bahwa HTTP/V1 belum pernah diuji dan dependensi belum tersedia sudah tidak berlaku secara umum. Benchmark kualitas jawaban dan load test tetap belum dibuktikan. Kelulusan audit tersebut tidak menyelesaikan semua phase. Gap yang diperiksa langsung terhadap source dicatat di `audit_reports/PHASE_GAP_AUDIT_2026-10-05.txt`.
+
 Verifikasi: `python -m unittest tests.v2.test_v2_core tests.v2.test_phases_7_21` (56 tes, stdlib saja, lulus) dan `python scripts/release_check.py`.
 Legenda: **Selesai** = kode + tes lulus di sandbox. **Sebagian** = ada yang belum. Tidak ada phase yang telah diuji terhadap V1 sungguhan atau lewat HTTP.
 
