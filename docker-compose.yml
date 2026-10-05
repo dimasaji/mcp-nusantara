@@ -1,7 +1,11 @@
 services:
   nusantara-api:
     build: .
-    ports: ["8000:8000"]
+    ports: ["127.0.0.1:8000:8000"]
+    environment:
+      NUSANTARA_DATA_DIR: /app/data
+      NUSANTARA_KNOWLEDGE_DB: /app/data/knowledge/nusantara_knowledge.db
+    volumes: [apidata:/app/data]
     env_file:
       - path: .env
         required: false
@@ -22,5 +26,5 @@ services:
     image: redis:7-alpine
     restart: unless-stopped
     networks: [nusantara]
-volumes: {pgdata: {}}
+volumes: {pgdata: {}, apidata: {}}
 networks: {nusantara: {}}
