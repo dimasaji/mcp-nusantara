@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
@@ -48,7 +48,7 @@ class HandoffEngine:
             requester_role=requester_role,
             level=level.value,
             status=HandoffStatus.PENDING,
-            created_at=datetime.utcnow().isoformat(),
+            created_at=datetime.now(timezone.utc).isoformat(),
             summary=summarize_context(context) if summary is None else summary,
             suggested_action=suggested_action,
             metadata=metadata or {},

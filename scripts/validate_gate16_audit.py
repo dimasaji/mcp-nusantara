@@ -410,8 +410,8 @@ def main():
     redaction_executor.record(
         ExecutionAudit.EVENT_EXECUTION_REQUESTED,
         execution_id="exec-redaction",
-        api_key="SECRET-DO-NOT-STORE",
-        token="TOKEN-DO-NOT-STORE",
+        api_key="SECRET-DO-NOT-STORE",  # nosecret: fixture for Gate 16.9.9 redaction test
+        token="TOKEN-DO-NOT-STORE",  # nosecret: fixture for Gate 16.9.9 redaction test
         normal_field="safe",
     )
 
