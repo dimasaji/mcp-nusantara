@@ -1,0 +1,10 @@
+# Use with docker-compose.yml under a separate project name.
+# Preserve local port 8000 and use fresh project-scoped data volumes.
+services:
+  nusantara-api:
+    ports: !override ["127.0.0.1:8001:8000"]
+    env_file: !reset []
+    environment:
+      NUSANTARA_ADMIN_TOKEN: ${NUSANTARA_AUDIT_ADMIN_TOKEN:-}
+      LLM_BASE_URL: http://host.docker.internal:11434
+      LLM_MODEL: llama3.2:1b
