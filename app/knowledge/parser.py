@@ -1,6 +1,5 @@
 ﻿from __future__ import annotations
 
-from pathlib import Path
 from typing import Any, Union
 
 
@@ -11,19 +10,8 @@ class TextParser:
         if isinstance(content, bytes):
             return content.decode("utf-8", errors="replace")
 
-        value = str(content)
-
-        # Jika string merupakan path file lokal,
-        # baca isi file tersebut.
-        path = Path(value)
-
-        if path.is_file():
-            return path.read_text(
-                encoding="utf-8",
-                errors="replace",
-            )
-
-        return value
+        # API content is literal data, never an implicit local file reference.
+        return str(content)
 
 
 class MarkdownParser(TextParser):
@@ -36,13 +24,9 @@ class PDFParser(TextParser):
     """Parser PDF menggunakan pypdf."""
 
     def parse(self, content: Union[str, bytes], **kwargs: Any) -> str:
-        if isinstance(content, str):
-            path = Path(content)
-            if not path.exists():
-                return content
-            data = path.read_bytes()
-        else:
-            data = content
+        if not isinstance(content, bytes):
+            raise ValueError("PDF harus berupa bytes, bukan path file lokal")
+        data = content
 
         try:
             from pypdf import PdfReader
@@ -69,13 +53,9 @@ class DOCXParser(TextParser):
     """Parser Microsoft Word DOCX menggunakan python-docx."""
 
     def parse(self, content: Union[str, bytes], **kwargs: Any) -> str:
-        if isinstance(content, str):
-            path = Path(content)
-            if not path.exists():
-                return content
-            data = path.read_bytes()
-        else:
-            data = content
+        if not isinstance(content, bytes):
+            raise ValueError("DOCX harus berupa bytes, bukan path file lokal")
+        data = content
 
         try:
             from docx import Document

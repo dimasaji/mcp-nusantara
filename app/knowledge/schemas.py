@@ -88,7 +88,7 @@ class DocumentIngestRequest(BaseModel):
     """Request ingest document."""
     document_id: Optional[str] = Field(None, description="ID dokumen (otomatis jika None)")
     title: str = Field(..., description="Judul dokumen")
-    source: str = Field(..., description="Path file atau URL")
+    source: str = Field(..., description="Konten teks literal; path atau URL tidak dibuka otomatis")
     content_type: str = Field(default="text/plain", description="Tipe konten: text/plain, text/markdown, application/pdf")
     metadata: Optional[Dict[str, Any]] = Field(None, description="Metadata tambahan")
     chunking_strategy: str = Field(default="sentence", description="Strategi chunking")

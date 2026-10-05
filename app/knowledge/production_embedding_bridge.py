@@ -1,4 +1,5 @@
-﻿from pathlib import Path
+﻿from app.runtime.indobert_cache import get_cached
+from pathlib import Path
 import sqlite3
 import hashlib
 import json
@@ -245,11 +246,11 @@ def load_model():
     print(f"MODEL: {MODEL_NAME}")
     print("DEVICE: CPU")
 
-    tokenizer = AutoTokenizer.from_pretrained(
+    tokenizer = get_cached(AutoTokenizer,
         MODEL_NAME
     )
 
-    model = AutoModel.from_pretrained(
+    model = get_cached(AutoModel,
         MODEL_NAME
     )
 
@@ -982,3 +983,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

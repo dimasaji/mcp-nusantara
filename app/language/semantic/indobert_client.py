@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import threading
 from pathlib import Path
@@ -24,19 +25,17 @@ class IndoBERTClient:
         project_root = Path(__file__).resolve().parents[3]
 
         if python_executable is None:
-            python_executable = str(
-                project_root
-                / "nusantara-models"
-                / ".venv"
-                / "Scripts"
-                / "python.exe"
+            python_executable = os.getenv(
+                "NUSANTARA_INDOBERT_PYTHON",
+                str(project_root / "nusantara-models" / ".venv"
+                    / ("Scripts" if os.name == "nt" else "bin")
+                    / ("python.exe" if os.name == "nt" else "python")),
             )
 
         if worker_path is None:
-            worker_path = str(
-                project_root
-                / "nusantara-models"
-                / "indobert_worker.py"
+            worker_path = os.getenv(
+                "NUSANTARA_INDOBERT_WORKER",
+                str(project_root / "nusantara-models" / "indobert_worker.py"),
             )
 
         self.python_executable = python_executable

@@ -256,7 +256,6 @@ class RAG:
             text_content = parser.parse(
                 source,
                 content_type=content_type,
-                filename=source if isinstance(source, str) else None,
             )
 
             if not isinstance(text_content, str):
