@@ -60,18 +60,25 @@ class TestSecurityGate(unittest.TestCase):
         d, r = make_ws()
         with d:
             ws = Workspace(r)
-            outside = Path(tempfile.mkdtemp()); (outside / "s.txt").write_text("x")
+            for bad in ("../x.py", "/etc/passwd", "~/a", "C:\\Windows\\system.ini", ".env", ".git/config", "data/audit.jsonl",
+                        "a\x00b", "", "app/../../etc/passwd"):
+                with self.assertRaises(PathBlocked, msg=bad): ws.resolve(bad)
+            self.assertEqual(ws.rel(ws.resolve(".env.example")), ".env.example")
+            self.assertEqual(ws.rel(ws.resolve("app\\main.py")), "app/main.py")
+
+    def test_symlink_outside_workspace_blocked(self):
+        d, r = make_ws()
+        with d, tempfile.TemporaryDirectory() as outside:
+            target = Path(outside) / "s.txt"
+            target.write_text("x", encoding="utf-8")
             try:
-                os.symlink(outside / "s.txt", r / "link.txt")
+                os.symlink(target, r / "link.txt")
             except OSError as exc:
                 if getattr(exc, "winerror", None) == 1314:
                     self.skipTest("Windows membutuhkan privilege untuk membuat symlink")
                 raise
-            for bad in ("../x.py", "/etc/passwd", "~/a", "C:\\Windows\\system.ini", ".env", ".git/config", "data/audit.jsonl",
-                        "link.txt", "a\x00b", "", "app/../../etc/passwd"):
-                with self.assertRaises(PathBlocked, msg=bad): ws.resolve(bad)
-            self.assertEqual(ws.rel(ws.resolve(".env.example")), ".env.example")
-            self.assertEqual(ws.rel(ws.resolve("app\\main.py")), "app/main.py")
+            with self.assertRaises(PathBlocked):
+                Workspace(r).resolve("link.txt")
 
 
 class TestDevCore(unittest.TestCase):
