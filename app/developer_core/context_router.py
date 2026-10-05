@@ -51,7 +51,7 @@ def build_context(task):
         graph = json.load(f)
 
     nodes = graph.get("nodes", [])
-    edges = graph.get("edges", [])
+    edges = graph.get("edges", graph.get("links", []))
 
     task_tokens = tokens(task)
 
@@ -232,3 +232,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
