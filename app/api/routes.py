@@ -1,15 +1,17 @@
 """Nusantara Core + Hermes API Gateway."""
 
 from __future__ import annotations
+import asyncio
 import time
 
 from datetime import datetime, timezone
 from typing import Any, Dict
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Header, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from app.core.config import settings
+from app.security.auth import require_admin
 from app.core.gate_integration import GateIntegration
 from app.developer_core.graph_bridge import GraphifyBridge
 from app.knowledge.engine import KnowledgeEngine
@@ -1332,11 +1334,13 @@ async def get_workflow(
 @router.post("/documents/ingest")
 async def ingest_document(
     request: DocumentIngestRequest,
+    x_admin_token: str | None = Header(default=None),
 ):
-
+    require_admin(x_admin_token)
     try:
 
-        result = _knowledge.ingest_document(
+        result = await asyncio.to_thread(
+            _knowledge.ingest_document,
             RAGIngestRequest(
                 document_id=(
                     request.id
@@ -1381,29 +1385,15 @@ async def search_knowledge(
 
     try:
 
-        results = _knowledge.search_knowledge(
+        results = await asyncio.to_thread(
+            _knowledge.search_knowledge,
             request.query,
             request.top_k,
             request.filter,
         )
 
 
-        developer_runtime = _developer_core.runtime_snapshot(
-            session_id=request.session_id,
-            user_input=request.user_input,
-            gate_pipeline=gate_context,
-            provider_status=model_status,
-            latency_ms=latency_ms,
-            grounded=bool(
-                gate_context
-                .get("reasoning", {})
-                .get("status") == "grounded"
-            ),
-        )
-
         return {
-            "developer_core": developer_runtime,
-
             "query": request.query,
             "results": [
                 {

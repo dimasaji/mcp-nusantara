@@ -4,7 +4,6 @@ CATATAN: modul ini butuh fastapi/pydantic; lihat docs/v2/ROADMAP_STATUS.md untuk
 """
 from __future__ import annotations
 
-import hmac
 import os
 from pathlib import Path
 from typing import Any
@@ -14,6 +13,7 @@ from pydantic import BaseModel, Field
 
 from app.approval import ApprovalError, ApprovalQueue, AuditTrail
 from app.core.config import settings
+from app.security.auth import require_admin as _require_admin
 from app.devcore import DevCore
 from app.experience import EventRecorder, FeedbackRejected, FeedbackStore
 from app.research.failure_analysis import analyze
@@ -37,13 +37,6 @@ _knowledge = KnowledgeEngine()
 _language = LanguageEngine()
 _policy = v1_policy_check()
 _trust = v1_trust_check()
-
-
-def _require_admin(token: str | None) -> None:
-    """Fail-closed: tanpa NUSANTARA_ADMIN_TOKEN terkonfigurasi, endpoint admin selalu ditolak."""
-    expected = os.getenv("NUSANTARA_ADMIN_TOKEN", "")
-    if not expected or not token or not hmac.compare_digest(token, expected):
-        raise HTTPException(status_code=403, detail="admin token diperlukan")
 
 
 class ChatV2Request(BaseModel):
@@ -157,8 +150,9 @@ class DevRequest(BaseModel):
 
 
 @router.post("/dev")
-async def dev_chat(req: DevRequest) -> dict[str, Any]:
+async def dev_chat(req: DevRequest, x_admin_token: str | None = Header(default=None)) -> dict[str, Any]:
     """Developer Core (read-only): baca/cari/list file di NUSANTARA_WORKSPACE dengan grounding."""
+    _require_admin(x_admin_token)
     provider = OllamaProvider(base_url=settings.llm_base_url, model=settings.llm_model)
 
     async def generate(prompt: str) -> str:
