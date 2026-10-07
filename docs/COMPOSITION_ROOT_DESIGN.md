@@ -1,6 +1,8 @@
 # Composition root: scoped design and impact
 
-2026-10-07. Design only; default service wiring is not changed by this document.
+2026-10-07. MDE-02 discovery: app/main.py is the actual application entrypoint. It imports V1/V2 route modules, where persistent services are assembled before FastAPI creation. Request handlers assemble providers, Hermes and V2 callbacks; KnowledgeEngine/RAG and HermesAgent own delegated component assembly. Lifespan only yields. These existing boundaries are retained. No additional composition root was created.
+
+MDE-02 decision: KEEP existing implementation; source changes are not required for the scoped discovery, precedence and effective-configuration design. The earlier factory proposal below is deferred design, not the actual root or an automatic instruction to create a parallel factory. Default snapshot/gateway/executor activation remains future work. The verified contract is docs/MDE02_EFFECTIVE_CONFIGURATION_CONTRACT.md; evidence and current status are reports/MDE02_REPORT_20261007.md and .dev/MDE02_CHECKPOINT.json.
 
 Preserve existing Settings, constructor signatures, explicit dependency precedence and API/CC01 response projection. A future `app/core/composition.py` should expose a factory taking an already validated immutable NusantaraConfig plus explicitly supplied provider/store/embedding/actor dependencies. No global mutable configuration, implicit dotenv load, worker start or production DB selection at import time.
 
@@ -16,4 +18,4 @@ First implementation must use injected MockProvider/MockTransport, isolated in-m
 
 Impact: dependency construction only; no new API response fields or endpoint, no database schema change, deployment, restart, model install, credential/security-policy change. Rollback: exact pre-change source backup and scoped restore; retain legacy constructors and startup until opted-in equivalence is proven. Fundamental ownership/architecture changes require Human Decision Gate rather than implicit migration.
 
-Status: DESIGN_AVAILABLE, IMPLEMENTATION_NOT_DONE. This design does not close Configuration DoD or V1 acceptance.
+Status: EXISTING_COMPOSITION_IDENTIFIED_AND_RETAINED; future factory/default activation IMPLEMENTATION_NOT_DONE. MDE-02 does not close Configuration DoD or V1 acceptance.

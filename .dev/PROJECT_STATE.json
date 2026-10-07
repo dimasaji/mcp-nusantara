@@ -1,8 +1,8 @@
 {
   "architecture": "EXISTING_NUSANTARA_V1_PRESERVED",
   "overall_status": "IN_PROGRESS",
-  "current_task": "FULLROOT checkpoint / independent acceptance gates",
-  "last_completed_task": "FULLROOT-003 optional gateway/executor consolidation",
+  "current_task": "MDE-02 verified discovery/design KEEP checkpoint",
+  "last_completed_task": "MDE-02-20261007 scoped configuration/composition contract",
   "working_components": [
     "developer control",
     "model router",
@@ -21,7 +21,7 @@
     "CC02-06 gaps",
     "Default composition root not active"
   ],
-  "next_priority": "Implement reviewed opt-in composition root in place; request owner-reviewed oracle evidence and privileged test runner; no production operations authorized",
+  "next_priority": "Default snapshot/gateway/executor adoption and effective observation remain separate roadmap work; close independent acceptance gates",
   "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
   "prior_source_build_id": "sha256:487ace8eb2a8ba4d8c979fdc7728cefe7802eb0b3f8f01d3f6462d9c83e9492a",
   "git": {
@@ -54,11 +54,20 @@
     "skipped": 1,
     "failures": 0,
     "errors": 0,
-    "junit": "reports/FULLROOT_REGRESSION_FINAL_20261007.xml"
+    "junit": "reports/MDE02_REGRESSION_20261007.xml"
   },
   "static_security_findings": 0,
   "overall_v1_acceptance": "FAIL/HOLD",
   "configuration_dod": "NOT_COMPLETE",
   "git_source_commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
-  "checkpoint": ".dev/FULLROOT_CHECKPOINT.json"
+  "checkpoint": ".dev/MDE02_CHECKPOINT.json",
+  "mde02": {
+    "status": "DONE_SCOPED_KEEP",
+    "runtime_source_changed": false,
+    "effective_configuration": "DESIGN_ONLY",
+    "composition": "Existing app entrypoint and delegated assembly retained",
+    "focused_passed": 139,
+    "resolution_probe_assertions": 10,
+    "checkpoint": ".dev/MDE02_CHECKPOINT.json"
+  }
 }

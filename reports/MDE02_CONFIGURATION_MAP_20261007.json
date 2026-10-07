@@ -1,0 +1,1251 @@
+{
+  "task_id": "MDE-02-20261007",
+  "scope": "Central fields and actual direct app source read sites; no dynamic dataflow claim",
+  "field_count": 75,
+  "fields": [
+    {
+      "namespace": "NusantaraConfig",
+      "field": "system.environment",
+      "owner": "app/core/nusantara_config.py",
+      "default": "development",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "system.debug",
+      "owner": "app/core/nusantara_config.py",
+      "default": false,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "system.application_name",
+      "owner": "app/core/nusantara_config.py",
+      "default": "Nusantara Core + Hermes",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "system.version",
+      "owner": "app/core/nusantara_config.py",
+      "default": "0.1.0",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "system.timezone",
+      "owner": "app/core/nusantara_config.py",
+      "default": "Asia/Jakarta",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "runtime.host",
+      "owner": "app/core/nusantara_config.py",
+      "default": "127.0.0.1",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "runtime.port",
+      "owner": "app/core/nusantara_config.py",
+      "default": 8000,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "runtime.workers",
+      "owner": "app/core/nusantara_config.py",
+      "default": 1,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "runtime.stage_timeout_s",
+      "owner": "app/core/nusantara_config.py",
+      "default": 30.0,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "runtime.log_level",
+      "owner": "app/core/nusantara_config.py",
+      "default": "INFO",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "runtime.request_limit",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "llm.provider",
+      "owner": "app/core/nusantara_config.py",
+      "default": "ollama",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "OllamaProvider profile guard",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "llm.base_url",
+      "owner": "app/core/nusantara_config.py",
+      "default": "http://localhost:11434",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "OllamaProvider constructor",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "llm.model",
+      "owner": "app/core/nusantara_config.py",
+      "default": "llama3.2:1b",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "OllamaProvider constructor/payload",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "llm.connection_timeout_s",
+      "owner": "app/core/nusantara_config.py",
+      "default": 120.0,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "OllamaProvider constructor",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "llm.generation.temperature",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "OllamaProvider._options",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "llm.generation.top_p",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "OllamaProvider._options",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "llm.generation.max_tokens",
+      "owner": "app/core/nusantara_config.py",
+      "default": 512,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "OllamaProvider._options",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "llm.generation.context_length",
+      "owner": "app/core/nusantara_config.py",
+      "default": 4096,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "OllamaProvider._options",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "embedding.provider",
+      "owner": "app/core/nusantara_config.py",
+      "default": "indobert",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "IndoBERTEmbeddingAdapter fixed-profile guard / KB config",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "embedding.model",
+      "owner": "app/core/nusantara_config.py",
+      "default": "indobenchmark/indobert-base-p1",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "IndoBERTEmbeddingAdapter fixed-profile guard / KB config",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "embedding.dimension",
+      "owner": "app/core/nusantara_config.py",
+      "default": 768,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "IndoBERTEmbeddingAdapter fixed-profile guard / KB config",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "embedding.batch_size",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "embedding.timeout_s",
+      "owner": "app/core/nusantara_config.py",
+      "default": 60.0,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "IndoBERTClient constructor",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "rag.top_k",
+      "owner": "app/core/nusantara_config.py",
+      "default": 5,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "RAG KB config",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "rag.chunk_size",
+      "owner": "app/core/nusantara_config.py",
+      "default": 512,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "RAG KB config",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "rag.chunk_overlap",
+      "owner": "app/core/nusantara_config.py",
+      "default": 64,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "RAG KB config",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "rag.semantic_weight",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "rag.lexical_weight",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "rag.reranker_enabled",
+      "owner": "app/core/nusantara_config.py",
+      "default": false,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "RAG KB config",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "rag.reranker_model",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "RAG KB config",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "rag.similarity_threshold",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "knowledge.root",
+      "owner": "app/core/nusantara_config.py",
+      "default": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "knowledge.database",
+      "owner": "app/core/nusantara_config.py",
+      "default": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\nusantara_knowledge.db",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "SQLiteVectorStore constructor",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "knowledge.document_root",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "knowledge.index",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "knowledge.cache",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "knowledge.store_backend",
+      "owner": "app/core/nusantara_config.py",
+      "default": "sqlite",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "RAG KB config",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "paths.project_root",
+      "owner": "app/core/nusantara_config.py",
+      "default": "C:\\Users\\dmaza\\mcp-starter",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "paths.worker",
+      "owner": "app/core/nusantara_config.py",
+      "default": "C:\\Users\\dmaza\\mcp-starter\\nusantara-models\\indobert_worker.py",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "IndoBERTClient constructor",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "paths.worker_python",
+      "owner": "app/core/nusantara_config.py",
+      "default": "C:\\Users\\dmaza\\mcp-starter\\nusantara-models\\.venv\\Scripts\\python.exe",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": "IndoBERTClient constructor",
+      "consumption": "OPT_IN_SOURCE_PATH; see focused integration evidence",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "governance.trust_contract_ref",
+      "owner": "app/core/nusantara_config.py",
+      "default": "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "governance.policy_contract_ref",
+      "owner": "app/core/nusantara_config.py",
+      "default": "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "governance.grounding_contract_ref",
+      "owner": "app/core/nusantara_config.py",
+      "default": "docs/contracts/NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "governance.evidence_requirement_ref",
+      "owner": "app/core/nusantara_config.py",
+      "default": "docs/contracts/NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "features.semantic_search",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "features.reranker",
+      "owner": "app/core/nusantara_config.py",
+      "default": false,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "features.graph_context",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "features.developer_core",
+      "owner": "app/core/nusantara_config.py",
+      "default": null,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "features.experimental_features",
+      "owner": "app/core/nusantara_config.py",
+      "default": false,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "legacy_declarations.embedding_model",
+      "owner": "app/core/nusantara_config.py",
+      "default": "local-hash",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "legacy_declarations.vector_store_type",
+      "owner": "app/core/nusantara_config.py",
+      "default": "memory",
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "legacy_declarations.privacy_filter_enabled",
+      "owner": "app/core/nusantara_config.py",
+      "default": true,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "legacy_declarations.context_window_size",
+      "owner": "app/core/nusantara_config.py",
+      "default": 10,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "legacy_declarations.session_timeout_minutes",
+      "owner": "app/core/nusantara_config.py",
+      "default": 30,
+      "source": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "override": "Explicit loader inputs; existing consumer/request precedence retained",
+      "consumer": null,
+      "consumption": "DECLARATION_OR_VALIDATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not infer default API activation or authorization",
+      "migration_requirement": "None for KEEP; separate contract before default activation"
+    },
+    {
+      "namespace": "NusantaraConfig",
+      "field": "llm.auth_env_ref",
+      "owner": "app/core/nusantara_config.py",
+      "source": "EXPLICIT reference only",
+      "default": null,
+      "value_policy": "Excluded from safe_dump/provenance/repr; never resolve credential",
+      "consumer": null,
+      "consumption": "DECLARATION_ONLY",
+      "verified_live": false,
+      "compatibility_risk": "Do not activate credential resolution",
+      "migration_requirement": "Separate authorized secret boundary"
+    },
+    {
+      "namespace": "Settings",
+      "field": "app_name",
+      "owner": "app/core/config.py",
+      "default": "Nusantara Core + Hermes",
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [
+        {
+          "kind": "Settings",
+          "field": "app_name",
+          "file": "app/api/routes.py",
+          "line": 816
+        }
+      ],
+      "consumption": "STATIC_READ_SITE",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "app_version",
+      "owner": "app/core/config.py",
+      "default": "0.1.0",
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [
+        {
+          "kind": "Settings",
+          "field": "app_version",
+          "file": "app/api/routes.py",
+          "line": 259
+        },
+        {
+          "kind": "Settings",
+          "field": "app_version",
+          "file": "app/api/routes.py",
+          "line": 817
+        },
+        {
+          "kind": "Settings",
+          "field": "app_version",
+          "file": "app/api/routes.py",
+          "line": 1661
+        }
+      ],
+      "consumption": "STATIC_READ_SITE",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "debug",
+      "owner": "app/core/config.py",
+      "default": false,
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "host",
+      "owner": "app/core/config.py",
+      "default": "127.0.0.1",
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "port",
+      "owner": "app/core/config.py",
+      "default": 8000,
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "llm_provider",
+      "owner": "app/core/config.py",
+      "default": "ollama",
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "llm_base_url",
+      "owner": "app/core/config.py",
+      "default": "http://localhost:11434",
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [
+        {
+          "kind": "Settings",
+          "field": "llm_base_url",
+          "file": "app/api/routes.py",
+          "line": 802
+        },
+        {
+          "kind": "Settings",
+          "field": "llm_base_url",
+          "file": "app/api/routes.py",
+          "line": 880
+        },
+        {
+          "kind": "Settings",
+          "field": "llm_base_url",
+          "file": "app/api/v2_routes.py",
+          "line": 103
+        },
+        {
+          "kind": "Settings",
+          "field": "llm_base_url",
+          "file": "app/api/v2_routes.py",
+          "line": 326
+        }
+      ],
+      "consumption": "STATIC_READ_SITE",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "llm_api_key",
+      "owner": "app/core/config.py",
+      "default": null,
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "llm_model",
+      "owner": "app/core/config.py",
+      "default": "llama3.2:1b",
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [
+        {
+          "kind": "Settings",
+          "field": "llm_model",
+          "file": "app/api/routes.py",
+          "line": 803
+        },
+        {
+          "kind": "Settings",
+          "field": "llm_model",
+          "file": "app/api/routes.py",
+          "line": 883
+        },
+        {
+          "kind": "Settings",
+          "field": "llm_model",
+          "file": "app/api/v2_routes.py",
+          "line": 326
+        },
+        {
+          "kind": "Settings",
+          "field": "llm_model",
+          "file": "app/api/v2_routes.py",
+          "line": 333
+        },
+        {
+          "kind": "Settings",
+          "field": "llm_model",
+          "file": "app/api/v2_routes.py",
+          "line": 104
+        }
+      ],
+      "consumption": "STATIC_READ_SITE",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "llm_context_tokens",
+      "owner": "app/core/config.py",
+      "default": 4096,
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [
+        {
+          "kind": "Settings",
+          "field": "llm_context_tokens",
+          "file": "app/models/ollama.py",
+          "line": 64
+        }
+      ],
+      "consumption": "STATIC_READ_SITE",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "context_window_size",
+      "owner": "app/core/config.py",
+      "default": 10,
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "session_timeout_minutes",
+      "owner": "app/core/config.py",
+      "default": 30,
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "embedding_model",
+      "owner": "app/core/config.py",
+      "default": "local-hash",
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "vector_store_type",
+      "owner": "app/core/config.py",
+      "default": "memory",
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "chunk_size",
+      "owner": "app/core/config.py",
+      "default": 512,
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "chunk_overlap",
+      "owner": "app/core/config.py",
+      "default": 64,
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "retrieval_top_k",
+      "owner": "app/core/config.py",
+      "default": 5,
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [
+        {
+          "kind": "Settings",
+          "field": "retrieval_top_k",
+          "file": "app/api/routes.py",
+          "line": 924
+        },
+        {
+          "kind": "Settings",
+          "field": "retrieval_top_k",
+          "file": "app/api/v2_routes.py",
+          "line": 130
+        }
+      ],
+      "consumption": "STATIC_READ_SITE",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "privacy_filter_enabled",
+      "owner": "app/core/config.py",
+      "default": true,
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    },
+    {
+      "namespace": "Settings",
+      "field": "log_level",
+      "owner": "app/core/config.py",
+      "default": "INFO",
+      "source": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "override": "Init arguments or environment before cached singleton construction; API request model override",
+      "consumer": [],
+      "consumption": "NO_DIRECT_READ_IN_THIS_SCAN",
+      "verified_live": false,
+      "compatibility_risk": "Settings declarations differ from actual RAG profile/startup literals",
+      "migration_requirement": "Keep existing consumer semantics; no universal normalization"
+    }
+  ],
+  "read_sites": [
+    {
+      "kind": "Settings",
+      "field": "app_version",
+      "file": "app/api/routes.py",
+      "line": 259
+    },
+    {
+      "kind": "Settings",
+      "field": "llm_base_url",
+      "file": "app/api/routes.py",
+      "line": 802
+    },
+    {
+      "kind": "Settings",
+      "field": "llm_model",
+      "file": "app/api/routes.py",
+      "line": 803
+    },
+    {
+      "kind": "Settings",
+      "field": "app_name",
+      "file": "app/api/routes.py",
+      "line": 816
+    },
+    {
+      "kind": "Settings",
+      "field": "app_version",
+      "file": "app/api/routes.py",
+      "line": 817
+    },
+    {
+      "kind": "Settings",
+      "field": "app_version",
+      "file": "app/api/routes.py",
+      "line": 1661
+    },
+    {
+      "kind": "Settings",
+      "field": "llm_base_url",
+      "file": "app/api/routes.py",
+      "line": 880
+    },
+    {
+      "kind": "Settings",
+      "field": "llm_model",
+      "file": "app/api/routes.py",
+      "line": 883
+    },
+    {
+      "kind": "Settings",
+      "field": "retrieval_top_k",
+      "file": "app/api/routes.py",
+      "line": 924
+    },
+    {
+      "kind": "ENV_IDENTIFIER_ONLY",
+      "field": "NUSANTARA_DATA_DIR",
+      "file": "app/api/v2_routes.py",
+      "line": 45
+    },
+    {
+      "kind": "ENV_IDENTIFIER_ONLY",
+      "field": "NUSANTARA_WORKSPACE",
+      "file": "app/api/v2_routes.py",
+      "line": 332
+    },
+    {
+      "kind": "Settings",
+      "field": "llm_base_url",
+      "file": "app/api/v2_routes.py",
+      "line": 103
+    },
+    {
+      "kind": "Settings",
+      "field": "llm_base_url",
+      "file": "app/api/v2_routes.py",
+      "line": 326
+    },
+    {
+      "kind": "Settings",
+      "field": "llm_model",
+      "file": "app/api/v2_routes.py",
+      "line": 326
+    },
+    {
+      "kind": "Settings",
+      "field": "llm_model",
+      "file": "app/api/v2_routes.py",
+      "line": 333
+    },
+    {
+      "kind": "Settings",
+      "field": "llm_model",
+      "file": "app/api/v2_routes.py",
+      "line": 104
+    },
+    {
+      "kind": "Settings",
+      "field": "retrieval_top_k",
+      "file": "app/api/v2_routes.py",
+      "line": 130
+    },
+    {
+      "kind": "ENV_IDENTIFIER_ONLY",
+      "field": "NUSANTARA_DISCOVERY_HOSTS",
+      "file": "app/api/v2_routes.py",
+      "line": 56
+    },
+    {
+      "kind": "ENV_IDENTIFIER_ONLY",
+      "field": "NUSANTARA_KNOWLEDGE_DB",
+      "file": "app/knowledge/store.py",
+      "line": 21
+    },
+    {
+      "kind": "ENV_IDENTIFIER_ONLY",
+      "field": "NUSANTARA_INDOBERT_PYTHON",
+      "file": "app/language/semantic/indobert_client.py",
+      "line": 31
+    },
+    {
+      "kind": "ENV_IDENTIFIER_ONLY",
+      "field": "NUSANTARA_INDOBERT_WORKER",
+      "file": "app/language/semantic/indobert_client.py",
+      "line": 39
+    },
+    {
+      "kind": "ENV_IDENTIFIER_ONLY",
+      "field": "NUSANTARA_DATA_DIR",
+      "file": "app/mcp/stdio_server.py",
+      "line": 19
+    },
+    {
+      "kind": "Settings",
+      "field": "llm_context_tokens",
+      "file": "app/models/ollama.py",
+      "line": 64
+    },
+    {
+      "kind": "ENV_IDENTIFIER_ONLY",
+      "field": "NUSANTARA_ADMIN_TOKEN",
+      "file": "app/security/auth.py",
+      "line": 11
+    }
+  ],
+  "composition_entrypoint": "app/main.py",
+  "delegated_assembly": [
+    "app/api/routes.py",
+    "app/api/v2_routes.py",
+    "app/knowledge/engine.py",
+    "app/knowledge/rag.py",
+    "app/hermes/agent.py"
+  ],
+  "default_api_snapshot_loading": false,
+  "default_gateway_executor_activation": false,
+  "effective_configuration": {
+    "representation": "DESIGN_ONLY",
+    "configured": "Selected input/default",
+    "resolved": "Validated snapshot",
+    "consumed": "Instance/request-bound execution evidence",
+    "verified_live": "Same-build running service/model/index evidence",
+    "live_values_verified": 0
+  },
+  "runtime_change": "KEEP",
+  "precedence_changed": [],
+  "source_map_limit": "Bare settings attributes and literal os.getenv; aliases, dynamic/indirect forwarding require constructor/tests/document evidence"
+}

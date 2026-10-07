@@ -8,4 +8,6 @@ Observability, Policy and Security remain cross-cutting authoritative boundaries
 
 Migration order: design deterministic composition-root precedence -> wire existing optional gateway/executor under compatibility tests -> prove four-path behavior -> verify actual runtime/model/index capability -> close acceptance evidence. New provider names never imply availability. No credential request, production restart/deploy, database migration or security weakening is authorized by these docs.
 
+MDE-02 verifies the discovery and design stage using KEEP. Future adoption must update the actual API assembly boundaries and account for import timing, object identity and worker sharing. No extra factory is automatically the real root. Settings and snapshot precedence remain deliberately different. Default snapshot/gateway/executor activation and live effective-configuration instrumentation are separate implementation work.
+
 Human Decision Gate applies to fundamental architecture changes, acceptance/governance changes, privileged OS operations, production and irreversible external actions. Routine reversible local patches remain autonomous under the invoked contract.

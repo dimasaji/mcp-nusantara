@@ -4,7 +4,7 @@ Updated 2026-10-07. Configuration DoD NOT_COMPLETE; V1 FAIL/HOLD.
 
 | Gap | Evidence / next work |
 | --- | --- |
-| Composition root/default startup | Snapshot opt-in; design Settings/ENV/explicit/request precedence before API wiring. Preserve public constructors and CC01 projection. |
+| Composition root/default startup | MDE-02 identifies app/main.py and delegated route/component assembly; precedence/effective design verified. Existing root retained. Default snapshot adoption and centralized factory remain unimplemented. Preserve constructors, lifecycle and CC01. |
 | Provider capabilities | Ollama implementation and OpenAI-compatible adapter source exist; actual cloud capability/credentials/health NOT_PROVEN. No OpenAI/Anthropic availability claim. |
 | Gateway/executor runtime activation | Optional adapters exist and integrate in isolated V2 fixtures; default API wiring unchanged. |
 | Four paths | Local tests cover generation, retrieval, tool execution/denial and degraded fallback separately. Unified deployed FAST/KNOWLEDGE/TOOL/OFFLINE behavior NOT_PROVEN. |

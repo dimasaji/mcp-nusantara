@@ -1,0 +1,25 @@
+{
+  "task_id": "MDE-02-20261007",
+  "status": "PASS_ISOLATED",
+  "checks": 10,
+  "results": [
+    {
+      "path": "Settings",
+      "precedence": "DEFAULT < DOTENV < PROCESS ENV < INIT",
+      "checks": 4,
+      "status": "PASS_ISOLATED"
+    },
+    {
+      "path": "NusantaraConfig",
+      "precedence": "DEFAULT < FILE < SELECTED ENV < EXPLICIT",
+      "checks": 6,
+      "status": "PASS_ISOLATED",
+      "runtime_activation": false
+    }
+  ],
+  "production_dotenv_read": false,
+  "database_opened": false,
+  "worker_started": false,
+  "provider_called": false,
+  "live_values_verified": 0
+}
