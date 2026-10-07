@@ -1,8 +1,8 @@
 {
   "architecture": "EXISTING_NUSANTARA_V1_PRESERVED",
   "overall_status": "IN_PROGRESS",
-  "current_task": "MDE-03 verified provider registry discovery/contract; stopped as instructed",
-  "last_completed_task": "MDE-03-20261007 scoped KEEP with explicit open identity/capability limits",
+  "current_task": "MDE-04 model identity discovery/contract verified; stopped as instructed",
+  "last_completed_task": "MDE-04-20261007 scoped KEEP with model identity limits",
   "working_components": [
     "developer control",
     "model router",
@@ -22,16 +22,19 @@
     "Default snapshot/gateway/executor adoption not active",
     "Provider/router/response identity not universally enforced",
     "Native openai_compatible differs from router preferred openai ID",
-    "Registration does not prove provider health/capability; no live provider verified"
+    "Registration does not prove provider health/capability; no live provider verified",
+    "Public V1 model label does not prove generation on no-generation paths",
+    "Selected model can be stale after provider mutation; immutable identity receipt not implemented",
+    "V2 text callbacks drop model identity; DevCore audit model is a configured label"
   ],
-  "next_priority": "Await next instruction; MDE-04 not started. Identity/capability/default activation and V1 acceptance gaps remain open",
+  "next_priority": "Await next instruction; MDE-05 not started. Runtime identity enforcement/default activation/live verification and V1 acceptance remain open",
   "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
   "prior_source_build_id": "sha256:487ace8eb2a8ba4d8c979fdc7728cefe7802eb0b3f8f01d3f6462d9c83e9492a",
   "git": {
     "status": "AVAILABLE",
     "branch": "codex/fullroot-control-20261007",
-    "observed_head_at_mde03_start": "fa4cd8f",
-    "observed_at": "2026-10-07T03:34:32.482892+00:00",
+    "observed_head_at_mde04_start": "d5af020",
+    "observed_at": "2026-10-07T04:00:50.149435+00:00",
     "source_implementation_commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
     "working_tree": "Inherited dirty/untracked source retained; task-owned artifacts only selected for commits"
   },
@@ -64,7 +67,7 @@
   "overall_v1_acceptance": "FAIL/HOLD",
   "configuration_dod": "NOT_COMPLETE",
   "git_source_commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
-  "checkpoint": ".dev/MDE03_CHECKPOINT.json",
+  "checkpoint": ".dev/MDE04_CHECKPOINT.json",
   "mde02": {
     "status": "DONE_SCOPED_KEEP",
     "runtime_source_changed": false,
@@ -86,5 +89,19 @@
     "full_regression": "MDE02_BASELINE_REUSED_NO_SOURCE_CHANGE",
     "mde04_started": false,
     "checkpoint": ".dev/MDE03_CHECKPOINT.json"
+  },
+  "mde04": {
+    "status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+    "decision": "KEEP",
+    "runtime_source_changed": false,
+    "model_registry_created": false,
+    "canonical_identity_contract": "DESIGN_ONLY",
+    "focused_passed": 71,
+    "new_asserted_fixture_observations": 8,
+    "reused_mde03_observations": 22,
+    "live_actual_model_verification": "NOT_RUN",
+    "full_regression": "MDE02_BASELINE_REUSED_NO_SOURCE_CHANGE",
+    "mde05_started": false,
+    "checkpoint": ".dev/MDE04_CHECKPOINT.json"
   }
 }

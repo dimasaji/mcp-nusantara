@@ -1,0 +1,987 @@
+{
+  "task_id": "MDE-04-20261007",
+  "decision": "KEEP",
+  "identity_matrix": "docs/MDE-04_MODEL_REGISTRY_DESIGN.md",
+  "source_site_count": 112,
+  "source_sites": [
+    {
+      "field": "model",
+      "owner": "module.ChatRequest",
+      "file": "app/api/routes.py",
+      "line": 102,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module._PublicChatResponse",
+      "file": "app/api/routes.py",
+      "line": 144,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module._project_v1_chat_response",
+      "file": "app/api/routes.py",
+      "line": 183,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.health_detail",
+      "file": "app/api/routes.py",
+      "line": 803,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "llm_model",
+      "owner": "module.health_detail",
+      "file": "app/api/routes.py",
+      "line": 803,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.chat",
+      "file": "app/api/routes.py",
+      "line": 881,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.chat",
+      "file": "app/api/routes.py",
+      "line": 882,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "llm_model",
+      "owner": "module.chat",
+      "file": "app/api/routes.py",
+      "line": 883,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.chat",
+      "file": "app/api/routes.py",
+      "line": 1094,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.chat",
+      "file": "app/api/routes.py",
+      "line": 1143,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.chat",
+      "file": "app/api/routes.py",
+      "line": 1193,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.chat",
+      "file": "app/api/routes.py",
+      "line": 1249,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.chat",
+      "file": "app/api/routes.py",
+      "line": 1255,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.chat",
+      "file": "app/api/routes.py",
+      "line": 1307,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ChatV2Request",
+      "file": "app/api/v2_routes.py",
+      "line": 66,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.chat",
+      "file": "app/api/v2_routes.py",
+      "line": 104,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.chat",
+      "file": "app/api/v2_routes.py",
+      "line": 104,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "llm_model",
+      "owner": "module.chat",
+      "file": "app/api/v2_routes.py",
+      "line": 104,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.dev_chat",
+      "file": "app/api/v2_routes.py",
+      "line": 326,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "llm_model",
+      "owner": "module.dev_chat",
+      "file": "app/api/v2_routes.py",
+      "line": 326,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.dev_chat",
+      "file": "app/api/v2_routes.py",
+      "line": 333,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "llm_model",
+      "owner": "module.dev_chat",
+      "file": "app/api/v2_routes.py",
+      "line": 333,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "llm_model",
+      "owner": "module.Settings",
+      "file": "app/core/config.py",
+      "line": 15,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module._LLM",
+      "file": "app/core/nusantara_config.py",
+      "line": 71,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module._LLM.address",
+      "file": "app/core/nusantara_config.py",
+      "line": 84,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module._Embedding",
+      "file": "app/core/nusantara_config.py",
+      "line": 91,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.DevCore.__init__",
+      "file": "app/devcore/core.py",
+      "line": 49,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.DevCore.handle",
+      "file": "app/devcore/core.py",
+      "line": 206,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.DevCore.handle",
+      "file": "app/devcore/core.py",
+      "line": 206,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAIEmbeddingProvider.embed",
+      "file": "app/knowledge/embeddings.py",
+      "line": 154,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.create_embedder",
+      "file": "app/knowledge/embeddings.py",
+      "line": 226,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.create_embedder",
+      "file": "app/knowledge/embeddings.py",
+      "line": 228,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.IndoBERTEmbeddingAdapter.validate_configuration",
+      "file": "app/knowledge/indobert_embedding.py",
+      "line": 23,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.RAG.__init__",
+      "file": "app/knowledge/rag.py",
+      "line": 225,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.RAG.ingest_document",
+      "file": "app/knowledge/rag.py",
+      "line": 373,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.EmbeddingResult",
+      "file": "app/knowledge/schemas.py",
+      "line": 40,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.SQLiteVectorStore._row_to_chunk",
+      "file": "app/knowledge/store.py",
+      "line": 413,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.SemanticIntentEngine.classify",
+      "file": "app/language/semantic/semantic_intent.py",
+      "line": 245,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.SemanticIntentEngine.classify",
+      "file": "app/language/semantic/semantic_intent.py",
+      "line": 266,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.SemanticIntentEngine.classify",
+      "file": "app/language/semantic/semantic_intent.py",
+      "line": 279,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.SemanticIntentEngine.classify",
+      "file": "app/language/semantic/semantic_intent.py",
+      "line": 294,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.SemanticIntentEngine.classify",
+      "file": "app/language/semantic/semantic_intent.py",
+      "line": 359,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.SemanticIntentEngine.classify",
+      "file": "app/language/semantic/semantic_intent.py",
+      "line": 373,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.SemanticIntentEngine.health",
+      "file": "app/language/semantic/semantic_intent.py",
+      "line": 411,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.GenerateResponse",
+      "file": "app/models/base.py",
+      "line": 22,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.StructuredGenerateResponse",
+      "file": "app/models/base.py",
+      "line": 39,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.HealthCheckResponse",
+      "file": "app/models/base.py",
+      "line": 47,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "provider_name",
+      "owner": "module.LLMProvider",
+      "file": "app/models/base.py",
+      "line": 62,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.LLMProvider",
+      "file": "app/models/base.py",
+      "line": 63,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "provider_name",
+      "owner": "module.LLMProvider.name",
+      "file": "app/models/base.py",
+      "line": 67,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.LLMProvider.model",
+      "file": "app/models/base.py",
+      "line": 71,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.LLMProvider.get_model_info",
+      "file": "app/models/base.py",
+      "line": 135,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "provider_name",
+      "owner": "module.LLMProvider.get_model_info",
+      "file": "app/models/base.py",
+      "line": 134,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.LLMProvider.get_model_info",
+      "file": "app/models/base.py",
+      "line": 135,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.MockProvider.generate",
+      "file": "app/models/mock.py",
+      "line": 43,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.MockProvider.health_check",
+      "file": "app/models/mock.py",
+      "line": 79,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "provider_name",
+      "owner": "module.OllamaProvider.__init__",
+      "file": "app/models/ollama.py",
+      "line": 49,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.__init__",
+      "file": "app/models/ollama.py",
+      "line": 54,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.OllamaProvider.__init__",
+      "file": "app/models/ollama.py",
+      "line": 58,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.generate",
+      "file": "app/models/ollama.py",
+      "line": 101,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.generate",
+      "file": "app/models/ollama.py",
+      "line": 101,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.generate",
+      "file": "app/models/ollama.py",
+      "line": 121,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.generate",
+      "file": "app/models/ollama.py",
+      "line": 121,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "provider_name",
+      "owner": "module.OllamaProvider.generate",
+      "file": "app/models/ollama.py",
+      "line": 126,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "provider_name",
+      "owner": "module.OllamaProvider.generate",
+      "file": "app/models/ollama.py",
+      "line": 128,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.generate_structured",
+      "file": "app/models/ollama.py",
+      "line": 149,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.generate_structured",
+      "file": "app/models/ollama.py",
+      "line": 149,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.generate_structured",
+      "file": "app/models/ollama.py",
+      "line": 175,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.generate_structured",
+      "file": "app/models/ollama.py",
+      "line": 175,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "provider_name",
+      "owner": "module.OllamaProvider.generate_structured",
+      "file": "app/models/ollama.py",
+      "line": 180,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.health_check",
+      "file": "app/models/ollama.py",
+      "line": 196,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.health_check",
+      "file": "app/models/ollama.py",
+      "line": 200,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.health_check",
+      "file": "app/models/ollama.py",
+      "line": 200,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.health_check",
+      "file": "app/models/ollama.py",
+      "line": 207,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OllamaProvider.health_check",
+      "file": "app/models/ollama.py",
+      "line": 207,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.OpenAICompatibleProvider.__init__",
+      "file": "app/models/openai_compatible.py",
+      "line": 40,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.generate",
+      "file": "app/models/openai_compatible.py",
+      "line": 79,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.generate",
+      "file": "app/models/openai_compatible.py",
+      "line": 79,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.generate",
+      "file": "app/models/openai_compatible.py",
+      "line": 109,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.generate",
+      "file": "app/models/openai_compatible.py",
+      "line": 109,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.generate_structured",
+      "file": "app/models/openai_compatible.py",
+      "line": 138,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.generate_structured",
+      "file": "app/models/openai_compatible.py",
+      "line": 138,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.generate_structured",
+      "file": "app/models/openai_compatible.py",
+      "line": 173,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.generate_structured",
+      "file": "app/models/openai_compatible.py",
+      "line": 173,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.generate_structured",
+      "file": "app/models/openai_compatible.py",
+      "line": 199,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.generate_structured",
+      "file": "app/models/openai_compatible.py",
+      "line": 199,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.health_check",
+      "file": "app/models/openai_compatible.py",
+      "line": 221,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.health_check",
+      "file": "app/models/openai_compatible.py",
+      "line": 225,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.health_check",
+      "file": "app/models/openai_compatible.py",
+      "line": 225,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.health_check",
+      "file": "app/models/openai_compatible.py",
+      "line": 232,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.OpenAICompatibleProvider.health_check",
+      "file": "app/models/openai_compatible.py",
+      "line": 232,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.ModelSelection.__init__",
+      "file": "app/models/router.py",
+      "line": 26,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.ModelSelection.__repr__",
+      "file": "app/models/router.py",
+      "line": 32,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ModelRouter.route",
+      "file": "app/models/router.py",
+      "line": 67,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ModelRouter.route",
+      "file": "app/models/router.py",
+      "line": 72,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ModelRouter.route",
+      "file": "app/models/router.py",
+      "line": 77,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ModelRouter.route",
+      "file": "app/models/router.py",
+      "line": 83,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ModelRouter.route",
+      "file": "app/models/router.py",
+      "line": 88,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ModelRouter.route",
+      "file": "app/models/router.py",
+      "line": 95,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ModelRouter.route",
+      "file": "app/models/router.py",
+      "line": 100,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ModelRouter.route",
+      "file": "app/models/router.py",
+      "line": 107,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ModelRouter.route",
+      "file": "app/models/router.py",
+      "line": 111,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ModelRouter.list_providers",
+      "file": "app/models/router.py",
+      "line": 145,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.GenerateResponse",
+      "file": "app/models/schemas.py",
+      "line": 28,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.StructuredOutput",
+      "file": "app/models/schemas.py",
+      "line": 38,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.HealthStatus",
+      "file": "app/models/schemas.py",
+      "line": 47,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.ProviderConfig",
+      "file": "app/models/schemas.py",
+      "line": 58,
+      "kind": "DECLARED_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.create_default_provider_config",
+      "file": "app/models/schemas.py",
+      "line": 70,
+      "kind": "CALL_KEYWORD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model_name",
+      "owner": "module.ModelSelection.__init__",
+      "file": "app/models/schemas.py",
+      "line": 84,
+      "kind": "ATTRIBUTE_ACCESS_OR_ASSIGNMENT",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.call_ollama",
+      "file": "app/skills/sop_semantic/engine.py",
+      "line": 661,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.process",
+      "file": "app/skills/sop_semantic/engine.py",
+      "line": 1253,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    },
+    {
+      "field": "model",
+      "owner": "module.process",
+      "file": "app/skills/sop_semantic/engine.py",
+      "line": 1305,
+      "kind": "DICT_FIELD",
+      "runtime_verified": false
+    }
+  ],
+  "scope": "Actual app AST named model identity fields and dictionary/call sites; source navigation not dataflow/runtime proof; embedding domains remain separate",
+  "paths_audited": [
+    "FAST dormant local rule",
+    "FAST evidence/KNOWLEDGE direct evidence",
+    "KNOWLEDGE generation",
+    "TOOL NativeExecutor/DevCore",
+    "OFFLINE V1/V2/DevCore",
+    "V2 generation",
+    "ModelGateway",
+    "ModelRouter"
+  ],
+  "canonical_contract": {
+    "provider_id": "Captured adapter identity; preserve registered key separately",
+    "model_id": "Opaque provider/endpoint-scoped selector",
+    "capability": "Declared vs observed operation/evidence",
+    "requested_model": "Original requested selector or absent",
+    "selected_model": "Captured chosen/configured provider model",
+    "actual_model": "Unknown without same-invocation execution identity evidence",
+    "identity_status": [
+      "DECLARED",
+      "CONFIGURED",
+      "SELECTED",
+      "EXECUTED",
+      "VERIFIED"
+    ],
+    "representation_status": "DESIGN_ONLY_NOT_IMPLEMENTED",
+    "public_schema_changed": false
+  },
+  "mde03_mismatch_evidence_reused": {
+    "alias_mock": "IDENTITY_COUNTEREXAMPLE_MOCK",
+    "mutable_identity_key_drift": "MUTABLE_ID_KEY_DRIFT",
+    "http_self_model": [
+      "OLLAMA_SERVER_MODEL_NOT_ATTESTED",
+      "COMPAT_SERVER_MODEL_NOT_ATTESTED"
+    ],
+    "gateway_foreign_model": "GATEWAY_NO_IDENTITY_VALIDATOR",
+    "compatible_preference_name": "NATIVE_COMPAT_ID_PREFERENCE",
+    "source": "reports/MDE03_FOCUSED_OBSERVATIONS_20261007.json"
+  },
+  "reused_evidence_sha256": {
+    "reports/MDE03_FOCUSED_OBSERVATIONS_20261007.json": "7dd1bba96dae5974c424a461c864b8e5d8cce01f2d51b8a3da5bb6ffd0c535b8",
+    "reports/MDE03_BASELINE_20261007.xml": "688551683fd2d8c322971709fac975d5b65cbb60d0ae4c11ce90cba030290eb8",
+    "reports/MDE02_REGRESSION_20261007.xml": "8e03995a26172ddf9aa15d17522f4076a40e7372c2648c7052eabbd35dfbd665"
+  },
+  "actual_live_model_verification": "NOT_RUN",
+  "registered_fallback_is_failover": false,
+  "default_gateway_activation": false,
+  "new_registry_created": false,
+  "ui_identity_sites": [
+    {
+      "field": "modelSelect value/display text",
+      "file": "app/ui/index.html",
+      "line": 1356,
+      "values": [
+        "llama3.2:1b",
+        "qwen3:4b",
+        "qwen3:8b"
+      ],
+      "role": "REQUESTED_SELECTOR_OPTIONS_NOT_INSTALLED_CATALOG",
+      "runtime_verified": false
+    },
+    {
+      "field": "request model",
+      "file": "app/ui/index.html",
+      "line": 2053,
+      "role": "BROWSER_SELECTOR_TO_V1_REQUEST",
+      "runtime_verified": false
+    },
+    {
+      "field": "data.model",
+      "file": "app/ui/index.html",
+      "line": 2247,
+      "role": "LEGACY_RESPONSE_DISPLAY_NOT_EXECUTION_PROOF",
+      "runtime_verified": false
+    },
+    {
+      "field": "data.llm.model",
+      "file": "app/ui/index.html",
+      "line": 2408,
+      "role": "CONFIGURED_HEALTH_LABEL",
+      "runtime_verified": false
+    }
+  ]
+}

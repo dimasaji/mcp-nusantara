@@ -1,0 +1,68 @@
+{
+  "task_id": "MDE-04-20261007",
+  "status": "PASS_SCOPED_OBSERVATION",
+  "observations": [
+    {
+      "id": "SELECTED_NOT_EXECUTED",
+      "assertion": "PASS",
+      "observation": "Selecting provider/model does not invoke generation.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_model_verified": false
+    },
+    {
+      "id": "CAPTURED_SELECTION_CAN_BE_STALE",
+      "assertion": "PASS",
+      "observation": "Selected model is captured but provider instance remains mutable; later execution can use changed state.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_model_verified": false
+    },
+    {
+      "id": "SEPARATE_MODEL_SELECTION_TYPES",
+      "assertion": "PASS",
+      "observation": "Actual router ModelSelection and package schema ModelSelection are distinct Python types.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_model_verified": false
+    },
+    {
+      "id": "MODEL_NOT_GENERATE_REQUEST_SELECTOR",
+      "assertion": "PASS",
+      "observation": "Base GenerateRequest carries generation input/options; API request.model selection is a separate constructor step.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_model_verified": false
+    },
+    {
+      "id": "UNDECLARED_REQUEST_MODEL_NOT_ROUTING",
+      "assertion": "PASS",
+      "observation": "Extra model key in dict does not override MockProvider model or router selection; no new selector semantics.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_model_verified": false
+    },
+    {
+      "id": "TEXT_CALLBACK_HAS_NO_IDENTITY",
+      "assertion": "PASS",
+      "observation": "V2 callback text return has no provider/model identity receipt.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_model_verified": false
+    },
+    {
+      "id": "TOOL_STATIC_WITHOUT_LLM",
+      "assertion": "PASS",
+      "observation": "Tool/read and static analysis succeed without generation callback.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_model_verified": false
+    },
+    {
+      "id": "DEVCORE_AUDIT_LABEL_NOT_EXECUTION",
+      "assertion": "PASS",
+      "observation": "DevCore audit emits configured model label even with generate=None; audit model is not executed-model proof.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_model_verified": false
+    }
+  ],
+  "asserted_observations": 8,
+  "actual_model_verification": "NOT_RUN",
+  "live_provider_calls": 0,
+  "source_changed": false,
+  "repository_dotenv_read": false,
+  "reused_mde03_mismatches": "reports/MDE03_FOCUSED_OBSERVATIONS_20261007.json"
+}

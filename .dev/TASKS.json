@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-07T03:34:32.482892+00:00",
+  "updated_at": "2026-10-07T04:00:50.149435+00:00",
   "tasks": [
     {
       "task_id": "FULLROOT-001",
@@ -160,6 +160,26 @@
       "result": "Existing ModelRouter dictionary is sufficient conceptual local registry; full matrix and configured/registered/runtime distinction documented",
       "known_issue": "Universal identity consistency false/not enforced; live provider health/capability not verified; no MDE04 work",
       "checkpoint": ".dev/MDE03_CHECKPOINT.json"
+    },
+    {
+      "task_id": "MDE-04-20261007",
+      "objective": "Model Registry discovery, identity contract and selection closure",
+      "status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+      "decision": "KEEP",
+      "runtime_files_changed": [],
+      "affected_components": [
+        "model identity contract",
+        "engineering state"
+      ],
+      "tests": [
+        "71 fresh existing focused tests",
+        "8 new isolated asserted observations",
+        "22 MDE03 observations reused with verified hashes",
+        "MDE02 full regression reused: 380/28/1; unchanged source"
+      ],
+      "result": "Canonical interpretation and lifecycle distinguish requested/selected/reported/actual identities; actual model unknown without execution evidence; no parallel registry",
+      "known_issue": "Identity contract is design only; no runtime enforcement/live model attestation; MDE05 not started",
+      "checkpoint": ".dev/MDE04_CHECKPOINT.json"
     }
   ]
 }
