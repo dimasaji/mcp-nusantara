@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import hashlib
 import html
+import json
 import re
+from dataclasses import asdict
+from pathlib import Path
+import threading
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from urllib.parse import urlparse
@@ -57,9 +61,24 @@ class KnowledgeCandidate:
 
 
 class CandidateStore:
-    def __init__(self, validator: SourceValidator):
+    def __init__(self, validator: SourceValidator, path: Path | None = None):
         self.validator = validator
         self._items: dict[str, KnowledgeCandidate] = {}
+        self.path = path
+        self._lock = threading.RLock()
+        if path and path.exists():
+            for raw in json.loads(path.read_text("utf-8")):
+                candidate = KnowledgeCandidate(**raw)
+                if hashlib.sha256(candidate.content.encode()).hexdigest() != candidate.provenance["sha256"]:
+                    raise SourceRejected("candidate integrity failure")
+                self._items[candidate.candidate_id] = candidate
+
+    def _save(self) -> None:
+        if self.path:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            temp = self.path.with_suffix(".tmp")
+            temp.write_text(json.dumps([asdict(c) for c in self._items.values()], ensure_ascii=False), "utf-8")
+            temp.replace(self.path)
 
     def propose(self, gap_id: str, uri: str, raw_content: str, *, title: str, topic: str,
                 provided_by: str) -> KnowledgeCandidate:
@@ -69,11 +88,19 @@ class CandidateStore:
         text = html_to_text(raw_content)[:100_000]
         if len(text) < 20:
             raise SourceRejected("konten terlalu pendek")
-        c = KnowledgeCandidate(new_id("kc"), gap_id, title, topic, uri, text, {
+        digest = hashlib.sha256(text.encode()).hexdigest()
+        with self._lock:
+            for existing in self._items.values():
+                if existing.uri == uri and existing.provenance["sha256"] == digest:
+                    return existing
+            if len(self._items) >= 1000:
+                raise SourceRejected("candidate capacity reached")
+            c = KnowledgeCandidate(new_id("kc"), gap_id, title, topic, uri, text, {
             "uri": uri, "sha256": hashlib.sha256(text.encode()).hexdigest(),
             "retrieved_at": datetime.now(timezone.utc).isoformat(), "validator": why,
             "provided_by": provided_by})
-        self._items[c.candidate_id] = c
+            self._items[c.candidate_id] = c
+            self._save()
         return c
 
     def get(self, candidate_id: str) -> KnowledgeCandidate | None:
@@ -97,4 +124,5 @@ class CandidateStore:
         meta = target.add_document(f"kc-{c.candidate_id}", c.content, source=c.uri, topic=c.topic,
                                    authority=authority, access_level=access_level)
         c.status = "approved"
+        self._save()
         return meta

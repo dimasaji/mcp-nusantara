@@ -1,16 +1,20 @@
-"""Nusantara Core + Hermes API Gateway."""
+﻿"""Nusantara Core + Hermes API Gateway."""
 
 from __future__ import annotations
 import asyncio
 import time
+import threading
 
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any, Dict, Literal
 
 from fastapi import APIRouter, Header, HTTPException, Request
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.core.config import settings
+from app.core.runtime_identity import BUILD_ID
+from app.observability import metrics
+from app.exceptions import ProviderUnavailableError
 from app.security.auth import require_admin
 from app.core.gate_integration import GateIntegration
 from app.developer_core.graph_bridge import GraphifyBridge
@@ -24,6 +28,7 @@ from app.problem.engine import ProblemEngine
 from app.hermes.agent import HermesAgent
 from app.language.engine import LanguageEngine
 from app.workflow.engine import WorkflowEngine
+from app.trust.engine import TrustEngine
 
 
 router = APIRouter(prefix="/v1", tags=["api"])
@@ -33,17 +38,48 @@ api_router = router
 
 _started_at = datetime.now(timezone.utc)
 
-_knowledge = KnowledgeEngine()
+_configuration = settings.effective_configuration
+_knowledge = KnowledgeEngine(nusantara_config=_configuration)
 _gate_integration = GateIntegration()
 _developer_core = GraphifyBridge()
 
 # Evidence Grounding Guard
 _grounding_guard = EvidenceGroundingGuard()
 
+# Trust Engine — Phase 4 V1
+_trust_engine = TrustEngine()
+
 # Persistent LanguageEngine:
 # IndoBERT worker dan prototype embeddings dibuat sekali
 # dan digunakan kembali oleh seluruh request /v1/chat.
 _language = LanguageEngine()
+# Both V1 stages use the same model and the client's serialized request pipe.
+# Reuse its worker instead of loading a second 768D model for RAG.
+if _language.semantic_intent_engine is not None:
+    _knowledge.rag._embedding_adapter.client = _language.semantic_intent_engine.client
+_sync_slots = threading.BoundedSemaphore(2)
+
+
+async def _run_sync_v1(fn, *args, timeout_s=30.0, **kwargs):
+    """Bound expensive synchronous stages without blocking HTTP or queuing forever.
+
+    Timed-out work keeps its capacity slot until its worker actually exits.
+    Worker process timeouts remain responsible for ending subprocess work.
+    """
+    if not _sync_slots.acquire(blocking=False):
+        raise HTTPException(status_code=503, detail="layanan sedang sibuk; coba lagi")
+    def run():
+        try:
+            return fn(*args, **kwargs)
+        finally:
+            _sync_slots.release()
+    task = asyncio.create_task(asyncio.to_thread(run))
+    # Observe background exceptions after a timeout; don't leak task warnings.
+    task.add_done_callback(lambda finished: finished.exception() if not finished.cancelled() else None)
+    try:
+        return await asyncio.wait_for(asyncio.shield(task), timeout=timeout_s)
+    except TimeoutError:
+        raise HTTPException(status_code=504, detail="batas waktu pemrosesan terlampaui") from None
 
 _workflows = WorkflowEngine()
 
@@ -66,6 +102,99 @@ class ChatRequest(BaseModel):
     )
     model: str | None = None
     stream: bool = False
+
+
+class _PublicChatModel(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True, allow_inf_nan=False)
+
+
+class _PublicChatTrust(_PublicChatModel):
+    supports_claim: bool
+    confidence: float = Field(ge=0, le=1)
+    risk_level: Literal["low", "medium", "high", "critical"]
+    requires_human: bool
+    evidence_count: int = Field(ge=0)
+    evidence_available: bool
+
+
+class _PublicChatEvidence(_PublicChatModel):
+    document_id: str = Field(max_length=256)
+    title: str = Field(max_length=1024)
+    chunk: str = Field(max_length=20000)
+    score: float = Field(ge=0, le=1)
+
+
+class _PublicChatGrounding(_PublicChatModel):
+    enabled: bool
+    grounded: bool
+    reason: str = Field(max_length=128)
+
+
+class _PublicChatUnderstanding(_PublicChatModel):
+    intent: str = Field(max_length=128)
+
+
+class _PublicChatProblem(_PublicChatModel):
+    goal: str | None = Field(default=None, max_length=2000)
+
+
+class _PublicChatResponse(_PublicChatModel):
+    session_id: str = Field(min_length=1, max_length=128)
+    response: str
+    trust: _PublicChatTrust
+    model: str = Field(max_length=256)
+    provider_status: Literal["local_rule", "evidence_fast_path", "ollama", "offline"]
+    latency_ms: int = Field(ge=0)
+    grounding: _PublicChatGrounding
+    understanding: _PublicChatUnderstanding
+    problem: _PublicChatProblem
+    evidence: list[_PublicChatEvidence] = Field(max_length=20)
+    timestamp: str = Field(max_length=64)
+
+
+def _project_v1_chat_response(payload: dict, *, intent_name: str) -> dict:
+    """Build public data explicitly; never serialize internal context recursively.
+
+    Trust values remain the existing assessment. Citation projection does not
+    certify authority or implement knowledge access control.
+    """
+    trust = payload["trust"]
+    grounding = payload["grounding"]
+    public_reasons = {
+        "empty_answer", "no_evidence", "grounded_abstention",
+        "requirement_evidence_missing", "possible_unsupported_content",
+        "grounded", "deterministic_response", "not_evaluated",
+    }
+    reason = grounding.get("reason")
+    if not isinstance(reason, str) or reason not in public_reasons:
+        reason = "not_evaluated"
+    problem = payload.get("problem")
+    goal = problem.get("goal") if isinstance(problem, dict) else None
+    if not isinstance(goal, str):
+        goal = None
+    public = _PublicChatResponse(
+        session_id=payload["session_id"],
+        response=payload["response"],
+        trust=_PublicChatTrust(
+            supports_claim=trust["supports_claim"], confidence=trust["confidence"],
+            risk_level=trust["risk_level"], requires_human=trust["requires_human"],
+            evidence_count=trust["evidence_count"],
+            evidence_available=trust["evidence_available"],
+        ),
+        model=payload["model"], provider_status=payload["provider_status"],
+        latency_ms=payload["latency_ms"],
+        grounding=_PublicChatGrounding(
+            enabled=grounding["enabled"], grounded=grounding["grounded"], reason=reason,
+        ),
+        understanding=_PublicChatUnderstanding(intent=intent_name),
+        problem=_PublicChatProblem(goal=goal),
+        evidence=[_PublicChatEvidence(
+            document_id=item["document_id"], title=item["title"],
+            chunk=item["chunk"], score=item["score"],
+        ) for item in payload["evidence"]],
+        timestamp=payload["timestamp"],
+    )
+    return public.model_dump(mode="json")
 
 
 class ProblemAnalyzeRequest(BaseModel):
@@ -129,6 +258,7 @@ class HealthResponse(BaseModel):
     status: str = "ok"
     service: str = "nusantara-core"
     version: str = settings.app_version
+    build_id: str = BUILD_ID
 
 
 # ============================================================================
@@ -670,8 +800,7 @@ async def health_check():
 async def health_detail():
 
     provider = OllamaProvider(
-        base_url=settings.llm_base_url,
-        model=settings.llm_model,
+        nusantara_config=_configuration,
     )
 
     try:
@@ -723,19 +852,19 @@ async def chat(
     Flow:
 
     User
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
     Language Engine
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
     Problem Engine
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
     Knowledge Engine
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
     Deterministic Safety / Routing
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
     Hermes
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
     Ollama
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
     Response
     """
 
@@ -748,10 +877,10 @@ async def chat(
         # ==============================================================
 
         provider = OllamaProvider(
-            base_url=settings.llm_base_url,
+            nusantara_config=_configuration,
             model=(
                 request.model
-                or settings.llm_model
+                or _configuration.llm.model
             ),
         )
 
@@ -773,7 +902,7 @@ async def chat(
         # LANGUAGE ENGINE
         # --------------------------------------------------------------
 
-        understanding = agent.language.process(
+        understanding = await _run_sync_v1(agent.language.process,
             request.user_input
         )
 
@@ -781,7 +910,7 @@ async def chat(
         # PROBLEM ENGINE
         # --------------------------------------------------------------
 
-        problem = agent.problem.analyze(
+        problem = await _run_sync_v1(agent.problem.analyze,
             user_input=request.user_input,
             context=None,
         )
@@ -790,9 +919,9 @@ async def chat(
         # KNOWLEDGE ENGINE
         # --------------------------------------------------------------
 
-        evidence = _knowledge.search_knowledge(
+        evidence = await _run_sync_v1(_knowledge.search_knowledge,
             request.user_input,
-            top_k=settings.retrieval_top_k,
+            top_k=None,
         )
 
         # --------------------------------------------------------------
@@ -828,7 +957,32 @@ async def chat(
             item
             for item in evidence
             if _evidence_score(item) >= 0.50
+        ]        
+        # ==============================================================
+        # PHASE 4 - TRUST ASSESSMENT
+        # ==============================================================
+        #
+        # Gate 7 menyaring evidence berdasarkan canonical Evidence.score.
+        # Trust menggunakan adapter boundary:
+        #
+        #     Evidence.score -> Trust.relevance
+        #
+        # Evidence asli tidak dimutasi.
+        # Trust hanya melakukan assessment.
+        # Trust tidak mengambil keputusan Policy.
+        # ==============================================================
+
+        trust_input = [
+            {
+                "relevance": _evidence_score(item),
+            }
+            for item in evidence
         ]
+
+        trust_assessment = _trust_engine.evaluate(
+            evidence=trust_input,
+            claim=request.user_input,
+        )
 
         # ==============================================================
         # 3. UNDERSTANDING
@@ -899,7 +1053,7 @@ async def chat(
         )
 
         # ==========================================================
-        # GATE 8-13 LIVE INTEGRATION — SHADOW MODE
+        # GATE 8-13 LIVE INTEGRATION â€” SHADOW MODE
         # ==========================================================
         gate_context = _gate_integration.process(
             session_id=request.session_id,
@@ -1136,9 +1290,17 @@ async def chat(
             ),
         )
 
-        return {
+        return _project_v1_chat_response({
             "developer_core": developer_runtime,
             "session_id": request.session_id,
+            "trust": {
+                "supports_claim": trust_assessment.supports_claim,
+                "confidence": trust_assessment.confidence,
+                "risk_level": trust_assessment.risk_level.value,
+                "requires_human": trust_assessment.requires_human,
+                "evidence_count": trust_assessment.evidence_count,
+                "evidence_available": trust_assessment.evidence_available,
+            },
 
             "response": response_text,
             "gate_pipeline": gate_context,
@@ -1208,18 +1370,16 @@ async def chat(
             "timestamp": datetime.now(
                 timezone.utc
             ).isoformat(),
-        }
+        }, intent_name=intent_name)
 
-    except HTTPException:
+    except (HTTPException, ProviderUnavailableError):
         raise
 
     except Exception as exc:
 
         raise HTTPException(
             status_code=500,
-            detail=(
-                f"Chat pipeline error: {exc}"
-            ),
+            detail="Terjadi kesalahan internal server",
         ) from exc
 
     finally:
@@ -1245,7 +1405,7 @@ async def analyze_problem(
             ProblemClassifier(),
         )
 
-        result = engine.analyze(
+        result = await _run_sync_v1(engine.analyze,
             user_input=request.user_input,
             context=None,
         )
@@ -1385,7 +1545,7 @@ async def search_knowledge(
 
     try:
 
-        results = await asyncio.to_thread(
+        results = await _run_sync_v1(
             _knowledge.search_knowledge,
             request.query,
             request.top_k,
@@ -1503,7 +1663,8 @@ async def get_metrics(
                 uptime,
                 2,
             ),
-            "requests_total": 0,
+            "requests_total": metrics.snapshot()["counters"].get("requests_total", 0),
+            "latency": metrics.snapshot()["latency"],
         },
     }
 
@@ -1519,4 +1680,9 @@ __all__ = [
 async def developer_core_status():
     """Read-only Developer Core / Graphify runtime inspection."""
     return _developer_core.inspect()
+
+
+
+
+
 

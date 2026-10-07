@@ -4,11 +4,14 @@ from __future__ import annotations
 from typing import Any, Optional
 
 from .rag import RAG, create_rag
+from app.core.nusantara_config import NusantaraConfig
 
 
 class KnowledgeEngine:
-    def __init__(self, rag: Optional[RAG] = None):
-        self.rag = rag or create_rag()
+    def __init__(self, rag: Optional[RAG] = None, *, nusantara_config: NusantaraConfig | None = None):
+        self.configuration = nusantara_config
+        self.rag = rag if rag is not None else (
+            create_rag(nusantara_config=nusantara_config) if nusantara_config is not None else create_rag())
 
     def ingest_document(self, document: Any):
         # Accept the lightweight API Document model as well as the canonical
@@ -25,12 +28,12 @@ class KnowledgeEngine:
         )
         return self.rag.ingest_document(request)
 
-    def search_knowledge(self, query: str, top_k: int = 5, filter: Optional[dict] = None):
+    def search_knowledge(self, query: str, top_k: int | None = None, filter: Optional[dict] = None):
         del filter  # reserved for vector-store filters in the persistent backend
         result = self.rag.query(query_text=query, top_k=top_k)
         return result.evidence_pack.evidence
 
-    def search(self, query: str, top_k: int = 5):
+    def search(self, query: str, top_k: int | None = None):
         return self.search_knowledge(query, top_k=top_k)
 
     def list_documents(self):

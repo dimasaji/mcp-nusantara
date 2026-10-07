@@ -8,6 +8,9 @@ import time
 from typing import Any, Dict, List, Optional
 
 import httpx
+from app.exceptions import ProviderUnavailableError
+from app.core.config import settings
+from app.core.nusantara_config import ConfigurationError, NusantaraConfig
 
 from app.models.base import (
     GenerateRequest,
@@ -32,14 +35,43 @@ class OllamaProvider(LLMProvider):
 
     def __init__(
         self,
-        base_url: str = "http://localhost:11434",
-        model: str = "llama3.2:1b",
-        timeout: float = 120.0,
+        base_url: str | None = None,
+        model: str | None = None,
+        timeout: float | None = None,
+        *,
+        nusantara_config: NusantaraConfig | None = None,
     ):
-        self.base_url = base_url.rstrip("/")
-        self.model_name = model
-        self.timeout = timeout
+        # Omitted values use the snapshot; explicit values always win, including
+        # values equal to the old defaults. No provider registry is duplicated.
+        self._configuration = nusantara_config
+        if nusantara_config is not None:
+            if nusantara_config.llm.provider != self.provider_name:
+                raise ConfigurationError("PROVIDER_MISMATCH")
+            if base_url is None:
+                base_url = nusantara_config.llm.base_url
+            if model is None:
+                model = nusantara_config.llm.model
+            if timeout is None:
+                timeout = nusantara_config.llm.connection_timeout_s
+        self.base_url = (base_url if base_url is not None else "http://localhost:11434").rstrip("/")
+        self.model_name = model if model is not None else "llama3.2:1b"
+        self.timeout = timeout if timeout is not None else 120.0
         self._client: Optional[httpx.AsyncClient] = None
+
+    def _options(self, request) -> dict:
+        generation = self._configuration.llm.generation if self._configuration else None
+        context = generation.context_length if generation else settings.llm_context_tokens
+        if not 512 <= context <= 131072:
+            raise ValueError('llm_context_tokens must be between 512 and 131072')
+        options = {'num_ctx': context, 'num_predict': generation.max_tokens if generation else 512}
+        if request.get('max_tokens') is not None:
+            options['num_predict'] = max(1, min(int(request['max_tokens']), context))
+        for key in ('temperature', 'top_p'):
+            if request.get(key) is not None:
+                options[key] = request[key]
+            elif generation is not None and getattr(generation, key) is not None:
+                options[key] = getattr(generation, key)
+        return options
 
     async def _get_client(self) -> httpx.AsyncClient:
         """Get atau buat HTTP client."""
@@ -68,16 +100,11 @@ class OllamaProvider(LLMProvider):
             "model": self.model,
             "prompt": request.get("prompt", ""),
             "stream": False,
+            "options": self._options(request),
         }
         
         if request.get("system"):
             payload["system"] = request["system"]
-        if request.get("max_tokens"):
-            payload["num_predict"] = request["max_tokens"]
-        if request.get("temperature"):
-            payload["temperature"] = request["temperature"]
-        if request.get("top_p"):
-            payload["top_p"] = request["top_p"]
         
         start_time = time.time()
         
@@ -95,7 +122,9 @@ class OllamaProvider(LLMProvider):
                 latency_ms=int((time.time() - start_time) * 1000),
             )
         except httpx.HTTPStatusError as e:
-            raise RuntimeError(f"Ollama API error: {e.response.status_code}") from e
+            raise ProviderUnavailableError(self.provider_name) from e
+        except httpx.RequestError as e:
+            raise ProviderUnavailableError(self.provider_name) from e
         except Exception as e:
             raise RuntimeError(f"Ollama generate failed: {str(e)}") from e
 
@@ -121,12 +150,9 @@ class OllamaProvider(LLMProvider):
             "system": system,
             "stream": False,
             "format": "json",
+            "options": self._options(request),
         }
         
-        if request.get("max_tokens"):
-            payload["num_predict"] = request["max_tokens"]
-        if request.get("temperature"):
-            payload["temperature"] = request["temperature"]
         
         start_time = time.time()
         
@@ -149,6 +175,8 @@ class OllamaProvider(LLMProvider):
                 tokens_used=result.get("eval_count", 0) + result.get("prompt_eval_count", 0),
                 latency_ms=int((time.time() - start_time) * 1000),
             )
+        except (httpx.HTTPStatusError, httpx.RequestError) as e:
+            raise ProviderUnavailableError(self.provider_name) from e
         except Exception as e:
             raise RuntimeError(f"Ollama structured generate failed: {str(e)}") from e
 

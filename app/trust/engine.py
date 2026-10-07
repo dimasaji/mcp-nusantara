@@ -71,10 +71,10 @@ class TrustEngine:
             risk_level = RiskLevel.MEDIUM
             requires_human = False
             issues = ["Evidence ada tapi relevansi rendah"]
-        elif coverage < 0.5:
-            risk_level = RiskLevel.LOW
-            requires_human = False
-            issues = []
+        elif coverage <= 0.5:
+            risk_level = RiskLevel.MEDIUM
+            requires_human = True
+            issues = ["Evidence campuran: coverage belum cukup untuk keputusan otomatis"]
         else:
             risk_level = RiskLevel.LOW
             requires_human = False

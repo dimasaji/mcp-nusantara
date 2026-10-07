@@ -16,6 +16,7 @@ EVENT_TYPES = frozenset({
     "request_started", "request_completed", "model_called", "memory_read", "memory_written",
     "rag_retrieval", "tool_called", "tool_failed", "response_generated", "feedback_received",
     "stage_failed",
+    "stage_completed",
 })
 
 
@@ -44,12 +45,27 @@ def _trim(v: Any, n: int = 200) -> Any:
 
 
 class EventRecorder:
-    def __init__(self, path: Path | None = None, max_memory: int = 5000):
+    def __init__(self, path: Path | None = None, max_memory: int = 5000,
+                 max_file_bytes: int = 10_000_000, backup_count: int = 3):
         self.path = Path(path) if path else None
         self.max_memory = max_memory
         self.dropped = 0
         self._lock = threading.Lock()
         self._events: list[Event] = []
+        if max_file_bytes < 1 or backup_count < 1:
+            raise ValueError("invalid telemetry retention limits")
+        self.max_file_bytes, self.backup_count = max_file_bytes, backup_count
+
+    def _rotate(self, incoming_bytes: int) -> None:
+        if not self.path.exists() or self.path.stat().st_size + incoming_bytes <= self.max_file_bytes:
+            return
+        oldest = self.path.with_name(self.path.name + f".{self.backup_count}")
+        oldest.unlink(missing_ok=True)
+        for index in range(self.backup_count - 1, 0, -1):
+            source = self.path.with_name(self.path.name + f".{index}")
+            if source.exists():
+                source.replace(self.path.with_name(self.path.name + f".{index + 1}"))
+        self.path.replace(self.path.with_name(self.path.name + ".1"))
 
     def emit(self, event_type: str, component: str, status: str = "ok", latency_ms: float = 0.0,
              metadata: dict[str, Any] | None = None) -> Event | None:
@@ -66,8 +82,10 @@ class EventRecorder:
                     del self._events[: len(self._events) - self.max_memory]
                 if self.path:
                     self.path.parent.mkdir(parents=True, exist_ok=True)
+                    line = json.dumps(asdict(ev), ensure_ascii=False, default=str) + "\n"
+                    self._rotate(len(line.encode("utf-8")))
                     with self.path.open("a", encoding="utf-8") as f:
-                        f.write(json.dumps(asdict(ev), ensure_ascii=False, default=str) + "\n")
+                        f.write(line)
             return ev
         except Exception:  # noqa: BLE001 - telemetry tidak boleh mengubah perilaku core
             self.dropped += 1

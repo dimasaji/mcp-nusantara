@@ -25,7 +25,11 @@ def v1_trust_check(engine: TrustEngine | None = None):
     def check(evidence: list[dict[str, Any]], claim: str) -> dict[str, Any]:
         ev = [{"relevance": e.get("score", e.get("relevance", 0.0))} for e in evidence]
         a = eng.evaluate(evidence=ev, claim=claim)
+        sources = [{"document_id": e.get("document_id"), "source": e.get("source"),
+                    "title": e.get("title"), "metadata": e.get("metadata", {})}
+                   for e in evidence]
         return {"verification": "evidence_supported" if a.supports_claim else "unverified",
+                "sources": sources,
                 "confidence": round(a.confidence, 3), "evidence_count": a.evidence_count,
                 "requires_human": a.requires_human, "issues": a.issues,
                 "note": "confidence = dukungan evidence retrieval, bukan kepastian fakta"}

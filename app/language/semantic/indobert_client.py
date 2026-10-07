@@ -4,6 +4,8 @@ import json
 import os
 import subprocess
 import threading
+import queue
+import math
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +22,7 @@ class IndoBERTClient:
         self,
         python_executable: str | None = None,
         worker_path: str | None = None,
+        response_timeout_s: float = 60.0,
     ) -> None:
 
         project_root = Path(__file__).resolve().parents[3]
@@ -40,6 +43,9 @@ class IndoBERTClient:
 
         self.python_executable = python_executable
         self.worker_path = worker_path
+        if not math.isfinite(response_timeout_s) or response_timeout_s <= 0:
+            raise ValueError("response timeout must be finite and positive")
+        self.response_timeout_s = response_timeout_s
 
         self._process: subprocess.Popen[str] | None = None
         self._lock = threading.Lock()
@@ -61,6 +67,7 @@ class IndoBERTClient:
             text=True,
             encoding="utf-8",
             bufsize=1,
+            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
         )
 
     def is_running(self) -> bool:
@@ -112,20 +119,26 @@ class IndoBERTClient:
             }
 
             try:
-                self._process.stdin.write(
-                    json.dumps(
-                        request,
-                        ensure_ascii=False,
-                    )
-                    + "\n"
-                )
-
-                self._process.stdin.flush()
-
-                response_line = self._process.stdout.readline()
+                process = self._process
+                responses = queue.Queue(maxsize=1)
+                def exchange():
+                    try:
+                        process.stdin.write(json.dumps(request, ensure_ascii=False) + "\n")
+                        process.stdin.flush()
+                        responses.put(process.stdout.readline())
+                    except Exception as exc:
+                        responses.put(exc)
+                threading.Thread(target=exchange, daemon=True).start()
+                try:
+                    response_line = responses.get(timeout=self.response_timeout_s)
+                except queue.Empty:
+                    self.stop()
+                    return {"ok": False, "engine": "indobert-client", "error": "Worker response timeout"}
+                if isinstance(response_line, Exception):
+                    raise response_line
 
                 if not response_line:
-                    self._process = None
+                    self.stop()
 
                     return {
                         "ok": False,
@@ -139,8 +152,7 @@ class IndoBERTClient:
                 return json.loads(response_line)
 
             except BrokenPipeError:
-
-                self._process = None
+                self.stop()
 
                 return {
                     "ok": False,
@@ -188,18 +200,14 @@ class IndoBERTClient:
             return
 
         try:
-            if process.stdin:
-                process.stdin.close()
-        except Exception:
-            pass
-
-        try:
             process.terminate()
-            process.wait(timeout=5)
-        except Exception:
-            try:
-                process.kill()
-            except Exception:
-                pass
+            process.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait(timeout=2)
+        finally:
+            for pipe in (process.stdin, process.stdout):
+                if pipe:
+                    pipe.close()
 
         self._process = None

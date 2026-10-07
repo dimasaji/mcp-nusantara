@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import contextvars
+import hashlib
 import uuid
 from contextlib import contextmanager
 from collections.abc import Iterator
@@ -25,7 +26,8 @@ def request_context(request_id: str | None = None, session_id: str = "-") -> Ite
     inherited = _request_id.get()
     toks = (
         _request_id.set(request_id or (inherited if inherited != "-" else new_id("req"))),
-        _session_id.set(session_id),
+        _session_id.set("memory:" + hashlib.sha256(session_id.encode()).hexdigest()[:16]
+                        if session_id.startswith("mem-") else session_id),
         _execution_id.set(new_id("exe")),
     )
     try:

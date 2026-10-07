@@ -4,7 +4,7 @@ from __future__ import annotations
 import hashlib
 import json
 import threading
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -47,6 +47,25 @@ class ApprovalQueue:
         self.ttl = timedelta(minutes=ttl_minutes)
         self._items: dict[str, ApprovalRequest] = {}
         self._lock = threading.Lock()
+        # The append-only audit is also the durable approval source of truth.
+        # Single application worker: no competing queue writers are supported.
+        if not self.audit.verify():
+            raise ApprovalError("approval audit integrity failure")
+        for entry in self.audit.entries():
+            if entry["event"] == "approval.snapshot":
+                raw = dict(entry["data"]["state"])
+                for key in ("created_at", "expires_at", "decided_at"):
+                    if raw.get(key):
+                        raw[key] = datetime.fromisoformat(raw[key])
+                restored = ApprovalRequest(**raw)
+                self._items[restored.approval_id] = restored
+
+    def _persist(self, req: ApprovalRequest) -> None:
+        state = asdict(req)
+        for key in ("created_at", "expires_at", "decided_at"):
+            if state[key] is not None:
+                state[key] = state[key].isoformat()
+        self.audit.record("approval.snapshot", state=state)
 
     def submit(self, kind: str, payload: Any, *, risk: str, requested_by: str,
                summary: dict[str, Any] | None = None) -> ApprovalRequest:
@@ -54,6 +73,7 @@ class ApprovalQueue:
         req = ApprovalRequest(new_id("apr"), kind, payload_hash(payload), summary or {}, risk,
                               requested_by, now, now + self.ttl)
         with self._lock:
+            self._persist(req)
             self._items[req.approval_id] = req
         self.audit.record("approval.submitted", approval_id=req.approval_id, kind=kind,
                           risk=risk, requested_by=requested_by, summary=req.summary)
@@ -82,9 +102,15 @@ class ApprovalQueue:
                 raise ApprovalError("reviewer tidak boleh sama dengan peminta")
             if datetime.now(timezone.utc) > req.expires_at:
                 req.status = EXPIRED
+                self._persist(req)
                 raise ApprovalError("approval kedaluwarsa")
             req.status, req.reviewer, req.reason = _DECISIONS[decision], reviewer, reason
             req.decided_at = datetime.now(timezone.utc)
+            try:
+                self._persist(req)
+            except OSError:
+                req.status, req.reviewer, req.reason, req.decided_at = PENDING, None, None, None
+                raise
         self.audit.record("approval.decided", approval_id=approval_id, reviewer=reviewer,
                           decision=decision, reason=reason, risk=req.risk)
         return req
@@ -98,5 +124,8 @@ class ApprovalQueue:
                   and req.payload_hash == payload_hash(payload))
             if ok:
                 req.status = CONSUMED
+                # Failure to persist must never grant permission; keeping CONSUMED
+                # in memory is conservative if storage becomes unavailable.
+                self._persist(req)
         self.audit.record("approval.consume", approval_id=approval_id, granted=bool(ok))
         return bool(ok)

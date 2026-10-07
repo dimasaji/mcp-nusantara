@@ -40,6 +40,7 @@ from app.knowledge.parser import (
 logger = logging.getLogger(__name__)
 from app.knowledge.indobert_embedding import IndoBERTEmbeddingAdapter
 from app.knowledge.store import SQLiteVectorStore
+from app.core.nusantara_config import ConfigurationError, NusantaraConfig
 
 
 class MemoriaVectorStore:
@@ -206,9 +207,34 @@ class RAG:
         parser: Optional[DocParser] = None,
         chunker: Optional[Chunker] = None,
         embedding_func=None,
+        *,
+        nusantara_config: NusantaraConfig | None = None,
     ):
+        self.configuration = nusantara_config
+        if nusantara_config is not None:
+            if (nusantara_config.rag.semantic_weight is not None or
+                    nusantara_config.rag.similarity_threshold is not None):
+                raise ConfigurationError("RAG_PARAMETER_NOT_INTEGRATED")
+            if embedding_func is None:
+                IndoBERTEmbeddingAdapter.validate_configuration(nusantara_config)
+                if config is not None and (config.embedding_dimension != 768 or
+                        config.embedding_model != "indobenchmark/indobert-base-p1"):
+                    raise ConfigurationError("EMBEDDING_PROFILE_UNSUPPORTED")
+        if nusantara_config is not None and config is None:
+            config = KnowledgeBaseConfig(
+                embedding_model=nusantara_config.embedding.model,
+                embedding_dimension=nusantara_config.embedding.dimension,
+                vector_store_type=nusantara_config.knowledge.store_backend,
+                chunk_size=nusantara_config.rag.chunk_size,
+                chunk_overlap=nusantara_config.rag.chunk_overlap,
+                retrieval_top_k=nusantara_config.rag.top_k,
+                reranker_enabled=nusantara_config.rag.reranker_enabled,
+                reranker_model=nusantara_config.rag.reranker_model,
+            )
         self._config = config or KnowledgeBaseConfig()
-        self._store = vector_store or SQLiteVectorStore()
+        self._store = vector_store if vector_store is not None else (
+            SQLiteVectorStore(str(nusantara_config.knowledge.database))
+            if nusantara_config is not None else SQLiteVectorStore())
         self._parser = parser or DocParser()
         self._chunker = chunker or SentenceChunker()
         # Gunakan IndoBERT 768D sebagai default embedding RAG.
@@ -217,7 +243,8 @@ class RAG:
         if embedding_func is not None:
             self._embedding = embedding_func
         else:
-            self._embedding_adapter = IndoBERTEmbeddingAdapter()
+            self._embedding_adapter = (IndoBERTEmbeddingAdapter(nusantara_config=nusantara_config)
+                                       if nusantara_config is not None else IndoBERTEmbeddingAdapter())
             self._embedding = self._embedding_adapter
         self._chunk_processor = None
 
@@ -699,9 +726,13 @@ class RAG:
 def create_rag(
     config: Optional[KnowledgeBaseConfig] = None,
     vector_store: Optional[MemoriaVectorStore] = None,
+    *,
+    nusantara_config: NusantaraConfig | None = None,
 ) -> RAG:
     """Factory function untuk membuat RAG instance."""
-    return RAG(config=config, vector_store=vector_store)
+    if nusantara_config is None:
+        return RAG(config=config, vector_store=vector_store)
+    return RAG(config=config, vector_store=vector_store, nusantara_config=nusantara_config)
 
 # ---------------------------------------------------------------------------
 # NUSANTARA CANONICAL RAG API

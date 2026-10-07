@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 from typing import Any, Dict, Optional
 from app.models.mock import MockProvider
 from app.models.router import ModelRouter
@@ -29,9 +29,86 @@ class HermesAgent:
         )
 
         self.reasoning = ReasoningEngine()
-    def run(self, user_input: str, session_id: str='default', context: Optional[Dict[str,Any]]=None) -> Dict[str,Any]:
-        understood=self.language.process(user_input)
-        problem=self.problem.analyze(user_input=user_input, context=context)
-        reason=self.reasoning.process(problem_description=str(getattr(problem,'goal',None) or user_input), context=context, knowledge_evidence=[])
-        return {'session_id':session_id,'understanding':understood.model_dump() if hasattr(understood,'model_dump') else understood,'problem':problem.model_dump() if hasattr(problem,'model_dump') else problem,'reasoning':reason.model_dump() if hasattr(reason,'model_dump') else reason}
+    def run(
+        self,
+        user_input: str,
+        session_id: str = "default",
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Execute the Hermes pipeline using the existing ReasoningEngine API.
 
+        Evidence from V2 is passed through context["knowledge_evidence"].
+        No V1 Language, Problem, or Knowledge engine is modified.
+        """
+        understood = self.language.process(user_input)
+
+        problem = self.problem.analyze(
+            user_input=user_input,
+            context=context,
+        )
+
+        knowledge_evidence = []
+
+        if isinstance(context, dict):
+            candidate_evidence = context.get("knowledge_evidence", [])
+
+            if isinstance(candidate_evidence, list):
+                knowledge_evidence = candidate_evidence
+
+        intent_name = ""
+        intent_confidence = 0.0
+
+        if isinstance(understood, dict):
+            intent_name = str(
+                understood.get("intent_name")
+                or understood.get("intent")
+                or ""
+            )
+
+            try:
+                intent_confidence = float(
+                    understood.get("intent_confidence", 0.0) or 0.0
+                )
+            except (TypeError, ValueError):
+                intent_confidence = 0.0
+        else:
+            intent_name = str(
+                getattr(understood, "intent_name", None)
+                or getattr(understood, "intent", None)
+                or ""
+            )
+
+            try:
+                intent_confidence = float(
+                    getattr(understood, "intent_confidence", 0.0)
+                    or 0.0
+                )
+            except (TypeError, ValueError):
+                intent_confidence = 0.0
+
+        reason = self.reasoning.analyze(
+            user_input=user_input,
+            evidence=knowledge_evidence,
+            intent_name=intent_name,
+            intent_confidence=intent_confidence,
+        )
+
+        return {
+            "session_id": session_id,
+            "understanding": (
+                understood.model_dump()
+                if hasattr(understood, "model_dump")
+                else understood
+            ),
+            "problem": (
+                problem.model_dump()
+                if hasattr(problem, "model_dump")
+                else problem
+            ),
+            "reasoning": (
+                reason.model_dump()
+                if hasattr(reason, "model_dump")
+                else reason
+            ),
+        }
