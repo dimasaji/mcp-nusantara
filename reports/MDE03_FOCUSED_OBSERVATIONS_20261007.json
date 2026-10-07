@@ -1,0 +1,167 @@
+{
+  "task_id": "MDE-03-20261007",
+  "status": "PASS_SCOPED_DISCOVERY",
+  "asserted_observations": 22,
+  "identity_universal_consistency": "FALSE_COUNTEREXAMPLES_OBSERVED",
+  "actual_provider_health": "NOT_RUN",
+  "network": "MockTransport only",
+  "real_failover": false,
+  "runtime_source_changed": false,
+  "repository_dotenv_read_by_probe": false,
+  "observations": [
+    {
+      "id": "EMPTY_REGISTRY",
+      "assertion": "PASS",
+      "observation": "Empty registration fails clearly; no automatic discovery.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "CONFIGURED_NOT_REGISTERED",
+      "assertion": "PASS",
+      "observation": "ProviderConfig construction does not populate router.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "REGISTERED_NOT_HEALTHY",
+      "assertion": "PASS",
+      "observation": "Router does not call/gate on health; unhealthy fixture remains selectable.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "DUPLICATE_ID_REPLACES",
+      "assertion": "PASS",
+      "observation": "Registration is keyed by provider.name; same-name second instance replaces first.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "MUTABLE_ID_KEY_DRIFT",
+      "assertion": "PASS",
+      "observation": "Name mutation after registration leaves captured dictionary key unchanged.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "NATIVE_COMPAT_ID_PREFERENCE",
+      "assertion": "PASS",
+      "observation": "openai_compatible is not openai; preferred-openai branches do not select this native adapter when local is present.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "COMPAT_ONLY_FALLBACK",
+      "assertion": "PASS",
+      "observation": "Registered fallback makes native compatible adapter usable without an openai alias.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "PREFERENCE_OPTIONS",
+      "assertion": "PASS",
+      "observation": "Existing fixture preference and privacy precedence preserved; no live cloud registration.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "IDENTITY_COUNTEREXAMPLE_MOCK",
+      "assertion": "PASS",
+      "observation": "Aliased MockProvider returns hardcoded mock/mock-model while selection names openai/cloud-fixture; universal consistency is false.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "STABLE_MOCK_IDENTITY",
+      "assertion": "PASS",
+      "observation": "Unmodified MockProvider response and selection agree.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "OLLAMA_8_ROUTING_PAYLOADS",
+      "assertion": "PASS",
+      "observation": "Eight branches agree on selected provider, configured model, submitted model and returned adapter metadata under MockTransport.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "OLLAMA_SERVER_MODEL_NOT_ATTESTED",
+      "assertion": "PASS",
+      "observation": "Adapter emits self.model, not upstream model; equal adapter metadata does not attest actual server execution identity.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "OLLAMA_HEALTH_FIXTURE",
+      "assertion": "PASS",
+      "observation": "Exact configured name found in fixture /api/tags; no live Ollama request.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "COMPAT_IDENTITY_AND_PAYLOAD",
+      "assertion": "PASS",
+      "observation": "Configured model/submitted payload/returned adapter metadata agree in fixture; provider inferred from selected object, absent from dict response.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "COMPAT_SERVER_MODEL_NOT_ATTESTED",
+      "assertion": "PASS",
+      "observation": "Adapter also ignores upstream response model; no remote identity attestation.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "COMPAT_HEALTH_FIXTURE",
+      "assertion": "PASS",
+      "observation": "Configured ID present in fixture /models; no actual remote provider verified.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "GATEWAY_NO_IDENTITY_VALIDATOR",
+      "assertion": "PASS",
+      "observation": "Gateway accepts text despite foreign response model; no response identity/schema reconciliation.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "SYNC_ASYNC_COMPAT",
+      "assertion": "PASS",
+      "observation": "Gateway awaits async result; existing synchronous MockProvider also works.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "NO_GENERATION_FAILOVER",
+      "assertion": "PASS",
+      "observation": "Selected provider failure propagates; second provider is never invoked.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "V2_DEGRADED_NOT_FAILOVER",
+      "assertion": "PASS",
+      "observation": "V2 owns failure degradation/fallback text; no alternative model invocation.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "CAPABILITY_METADATA_NOT_SELECTOR",
+      "assertion": "PASS",
+      "observation": "Inherited capability/context metadata and unconditional JSON-schema assumption are declarations; router does not validate/probe these.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    },
+    {
+      "id": "MOCK_PROTOCOL_VARIANCE",
+      "assertion": "PASS",
+      "observation": "Mock generate/health are sync; structured method requires additional response_model argument. Base async/TypedDict API is not uniformly implemented.",
+      "scope": "ISOLATED_FIXTURE",
+      "live_verified": false
+    }
+  ]
+}

@@ -1,0 +1,1229 @@
+{
+  "task_id": "MDE-03-20261007",
+  "implementation_decision": "KEEP",
+  "registry_owner": "ModelRouter._providers keyed by provider.name",
+  "sources": [
+    {
+      "file": "app/models/base.py",
+      "symbols": [
+        {
+          "name": "GenerateRequest",
+          "line": 9,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "GenerateResponse",
+          "line": 19,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "StructuredGenerateRequest",
+          "line": 27,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "StructuredGenerateResponse",
+          "line": 36,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "HealthCheckResponse",
+          "line": 44,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "LLMProvider",
+          "line": 52,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "name",
+          "line": 66,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "model",
+          "line": 70,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "generate",
+          "line": 74,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "generate_structured",
+          "line": 90,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "health_check",
+          "line": 106,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "generate_stream",
+          "line": 115,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "get_model_info",
+          "line": 131,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/models/router.py",
+      "symbols": [
+        {
+          "name": "ModelSelection",
+          "line": 14,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "ModelRouter",
+          "line": 35,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "__init__",
+          "line": 17,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__repr__",
+          "line": 31,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 38,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "register",
+          "line": 41,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "route",
+          "line": 45,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "route_and_generate",
+          "line": 120,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "list_providers",
+          "line": 143,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/models/gateway.py",
+      "symbols": [
+        {
+          "name": "ModelGateway",
+          "line": 15,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "__init__",
+          "line": 16,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "select",
+          "line": 19,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "generate",
+          "line": 22,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "generate_text",
+          "line": 29,
+          "kind": "AsyncFunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/models/ollama.py",
+      "symbols": [
+        {
+          "name": "OllamaProvider",
+          "line": 25,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "__init__",
+          "line": 36,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_options",
+          "line": 62,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_get_client",
+          "line": 77,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "close",
+          "line": 87,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "generate",
+          "line": 93,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "generate_structured",
+          "line": 132,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "health_check",
+          "line": 184,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "list_models",
+          "line": 212,
+          "kind": "AsyncFunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/models/openai_compatible.py",
+      "symbols": [
+        {
+          "name": "OpenAICompatibleProvider",
+          "line": 21,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "__init__",
+          "line": 31,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_get_client",
+          "line": 44,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "close",
+          "line": 58,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "generate",
+          "line": 64,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "generate_structured",
+          "line": 118,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "_supports_json_schema",
+          "line": 204,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "health_check",
+          "line": 209,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "list_models",
+          "line": 237,
+          "kind": "AsyncFunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/models/mock.py",
+      "symbols": [
+        {
+          "name": "MockProvider",
+          "line": 10,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "create_mock_provider",
+          "line": 101,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 18,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "generate",
+          "line": 32,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "generate_structured",
+          "line": 46,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "health_check",
+          "line": 74,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "reset_call_count",
+          "line": 84,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "set_mock_response",
+          "line": 88,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "set_mock_structured",
+          "line": 92,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "get_call_count",
+          "line": 96,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "Wrapped",
+          "line": 61,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "Wrapped",
+          "line": 65,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "__init__",
+          "line": 62,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 66,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/models/schemas.py",
+      "symbols": [
+        {
+          "name": "GenerateRequest",
+          "line": 11,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "GenerateResponse",
+          "line": 25,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "StructuredOutput",
+          "line": 35,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "HealthStatus",
+          "line": 43,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "ProviderConfig",
+          "line": 53,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "create_default_provider_config",
+          "line": 65,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "ModelSelection",
+          "line": 83,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "__init__",
+          "line": 84,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/models/ollama_provider.py",
+      "symbols": [],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/models/mock_provider.py",
+      "symbols": [],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/models/__init__.py",
+      "symbols": [],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/interfaces.py",
+      "symbols": [
+        {
+          "name": "LLMProviderProtocol",
+          "line": 2,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "generate",
+          "line": 3,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/hermes/agent.py",
+      "symbols": [
+        {
+          "name": "HermesAgent",
+          "line": 11,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "__init__",
+          "line": 14,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "run",
+          "line": 32,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/api/routes.py",
+      "symbols": [
+        {
+          "name": "_run_sync_v1",
+          "line": 62,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "ChatRequest",
+          "line": 91,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "_PublicChatModel",
+          "line": 106,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "_PublicChatTrust",
+          "line": 110,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "_PublicChatEvidence",
+          "line": 119,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "_PublicChatGrounding",
+          "line": 126,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "_PublicChatUnderstanding",
+          "line": 132,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "_PublicChatProblem",
+          "line": 136,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "_PublicChatResponse",
+          "line": 140,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "_project_v1_chat_response",
+          "line": 154,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "ProblemAnalyzeRequest",
+          "line": 199,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "WorkflowCreateRequest",
+          "line": 208,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "DocumentIngestRequest",
+          "line": 218,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "KnowledgeSearchRequest",
+          "line": 233,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "HumanHandoffRequest",
+          "line": 248,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "HealthResponse",
+          "line": 256,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "_model_dump",
+          "line": 268,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_extract_understanding_data",
+          "line": 276,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_extract_intent",
+          "line": 288,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_extract_entities",
+          "line": 326,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_extract_document_entities",
+          "line": 405,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_get_problem_value",
+          "line": 440,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_reconcile_problem_with_intent",
+          "line": 460,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_build_evidence_text",
+          "line": 550,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_deterministic_response",
+          "line": 591,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_build_system_prompt",
+          "line": 622,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_build_user_prompt",
+          "line": 662,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_apply_grounding_safety_gate",
+          "line": 722,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "health_check",
+          "line": 793,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "health_detail",
+          "line": 799,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "chat",
+          "line": 846,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "analyze_problem",
+          "line": 1397,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "create_workflow",
+          "line": 1442,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "get_workflow",
+          "line": 1464,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "ingest_document",
+          "line": 1495,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "search_knowledge",
+          "line": 1542,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "list_knowledge_documents",
+          "line": 1584,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "request_handoff",
+          "line": 1601,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "get_metrics",
+          "line": 1649,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "developer_core_status",
+          "line": 1680,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "run",
+          "line": 70,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_evidence_score",
+          "line": 945,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "symbols": [
+        {
+          "name": "review_page",
+          "line": 42,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "ChatV2Request",
+          "line": 63,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "DecisionRequest",
+          "line": 70,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "health",
+          "line": 77,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "chat",
+          "line": 82,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "create_memory_session",
+          "line": 179,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "MemoryDeleteRequest",
+          "line": 187,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "delete_memory_session",
+          "line": 192,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "get_metrics",
+          "line": 200,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "pending",
+          "line": 205,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "decide",
+          "line": 213,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "audit_verify",
+          "line": 224,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "FeedbackRequest",
+          "line": 229,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "submit_feedback",
+          "line": 238,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "experience_analysis",
+          "line": 250,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "DevRequest",
+          "line": 260,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "DiscoveryRequest",
+          "line": 265,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "ProposalRequest",
+          "line": 273,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "propose_improvement",
+          "line": 285,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "discover",
+          "line": 305,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "dev_chat",
+          "line": 323,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "generate",
+          "line": 107,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "retrieve",
+          "line": 118,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "generate",
+          "line": 328,
+          "kind": "AsyncFunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/v2/orchestrator.py",
+      "symbols": [
+        {
+          "name": "V2Result",
+          "line": 28,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "V2Orchestrator",
+          "line": 40,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "__init__",
+          "line": 41,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_stage",
+          "line": 63,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "_emit",
+          "line": 78,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "handle",
+          "line": 83,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "_prompt",
+          "line": 206,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "render",
+          "line": 235,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "trim",
+          "line": 272,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/devcore/core.py",
+      "symbols": [
+        {
+          "name": "build_prompt",
+          "line": 27,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "DevCore",
+          "line": 40,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "__init__",
+          "line": 41,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_backend_call",
+          "line": 52,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_rel",
+          "line": 62,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_sanitize",
+          "line": 69,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_call",
+          "line": 89,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_resolve_reads",
+          "line": 104,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_analyze",
+          "line": 135,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "handle",
+          "line": 158,
+          "kind": "AsyncFunctionDef"
+        },
+        {
+          "name": "handle_sync",
+          "line": 212,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/knowledge/embeddings.py",
+      "symbols": [
+        {
+          "name": "EmbeddingProvider",
+          "line": 9,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "SentenceTransformerEmbedder",
+          "line": 75,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "OpenAIEmbeddingProvider",
+          "line": 127,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "MockEmbeddingProvider",
+          "line": 160,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "EmbeddingService",
+          "line": 189,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "create_embedder",
+          "line": 220,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 15,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_detect_dimension",
+          "line": 19,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "model",
+          "line": 34,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "dimension",
+          "line": 38,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "embed",
+          "line": 41,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "embed_batch",
+          "line": 62,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "embed_documents",
+          "line": 66,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 81,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_load_model",
+          "line": 86,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "embed",
+          "line": 96,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "embed_batch",
+          "line": 105,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_fallback_embedding",
+          "line": 113,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 133,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "embed",
+          "line": 143,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 166,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "embed",
+          "line": 171,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 195,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "embed",
+          "line": 203,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "embed_batch",
+          "line": 207,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "set_provider",
+          "line": 211,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "get_provider",
+          "line": 215,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/knowledge/retriever.py",
+      "symbols": [
+        {
+          "name": "Retriever",
+          "line": 16,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "create_retriever",
+          "line": 165,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 22,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "retrieve",
+          "line": 32,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_default_embedding",
+          "line": 91,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_apply_filter",
+          "line": 104,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "retrieve_by_document",
+          "line": 133,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "retrieve_all",
+          "line": 156,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    },
+    {
+      "file": "app/knowledge/reranker.py",
+      "symbols": [
+        {
+          "name": "Reranker",
+          "line": 9,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "SimpleReranker",
+          "line": 35,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "CrossEncoderReranker",
+          "line": 80,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "LLMReranker",
+          "line": 132,
+          "kind": "ClassDef"
+        },
+        {
+          "name": "create_reranker",
+          "line": 187,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 14,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "rerank",
+          "line": 18,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_compute_score",
+          "line": 30,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 41,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "rerank",
+          "line": 44,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_compute_score",
+          "line": 72,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 87,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_load_model",
+          "line": 95,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "rerank",
+          "line": 105,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "__init__",
+          "line": 138,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "_default_prompt",
+          "line": 147,
+          "kind": "FunctionDef"
+        },
+        {
+          "name": "rerank",
+          "line": 155,
+          "kind": "FunctionDef"
+        }
+      ],
+      "authority": "CURRENT_SOURCE_STATIC",
+      "live_verified": false
+    }
+  ],
+  "test_only_provider_classes": [
+    {
+      "file": "tests/test_fullroot_boundaries.py",
+      "class": "AsyncMock",
+      "line": 26,
+      "scope": "TEST_ONLY"
+    },
+    {
+      "file": "tests/test_fullroot_boundaries.py",
+      "class": "InvalidMock",
+      "line": 48,
+      "scope": "TEST_ONLY"
+    },
+    {
+      "file": "tests/test_session_memory.py",
+      "class": "Provider",
+      "line": 77,
+      "scope": "TEST_ONLY"
+    },
+    {
+      "file": "tests/test_v1_response_projection.py",
+      "class": "Provider",
+      "line": 115,
+      "scope": "TEST_ONLY"
+    },
+    {
+      "file": "tests/v2/test_devcore_routes.py",
+      "class": "FakeProvider",
+      "line": 23,
+      "scope": "TEST_ONLY"
+    }
+  ],
+  "dedicated_TestProvider_class_found": false,
+  "default_API_gateway_activation": false,
+  "actual_live_provider_verification": "NOT_RUN",
+  "prior_verified_source_checkpoint": ".dev/MDE02_CHECKPOINT.json",
+  "limitations": [
+    "AST/symbol navigation is not execution proof",
+    "Compatibility alias modules re-export same classes",
+    "Embedding providers are independent of LLM routing; not activated or modified",
+    "Only scoped fixture identity/health observations executed"
+  ]
+}
