@@ -102,7 +102,8 @@ async def chat(req: ChatV2Request) -> dict[str, Any]:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
     provider = OllamaProvider(
         nusantara_config=_configuration,
-        model=req.model or _configuration.llm.model,
+        model=req.model or None,
+        model_source='REQUEST_OVERRIDE' if req.model else None,
     )
 
     async def generate(prompt: str) -> str:

@@ -4,6 +4,7 @@ Model Router - memilih model berdasarkan task, complexity, privacy, latency, cos
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, Optional, cast
+from dataclasses import dataclass, field
 
 from app.models.base import GenerateRequest, GenerateResponse, LLMProvider
 
@@ -11,25 +12,27 @@ if TYPE_CHECKING:
     from app.models.base import LLMProvider
 
 
+@dataclass(frozen=True)
 class ModelSelection:
     """Hasil pemilihan model."""
 
-    def __init__(
-        self,
-        provider: LLMProvider,
-        model_name: str,
-        reason: str,
-        estimated_latency_ms: int,
-        estimated_cost_per_1k_tokens: float,
-    ):
-        self.provider = provider
-        self.model_name = model_name
-        self.reason = reason
-        self.estimated_latency_ms = estimated_latency_ms
-        self.estimated_cost_per_1k_tokens = estimated_cost_per_1k_tokens
+    provider: LLMProvider
+    model_name: str
+    reason: str
+    estimated_latency_ms: int
+    estimated_cost_per_1k_tokens: float
+    provider_name: str = field(init=False)
+    failover_status: str = field(default='NOT_ATTEMPTED', init=False)
+
+    def __post_init__(self):
+        object.__setattr__(self, 'provider_name', self.provider.name)
+
+    def assert_current_binding(self):
+        if self.provider.name != self.provider_name or self.provider.model != self.model_name:
+            raise RuntimeError('provider/model binding drift')
 
     def __repr__(self) -> str:
-        return f"ModelSelection(provider={self.provider.name!r}, model={self.model_name!r}, reason={self.reason!r})"
+        return f"ModelSelection(provider={self.provider_name!r}, model={self.model_name!r}, reason={self.reason!r})"
 
 
 class ModelRouter:
@@ -59,6 +62,8 @@ class ModelRouter:
         providers = self._providers
         if not providers:
             raise RuntimeError("Tidak ada provider yang terdaftar. Gunakan router.register()")
+        if any(name != provider.name for name, provider in providers.items()):
+            raise RuntimeError('provider registry identity drift')
 
         # Decision tree sederhana
         if privacy == "sensitive" and "ollama" in providers:
@@ -138,6 +143,7 @@ class ModelRouter:
             budget_sensitive=budget_sensitive,
             prefer_local=prefer_local,
         )
+        selection.assert_current_binding()
         return cast(LLMProvider, selection.provider).generate(request)
 
     def list_providers(self) -> Dict[str, str]:

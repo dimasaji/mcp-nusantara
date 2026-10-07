@@ -11,6 +11,7 @@ import httpx
 from app.exceptions import ProviderUnavailableError
 from app.core.config import settings
 from app.core.nusantara_config import ConfigurationError, NusantaraConfig
+from app.core.runtime_identity import capture_model_identity
 
 from app.models.base import (
     GenerateRequest,
@@ -40,10 +41,15 @@ class OllamaProvider(LLMProvider):
         timeout: float | None = None,
         *,
         nusantara_config: NusantaraConfig | None = None,
+        model_source: str | None = None,
     ):
         # Omitted values use the snapshot; explicit values always win, including
         # values equal to the old defaults. No provider registry is duplicated.
         self._configuration = nusantara_config
+        self._requested_model = model
+        self._model_source = (model_source or 'EXPLICIT_CONSTRUCTOR') if model is not None else (
+            'CONFIGURATION' if nusantara_config is not None else 'DEFAULT')
+        self.last_health_identity = None
         if nusantara_config is not None:
             if nusantara_config.llm.provider != self.provider_name:
                 raise ConfigurationError("PROVIDER_MISMATCH")
@@ -57,6 +63,11 @@ class OllamaProvider(LLMProvider):
         self.model_name = model if model is not None else "llama3.2:1b"
         self.timeout = timeout if timeout is not None else 120.0
         self._client: Optional[httpx.AsyncClient] = None
+
+    def _capture_identity(self):
+        return capture_model_identity(provider_id=self.name, selected_model=self.model,
+            configuration=self._configuration, requested_model=self._requested_model,
+            override_source=self._model_source)
 
     def _options(self, request) -> dict:
         generation = self._configuration.llm.generation if self._configuration else None
@@ -94,10 +105,11 @@ class OllamaProvider(LLMProvider):
         request: GenerateRequest,
     ) -> GenerateResponse:
         """Generate teks dari Ollama API."""
+        identity = self._capture_identity()
         client = await self._get_client()
         
         payload: Dict[str, Any] = {
-            "model": self.model,
+            "model": identity.payload_model,
             "prompt": request.get("prompt", ""),
             "stream": False,
             "options": self._options(request),
@@ -117,7 +129,9 @@ class OllamaProvider(LLMProvider):
             
             return GenerateResponse(
                 content=content,
-                model=self.model,
+                model=identity.payload_model,
+                execution_identity=identity.with_response(result.get('model'),
+                    completed=result.get('done') is True).safe_dump(),
                 tokens_used=result.get("eval_count", 0) + result.get("prompt_eval_count", 0),
                 latency_ms=int((time.time() - start_time) * 1000),
             )
@@ -133,6 +147,7 @@ class OllamaProvider(LLMProvider):
         request: StructuredGenerateRequest,
     ) -> StructuredGenerateResponse:
         """Generate dengan output terstruktur (JSON schema)."""
+        identity = self._capture_identity()
         client = await self._get_client()
         
         prompt = request.get("prompt", "")
@@ -145,7 +160,7 @@ class OllamaProvider(LLMProvider):
             prompt = f"{prompt}\n\nOutput harus dalam format JSON berikut:\n{json_schema}\n\nJawab dalam JSON saja."
         
         payload: Dict[str, Any] = {
-            "model": self.model,
+            "model": identity.payload_model,
             "prompt": prompt,
             "system": system,
             "stream": False,
@@ -171,7 +186,9 @@ class OllamaProvider(LLMProvider):
             
             return StructuredGenerateResponse(
                 content=content,
-                model=self.model,
+                model=identity.payload_model,
+                execution_identity=identity.with_response(result.get('model'),
+                    completed=result.get('done') is True).safe_dump(),
                 tokens_used=result.get("eval_count", 0) + result.get("prompt_eval_count", 0),
                 latency_ms=int((time.time() - start_time) * 1000),
             )
@@ -182,6 +199,7 @@ class OllamaProvider(LLMProvider):
 
     async def health_check(self) -> HealthCheckResponse:
         """Cek kesehatan Ollama server."""
+        identity = self._capture_identity()
         client = await self._get_client()
         
         start_time = time.time()
@@ -192,18 +210,23 @@ class OllamaProvider(LLMProvider):
             response.raise_for_status()
             
             models = response.json().get("models", [])
-            available = any(m.get("name") == self.model for m in models)
+            available = any(m.get("name") == identity.payload_model for m in models)
+            self.last_health_identity = {**identity.safe_dump(),
+                'confirmation_source': 'MODEL_INVENTORY_ONLY',
+                'model_available': available, 'actual_model': None,
+                'identity_status': 'NOT_VERIFIED'}
             
             return HealthCheckResponse(
                 status="ok" if available else "degraded",
-                model=self.model,
+                model=identity.payload_model,
                 available=available,
                 latency_ms=int((time.time() - start_time) * 1000),
             )
         except Exception:
+            self.last_health_identity = {**identity.safe_dump(), 'model_available': False}
             return HealthCheckResponse(
                 status="unavailable",
-                model=self.model,
+                model=identity.payload_model,
                 available=False,
                 latency_ms=int((time.time() - start_time) * 1000),
             )

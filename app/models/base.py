@@ -3,7 +3,7 @@ Base LLMProvider abstraction.
 Semua provider harus inherit dari class ini.
 """
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, Dict, List, NotRequired, Optional, TypedDict
 
 
 class GenerateRequest(TypedDict, total=False):
@@ -22,6 +22,7 @@ class GenerateResponse(TypedDict):
     model: str
     tokens_used: int
     latency_ms: int
+    execution_identity: NotRequired[Dict[str, Any]]
 
 
 class StructuredGenerateRequest(TypedDict, total=False):
@@ -39,6 +40,7 @@ class StructuredGenerateResponse(TypedDict):
     model: str
     tokens_used: int
     latency_ms: int
+    execution_identity: NotRequired[Dict[str, Any]]
 
 
 class HealthCheckResponse(TypedDict):

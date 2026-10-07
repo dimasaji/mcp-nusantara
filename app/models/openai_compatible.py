@@ -7,6 +7,7 @@ import time
 from typing import Any, Dict, List, Optional
 
 import httpx
+from app.core.runtime_identity import capture_model_identity
 
 from app.models.base import (
     GenerateRequest,
@@ -32,12 +33,15 @@ class OpenAICompatibleProvider(LLMProvider):
         self,
         base_url: str = "http://localhost:1234/v1",
         api_key: str = "lm-studio",
-        model: str = "gpt-4o-mini",
+        model: str | None = None,
         timeout: float = 120.0,
     ):
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key
-        self.model_name = model
+        self.model_name = model if model is not None else 'gpt-4o-mini'
+        self._requested_model = model
+        self._model_source = 'EXPLICIT_CONSTRUCTOR' if model is not None else 'DEFAULT'
+        self.last_health_identity = None
         self.timeout = timeout
         self._client: Optional[httpx.AsyncClient] = None
 
@@ -66,6 +70,8 @@ class OpenAICompatibleProvider(LLMProvider):
         request: GenerateRequest,
     ) -> GenerateResponse:
         """Generate teks menggunakan OpenAI-compatible API."""
+        identity = capture_model_identity(provider_id=self.name, selected_model=self.model,
+            requested_model=self._requested_model, override_source=self._model_source)
         client = await self._get_client()
         
         messages: List[Dict[str, str]] = []
@@ -76,7 +82,7 @@ class OpenAICompatibleProvider(LLMProvider):
         messages.append({"role": "user", "content": request.get("prompt", "")})
         
         payload: Dict[str, Any] = {
-            "model": self.model,
+            "model": identity.payload_model,
             "messages": messages,
             "stream": False,
         }
@@ -106,7 +112,9 @@ class OpenAICompatibleProvider(LLMProvider):
             
             return GenerateResponse(
                 content=content,
-                model=self.model,
+                model=identity.payload_model,
+                execution_identity=identity.with_response(result.get('model'),
+                    completed=bool(result.get('choices'))).safe_dump(),
                 tokens_used=prompt_tokens + completion_tokens,
                 latency_ms=int((time.time() - start_time) * 1000),
             )
@@ -120,6 +128,8 @@ class OpenAICompatibleProvider(LLMProvider):
         request: StructuredGenerateRequest,
     ) -> StructuredGenerateResponse:
         """Generate dengan output terstruktur menggunakan function calling atau JSON mode."""
+        identity = capture_model_identity(provider_id=self.name, selected_model=self.model,
+            requested_model=self._requested_model, override_source=self._model_source)
         client = await self._get_client()
         
         messages: List[Dict[str, str]] = []
@@ -135,7 +145,7 @@ class OpenAICompatibleProvider(LLMProvider):
             messages.append({"role": "user", "content": prompt})
             
             payload: Dict[str, Any] = {
-                "model": self.model,
+                "model": identity.payload_model,
                 "messages": messages,
                 "stream": False,
                 "response_format": {
@@ -170,7 +180,9 @@ class OpenAICompatibleProvider(LLMProvider):
                 
                 return StructuredGenerateResponse(
                     content=content,
-                    model=self.model,
+                    model=identity.payload_model,
+                    execution_identity=identity.with_response(result.get('model'),
+                        completed=bool(result.get('choices'))).safe_dump(),
                     tokens_used=0,  # JSON schema mode tidak selalu return usage
                     latency_ms=int((time.time() - start_time) * 1000),
                 )
@@ -196,7 +208,8 @@ class OpenAICompatibleProvider(LLMProvider):
             
             return StructuredGenerateResponse(
                 content=content,
-                model=self.model,
+                model=result['model'],
+                execution_identity={**result['execution_identity'], 'format_fallback': 'TEXT_JSON'},
                 tokens_used=result["tokens_used"],
                 latency_ms=result["latency_ms"],
             )
@@ -208,6 +221,8 @@ class OpenAICompatibleProvider(LLMProvider):
 
     async def health_check(self) -> HealthCheckResponse:
         """Cek kesehatan API."""
+        identity = capture_model_identity(provider_id=self.name, selected_model=self.model,
+            requested_model=self._requested_model, override_source=self._model_source)
         client = await self._get_client()
         
         start_time = time.time()
@@ -218,18 +233,23 @@ class OpenAICompatibleProvider(LLMProvider):
             
             models_data = response.json()
             models = models_data.get("data", [])
-            available = any(m.get("id") == self.model for m in models)
+            available = any(m.get("id") == identity.payload_model for m in models)
+            self.last_health_identity = {**identity.safe_dump(),
+                'confirmation_source': 'MODEL_INVENTORY_ONLY',
+                'model_available': available, 'actual_model': None,
+                'identity_status': 'NOT_VERIFIED'}
             
             return HealthCheckResponse(
                 status="ok" if available else "degraded",
-                model=self.model,
+                model=identity.payload_model,
                 available=available,
                 latency_ms=int((time.time() - start_time) * 1000),
             )
         except Exception:
+            self.last_health_identity = {**identity.safe_dump(), 'model_available': False}
             return HealthCheckResponse(
                 status="unavailable",
-                model=self.model,
+                model=identity.payload_model,
                 available=False,
                 latency_ms=int((time.time() - start_time) * 1000),
             )

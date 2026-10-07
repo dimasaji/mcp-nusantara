@@ -816,6 +816,39 @@ async def health_detail():
             "service": settings.app_name,
             "version": settings.app_version,
             "llm": ollama,
+            # Inventory health does not prove that this process executed a model.
+            # Project only safe fields; retain the existing public health fields.
+            "identity": {
+                "service": {"status": "ok"},
+                "provider": {
+                    "name": provider.name,
+                    "status": ollama["status"],
+                    "verification_state": "HEALTH_PROBE_ONLY",
+                },
+                "model": {
+                    "configured": _configuration.llm.model,
+                    "effective": _configuration.llm.model,
+                    "selected": ollama["model"],
+                    "payload": None,
+                    "actual": None,
+                    "source": next(
+                        (record.source for record in _configuration.provenance
+                         if record.field == "llm.model"),
+                        "DEFAULT",
+                    ),
+                    "override_source": "CONFIGURATION",
+                    "verification_state": "NOT_VERIFIED",
+                },
+                "build": {
+                    "id": BUILD_ID,
+                    "verification_state": "SOURCE_SNAPSHOT",
+                },
+                "verification_state": "NOT_VERIFIED",
+                "confirmation_source": (
+                    "NONE" if ollama["status"] == "unavailable"
+                    else "MODEL_INVENTORY_ONLY"
+                ),
+            },
             "components": {
                 "api": "available",
                 "language_engine": "available",
@@ -878,10 +911,8 @@ async def chat(
 
         provider = OllamaProvider(
             nusantara_config=_configuration,
-            model=(
-                request.model
-                or _configuration.llm.model
-            ),
+            model=request.model or None,
+            model_source='REQUEST_OVERRIDE' if request.model else None,
         )
 
         health = await provider.health_check()
