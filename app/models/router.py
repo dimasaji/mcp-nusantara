@@ -64,49 +64,51 @@ class ModelRouter:
         if privacy == "sensitive" and "ollama" in providers:
             provider = providers["ollama"]
             reason = "Privacy sensitif: all data stays local"
-            return ModelSelection(provider, "llama3.2:1b", reason, 1000, 0.0)
+            return ModelSelection(provider, provider.model, reason, 1000, 0.0)
 
         if latency_sensitive and "ollama" in providers:
             provider = providers["ollama"]
             reason = "Latensi rendah: local inference, no network round-trip"
-            return ModelSelection(provider, "llama3.2:1b", reason, 500, 0.0)
+            return ModelSelection(provider, provider.model, reason, 500, 0.0)
 
         if budget_sensitive and "ollama" in providers:
             provider = providers["ollama"]
             reason = "Biaya nol: local inference, no API cost"
-            return ModelSelection(provider, "llama3.2:1b", reason, 800, 0.0)
+            return ModelSelection(provider, provider.model, reason, 800, 0.0)
 
         # Task-based selection
         if task in ("code", "coding", "programming", "debug", "refactor"):
             if prefer_faster and "ollama" in providers:
                 provider = providers["ollama"]
-                model = "llama3.2:1b"
+                model = provider.model
                 reason = "Coding task + prefer faster: local model"
             else:
-                provider = providers.get("openai") or providers.get("ollama")
-                model = "llama3.2:1b" if provider.name == "ollama" else "gpt-4o-mini"
+                provider = (providers.get("openai") or providers.get("ollama")
+                            or next(iter(providers.values())))
+                model = provider.model
                 reason = "Coding task: memilih model dengan coding capability"
             return ModelSelection(provider, model, reason, 1500, 0.0 if provider.name == "ollama" else 0.01)
 
         if task in ("math", "logic", "reasoning", "analysis"):
             if prefer_cheaper and "ollama" in providers:
                 provider = providers["ollama"]
-                model = "llama3.2:1b"
+                model = provider.model
                 reason = "Reasoning task + budget: local model"
             else:
-                provider = providers.get("openai") or providers.get("ollama")
-                model = "gpt-4o" if provider.name == "openai" else "llama3.2:1b"
+                provider = (providers.get("openai") or providers.get("ollama")
+                            or next(iter(providers.values())))
+                model = provider.model
                 reason = "Reasoning task: model dengan reasoning capability"
             return ModelSelection(provider, model, reason, 2000, 0.0 if provider.name == "ollama" else 0.015)
 
         # Default: general tasks
         if prefer_local and "ollama" in providers:
             provider = providers["ollama"]
-            model = "llama3.2:1b"
+            model = provider.model
             reason = "General task + local preference: ollama"
         elif "openai" in providers:
             provider = providers["openai"]
-            model = "gpt-4o-mini"
+            model = provider.model
             reason = "General task: openai (fallback)"
         else:
             provider = next(iter(providers.values()))

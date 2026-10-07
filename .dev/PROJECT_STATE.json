@@ -1,0 +1,62 @@
+{
+  "architecture": "EXISTING_NUSANTARA_V1_PRESERVED",
+  "overall_status": "IN_PROGRESS",
+  "current_task": "FULLROOT checkpoint / independent acceptance gates",
+  "last_completed_task": "FULLROOT-003 optional gateway/executor consolidation",
+  "working_components": [
+    "developer control",
+    "model router",
+    "optional gateway",
+    "governed executor adapter",
+    "existing Hermes boundary",
+    "existing API/configuration tests"
+  ],
+  "broken_components": [],
+  "known_issues": [
+    "Configuration DoD NOT_COMPLETE",
+    "V1 FAIL/HOLD",
+    "Mandatory Windows symlink skip",
+    "Oracle review/missing evidence",
+    "Deployment verification NOT_RUN",
+    "CC02-06 gaps",
+    "Default composition root not active"
+  ],
+  "next_priority": "Implement reviewed opt-in composition root in place; request owner-reviewed oracle evidence and privileged test runner; no production operations authorized",
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "prior_source_build_id": "sha256:487ace8eb2a8ba4d8c979fdc7728cefe7802eb0b3f8f01d3f6462d9c83e9492a",
+  "git": {
+    "status": "AVAILABLE",
+    "branch": "codex/fullroot-control-20261007",
+    "head": "0adccd9d9e847b8329457879ae0aae394ca13ca7",
+    "working_tree": "M .env.example\n M .graphifyignore\n M RELEASE_READINESS_REPORT.md\n M ROLLBACK_PLAN.md\n M app/api/routes.py\n M app/api/v2_routes.py\n M app/approval/queue.py\n M app/core/config.py\n M app/developer_core/engine.py\n M app/evaluation/evaluator.py\n M app/experience/events.py\n M app/hermes/agent.py\n M app/improvement/gate.py\n M app/improvement/release.py\n M app/knowledge/engine.py\n M app/knowledge/indobert_embedding.py\n M app/knowledge/rag.py\n M app/language/semantic/indobert_client.py\n M app/main.py\n M app/models/ollama.py\n M app/models/router.py\n M app/observability/context.py\n M app/research/improvement.py\n M app/research/knowledge_discovery.py\n M app/security/readiness.py\n M app/security/scanner.py\n M app/trust/engine.py\n M app/ui/index.html\n M app/v2/orchestrator.py\n M app/v2/wiring.py\n M docs/v2/ROADMAP_STATUS.md\n M pyproject.toml\n M run_tests.py\n M scripts/release_check.py\n M scripts/run_eval.py\n?? '\n?? .dev/\n?? _phase4_trust_baseline.py\n?? app/core/runtime_identity.py\n?? app/evaluation/datasets/v1_id.json\n?? app/evaluation/datasets/v1_recovery_oracle.json\n?? app/execution/\n?? app/mcp/stdio_server.py\n?? app/memory/session_adapter.py\n?? app/models/gateway.py\n?? app/research/source_fetcher.py\n?? app/ui/review.html\n?? app/v2/hermes_adapter.py\n?? developer.py\n?? docs/ARCHITECTURE_CURRENT.md\n?? docs/ARCHITECTURE_GAP.md\n?? docs/ARCHITECTURE_TARGET_V1.md\n?? docs/NUSANTARA_REPO_MAP.md\n?? docs/audit/NUSANTARA-V1-CONTRACT-COMPLIANCE-ADDENDUM-2026-10-06.md\n?? docs/commands/\n?? docs/contracts/NUSANTARA-AGENT-ORCHESTRATION-CONTRACT-V1.md\n?? docs/contracts/NUSANTARA-INTELLIGENCE-MODEL-CONTRACT-V1.md\n?? docs/contracts/NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md\n?? docs/contracts/NUSANTARA-RUNTIME-EXECUTION-CONTRACT-V1.md\n?? docs/contracts/NUSANTARA-TOOL-MCP-API-CONTRACT-V1.md\n?? docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md\n?? reports/\n?? scripts/classify_configuration_phase2.py\n?? scripts/implement_v2_hermes_runtime.py\n?? scripts/implement_v2_hermes_runtime_safe.py\n?? scripts/load_test.py\n?? scripts/nusantara_master_phase_runner.ps1\n?? scripts/staging_drill.py\n?? scripts/verify_v1_recovery_rag.py\n?? scripts/verify_v1_recovery_runtime.py\n?? scripts/wire_v2_chat_hermes.py\n?? tests/evaluation/test_live_harness.py\n?? tests/test_approval_persistence.py\n?? tests/test_backup_restore.py\n?? tests/test_configuration_contract.py\n?? tests/test_configuration_integration.py\n?? tests/test_developer_control.py\n?? tests/test_developer_core_engine_contract.py\n?? tests/test_fullroot_boundaries.py\n?? tests/test_indobert_timeout.py\n?? tests/test_mcp_stdio.py\n?? tests/test_model_router_configuration.py\n?? tests/test_phase3_v1_metrics_integration.py\n?? tests/test_phase4_trust_contract.py\n?? tests/test_phase4_v1_chat_runtime.py\n?? tests/test_phase4_v1_trust_integration.py\n?? tests/test_provider_failure.py\n?? tests/test_research_persistence.py\n?? tests/test_review_branch.py\n?? tests/test_runtime_identity.py\n?? tests/test_session_memory.py\n?? tests/test_source_fetcher.py\n?? tests/test_trace_retention.py\n?? tests/test_v1_response_projection.py\n?? tests/test_v1_stage_budget.py\n?? tests/v2/test_context_budget.py",
+    "recent_commits": "0adccd9 Add graphify .agents skill references and version pin\ne5864ac Add V2 capability audit artifacts and graphify .agents skill manifest\n01134ca Add .codex hook config wiring graphify hook-guard into PreToolUse\n37661cd Add phase-0..21 audit evidence (V100..V220 + master engine v2/00)"
+  },
+  "baseline_test_passed": 145,
+  "targeted_router_passed": 32,
+  "targeted_boundaries_passed": 87,
+  "dependencies_added": [],
+  "source_files_changed": [
+    "developer.py",
+    "app/models/router.py",
+    "app/models/gateway.py",
+    "app/execution/__init__.py",
+    "app/execution/base.py",
+    "app/execution/native.py",
+    "tests/test_developer_control.py",
+    "tests/test_model_router_configuration.py",
+    "tests/test_fullroot_boundaries.py"
+  ],
+  "runtime_activation": false,
+  "production_operations": false,
+  "regression": {
+    "passed": 380,
+    "subtests_passed": 28,
+    "skipped": 1,
+    "failures": 0,
+    "errors": 0,
+    "junit": "reports/FULLROOT_REGRESSION_FINAL_20261007.xml"
+  },
+  "static_security_findings": 0,
+  "overall_v1_acceptance": "FAIL/HOLD",
+  "configuration_dod": "NOT_COMPLETE"
+}
