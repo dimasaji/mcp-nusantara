@@ -65,3 +65,5 @@ Configuration DoD NOT_COMPLETE, DeveloperCore PASS_SCOPED, V1 FAIL/HOLD. Officia
 Continue from `.dev/FULLROOT_CHECKPOINT.json`: implement the reviewed opt-in composition-root design incrementally; preserve existing API behavior; close RAG/runtime semantics with actual tests. Owner-controlled oracle evidence and an eligible privileged Windows test runner are needed for external acceptance gates. Production verification requires a concrete target and explicit authorization under FULL-ROOT section 27; routine local development remains independently actionable.
 
 This is a verified local checkpoint, not a claim that every FULL-ROOT execution-order item or all V1 acceptance criteria are done.
+
+Source implementation commit: `089e6e12a16ec0c703c391b67d14a98eaf92a222`. Metadata checkpoint may be committed separately; no push.

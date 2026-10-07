@@ -1,0 +1,83 @@
+{
+  "task_id": "FULLROOT-20261007",
+  "status": "LOCAL_MILESTONE_PASS_SCOPED_ROADMAP_IN_PROGRESS",
+  "completed_at": "2026-10-07T03:08:07.032516+00:00",
+  "command": "docs/commands/MASTER DEVELOPER FULL-ROOT EXECUTION CONTRACT.md",
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "git_branch": "codex/fullroot-control-20261007",
+  "git_source_commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
+  "source_sha256": {
+    "developer.py": "1b151904b162f90bc5d8c6a90cbe0cc09bc3ddd612913b7de4514e5834a7f2d5",
+    "app/models/router.py": "dd7e3a9da2aac5b9edc742f1bb6670ded6ed96f212079f720d2918fe9f9fbfff",
+    "app/models/gateway.py": "a79fbaa0f3b9a1e3f386e33646e8cbda934168146f5213b4aab860092c3991e3",
+    "app/execution/__init__.py": "3226588911e495033ed876f111caf150601fdc55c859afad5649948790e457c5",
+    "app/execution/base.py": "d0fe257b13181326e7669b7a591c6ccb66ea8f311fcdea8d1e5ecde47d3ae994",
+    "app/execution/native.py": "f241ccedbff9de32b40d9a07e5fd617f74b27db2b398a8021db06069d47a45e3",
+    "tests/test_developer_control.py": "b35a29343b29b7a05cb52a1373101bfb956f05e0cb6e67992b552b624fa23c72",
+    "tests/test_model_router_configuration.py": "b0ce4e26bec018425b8965fefb616c2bb5f001cc7b7990d9c94064c744397f61",
+    "tests/test_fullroot_boundaries.py": "2704892ee5df98eb88942db9f8ab4e88c744661b50accedff92852e6be54a246"
+  },
+  "evidence_sha256": {
+    "reports/FULLROOT_BASELINE_20261007.xml": "a09725d07b4275d78fa6cf9c85e544e7b6645a81f6283c8022eabc495139176b",
+    "reports/FULLROOT_CONTROL_20261007.xml": "cc8d34aced5f53948bf904210b13523da147801d6a920ae965636fdec531553f",
+    "reports/FULLROOT_ROUTER_20261007.xml": "87780c92ac3c94a2cbf5cb970c6168be5f01a580f9558b8d133cb3ef66152e97",
+    "reports/FULLROOT_BOUNDARIES_20261007.xml": "bc66dbbb85b435e0cf8eff381b6abe6c2aa01f99cc52829a8c3f387f515e0c72",
+    "reports/FULLROOT_REGRESSION_FINAL_20261007.xml": "8da88761f2b61f471b92ed144d84804a522d2fb772098fa2346aca3ffeac1491",
+    "reports/FULLROOT_EXECUTOR_FAILURE_20261007.json": "338ca9da00e1996fd098ce6e09039336c20573103b0295ca7e773ddd70c5a349",
+    "reports/FULLROOT_DEVELOPMENT_REPORT_20261007.md": "4ba4c1a01afc9d6f79fababccfb046e7c9bc533961941fbf460afd09021e8b25",
+    ".dev/security-check.json": "0aac16e51efeb5f3be43e8da172ffc63cc9817b975fa2a38adc340fc50bfa42c",
+    ".dev/PROJECT_STATE.json": "8061404123ceda3d8f098d50892de975ce1ba7ac5b72a8b111076e1b35ec28c3",
+    ".dev/TASKS.json": "63f9fad589f5a45b27893b6582e832297ba2f8887a8a3873e9cf4a2698d55772",
+    "docs/COMPOSITION_ROOT_DESIGN.md": "bda35f552e38880b500b192f47092b8ebdf85c141dc60e5f6585d8d7a2557b49"
+  },
+  "baseline_passed": 145,
+  "targeted_control_passed": 8,
+  "targeted_router_passed": 32,
+  "targeted_boundaries_passed": 87,
+  "regression": {
+    "passed": 380,
+    "subtests_passed": 28,
+    "skipped": 1,
+    "failures": 0,
+    "errors": 0,
+    "junit": "reports/FULLROOT_REGRESSION_FINAL_20261007.xml"
+  },
+  "supplemental_executor_failure": "PASS_SCOPED",
+  "developer_commands_executed": [
+    "inspect",
+    "inventory",
+    "status",
+    "health",
+    "test --suite full",
+    "architecture-check",
+    "cleanup --dry-run",
+    "validate",
+    "report"
+  ],
+  "protected_baseline_files_checked": 296,
+  "allowed_baseline_changed": [
+    "app/models/router.py"
+  ],
+  "other_protected_drift": 0,
+  "old_work_preserved": true,
+  "dependencies_added": [],
+  "deleted_or_moved": [],
+  "production_operations": false,
+  "current_architecture": "Existing V1 + compatible opt-in adapters; no new Core Agent/rebuild",
+  "configuration_dod": "NOT_COMPLETE",
+  "overall_v1_acceptance": "FAIL/HOLD",
+  "developer_core": "PASS_SCOPED",
+  "graph": {
+    "method": "AST only --no-cluster",
+    "nodes": 6330,
+    "edges": 10654,
+    "external_llm_calls": 0,
+    "limits": "Existing temp-report permission warnings; cluster/wiki/report metadata not regenerated"
+  },
+  "remaining_tasks": {
+    "FULLROOT-005": "QUEUED",
+    "FULLROOT-006": "BLOCKED",
+    "FULLROOT-007": "BLOCKED"
+  },
+  "resume_instruction": "Verify source/evidence hashes, read docs/COMPOSITION_ROOT_DESIGN.md and TASKS, then continue reviewed opt-in composition root. Do not repeat passed checks without changed code/failure. Owner evidence/eligible runner and explicit production target authorization are needed for acceptance gates."
+}

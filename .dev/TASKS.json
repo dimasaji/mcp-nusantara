@@ -14,7 +14,8 @@
         "docs/NUSANTARA_REPO_MAP.md",
         "docs/ARCHITECTURE_CURRENT.md",
         "docs/ARCHITECTURE_TARGET_V1.md",
-        "docs/ARCHITECTURE_GAP.md"
+        "docs/ARCHITECTURE_GAP.md",
+        "tests/test_developer_control.py"
       ],
       "tests": [
         "8 control tests",
@@ -23,7 +24,7 @@
         "380 pass + 28 passing subtests + 1 mandatory skip; full regression"
       ],
       "result": "Control and maps implemented; local verification complete",
-      "commit": null,
+      "commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
       "known_issue": "Static inventory/health are scoped, not production verification"
     },
     {
@@ -41,7 +42,7 @@
         "32 targeted router/compatibility tests"
       ],
       "result": "Actual provider.model reported; registered fallback works for coding/reasoning",
-      "commit": null,
+      "commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
       "known_issue": null
     },
     {
@@ -64,7 +65,7 @@
         "380 pass + 28 passing subtests + 1 mandatory skip; full regression"
       ],
       "result": "Sync/async gateway, V2 callback integration, governed tool delegation, optional Hermes protocol pass; final regression PASS_SCOPED",
-      "commit": null,
+      "commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
       "known_issue": "No default API activation or live adapter health claim"
     },
     {
@@ -79,7 +80,7 @@
         "developer.py cleanup --dry-run"
       ],
       "result": "UNKNOWN and duplicate candidates retained; no deletes/moves",
-      "commit": null,
+      "commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
       "known_issue": "Physical cleanup requires reference and recoverability proof"
     },
     {
