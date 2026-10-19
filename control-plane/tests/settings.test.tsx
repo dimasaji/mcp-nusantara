@@ -38,17 +38,47 @@ it('shows the HTTP result and loading state for a manual health check',async()=>
  mount();
  expect(await screen.findByText('GET /health - HTTP 200')).toBeInTheDocument();
  fireEvent.click(screen.getByRole('button',{name:'Periksa health'}));
- await waitFor(()=>expect(screen.getByRole('button',{name:'Memeriksa health...'})).toBeDisabled());
+ await waitFor(()=>expect(screen.getByRole('button',{name:'Memeriksa…'})).toBeDisabled());
  finishRefresh(success);
  expect(await screen.findByRole('button',{name:'Periksa health'})).toBeEnabled();
+});
+it('announces a refresh in progress in the health panel',async()=>{
+ const success={status:'ok',service:'nusantara-core',version:'0.1.0',httpStatus:200} as Awaited<ReturnType<typeof api.fetchRuntimeHealth>>;
+ let finishRefresh:(value:typeof success)=>void=()=>{};
+ const refresh=new Promise<typeof success>(resolve=>{finishRefresh=resolve;});
+ vi.mocked(api.fetchRuntimeHealth).mockResolvedValueOnce(success).mockReturnValueOnce(refresh);
+ mount();
+ expect(await screen.findByText('GET /health - HTTP 200')).toBeInTheDocument();
+ fireEvent.click(screen.getByRole('button',{name:'Periksa health'}));
+ try{
+  expect(await screen.findByRole('status')).toHaveTextContent('Memeriksa GET /health pada Backend…');
+  expect(screen.getByRole('button',{name:'Memeriksa…'})).toBeDisabled();
+ }
+ finally{finishRefresh(success);}
+});
+it('updates the last-check time when the same healthy response is returned again',async()=>{
+ const success={status:'ok',service:'nusantara-core',version:'0.1.0',httpStatus:200} as Awaited<ReturnType<typeof api.fetchRuntimeHealth>>;
+ vi.mocked(api.fetchRuntimeHealth).mockResolvedValue(success);
+ mount();
+ expect(await screen.findByText('GET /health - HTTP 200')).toBeInTheDocument();
+ const firstCheckedAt=await screen.findByText(/Pemeriksaan terakhir:/);
+ const firstValue=firstCheckedAt.textContent;
+ await new Promise(resolve=>setTimeout(resolve,5));
+ fireEvent.click(screen.getByRole('button',{name:'Periksa health'}));
+ await waitFor(()=>expect(screen.getByText(/Pemeriksaan terakhir:/).textContent).not.toBe(firstValue));
+ expect(api.fetchRuntimeHealth).toHaveBeenCalledTimes(2);
+ expect(screen.getByText('GET /health - HTTP 200')).toBeInTheDocument();
 });
 it('replaces stale health success with a clear HTTP error after refresh fails',async()=>{
  const success={status:'ok',service:'nusantara-core',version:'0.1.0',httpStatus:200} as Awaited<ReturnType<typeof api.fetchRuntimeHealth>>;
  vi.mocked(api.fetchRuntimeHealth).mockResolvedValueOnce(success).mockRejectedValueOnce(new Error('GET /health gagal (HTTP 503).'));
  mount();
  expect(await screen.findByText('GET /health - HTTP 200')).toBeInTheDocument();
+ const firstCheckedAt=screen.getByText(/Pemeriksaan terakhir:/).textContent;
+ await new Promise(resolve=>setTimeout(resolve,5));
  fireEvent.click(screen.getByRole('button',{name:'Periksa health'}));
  expect(await screen.findByRole('alert')).toHaveTextContent('GET /health gagal (HTTP 503).');
+ await waitFor(()=>expect(screen.getByText(/Pemeriksaan terakhir:/).textContent).not.toBe(firstCheckedAt));
  expect(screen.queryByText('GET /health - HTTP 200')).toBeNull();
  expect(screen.queryByText(/nusantara-core: ok/)).toBeNull();
 });
