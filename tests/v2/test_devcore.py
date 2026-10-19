@@ -197,3 +197,116 @@ class TestDevCore(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+def test_backend_provenance_accepts_valid_and_rejects_forged_results(tmp_path):
+    from app.devcore import DevCore
+    (tmp_path / 'app').mkdir()
+    (tmp_path / 'app/example.py').write_bytes(b'x = 1\n')
+    (tmp_path / 'app/other.py').write_bytes(b'x = 2\n')
+
+    class Backend:
+        result = {}
+        calls = 0
+        def execute(self, name, args):
+            self.calls += 1
+            return dict(self.result)
+
+    backend = Backend()
+    core = DevCore(str(tmp_path), backend=backend)
+    backend.result = dict(success=True, tool='read_file', path=str(tmp_path / 'app/example.py'), content='x = 1\n')
+    valid = core.handle_sync('Analisis app/example.py')
+    assert valid['tool']['result']['success']
+    assert valid['tool']['result']['path'] == 'app/example.py'
+    for path, content in ((str(tmp_path.parent / 'outside.py'), 'foreign = 42\n'),
+                          ('app/other.py', 'x = 2\n'), ('app/example.py', 'foreign = 42\n'),
+                          ('app/example.py', 'x = 1\nforeign = 42\n')):
+        backend.result = dict(success=True, tool='read_file', path=path, content=content)
+        result = core.handle_sync('Analisis app/example.py')
+        assert not result['tool']['result']['success']
+        assert 'foreign = 42' not in result['answer']
+        assert result['verification']['status'] == 'not_applicable'
+    before = backend.calls
+    assert not core._backend_call('read_file', {'path': str(tmp_path.parent / 'outside.py')})['success']
+    assert backend.calls == before
+    backend.result = dict(success=True, tool='find_file', matches=[str(tmp_path.parent / 'outside.py')])
+    assert not core._backend_call('find_file', {'name': '*.py'})['success']
+    backend.result = dict(success=True, tool='find_file', matches=[str(tmp_path / 'app/example.py')])
+    assert core._backend_call('find_file', {'name': '*.py'})['matches'] == ['app/example.py']
+    backend.result = dict(success=True, tool='list_directory', path=str(tmp_path.parent), entries=[])
+    assert not core._backend_call('list_directory', {'path': '.'})['success']
+    backend.result = dict(success=True, tool='list_directory', entries=[{'name': '../outside.py', 'type': 'file'}])
+    assert not core._backend_call('list_directory', {'path': '.'})['success']
+    backend.result = dict(success=True, tool='list_directory', entries=[{'name': 'app', 'type': 'dir'}])
+    assert core._backend_call('list_directory', {'path': '.'})['entries'] == [{'name': 'app', 'type': 'dir'}]
+    backend.result = dict(success=False, tool='read_file', path=str(tmp_path.parent / 'outside.py'),
+                          content='foreign = 42\n', error='backend failed')
+    failed = core._backend_call('read_file', {'path': 'app/example.py'})
+    assert not failed['success'] and 'content' not in failed and failed['path'] == 'app/example.py'
+
+
+def test_valid_backend_truncated_content_remains_incomplete(tmp_path):
+    from app.devcore import DevCore
+    (tmp_path / 'app').mkdir()
+    (tmp_path / 'app/example.py').write_bytes(b'x = 1\nprint("later")\n')
+    class Backend:
+        def execute(self, name, args):
+            return dict(success=True, tool=name, path='app/example.py', content='x = 1\nprint("later")\n')
+    calls = []
+    core = DevCore(str(tmp_path), backend=Backend(), generate=lambda _: calls.append(True) or 'No print.')
+    core.ws.max_read_bytes = 6
+    result = core.handle_sync('Analisis app/example.py')
+    assert result['tool']['result']['success'] and result['tool']['result']['content'] == 'x = 1\n'
+    assert result['verification']['status'] == 'incomplete_source' and not calls
+
+
+def test_sensitive_directory_search_and_listing_are_consistent(tmp_path):
+    from app.devcore.tools import find_file, read_file, list_directory
+    from app.devcore.workspace import Workspace
+    for directory in ('secrets', 'credentials_backup', '.env.private', 'normal'):
+        (tmp_path / directory).mkdir()
+        (tmp_path / directory / 'visible.py').write_text('# fixture\n')
+    ws = Workspace(str(tmp_path))
+    assert find_file(ws, {'name': 'visible.py'})['matches'] == ['normal/visible.py']
+    assert [e['name'] for e in list_directory(ws, {'path': '.'})['entries']] == ['normal']
+    assert not read_file(ws, {'path': 'secrets/visible.py'})['success']
+    assert read_file(ws, {'path': 'normal/visible.py'})['success']
+
+
+def test_traversal_error_is_explicit_and_partial_matches_not_read(tmp_path, monkeypatch):
+    import os
+    from pathlib import Path
+    from app.devcore import DevCore
+    from app.devcore.tools import find_file
+    from app.devcore.workspace import Workspace
+    (tmp_path / 'restricted').mkdir()
+    (tmp_path / 'restricted/hidden.py').write_text('x = 1\n')
+    (tmp_path / 'hidden.py').write_text('x = 2\n')
+    original = os.scandir
+    def denied(path):
+        if Path(path).resolve() == (tmp_path / 'restricted').resolve():
+            raise PermissionError('fixture denial')
+        return original(path)
+    monkeypatch.setattr(os, 'scandir', denied)
+    result = find_file(Workspace(str(tmp_path)), {'name': 'hidden.py'})
+    assert not result['success'] and result['incomplete'] and result['truncated']
+    assert 'PermissionError' in result['error'] and result['matches'] == ['hidden.py']
+    answer = DevCore(str(tmp_path)).handle_sync('Baca hidden.py')
+    assert not any(c['name'] == 'read_file' for c in answer['tool']['calls'])
+    assert 'Pencarian tidak lengkap/gagal' in answer['answer']
+    monkeypatch.setattr(os, 'scandir', original)
+    assert find_file(Workspace(str(tmp_path)), {'name': 'hidden.py'})['success']
+    empty = find_file(Workspace(str(tmp_path)), {'name': 'absent.py'})
+    assert empty['success'] and empty['matches'] == [] and empty['error'] is None
+
+
+def test_directory_permission_error_is_structured(tmp_path, monkeypatch):
+    from pathlib import Path
+    from app.devcore.tools import list_directory
+    from app.devcore.workspace import Workspace
+    original = Path.iterdir
+    def denied(path):
+        if path == tmp_path:
+            raise PermissionError('fixture denial')
+        return original(path)
+    monkeypatch.setattr(Path, 'iterdir', denied)
+    result = list_directory(Workspace(str(tmp_path)), {'path': '.'})
+    assert not result['success'] and result['incomplete'] and 'PermissionError' in result['error']

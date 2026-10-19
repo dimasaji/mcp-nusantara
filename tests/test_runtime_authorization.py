@@ -1,0 +1,425 @@
+"""Native IPC proofs + existing provider/queue/audit, isolated mock-only bridge."""
+import asyncio
+import ctypes
+from dataclasses import asdict, FrozenInstanceError, replace
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import threading
+from uuid import uuid4
+
+import httpx
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+import pytest
+
+from app.approval.runtime_authorization import RuntimeAuthorization, AuthorizationError, SCOPE, install_authorization_foundation
+from app.api.runtime_verification import install_runtime_verification, VERIFICATION_PATH
+from app.core.runtime_attestation import install_runtime_attestation
+from app.core.nusantara_config import load_nusantara_config
+from app.core.runtime_correlation import ResponseObservationMiddleware
+from app.security.local_operator import Windows, OperatorPolicy, LocalOperatorChannel, operator_exchange, VerifiedPeer, ActorError
+
+
+def native_proof():
+    api = Windows()
+    own = api.current_actor()
+    policy = OperatorPolicy(own.sid, own.logon_id, own.session)
+    name = r'\\.\pipe\nusantara-r2-a9-' + uuid4().hex
+    captured, errors = [], []
+    with LocalOperatorChannel(name, policy) as channel:
+        def client():
+            try:
+                operator_exchange(name, os.getpid(), own.process_start, {'probe': 'foundation'})
+            except Exception as error:
+                errors.append(error)
+        thread = threading.Thread(target=client, daemon=True)
+        thread.start()
+        channel.serve_authenticated_once(lambda proof, body: captured.append(proof) or {'observed': True})
+        thread.join(timeout=5)
+        assert not thread.is_alive() and not errors and len(captured) == 1
+    return captured[0]
+
+
+def fixture(tmp_path, *, response=None, live_locked=False):
+    calls = []
+    async def respond(request):
+        calls.append(request)
+        if response:
+            value = response(request)
+            return await value if hasattr(value, '__await__') else value
+        return httpx.Response(200, json={'model': 'fixture-model', 'done': True, 'response': 'PRIVATE_FIXTURE_CONTENT'})
+    config = load_nusantara_config(project_root=tmp_path, overrides={
+        'runtime': {'profile': 'ATTESTATION'}, 'llm': {'model': 'fixture-model'}})
+    app = FastAPI()
+    app.state.runtime_profile = 'ATTESTATION'
+    controller = install_runtime_verification(app, config)
+    own = Windows().current_actor()
+    owner = install_authorization_foundation(app, controller,
+        policy=OperatorPolicy(own.sid, own.logon_id, own.session),
+        isolated_transport=None if live_locked else httpx.MockTransport(respond))
+    install_runtime_attestation(app, entrypoint='isolated:foundation')
+    return app, owner, controller, calls
+
+
+def command(review, operation, reason='REVIEWED', **changes):
+    return {'operation': operation, 'review_id': review['review_id'], 'scope': SCOPE,
+            'evidence_version': review['evidence_version'], 'reason': reason, **changes}
+
+
+async def act(owner, review, operation, **changes):
+    return await owner.handle_verified(native_proof(), command(review, operation, **changes))
+
+
+@pytest.mark.asyncio
+async def test_native_decision_arm_execute_receipt_private_and_one_use(tmp_path):
+    app, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    assert review['state'] == 'PENDING' and controller.authorization.state == 'DISARMED'
+    binding = owner._reviews[review['review_id']].binding
+    with pytest.raises(FrozenInstanceError):
+        binding.pid = 0
+    detached = owner.evidence()
+    detached['binding']['pid'] = 0
+    assert owner.evidence()['binding']['pid'] == os.getpid()
+    assert (await act(owner, review, 'APPROVE'))['state'] == 'APPROVED'
+    assert controller.authorization.state == 'DISARMED'
+    armed = await act(owner, review, 'ARM')
+    internal_permit = owner._permit
+    assert armed['scope'] == 'ISOLATED_MOCK_ONLY' and internal_permit
+    result = await act(owner, review, 'EXECUTE')
+    assert len(calls) == 1 and result['state'] == 'COMPLETED'
+    assert result['receipt']['actual_model'] == 'fixture-model'
+    assert result['receipt']['pid'] == binding.pid
+    assert result['receipt']['runtime_instance_id'] == binding.runtime_instance
+    assert result['receipt']['application_response_sent'] is False
+    assert result['receipt']['external_client_observed'] is False
+    encoded = json.dumps([review, armed, result, owner.evidence(), owner._audit.entries()])
+    assert internal_permit not in encoded and 'PRIVATE_FIXTURE_CONTENT' not in encoded
+    assert json.loads(calls[0].content)['prompt'] not in encoded
+    assert owner._permit is None and owner._audit.path is None
+    assert controller.authorization.dispatch_count == 1
+    with pytest.raises(AuthorizationError):
+        await act(owner, review, 'EXECUTE')
+    assert len(calls) == 1
+
+
+@pytest.mark.asyncio
+async def test_proof_cannot_be_client_actor_or_replayed(tmp_path):
+    _, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    with pytest.raises(ActorError):
+        VerifiedPeer(Windows().current_actor(), object())
+    with pytest.raises(AuthorizationError):
+        await owner.handle_verified(Windows().current_actor(), command(review, 'APPROVE'))
+    proof = native_proof()
+    await owner.handle_verified(proof, command(review, 'APPROVE'))
+    with pytest.raises(AuthorizationError):
+        await owner.handle_verified(proof, command(review, 'ARM'))
+    assert not calls and controller.authorization.state == 'DISARMED'
+
+
+@pytest.mark.asyncio
+async def test_live_owner_cannot_issue_permit_even_with_os_proof(tmp_path):
+    _, owner, controller, calls = fixture(tmp_path, live_locked=True)
+    review = owner.intention()
+    await act(owner, review, 'APPROVE')
+    with pytest.raises(AuthorizationError):
+        await act(owner, review, 'ARM')
+    assert not calls and owner._permit is None and controller.authorization.dispatch_count == 0
+    assert owner.evidence()['live_actions'] == 'LOCKED'
+
+
+@pytest.mark.parametrize('operation', ['REJECT', 'HOLD', 'ABORT'])
+@pytest.mark.asyncio
+async def test_negative_decisions_never_arm(tmp_path, operation):
+    _, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    result = await act(owner, review, operation)
+    assert result['state'] in {'REJECTED', 'HOLD', 'ABORTED'}
+    with pytest.raises(AuthorizationError):
+        await act(owner, review, 'ARM')
+    assert not calls and owner._permit is None
+
+
+@pytest.mark.parametrize('phase', ['APPROVED', 'ARMED'])
+@pytest.mark.asyncio
+async def test_abort_revokes_before_dispatch(tmp_path, phase):
+    _, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    await act(owner, review, 'APPROVE')
+    if phase == 'ARMED':
+        await act(owner, review, 'ARM')
+    assert (await act(owner, review, 'ABORT'))['state'] == 'ABORTED'
+    assert controller.authorization.state == 'TERMINAL' and owner._permit is None
+    with pytest.raises(AuthorizationError):
+        await act(owner, review, 'EXECUTE')
+    assert not calls
+
+
+@pytest.mark.parametrize('field', ['pid', 'process_start', 'runtime_instance', 'source_snapshot', 'scoped_loaded_code', 'configuration_digest'])
+@pytest.mark.asyncio
+async def test_stale_process_runtime_or_material_rejected(tmp_path, monkeypatch, field):
+    _, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    original = owner._material
+    def changed():
+        data = original()
+        data[field] = 999 if field in {'pid', 'process_start'} else 'CHANGED'
+        return data
+    monkeypatch.setattr(owner, '_material', changed)
+    with pytest.raises(AuthorizationError):
+        await act(owner, review, 'APPROVE')
+    assert controller.authorization.state == 'TERMINAL' and not calls
+
+
+@pytest.mark.asyncio
+async def test_real_scoped_code_drift_rejected(tmp_path, monkeypatch):
+    _, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    monkeypatch.setattr(RuntimeAuthorization, '_actor_reference', staticmethod(lambda actor: 'changed'))
+    with pytest.raises(AuthorizationError):
+        await act(owner, review, 'APPROVE')
+    assert not calls
+
+
+@pytest.mark.asyncio
+async def test_expiry_actor_session_and_peer_freshness(tmp_path):
+    _, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    stored = owner._reviews[review['review_id']]
+    owner._reviews[review['review_id']] = replace(stored, deadline=0)
+    with pytest.raises(AuthorizationError):
+        await act(owner, review, 'APPROVE')
+    assert not calls
+    _, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    owner._policy = replace(owner._policy, session=999)
+    with pytest.raises(AuthorizationError):
+        await act(owner, review, 'APPROVE')
+    owner._policy = replace(owner._policy, session=Windows().current_actor().session)
+    proof = native_proof()
+    with pytest.raises(ActorError, match='IMMUTABLE_NATIVE_IPC_PROOF'):
+        proof._deadline = 0
+    object.__setattr__(proof, '_deadline', 0)  # Test-only injection to exercise stale-proof rejection.
+    with pytest.raises(ActorError):
+        await owner.handle_verified(proof, command(review, 'APPROVE'))
+    assert not calls
+
+
+@pytest.mark.parametrize('change', [{'scope': 'WRONG'}, {'evidence_version': 'FORGED'},
+    {'reviewer': 'CLIENT'}, {'provider': 'alternate'}, {'reason': 'PRIVATE_PROMPT_SECRET'}, {'operation': 'VERIFIED'}])
+@pytest.mark.asyncio
+async def test_forged_scope_evidence_status_sensitive_reason_rejected(tmp_path, change):
+    _, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    with pytest.raises(AuthorizationError):
+        await owner.handle_verified(native_proof(), {**command(review, 'APPROVE'), **change})
+    assert not calls and 'PRIVATE_PROMPT_SECRET' not in json.dumps(owner._audit.entries())
+
+
+@pytest.mark.parametrize('failure', ['submit', 'decide', 'consume', 'post_grant_audit', 'tampered_queue', 'tampered_audit'])
+@pytest.mark.asyncio
+async def test_queue_audit_failures_poison_and_revoke(tmp_path, monkeypatch, failure):
+    _, owner, controller, calls = fixture(tmp_path)
+    def fail(*args, **kwargs):
+        raise OSError('PRIVATE_EXCEPTION_SECRET')
+    if failure == 'submit':
+        monkeypatch.setattr(owner._queue, 'submit', fail)
+        with pytest.raises(AuthorizationError):
+            owner.intention()
+    else:
+        review = owner.intention()
+        if failure == 'decide':
+            monkeypatch.setattr(owner._queue, 'decide', fail)
+        elif failure == 'tampered_queue':
+            owner._queue.get(owner._reviews[review['review_id']].approval_id).payload_hash = 'FORGED'
+        elif failure == 'tampered_audit':
+            owner._audit.entries()[0]['data']['risk'] = 'FORGED'
+        else:
+            await act(owner, review, 'APPROVE')
+            if failure == 'consume':
+                monkeypatch.setattr(owner._queue, 'consume', fail)
+            else:
+                native = owner._native_record
+                def after_grant(event, **fields):
+                    if event == 'runtime.armed':
+                        return fail()
+                    return native(event, **fields)
+                monkeypatch.setattr(owner, '_native_record', after_grant)
+        with pytest.raises(AuthorizationError):
+            await act(owner, review, 'ARM' if failure in {'consume', 'post_grant_audit'} else 'APPROVE')
+    assert owner._poisoned and owner._permit is None and controller.authorization.state == 'TERMINAL'
+    assert not calls and 'PRIVATE_EXCEPTION_SECRET' not in json.dumps(owner._audit.entries())
+
+
+def test_redaction_safe_fields_round_trip_capacity_and_no_alias(tmp_path):
+    _, owner, _, _ = fixture(tmp_path)
+    value = '1234567890123456' * 4
+    entry = owner._record('test.safe', identifier=value, digest=value)
+    encoded = entry['data']['digest']
+    assert bytes.fromhex(encoded.removeprefix('hex:').replace(':', '')).decode() == value
+    assert owner._audit.verify()
+    with pytest.raises(AuthorizationError):
+        owner._record('test.forbidden', token='secret')
+    for _ in range(32):
+        owner.intention()
+    with pytest.raises(AuthorizationError):
+        owner.intention()
+
+
+@pytest.mark.asyncio
+async def test_concurrency_dispatch_uncertainty_terminal_no_retry(tmp_path):
+    entered, release = asyncio.Event(), asyncio.Event()
+    async def response(request):
+        entered.set()
+        await release.wait()
+        raise httpx.ReadTimeout('PRIVATE_PROVIDER_ERROR', request=request)
+    _, owner, controller, calls = fixture(tmp_path, response=response)
+    review = owner.intention()
+    await act(owner, review, 'APPROVE')
+    await act(owner, review, 'ARM')
+    first = asyncio.create_task(act(owner, review, 'EXECUTE'))
+    await entered.wait()
+    with pytest.raises(AuthorizationError):
+        await act(owner, review, 'EXECUTE')
+    release.set()
+    with pytest.raises(AuthorizationError):
+        await first
+    assert len(calls) == 1 and controller.authorization.dispatch_count == 1
+    assert controller.receipt.actual_model is None and not controller.receipt.response_observed
+    assert 'PRIVATE_PROVIDER_ERROR' not in json.dumps(owner.evidence())
+
+
+@pytest.mark.parametrize('fail_send', [True, False])
+@pytest.mark.asyncio
+async def test_final_send_distinct_from_provider_observation(tmp_path, fail_send):
+    _, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    await act(owner, review, 'APPROVE')
+    await act(owner, review, 'ARM')
+    result = await act(owner, review, 'EXECUTE')
+    receipt = result['receipt']
+    assert receipt['response_observed'] and not receipt['application_response_sent']
+    async def response_app(scope, receive, send):
+        await send({'type': 'http.response.start', 'status': 200,
+                    'headers': [(b'x-request-id', receipt['request_id'].encode())]})
+        await send({'type': 'http.response.body', 'body': b'fixture'})
+    async def send(message):
+        if fail_send and message['type'] == 'http.response.body':
+            raise OSError('synthetic final send failure')
+    middleware = ResponseObservationMiddleware(response_app, controller)
+    if fail_send:
+        with pytest.raises(OSError):
+            await middleware({'type': 'http', 'path': VERIFICATION_PATH}, None, send)
+    else:
+        await middleware({'type': 'http', 'path': VERIFICATION_PATH}, None, send)
+    assert controller.receipt.application_response_sent is (not fail_send)
+    assert controller.receipt.external_client_observed is False and len(calls) == 1
+
+
+def test_atttestation_projection_no_legacy_digest_and_normal_preserved(tmp_path, monkeypatch):
+    from app.api import control_plane
+    app, owner, controller, calls = fixture(tmp_path)
+    app.include_router(control_plane.router)
+    def forbidden():
+        raise AssertionError('legacy digest projection invoked')
+    monkeypatch.setattr(control_plane, 'project', forbidden)
+    with TestClient(app, base_url='http://127.0.0.1:8000', client=('127.0.0.1', 1)) as client:
+        assert client.get('/v1/control-plane/snapshot').json()['live_actions'] == 'LOCKED'
+        assert client.post('/v1/control-plane/arm').status_code == 404
+    assert not calls and controller.authorization.state == 'DISARMED'
+    app.state.runtime_profile = 'NORMAL'
+    monkeypatch.setattr(control_plane, 'project', lambda: {'legacy': 'same owner'})
+    with TestClient(app, base_url='http://127.0.0.1:8000', client=('127.0.0.1', 1)) as client:
+        assert client.get('/v1/control-plane/snapshot').json() == {'legacy': 'same owner'}
+
+
+def test_normal_profile_cannot_install_foundation(tmp_path):
+    app, owner, controller, calls = fixture(tmp_path)
+    app.state.runtime_profile = 'NORMAL'
+    with pytest.raises(AuthorizationError):
+        install_authorization_foundation(app, controller)
+
+
+def test_direct_native_ipc_to_foundation_decision_without_activation(tmp_path):
+    _, owner, controller, calls = fixture(tmp_path, live_locked=True)
+    review = owner.intention()
+    name = r'\\.\pipe\nusantara-r2-a9-' + uuid4().hex
+    responses, errors = [], []
+    with LocalOperatorChannel(name, owner._policy) as channel:
+        def client():
+            try:
+                responses.append(operator_exchange(name, os.getpid(), Windows().process_start(os.getpid()),
+                    command(review, 'APPROVE')))
+            except Exception as error:
+                errors.append(error)
+        thread = threading.Thread(target=client, daemon=True)
+        thread.start()
+        owner.serve_operator_once(channel)
+        thread.join(timeout=5)
+        assert not thread.is_alive() and not errors
+    assert responses == [{'review_id': review['review_id'], 'state': 'APPROVED'}]
+    assert controller.authorization.state == 'DISARMED' and not calls
+
+
+def test_expiry_is_rechecked_at_actual_dispatch(tmp_path, monkeypatch):
+    from app.core.runtime_correlation import OneUseAuthorization
+    permit = OneUseAuthorization()
+    raw = permit.grant()
+    permit.reserve(raw)
+    permit._deadline = 0  # Test-only clock boundary.
+    with pytest.raises(ValueError, match='GRANT_EXPIRED_BEFORE_DISPATCH'):
+        permit.dispatch()
+    assert permit.dispatch_count == 0 and permit.state == 'TERMINAL'
+    with pytest.raises(ValueError):
+        permit.grant()
+
+
+@pytest.mark.parametrize('stage', ['arm', 'execute'])
+@pytest.mark.asyncio
+async def test_false_queue_result_and_post_claim_failure_no_release(tmp_path, monkeypatch, stage):
+    _, owner, controller, calls = fixture(tmp_path)
+    review = owner.intention()
+    await act(owner, review, 'APPROVE')
+    if stage == 'arm':
+        monkeypatch.setattr(owner._queue, 'consume', lambda *args: False)
+        with pytest.raises(AuthorizationError):
+            await act(owner, review, 'ARM')
+    else:
+        await act(owner, review, 'ARM')
+        native = owner._native_record
+        def fail(event, **fields):
+            if event == 'runtime.execution_claimed':
+                raise OSError('PRIVATE_AUDIT_FAILURE')
+            return native(event, **fields)
+        monkeypatch.setattr(owner, '_native_record', fail)
+        with pytest.raises(AuthorizationError):
+            await act(owner, review, 'EXECUTE')
+    assert not calls and owner._permit is None and controller.authorization.state == 'TERMINAL'
+
+
+@pytest.mark.asyncio
+async def test_abort_after_dispatch_records_uncertainty_without_second_dispatch(tmp_path):
+    entered, release = asyncio.Event(), asyncio.Event()
+    async def response(request):
+        entered.set()
+        await release.wait()
+        return httpx.Response(200, json={'model': 'fixture-model', 'done': True, 'response': 'private'})
+    _, owner, controller, calls = fixture(tmp_path, response=response)
+    review = owner.intention()
+    await act(owner, review, 'APPROVE')
+    await act(owner, review, 'ARM')
+    executing = asyncio.create_task(act(owner, review, 'EXECUTE'))
+    await entered.wait()
+    with pytest.raises(AuthorizationError):
+        await act(owner, review, 'ABORT')
+    release.set()
+    with pytest.raises(AuthorizationError):
+        await executing
+    assert len(calls) == 1 and controller.authorization.dispatch_count == 1
+    assert controller.receipt.response_observed and not controller.receipt.application_response_sent
+    assert owner._reviews[review['review_id']].state == 'ABORTED'

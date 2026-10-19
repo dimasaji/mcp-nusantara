@@ -5,6 +5,7 @@ import dataclasses
 import json
 import os
 import sys
+import subprocess
 from pathlib import Path
 
 import httpx
@@ -17,6 +18,193 @@ from app.models.mock import MockProvider
 from app.models.ollama import OllamaProvider
 from app.models.openai_compatible import OpenAICompatibleProvider
 from app.models.router import ModelRouter
+from app.observability.context import request_context
+
+
+def test_request_context_binds_distinct_invocations_to_one_instance():
+    with request_context(request_id='http-r2-correlation'):
+        first = capture_model_identity(provider_id='ollama', selected_model='selected')
+        second = capture_model_identity(provider_id='ollama', selected_model='selected')
+    standalone = capture_model_identity(provider_id='ollama', selected_model='selected')
+    assert first.request_id == second.request_id == 'http-r2-correlation'
+    assert first.request_id_source == second.request_id_source == 'REQUEST_CONTEXT'
+    assert len({first.invocation_id, second.invocation_id, standalone.invocation_id}) == 3
+    assert first.runtime_instance_id == second.runtime_instance_id == standalone.runtime_instance_id
+    assert standalone.request_id == standalone.invocation_id
+    assert standalone.request_id_source == 'STANDALONE'
+    assert first.working_directory == os.getcwd()
+    assert first.instance_captured_at <= first.timestamp
+
+
+def test_runtime_instances_differ_in_real_subprocesses(tmp_path):
+    script = ('import json; from app.core.runtime_identity import current_runtime_instance; '
+              'from dataclasses import asdict; print(json.dumps(asdict(current_runtime_instance())))')
+    environment = {**os.environ, 'PYTHONPATH': str(Path(__file__).parents[1])}
+    observations = [json.loads(subprocess.check_output(
+        [sys.executable, '-B', '-c', script], cwd=tmp_path, env=environment, text=True))
+        for _ in range(2)]
+    assert observations[0]['process_id'] != observations[1]['process_id']
+    assert observations[0]['runtime_instance_id'] != observations[1]['runtime_instance_id']
+    assert all(item['working_directory'] == str(tmp_path) for item in observations)
+
+
+@pytest.mark.parametrize('change', [
+    {'runtime_instance_id': None}, {'runtime_instance_id': 'foreign-instance'},
+    {'process_id': -1}, {'invocation_id': ''},
+])
+def test_wrong_or_missing_instance_cannot_confirm_provider_response(change):
+    receipt = capture_model_identity(provider_id='ollama', selected_model='selected')
+    altered = dataclasses.replace(receipt, **change)
+    assert altered.with_response('selected').identity_status == 'NOT_VERIFIED'
+
+
+def test_stale_receipt_after_instance_change_is_not_confirmed(monkeypatch):
+    import app.core.runtime_identity as owner
+    receipt = capture_model_identity(provider_id='ollama', selected_model='selected')
+    replacement = dataclasses.replace(owner.current_runtime_instance(), runtime_instance_id='new-instance')
+    monkeypatch.setattr(owner, '_runtime_instance', replacement)
+    assert receipt.with_response('selected').identity_status == 'NOT_VERIFIED'
+
+
+def test_concurrent_generation_receipts_preserve_each_request_context():
+    async def run():
+        provider = OllamaProvider(model='selected')
+        async def respond(request):
+            await asyncio.sleep(0)
+            return httpx.Response(200, json={'model': 'selected', 'done': True, 'response': 'answer'})
+        provider._client = httpx.AsyncClient(base_url='http://fixture',
+                                            transport=httpx.MockTransport(respond))
+        async def generate(rid):
+            with request_context(request_id=rid):
+                return await provider.generate({'prompt': 'fixture'})
+        try:
+            return await asyncio.gather(generate('http-first'), generate('http-second'))
+        finally:
+            await provider.close()
+    results = asyncio.run(run())
+    receipts = [result['execution_identity'] for result in results]
+    assert [r['request_id'] for r in receipts] == ['http-first', 'http-second']
+    assert receipts[0]['invocation_id'] != receipts[1]['invocation_id']
+    assert receipts[0]['runtime_instance_id'] == receipts[1]['runtime_instance_id']
+    assert all(r['identity_status'] == 'RUNTIME_CONFIRMED' for r in receipts)
+
+
+@pytest.mark.parametrize('incoming', ['http-fixture-id', 'invalid!id', ''])
+def test_actual_http_middleware_binds_header_to_fixture_provider_receipt(incoming):
+    import time
+    from types import SimpleNamespace
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    source = Path(__file__).parents[1] / 'app/main.py'
+    module = ast.parse(source.read_text(encoding='utf-8-sig'))
+    middleware = next(node for node in module.body
+                      if isinstance(node, ast.AsyncFunctionDef) and node.name == 'request_id_middleware')
+    application = FastAPI()
+    namespace = {'app': application, 'time': time, 'request_context': request_context,
+                 'metrics': SimpleNamespace(incr=lambda *args: None, observe=lambda *args: None)}
+    exec(compile(ast.Module(body=[middleware], type_ignores=[]), str(source), 'exec'), namespace)
+
+    @application.get('/fixture-generation')
+    async def generate():
+        provider = OllamaProvider(model='selected')
+        provider._client = httpx.AsyncClient(base_url='http://fixture', transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, json={'model': 'selected', 'done': True, 'response': 'answer'})))
+        try:
+            return (await provider.generate({'prompt': 'fixture'}))['execution_identity']
+        finally:
+            await provider.close()
+
+    with TestClient(application) as client:
+        response = client.get('/fixture-generation', headers={'X-Request-ID': incoming})
+    assert response.status_code == 200
+    receipt = response.json()
+    assert receipt['request_id'] == response.headers['X-Request-ID']
+    assert receipt['request_id_source'] == 'REQUEST_CONTEXT'
+    assert receipt['runtime_instance_id'] and receipt['invocation_id'] != receipt['request_id']
+    if incoming == 'http-fixture-id':
+        assert receipt['request_id'] == incoming
+    else:
+        assert receipt['request_id'].startswith('req_')
+
+
+@pytest.mark.parametrize('structured', [False, True])
+@pytest.mark.parametrize('reported,done,status,result', [
+    ('selected', True, 'RUNTIME_CONFIRMED', 'NOT_VERIFIED'),
+    ('foreign', True, 'MISMATCH', 'MISMATCH'),
+    (None, True, 'NOT_VERIFIED', 'NOT_VERIFIED'),
+    ('selected', False, 'NOT_VERIFIED', 'NOT_VERIFIED'),
+])
+def test_generation_console_receipt_is_allowlisted_and_never_overall_verified(
+        monkeypatch, structured, reported, done, status, result):
+    events = []
+    monkeypatch.setattr('app.models.ollama.log_event', lambda event, **fields: events.append((event, fields)))
+    async def run():
+        provider = OllamaProvider(model='selected')
+        provider._client = httpx.AsyncClient(base_url='http://fixture', transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, json={'model': reported, 'done': done,
+                'response': '{}' if structured else 'PRIVATE_RESPONSE'})))
+        try:
+            with request_context(request_id='http-telemetry'):
+                method = provider.generate_structured if structured else provider.generate
+                return await method({'prompt': 'PRIVATE_PROMPT', 'system': 'PRIVATE_SYSTEM'})
+        finally:
+            await provider.close()
+    response = asyncio.run(run())
+    event, fields = events[0]
+    assert len(events) == 1 and event == 'provider_generation_identity'
+    assert fields['request_id'] == 'http-telemetry'
+    assert fields['identity_status'] == status and fields['result'] == result
+    assert fields['invocation_id'] == response['execution_identity']['invocation_id']
+    assert fields['runtime_instance_id'] == response['execution_identity']['runtime_instance_id']
+    assert set(fields) == {'request_id', 'request_id_source', 'invocation_id', 'runtime_instance_id',
+        'timestamp', 'instance_captured_at', 'build_id', 'process_id', 'provider_id',
+        'configured_model', 'effective_model', 'selected_model', 'payload_model',
+        'actual_model', 'identity_status', 'confirmation_source', 'result'}
+    serialized = json.dumps(fields)
+    assert all(secret not in serialized for secret in (
+        'PRIVATE_PROMPT', 'PRIVATE_SYSTEM', 'PRIVATE_RESPONSE', sys.executable, os.getcwd()))
+
+
+@pytest.mark.parametrize('structured', [False, True])
+@pytest.mark.parametrize('failure', ['provider', 'model', 'connection'])
+def test_failed_generation_logs_error_without_private_details(monkeypatch, structured, failure):
+    from app.exceptions import ProviderUnavailableError
+    events = []
+    monkeypatch.setattr('app.models.ollama.log_event', lambda event, **fields: events.append(fields))
+    def respond(request):
+        if failure == 'connection':
+            raise httpx.ConnectError('PRIVATE_NETWORK_DETAIL', request=request)
+        return httpx.Response(503 if failure == 'provider' else 404,
+                              json={'error': 'PRIVATE_UPSTREAM_DETAIL'})
+    async def run():
+        provider = OllamaProvider(model='missing')
+        provider._client = httpx.AsyncClient(base_url='http://fixture', transport=httpx.MockTransport(respond))
+        try:
+            with request_context(request_id='http-failure'):
+                with pytest.raises(ProviderUnavailableError):
+                    await (provider.generate_structured if structured else provider.generate)({'prompt': 'PRIVATE_PROMPT'})
+        finally:
+            await provider.close()
+    asyncio.run(run())
+    assert len(events) == 1 and events[0]['result'] == 'ERROR'
+    assert events[0]['identity_status'] == 'NOT_VERIFIED' and events[0]['actual_model'] is None
+    assert events[0]['request_id'] == 'http-failure'
+    assert 'PRIVATE_' not in json.dumps(events)
+
+
+def test_console_logging_failure_does_not_change_provider_response(monkeypatch):
+    def unavailable_logger(*args, **kwargs):
+        raise RuntimeError('logger unavailable')
+    monkeypatch.setattr('app.models.ollama.log_event', unavailable_logger)
+    async def run():
+        provider = OllamaProvider(model='selected')
+        provider._client = httpx.AsyncClient(base_url='http://fixture', transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, json={'model': 'selected', 'done': True, 'response': 'answer'})))
+        try:
+            return await provider.generate({'prompt': 'fixture'})
+        finally:
+            await provider.close()
+    assert asyncio.run(run())['content'] == 'answer'
 
 
 def config():
@@ -177,6 +365,18 @@ def test_public_request_response_models_and_routes_unchanged():
     for name in ['app/api/routes.py', 'app/api/v2_routes.py']:
         def surface(path):
             module = ast.parse(path.read_text(encoding='utf-8-sig'))
+            # HDR-OPENROUTER-01 choice A authorizes exactly one enum member.
+            # Normalize only that additive delta; every other public schema and
+            # route signature still has to match the original baseline.
+            for node in module.body:
+                if isinstance(node, ast.ClassDef) and node.name == '_PublicChatResponse':
+                    for field in node.body:
+                        if (isinstance(field, ast.AnnAssign) and isinstance(field.target, ast.Name)
+                            and field.target.id == 'provider_status'
+                            and isinstance(field.annotation, ast.Subscript)
+                            and isinstance(field.annotation.slice, ast.Tuple)):
+                            field.annotation.slice.elts = [value for value in field.annotation.slice.elts
+                                if not (isinstance(value, ast.Constant) and value.value == 'openrouter')]
             classes = [ast.dump(node) for node in module.body if isinstance(node, ast.ClassDef)]
             routes = [(node.name, ast.dump(node.args), [ast.dump(d) for d in node.decorator_list])
                       for node in module.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))

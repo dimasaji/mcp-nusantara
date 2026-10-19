@@ -49,3 +49,14 @@ def test_provider_preferences_are_preserved_without_claiming_cloud_availability(
 def test_empty_registry_still_fails_clearly():
     with pytest.raises(RuntimeError, match="Tidak ada provider"):
         ModelRouter().route(task="coding")
+
+
+def test_explicit_legacy_defaults_win_over_snapshot():
+    config = load_nusantara_config(overrides={'llm': {
+        'base_url': 'http://127.0.0.1:9999', 'model': 'snapshot', 'connection_timeout_s': 8.0}})
+    provider = OllamaProvider('http://localhost:11434', 'llama3.2:1b', 120.0,
+                              nusantara_config=config)
+    assert (provider.base_url, provider.model, provider.timeout) == (
+        'http://localhost:11434', 'llama3.2:1b', 120.0)
+    assert ModelRouter().register(provider).route().model_name == 'llama3.2:1b'
+    assert provider._client is None
