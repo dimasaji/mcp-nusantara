@@ -51,6 +51,8 @@ class SemanticIntentEngine:
         self.build_error: str | None = None
 
         self._lock = threading.RLock()
+        self._warmup_lock = threading.Lock()
+        self._warmup_thread: threading.Thread | None = None
 
     # ==========================================================
     # COSINE SIMILARITY
@@ -231,22 +233,24 @@ class SemanticIntentEngine:
         # Ensure prototype index
         # ------------------------------------------------------
 
-        try:
-
-            if not self.ready:
-                self.build_index()
-
-        except Exception as exc:
-
+        if not self.ready:
+            # Semantic classification is optional. A first question must not
+            # wait for every prototype before the existing rule fallback runs.
+            with self._warmup_lock:
+                if self._warmup_thread is None or not self._warmup_thread.is_alive():
+                    def warmup():
+                        try:
+                            self.build_index()
+                        except Exception:
+                            pass  # build_index publishes ready/build_error.
+                    self._warmup_thread=threading.Thread(target=warmup,daemon=True)
+                    self._warmup_thread.start()
             return {
                 "ok": False,
                 "engine": "indobert-semantic",
                 "version": self.VERSION,
                 "model": self.MODEL,
-                "error": (
-                    "IndoBERT semantic index gagal dibangun: "
-                    f"{exc}"
-                ),
+                "error": "SEMANTIC_INDEX_WARMING",
             }
 
         # ------------------------------------------------------

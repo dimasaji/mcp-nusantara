@@ -1,3 +1,4 @@
+import {HumanControlView} from './human-control';
 import {createContext, useContext, useEffect, useRef, useState, type ReactNode, type Dispatch, type SetStateAction} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {Link, useNavigate, useRouterState} from '@tanstack/react-router';
@@ -272,11 +273,11 @@ export function ExecutionReview({title='Review & Execute V1'}:{title?:string}){
  const canExecute=model.executionReady&&!pending&&!busy;
  const why=!token.trim()?'Masukkan token operator yang sudah tersedia.':!model.operatorAuthenticated?'Autentikasi atau pembacaan History belum berhasil.':context.data?.completed?'Pekerjaan sudah selesai; lihat hasil dan riwayat. Publikasi ulang memerlukan rencana baru.':!model.planReady?'Rencana belum siap; periksa alasan backend.':!model.evidenceValid?'Bukti belum valid; diperlukan pengujian dan paket baru.':!active?'Menunggu keputusan manusia.':model.checks.find(c=>c.id==='EXEC')?.detail;
  async function decide(decision:'PASS'|'FAIL'|'HOLD'){
-  if(!pkg.data||!canDecide||(decision==='PASS'&&!canPass))return;
+  if(!pkg.data||!canDecide||(decision==='PASS'&&!canPass))return false;
   setBusy(true);setMessage('');
   try{const record=await saveEvidenceDecision({packageId:pkg.data.package_id,decision,notes,token,planBinding:context.data?.plan_binding});
-   setMessage(`Keputusan ${record.decision} tersimpan di server.`);setNotes('');}
-  catch(e){setMessage(e instanceof Error?e.message:'Keputusan gagal disimpan.');}
+   setMessage(`Keputusan ${record.decision} tersimpan di server.`);setNotes('');return true;}
+  catch(e){setMessage(e instanceof Error?e.message:'Keputusan gagal disimpan.');return false;}
   finally{setBusy(false);refresh();}
  }
  async function execute(){
@@ -286,6 +287,7 @@ export function ExecutionReview({title='Review & Execute V1'}:{title?:string}){
   catch(e){setMessage(e instanceof Error?e.message:'Eksekusi ditolak.');}
   finally{setBusy(false);refresh();}
  }
+ if(title==='Human Control')return <HumanControlView pkg={pkg} context={context} history={history} model={model} canDecide={canDecide} canPass={canPass} canExecute={canExecute} busy={busy} pending={pending} why={why} notes={notes} setNotes={setNotes} message={message} refresh={refresh} decide={decide} execute={execute}/>;
  return <>
   <header><div><div className="eyebrow">NUSANTARA V1 / TINJAU DAN JALANKAN</div><h1>{title}</h1></div><button onClick={refresh} disabled={busy||pending}>Muat ulang review</button></header>
   <p>Baca pekerjaan dan hasil pemeriksaannya, lalu pilih keputusan Anda. Bukti valid dan izin eksekusi diperiksa secara terpisah.</p>

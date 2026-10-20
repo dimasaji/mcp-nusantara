@@ -38,6 +38,7 @@ class EvalRecord:
     error: bool = False
     cost: float = 0.0
     repeat_answers: list[str] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 def score_record(case: EvalCase, rec: EvalRecord, *, latency_target_ms: float = 2000.0,
@@ -86,20 +87,35 @@ def aggregate(scores: list[dict[str, float | None]]) -> dict[str, float | None]:
 def run_cases(system: Callable[[str], dict[str, Any]], cases: list[EvalCase], *, repeats: int = 1,
               **score_kw: Any) -> dict[str, Any]:
     scores = []
+    records = []
     for c in cases:
         answers, rec = [], None
+        attempts = []
         for _ in range(max(1, repeats)):
             t0 = time.perf_counter()
             try:
                 data = dict(system(c.query))
                 data.setdefault("latency_ms", (time.perf_counter() - t0) * 1000)
                 rec = EvalRecord(case_id=c.case_id, **{k: v for k, v in data.items() if k in EvalRecord.__dataclass_fields__ and k != "case_id"})
-            except Exception:  # noqa: BLE001
+            except Exception as exc:  # noqa: BLE001
                 rec = EvalRecord(case_id=c.case_id, error=True, latency_ms=(time.perf_counter() - t0) * 1000)
+                error_type = type(exc).__name__  # Do not expose server error bodies.
+            else:
+                error_type = None
             answers.append(rec.answer)
+            attempts.append({"answer": rec.answer, "evidence": rec.evidence,
+                             "retrieved_doc_ids": rec.retrieved_doc_ids,
+                             "latency_ms": rec.latency_ms, "error": rec.error,
+                             "error_type": error_type,
+                             "metadata": rec.metadata,
+                             "scores": score_record(c, rec, **score_kw)})
         rec.repeat_answers = answers
-        scores.append(score_record(c, rec, **score_kw))
-    return {"cases": len(cases), "metrics": aggregate(scores)}
+        case_scores = aggregate([a["scores"] for a in attempts])
+        case_scores["consistency"] = score_record(c, rec, **score_kw)["consistency"]
+        scores.append(case_scores)
+        records.append({"case_id": c.case_id, "query": c.query,
+                        "attempts": attempts, "scores": case_scores})
+    return {"cases": len(cases), "metrics": aggregate(scores), "records": records}
 
 
 def compare(baseline: dict[str, float | None], candidate: dict[str, float | None],
@@ -107,6 +123,10 @@ def compare(baseline: dict[str, float | None], candidate: dict[str, float | None
     dims: dict[str, Any] = {}
     for d in DIMENSIONS:
         b, c = baseline.get(d), candidate.get(d)
+        if b is not None and c is None:
+            dims[d] = {"baseline": b, "candidate": None, "delta": None, "status": "regressed",
+                       "reason": "candidate metric is missing"}
+            continue
         if b is None or c is None:
             continue
         delta = round(c - b, 4)

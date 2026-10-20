@@ -247,6 +247,7 @@ class LanguageEngine:
         entity_extractor: Any | None = None,
         language_detector: Callable[[str], Any] | None = None,
         indo_bert: Any | None = None,
+        sop_intent_adapter: Any | None = None,
     ) -> None:
 
         self.normalizer = (
@@ -269,6 +270,7 @@ class LanguageEngine:
 
         self.language_detector = language_detector
         self.indo_bert = indo_bert
+        self.sop_intent_adapter = sop_intent_adapter
 
         # ------------------------------------------------------
         # SEMANTIC INTELLIGENCE
@@ -465,6 +467,48 @@ class LanguageEngine:
 
     def understand(self, text: str) -> Any:
         return self.process(text)
+
+    @staticmethod
+    def service_turn(text: str, previous_topic: str = '', intent: str = '') -> dict:
+        """Resolve service aspects, not canned questions or particular services.
+
+        Normalization stays owned by TextNormalizer. Service names come from
+        the user's words and are subsequently resolved against retrieved sources.
+        """
+        normalized = text.casefold()
+        if TextNormalizer is not None:
+            result=TextNormalizer().normalize(text)
+            normalized=str(getattr(result,'normalized',None) or getattr(result,'normalized_text',None) or normalized).casefold()
+        aspects={
+            'requirements':r'\b(?:syarat(?:nya)?|persyaratan(?:nya)?|bawa|dibawa|berkas(?:nya)?|dokumen(?:nya)?|perlu|butuh|siapkan|disiapkan)\b',
+            'procedure':r'\b(?:proses(?:nya)?|alur(?:nya)?|langkah(?:nya)?|tahapan?|prosedur(?:nya)?|cara(?:nya)?)\b',
+            'duration':r'\b(?:lama(?:nya)?|durasi|waktu(?:nya)?|kapan|selesai)\b',
+            'channel':r'\b(?:online|daring|internet|website|aplikasi|offline|langsung)\b',
+        }
+        # Specific time/channel questions may also contain the generic word
+        # "proses" or "cara". Let the requested aspect control retrieval.
+        facet=next((name for name in ('duration','channel','requirements','procedure')
+                    if re.search(aspects[name],normalized)),None)
+        if facet is None and intent=='ask_document_requirements':facet='requirements'
+        stop={'apa','saja','yang','saya','aku','anda','mau','ingin','minta','meminta','tolong','untuk','kalau','kalo','bagaimana','gimana',
+              'berapa','bisa','boleh','harus','dapat','ya','dong','nih','itu','ini','terus','dan','di','ke','dengan','nya','akan','apakah','lebih','jelaskan',
+              'urus','mengurus','ngurus','mengajukan','ajukan','ngajuin','pengurusan','diperlukan','dibutuhkan','sih','sama','buat'}
+        markers='|'.join(aspects.values())
+        stop.update({'rinci','detail','lengkap','semua','seluruh','lewat','melalui','secara'})
+        words=[w for w in re.findall(r'\w+',normalized) if w not in stop and not re.fullmatch(markers,w)]
+        hint=' '.join(words)
+        topic=hint or previous_topic
+        prefixes={'requirements':'persyaratan permohonan','procedure':'prosedur','duration':'waktu penyelesaian','channel':'cara pengajuan'}
+        ambiguous=not facet and not hint and bool(previous_topic)
+        channel=re.search(r'\b(?:online|daring|internet|website|aplikasi|offline|langsung)\b',normalized)
+        return {'facet':facet,'channel':channel[0] if channel else '', 'topic_hint':hint,'topic':topic,'uses_context':bool(facet and not hint and previous_topic),
+                'detailed':bool(re.search(r'\b(?:rinci|detail|lengkap|semua|seluruh)\b',normalized)),
+                'needs_clarification':bool(facet and not topic) or ambiguous,
+                'query':f'{prefixes[facet]} {topic}'.strip() if facet and topic else text}
+
+    def classify_sop_intent(self, text, service_context, recent_turns):
+        """Optional retrieval hint after Hermes restores context; process() stays unchanged."""
+        return self.sop_intent_adapter.classify(text, service_context, recent_turns)
 
     def analyze(self, text: str) -> Any:
         return self.process(text)

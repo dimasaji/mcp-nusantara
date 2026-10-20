@@ -1141,3 +1141,61 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+def validate_operational_manifest(manifest_path: Path) -> dict:
+    """Offline integrity and answer-oracle preparation; no DB, network or ingestion."""
+    from datetime import date
+    manifest_path = Path(manifest_path).resolve()
+    root = manifest_path.parent
+    blockers, documents = [], []
+    try:
+        if manifest_path.stat().st_size > 2_000_000:
+            raise ValueError('MANIFEST_SIZE_LIMIT')
+        manifest = json.loads(manifest_path.read_text(encoding='utf-8-sig'))
+        if not isinstance(manifest, dict) or manifest.get('schema_version') != 1 or not isinstance(manifest.get('documents'), list):
+            raise ValueError('MANIFEST_INVALID')
+    except (OSError, ValueError):
+        return {'status':'BLOCKED','operational_ready':False,'blockers':['MANIFEST_UNAVAILABLE_OR_INVALID'],'documents':[]}
+    if not manifest['documents']:
+        blockers.append('OFFICIAL_DOCUMENTS_MISSING')
+    for index, item in enumerate(manifest['documents']):
+        errors = []
+        try:
+            if not isinstance(item, dict):raise ValueError('DOCUMENT_METADATA_INVALID')
+            source = OfficialSource(**{key:item[key] for key in ('source_id','source_name','authority','source_url','source_status','service','content_type')},
+                published_date=item.get('published_date'), verification_note=item.get('verification_note'))
+            if source.validate():errors.append('SOURCE_METADATA_INVALID')
+            from urllib.parse import urlsplit
+            url=urlsplit(source.source_url)
+            if url.scheme!='https' or not url.hostname or url.username or url.password or url.query or url.fragment:
+                errors.append('PUBLIC_SOURCE_URL_REQUIRED')
+            if not item.get('jurisdiction'):errors.append('JURISDICTION_REQUIRED')
+            date.fromisoformat(item['published_date'])
+            effective=date.fromisoformat(item['effective_date'])
+            if effective>date.today():errors.append('DOCUMENT_NOT_YET_EFFECTIVE')
+            if item.get('expires_date') and date.fromisoformat(item['expires_date'])<date.today():errors.append('DOCUMENT_EXPIRED')
+            if item.get('contains_personal_data') is not False:errors.append('PERSONAL_DATA_REVIEW_REQUIRED')
+            relative=Path(item['local_path'])
+            path=(root/relative).resolve()
+            if relative.is_absolute() or not path.is_relative_to(root) or not path.is_file():
+                raise ValueError('DOCUMENT_PATH_INVALID')
+            if path.stat().st_size>2_000_000:raise ValueError('DOCUMENT_SIZE_LIMIT')
+            if sha256_file(path)!=item.get('sha256'):errors.append('DOCUMENT_HASH_MISMATCH')
+            cases=item.get('cases',[])
+            if not isinstance(cases,list) or not cases:errors.append('ANSWER_ORACLE_REQUIRED')
+            elif path.suffix.lower() in {'.txt','.md'}:
+                text=path.read_text(encoding='utf-8-sig')
+                for case in cases:
+                    if not isinstance(case,dict) or not case.get('question') or not case.get('quote') or case['quote'] not in text:
+                        errors.append('ANSWER_ORACLE_QUOTE_UNSUPPORTED')
+            else:errors.append('REVIEWED_TEXT_EXTRACTION_REQUIRED')
+            documents.append({'source_id':source.source_id,'service':source.service,'content_type':source.content_type,
+                'integrity':'PASS' if not errors else 'BLOCKED','errors':errors})
+        except (KeyError,TypeError,ValueError,OSError,UnicodeError,AttributeError):
+            errors.append('DOCUMENT_UNAVAILABLE_OR_INVALID')
+            documents.append({'index':index,'integrity':'BLOCKED','errors':errors})
+        blockers.extend(f'DOCUMENT_{index}:{error}' for error in errors)
+    return {'status':'BLOCKED' if blockers else 'OFFLINE_VALIDATION_PASS','operational_ready':False,
+            'source_authentication':'REQUIRES_HUMAN_AUTHORITY_REVIEW','active_ingestion':'NOT_PERFORMED',
+            'documents':documents,'blockers':blockers}

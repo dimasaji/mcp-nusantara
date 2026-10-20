@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import concurrent.futures
+import json
 import time
 from pathlib import Path
 from collections.abc import Callable
@@ -14,7 +15,7 @@ from app.core.hardening import safe_acall, validate_output
 from app.devcore.facts import static_facts
 from app.devcore.grounding import check_grounding
 from app.devcore.router import DevPlan, plan as make_plan
-from app.devcore.tools import register_dev_tools
+from app.devcore.tools import read_file, register_dev_tools
 from app.devcore.workspace import SKIP_DIRS, PathBlocked, Workspace, is_sensitive_name
 from app.governance import GovernedToolRegistry
 from app.observability import request_context
@@ -57,7 +58,12 @@ class DevCore:
             except PathBlocked as exc:
                 return {"success": False, "tool": name, "error": f"DIBLOKIR: {exc}", "path": str(args.get("path"))}
         res = self.backend.execute(name, args)
-        return self._sanitize(name, args, res) if res.get("success") else res
+        if not isinstance(res, dict):
+            return {"success": False, "tool": name, "path": args.get("path"), "error": "hasil backend tidak valid"}
+        if not res.get("success"):
+            return {"success": False, "tool": name, "path": args.get("path"),
+                    "error": str(res.get("error") or "backend gagal")[:300]}
+        return self._sanitize(name, args, res)
 
     def _rel(self, p: Any) -> str:
         s = str(p).replace("\\", "/")
@@ -68,22 +74,63 @@ class DevCore:
 
     def _sanitize(self, name: str, args: dict[str, Any], res: dict[str, Any]) -> dict[str, Any]:
         ok_name = lambda rel: not any(x in SKIP_DIRS or is_sensitive_name(x) for x in rel.split("/"))  # noqa: E731
+        def rejected() -> dict[str, Any]:
+            return {"success": False, "tool": name, "error": "DIBLOKIR: provenance hasil backend tidak valid",
+                    "path": args.get("path")}
+
         if name == "read_file":
             c = res.get("content")
             if not isinstance(c, str):
                 return {"success": False, "tool": name, "error": "hasil tool tidak berisi content", "path": args.get("path")}
             if "\x00" in c[:8000]:
                 return {"success": False, "tool": name, "error": "file biner tidak didukung", "path": args.get("path")}
-            trunc = bool(res.get("truncated")) or len(c) > self.ws.max_read_bytes
-            c = c[: self.ws.max_read_bytes]
-            res.update(content=c, truncated=trunc, path=self._rel(res.get("path") or args.get("path")),
-                       lines=c.count("\n") + (1 if c and not c.endswith("\n") else 0))
+            try:
+                requested = self.ws.resolve(args.get("path"))
+                returned = self.ws.resolve(res.get("path") or args.get("path"))
+            except (PathBlocked, OSError, ValueError):
+                return rejected()
+            if returned != requested:
+                return rejected()
+            # A claimed safe path cannot establish content provenance by itself.
+            trusted = read_file(self.ws, {"path": self.ws.rel(requested)})
+            normalized = c.replace("\r\n", "\n")
+            expected = trusted.get("content", "").replace("\r\n", "\n")
+            if not trusted["success"] or normalized[:len(expected)] != expected or (
+                    not trusted["truncated"] and normalized != expected):
+                return rejected()
+            trusted.update(content=expected, truncated=trusted["truncated"] or bool(res.get("truncated")),
+                           lines=expected.count("\n") + (1 if expected and not expected.endswith("\n") else 0))
+            return trusted
         elif name == "find_file":
-            m = [self._rel(x) for x in (res.get("matches") or [])]
-            res.update(matches=[x for x in m if ok_name(x)][:20], query=res.get("query") or args.get("name"))
+            try:
+                m = [self.ws.rel(self.ws.resolve(x)) for x in (res.get("matches") or [])]
+            except (PathBlocked, OSError, ValueError, TypeError):
+                return rejected()
+            return {"success": True, "tool": name, "matches": m[:20], "query": args.get("name"),
+                    "truncated": bool(res.get("truncated")) or len(m) > 20, "error": None}
         elif name == "list_directory":
-            ents = [e for e in (res.get("entries") or []) if isinstance(e, dict) and ok_name(str(e.get("name", "")))]
-            res.update(entries=ents[:200], path=res.get("path") or args.get("path") or ".")
+            try:
+                requested = self.ws.resolve(args.get("path") or ".")
+                returned = self.ws.resolve(res.get("path") or args.get("path") or ".")
+                if returned != requested:
+                    return rejected()
+                ents = []
+                for e in res.get("entries") or []:
+                    if not isinstance(e, dict):
+                        return rejected()
+                    child = str(e.get("name", ""))
+                    if not ok_name(child):
+                        continue
+                    if not child or child in (".", "..") or "/" in child or "\\" in child:
+                        return rejected()
+                    target = self.ws.resolve(str(requested / child))
+                    if target.parent != requested:
+                        return rejected()
+                    ents.append({"name": child, "type": e.get("type")})
+            except (PathBlocked, OSError, ValueError):
+                return rejected()
+            return {"success": True, "tool": name, "entries": ents[:200], "path": self.ws.rel(requested),
+                    "truncated": bool(res.get("truncated")) or len(ents) > 200, "error": None}
         return res
 
     def _call(self, name: str, args: dict[str, Any], calls: list[dict[str, Any]], requester: str) -> dict[str, Any]:
@@ -114,6 +161,8 @@ class DevCore:
             if mode == "find_then_read":
                 found = self._call("find_file", {"name": target}, calls, req)
                 results.append(found)
+                if not found.get("success"):
+                    continue
                 m = found.get("matches") or []
                 if len(m) != 1:
                     notes.append(f"'{target}' tidak ditemukan." if not m else
@@ -123,7 +172,8 @@ class DevCore:
             r = self._call("read_file", {"path": path}, calls, req)
             if not r["success"] and r.get("error") == "file tidak ditemukan" and mode == "read":
                 f = self._call("find_file", {"name": path.rsplit("/", 1)[-1]}, calls, req)
-                m = f.get("matches") or []
+                results.append(f)
+                m = (f.get("matches") or []) if f.get("success") else []
                 if len(m) == 1:
                     notes.append(f"'{path}' tidak ada; memakai satu-satunya kecocokan '{m[0]}'.")
                     r = self._call("read_file", {"path": m[0]}, calls, req)
@@ -134,6 +184,10 @@ class DevCore:
 
     async def _analyze(self, r: dict[str, Any], request: str) -> tuple[str, dict[str, Any]]:
         facts = static_facts(r["path"], r["content"])
+        if r.get("truncated"):
+            return ("Source terpotong; evidence tidak lengkap. Fakta berikut hanya mencakup fragmen yang terbaca, "
+                    "bukan keseluruhan file:\n" + "\n".join(f"- {f}" for f in facts),
+                    {"status": "incomplete_source", "violations": [], "evidence_completeness": "incomplete"})
         model_text = None
         if self.generate:
             g = await safe_acall(self.generate, build_prompt(r["path"], r["content"], r["lines"], facts, request),
@@ -150,9 +204,10 @@ class DevCore:
         ver = {"status": "failed" if v else "passed", "violations": [x.__dict__ for x in v]}
         body = model_text
         if v:
-            body += ("\n\nPERINGATAN verifikasi grounding: klaim berikut tidak didukung source -> "
-                     + "; ".join(f"[{x.rule}] \"{x.sentence[:80]}\"" for x in v)
-                     + "\nGunakan fakta statis:\n" + "\n".join(f"- {f}" for f in facts))
+            # Rejected model text remains diagnostic evidence, not the answer.
+            body = ("PERINGATAN: analisis model tidak lolos pemeriksaan source. "
+                    "Berikut fakta statis dari source:\n"
+                    + "\n".join(f"- {f}" for f in facts))
         return body, ver
 
     async def handle(self, text: str, session_id: str = "default") -> dict[str, Any]:
@@ -165,6 +220,22 @@ class DevCore:
             if not p.handled:
                 return {**base, "answer": "", "tool": {"used": False, "name": None, "result": None, "calls": []},
                         "verification": {"status": "not_applicable", "violations": []}, "modify_blocked": False}
+            if p.inspection is not None:
+                # Preview is terminal: no tools, source reads, model or execution.
+                preview = p.inspection
+                blocked = p.modify_requested or preview['status'] == 'HUMAN_DECISION_REQUIRED'
+                out = {**base, 'inspection_preview': preview,
+                       'answer': json.dumps(preview, ensure_ascii=False, indent=2),
+                       'latency_ms': round((time.perf_counter() - t0) * 1000, 2),
+                       'modify_blocked': blocked,
+                       'verification': {'status': 'not_applicable', 'violations': []},
+                       'tool': {'used': False, 'name': None, 'result': None, 'calls': []}}
+                self.audit.record('dev.request', request_id=ids['request_id'], session_id=session_id,
+                                  intent=p.intent, file_references=[], tools=[], model='NOT_INVOKED',
+                                  latency_ms=out['latency_ms'], verification='not_applicable',
+                                  modify_requested=p.modify_requested, errors=[],
+                                  preview_status=preview['status'], target=preview['target'])
+                return out
             calls: list[dict[str, Any]] = []
             notes: list[str] = []
             results = self._resolve_reads(p, calls, ids["request_id"], notes)
@@ -177,6 +248,8 @@ class DevCore:
                 elif r.get("tool") == "find_file" and r.get("success") and p.intent == "find_file":
                     m = r["matches"]
                     parts.append(f"Hasil pencarian '{r['query']}': " + (", ".join(m) if m else "tidak ditemukan"))
+                elif r.get("tool") == "find_file" and not r.get("success"):
+                    parts.append(f"Pencarian tidak lengkap/gagal: {r.get('error')}")
                 elif r.get("tool") == "list_directory":
                     parts.append(f"Isi `{r['path']}`:\n" + "\n".join(f"- {e['name']}{'/' if e['type']=='dir' else ''}" for e in r["entries"])
                                  if r.get("success") else f"Gagal membuka direktori: {r.get('error')}")
@@ -191,8 +264,11 @@ class DevCore:
                 parts.append(f"Analisis `{r['path']}`:\n{body}")
                 statuses.append(v["status"])
                 ver["violations"] += v["violations"]
+                if v.get("evidence_completeness"):
+                    ver["evidence_completeness"] = v["evidence_completeness"]
             if statuses:
                 ver["status"] = "failed" if "failed" in statuses else \
+                    "incomplete_source" if "incomplete_source" in statuses else \
                     "fallback_static_facts" if "fallback_static_facts" in statuses else "passed"
             if p.modify_requested:
                 parts.append(_MODIFY_NOTE)

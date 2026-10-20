@@ -1,57 +1,19 @@
-$ErrorActionPreference = "Stop"
-
-$ROOT = "C:\Users\dmaza\mcp-starter"
-$SUPERVISOR = "$ROOT\service\nusantara-supervisor.ps1"
-$TASKNAME = "Nusantara AI Service"
-
-$PowerShell = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
-
-Write-Host ""
-Write-Host "=========================================="
-Write-Host " INSTALL NUSANTARA AI SERVICE"
-Write-Host "=========================================="
-Write-Host ""
-
-if (-not (Test-Path $SUPERVISOR)) {
-    Write-Host "ERROR: Supervisor tidak ditemukan:"
-    Write-Host $SUPERVISOR
+param([switch]$Uninstall, [switch]$PlanOnly, [System.Management.Automation.PSCredential]$Credential)
+try {
+    if (-not $PlanOnly -and -not $Uninstall) {
+        $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+        $principal = [Security.Principal.WindowsPrincipal]::new($identity)
+        if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+            throw 'Administrator required for the Windows boot trigger. Run this installer from PowerShell Administrator; no UAC bypass is attempted.'
+        }
+    }
+    & "$PSScriptRoot/task-registration.ps1" -Uninstall:$Uninstall -PlanOnly:$PlanOnly -Credential $Credential
+} catch {
+    $config = Get-Content "$PSScriptRoot/../config/local-services.json" -Raw | ConvertFrom-Json
+    $stateDirectory = "$PSScriptRoot/../data/service-v1"
+    if (-not $PlanOnly -and -not $Uninstall -and (Test-Path $stateDirectory) -and -not (Get-ScheduledTask -TaskName $config.taskName -ErrorAction SilentlyContinue)) {
+        'disabled' | Set-Content (Join-Path $stateDirectory 'monitor-state')
+    }
+    Write-Error -Message $_.Exception.Message -ErrorAction Continue
     exit 1
 }
-
-$Action = New-ScheduledTaskAction `
-    -Execute $PowerShell `
-    -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$SUPERVISOR`""
-
-$Trigger = New-ScheduledTaskTrigger -AtLogOn
-
-$Principal = New-ScheduledTaskPrincipal `
-    -UserId "$env:USERDOMAIN\$env:USERNAME" `
-    -LogonType Interactive `
-    -RunLevel Highest
-
-$Settings = New-ScheduledTaskSettingsSet `
-    -StartWhenAvailable `
-    -AllowStartIfOnBatteries `
-    -DontStopIfGoingOnBatteries `
-    -RestartCount 5 `
-    -RestartInterval (New-TimeSpan -Minutes 1) `
-    -ExecutionTimeLimit ([TimeSpan]::Zero)
-
-Register-ScheduledTask `
-    -TaskName $TASKNAME `
-    -Action $Action `
-    -Trigger $Trigger `
-    -Principal $Principal `
-    -Settings $Settings `
-    -Force | Out-Null
-
-Write-Host ""
-Write-Host "TASK BERHASIL DIPASANG"
-Write-Host "Nama    : $TASKNAME"
-Write-Host "Trigger : Saat Windows Login"
-Write-Host ""
-
-Start-ScheduledTask -TaskName $TASKNAME
-
-Write-Host "Nusantara AI Service sedang dijalankan..."
-Write-Host ""

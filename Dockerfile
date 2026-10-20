@@ -10,11 +10,12 @@ ENV NUSANTARA_INDOBERT_PYTHON=/opt/indobert/bin/python \
     NUSANTARA_INDOBERT_WORKER=/app/nusantara-models/indobert_worker.py \
     HF_HOME=/app/data/huggingface
 COPY app ./app
+COPY control-plane/dist ./control-plane/dist
 COPY docs ./docs
 COPY .env.example ./
 COPY scripts/healthcheck.py ./scripts/healthcheck.py
 COPY nusantara-models/indobert_worker.py ./nusantara-models/indobert_worker.py
-RUN useradd -r -u 10001 appuser && mkdir -p /app/data && chown -R appuser:appuser /app
+RUN useradd -r -u 10001 appuser && mkdir -p /app/data /home/appuser && chown -R appuser:appuser /app /home/appuser
 USER appuser
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s CMD python scripts/healthcheck.py

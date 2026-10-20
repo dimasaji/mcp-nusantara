@@ -417,4 +417,33 @@ def test_evidence_profile_external_origin_and_missing_admin_fail_closed(controll
     assert controlled_client.get('/v1/control-plane/model-status').status_code == 503
 
 
+def test_document_chat_requires_auth_and_never_dispatches_to_external_provider(controlled_client, monkeypatch):
+    from app.api import routes
+    body={'user_input':'Apa isi dokumen?','document_ids':['selected']}
+    assert controlled_client.post('/v1/chat',json=body).status_code==403
+    monkeypatch.setattr(routes._knowledge.rag,'get_document_info',lambda identifier: object())
+    monkeypatch.setattr(routes,'settings',SimpleNamespace(configuration_snapshot=lambda: (
+        SimpleNamespace(llm=SimpleNamespace(provider='openrouter')),0)))
+    response=controlled_client.post('/v1/chat',json=body,headers={'X-Admin-Token':'isolated-operator-fixture'})
+    assert response.status_code==409
+    assert response.json()['detail']=='DOCUMENT_CHAT_REQUIRES_LOCAL_OPERATOR_MODEL'
+
+
+def test_stream_final_uses_the_same_public_projection_and_replays_once(controlled_client):
+    import json
+    body={'user_input':'Halo','session_id':'web-12345678-1234-1234-1234-123456789abc',
+          'request_id':'f'*32,'stream':True}
+    response=controlled_client.post('/v1/chat',json=body)
+    assert response.status_code==200
+    assert response.headers['content-type'].startswith('application/x-ndjson')
+    events=[json.loads(line) for line in response.text.splitlines()]
+    assert events[0]['type']=='status' and events[-1]['type']=='final'
+    assert set(events[-1]['answer'])=={'session_id','response','trust','model','provider_status','latency_ms',
+        'grounding','understanding','problem','evidence','timestamp'}
+    replay=controlled_client.post('/v1/chat',json={**body,'stream':False})
+    assert replay.json()==events[-1]['answer']
+    history=controlled_client.get('/v1/chat/history',headers={'X-Chat-Session':body['session_id']})
+    assert len(history.json()['turns'])==1
+
+
 

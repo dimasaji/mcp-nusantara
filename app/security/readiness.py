@@ -25,9 +25,11 @@ def verdict(checks: list[Check]) -> str:
 
 def render(version: str, checks: list[Check], baseline_note: str) -> str:
     v = verdict(checks)
-    rows = "\n".join(f"| {c.name} | {c.status}{' (kritis)' if c.critical and c.status == FAIL else ''} | {c.detail} |"
+    def cell(value):
+        return str(value).replace('|', '\\|').replace('\r', '').replace('\n', '<br>')
+    rows = "\n".join(f"| {cell(c.name)} | {c.status}{' (kritis)' if c.critical and c.status == FAIL else ''} | {cell(c.detail)} |"
                      for c in checks)
-    block = "\n**BLOCK RELEASE** - ada temuan keamanan kritis.\n" if v == "FAIL" else ""
+    block = "\n**BLOCK RELEASE** - ada check wajib yang gagal; lihat bukti di bawah.\n" if v == "FAIL" else ""
     return (f"# RELEASE_READINESS_REPORT\n\nVersi kandidat: {version}\nTanggal: {datetime.now(timezone.utc).isoformat()}\n"
             f"Status: **{v}**\n{block}\nBaseline V1: {baseline_note}\n\n| Check | Status | Detail |\n|---|---|---|\n{rows}\n\n"
             "PASS berarti seluruh check dijalankan dan lulus. NOT_RUN berarti check belum dapat dijalankan di lingkungan ini.\n")

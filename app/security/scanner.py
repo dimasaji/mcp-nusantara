@@ -1,6 +1,7 @@
-"""Phase 20 - pemindai secret statis. Temuan tidak pernah menampilkan nilai secret."""
+﻿"""Phase 20 - pemindai secret statis. Temuan tidak pernah menampilkan nilai secret."""
 from __future__ import annotations
 
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -22,22 +23,43 @@ class Finding:
     rule: str
 
 
+def _is_generated_vendor_copy(relative_path: Path) -> bool:
+    parts = relative_path.parts
+    return (
+        len(parts) >= 4
+        and parts[0] == "docs"
+        and parts[1] == "reports"
+        and "workflow-dependencies" in parts[3:]
+    )
+
+
 def scan_tree(root: Path) -> list[Finding]:
     out: list[Finding] = []
     root = Path(root)
-    for p in root.rglob("*"):
-        if not p.is_file() or set(p.relative_to(root).parts) & SKIP_DIRS:
-            continue
-        if p.suffix not in EXTS and p.name not in {".env", ".env.example"}:
-            continue
-        try:
-            lines = p.read_text("utf-8", errors="ignore").splitlines()
-        except OSError:
-            continue
-        for i, line in enumerate(lines, 1):
-            if "nosecret" in line:
+
+    # Prune excluded directories before descent, not after rglob has visited them.
+    for current, dirs, files in os.walk(root, topdown=True, followlinks=False):
+        dirs[:] = [
+            name for name in dirs
+            if name not in SKIP_DIRS and not (Path(current) / name).is_symlink()
+        ]
+
+        for filename in files:
+            p = Path(current) / filename
+            relative_path = p.relative_to(root)
+            if _is_generated_vendor_copy(relative_path):
                 continue
-            for name, rx in RULES.items():
-                if rx.search(line):
-                    out.append(Finding(str(p.relative_to(root)), i, name))
+            if p.suffix not in EXTS and p.name not in {".env", ".env.example"}:
+                continue
+            try:
+                with p.open("r", encoding="utf-8", errors="ignore") as source:
+                    for i, line in enumerate(source, 1):
+                        if "nosecret" in line:
+                            continue
+                        for name, rx in RULES.items():
+                            if rx.search(line):
+                                out.append(Finding(str(p.relative_to(root)), i, name))
+            except OSError:
+                continue
+
     return out

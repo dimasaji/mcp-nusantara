@@ -1,40 +1,50 @@
-# ROADMAP_STATUS — Phase 0–21 (V2.0.0-alpha.2)
+# ROADMAP_STATUS — V2 Phase 0–21
 
-> Pembaruan audit 2026-10-05: tabel di bawah adalah baseline historis V2, bukan status terbaru seluruh aplikasi. Pengujian HTTP, auth, RAG dengan embedding nyata, Docker, dan persistensi restart kini memiliki bukti pada `audit_reports/AUDIT_DOCKER_2026-10-05.json` serta `audit_reports/PYTEST_DOCKER_FIX_FULL_2026-10-05.xml`. Karena itu, pernyataan lama bahwa HTTP/V1 belum pernah diuji dan dependensi belum tersedia sudah tidak berlaku secara umum. Benchmark kualitas jawaban dan load test tetap belum dibuktikan. Kelulusan audit tersebut tidak menyelesaikan semua phase. Gap yang diperiksa langsung terhadap source dicatat di `audit_reports/PHASE_GAP_AUDIT_2026-10-05.txt`.
+Pembaruan 2026-10-06. Nomor di sini mengikuti roadmap V2; penomoran V1 dalam run_tests.py berbeda. Laporan 2026-10-05 merupakan bukti historis.
 
-Verifikasi: `python -m unittest tests.v2.test_v2_core tests.v2.test_phases_7_21` (56 tes, stdlib saja, lulus) dan `python scripts/release_check.py`.
-Legenda: **Selesai** = kode + tes lulus di sandbox. **Sebagian** = ada yang belum. Tidak ada phase yang telah diuji terhadap V1 sungguhan atau lewat HTTP.
+Sesuai verification contract, VERIFY berarti masih ada kriteria yang belum terbukti. Tes yang lulus membuktikan lingkup yang diuji, bukan seluruh blueprint atau kesiapan produksi. Semua phase sudah diperiksa; seluruh phase belum dapat dinyatakan PASS.
 
-| Phase | Status | Modul | Yang belum |
+| Phase | Status menyeluruh | Implementasi/verifikasi terbaru | Kriteria tersisa |
 |---|---|---|---|
-| 0 Discovery | Selesai (statis) | PROJECT_BASELINE.md, RISK_REGISTER.md | V1 tidak bisa dijalankan di sandbox |
-| 1 Architecture | Selesai | docs/architecture/TARGET_ARCHITECTURE.md | — |
-| 2 Hardening | Sebagian | `app/core/hardening/` | belum dipasang ke provider/route V1; timeout thread tidak membunuh fungsi macet |
-| 3 Observability | Sebagian | `app/observability/` | token usage, trace, retensi log, dashboard |
-| 4 Trust | Sebagian | adapter ke TrustEngine V1 | provenance/source trust per sumber |
-| 5 Policy | Sebagian | PolicyEngine V1 + audit hash-chain | modul `permissions` terpisah |
-| 6 Memory | Sebagian | perbaikan keamanan LTM (JSON) | governance (what/why/how long), episodic, vector, memory_manager |
-| **7 RAG** | **Selesai (inti)** | `app/rag/` | ingest parser file (PDF/docx), embedding nyata, reranker model; belum menggantikan `app/knowledge` V1 |
-| **8 MCP** | **Sebagian** | `app/governance/mcp_bridge.py` | belum terhubung ke `MCPServer`/client MCP nyata; hanya validasi manifest + tool bawaan |
-| **9 Tool governance** | **Selesai (inti)** | `governance/tools.py`, `sandbox.py` | sandbox = allowlist + timeout, bukan isolasi OS/container |
-| **10 Experience** | **Selesai (inti)** | `app/experience/events.py` | analytics/dashboard |
-| **11 Feedback** | **Selesai** | `app/experience/feedback.py` | UI feedback |
-| **12 Evaluation** | **Sebagian** | `app/evaluation/` | baseline V1 ASLI belum ditangkap; dataset baru 4 kasus smoke; groundedness/relevance heuristik leksikal |
-| **13 Failure analysis** | **Selesai (inti)** | `research/failure_analysis.py` | korelasi lintas request, klasifikasi berbasis log tak terstruktur |
-| **14 Gap detection** | **Selesai (inti)** | `research/gap_detection.py` | `confidence` heuristik, bukan terkalibrasi |
-| **15 Knowledge discovery** | **Sebagian** | `research/knowledge_discovery.py` | tidak mengambil dari jaringan (konten disuplai pemanggil); promosi wajib approval |
-| **16 Experiment** | **Selesai (inti)** | `research/experiments.py` | tidak ada penjadwal/dataset besar |
-| **17 Improvement proposal** | **Selesai** | `research/improvement.py` | — |
-| **18 Human approval** | **Selesai (inti)** | `approval/queue.py`, `change_request.py`, endpoint `/v2/approvals/*` | UI review; autentikasi hanya admin-token |
-| **19 V1.x development** | **Sebagian** | `improvement/gate.py` | tidak menjalankan git; hanya validasi syarat + registri versi |
-| **20 Regression + security** | **Sebagian** | `security/`, `scripts/release_check.py` | 5 check NOT_RUN (lihat laporan) |
-| **21 Release + rollback** | **Sebagian** | `improvement/release.py` | tidak melakukan deploy; tidak ada rilis yang pernah dijalankan |
+| 0 Discovery | VERIFY | Baseline, risk register, audit gap dan dependency graph tersedia | Inventaris target produksi |
+| 1 Architecture | VERIFY | Adapter menggunakan engine yang ada | Review akhir arsitektur/deployment |
+| 2 Hardening | VERIFY | Stage V1 bounded, event loop responsif, worker timeout, provider 503, konteks/token dibatasi | Thread Python tidak dapat dibunuh saat timeout; SLA end-to-end |
+| 3 Observability | VERIFY | Stage/request trace, token usage, rotasi telemetry, monitoring UI | Retensi audit dan kapasitas produksi |
+| 4 Trust | VERIFY | Trust memeriksa jawaban dan mengembalikan provenance | Kalibrasi authority dan verifikasi faktual |
+| 5 Policy | VERIFY | Policy V1 dipakai; auth/admin dan approval-bound payload diuji | Matriks izin dan identitas produksi |
+| 6 Memory | VERIFY | Chat V2 opt-in, sesi acak, isolasi, persistence, TTL, delete dan batas history diuji; purge saat akses baca/tulis, create dan pembukaan store terbukti menghapus file kedaluwarsa | Episodic/vector memory belum dibuktikan; retensi saat layanan idle belum dijadwalkan |
+| 7 RAG | VERIFY | Engine existing dipertahankan; metadata retrieval/trust tersedia | Knowledge domain yang disahkan, parser PDF/DOCX end-to-end dan dataset representatif |
+| 8 MCP | VERIFY | Client SDK nyata initialize/list/call melalui stdio dan governed registry | Integrasi host produksi; transport jaringan/auth |
+| 9 Tools | VERIFY | Tool read-only, penolakan injection/unknown tool dan audit diuji | Isolasi OS/container untuk tool berisiko |
+| 10 Experience | VERIFY | Analisis event/feedback tersedia di API admin dan UI | Korelasi pengalaman produksi |
+| 11 Feedback | VERIFY | Tombol feedback chat terhubung request ID; backend diuji | Uji pengguna seluruh alur pada model nyata |
+| 12 Evaluation | VERIFY | API nyata, 12 skenario, records/error/hash dataset, baseline dan deteksi regresi | Oracle wilayah/SOP dan ambang kualitas; skor leksikal bukan verifikasi fakta |
+| 13 Failure analysis | VERIFY | Analisis existing terhubung event/feedback | Validasi klasifikasi lintas request produksi |
+| 14 Gap detection | VERIFY | Gap dapat menghasilkan proposal melalui API | Confidence heuristik belum terkalibrasi |
+| 15 Discovery | VERIFY | HTTPS allowlist host eksplisit, DNS pinned publik, batas ukuran, kandidat durable/review | Sumber resmi, fetch domain nyata, promosi berapproval dan pencarian RAG end-to-end |
+| 16 Experiment | VERIFY | Mesin eksperimen dan pembanding existing diuji | Dataset/eksperimen representatif dan penjadwalan bila diperlukan |
+| 17 Proposal | VERIFY | Proposal API dari gap, persistence dan antrean review diuji | Proposal domain nyata dan keputusan manusia |
+| 18 Human approval | VERIFY | UI browser, audit snapshot, restart dan consume sekali diuji | Identitas masih admin-token; single worker; audit legacy tanpa snapshot tidak direkonstruksi |
+| 19 Development | VERIFY | Branch Git nyata dibuat setelah approval consumed/payload cocok | Change request nyata, implementasi kandidat dan review |
+| 20 Regression/security | VERIFY | Regresi lengkap, compile, auth, injection, leakage, secret scan, health/chat load dijalankan | Gate fakta, SLA dan beban representatif |
+| 21 Release/rollback | VERIFY | Backup checksum, restore aman, fault injection staging dan health pulih | Readiness PASS, approval manusia, target deployment; belum rilis produksi |
 
-## Status rilis
-`RELEASE_READINESS_REPORT.md` = **CONDITIONAL** (bukan PASS). Tidak ada check FAIL; 5 check NOT_RUN: API test, regresi V1 (`run_tests.py`), auth endpoint, benchmark vs baseline V1, performance.
-`POST_RELEASE_REPORT.md` sengaja tidak dibuat: belum ada rilis.
+## Bukti
 
-## Yang wajib Anda jalankan di mesin dengan dependensi
-1. `pip install -e ".[dev]"` → `python run_tests.py` (baseline V1) → `python scripts/release_check.py` (check 3 akan ikut berjalan).
-2. Ganti `system()` di `scripts/run_eval.py` agar memanggil `/v1/chat`, jalankan, simpan sebagai baseline V1 asli.
-3. `uvicorn app.main:app` lalu uji `/v1/chat`, `/v2/chat`, `/v2/feedback`, `/v2/experience/analysis`, `/v2/approvals/*` (set `NUSANTARA_ADMIN_TOKEN`).
+- reports/MEMORY_RETENTION_2026-10-06.md: tes terarah retensi sesi, V2 core dan context budget; 39 tes serta 4 subtes lulus. Tidak mengubah gate release.
+- audit_reports/ALL_PHASES_FINAL_2026-10-06.xml: regresi lengkap terbaru.
+- RELEASE_READINESS_REPORT.md: gate terkini; bukan otomatis PASS ketika unit test lulus.
+- audit_reports/EVAL_V1_2026-10-06.json: baseline historis layanan utama, tidak ditimpa kandidat.
+- audit_reports/EVAL_V1_STAGING_FINAL_2026-10-06.json: pengukuran ulang kandidat staging.
+- audit_reports/LOAD_HEALTH_2026-10-06.json dan LOAD_CHAT_2026-10-06.json: health/chat terpisah, sampel kecil bukan SLA.
+- audit_reports/REVIEW_UI_2026-10-06.png: UI dengan fixture staging yang ditolak.
+- audit_reports/ALL_PHASES_WORK_2026-10-06.txt: scope, hasil dan cara menjalankan.
+
+Baseline lama yang menyatakan HTTP/MCP/persistence/Git/rollback belum pernah diuji kini digantikan bukti tersebut. Ini tidak berarti seluruh kriteria phase terpenuhi.
+
+## Menutup gate
+
+1. Tentukan wilayah layanan/SOP resmi, review oracle dan ambang kualitas, sahkan knowledge melalui approval.
+2. Benchmark dan load representatif pada target; perbaiki kegagalan sebelum rilis.
+3. Lengkapi kriteria tersisa per phase sesuai matriks.
+4. Approval release setelah readiness PASS; ulangi backup/restore pada target sebelum deployment.

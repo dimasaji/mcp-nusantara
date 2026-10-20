@@ -77,3 +77,5 @@ image Linux berhasil dibangun.
 ## Verifikasi
 
 `python run_tests.py` adalah smoke/phase verification. `pytest` menjalankan test suite. Lulus test tidak berarti production-ready; audit blueprint juga mensyaratkan pengujian keamanan, performa, model, RAG dan handoff nyata.
+
+Kontrak NCP-V1-AUTOSTART-001 menetapkan Backend `127.0.0.1:8000` dan Frontend `127.0.0.1:5180`, bersumber dari `config/local-services.json`. Jalankan `scripts/Start-NusantaraV1.ps1`. Pengelolaan lifecycle, Task Scheduler, dan verifikasi reboot: [panduan autostart](docs/NCP-V1-AUTOSTART-001.md). Override proxy eksplisit untuk tes terisolasi: `NUSANTARA_BACKEND_URL`. Port 5174 hanya dipakai server tes Playwright terisolasi.

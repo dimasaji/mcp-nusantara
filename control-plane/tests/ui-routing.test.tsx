@@ -22,8 +22,8 @@ beforeEach(()=>{
 });
 afterEach(()=>{cleanup();vi.mocked(window.scrollTo).mockRestore();vi.clearAllMocks();vi.unstubAllGlobals();});
 
-describe('V1 assistant route alias',()=>{
-  it.each(['/ui'])('renders the existing assistant at %s without Console layout',async path=>{
+describe('V1 assistant route',()=>{
+  it.each(['/','/ui','/assistant'])('renders the existing assistant at %s without Console layout',async path=>{
     const router=createRouter({routeTree:existingRouter.routeTree,
       history:createMemoryHistory({initialEntries:[path]})});
     const client=new QueryClient({defaultOptions:{queries:{retry:false}}});
@@ -38,11 +38,13 @@ describe('V1 assistant route alias',()=>{
     expect(sendUserChat).not.toHaveBeenCalled();
     expect(fetch).not.toHaveBeenCalled();
   });
-  it('keeps legacy chat and makes the operator dashboard the landing page',()=>{
+  it('makes Chat the landing page and retains the operator dashboard',()=>{
     const routes=existingRouter.routeTree.children??[];
     const componentFor=(path:string)=>routes.find(route=>'path' in route.options&&route.options.path===path)?.options.component;
-    expect(componentFor('/')).toBe(OperatorHome);
-    expect(componentFor('/ui')).toBe(UserChat);
+    expect(componentFor('/')).not.toBe(OperatorHome);
+    expect(componentFor('/ui')).not.toBe(OperatorHome);
+    expect(componentFor('/assistant')).not.toBe(OperatorHome);
+    expect(componentFor('/dashboard')).toBe(OperatorHome);
   });
 });
 

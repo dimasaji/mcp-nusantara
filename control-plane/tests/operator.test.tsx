@@ -2,11 +2,11 @@
 import {describe,it,expect,vi,beforeEach} from 'vitest';
 import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
 import {AdminAuthProvider,useAdminAuth} from '../src/auth';
-import {OperatorHome,WorkspacePage,CostsPage,TasksPage,BlockersPage,operatorMenus} from '../src/operator';
+import {OperatorHome,WorkspacePage,WorkspaceTasks,CostsPage,TasksPage,BlockersPage,operatorMenus} from '../src/operator';
 import * as api from '../src/api';
 import {HumanNavigation} from '../src/human';
 vi.mock('@tanstack/react-router',()=>({Link:({to,children}:{to:string;children:React.ReactNode})=><a href={to}>{children}</a>}));
-vi.mock('../src/api',()=>({fetchOperationsSummary:vi.fn(),fetchCostSummary:vi.fn(),fetchEvidencePackage:vi.fn(),fetchExecutionHistory:vi.fn(),fetchExecutionContext:vi.fn(),fetchModelStatus:vi.fn(),fetchSnapshot:vi.fn(),fetchChatHistory:vi.fn(),sendUserChat:vi.fn(),ChatSendError:class extends Error{}}));
+vi.mock('../src/api',()=>({fetchRuntimeHealth:vi.fn(),fetchOperationsSummary:vi.fn(),fetchCostSummary:vi.fn(),fetchEvidencePackage:vi.fn(),fetchExecutionHistory:vi.fn(),fetchExecutionContext:vi.fn(),fetchModelStatus:vi.fn(),fetchSnapshot:vi.fn(),fetchChatHistory:vi.fn(),sendUserChat:vi.fn(),ChatSendError:class extends Error{}}));
 const binding={plan_id:'plan-fixture',version:'v1',action:'CONTROLLED_FILE_WRITE'};
 const pkg:api.EvidencePackage={package_id:'evp_sha256_'+'a'.repeat(64),generated_at:'2026-10-16',read_scope:'FIXTURE_ONLY',runtime_status:'NOT_VERIFIED',pass_allowed:false,evidence:[],criteria:[],blockers:[{id:'missing-proof',reason:'Evidence runtime belum lengkap'}]};
 function mount(children:React.ReactNode,token=''){
@@ -16,6 +16,7 @@ function mount(children:React.ReactNode,token=''){
 }
 beforeEach(()=>{
  vi.resetAllMocks();
+ vi.mocked(api.fetchRuntimeHealth).mockResolvedValue({status:'ok',service:'fixture-backend',version:'test',httpStatus:200});
  vi.mocked(api.fetchChatHistory).mockResolvedValue({session_id:'fixture',turns:[]});
  vi.mocked(api.fetchEvidencePackage).mockResolvedValue(pkg);
  vi.mocked(api.fetchModelStatus).mockResolvedValue({model:'fixture-local',provider:'ollama',revision:0,process_id:1,consistency_scope:'CURRENT_PROCESS_ONLY',availability:'NOT_VERIFIED',status:'NOT_VERIFIED',selection_enabled:false,selection_source:'BOOTSTRAP',last_request:null});
@@ -24,6 +25,16 @@ beforeEach(()=>{
  vi.mocked(api.fetchSnapshot).mockRejectedValue(new Error('Snapshot offline'));
 });
 describe('Operator contract boundaries',()=>{
+ it('filters only loaded backend tasks and reports empty search without dispatch',async()=>{
+  vi.mocked(api.fetchOperationsSummary).mockResolvedValue({scope:'TEST_ONLY',source:'fixture',pending_work:1,pending_review:0,reason:null,checked_at:'2026-10-19',tasks:[{id:'PIAK-03',objective:'Tinjau evidence',status:'HOLD',updated_at:'2026-10-19',source:'fixture'}]});
+  mount(<WorkspaceTasks/>,'test-only');
+  await screen.findByText('PIAK-03');
+  fireEvent.change(screen.getByRole('searchbox'),{target:{value:'tidak-cocok'}});
+  expect(screen.getByText('Tidak ada tugas yang cocok dalam cakupan yang dibaca.')).toBeInTheDocument();
+  expect(screen.queryByText('PIAK-03')).toBeNull();
+  expect(api.fetchOperationsSummary).toHaveBeenCalledTimes(1);
+  expect(api.sendUserChat).not.toHaveBeenCalled();
+ });
  it('opens the existing Chat route from human navigation',()=>{
   mount(<HumanNavigation/>);
   expect(screen.getByRole('link',{name:'Chat'})).toHaveAttribute('href','/ui');
@@ -47,10 +58,11 @@ describe('Operator contract boundaries',()=>{
  });
  it('provides existing Chat in Workspace without enabling autonomous task execution',async()=>{
   mount(<WorkspacePage/>);
+  fireEvent.click(screen.getByRole('tab',{name:'Chat V1'}));
   expect(screen.getByLabelText('Pertanyaan Anda')).toBeEnabled();
-  expect(screen.getByRole('heading',{name:'Status tugas V1'})).toBeInTheDocument();
+  expect(screen.getByRole('tab',{name:'Aktivitas tugas'})).toBeInTheDocument();
   expect(screen.queryByRole('button',{name:'Kirim tugas'})).toBeNull();
-  await screen.findByText(/fixture-local/);
+  await screen.findByText('Ollama · fixture-local');
   expect(api.sendUserChat).not.toHaveBeenCalled();
   expect(api.fetchExecutionContext).not.toHaveBeenCalled();
  });

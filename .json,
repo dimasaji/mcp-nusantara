@@ -1,0 +1,76 @@
+warning: in the working copy of '.dockerignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.env.example', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.graphifyignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'Dockerfile', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ROLLBACK_PLAN.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/api/v2_routes.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/core/config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/core/nusantara_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/core/runtime_identity.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/devcore/core.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/devcore/grounding.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/devcore/router.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/devcore/tools.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/evaluation/evaluator.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/hermes/agent.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/improvement/gate.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/improvement/release.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/knowledge/engine.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/knowledge/rag.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/knowledge/schemas.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/knowledge/store.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/main.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/memory/engine.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/models/base.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/models/ollama.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/security/readiness.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/security/scanner.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docker-compose.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/ROADMAP_STATUS.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'pyproject.toml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'run_tests.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/release_check.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/run_eval.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_model_router_configuration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_provider_identity.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/v2/test_devcore.py', LF will be replaced by CRLF the next time Git touches it
+ .dockerignore                            |   3 [32m+[m
+ .env.example                             |   1 [32m+[m
+ .graphifyignore                          |   2 [32m+[m
+ Dockerfile                               |   3 [32m+[m[31m-[m
+ RELEASE_READINESS_REPORT.md              |  32 [32m+[m[31m-[m
+ ROLLBACK_PLAN.md                         |  15 [32m+[m[31m-[m
+ app/api/routes.py                        | 542 [32m+++[m[31m-------------------------[m
+ app/api/v2_routes.py                     |  10 [32m+[m[31m-[m
+ app/core/config.py                       |  57 [32m++[m[31m-[m
+ app/core/nusantara_config.py             |  37 [32m+[m[31m-[m
+ app/core/runtime_identity.py             |  76 [32m+++[m[31m-[m
+ app/devcore/core.py                      | 104 [32m+++++[m[31m-[m
+ app/devcore/grounding.py                 |  22 [32m+[m[31m-[m
+ app/devcore/router.py                    |   7 [32m+[m
+ app/devcore/tools.py                     |  27 [32m+[m[31m-[m
+ app/evaluation/evaluator.py              |  26 [32m+[m[31m-[m
+ app/hermes/agent.py                      | 595 [32m+++++++++++++++++++++++++++++++[m
+ app/improvement/gate.py                  |  26 [32m++[m
+ app/improvement/release.py               |  42 [32m++[m[31m-[m
+ app/knowledge/engine.py                  |   8 [32m+[m[31m-[m
+ app/knowledge/rag.py                     | 157 [32m+++++++[m[31m-[m
+ app/knowledge/schemas.py                 | 140 [32m+++++++[m[31m-[m
+ app/knowledge/store.py                   |  36 [32m++[m
+ app/main.py                              |  87 [32m++++[m[31m-[m
+ app/memory/engine.py                     |   2 [32m+[m
+ app/models/base.py                       |   6 [32m+[m[31m-[m
+ app/models/ollama.py                     |  41 [32m++[m[31m-[m
+ app/security/readiness.py                |   6 [32m+[m[31m-[m
+ app/security/scanner.py                  |  15 [32m+[m[31m-[m
+ app/ui/index.html                        |  88 [32m+++[m[31m--[m
+ docker-compose.yml                       |   4 [32m+[m[31m-[m
+ docs/v2/ROADMAP_STATUS.md                |  82 [32m+++[m[31m--[m
+ pyproject.toml                           |   3 [32m+[m
+ run_tests.py                             |   9 [32m+[m[31m-[m
+ scripts/release_check.py                 |  60 [32m+++[m[31m-[m
+ scripts/run_eval.py                      | 148 [32m+++++++[m[31m-[m
+ tests/test_model_router_configuration.py |  11 [32m+[m
+ tests/test_provider_identity.py          | 200 [32m+++++++++++[m
+ tests/v2/test_devcore.py                 | 113 [32m++++++[m
+ 39 files changed, 2167 insertions(+), 676 deletions(-)

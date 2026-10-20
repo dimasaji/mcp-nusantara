@@ -31,7 +31,14 @@ def main():
     from app.knowledge.rag import create_rag
     check('Phase 6 RAG engine imports', lambda: assert_true(create_rag() is not None))
     from app.reasoning.engine import ReasoningEngine
-    check('Phase 7 reasoning', lambda: assert_true(ReasoningEngine().process(problem_description='KTP hilang').plan is not None))
+    def verify_reasoning():
+        engine = ReasoningEngine()
+        assert_true(engine.analyze('KTP hilang').status == 'insufficient_evidence')
+        grounded = engine.analyze('KTP hilang', evidence=[{
+            'document_id': 'fixture-smoke', 'chunk': 'Synthetic verification evidence.', 'score': 0.9,
+        }], intent_confidence=0.9)
+        assert_true(grounded.status == 'grounded' and grounded.facts and grounded.inferences)
+    check('Phase 7 reasoning', verify_reasoning)
     from app.workflow.engine import WorkflowEngine
     check('Phase 8 workflow', lambda: assert_true(WorkflowEngine().complete(WorkflowEngine().create_workflow({'name':'x'}),True).status=='completed'))
     from app.policy.policy_engine import PolicyEngine

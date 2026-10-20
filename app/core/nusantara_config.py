@@ -44,8 +44,9 @@ class _System(_Frozen):
 
 
 class _Runtime(_Frozen):
+    profile: Literal["NORMAL", "ATTESTATION"] = "NORMAL"
     host: str = Field(default="127.0.0.1", min_length=1, max_length=256)
-    port: int = Field(default=8000, ge=1, le=65535)
+    port: int = Field(default=8765, ge=1, le=65535)
     workers: int = Field(default=1, ge=1)
     stage_timeout_s: float = Field(default=30.0, gt=0)
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
@@ -66,7 +67,7 @@ class _Generation(_Frozen):
 
 
 class _LLM(_Frozen):
-    provider: Literal["ollama"] = "ollama"
+    provider: Literal["ollama", "openrouter"] = "ollama"
     base_url: str = Field(default="http://localhost:11434", max_length=2048)
     model: str = Field(default="llama3.2:1b", min_length=1, max_length=256)
     auth_env_ref: str | None = Field(default=None, pattern=r"^[A-Z_][A-Z0-9_]{0,127}$", repr=False, exclude=True)
@@ -83,6 +84,13 @@ class _LLM(_Frozen):
             raise ValueError("provider_address")
         if not self.model.strip():
             raise ValueError("model_required")
+        if self.provider == "openrouter":
+            if self.base_url != "https://openrouter.ai/api/v1":
+                raise ValueError("openrouter_official_endpoint_required")
+            if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}", self.model):
+                raise ValueError("openrouter_model_invalid")
+            if self.auth_env_ref not in (None, "OPENROUTER_API_KEY"):
+                raise ValueError("openrouter_key_reference_invalid")
         return self
 
 
@@ -146,6 +154,7 @@ class _Features(_Frozen):
     graph_context: bool | None = None
     developer_core: bool | None = None
     experimental_features: bool = False
+    langgraph_workflow: bool = False
 
 
 class _Legacy(_Frozen):
@@ -154,6 +163,25 @@ class _Legacy(_Frozen):
     privacy_filter_enabled: bool = True
     context_window_size: int = Field(default=10, gt=0)
     session_timeout_minutes: int = Field(default=30, gt=0)
+
+
+class _LayaIntent(_Frozen):
+    enabled: bool = False
+    base_url: str = 'http://127.0.0.1:18765'
+    timeout_s: float = Field(default=2.0, gt=0, le=5)
+    # Measured with eligibility gate on tests/fixtures/laya-intents.json.
+    min_probability: float = Field(default=0.5, ge=0.5, le=1)
+    min_margin: float = Field(default=0.7, ge=0, le=1)
+
+    @model_validator(mode='after')
+    def loopback_only(self):
+        parsed = urlsplit(self.base_url)
+        if (parsed.scheme != 'http' or parsed.hostname != '127.0.0.1' or
+                parsed.username is not None or parsed.password is not None or
+                parsed.path not in ('', '/') or parsed.query or parsed.fragment or
+                parsed.port is None):
+            raise ValueError('LAYA_LOOPBACK_URL_REQUIRED')
+        return self
 
 
 class _Snapshot(_Frozen):
@@ -166,6 +194,7 @@ class _Snapshot(_Frozen):
     paths: _Paths
     governance: _Governance = Field(default_factory=_Governance)
     features: _Features = Field(default_factory=_Features)
+    laya_intent: _LayaIntent = Field(default_factory=_LayaIntent)
     legacy_declarations: _Legacy = Field(default_factory=_Legacy)
 
 
@@ -181,6 +210,40 @@ class NusantaraConfig:
     """Validated immutable snapshot returned only by the loader; no global singleton."""
     _snapshot: _Snapshot
     provenance: tuple[Provenance, ...]
+
+    def with_operator_model(self, model: str) -> 'NusantaraConfig':
+        """Replace only the validated LLM leaf; retain the frozen bootstrap context."""
+        from dataclasses import replace
+        llm = self.llm.model_copy(update={'model': model})
+        llm = type(llm).model_validate(llm.model_dump() | {'auth_env_ref': self.llm.auth_env_ref})
+        snapshot = self._snapshot.model_copy(update={'llm': llm})
+        provenance = tuple(replace(p, source='EXPLICIT') if p.field == 'llm.model' else p
+                           for p in self.provenance)
+        return replace(self, _snapshot=snapshot, provenance=provenance)
+
+    def with_operator_provider(self, provider: str, model: str, *,
+                               ollama_base_url: str = 'http://127.0.0.1:11434') -> 'NusantaraConfig':
+        """Create a process-local provider selection without changing bootstrap settings."""
+        if provider not in {'ollama', 'openrouter'}:
+            raise ConfigurationError('UNSUPPORTED_PROVIDER')
+        if provider == 'openrouter' and self.llm.provider != 'openrouter':
+            raise ConfigurationError('OPENROUTER_NOT_BOOTSTRAPPED')
+        if provider == self.llm.provider:
+            return self.with_operator_model(model)
+        from dataclasses import replace
+        llm_data = self.llm.model_dump() | {'provider': provider, 'model': model}
+        if provider == 'ollama':
+            # OpenRouter's provider-specific default is 30 seconds. Do not carry
+            # that cloud timeout into a cold local model load; the 7B Qwen
+            # runtime has taken over two minutes on this host.
+            llm_data.update(base_url=ollama_base_url, auth_env_ref=None,
+                            connection_timeout_s=240.0)
+        llm = type(self.llm).model_validate(llm_data)
+        snapshot = self._snapshot.model_copy(update={'llm': llm})
+        provenance = tuple(replace(p, source='EXPLICIT') if p.field in
+                           {'llm.provider', 'llm.model', 'llm.base_url'} else p
+                           for p in self.provenance)
+        return replace(self, _snapshot=snapshot, provenance=provenance)
 
     @property
     def system(self) -> _System:
@@ -219,6 +282,10 @@ class NusantaraConfig:
         return self._snapshot.features
 
     @property
+    def laya_intent(self) -> _LayaIntent:
+        return self._snapshot.laya_intent
+
+    @property
     def legacy_declarations(self) -> _Legacy:
         return self._snapshot.legacy_declarations
 
@@ -235,10 +302,19 @@ class NusantaraConfig:
 
 
 _ALIASES = MappingProxyType({
+    "NUSANTARA_RUNTIME_PROFILE": "runtime.profile",
     "APP_NAME": "system.application_name", "APP_VERSION": "system.version",
     "DEBUG": "system.debug", "HOST": "runtime.host", "PORT": "runtime.port",
     "LOG_LEVEL": "runtime.log_level", "LLM_PROVIDER": "llm.provider",
     "LLM_BASE_URL": "llm.base_url", "LLM_MODEL": "llm.model",
+    "LLM_TIMEOUT_SECONDS": "llm.connection_timeout_s",
+    "LLM_MAX_TOKENS": "llm.generation.max_tokens",
+    "LANGGRAPH_WORKFLOW_ENABLED": "features.langgraph_workflow",
+    "NUSANTARA_LAYA_ENABLED": "laya_intent.enabled",
+    "NUSANTARA_LAYA_BASE_URL": "laya_intent.base_url",
+    "NUSANTARA_LAYA_TIMEOUT_S": "laya_intent.timeout_s",
+    "NUSANTARA_LAYA_MIN_PROBABILITY": "laya_intent.min_probability",
+    "NUSANTARA_LAYA_MIN_MARGIN": "laya_intent.min_margin",
     "LLM_CONTEXT_TOKENS": "llm.generation.context_length",
     "EMBEDDING_MODEL": "legacy_declarations.embedding_model",
     "VECTOR_STORE_TYPE": "legacy_declarations.vector_store_type",
@@ -253,9 +329,12 @@ _ALIASES = MappingProxyType({
     "NUSANTARA_LLM_MODEL": "llm.model", "NUSANTARA_RUNTIME_PORT": "runtime.port",
 })
 _NUMERIC_ENV = frozenset({"runtime.port", "llm.generation.context_length",
+    "llm.connection_timeout_s", "llm.generation.max_tokens",
     "legacy_declarations.context_window_size", "legacy_declarations.session_timeout_minutes",
-    "rag.chunk_size", "rag.chunk_overlap", "rag.top_k"})
-_BOOL_ENV = frozenset({"system.debug", "legacy_declarations.privacy_filter_enabled"})
+    "rag.chunk_size", "rag.chunk_overlap", "rag.top_k", "laya_intent.timeout_s",
+    "laya_intent.min_probability", "laya_intent.min_margin"})
+_BOOL_ENV = frozenset({"system.debug", "legacy_declarations.privacy_filter_enabled",
+                       "features.langgraph_workflow", "laya_intent.enabled"})
 
 
 def _leaves(data: Mapping, prefix: str = "", depth: int = 0) -> dict[str, Any]:
@@ -377,6 +456,18 @@ def _load(config_file, dotenv_environment, environment, overrides, project_root)
             provenance[key] = source
     if overrides is not None:
         merge(overrides, "EXPLICIT")
+    # The sealed legacy attestation protocol is intentionally bound to 8000.
+    # NORMAL V1 uses 8765; explicit configured ports always retain precedence.
+    if data['runtime']['profile'] == 'ATTESTATION' and provenance['runtime.port'] == 'DEFAULT':
+        data['runtime']['port'] = 8000
+    # Provider-dependent defaults are resolved on this same owner, never from
+    # credentials. Explicit FILE/ENV/EXPLICIT values still take precedence.
+    if data["llm"]["provider"] == "openrouter":
+        for field, value in {"base_url": "https://openrouter.ai/api/v1",
+                             "model": "openai/gpt-4o-mini",
+                             "connection_timeout_s": 30.0}.items():
+            if provenance["llm." + field] == "DEFAULT":
+                data["llm"][field] = value
     for group, fields in {"knowledge": ("root", "database", "document_root", "index", "cache"),
                           "paths": ("project_root", "worker", "worker_python")}.items():
         for field in fields:

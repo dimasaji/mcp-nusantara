@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -99,3 +100,28 @@ def start(cr: ChangeRequest, p: Proposal, baseline_name: str | None, registry: V
     return DevBranch(name, target_version, [f"git checkout -b {name} v{parent}",
                                             "# lakukan perubahan, jalankan tes + evaluasi, buka review",
                                             f"git tag v{target_version}  # setelah lolos Phase 20"])
+
+
+def create_review_branch(repo: Path, cr: ChangeRequest, proposal: Proposal,
+                         baseline_name: str, queue, git_executable: str = "git") -> str:
+    """Create an approved review branch without checkout, commit, tag or deployment.
+
+    The approval must already have been consumed by ReviewWorkflow for this exact
+    proposal. AI-created ChangeRequest objects alone cannot authorize Git writes.
+    """
+    from dataclasses import asdict
+    from app.approval.queue import CONSUMED, payload_hash
+    blockers = check(cr, proposal, baseline_name)
+    approved = queue.get(cr.approval_id)
+    if (approved is None or approved.status != CONSUMED
+            or approved.kind != "improvement_proposal"
+            or approved.payload_hash != payload_hash(asdict(proposal))
+            or approved.reviewer != cr.reviewer or not queue.audit.verify()):
+        blockers.append("durable human approval is missing or mismatched")
+    if blockers:
+        raise GateBlocked(blockers)
+    branch = "codex/" + branch_name(proposal.proposal_id).replace("feature/", "")
+    subprocess.run([git_executable, "-C", str(Path(repo).resolve()), "branch", "--", branch, "HEAD"],
+                   check=True, capture_output=True, text=True, timeout=10)
+    queue.audit.record("development.branch_created", branch=branch, change_request_id=cr.change_request_id)
+    return branch

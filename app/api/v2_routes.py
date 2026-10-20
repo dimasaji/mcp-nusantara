@@ -15,6 +15,7 @@ from pydantic import BaseModel, Field
 from app.approval import ApprovalError, ApprovalQueue, AuditTrail
 from app.core.config import settings
 from app.security.auth import require_admin as _require_admin
+from app.api.inspection_preview import router as inspection_preview_router
 from app.devcore import DevCore
 from app.experience import EventRecorder, FeedbackRejected, FeedbackStore
 from app.research.failure_analysis import analyze
@@ -25,6 +26,7 @@ from app.research.improvement import ProposalEngine, ProposalInvalid
 from app.approval.change_request import ReviewWorkflow
 import asyncio
 from app.knowledge.engine import KnowledgeEngine
+from app.knowledge.schemas import capture_retrieval
 from app.language.engine import LanguageEngine
 from app.models.ollama import OllamaProvider
 from app.memory.session_adapter import SessionMemory
@@ -36,6 +38,7 @@ from app.v2.orchestrator import V2Orchestrator
 from app.v2.wiring import v1_policy_check, v1_trust_check
 
 router = APIRouter(prefix="/v2", tags=["v2"])
+router.include_router(inspection_preview_router)
 
 
 @router.get("/review", include_in_schema=False)
@@ -118,6 +121,8 @@ async def chat(req: ChatV2Request) -> dict[str, Any]:
         return out["content"]
 
     def retrieve(text: str) -> list[dict[str, Any]]:
+        with capture_retrieval('V2_CHAT'):
+            evidence = _knowledge.search_knowledge(text, top_k=None)
         return [
             {
                 "document_id": e.document_id,
@@ -127,10 +132,7 @@ async def chat(req: ChatV2Request) -> dict[str, Any]:
                 "score": e.score,
                 "metadata": getattr(e, "metadata", {}) or {},
             }
-            for e in _knowledge.search_knowledge(
-                text,
-                top_k=None,
-            )
+            for e in evidence
         ]
 
     # Reuse the existing LanguageEngine instance. Hermes owns the

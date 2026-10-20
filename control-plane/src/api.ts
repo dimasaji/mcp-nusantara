@@ -4,7 +4,9 @@ import {z} from 'zod';
 const ModelStatusSchema=z.object({model:z.string(),provider:z.string(),revision:z.number().int(),
   process_id:z.number().int(),consistency_scope:z.literal('CURRENT_PROCESS_ONLY'),
   availability:z.string(),status:z.string(),selection_enabled:z.boolean(),source_build_id:z.string().optional(),
-  selection_source:z.string(),last_request:z.record(z.string(),z.unknown()).nullable()});
+  selectable_providers:z.array(z.enum(['ollama','openrouter'])).optional(),
+  selection_source:z.string(),checked_at:z.string().optional(),verified_at:z.string().nullable().optional(),
+  verification_scope:z.string().optional(),last_request:z.record(z.string(),z.unknown()).nullable()});
 export type ModelStatus=z.infer<typeof ModelStatusSchema>;
 async function runtimeRequest(path:string,options:RequestInit={}):Promise<Response>{
   let response:Response;
@@ -18,12 +20,19 @@ async function runtimeFetch(path:string,options:RequestInit={}){
     const body=await response.json().catch(()=>null) as {detail?:{reason?:string}}|null;
     throw new Error(`Rencana eksekusi belum siap. ${body?.detail?.reason??'Periksa kelengkapan rencana dan staging di backend.'}`);
   }
-  if(!response.ok)throw new Error(response.status===403?'Akses ditolak. Periksa token operator.':
+  if(!response.ok){
+    if(path.endsWith('/models')&&response.status===503){
+      const body=await response.json().catch(()=>null) as {detail?:string}|null;
+      throw new Error(body?.detail==='MODEL_INVENTORY_UNAVAILABLE'?'Ollama lokal tidak dapat dihubungi untuk membaca /api/tags. Periksa Ollama lalu coba lagi.':
+        body?.detail==='MODEL_PRICING_CATALOG_UNAVAILABLE'?'Katalog model OpenRouter lokal tidak tersedia.':'Inventaris model runtime belum tersedia.');
+    }
+    throw new Error(response.status===403?'Akses ditolak. Periksa token operator.':
     response.status===404&&path.startsWith('/v1/control-plane/model')?'Endpoint kendali model belum tersedia (404). Runtime yang terhubung belum menyediakan API ini; operator perlu memeriksa build layanan.':
     response.status===409&&path.endsWith('/execution-context')?'Rencana eksekusi belum siap. Belum ada tindakan yang dapat dijalankan.':
     response.status===409&&path.endsWith('/execute-reviewed')?'Eksekusi ditolak oleh governance. Periksa evidence, keputusan, dan History.':
     response.status===409?'Konfigurasi berubah atau pemilihan tidak didukung. Muat ulang status.':
     response.status===422?'Pilihan tidak valid atau model tidak tersedia.':`Layanan belum tersedia (${response.status}).`);
+  }
   return response.json() as Promise<unknown>;
 }
 export async function fetchModelStatus(){return ModelStatusSchema.parse(await runtimeFetch('/v1/control-plane/model-status'));}
@@ -53,7 +62,8 @@ export async function fetchOperationsSummary(token:string):Promise<OperationsSum
   return runtimeFetch('/v1/control-plane/operations-summary',{headers:{'X-Admin-Token':token}}) as Promise<OperationsSummary>;
 }
 export type KnowledgePipelineRun={run_id:string;filename:string;source_sha256:string;status:string;reason:string|null;document_id:string|null;created_at:string;source_path:string|null};
-export type KnowledgePipelineStatus={source:string;database:string;documents_indexed:number;pipeline_ready_documents:number;watch:{enabled:boolean;folder:string;updated_at:string};runs:KnowledgePipelineRun[];checked_at:string};
+export type KnowledgeDocument={document_id:string;title:string;chunks_count:number;status:string;source_verification:string;verification_reason?:string|null;source_sha256?:string|null;updated_at:string};
+export type KnowledgePipelineStatus={source:string;database:string;documents_indexed:number;pipeline_ready_documents:number;documents?:KnowledgeDocument[];watch:{enabled:boolean;folder:string;updated_at:string};runs:KnowledgePipelineRun[];checked_at:string};
 export async function fetchKnowledgePipelineStatus(token:string):Promise<KnowledgePipelineStatus>{
   if(!token.trim())throw new Error('Token operator diperlukan untuk melihat History knowledge.');
   return runtimeFetch('/v1/knowledge/pipeline/status',{headers:{'X-Admin-Token':token}}) as Promise<KnowledgePipelineStatus>;
@@ -88,16 +98,16 @@ export async function retryKnowledgeDocument(runId:string,token:string):Promise<
   if(!token.trim())throw new Error('Token operator diperlukan untuk mencoba lagi.');
   return runtimeFetch(`/v1/knowledge/pipeline/runs/${encodeURIComponent(runId)}/retry`,{method:'POST',headers:{'X-Admin-Token':token}}) as Promise<KnowledgePipelineRun>;
 }
-export async function fetchAvailableModels(token:string){
+export async function fetchAvailableModels(token:string,provider?:'ollama'|'openrouter'){
   if(!token.trim())throw new Error('Token operator diperlukan.');
-  return z.object({models:z.array(z.string()),observed_revision:z.number().int()}).parse(
-    await runtimeFetch('/v1/control-plane/models',{headers:{'X-Admin-Token':token}}));
+  return z.object({models:z.array(z.string()),provider:z.enum(['ollama','openrouter']).optional(),observed_revision:z.number().int()}).parse(
+    await runtimeFetch(`/v1/control-plane/models${provider?`?provider=${provider}`:''}`,{headers:{'X-Admin-Token':token}}));
 }
-export async function selectOperatorModel(model:string,revision:number,token:string){
+export async function selectOperatorModel(model:string,revision:number,token:string,provider?:'ollama'|'openrouter'){
   if(!token.trim())throw new Error('Token operator diperlukan.');
   return ModelStatusSchema.parse(await runtimeFetch('/v1/control-plane/model-selection',{
     method:'POST',headers:{'Content-Type':'application/json','X-Admin-Token':token},
-    body:JSON.stringify({model,expected_revision:revision})}));
+    body:JSON.stringify({model,...(provider?{provider}:{}),expected_revision:revision})}));
 }
 const PublicChatSchema=z.object({session_id:z.string(),response:z.string(),model:z.string(),
   provider_status:z.string(),latency_ms:z.number(),timestamp:z.string(),
@@ -113,19 +123,23 @@ export async function fetchChatHistory(session:string){
 export class ChatSendError extends Error{
   constructor(message:string,readonly status:number,readonly retrySafe:boolean){super(message);this.name='ChatSendError';}
 }
-export async function sendUserChat(user_input:string,session_id:string,request_id:string=crypto.randomUUID().replaceAll('-',''),retry_of?:string){
+export type ChatOptions={signal?:AbortSignal;onDelta?:(text:string)=>void;documentIds?:string[];token?:string};
+export async function sendUserChat(user_input:string,session_id:string,request_id:string=crypto.randomUUID().replaceAll('-',''),retry_of?:string,timeoutMs=90000,options:ChatOptions={}){
   const controller=new AbortController();
+  const abort=()=>controller.abort();
+  options.signal?.addEventListener('abort',abort,{once:true});
+  if(options.signal?.aborted)controller.abort();
   let timeout:ReturnType<typeof setTimeout>|undefined;
   try{
     const deadline=new Promise<never>((_,reject)=>{
       timeout=setTimeout(()=>{
         // Settle the deadline before abort can synchronously reject fetch.
-        reject(new ChatSendError('Batas waktu 90 detik tercapai. Backend mungkin masih memproses; pembatalan browser tidak menjamin pembatalan di server. Periksa History atau gunakan ID permintaan yang sama agar server tidak mengirim ulang.',0,false));
+        reject(new ChatSendError(`Batas waktu ${Math.floor(timeoutMs/1000)} detik tercapai. Backend mungkin masih memproses; pembatalan browser tidak menjamin pembatalan di server. Periksa History atau gunakan ID permintaan yang sama agar server tidak mengirim ulang.`,0,false));
         controller.abort();
-      },90000);
+      },timeoutMs);
     });
     const response=await Promise.race([fetch('/v1/chat',{method:'POST',signal:controller.signal,credentials:'omit',cache:'no-store',redirect:'error',
-      headers:{'Content-Type':'application/json'},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{})})}),deadline]);
+      headers:{'Content-Type':'application/json',...(options.documentIds?.length?{'X-Admin-Token':options.token??''}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{})})}),deadline]);
     if(!response.ok){
       let body:{detail?:unknown}|null=null;
       try{body=await response.json() as {detail?:unknown};}catch{/* HTTP status remains authoritative when the body is unreadable. */}
@@ -138,10 +152,30 @@ export async function sendUserChat(user_input:string,session_id:string,request_i
         `Pertanyaan belum berhasil diproses (${response.status}).`;
       throw new ChatSendError(message,response.status,response.status===504&&response.headers.get('X-Chat-Retry-Safe')==='pre-provider');
     }
-    const result=PublicChatSchema.safeParse(await response.json());
+    async function readAnswer():Promise<unknown>{
+      if(!response.headers?.get('content-type')?.includes('application/x-ndjson'))return response.json();
+      if(!response.body)throw new Error('Aliran jawaban tidak tersedia.');
+      const reader=response.body.getReader(),decoder=new TextDecoder();let buffer='';
+      try{
+        while(true){
+          const {done,value}=await reader.read();buffer+=decoder.decode(value,{stream:!done});
+          const lines=buffer.split('\n');buffer=lines.pop()??'';
+          for(const line of lines){
+            if(!line.trim())continue;
+            const event=JSON.parse(line) as {type:string;text?:string;answer?:unknown;status?:number;retry_safe?:boolean;message?:string};
+            if(event.type==='delta'&&typeof event.text==='string')options.onDelta?.(event.text);
+            if(event.type==='error')throw new ChatSendError(event.message??'Chat gagal.',event.status??500,event.retry_safe===true);
+            if(event.type==='final')return event.answer;
+          }
+          if(done)throw new Error('Aliran jawaban terputus sebelum selesai. Periksa History.');
+        }
+      }finally{await reader.cancel().catch(()=>{});reader.releaseLock();}
+    }
+    const result=PublicChatSchema.safeParse(await Promise.race([readAnswer(),deadline]));
     if(!result.success)throw new Error('Jawaban tidak sesuai kontrak layanan. Silakan coba kembali.');
     return result.data;
-  }finally{if(timeout!==undefined)clearTimeout(timeout);}
+  }catch(error){if(controller.signal.aborted&&options.signal?.aborted)throw new ChatSendError('Permintaan dihentikan. Jawaban sementara tidak disimpan sebagai jawaban final.',0,false);throw error;}
+  finally{if(timeout!==undefined)clearTimeout(timeout);options.signal?.removeEventListener('abort',abort);}
 }
 
 const InspectionPreviewSchema = z.object({

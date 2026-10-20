@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import tarfile
+import hashlib
+import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,11 +17,49 @@ def create_backup(src_dir: Path, out_dir: Path, label: str) -> Path:
     if not src.is_dir():
         raise FileNotFoundError(f"direktori sumber tidak ada: {src}")
     out = Path(out_dir)
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,63}", label):
+        raise ValueError("invalid backup label")
+    if src.resolve() == out.resolve() or src.resolve() in out.resolve().parents:
+        raise ValueError("backup destination must be outside source")
+    if src.is_symlink() or any(p.is_symlink() for p in src.rglob("*")):
+        raise ValueError("backup source must not contain symbolic links")
     out.mkdir(parents=True, exist_ok=True)
-    dest = out / f"backup-{label}-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.tar.gz"
+    dest = out / f"backup-{label}-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')}.tar.gz"
     with tarfile.open(dest, "w:gz") as tf:
         tf.add(src, arcname=src.name)
+    dest.with_suffix(dest.suffix + ".sha256").write_text(_sha256(dest), "ascii")
     return dest
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as source:
+        for block in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def restore_backup(archive: Path, destination: Path, *, max_bytes: int = 1_000_000_000) -> Path:
+    """Restore verified data to an empty destination; never overwrite active data."""
+    archive, destination = Path(archive), Path(destination)
+    expected = archive.with_suffix(archive.suffix + ".sha256").read_text("ascii").strip()
+    if expected != _sha256(archive):
+        raise ValueError("backup checksum mismatch")
+    if destination.is_symlink() or (destination.exists() and any(destination.iterdir())):
+        raise ValueError("restore destination must be empty and not a symlink")
+    root = destination.resolve()
+    with tarfile.open(archive, "r:gz") as source:
+        members = source.getmembers()
+        if sum(m.size for m in members) > max_bytes:
+            raise ValueError("backup exceeds restore size limit")
+        for member in members:
+            target = (root / member.name).resolve()
+            if (member.name.startswith(("/", "\\")) or "\\" in member.name or ":" in member.name
+                    or root not in target.parents or not (member.isfile() or member.isdir())):
+                raise ValueError("unsafe backup member")
+        destination.mkdir(parents=True, exist_ok=True)
+        source.extractall(destination, members=members, filter="data")
+    return destination
 
 
 @dataclass

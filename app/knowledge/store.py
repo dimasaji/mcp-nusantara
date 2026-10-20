@@ -5,6 +5,8 @@ import math
 import os
 import sqlite3
 import struct
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -12,10 +14,23 @@ from typing import Dict, List, Optional
 from .schemas import DocumentInfo, StoredChunk
 
 
+class _BorrowedConnection:
+    """Store calls inside an explicit transaction must not commit independently."""
+    def __init__(self, connection):
+        self.connection = connection
+
+    def __enter__(self):
+        return self.connection
+
+    def __exit__(self, *args):
+        return False
+
+
 class SQLiteVectorStore:
     """Persistent local vector store menggunakan SQLite."""
 
     def __init__(self, db_path: Optional[str] = None) -> None:
+        self._transaction_connection = ContextVar(f"store_transaction_{id(self)}", default=None)
         self.db_path = Path(
             db_path
             or os.getenv(
@@ -32,11 +47,32 @@ class SQLiteVectorStore:
         self._initialize()
 
     def _connect(self) -> sqlite3.Connection:
+        active = self._transaction_connection.get()
+        if active is not None:
+            return _BorrowedConnection(active)
         conn = sqlite3.connect(str(self.db_path))
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA journal_mode=WAL")
         conn.execute("PRAGMA foreign_keys=ON")
         return conn
+
+    @contextmanager
+    def transaction(self):
+        """Opt-in atomic operation across existing store methods; no schema change."""
+        if self._transaction_connection.get() is not None:
+            raise RuntimeError("NESTED_STORE_TRANSACTION_NOT_SUPPORTED")
+        conn = self._connect()
+        token = self._transaction_connection.set(conn)
+        try:
+            conn.execute("BEGIN IMMEDIATE")
+            yield self
+            conn.commit()
+        except BaseException:
+            conn.rollback()
+            raise
+        finally:
+            self._transaction_connection.reset(token)
+            conn.close()
 
     def _initialize(self) -> None:
         with self._connect() as conn:
@@ -267,18 +303,14 @@ class SQLiteVectorStore:
         self,
         query_embedding: List[float],
         top_k: int = 5,
+        document_ids: list[str] | None = None,
     ) -> List[tuple]:
         results = []
 
         with self._connect() as conn:
-            rows = conn.execute(
-                """
-                SELECT *
-                FROM chunks
-                WHERE embedding_dimension = ?
-                """,
-                (len(query_embedding),),
-            ).fetchall()
+            clause = '' if document_ids is None else ' AND document_id IN (' + ','.join('?' for _ in document_ids) + ')'
+            rows = conn.execute('SELECT * FROM chunks WHERE embedding_dimension = ?' + clause,
+                (len(query_embedding), *(document_ids or []))).fetchall()
 
         for row in rows:
             vector = self._deserialize_embedding(
@@ -299,6 +331,7 @@ class SQLiteVectorStore:
         self,
         query: str,
         top_k: int = 20,
+        document_ids: list[str] | None = None,
     ) -> List[tuple]:
         """
         Lexical Retrieval V2.
@@ -343,12 +376,8 @@ class SQLiteVectorStore:
         results = []
 
         with self._connect() as conn:
-            rows = conn.execute(
-                """
-                SELECT *
-                FROM chunks
-                """
-            ).fetchall()
+            clause = '' if document_ids is None else ' WHERE document_id IN (' + ','.join('?' for _ in document_ids) + ')'
+            rows = conn.execute('SELECT * FROM chunks' + clause, document_ids or []).fetchall()
 
         for row in rows:
             chunk = self._row_to_chunk(row)

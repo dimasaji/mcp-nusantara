@@ -11,10 +11,10 @@ from app.reasoning.engine import ReasoningEngine
 class GateIntegration:
     VERSION = "8-13.1.0"
 
-    def __init__(self, existing_tools: dict[str, Any] | None = None):
+    def __init__(self, existing_tools: dict[str, Any] | None = None, *, memory_root=None):
         self.reasoning = ReasoningEngine()
         self.policy = PolicyEngine()
-        self.memory = MemoryEngine()
+        self.memory = MemoryEngine(storage_root=memory_root)
         self.actions = ActionEngine(existing_tools or {})
         self.orchestration = OrchestrationEngine()
 
@@ -102,9 +102,11 @@ class GateIntegration:
         *,
         session_id: str,
         response: str,
+        service_context: dict | None = None,
     ) -> None:
         self.memory.remember(
             session_id,
             "assistant",
             response,
+            service_context=service_context,
         )

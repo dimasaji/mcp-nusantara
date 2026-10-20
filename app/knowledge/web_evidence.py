@@ -1,0 +1,784 @@
+"""Isolated WEIP candidate acquisition. No route, model, or knowledge DB wiring.
+
+Registry verification is a recorded owner decision, never a claim inferred from DNS,
+HTTPS, a content hash, or successful parsing. Active-store ingestion is not exposed.
+"""
+from __future__ import annotations
+
+import hashlib
+import http.client
+import ipaddress
+import json
+import math
+import queue
+import re
+import socket
+import threading
+import time
+import tempfile
+from dataclasses import asdict, dataclass
+from datetime import date, datetime, timezone
+from html.parser import HTMLParser
+from pathlib import Path
+from urllib.parse import urljoin, urlsplit
+
+from app.research.source_fetcher import _PinnedHTTPS
+
+
+class EvidenceRejected(ValueError):
+    """Safe reason codes; never expose response bodies or credential values."""
+
+
+MAX_DOCUMENT_BYTES = 2_000_000
+
+
+@dataclass(frozen=True)
+class ApprovalPrincipal:
+    """Result supplied by a trusted host authorizer, not by a document caller."""
+    subject: str
+    evidence_reference: str
+    payload_binding: str
+    purposes: tuple[str, ...] = ()
+    expires_at: str | None = None
+    revoked: bool = False
+    provenance_reference: str | None = None
+    conditions: tuple[str, ...] = ()
+    approval_status: str = "PENDING_APPROVAL"
+
+
+class _DeadlineHTTPS(_PinnedHTTPS):
+    """Expose TCP/TLS sockets to the deadline guard, preserving pinned DNS/SNI."""
+    def __init__(self, host, address, timeout):
+        super().__init__(host, address, timeout)
+        self.deadline = time.monotonic() + timeout
+
+    def connect(self):
+        raw = socket.create_connection((self.address, 443), self.timeout)
+        self.sock = raw
+        try:
+            remaining = self.deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError
+            raw.settimeout(remaining)
+            self.sock = self._context.wrap_socket(raw, server_hostname=self.host,
+                                                  do_handshake_on_connect=False)
+            self.sock.do_handshake()
+            remaining = self.deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError
+            self.sock.settimeout(remaining)
+        except Exception:
+            raw.close()
+            self.close()
+            raise
+
+
+def _expire_connection(conn, expired):
+    expired.set()
+    # Shutdown also interrupts reads held by HTTPResponse's socket file wrapper.
+    sock = getattr(conn, "sock", None)
+    if sock is not None:
+        try:
+            sock.shutdown(socket.SHUT_RDWR)
+        except OSError:
+            pass
+    try:
+        conn.close()
+    except OSError:
+        pass
+
+
+def _now():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _hash(body: bytes):
+    return hashlib.sha256(body).hexdigest()
+
+
+def verify_fixture_checksum(markdown: bytes, expected_sha256: str):
+    """Verify the existing KTP manifest representation, not whole-file identity.
+
+    UTF-8 (optional BOM), CRLF -> LF, text after the unique '## Isi Sumber'
+    marker, trim surrounding whitespace, then SHA-256 of UTF-8 bytes.
+    Metadata/outer whitespace are excluded. Interior text whitespace is preserved.
+    Neither a match nor manifest labels establish provenance or permission to use.
+    """
+    if len(markdown) > MAX_DOCUMENT_BYTES:
+        raise EvidenceRejected("CONTENT_TOO_LARGE")
+    if not isinstance(expected_sha256, str) or not re.fullmatch(r"[a-f0-9]{64}", expected_sha256):
+        raise EvidenceRejected("EXPECTED_DIGEST_REQUIRED")
+    try:
+        text = markdown.decode("utf-8-sig").replace("\r\n", "\n")
+    except UnicodeError:
+        raise EvidenceRejected("TEXT_ENCODING") from None
+    marker = "## Isi Sumber\n\n"
+    if text.count(marker) != 1:
+        raise EvidenceRejected("FIXTURE_REPRESENTATION_INVALID")
+    content = text.split(marker, 1)[1].strip()
+    if not content:
+        raise EvidenceRejected("FIXTURE_REPRESENTATION_INVALID")
+    actual = _hash(content.encode("utf-8"))
+    return {"representation": "UTF8_BOM_OPTIONAL_CRLF_TO_LF_EXTRACT_BODY_STRIP_V1",
+            "normalized_sha256": actual, "file_sha256": _hash(markdown),
+            "expected_sha256": expected_sha256,
+            "integrity": "INTEGRITY_PASS" if actual == expected_sha256 else "INTEGRITY_FAIL",
+            "source_authentication": "NOT_VERIFIED", "usage_authorization": "NOT_AUTHORIZED"}
+
+
+def _url(value: str):
+    try:
+        u = urlsplit(value)
+        if (u.scheme != "https" or not u.hostname or u.username or u.password
+                or u.port not in (None, 443) or u.fragment or u.query
+                or any(ord(c) < 33 or ord(c) > 126 for c in value)
+                or "\\" in value or "%" in value or any(p in (".", "..") for p in u.path.split("/"))):
+            raise EvidenceRejected("URL_POLICY")
+        if u.hostname != u.hostname.lower() or value != u.geturl():
+            raise EvidenceRejected("URL_CANONICAL_REQUIRED")
+        return u
+    except (ValueError, TypeError):
+        raise EvidenceRejected("URL_POLICY") from None
+
+
+def _identifier(value):
+    if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", value):
+        raise EvidenceRejected("IDENTIFIER_REQUIRED")
+
+
+@dataclass(frozen=True)
+class SourceEntry:
+    source_id: str
+    publisher: str
+    agency: str
+    domain: str
+    base_url: str
+    allowed_urls: tuple[str, ...]
+    kind: str  # API / WEB / PDF
+    jurisdiction: str
+    services: tuple[str, ...]
+    verification_status: str = "UNVERIFIED"
+    verification_reference: str | None = None
+    last_checked: str | None = None
+    status: str = "ACTIVE"
+    min_interval_s: float = 1.0
+    human_review_required: bool = True
+
+    def __post_init__(self):
+        _identifier(self.source_id)
+        if not all(isinstance(v, str) and v.strip() for v in
+                   (self.publisher, self.agency, self.domain, self.jurisdiction)):
+            raise EvidenceRejected("SOURCE_METADATA_REQUIRED")
+        if self.kind not in {"API", "WEB", "PDF"} or self.status not in {"ACTIVE", "SUSPENDED", "REVOKED"}:
+            raise EvidenceRejected("SOURCE_POLICY")
+        if self.verification_status not in {"UNVERIFIED", "VERIFIED"}:
+            raise EvidenceRejected("SOURCE_VERIFICATION")
+        if self.verification_status == "VERIFIED" and not (self.verification_reference and self.last_checked):
+            raise EvidenceRejected("VERIFICATION_RECORD_REQUIRED")
+        if self.last_checked:
+            try:
+                checked = datetime.fromisoformat(self.last_checked)
+                if checked.tzinfo is None or checked > datetime.now(timezone.utc):
+                    raise ValueError
+            except ValueError:
+                raise EvidenceRejected("VERIFICATION_TIME_INVALID") from None
+        if not math.isfinite(self.min_interval_s) or self.min_interval_s < 0:
+            raise EvidenceRejected("RATE_POLICY")
+        object.__setattr__(self, "allowed_urls", tuple(self.allowed_urls))
+        object.__setattr__(self, "services", tuple(self.services))
+        if not self.allowed_urls or not self.services or any(not s.strip() for s in self.services):
+            raise EvidenceRejected("SOURCE_SCOPE_REQUIRED")
+        base = _url(self.base_url)
+        if base.hostname != self.domain or self.domain != self.domain.lower():
+            raise EvidenceRejected("SOURCE_DOMAIN")
+        for value in self.allowed_urls:
+            u = _url(value)
+            if u.hostname != self.domain or not (u.path or "/").startswith(base.path.rstrip("/") + "/"):
+                if value != self.base_url:
+                    raise EvidenceRejected("SOURCE_URL_SCOPE")
+
+
+class SourceRegistry:
+    def __init__(self, entries=()):
+        self._entries = {}
+        self.audit = []
+        for entry in entries:
+            self.register(entry, actor="bootstrap", reason="DECLARED_SOURCE_RECORD")
+
+    def register(self, entry: SourceEntry, *, actor: str, reason: str):
+        _identifier(actor)
+        _identifier(reason)
+        if entry.source_id in self._entries:
+            raise EvidenceRejected("SOURCE_ALREADY_REGISTERED")
+        self._entries[entry.source_id] = entry
+        self.audit.append({"at": _now(), "actor": actor, "reason": reason,
+                           "source": asdict(entry), "identity_status": "DECLARED_NOT_AUTHENTICATED"})
+
+    def replace(self, entry: SourceEntry, *, actor: str, reason: str):
+        _identifier(actor)
+        _identifier(reason)
+        if entry.source_id not in self._entries:
+            raise EvidenceRejected("SOURCE_NOT_REGISTERED")
+        self._entries[entry.source_id] = entry
+        self.audit.append({"at": _now(), "actor": actor, "reason": reason,
+                           "source": asdict(entry), "identity_status": "DECLARED_NOT_AUTHENTICATED"})
+
+    def require(self, source_id: str, url: str):
+        entry = self._entries.get(source_id)
+        if entry is None or entry.status != "ACTIVE":
+            raise EvidenceRejected("SOURCE_NOT_ACTIVE")
+        _url(url)
+        if url not in entry.allowed_urls:
+            raise EvidenceRejected("URL_NOT_ALLOWLISTED")
+        return entry
+
+    def fingerprint(self, entry):
+        return _hash(json.dumps(asdict(entry), sort_keys=True).encode())
+
+
+@dataclass(frozen=True)
+class FetchResult:
+    source_id: str
+    original_url: str
+    final_url: str
+    content_type: str
+    body: bytes
+    retrieved_at: str
+    redirects: tuple[str, ...]
+
+
+class EvidenceFetcher:
+    TYPES = {"API": {"application/json"}, "WEB": {"text/html", "text/plain"},
+             "PDF": {"application/pdf"}}
+
+    def __init__(self, registry: SourceRegistry, *, max_bytes=2_000_000, timeout_s=15.0,
+                 max_redirects=3, retries=1, resolver=socket.getaddrinfo,
+                 connection=_DeadlineHTTPS, clock=time.monotonic):
+        if (type(max_bytes) is not int or not 0 < max_bytes <= MAX_DOCUMENT_BYTES
+                or not isinstance(timeout_s, (int, float)) or isinstance(timeout_s, bool)
+                or not math.isfinite(timeout_s) or not 0 < timeout_s <= 60
+                or type(max_redirects) is not int or not 0 <= max_redirects <= 3
+                or type(retries) is not int or not 0 <= retries <= 2):
+            raise EvidenceRejected("FETCH_LIMITS")
+        self.registry, self.max_bytes, self.timeout_s = registry, max_bytes, timeout_s
+        self.max_redirects, self.retries = max_redirects, retries
+        self.resolver, self.connection, self.clock = resolver, connection, clock
+        self._last = {}
+        self._lock = threading.Lock()
+        self._dns_slot = threading.BoundedSemaphore(1)
+
+    def fetch(self, source_id: str, url: str):
+        original, current, redirects = url, url, []
+        deadline = self.clock() + self.timeout_s
+        for hop in range(self.max_redirects + 1):
+            entry = self.registry.require(source_id, current)
+            for attempt in range(self.retries + 1):
+                remaining = deadline - self.clock()
+                if remaining <= 0:
+                    raise EvidenceRejected("FETCH_DEADLINE")
+                with self._lock:
+                    previous = self._last.get(source_id)
+                    if previous is not None and self.clock() - previous < entry.min_interval_s:
+                        raise EvidenceRejected("RATE_LIMITED")
+                    self._last[source_id] = self.clock()
+                u = _url(current)
+                conn = None
+                timer = None
+                expired = threading.Event()
+                try:
+                    addresses = self._resolve(u.hostname, remaining)
+                    ips = {str(row[4][0]) for row in addresses}
+                    if not ips or any(not self._public(ip) for ip in ips):
+                        raise EvidenceRejected("SSRF_ADDRESS")
+                    remaining = deadline - self.clock()
+                    if remaining <= 0:
+                        raise EvidenceRejected("FETCH_DEADLINE")
+                    conn = self.connection(u.hostname, sorted(ips)[0], remaining)
+                    timer = threading.Timer(remaining, _expire_connection, (conn, expired))
+                    timer.daemon = True
+                    timer.start()
+                    # No cookies, Authorization, caller headers, or environment proxies.
+                    conn.request("GET", u.path or "/", headers={"Accept": ",".join(sorted(self.TYPES[entry.kind])),
+                                 "Accept-Encoding": "identity", "User-Agent": "Nusantara-WEIP/1.1"})
+                    response = conn.getresponse()
+                    if expired.is_set() or self.clock() >= deadline:
+                        raise EvidenceRejected("FETCH_DEADLINE")
+                    if response.status in {301, 302, 303, 307, 308}:
+                        location = response.getheader("Location", "")
+                        target = urljoin(current, location)
+                        self.registry.require(source_id, target)
+                        if not location or target in redirects or target == original or hop == self.max_redirects:
+                            raise EvidenceRejected("REDIRECT_LIMIT")
+                        redirects.append(target)
+                        current = target
+                        break
+                    if response.status in {429, 502, 503, 504} and attempt < self.retries:
+                        continue
+                    if response.status != 200:
+                        raise EvidenceRejected("HTTP_STATUS")
+                    if response.getheader("Content-Encoding", "identity").lower() != "identity":
+                        raise EvidenceRejected("ENCODING_REJECTED")
+                    content_type = response.getheader("Content-Type", "").split(";")[0].strip().lower()
+                    if content_type not in self.TYPES[entry.kind]:
+                        raise EvidenceRejected("CONTENT_TYPE")
+                    body = bytearray()
+                    while True:
+                        if expired.is_set() or self.clock() >= deadline:
+                            raise EvidenceRejected("FETCH_DEADLINE")
+                        if getattr(conn, "sock", None) is not None:
+                            conn.sock.settimeout(max(.001, deadline - self.clock()))
+                        reader = getattr(response, "read1", response.read)
+                        block = reader(min(65536, self.max_bytes + 1 - len(body)))
+                        if expired.is_set() or self.clock() >= deadline:
+                            raise EvidenceRejected("FETCH_DEADLINE")
+                        if not block:
+                            break
+                        body.extend(block)
+                        if len(body) > self.max_bytes:
+                            raise EvidenceRejected("CONTENT_TOO_LARGE")
+                    return FetchResult(source_id, original, current, content_type, bytes(body), _now(), tuple(redirects))
+                except http.client.HTTPException:
+                    if expired.is_set() or self.clock() >= deadline:
+                        raise EvidenceRejected("FETCH_DEADLINE") from None
+                    raise EvidenceRejected("HTTP_PROTOCOL_ERROR") from None
+                except (OSError, TimeoutError):
+                    if expired.is_set() or self.clock() >= deadline:
+                        raise EvidenceRejected("FETCH_DEADLINE") from None
+                    if attempt == self.retries:
+                        raise EvidenceRejected("FETCH_UNAVAILABLE") from None
+                finally:
+                    if timer is not None:
+                        timer.cancel()
+                        timer.join()
+                    if conn is not None:
+                        conn.close()
+            else:
+                raise EvidenceRejected("RETRY_EXHAUSTED")
+        raise EvidenceRejected("REDIRECT_LIMIT")
+
+    def _resolve(self, host, timeout):
+        # getaddrinfo has no portable timeout. A daemon resolver cannot block the
+        # caller past the deadline; it never opens an HTTP connection after timeout.
+        if not self._dns_slot.acquire(blocking=False):
+            raise EvidenceRejected("DNS_BUSY")
+        answers = queue.Queue(maxsize=1)
+        def resolve():
+            try:
+                answers.put((True, self.resolver(host, 443, type=socket.SOCK_STREAM)))
+            except Exception:
+                answers.put((False, None))
+            finally:
+                self._dns_slot.release()
+        try:
+            threading.Thread(target=resolve, daemon=True).start()
+        except Exception:
+            self._dns_slot.release()
+            raise EvidenceRejected("DNS_UNAVAILABLE") from None
+        try:
+            ok, value = answers.get(timeout=timeout)
+        except queue.Empty:
+            raise EvidenceRejected("DNS_DEADLINE") from None
+        if not ok:
+            raise OSError("DNS_UNAVAILABLE")
+        return value
+
+    @staticmethod
+    def _public(value):
+        try:
+            ip = ipaddress.ip_address(value)
+            if isinstance(ip, ipaddress.IPv6Address) and ip.ipv4_mapped:
+                ip = ip.ipv4_mapped
+            return ip.is_global and not (ip.is_multicast or ip.is_reserved or ip.is_unspecified)
+        except ValueError:
+            return False
+
+
+class _TextHTML(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.parts, self.hidden = [], []
+
+    def handle_starttag(self, tag, attrs):
+        if tag in {"script", "style", "iframe", "object", "template", "noscript"}:
+            self.hidden.append(tag)
+
+    def handle_endtag(self, tag):
+        if self.hidden and tag == self.hidden[-1]:
+            self.hidden.pop()
+
+    def handle_data(self, data):
+        if not self.hidden:
+            self.parts.append(data)
+
+
+def parse_document(result: FetchResult, *, pdf_parser=None):
+    if len(result.body) > MAX_DOCUMENT_BYTES:
+        raise EvidenceRejected("CONTENT_TOO_LARGE")
+    if result.content_type == "application/pdf":
+        if not result.body.startswith(b"%PDF-"):
+            raise EvidenceRejected("PDF_MAGIC")
+        if any(token in result.body for token in (b"/JavaScript", b"/JS", b"/Launch", b"/EmbeddedFile", b"/OpenAction")):
+            raise EvidenceRejected("PDF_ACTIVE_CONTENT")
+        if pdf_parser is None:
+            # Native extraction needs a separately verified resource-limited worker.
+            # Injection is an offline fixture seam, not native parser attestation.
+            raise EvidenceRejected("PDF_ISOLATION_REQUIRED")
+        else:
+            text = pdf_parser(result.body)
+    else:
+        try:
+            decoded = result.body.decode("utf-8", errors="strict")
+        except UnicodeError:
+            raise EvidenceRejected("TEXT_ENCODING") from None
+        if result.content_type == "application/json":
+            try:
+                obj = json.loads(decoded, parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+                if not isinstance(obj, (dict, list)):
+                    raise ValueError
+                text = json.dumps(obj, ensure_ascii=False, sort_keys=True)
+            except (ValueError, RecursionError):
+                raise EvidenceRejected("JSON_INVALID") from None
+        elif result.content_type == "text/html":
+            parser = _TextHTML()
+            parser.feed(decoded)
+            text = " ".join(parser.parts)
+            if parser.hidden:
+                raise EvidenceRejected("HTML_UNCLOSED_ACTIVE_ELEMENT")
+        elif result.content_type == "text/plain":
+            text = decoded
+        else:
+            raise EvidenceRejected("CONTENT_TYPE")
+    if not isinstance(text, str) or not text.strip() or len(text) > 2_000_000:
+        raise EvidenceRejected("PARSE_EMPTY_OR_OVERSIZED")
+    return text.strip()
+
+
+class StagingStore:
+    """Single-writer candidate files. No DB connections or ingestion operation."""
+    ALLOWED = {
+        "DISCOVERED": {"FETCHED", "REJECTED", "QUARANTINED"},
+        "FETCHED": {"PARSED", "QUARANTINED", "REJECTED"},
+        "PARSED": {"VALIDATION_PENDING"},
+        "VALIDATION_PENDING": {"REVIEW_REQUIRED", "QUARANTINED", "REJECTED"},
+        "REVIEW_REQUIRED": {"REJECTED", "QUARANTINED", "SUPERSEDED", "SUSPENDED"},
+        "APPROVED_FOR_INGESTION": {"SUSPENDED", "SUPERSEDED", "RETIRED", "QUARANTINED"},
+        "SUSPENDED": {"REVIEW_REQUIRED", "RETIRED"},
+    }
+
+    def __init__(self, root: Path):
+        self.root = Path(root).resolve()
+        repo = Path(__file__).resolve().parents[2]
+        if self.root == repo or self.root in repo.parents or self.root.is_relative_to(repo / "data/knowledge"):
+            raise EvidenceRejected("STAGING_LOCATION")
+        marker = self.root / "WEIP_STAGING_V1"
+        if marker.is_symlink() or (marker.exists() and marker.read_text(encoding="utf-8") != "ISOLATED_SINGLE_WRITER_NO_INGESTION"):
+            raise EvidenceRejected("STAGING_NOT_OWNED")
+        if self.root.exists() and not marker.is_file() and any(self.root.iterdir()):
+            raise EvidenceRejected("STAGING_NOT_OWNED")
+        self.root.mkdir(parents=True, exist_ok=True)
+        if not marker.exists():
+            marker.write_text("ISOLATED_SINGLE_WRITER_NO_INGESTION", encoding="utf-8")
+
+    def _path(self, document_id):
+        if not re.fullmatch(r"WEIP-[a-f0-9]{64}", document_id):
+            raise EvidenceRejected("DOCUMENT_ID")
+        p = self.root / (document_id + ".json")
+        if p.is_symlink():
+            raise EvidenceRejected("STAGING_SYMLINK")
+        return p
+
+    def _save(self, record):
+        p = self._path(record["document_id"])
+        temp = p.with_suffix(".pending")
+        if temp.exists():
+            raise EvidenceRejected("STAGING_WRITE_CONFLICT")
+        created = False
+        try:
+            with temp.open("x", encoding="utf-8") as stream:
+                created = True
+                json.dump(record, stream, ensure_ascii=False, indent=2)
+            for attempt in range(3):
+                try:
+                    temp.replace(p)
+                    break
+                except PermissionError as error:
+                    # Bounded retry of this atomic rename only. Never relax ACLs
+                    # or replay acquisition/ingestion on Windows sharing failures.
+                    if getattr(error, "winerror", None) not in {5, 32, 33} or attempt == 2:
+                        raise
+                    time.sleep(.01 * (attempt + 1))
+        except Exception:
+            # Only the pending file exclusively created by this invocation.
+            if created:
+                temp.unlink(missing_ok=True)
+            raise
+
+    def _event(self, record, status, reason, actor="pipeline"):
+        _identifier(actor)
+        _identifier(reason)
+        previous = record["audit"][-1]["event_hash"] if record["audit"] else ""
+        event = {"at": _now(), "from": record["status"], "to": status, "reason": reason,
+                 "actor": actor, "previous_hash": previous, "content_hash": record["content_hash"]}
+        event["event_hash"] = _hash(json.dumps(event, sort_keys=True).encode())
+        record["audit"].append(event)
+        record["status"] = status
+
+    def add(self, fetched: FetchResult, metadata: dict):
+        digest = _hash(fetched.body)
+        document_id = "WEIP-" + _hash((fetched.source_id + "\0" + fetched.original_url + "\0" + digest).encode())
+        if self._path(document_id).exists():
+            return self.get(document_id)
+        version_conflict = any(r["original_url"] == fetched.original_url and r["source_id"] == fetched.source_id
+                               and r["content_hash"] != digest for r in self.list())
+        raw = self.root / (document_id + ".bin")
+        with raw.open("xb") as stream:
+            stream.write(fetched.body)
+        record = {"document_id": document_id, "source_id": fetched.source_id,
+                  "original_url": fetched.original_url, "final_url": fetched.final_url,
+                  "redirects": list(fetched.redirects), "retrieved_at": fetched.retrieved_at,
+                  "content_type": fetched.content_type, "content_hash": digest,
+                  "version": "sha256:" + digest, "version_conflict": version_conflict,
+                  "metadata": metadata, "text": None, "status": "DISCOVERED", "audit": []}
+        try:
+            self._event(record, "FETCHED", "FETCH_SUCCEEDED")
+            self._save(record)
+        except Exception:
+            # The raw file was created with xb; existing documents are untouched.
+            raw.unlink(missing_ok=True)
+            raise
+        return record
+
+    def get(self, document_id):
+        record = json.loads(self._path(document_id).read_text(encoding="utf-8"))
+        if record["document_id"] != document_id:
+            raise EvidenceRejected("STAGING_IDENTITY")
+        raw = self.root / (document_id + ".bin")
+        if raw.is_symlink() or _hash(raw.read_bytes()) != record["content_hash"]:
+            raise EvidenceRejected("STAGING_INTEGRITY")
+        previous = ""
+        for event in record["audit"]:
+            copied = dict(event)
+            digest = copied.pop("event_hash")
+            if copied["previous_hash"] != previous or _hash(json.dumps(copied, sort_keys=True).encode()) != digest:
+                raise EvidenceRejected("AUDIT_INTEGRITY")
+            previous = digest
+        if not record["audit"] or record["audit"][-1]["to"] != record["status"]:
+            raise EvidenceRejected("AUDIT_STATE")
+        return record
+
+    def record_registry(self, registry):
+        payload = json.dumps(registry.audit, sort_keys=True, indent=2)
+        path = self.root / ("registry-" + _hash(payload.encode()) + ".json")
+        if not path.exists():
+            with path.open("x", encoding="utf-8") as stream:
+                stream.write(payload)
+
+    def list(self):
+        return [self.get(p.stem) for p in self.root.glob("WEIP-*.json")]
+
+    def transition(self, document_id, status, *, reason, actor="pipeline"):
+        record = self.get(document_id)
+        if status not in self.ALLOWED.get(record["status"], set()):
+            raise EvidenceRejected("TRANSITION_OR_INTEGRATION_GATE")
+        self._event(record, status, reason, actor)
+        self._save(record)
+        return record
+
+
+class WebEvidencePipeline:
+    def __init__(self, registry, fetcher, staging, *, pdf_parser=None, review_authorizer=None,
+                 now=lambda: datetime.now(timezone.utc)):
+        if fetcher.registry is not registry:
+            raise EvidenceRejected("REGISTRY_OWNER_MISMATCH")
+        self.registry, self.fetcher, self.staging = registry, fetcher, staging
+        self.pdf_parser = pdf_parser
+        self.review_authorizer = review_authorizer
+        self.now = now
+
+    def _time(self):
+        value = self.now()
+        if not isinstance(value, datetime) or value.tzinfo is None:
+            raise EvidenceRejected("APPROVAL_CLOCK_INVALID")
+        return value.astimezone(timezone.utc)
+
+    def collect(self, source_id, url, *, title, service, jurisdiction,
+                publication_date=None, effective_date=None, expiry_date=None, risk="HIGH"):
+        entry = self.registry.require(source_id, url)
+        if service not in entry.services or jurisdiction != entry.jurisdiction:
+            raise EvidenceRejected("DOCUMENT_SCOPE")
+        if not isinstance(title, str) or not title.strip() or risk not in {"LOW", "HIGH"}:
+            raise EvidenceRejected("DOCUMENT_METADATA")
+        for value in (publication_date, effective_date, expiry_date):
+            if value is not None:
+                try:
+                    if date.fromisoformat(value).isoformat() != value:
+                        raise ValueError
+                except (ValueError, TypeError):
+                    raise EvidenceRejected("DOCUMENT_DATE") from None
+        fetched = self.fetcher.fetch(source_id, url)
+        entry = self.registry.require(source_id, fetched.final_url)
+        self.staging.record_registry(self.registry)
+        metadata = {"title": title, "publisher": entry.publisher, "agency": entry.agency,
+                    "domain": entry.domain, "jurisdiction": jurisdiction, "service": service,
+                    "publication_date": publication_date, "effective_date": effective_date,
+                    "expiry_date": expiry_date, "risk": risk,
+                    "source_verification_status": entry.verification_status,
+                    "source_verification_reference": entry.verification_reference,
+                    "source_assurance": "OWNER_DECLARED_NOT_INDEPENDENTLY_AUTHENTICATED",
+                    "registry_fingerprint": self.registry.fingerprint(entry),
+                    "validation_status": "PENDING", "chunk_reference": "FULL_PARSED_DOCUMENT"}
+        record = self.staging.add(fetched, metadata)
+        if record["status"] != "FETCHED":
+            return record
+        try:
+            record["text"] = parse_document(fetched, pdf_parser=self.pdf_parser)
+        except Exception:
+            # Do not persist parser exception text: it may contain private content.
+            return self.staging.transition(record["document_id"], "QUARANTINED", reason="PARSE_UNSAFE_OR_UNAVAILABLE")
+        record["parsed_hash"] = _hash(record["text"].encode())
+        record["metadata"]["validation_status"] = "PARSED_REVIEW_PENDING"
+        self.staging._event(record, "PARSED", "PARSE_SUCCEEDED")
+        self.staging._save(record)
+        self.staging.transition(record["document_id"], "VALIDATION_PENDING", reason="PROVENANCE_REVIEW")
+        # Conservative implementation: no automatic promotion, even verified HTTPS.
+        return self.staging.transition(record["document_id"], "REVIEW_REQUIRED", reason="OWNER_DOCUMENT_REVIEW")
+
+    def approve(self, document_id, *, reviewer, review_reference, purpose="v1_request_projection"):
+        _identifier(reviewer)
+        _identifier(review_reference)
+        _identifier(purpose)
+        record = self.staging.get(document_id)
+        self._eligible(record)
+        if record["status"] != "REVIEW_REQUIRED" or record["version_conflict"]:
+            raise EvidenceRejected("REVIEW_STATE_OR_VERSION_CONFLICT")
+        record["metadata"]["validation_status"] = "OWNER_REVIEW_RECORDED"
+        binding = self._approval_binding(record)
+        principal = self._authorize(reviewer, review_reference, binding, purpose)
+        record["approval"] = {"reviewer": reviewer, "reference": review_reference,
+                              "identity_status": "VERIFIED_BY_HOST_AUTHORIZER",
+                              "identity_reference": principal.evidence_reference,
+                              "binding": binding, "approved_at": self._time().isoformat(),
+                              "status": "APPROVED",
+                              "purpose": purpose, "expires_at": principal.expires_at,
+                              "conditions": list(principal.conditions), "revoked": False,
+                              "provenance_reference": principal.provenance_reference}
+        self.staging._event(record, "APPROVED_FOR_INGESTION", "OWNER_REVIEW_RECORDED", reviewer)
+        self.staging._save(record)
+        return record
+
+    def _authorize(self, reviewer, reference, binding, purpose):
+        # The host verifies consent, current revocation, provenance and scope.
+        # Rechecking authorization is not a request for repeated human consent.
+        if self.review_authorizer is None:
+            raise EvidenceRejected("APPROVAL_IDENTITY_REQUIRED")
+        try:
+            principal = self.review_authorizer(reviewer, reference, binding)
+        except Exception:
+            raise EvidenceRejected("APPROVAL_IDENTITY_REQUIRED") from None
+        if (not isinstance(principal, ApprovalPrincipal) or principal.subject != reviewer
+                or principal.payload_binding != binding):
+            raise EvidenceRejected("APPROVAL_IDENTITY_REQUIRED")
+        _identifier(principal.evidence_reference)
+        if principal.approval_status != "APPROVED":
+            raise EvidenceRejected("APPROVAL_NOT_VALID")
+        if type(principal.revoked) is not bool or principal.revoked:
+            raise EvidenceRejected("APPROVAL_REVOKED")
+        if not isinstance(principal.purposes, tuple) or purpose not in principal.purposes:
+            raise EvidenceRejected("APPROVAL_SCOPE")
+        try:
+            expiry = datetime.fromisoformat(principal.expires_at)
+            if expiry.tzinfo is None or expiry <= self._time():
+                raise ValueError
+        except (TypeError, ValueError):
+            raise EvidenceRejected("APPROVAL_EXPIRED_OR_INVALID") from None
+        if not principal.provenance_reference:
+            raise EvidenceRejected("PROVENANCE_REVIEW_REQUIRED")
+        _identifier(principal.provenance_reference)
+        # Unknown conditions must be enforced by a reviewed host policy, not ignored.
+        if principal.conditions:
+            raise EvidenceRejected("APPROVAL_CONDITIONS_REVIEW_REQUIRED")
+        return principal
+
+    def _eligible(self, record):
+        entry = self.registry.require(record["source_id"], record["original_url"])
+        self.registry.require(record["source_id"], record["final_url"])
+        if (entry.verification_status != "VERIFIED" or
+                self.registry.fingerprint(entry) != record["metadata"]["registry_fingerprint"]):
+            raise EvidenceRejected("SOURCE_REVIEW_REQUIRED")
+        m = record["metadata"]
+        today = self._time().date().isoformat()
+        if (not all(m.get(k) for k in ("publication_date", "effective_date", "expiry_date"))
+                or m["publication_date"] > today
+                or not m["effective_date"] <= today <= m["expiry_date"]
+                or m["service"] not in entry.services or m["jurisdiction"] != entry.jurisdiction
+                or not record.get("text") or _hash(record["text"].encode()) != record.get("parsed_hash")):
+            raise EvidenceRejected("DOCUMENT_REVIEW_REQUIRED")
+        if any(other["original_url"] == record["original_url"] and other["source_id"] == record["source_id"]
+               and other["content_hash"] != record["content_hash"]
+               and other["status"] not in {"REJECTED", "SUPERSEDED", "RETIRED"}
+               for other in self.staging.list()):
+            raise EvidenceRejected("VERSION_CONFLICT_REVIEW")
+        return entry
+
+    @staticmethod
+    def _approval_binding(record):
+        payload = {k: record[k] for k in ("document_id", "source_id", "original_url", "final_url",
+                   "content_hash", "parsed_hash", "metadata", "version_conflict", "version", "retrieved_at")}
+        return _hash(json.dumps(payload, sort_keys=True).encode())
+
+    def to_v1_request(self, document_id, *, purpose="v1_request_projection"):
+        """Pure compatibility projection. Never calls RAG/store/ingest or changes state."""
+        record = self.staging.get(document_id)
+        self._eligible(record)
+        if record["status"] != "APPROVED_FOR_INGESTION" or not record.get("approval"):
+            raise EvidenceRejected("DOCUMENT_NOT_APPROVED")
+        if record["approval"].get("identity_status") != "VERIFIED_BY_HOST_AUTHORIZER":
+            raise EvidenceRejected("APPROVAL_IDENTITY_REQUIRED")
+        if record["approval"].get("binding") != self._approval_binding(record):
+            raise EvidenceRejected("APPROVAL_BINDING")
+        approval = record["approval"]
+        if approval.get("status") != "APPROVED":
+            raise EvidenceRejected("APPROVAL_NOT_VALID")
+        _identifier(approval.get("reviewer"))
+        _identifier(approval.get("reference"))
+        if approval.get("purpose") != purpose:
+            raise EvidenceRejected("APPROVAL_SCOPE")
+        principal = self._authorize(approval["reviewer"], approval["reference"],
+                                    approval["binding"], purpose)
+        # A legacy record or rewritten authorization terms cannot silently inherit consent.
+        if (approval.get("revoked") is not False or
+                approval.get("expires_at") != principal.expires_at or
+                approval.get("provenance_reference") != principal.provenance_reference or
+                approval.get("identity_reference") != principal.evidence_reference or
+                approval.get("conditions") != list(principal.conditions)):
+            raise EvidenceRejected("APPROVAL_TERMS_CHANGED")
+        from app.knowledge.schemas import DocumentIngestRequest
+        return DocumentIngestRequest(document_id=record["document_id"],
+            title=record["metadata"]["title"], source=record["text"], content_type="text/plain",
+            metadata={"web_evidence": {k: record[k] for k in
+                      ("original_url", "final_url", "content_hash", "version", "retrieved_at", "source_id")},
+                      "provenance": record["metadata"], "approval": record["approval"]})
+
+    def ingest_into_temporary_rag(self, document_id, rag, *, temporary_root,
+                                  purpose="temporary_rag_ingestion"):
+        """Offline adapter only; active-store activation is not implemented here."""
+        from app.knowledge.store import SQLiteVectorStore
+        root = Path(temporary_root).resolve()
+        store = rag._store
+        repo = Path(__file__).resolve().parents[2]
+        if (not isinstance(store, SQLiteVectorStore)
+                or not root.is_relative_to(Path(tempfile.gettempdir()).resolve())
+                or root == Path(tempfile.gettempdir()).resolve()
+                or root.is_relative_to(repo / "data")
+                or not store.db_path.resolve().is_relative_to(root)):
+            raise EvidenceRejected("TEMPORARY_STORE_REQUIRED")
+        request = self.to_v1_request(document_id, purpose=purpose)
+        with store.transaction():
+            result = rag.ingest_document(request)
+            if not result.success:
+                raise EvidenceRejected("RAG_INGEST_FAILED")
+            # Consent/version may change while embedding or storing; roll back then.
+            current = self.to_v1_request(document_id, purpose=purpose)
+            if current.model_dump() != request.model_dump():
+                raise EvidenceRejected("DOCUMENT_CHANGED_DURING_INGESTION")
+        return result

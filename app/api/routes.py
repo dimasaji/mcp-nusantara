@@ -1,7 +1,8 @@
-﻿"""Nusantara Core + Hermes API Gateway."""
+"""Nusantara Core + Hermes API Gateway."""
 
 from __future__ import annotations
 import asyncio
+import re
 import time
 import threading
 
@@ -11,6 +12,10 @@ from typing import Any, Dict, Literal
 from fastapi import APIRouter, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.api.knowledge_pipeline import create_knowledge_pipeline_router
+from app.policy.policy_engine import PolicyEngine, PolicyDecision
+from app.handoff.engine import HandoffEngine, HandoffLevel
+from app.mcp.mcp import MCPServer, create_server
 from app.core.config import settings
 from app.core.runtime_identity import BUILD_ID
 from app.observability import metrics
@@ -21,12 +26,15 @@ from app.developer_core.graph_bridge import GraphifyBridge
 from app.knowledge.engine import KnowledgeEngine
 from app.knowledge.grounding import EvidenceGroundingGuard
 from app.knowledge.schemas import DocumentIngestRequest as RAGIngestRequest
+from app.knowledge.schemas import capture_retrieval
 from app.models.ollama import OllamaProvider
+from app.models.openrouter import OpenRouterProvider
 from app.problem.classifier import ProblemClassifier
 from app.problem.detector import ProblemDetector
 from app.problem.engine import ProblemEngine
 from app.hermes.agent import HermesAgent
 from app.language.engine import LanguageEngine
+from app.language.laya_intent import LayaIntentAdapter
 from app.workflow.engine import WorkflowEngine
 from app.trust.engine import TrustEngine
 
@@ -40,7 +48,7 @@ _started_at = datetime.now(timezone.utc)
 
 _configuration = settings.effective_configuration
 _knowledge = KnowledgeEngine(nusantara_config=_configuration)
-_gate_integration = GateIntegration()
+_gate_integration = GateIntegration(memory_root=_configuration.knowledge.database.parent / 'chat-history')
 _developer_core = GraphifyBridge()
 
 # Evidence Grounding Guard
@@ -49,10 +57,15 @@ _grounding_guard = EvidenceGroundingGuard()
 # Trust Engine — Phase 4 V1
 _trust_engine = TrustEngine()
 
+# Fase B - Policy, Handoff, MCP
+_policy_engine = PolicyEngine()
+_handoff_engine = HandoffEngine()
+_mcp_server = create_server()
+
 # Persistent LanguageEngine:
 # IndoBERT worker dan prototype embeddings dibuat sekali
 # dan digunakan kembali oleh seluruh request /v1/chat.
-_language = LanguageEngine()
+_language = LanguageEngine(sop_intent_adapter=LayaIntentAdapter(_configuration.laya_intent))
 # Both V1 stages use the same model and the client's serialized request pipe.
 # Reuse its worker instead of loading a second 768D model for RAG.
 if _language.semantic_intent_engine is not None:
@@ -79,7 +92,8 @@ async def _run_sync_v1(fn, *args, timeout_s=30.0, **kwargs):
     try:
         return await asyncio.wait_for(asyncio.shield(task), timeout=timeout_s)
     except TimeoutError:
-        raise HTTPException(status_code=504, detail="batas waktu pemrosesan terlampaui") from None
+        raise HTTPException(status_code=504, detail="batas waktu pemrosesan terlampaui",
+                            headers={"X-Chat-Retry-Safe": "pre-provider"}) from None
 
 _workflows = WorkflowEngine()
 
@@ -102,6 +116,9 @@ class ChatRequest(BaseModel):
     )
     model: str | None = None
     stream: bool = False
+    request_id: str | None = Field(default=None, pattern=r'^[a-f0-9]{32}$')
+    retry_of: str | None = Field(default=None, pattern=r'^[a-f0-9]{32}$')
+    document_ids: list[str] = Field(default_factory=list, max_length=20)
 
 
 class _PublicChatModel(BaseModel):
@@ -143,7 +160,7 @@ class _PublicChatResponse(_PublicChatModel):
     response: str
     trust: _PublicChatTrust
     model: str = Field(max_length=256)
-    provider_status: Literal["local_rule", "evidence_fast_path", "ollama", "offline"]
+    provider_status: Literal["local_rule", "evidence_fast_path", "ollama", "openrouter", "offline"]
     latency_ms: int = Field(ge=0)
     grounding: _PublicChatGrounding
     understanding: _PublicChatUnderstanding
@@ -164,6 +181,7 @@ def _project_v1_chat_response(payload: dict, *, intent_name: str) -> dict:
         "empty_answer", "no_evidence", "grounded_abstention",
         "requirement_evidence_missing", "possible_unsupported_content",
         "grounded", "deterministic_response", "not_evaluated",
+        "general_knowledge_fallback",
     }
     reason = grounding.get("reason")
     if not isinstance(reason, str) or reason not in public_reasons:
@@ -589,12 +607,109 @@ def _build_evidence_text(
     return "\n".join(lines)
 
 
+def _arithmetic_response(user_input: str) -> str | None:
+    """Hitung ekspresi aritmetika sederhana secara lokal dan terbatas."""
+    import ast
+    import math
+    import re
+
+    text = (user_input or "").strip().lower()
+    if not text or len(text) > 100:
+        return None
+
+    # Terima kata operasi bahasa Indonesia yang eksplisit.
+    replacements = (
+        (r"\bditambah\b", "+"),
+        (r"\btambah\b", "+"),
+        (r"\bdikurangi\b", "-"),
+        (r"\bkurangi\b", "-"),
+        (r"\bdikali\b", "*"),
+        (r"\bkali\b", "*"),
+        (r"\bdibagi\b", "/"),
+        (r"\bbagi\b", "/"),
+    )
+    for pattern, replacement in replacements:
+        text = re.sub(pattern, replacement, text)
+
+    text = re.sub(r"^(?:tolong\s+)?(?:hitung(?:kan)?|berapa hasil dari|berapakah)\s+", "", text)
+    text = re.sub(r"\s+jawab\b.*$", "", text)
+    text = re.sub(r"\s+berapa hasilnya\??$", "", text)
+    text = text.strip().rstrip("?.! ")
+
+    # Tolak teks campuran dan sintaks di luar ekspresi aritmetika.
+    if not text or not re.fullmatch(r"[0-9\s.+\-*/()]+", text):
+        return None
+
+    try:
+        tree = ast.parse(text, mode="eval")
+        nodes = list(ast.walk(tree))
+        if len(nodes) > 25:
+            return None
+
+        from app.tools.base import calculator
+
+        def evaluate(node):
+            if isinstance(node, ast.Expression):
+                return evaluate(node.body)
+
+            if isinstance(node, ast.Constant) and type(node.value) in (int, float):
+                value = node.value
+                if not math.isfinite(value) or abs(value) > 1_000_000_000_000:
+                    raise ValueError("Angka di luar batas")
+                return value
+
+            if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+                value = evaluate(node.operand)
+                if isinstance(node.op, ast.USub):
+                    return calculator({"operation": "subtract", "a": 0, "b": value})["result"]
+                return value
+
+            if isinstance(node, ast.BinOp):
+                left = evaluate(node.left)
+                right = evaluate(node.right)
+
+                if isinstance(node.op, ast.Add):
+                    operation = "add"
+                elif isinstance(node.op, ast.Sub):
+                    operation = "subtract"
+                elif isinstance(node.op, ast.Mult):
+                    operation = "multiply"
+                elif isinstance(node.op, ast.Div):
+                    operation = "divide"
+                else:
+                    raise ValueError("Operator tidak diizinkan")
+
+                value = calculator({
+                    "operation": operation,
+                    "a": left,
+                    "b": right,
+                })["result"]
+
+                if not math.isfinite(value) or abs(value) > 1_000_000_000_000:
+                    raise ValueError("Hasil di luar batas")
+                return value
+
+            raise ValueError("Ekspresi tidak diizinkan")
+
+        result = evaluate(tree)
+        if isinstance(result, float) and result.is_integer():
+            result = int(result)
+        return str(result)
+
+    except (SyntaxError, ValueError, TypeError, ArithmeticError, OverflowError, ZeroDivisionError):
+        return None
+    except Exception:
+        # Kegagalan tool tidak boleh menggagalkan seluruh permintaan chat.
+        return None
+
 def _deterministic_response(
     *,
     intent_name: str,
     intent_confidence: float,
     entities: list[dict[str, Any]],
     evidence: list[Any],
+    user_input: str = "",
+    arithmetic_response_fn: Any = None,
 ) -> str | None:
     """
     Safe deterministic routing.
@@ -606,6 +721,13 @@ def _deterministic_response(
     Evidence prosedural harus diberikan kepada Hermes agar jawaban tetap
     grounded dan tidak disalahartikan sebagai status personal pengguna.
     """
+
+
+    # Aritmetika lokal hanya menjawab ekspresi yang dikenali helper.
+    if arithmetic_response_fn is not None:
+        arithmetic_response = arithmetic_response_fn(user_input)
+        if arithmetic_response is not None:
+            return arithmetic_response
 
     # Confidence terlalu rendah -> jangan mengambil keputusan deterministik.
     if intent_confidence < 0.70:
@@ -875,10 +997,87 @@ async def health_detail():
 # ============================================================================
 
 
+@router.get('/chat/history')
+def chat_history(x_chat_session: str = Header(default='')):
+    import re
+    if not re.fullmatch(r'web-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}', x_chat_session):
+        raise HTTPException(403,'CHAT_SESSION_CAPABILITY_REQUIRED')
+    return {'session_id':x_chat_session,'turns':_gate_integration.memory.chat_history(x_chat_session)}
+
+
+def _record_chat_result(session_id, question, *, request_id=None, **result):
+    try:
+        if request_id:
+            return _gate_integration.memory.finish_chat(session_id, request_id, **result)
+        _gate_integration.memory.record_chat(session_id,question,**result)
+        return True
+    except Exception as exc:
+        # A storage failure must not mask a provider error or escape sanitization.
+        import logging
+        logging.getLogger(__name__).warning('V1_HISTORY_WRITE_FAILED:%s',type(exc).__name__)
+        return False
+
+
 @router.post("/chat")
 async def chat(
     request: ChatRequest,
+    x_admin_token: str | None = Header(default=None),
 ):
+    if request.document_ids:
+        require_admin(x_admin_token)
+        configuration, _ = settings.configuration_snapshot()
+        if configuration.llm.provider != 'ollama':
+            raise HTTPException(409, 'DOCUMENT_CHAT_REQUIRES_LOCAL_OPERATOR_MODEL')
+        if any(not identifier or len(identifier) > 256 or _knowledge.rag.get_document_info(identifier) is None
+               for identifier in request.document_ids):
+            raise HTTPException(422, 'DOCUMENT_NOT_INDEXED')
+    if not request.stream:
+        return await _chat_completed(request)
+    # The same Hermes/grounding/history path executes once; only its transport
+    # changes. Deltas are provisional until the final grounded public projection.
+    import asyncio
+    import contextlib
+    import json
+    from fastapi.responses import StreamingResponse
+    from app.models.streaming import stream_observer
+
+    async def events():
+        queue = asyncio.Queue(maxsize=32)
+
+        async def execute():
+            token = stream_observer.set(queue.put)
+            try:
+                answer = await _chat_completed(request.model_copy(update={'stream': False}))
+                await queue.put({'type': 'final', 'answer': answer})
+            except asyncio.CancelledError:
+                raise
+            except Exception as exc:
+                status = getattr(exc, 'status_code', 500)
+                await queue.put({'type': 'error', 'status': getattr(exc, 'status_code', 500),
+                    'retry_safe': status == 504,
+                    'message': 'Batas waktu pemrosesan tercapai. Periksa History sebelum mencoba kembali.' if status == 504
+                        else 'Chat gagal. Periksa History sebelum mencoba kembali.'})
+            finally:
+                stream_observer.reset(token)
+
+        task = asyncio.create_task(execute())
+        try:
+            yield json.dumps({'type': 'status', 'message': 'Memproses pertanyaan'}) + '\n'
+            while True:
+                event = await queue.get()
+                yield json.dumps(event, ensure_ascii=False) + '\n'
+                if event['type'] in {'final', 'error'}:
+                    break
+        finally:
+            task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await task
+
+    return StreamingResponse(events(), media_type='application/x-ndjson',
+        headers={'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no'})
+
+
+async def _chat_completed(request: ChatRequest):
     """
     End-to-end local chat.
 
@@ -901,513 +1100,123 @@ async def chat(
     Response
     """
 
-    provider: OllamaProvider | None = None
+    provider: OllamaProvider | OpenRouterProvider | None = None
+    request_id = request.request_id
 
     try:
+
+        if request_id:
+            try:
+                reservation = _gate_integration.memory.begin_chat(
+                    request.session_id, request_id, request.user_input, retry_of=request.retry_of,
+                    **({'document_ids': request.document_ids} if request.document_ids else {}))
+            except Exception:
+                raise HTTPException(503, 'HISTORY_PERSISTENCE_FAILED') from None
+            state = reservation.get('state')
+            if state == 'SUCCEEDED':
+                return reservation['answer']
+            if state == 'PROCESSING':
+                raise HTTPException(409, 'CHAT_REQUEST_IN_PROGRESS')
+            if state == 'UNKNOWN':
+                raise HTTPException(409, 'CHAT_REQUEST_OUTCOME_UNKNOWN')
+            if state == 'CONFLICT':
+                raise HTTPException(409, 'CHAT_REQUEST_ID_CONFLICT')
+            if state == 'RETRY_NOT_SAFE':
+                raise HTTPException(409, 'CHAT_RETRY_NOT_SAFE')
+            if state == 'FAILED':
+                error = reservation.get('error') or 'INTERNAL_ERROR_UNKNOWN'
+                if error == 'HTTP_504_PRE_PROVIDER':
+                    raise HTTPException(504, 'batas waktu pemrosesan terlampaui',
+                                        headers={'X-Chat-Retry-Safe': 'pre-provider'})
+                match = re.fullmatch(r'HTTP_(\d+)_UNKNOWN', error)
+                status_code = int(match.group(1)) if match else 500
+                raise HTTPException(status_code, 'CHAT_REQUEST_PREVIOUSLY_FAILED')
+            if state != 'NEW':
+                raise HTTPException(503, 'CHAT_IDEMPOTENCY_UNAVAILABLE')
 
         # ==============================================================
         # 1. OLLAMA PROVIDER
         # ==============================================================
 
-        provider = OllamaProvider(
-            nusantara_config=_configuration,
-            model=request.model or None,
-            model_source='REQUEST_OVERRIDE' if request.model else None,
-        )
+        configuration, revision = settings.configuration_snapshot()
+        if request.model and request.model != configuration.llm.model:
+            raise HTTPException(409, 'Model dikendalikan operator; perbarui status model aktif.')
+        if configuration.llm.provider == "openrouter":
+            from app.models.cost_ledger import CostLedger
+            from app.models.openrouter_cost_policy import estimate_openrouter_cost
 
-        health = await provider.health_check()
-
-        # Pipeline timer untuk latency Fast Path
-        started = time.perf_counter()
-
-        # ==============================================================
-        # 2. HERMES CORE
-        # ==============================================================
-
-        agent = HermesAgent(
-            provider=provider,
-            language_engine=_language,
-        )
-
-        # --------------------------------------------------------------
-        # LANGUAGE ENGINE
-        # --------------------------------------------------------------
-
-        understanding = await _run_sync_v1(agent.language.process,
-            request.user_input
-        )
-
-        # --------------------------------------------------------------
-        # PROBLEM ENGINE
-        # --------------------------------------------------------------
-
-        problem = await _run_sync_v1(agent.problem.analyze,
-            user_input=request.user_input,
-            context=None,
-        )
-
-        # --------------------------------------------------------------
-        # KNOWLEDGE ENGINE
-        # --------------------------------------------------------------
-
-        evidence = await _run_sync_v1(_knowledge.search_knowledge,
-            request.user_input,
-            top_k=None,
-        )
-
-        # --------------------------------------------------------------
-        # GATE 7 - EVIDENCE RELEVANCE GATE
-        # --------------------------------------------------------------
-        #
-        # Retriever dapat mengembalikan kandidat yang secara semantik
-        # masih berhubungan tetapi sebenarnya tidak cukup relevan untuk
-        # menjawab pertanyaan.
-        #
-        # Contoh:
-        #   query biaya KTP-el
-        #   evidence KTP umum score 0.48
-        #
-        # Evidence tersebut tidak boleh diteruskan sebagai dasar jawaban.
-        #
-        # Threshold 0.50 dipilih sebagai initial production gate dan
-        # tetap mempertahankan evidence kuat seperti score 0.60-0.70.
-        # --------------------------------------------------------------
-
-        def _evidence_score(item):
-            try:
-                if isinstance(item, dict):
-                    return float(item.get("score", 0.0) or 0.0)
-
-                return float(
-                    getattr(item, "score", 0.0) or 0.0
-                )
-            except (TypeError, ValueError):
-                return 0.0
-
-        evidence = [
-            item
-            for item in evidence
-            if _evidence_score(item) >= 0.50
-        ]        
-        # ==============================================================
-        # PHASE 4 - TRUST ASSESSMENT
-        # ==============================================================
-        #
-        # Gate 7 menyaring evidence berdasarkan canonical Evidence.score.
-        # Trust menggunakan adapter boundary:
-        #
-        #     Evidence.score -> Trust.relevance
-        #
-        # Evidence asli tidak dimutasi.
-        # Trust hanya melakukan assessment.
-        # Trust tidak mengambil keputusan Policy.
-        # ==============================================================
-
-        trust_input = [
-            {
-                "relevance": _evidence_score(item),
-            }
-            for item in evidence
-        ]
-
-        trust_assessment = _trust_engine.evaluate(
-            evidence=trust_input,
-            claim=request.user_input,
-        )
-
-        # ==============================================================
-        # 3. UNDERSTANDING
-        # ==============================================================
-
-        understanding_data = (
-            _extract_understanding_data(
-                understanding
-            )
-        )
-
-        intent_name, intent_confidence = (
-            _extract_intent(
-                understanding_data
-            )
-        )
-
-        # ----------------------------------------------------------
-        # INTENT / PROBLEM RECONCILIATION
-        # ----------------------------------------------------------
-        #
-        # Intent dengan confidence tinggi menjadi authoritative
-        # untuk routing percakapan.
-        #
-        # Ini mencegah Problem Engine salah membaca:
-        #
-        #   "Apa itu KTP-el?"
-        #
-        # sebagai:
-        #
-        #   document_status
-        #
-        problem = _reconcile_problem_with_intent(
-            problem=problem,
-            intent_name=intent_name,
-            intent_confidence=intent_confidence,
-            user_input=request.user_input,
-        )
-
-        detected_entities, entities_text = (
-            _extract_entities(
-                understanding_data
-            )
-        )
-
-        # ==============================================================
-        # 4. PROBLEM DATA
-        # ==============================================================
-
-        problem_goal = _get_problem_value(
-            problem,
-            "goal",
-            "Membantu pengguna menyelesaikan kebutuhannya.",
-        )
-
-        problem_situation = _get_problem_value(
-            problem,
-            "situation",
-            request.user_input,
-        )
-
-        # ==============================================================
-        # 5. KNOWLEDGE DATA
-        # ==============================================================
-
-        evidence_text = _build_evidence_text(
-            evidence
-        )
-
-        # ==========================================================
-        # GATE 8-13 LIVE INTEGRATION â€” SHADOW MODE
-        # ==========================================================
-        gate_context = _gate_integration.process(
-            session_id=request.session_id,
-            user_input=request.user_input,
-            evidence=evidence,
-            intent_name=intent_name,
-            intent_confidence=intent_confidence,
-            problem=problem,
-        )
-
-
-        # ==============================================================
-        # 6. DETERMINISTIC RESPONSE
-        # ==============================================================
-
-        deterministic_response = (
-            _deterministic_response(
-                intent_name=intent_name,
-                intent_confidence=intent_confidence,
-                entities=detected_entities,
-                evidence=evidence,
-            )
-        )
-
-        # Grounding result hanya diisi ketika Ollama menghasilkan jawaban.
-        # Default None agar local_rule/offline tetap aman.
-        grounding_result = None
-
-        if deterministic_response is not None:
-
-            # Tidak perlu memanggil LLM.
-            response_text = (
-                deterministic_response
+            # Separate operational ledger; never reuse test database.
+            ledger = CostLedger(
+                "data/openrouter_cost_v1.db",
+                budget_usd="1.00",
+                per_request_cap_usd="0.05",
             )
 
-            model_status = "local_rule"
-
-            model_used = provider.model
-
-            latency_ms = 0
-
-        # ==============================================================
-        # 7. OLLAMA / HERMES
-        # ==============================================================
-
-        elif health["available"]:
-
-            # ==========================================================
-            # GATE 7 FINAL FAST PATH
-            # ==========================================================
-            # Jika intent sangat yakin dan evidence cukup kuat,
-            # gunakan evidence langsung. Tidak perlu memanggil Ollama
-            # untuk menghasilkan ulang informasi yang sudah tersedia.
-            # Ini mengurangi latency dan sekaligus mencegah hallucination.
-            # ==========================================================
-
-            fast_evidence_response = None
-
-            if (
-                intent_name == "ask_document_status"
-                and evidence
-                and _evidence_score(evidence[0]) >= 0.50
-            ):
-
-                first_evidence = evidence[0]
-
-                if isinstance(first_evidence, dict):
-                    source_text = (
-                        first_evidence.get("chunk")
-                        or first_evidence.get("source")
-                        or ""
-                    ).strip()
-                else:
-                    source_text = (
-                        getattr(first_evidence, "chunk", None)
-                        or getattr(first_evidence, "source", None)
-                        or ""
-                    ).strip()
-
-                if source_text:
-                    fast_evidence_response = source_text
-
-            if fast_evidence_response:
-
-                response_text = fast_evidence_response
-                model_status = "evidence_fast_path"
-                model_used = provider.model
-                latency_ms = int(
-                    (time.perf_counter() - started) * 1000
+            def cost_estimator(payload):
+                return estimate_openrouter_cost(
+                    payload,
+                    pricing_file="data/config/openrouter-pricing-v1.json",
                 )
 
-                grounding_result = _grounding_guard.validate(
-                    answer=response_text,
-                    evidence=evidence,
-                    intent_name=intent_name,
-                )
-
-                if not grounding_result.grounded:
-                    response_text = (
-                        "Informasi tersebut belum tersedia secara "
-                        "cukup dalam knowledge base."
-                    )
-
-            else:
-
-                system_prompt = _build_system_prompt()
-                system_prompt = (
-                    system_prompt
-                    + "\n\n"
-                    + _grounding_guard.build_system_instruction()
-                )
-
-                prompt = _build_user_prompt(
-                    user_input=request.user_input,
-                    intent_name=intent_name,
-                    intent_confidence=intent_confidence,
-                    entities_text=entities_text,
-                    problem_situation=problem_situation,
-                    problem_goal=problem_goal,
-                    evidence_text=evidence_text,
-                )
-
-                result = await provider.generate(
-                    {
-                        "system": system_prompt,
-                        "prompt": prompt,
-                        "temperature": 0.1,
-                        "max_tokens": 220,
-                    }
-                )
-
-                response_text = str(
-                    result.get("content", "")
-                ).strip()
-
-                model_status = "ollama"
-                model_used = provider.model
-
-                latency_ms = int(
-                    (time.perf_counter() - started) * 1000
-                )
-
-                grounding_result = _grounding_guard.validate(
-                    answer=response_text,
-                    evidence=evidence,
-                    intent_name=intent_name,
-                )
-
-                if not grounding_result.grounded:
-                    response_text = (
-                        "Informasi tersebut belum tersedia secara "
-                        "cukup dalam knowledge base."
-                    )
-
-            if not response_text:
-                response_text = (
-                    "Maaf, saya belum mendapatkan jawaban "
-                    "dari sistem. Silakan coba kembali."
-                )
-
-            system_prompt = (
-                _build_system_prompt()
+            provider = OpenRouterProvider(
+                nusantara_config=configuration,
+                cost_ledger=ledger,
+                cost_estimator=cost_estimator,
             )
-
-            # Evidence Grounding Guard
-            system_prompt = (
-                system_prompt
-                + "\n\n"
-                + _grounding_guard.build_system_instruction()
-            )
-
-            prompt = _build_user_prompt(
-                user_input=request.user_input,
-                intent_name=intent_name,
-                intent_confidence=intent_confidence,
-                entities_text=entities_text,
-                problem_situation=problem_situation,
-                problem_goal=problem_goal,
-                evidence_text=evidence_text,
-            )
-
-
-        # ==============================================================
-        # 8. OLLAMA OFFLINE
-        # ==============================================================
-
         else:
+            provider = OllamaProvider(nusantara_config=configuration)
 
-            response_text = (
-                "Ollama belum tersedia. "
-                "Nusantara Core sudah menerima "
-                "dan memahami input Anda. "
-                f"Pastikan model '{provider.model}' "
-                "tersedia di Ollama."
-            )
+        agent = HermesAgent(provider=provider, language_engine=_language)
+        agent = HermesAgent(provider=provider, language_engine=_language)
+        core = await agent.execute_v1(request, knowledge=_knowledge, gates=_gate_integration,
+            trust=_trust_engine, grounding=_grounding_guard, developer_core=_developer_core,
+            policy=_policy_engine, handoff=_handoff_engine, mcp=_mcp_server,
+            run_sync=_run_sync_v1, helpers={
+                '_extract_understanding_data': _extract_understanding_data,
+                '_extract_intent': _extract_intent,
+                '_reconcile_problem_with_intent': _reconcile_problem_with_intent,
+                '_extract_entities': _extract_entities,
+                '_get_problem_value': _get_problem_value,
+                '_build_evidence_text': _build_evidence_text,
+                '_deterministic_response': _deterministic_response,
+        '_arithmetic_response': _arithmetic_response,
+                '_build_system_prompt': _build_system_prompt,
+                '_build_user_prompt': _build_user_prompt,
+                '_model_dump': _model_dump,
+            })
+        public = _project_v1_chat_response(core.payload, intent_name=core.intent_name)
+        settings.record_v1_execution(revision=revision, model=public['model'],
+            provider_status=public['provider_status'], grounded=public['grounding']['grounded'],
+            stages=('HERMES_RUN', 'KNOWLEDGE', 'TRUST', 'GATES', 'GROUNDING', 'PUBLIC_PROJECTION'),
+            execution_identity=getattr(provider, 'last_execution_identity', None))
+        if not _record_chat_result(request.session_id,request.user_input,request_id=request_id,answer=public):
+            raise HTTPException(503,'HISTORY_PERSISTENCE_FAILED')
+        return public
 
-            model_status = "offline"
+    except asyncio.CancelledError:
+        if request_id:
+            _record_chat_result(request.session_id, request.user_input, request_id=request_id,
+                                error='CANCELLED_UNKNOWN')
+        raise
 
-            model_used = provider.model
-
-            latency_ms = 0
-
-        # ==============================================================
-        # 9. PROBLEM RESPONSE
-        # ==============================================================
-
-        problem_data = _model_dump(
-            problem
-        )
-
-        # ==============================================================
-        # 10. FINAL RESPONSE
-        # ==============================================================
-
-
-        _gate_integration.remember_response(
-            session_id=request.session_id,
-            response=response_text,
-        )
-
-        # ==============================================================
-        # GATE 14 - DEVELOPER CORE RUNTIME SNAPSHOT
-        # ==============================================================
-        developer_runtime = _developer_core.runtime_snapshot(
-            session_id=request.session_id,
-            user_input=request.user_input,
-            gate_pipeline=gate_context,
-            provider_status=model_status,
-            latency_ms=latency_ms,
-            grounded=bool(
-                gate_context
-                .get("reasoning", {})
-                .get("status") == "grounded"
-            ),
-        )
-
-        return _project_v1_chat_response({
-            "developer_core": developer_runtime,
-            "session_id": request.session_id,
-            "trust": {
-                "supports_claim": trust_assessment.supports_claim,
-                "confidence": trust_assessment.confidence,
-                "risk_level": trust_assessment.risk_level.value,
-                "requires_human": trust_assessment.requires_human,
-                "evidence_count": trust_assessment.evidence_count,
-                "evidence_available": trust_assessment.evidence_available,
-            },
-
-            "response": response_text,
-            "gate_pipeline": gate_context,
-            "model": model_used,
-            "provider_status": model_status,
-            "latency_ms": latency_ms,
-
-            "grounding": {
-                "enabled": True,
-                "grounded": (
-                    grounding_result.grounded
-                    if grounding_result is not None
-                    else (
-                        True
-                        if model_status == "local_rule"
-                        else False
-                    )
-                ),
-                "reason": (
-                    grounding_result.reason
-                    if grounding_result is not None
-                    else (
-                        "deterministic_response"
-                        if model_status == "local_rule"
-                        else "not_evaluated"
-                    )
-                ),
-                "unsupported_sentences": (
-                    grounding_result.unsupported_sentences
-                    if grounding_result is not None
-                    else []
-                ),
-            },
-
-            "understanding": understanding_data,
-            "problem": problem_data,
-            "evidence": [
-                {
-                    "document_id": getattr(
-                        e,
-                        "document_id",
-                        None,
-                    ),
-                    "title": getattr(
-                        e,
-                        "title",
-                        None,
-                    ),
-                    "source": getattr(
-                        e,
-                        "source",
-                        None,
-                    ),
-                    "chunk": getattr(
-                        e,
-                        "chunk",
-                        None,
-                    ),
-                    "score": getattr(
-                        e,
-                        "score",
-                        None,
-                    ),
-                }
-                for e in evidence
-            ],
-            "timestamp": datetime.now(
-                timezone.utc
-            ).isoformat(),
-        }, intent_name=intent_name)
-
-    except (HTTPException, ProviderUnavailableError):
+    except (HTTPException, ProviderUnavailableError) as exc:
+        status_code = getattr(exc, 'status_code', 503)
+        if request_id:
+            if status_code == 504:
+                headers = dict(getattr(exc, 'headers', None) or {})
+                headers.setdefault('X-Chat-Retry-Safe', 'pre-provider')
+                exc.headers = headers
+            error_code = 'HTTP_504_PRE_PROVIDER' if status_code == 504 else f'HTTP_{status_code}_UNKNOWN'
+            _record_chat_result(request.session_id,request.user_input,request_id=request_id,error=error_code)
+        else:
+            _record_chat_result(request.session_id,request.user_input,error=f'HTTP_{status_code}')
         raise
 
     except Exception as exc:
-
+        if request_id:
+            _record_chat_result(request.session_id,request.user_input,request_id=request_id,error='INTERNAL_ERROR_UNKNOWN')
+        else:
+            _record_chat_result(request.session_id,request.user_input,error='INTERNAL_ERROR')
         raise HTTPException(
             status_code=500,
             detail="Terjadi kesalahan internal server",
@@ -1529,32 +1338,13 @@ async def ingest_document(
 ):
     require_admin(x_admin_token)
     try:
-
-        result = await asyncio.to_thread(
-            _knowledge.ingest_document,
-            RAGIngestRequest(
-                document_id=(
-                    request.id
-                    or None
-                ),
-                title=request.title,
-                source=request.content,
-                content_type="text/plain",
-                metadata=request.metadata,
-            )
-        )
-
-        if not result.success:
-
-            raise HTTPException(
-                status_code=400,
-                detail=(
-                    result.error
-                    or "Ingest failed"
-                ),
-            )
-
-        return result.model_dump()
+        result=await _run_sync_v1(_knowledge.process_knowledge_source,
+            request.title+'.txt',request.content.encode('utf-8'),request.id or None,request.metadata)
+        if result['status'] not in {'READY','DUPLICATE'}:
+            raise HTTPException(400,detail=result.get('reason') or 'INGEST_FAILED')
+        return {'success':True,'document_id':result['document_id'],'title':request.title,
+                'chunks_created':result.get('chunks_created',0),'chunks_stored':result.get('chunks_stored',0),
+                'total_time_ms':result.get('total_time_ms',0),'error':None}
 
     except HTTPException:
         raise
@@ -1569,19 +1359,27 @@ async def ingest_document(
         ) from exc
 
 
+router.include_router(create_knowledge_pipeline_router(_run_sync_v1))
+
+
 @router.post("/knowledge/search")
 async def search_knowledge(
     request: KnowledgeSearchRequest,
 ):
 
+    if request.filter:
+        raise HTTPException(422, 'KNOWLEDGE_FILTER_NOT_SUPPORTED')
+
     try:
 
-        results = await _run_sync_v1(
-            _knowledge.search_knowledge,
-            request.query,
-            request.top_k,
-            request.filter,
-        )
+        with capture_retrieval('V1_KNOWLEDGE_SEARCH', request_top_k_source=(
+                'REQUEST_EXPLICIT' if 'top_k' in request.model_fields_set else 'REQUEST_DEFAULT')):
+            results = await _run_sync_v1(
+                _knowledge.search_knowledge,
+                request.query,
+                request.top_k,
+                request.filter,
+            )
 
 
         return {

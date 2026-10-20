@@ -1,5 +1,5 @@
 """Grounding gate (workflow #17, #20): tandai klaim jawaban yang TIDAK didukung source.
-Heuristik leksikal per kalimat; kalimat bernegasi ("tidak ada print()") dilewati. Bukan bukti kebenaran."""
+Heuristik leksikal per klaim; negasi hanya berlaku pada klaim setempat. Bukan bukti kebenaran."""
 from __future__ import annotations
 
 import re
@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 _NEG = re.compile(r"\b(tidak|bukan|tanpa|belum|tak|no|not|without|tiada)\b", re.I)
 _SPLIT = re.compile(r"(?<=[.!?])\s+|\n+")
+_CLAUSES = re.compile(r"(?<!\d),|,(?!\d)|[;:]|\b(?:tetapi|namun|tapi|dan|sedangkan|but|however|and|while)\b", re.I)
 _EXT_URL = re.compile(r"https?://(?!127\.|localhost|0\.0\.0\.0|\[::1\])", re.I)
 
 # (nama_rule, klaim_di_jawaban, bukti_di_source)
@@ -39,18 +40,25 @@ def _num(s: str) -> float:
     return float(s.replace(",", "."))
 
 
+def _negated(sent: str, start: int) -> bool:
+    # Negation after a claim, or belonging to an earlier claim, does not exempt it.
+    preceding = [m.end() for pattern in [r[1] for r in _RULES] + [_INTERNET, _TIMEOUT_CLAIM]
+                 for m in pattern.finditer(sent) if m.end() <= start]
+    return bool(_NEG.search(sent[max(preceding, default=0):start]))
+
+
 def check_grounding(answer: str, source: str) -> list[Violation]:
     out: list[Violation] = []
     src_timeouts = {_num(m) for m in _TIMEOUT_SRC.findall(source)}
-    for sent in (s.strip() for s in _SPLIT.split(answer)):
-        if not sent or _NEG.search(sent):
+    for sent in (s.strip() for sentence in _SPLIT.split(answer) for s in _CLAUSES.split(sentence)):
+        if not sent:
             continue
         for name, claim, evidence in _RULES:
-            if claim.search(sent) and not evidence.search(source):
+            if any(not _negated(sent, m.start()) for m in claim.finditer(sent)) and not evidence.search(source):
                 out.append(Violation(name, sent[:200]))
-        if _INTERNET.search(sent) and not _EXT_URL.search(source):
+        if any(not _negated(sent, m.start()) for m in _INTERNET.finditer(sent)) and not _EXT_URL.search(source):
             out.append(Violation("pengecekan internet/host eksternal", sent[:200]))
-        for m in _TIMEOUT_CLAIM.findall(sent):
-            if _num(m) not in src_timeouts:
+        for m in _TIMEOUT_CLAIM.finditer(sent):
+            if not _negated(sent, m.start()) and _num(m.group(1)) not in src_timeouts:
                 out.append(Violation("nilai timeout tidak sesuai source", sent[:200]))
     return out

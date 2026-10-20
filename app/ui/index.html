@@ -1,11 +1,11 @@
-
+﻿
 <!doctype html>
 <html lang="id">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Nusantara Core + Hermes</title>
+  <title>Nusantara AI</title>
 
   <style>
     :root {
@@ -1244,7 +1244,7 @@
 
       <div>
         <div class="brand-title">
-          Nusantara Hermes
+          Nusantara AI
         </div>
 
         <div class="brand-sub">
@@ -1261,9 +1261,13 @@
 
       <nav class="nav">
 
+        <button class="nav-btn" onclick="location.href='/v2/review'">
+          <span class="nav-icon">✓</span><span>Review & Monitoring</span>
+        </button>
+
         <button class="nav-btn active" onclick="setView('chat',this)">
           <span class="nav-icon">💬</span>
-          <span>Hermes Chat</span>
+          <span>Nusantara Chat</span>
         </button>
 
         <button class="nav-btn" onclick="openProblem()">
@@ -1338,7 +1342,7 @@
       <div class="page-title">
 
         <h1>
-          Hermes Agent Console
+          Nusantara AI Console
         </h1>
 
         <p>
@@ -1415,7 +1419,7 @@
             <div>
 
               <strong>
-                Hermes
+                Nusantara
               </strong>
 
               <span>
@@ -1445,7 +1449,7 @@
             </div>
 
             <h2>
-              Halo, saya Hermes.
+              Halo, saya Nusantara.
             </h2>
 
             <p>
@@ -1468,8 +1472,8 @@
               </button>
 
               <button class="quick"
-                      onclick="quickPrompt('Jelaskan kemampuan Nusantara Core Hermes.')">
-                ✦ Tentang Hermes
+                      onclick="quickPrompt('Jelaskan kemampuan Nusantara AI.')">
+                ✦ Tentang Nusantara
               </button>
 
               <button class="quick"
@@ -1492,7 +1496,7 @@
 
             <textarea
               id="chatInput"
-              placeholder="Tulis perintah atau pertanyaan untuk Hermes..."
+              placeholder="Tulis perintah atau pertanyaan untuk Nusantara..."
               onkeydown="handleInputKey(event)"></textarea>
 
             <div class="composer-footer">
@@ -1616,7 +1620,7 @@
           <div class="side-title">
 
             <h3>
-              Hermes Inspector
+              Nusantara Inspector
             </h3>
 
             <button class="btn"
@@ -1632,7 +1636,7 @@
             <div class="muted"
                  style="font-size:10px">
               Kirim pesan untuk melihat
-              proses Hermes.
+              proses Nusantara.
             </div>
 
           </div>
@@ -1714,7 +1718,7 @@
   <div class="drawer-header">
 
     <h3 id="drawerTitle">
-      Hermes
+      Nusantara
     </h3>
 
     <button class="close"
@@ -1828,6 +1832,7 @@
 
     }
 
+    if (!data.request_id) data.request_id = response.headers.get("X-Request-ID");
     return data;
 
   }
@@ -1932,7 +1937,7 @@
           ${
             role === "user"
               ? "You"
-              : "Hermes"
+              : "Nusantara"
           }
         </div>
 
@@ -2016,7 +2021,7 @@
     const thinking =
       addMessage(
         "assistant",
-        "Hermes sedang menganalisis..."
+        "Nusantara sedang menganalisis..."
       );
 
 
@@ -2076,7 +2081,9 @@
 
       bubble.textContent =
         data.response ||
-        "Hermes tidak mengembalikan response.";
+        "Nusantara tidak mengembalikan respons.";
+
+      addFeedbackControls(thinking, data);
 
 
       $("latency").textContent =
@@ -2096,7 +2103,7 @@
 
 
       toast(
-        "Response Hermes diterima."
+        "Respons Nusantara diterima."
       );
 
 
@@ -2119,7 +2126,7 @@
 
 
       toast(
-        "Hermes mengalami error."
+        "Nusantara mengalami kesalahan."
       );
 
     } finally {
@@ -2132,6 +2139,36 @@
 
     }
 
+  }
+
+
+  function addFeedbackControls(message, data) {
+    if (!data.request_id) return;
+    const panel = document.createElement("div");
+    const comment = document.createElement("input");
+    comment.placeholder = "Komentar opsional";
+    comment.maxLength = 2000;
+    comment.setAttribute("aria-label", "Komentar untuk jawaban ini");
+    const status = document.createElement("span");
+    status.setAttribute("role", "status");
+    for (const [type, label] of [["thumbs_up", "Membantu"], ["thumbs_down", "Kurang membantu"]]) {
+      const button = document.createElement("button");
+      button.textContent = label;
+      button.onclick = async () => {
+        button.disabled = true;
+        try {
+          await api("/v2/feedback", {method: "POST", body: JSON.stringify({
+            request_id: data.request_id, session_id: data.session_id || "-",
+            type, comment: comment.value, user: "anonymous"
+          })});
+          status.textContent = "Feedback tersimpan.";
+          for (const b of panel.querySelectorAll("button")) b.disabled = true;
+        } catch (error) {status.textContent = error.message; button.disabled = false;}
+      };
+      panel.append(button);
+    }
+    panel.append(comment, status);
+    message.append(panel);
   }
 
 
@@ -2575,7 +2612,7 @@
 
         <p>
           Session baru siap digunakan.
-          Silakan berikan perintah kepada Hermes.
+          Silakan berikan perintah kepada Nusantara.
         </p>
 
       </div>
@@ -2967,14 +3004,14 @@
 
                 title:
                   title ||
-                  "Knowledge Hermes",
+                  "Knowledge Nusantara",
 
                 content:
                   content,
 
                 metadata: {
                   source:
-                    "Hermes UI"
+                    "Nusantara UI"
                 }
 
               })
@@ -3123,7 +3160,7 @@
 
           <input
             id="workflowName"
-            value="Hermes Citizen Service">
+            value="Nusantara Citizen Service">
 
         </div>
 
@@ -3338,7 +3375,7 @@
           line-height:1.7">
 
           MCP dapat menjadi layer integrasi
-          Hermes dengan tools dan resource
+          Nusantara dengan tools dan resource
           eksternal/lokal.
 
         </p>
@@ -3356,7 +3393,7 @@
   function openMemory() {
 
     openDrawer(
-      "Hermes Memory",
+      "Nusantara Memory",
       `
 
         <div class="evidence">
@@ -3383,7 +3420,7 @@
           Nusantara Core.
 
           Session ID ini akan digunakan
-          sebagai identitas percakapan Hermes.
+          sebagai identitas percakapan Nusantara.
 
         </p>
 
@@ -3451,3 +3488,4 @@
 </body>
 </html>
 ```
+

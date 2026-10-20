@@ -5,7 +5,7 @@ services:
     environment:
       NUSANTARA_DATA_DIR: /app/data
       NUSANTARA_KNOWLEDGE_DB: /app/data/knowledge/nusantara_knowledge.db
-    volumes: [apidata:/app/data]
+    volumes: [apidata:/app/data, apphome:/home/appuser]
     env_file:
       - path: .env
         required: false
@@ -26,5 +26,5 @@ services:
     image: redis:7-alpine
     restart: unless-stopped
     networks: [nusantara]
-volumes: {pgdata: {}, apidata: {}}
+volumes: {pgdata: {}, apidata: {}, apphome: {}}
 networks: {nusantara: {}}

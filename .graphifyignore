@@ -25,6 +25,8 @@ app_backup_before_openrouter/
 
 # Integration snapshots / experimental copies
 integration/
+audit_reports/staging-drill-*/
+audit_reports/staging-*/
 
 # Generated Graphify output
 graphify-out/
@@ -40,3 +42,269 @@ temp/
 # OS
 .DS_Store
 Thumbs.db
+
+# --- Direktori orphan milik akun sandbox terhapus (BLK-ACL-REPORTS-001) ---
+# 213 direktori dimiliki akun sandbox yang sudah DIHAPUS (owner tampil "..."
+# pada `dir /q`), sehingga DACL-nya menolak dibaca bahkan oleh proses unconfined
+# non-elevated. Akibatnya `git status` melaporkan "Git coverage PARTIAL" dan `rg`
+# atas workspace gagal dengan exit 2.
+# Pengecualian ini TIDAK mengubah izin dan TIDAK menghapus apa pun: direktori tetap
+# ada di disk, dan perbaikan aksesnya masih BLOCKED sampai dijalankan dengan elevate.
+# Daftar ini dihasilkan dari inventaris walk (bukan pola), supaya direktori serupa
+# yang MASIH TERBACA tidak pernah ikut ter-ignore.
+# Bukti   : reports/ACL-EXCLUSION-BLK-ACL-REPORTS-001-20261015.md
+# Rollback: hapus blok ini; tidak ada perubahan izin yang perlu dipulihkan.
+control-plane/release-candidates/ac15-hash-binding-20261010/pytest-tmp/
+control-plane/release-candidates/v1-etr-20261010-120500/pytest-tmp/
+control-plane/release-candidates/v1-etr-20261010-120500-pathfix/pytest-tmp/
+control-plane/release-candidates/v1-etr-20261010-verify-02/pytest-tmp/
+docs/reports/core-human-first-20261008-4b875c29/after-tmp/
+docs/reports/core-human-first-20261008-4b875c29/before-tmp/
+docs/reports/d2-isolated-reproduction-20261008-9f4d2a61/backend-tmp/
+docs/reports/decision-pass-persistence-20261010-01/python-run-02/pytest-tmp/
+docs/reports/decision-repair-20261010-162642/python-run/pytest-tmp/
+docs/reports/devcore-goal-integration-20261008-c83f7a21/focused-tmp/
+docs/reports/devcore-goal-integration-20261008-c83f7a21/regression-tmp/
+docs/reports/evidence-full-20261014/pytest-tmp/
+docs/reports/evidence-isolated-20261012/pytest-tmp/
+docs/reports/hermes-conversation-20261009T202640/memory-review-20261009-203318/temporary/
+docs/reports/hermes-conversation-20261009T202640/regression-20261009-203229/temporary/
+docs/reports/hermes-conversation-20261009T202640/regression-core-20261009-203459/temporary/
+docs/reports/hermes-conversation-20261009T202640/regression-core-20261009-203606/temporary/
+docs/reports/hermes-conversation-20261009T202640/regression-core-20261009-204237/temporary/
+docs/reports/hermes-conversation-20261009T202640/regression-final-20261009-203330/temporary/
+docs/reports/lc-decimal-comma-20261008/REGRESSION-tmp/
+docs/reports/lc-decimal-comma-20261008/TARGETED-tmp/
+docs/reports/lc-five-gap-20261008/backend-tmp/
+docs/reports/normal-inspection-preview-20261008-01a11b73/backend-tmp/
+docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-offline-20261010-02/pytest-tmp/
+docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-offline-20261010-03/pytest-tmp/
+docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-worker-offline-20261010-01/pytest-tmp/
+docs/reports/nusantara-v1-autonomous-closure-20261010/runs/evidence-registry-offline-20261010-01/pytest-tmp/
+docs/reports/nusantara-v1-diagnostic-20261014-092006/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-evidence-tests-05/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-evidence-tests-06/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-evidence-tests-07/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-evidence-tests-08/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-evidence-tests-09/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-python-final/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-python-final-02/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-python-final-03/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-python-final-04/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-python-final-05/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-python-final-06/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/003-python-final-07/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/blocker-closure-20261010-01/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/blocker-closure-20261010-02/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/decision-422-fix-20261010-01/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/NUS-DEV-EVIDENCE-WIN-20261010-01/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/NUS-DEV-EVIDENCE-WIN-20261010-02/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/NUS-WIN-STDIO-20261010-04/pytest-tmp/
+docs/reports/nus-evidence-completion-20261010/runs/NUS-WIN-STDIO-20261010-05/pytest-tmp/
+docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185326/temporary/
+docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185424/temporary/
+docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185646/temporary/
+docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185807/temporary/
+docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185830/temporary/
+docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185852/temporary/
+docs/reports/openrouter-workflow-20261009T184538/regression-20261009-190056/temporary/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/_yaml/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/annotated_types/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/annotated_types-0.8.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/anyio/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/anyio-4.15.1.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/bin/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/certifi/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/certifi-2026.7.22.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/charset_normalizer/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/charset_normalizer-3.5.2.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/distro/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/distro-1.9.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/h11/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/h11-0.16.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/httpcore/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/httpcore-1.0.9.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/httpcore2/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/httpcore2-2.13.1.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/httpx/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/httpx-0.28.1.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/httpx2/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/httpx2-2.13.1.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/idna/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/idna-3.20.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/jsonpatch-1.34.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/jsonpointer-3.2.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langchain_core/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langchain_core-1.6.9.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langchain_protocol/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langchain_protocol-0.0.19.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langgraph/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langgraph_checkpoint-4.2.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langgraph_prebuilt-1.1.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langgraph_sdk/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langgraph_sdk-0.4.6.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langgraph-1.2.14.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langsmith/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/langsmith-0.14.5.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/orjson/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/orjson-3.13.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/ormsgpack/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/ormsgpack-1.12.2.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/packaging/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/packaging-26.3.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/pydantic/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/pydantic_core/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/pydantic_core-2.50.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/pydantic-2.14.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/pyyaml-6.0.3.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/requests/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/requests_toolbelt/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/requests_toolbelt-1.0.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/requests-2.34.2.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/sniffio/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/sniffio-1.3.1.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/tenacity/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/tenacity-9.2.1.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/truststore/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/truststore-0.10.4.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/typing_extensions-4.16.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/typing_inspection/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/typing_inspection-0.4.4.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/urllib3/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/urllib3-2.8.0.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/uuid_utils/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/uuid_utils-0.17.1.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/websockets/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/websockets-16.1.1.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/xxhash/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/xxhash-4.0.1.dist-info/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/yaml/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/zstandard/
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/zstandard-0.25.0.dist-info/
+docs/reports/r2-a10-isolation-fix-20261008/baseline-tmp/
+docs/reports/r2-a10-isolation-fix-20261008/targeted-tmp/
+docs/reports/r2-a11-level-c-20261008-7d1ea04b/focused-tmp/
+docs/reports/r2-a11-level-c-20261008-7d1ea04b/regression-tmp/
+docs/reports/r2-a11-level-c-observer-regression-20261008-78a4c9f2/pytest-tmp/
+docs/reports/r2-a11-phase-b-20261008-55fd917c/final-tmp/
+docs/reports/r2-a11-phase-b-20261008-55fd917c/regression-tmp/
+docs/reports/r2-a11-phase-b2-20261008-9fb4e38a/focused-tmp/
+docs/reports/r2-a13-runtime-identity-binding-20261008-841d2e7a/pytest-final-tmp/
+docs/reports/r2-a13-runtime-identity-binding-20261008-841d2e7a/pytest-tmp/
+docs/reports/r2-a14-build-provenance-20261008-61f072ac/regression-tmp/
+docs/reports/r2-a3-20261008/after-tmp/
+docs/reports/r2-a3-20261008/baseline-tmp/
+docs/reports/r2-a3-20261008/final-tmp/
+docs/reports/r2-a3-20261008/http-final-tmp/
+docs/reports/r2-a7-runtime-attestation-20261008/baseline-tmp/
+docs/reports/r2-a7-runtime-attestation-20261008/final-tmp/
+docs/reports/r2-a7-runtime-attestation-20261008/isolated-tmp/
+docs/reports/r2-a8-remediation-20261008/profile-baseline-tmp/
+docs/reports/r2-a8-remediation-20261008/profile-test-final-tmp/
+docs/reports/r2-a8-remediation-20261008/profile-test-fixed-tmp/
+docs/reports/r2-a8-remediation-20261008/profile-test-pass-tmp/
+docs/reports/r2-a8-remediation-20261008/profile-test-tmp/
+docs/reports/r2-a9-auth-foundation-20261008/acceptance-tmp/
+docs/reports/r2-a9-auth-foundation-20261008/composition-tmp/
+docs/reports/r2-a9-auth-foundation-20261008/final-pass-tmp/
+docs/reports/r2-a9-auth-foundation-20261008/final-tmp/
+docs/reports/r2-a9-auth-foundation-20261008/foundation-tmp/
+docs/reports/r2-a9-control-plane-implementation-20261008/isolated-final-tmp/
+docs/reports/r2-a9-control-plane-implementation-20261008/isolated-first-tmp/
+docs/reports/r2-a9-control-plane-implementation-20261008/isolated-pass-tmp/
+docs/reports/r2-a9-control-plane-implementation-20261008/isolated-second-tmp/
+docs/reports/ui-completion-audit-20261008-a14ec92f/backend-tmp/
+docs/reports/v1-closure-20261008/regression-v3-temporary/pytest/
+docs/reports/v1-functional-closure-20261009-101736/regression-20261009-102112/temporary/
+docs/reports/v1-functional-closure-20261009-101736/targeted-20261009-102003/temporary/
+docs/reports/v1-functional-closure-20261009-101736/targeted-20261009-102040/temporary/
+docs/reports/v1-remaining-20261009T182840/regression-20261009-183245/temporary/
+docs/reports/v1-remaining-20261009T182840/regression-20261009-183418/temporary/
+docs/reports/v1-remaining-20261009T182840/targeted-20261009-183120/temporary/
+docs/reports/v1-remaining-20261009T182840/targeted-20261009-183201/temporary/
+docs/reports/v1-remaining-20261009T182840/targeted-20261009-183345/temporary/
+docs/reports/v1-targeted-20261009T214132/regression-20261009-214303/temporary/
+docs/reports/v1-targeted-20261009T214132/regression-20261009-214353/temporary/
+docs/reports/v1-user-hermes-implementation/regression-20261009-090050/temporary/
+docs/reports/v1-user-hermes-implementation/regression-20261009-090147/temporary/
+docs/reports/v1-user-hermes-implementation/regression-20261009-090953/temporary/
+docs/reports/v1-user-hermes-implementation/targeted-20261009-090024/temporary/
+docs/reports/v1-user-hermes-implementation/targeted-20261009-093732/temporary/
+docs/reports/v1-user-hermes-implementation/targeted-20261009-094411/temporary/
+docs/reports/weip-20261009T102239Z/focused-20261009-173102/temporary/
+docs/reports/weip-20261009T102239Z/focused-20261009-173233/temporary/
+docs/reports/weip-20261009T102239Z/regression-20261009-173309/temporary/
+docs/reports/weip-completion-20261009T104250Z/regression-20261009-174852/temporary/
+docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174413/temporary/
+docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174735/temporary/
+docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174841/temporary/
+docs/reports/weip-governance-closure-20261009T181812/regression-20261009-182327/temporary/
+docs/reports/weip-governance-closure-20261009T181812/regression-20261009-182347/temporary/
+docs/reports/weip-governance-closure-20261009T181812/targeted-20261009-182256/temporary/
+reports/configuration-phase6-compat-tmp/
+reports/configuration-phase6-targeted-tmp/
+reports/configuration-phase7-memory-diagnosis-tmp/
+reports/configuration-phase7-regression-final-tmp/
+reports/configuration-phase7-regression-tmp/
+reports/configuration-phase7-targeted-final-tmp/
+reports/configuration-phase7-targeted-fixed-tmp/
+reports/configuration-phase7-targeted-tmp/
+reports/developer-core-regression-tmp/
+reports/developer-core-targeted-tmp/
+reports/evidence-guards-check/pytest-tmp/
+reports/fullroot-baseline-tmp-20261007/
+reports/memory-retention-tests-20261006/
+reports/memory-retention-tests-20261006-final/
+reports/v1-cc01-regression-tmp/
+reports/v1-cc01-targeted-fixed-tmp/
+reports/v1-cc01-targeted-tmp/
+reports/v1-closure-targeted-tmp/
+reports/v1-final-closure-tmp/
+reports/v1-final-regression-tmp/
+reports/v1-git-verify-tmp/
+reports/v1-rag-4kvfxegr/
+reports/v1-recovery-identity-tmp/
+reports/v1-recovery-mcp-tmp/
+reports/v1-recovery-tmp/
+reports/v1-verify-20261006-tmp/
+
+
+# File (bukan direktori) yang juga tidak terbaca oleh akun yang sama:
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/jsonpatch.py
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/jsonpointer.py
+docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies/typing_extensions.py
+
+# Direktori orphan hidden (ditemukan lewat graphify update):
+.dev/checkpoints/r1-local-001-20261007/pytest-after/
+.dev/checkpoints/r1-local-001-20261007/pytest-before/
+.dev/checkpoints/r2-20261007/r1-after-tmp/
+.dev/checkpoints/r2-20261007/r1-before-tmp/
+.dev/checkpoints/r2-20261007/regression-tmp/
+.dev/checkpoints/r2-20261007/health-gate/integration-tmp/
+.dev/checkpoints/r2-20261007/health-gate/unit-tmp/
+
+# Generated isolated V1 review/browser evidence, not application source.
+artifacts/v1-review-e2e/
+artifacts/v1-continuation/
+
+artifacts/evidence-runs/
+artifacts/evidence-repair/
+
+# Direktori orphan baru (ditemukan 2026-10-15 13:08 dari pytest di root workspace):
+pytest-of-dmaza/
+# Direktori basetemp pytest (mode 0o700) yang tidak terbaca oleh pemindai berikutnya,
+# baik pada run confined maupun unconfined. Pola menutup semua run sekarang dan mendatang;
+# tiga baris eksplisit menjaga kompatibilitas dengan pemindai yang tidak mendukung **.
+artifacts/**/pytest-tmp/
+artifacts/v1-continuation/isolated/pytest-tmp/
+artifacts/v1-execution/isolated-evidence/pytest-tmp/
+artifacts/v1-execution/isolated-final/pytest-tmp/
+
+# Sisa probe diagnostik mode 0o700 milik sesi 2026-10-15 (mode700, tmpurar5lt9).
+# Keduanya tidak dapat dibaca maupun dihapus tanpa elevate; dicatat agar pemindaian tetap deterministik.
+artifacts/mkdir-probe/
+artifacts/tmp-probe/
+
+# Basetemp pytest dari verifikasi sesi 2026-10-15 (mode 0o700, hanya dapat dihapus dengan elevate).
+# Konvensi ke depan: arahkan --basetemp ke pola ini atau ke luar workspace agar tidak menimbulkan debris.
+artifacts/pytest-*/

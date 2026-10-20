@@ -4,11 +4,14 @@ import {HumanPage,ExecutionReview} from './human';
 import {VerificationPage} from './verification';
 import {OverviewPage,KnowledgeOperationsPage} from './overview';
 import {UserChat,OperatorConsole} from './assistant';
+import {useAdminAuth} from './auth';
 import {OperatorHome,TasksPage,BlockersPage,WorkspacePage,CostsPage,TechnicalPage} from './operator';
 import {SettingsPage} from './settings';
 const root=createRootRoute({component:Shell});
-const index=createRoute({getParentRoute:()=>root,path:'/',component:OperatorHome});
-const uiAlias=createRoute({getParentRoute:()=>root,path:'/ui',component:UserChat});
+function ChatPage(){const {token,setToken}=useAdminAuth();return <UserChat token={token} setToken={setToken}/>;}
+const index=createRoute({getParentRoute:()=>root,path:'/',component:ChatPage});
+const uiAlias=createRoute({getParentRoute:()=>root,path:'/ui',component:ChatPage});
+const assistantAlias=createRoute({getParentRoute:()=>root,path:'/assistant',component:ChatPage});
 const consoleRoute=createRoute({getParentRoute:()=>root,path:'/console',component:OperatorConsole});
 const dashboard=createRoute({getParentRoute:()=>root,path:'/dashboard',component:OperatorHome});
 const overview=createRoute({getParentRoute:()=>root,path:'/overview',component:()=> <HumanPage stage="System"/>});
@@ -35,5 +38,5 @@ const operatorRoutes=[
  createRoute({getParentRoute:()=>root,path:'/settings',component:SettingsPage}),
  createRoute({getParentRoute:()=>root,path:'/technical',component:TechnicalPage}),
 ];
-export const router=createRouter({routeTree:root.addChildren([...operatorRoutes,executionReview,index,uiAlias,consoleRoute,dashboard,overview,system,evidence,humanTest,review,decision,engineeringOverview,roadmap,architecture,engineering,governance,verification,runtime,knowledge])});
+export const router=createRouter({routeTree:root.addChildren([...operatorRoutes,executionReview,index,uiAlias,assistantAlias,consoleRoute,dashboard,overview,system,evidence,humanTest,review,decision,engineeringOverview,roadmap,architecture,engineering,governance,verification,runtime,knowledge])});
 declare module '@tanstack/react-router'{interface Register{router:typeof router}}

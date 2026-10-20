@@ -25,5 +25,7 @@ export function SettingsPage(){
       <p>Pemantauan folder: {knowledge.data.watch.enabled?'aktif':'nonaktif'}</p><p>Diperiksa: {knowledge.data.checked_at}</p>
       <button disabled={knowledge.isFetching} onClick={()=>void knowledge.refetch()}>Perbarui Knowledge</button></>}
       <p><Link to="/knowledge">Kelola dokumen dan History Knowledge</Link></p></section>
+    <section className="panel"><h2>Biaya &amp; routing model</h2><p>Model aktif dan pemilihan provider memakai kendali runtime V1 di atas. Biaya hanya ditampilkan jika tersedia dari ledger backend.</p><Link to="/costs">Buka biaya aktual dan riwayat ledger</Link></section>
+    <section className="panel"><h2>Maintenance &amp; Recovery</h2><p>Periksa health backend dan koneksi model sebelum melakukan pemulihan. Jika API gagal, periksa status layanan lokal melalui skrip existing <code>scripts/Status-NusantaraV1.ps1</code>.</p><p>Backup, update, dan restore belum tersedia melalui API Control Plane. Penjadwalan pemulihan dan kesiapan VPS belum diverifikasi.</p></section>
     <section className="panel"><h2>Evidence teknis dan governance</h2><Link to="/technical">Buka evidence teknis existing</Link><p><Link to="/approvals">Human Control</Link></p></section></>;
 }

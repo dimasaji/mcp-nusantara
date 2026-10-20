@@ -1,179 +1,63 @@
-﻿$ErrorActionPreference = "SilentlyContinue"
-
-$ROOT = "C:\Users\dmaza\mcp-starter"
-$VENV = "$ROOT\.venv\Scripts\python.exe"
-$LOGDIR = "$ROOT\data\logs"
-$PIDFILE = "$ROOT\data\nusantara-core.pid"
-$PORT = 8000
-
-New-Item -ItemType Directory -Path $LOGDIR -Force | Out-Null
-
-function Get-NusantaraProcesses {
-    Get-CimInstance Win32_Process |
-        Where-Object {
-            $_.CommandLine -and
-            $_.CommandLine -match 'uvicorn.*app\.main:app.*--port 8000'
+﻿param(
+    [ValidateSet('start','stop','restart','status','health','run-backend','install-autostart','uninstall-autostart')]
+    [string]$Action = 'status',
+    [switch]$AllowStop,
+    [switch]$NoOllama
+)
+. "$PSScriptRoot/local-services.ps1"
+switch ($Action) {
+    'run-backend' {
+        # Foreground diagnostics use the same V1 executable/configuration. The
+        # port guard prevents racing an existing service or foreign listener.
+        $runtime = Get-RuntimePaths
+        $port = [int]$script:LocalConfig.backendPort
+        Invoke-WithLifecycleLock {
+            if (@(Get-PortListeners $port).Count -or @(Get-ServiceProcesses 'backend').Count) {
+                throw 'Backend already exists; refusing a duplicate foreground server.'
+            }
         }
-}
-
-function Is-PortOpen($Port) {
-    return $null -ne (
-        Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
-    )
-}
-
-function Stop-Nusantara {
-
-    Write-Host "Stopping Nusantara Core..."
-
-    $processes = @(Get-NusantaraProcesses)
-
-    foreach ($p in $processes) {
-        Write-Host "Stopping Uvicorn PID: $($p.ProcessId)"
-        Stop-Process -Id ([int]$p.ProcessId) -Force -ErrorAction SilentlyContinue
+        $env:HOST = $script:LocalConfig.host
+        $env:PORT = [string]$port
+        Remove-Item Env:NUSANTARA_RUNTIME_PORT -ErrorAction SilentlyContinue
+        Push-Location $script:Repository
+        try {
+            & $runtime.python -B -m uvicorn app.main:app --host 127.0.0.1 --port $port --workers 1 --env-file .env
+            exit $LASTEXITCODE
+        } finally { Pop-Location }
     }
-
-    if (Test-Path $PIDFILE) {
-        Remove-Item $PIDFILE -Force -ErrorAction SilentlyContinue
+    'status' { Get-LocalStatus | ConvertTo-Json -Depth 6 }
+    'health' {
+        $status = Get-LocalStatus
+        $status | ConvertTo-Json -Depth 6
+        if (@($status.services | Where-Object { -not $_.healthy }).Count -or -not $status.proxyHealthy -or (-not $NoOllama -and -not $status.ollamaHealthy)) { exit 1 }
     }
-
-    for ($i = 1; $i -le 10; $i++) {
-        $remaining = @(Get-NusantaraProcesses)
-
-        if ($remaining.Count -eq 0 -and -not (Is-PortOpen $PORT)) {
-            break
+    'start' {
+        Invoke-WithLifecycleLock {
+            Initialize-LocalState
+            'running' | Set-Content (Join-Path $script:StateDirectory 'desired-state')
+            Invoke-LocalStart -NoOllama:$NoOllama
         }
-
-        Start-Sleep -Milliseconds 500
+        Resume-LocalMonitor
+        $deadline = (Get-Date).AddSeconds($script:LocalConfig.startupTimeoutSeconds)
+        do {
+            $status = Get-LocalStatus
+            if (@($status.services | Where-Object { -not $_.healthy }).Count -eq 0 -and $status.proxyHealthy) { break }
+            Start-Sleep -Seconds 2
+        } while ((Get-Date) -lt $deadline)
+        $status | ConvertTo-Json -Depth 6
+        if (@($status.services | Where-Object { -not $_.healthy }).Count -or -not $status.proxyHealthy) { exit 1 }
     }
-
-    # Final cleanup berdasarkan port
-    $owners = @(
-        Get-NetTCPConnection -LocalPort $PORT -State Listen -ErrorAction SilentlyContinue |
-        Select-Object -ExpandProperty OwningProcess -Unique
-    )
-
-    foreach ($owner in $owners) {
-        Stop-Process -Id ([int]$owner) -Force -ErrorAction SilentlyContinue
-    }
-
-    Start-Sleep 1
-
-    Write-Host "Nusantara Core stopped."
-}
-
-function Start-Nusantara {
-
-    Write-Host "Starting Ollama..."
-
-    if (-not (Is-PortOpen 11434)) {
-        Start-Process "ollama" -ArgumentList "serve" -WindowStyle Hidden
-        Start-Sleep 3
-    }
-
-    # HARD CLEAN: jangan pernah start jika ada instance lama
-    $existing = @(Get-NusantaraProcesses)
-
-    if ($existing.Count -gt 0 -or (Is-PortOpen $PORT)) {
-        Write-Host "Existing Nusantara instance detected. Cleaning..."
-
-        Stop-Nusantara
-
-        Start-Sleep 1
-    }
-
-    Write-Host "Starting Nusantara Core..."
-
-    $process = Start-Process `
-        -FilePath $VENV `
-        -ArgumentList "-m uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1" `
-        -WorkingDirectory $ROOT `
-        -RedirectStandardOutput "$LOGDIR\nusantara-core.log" `
-        -RedirectStandardError "$LOGDIR\nusantara-core-error.log" `
-        -PassThru `
-        -WindowStyle Hidden
-
-    $process.Id | Set-Content $PIDFILE
-
-    Write-Host "PID: $($process.Id)"
-
-    for ($i = 1; $i -le 30; $i++) {
-
-        Start-Sleep 1
-
-        $running = @(Get-NusantaraProcesses)
-
-        if ((Is-PortOpen $PORT) -and $running.Count -ge 1) {
-
-            $final = @(Get-NusantaraProcesses)
-
-            Write-Host ""
-            Write-Host "NUSANTARA AI RUNNING"
-            Write-Host "PID: $($process.Id)"
-            Write-Host "http://127.0.0.1:8000"
-            Write-Host "http://127.0.0.1:8000/docs"
-
-            return
+    'stop' { Invoke-WithLifecycleLock { Stop-LocalServices -AllowStop:$AllowStop } }
+    'restart' {
+        Invoke-WithLifecycleLock {
+            Stop-LocalServices -AllowStop:$AllowStop
+            Start-Sleep -Seconds 2
+            if (@(Get-ServiceProcesses 'backend').Count -or @(Get-ServiceProcesses 'frontend').Count) { throw 'Verified processes are still exiting; restart held.' }
+            'running' | Set-Content (Join-Path $script:StateDirectory 'desired-state')
+            Invoke-LocalStart -NoOllama:$NoOllama
         }
+        & "$PSScriptRoot/nusantara-service.ps1" start -NoOllama:$NoOllama
     }
-
-    Write-Host "ERROR: Nusantara Core gagal start."
+    'install-autostart' { & "$PSScriptRoot/install-nusantara-task.ps1" }
+    'uninstall-autostart' { & "$PSScriptRoot/install-nusantara-task.ps1" -Uninstall }
 }
-
-function Status-Nusantara {
-
-    Write-Host ""
-    Write-Host "=========================================="
-    Write-Host "       NUSANTARA AI STATUS"
-    Write-Host "=========================================="
-    Write-Host ""
-
-    if (Is-PortOpen 11434) {
-        Write-Host "Ollama         : RUNNING"
-    }
-    else {
-        Write-Host "Ollama         : STOPPED"
-    }
-
-    $processes = @(Get-NusantaraProcesses)
-
-    if (Is-PortOpen $PORT) {
-        Write-Host "Nusantara Core : RUNNING"
-        Write-Host "Uvicorn count  : $($processes.Count)"
-    }
-    else {
-        Write-Host "Nusantara Core : STOPPED"
-    }
-
-    Write-Host ""
-}
-
-switch ($args[0]) {
-
-    "start" {
-        Start-Nusantara
-    }
-
-    "stop" {
-        Stop-Nusantara
-    }
-
-    "restart" {
-        Stop-Nusantara
-        Start-Sleep 2
-        Start-Nusantara
-    }
-
-    "status" {
-        Status-Nusantara
-    }
-
-    default {
-        Write-Host "Usage:"
-        Write-Host "  nusantara-service.ps1 start"
-        Write-Host "  nusantara-service.ps1 stop"
-        Write-Host "  nusantara-service.ps1 restart"
-        Write-Host "  nusantara-service.ps1 status"
-    }
-}
-

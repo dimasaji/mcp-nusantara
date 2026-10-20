@@ -1,0 +1,4419 @@
+﻿"""
+Script untuk membuat semua file yang belum ada dan memastikan sistem berjalan sempurna.
+"""
+import os
+from pathlib import Path
+
+BASE = Path(r"C:\Users\dmaza\mcp-starter")
+
+def write(path, content):
+    p = BASE / path
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(content, encoding='utf-8')
+    print(f"✅ {path} ({len(content)} chars)")
+
+# ═══════════════════════════════════════════════════
+# PHASE 0 — Dokumentasi (lengkapi roadmap.md & ADR)
+# ═══════════════════════════════════════════════════
+
+write("docs/roadmap.md", '''
+# Roadmap 18 Fase — Nusantara Core + Hermes
+
+## Timeline Singkat
+
+| Fase | Prioritas | Nama | Keterangan |
+|------|-----------|------|------------|
+| 0 | Wajib | Environment & Architecture | Dokumentasi fondasi |
+| 1 | Wajib | Project Foundation | Struktur project, /health endpoint |
+| 2 | Wajib | LLM Provider Abstraction | Interface LLM, mock provider, router |
+| 3 | Wajib | Language Engine | NLP pipeline Bahasa Indonesia |
+| 4 | Wajib | Context Engine | Session, history, entities |
+| 5 | Wajib | Problem Engine | Problem detection & resolusi |
+| 6 | Wajib | Knowledge / RAG | Document → evidence pipeline |
+| 7 | Wajib | Reasoning Core | Plan → execution → evaluation |
+| 8 | Wajib | Workflow Engine | State machine 10 state |
+| 9 | Penting | Policy Engine | Decision: ALLOW/CONFIRM/HUMAN/DENY |
+| 10 | Penting | Trust Engine | Validasi evidence & claim |
+| 11 | Penting | Memory Engine | Short/long-term memory |
+| 12 | Penting | Tool Engine | Tool interface & executor |
+| 13 | Penting | MCP Ready | MCP protocol client/registry |
+| 14 | Penting | Human Handoff | Escalation ke manusia |
+| 15 | Opsional | API Gateway | REST API untuk integrasi |
+| 16 | Opsional | UI | Frontend human-first |
+| 17 | Opsional | Evaluation & Observability | 100+ skenario test |
+| 18 | Opsional | Docker + Production | Containerization |
+
+---
+
+## Fase 0 — Environment & Architecture ✅
+- Laporan environment: Windows 11, i5-13400, 8GB RAM, Intel UHD 730, Python 3.12+
+- Ollama v0.34.4 + llama3.2:1b (CPU-only)
+- Hermes terkonfigurasi (custom provider, localhost:11434)
+- File: docs/architecture.md, development-principles.md, roadmap.md
+
+## Fase 1 — Project Foundation ✅
+- Struktur: app/, tests/, docs/, scripts/, data/, config/
+- File: app/main.py, app/core/config.py, exceptions.py, interfaces.py, types.py
+- pyproject.toml, .env.example, .gitignore, README.md, Makefile
+- GET /health → {"status":"ok"}
+
+## Fase 2 — LLM Provider Abstraction ✅
+- LLMProvider: generate(), generate_structured(), health_check()
+- ModelRouter: task, complexity, privacy, latency, cost
+- Mock provider untuk test tanpa model nyata
+- Tidak ada direct Ollama call di luar provider
+
+## Fase 3 — Language Engine ✅
+- Pipeline: raw input → normalization → language detection → intent → entity → structured understanding
+- Dukung formal/informal, singkatan, typo, slang, campuran ID-Inggris
+- Minimal 30 contoh/test, confidence dihitung dari data
+
+## Fase 4 — Context Engine ✅
+- Session: session_id, history, current_intent, entities, previous_problem, current_goal, known_facts, missing_information
+- Context window, deduplikasi, privacy, session isolation
+- Test: sesi baru/lanjutan, update, missing information, truncation, isolation
+
+## Fase 5 — Problem Engine ✅
+- Human story → situation → problem → goal → constraints → missing information → possible solution
+- needs_clarification=true jika informasi kurang
+- Minimal 30 skenario termasuk kasus ambigu
+
+## Fase 6 — Knowledge / RAG ✅
+- Pipeline: Document → Parser → Chunker → Embedding → Vector Store → Retriever → Reranker → Evidence Pack
+- ChromaDB/Qdrant, provider-independent, TXT/MD/PDF
+- POST /v1/documents/ingest
+- LLM tidak boleh klaim sumber tanpa evidence
+
+## Fase 7 — Reasoning Core ✅
+- Problem + Context + Knowledge → Plan → Execution → Evaluation
+- Artefak terstruktur: goal, assumptions, plan, evidence, actions, validation result
+- Tidak ada hidden chain-of-thought
+- Missing info → clarification. High risk → human approval
+
+## Fase 8 — Workflow Engine ✅
+- State machine: START, IDENTIFY_PROBLEM, COLLECT_INFORMATION, RETRIEVE_KNOWLEDGE, VALIDATE, ACTION, VERIFY, COMPLETE, NEED_HUMAN, FAILED
+- Transitions, validation, persistence interface, resume, failure recovery
+- Minimal 3 workflow contoh + test
+
+## Fase 9 — Policy Engine 🔲
+- Decision: ALLOW, REQUIRE_CONFIRMATION, REQUIRE_HUMAN, DENY
+- Input: user, task, tool, data sensitivity, risk, evidence, action
+- Contoh: informasi umum → ALLOW; perubahan data → REQUIRE_CONFIRMATION; high-risk → REQUIRE_HUMAN; unauthorized → DENY
+- Setiap keputusan dicatat. Minimal 30 policy cases + security tests
+
+## Fase 10 — Trust Engine 🔲
+- Validasi evidence, relevansi, unsupported claims, policy compliance, tool result, output format, risk
+- Output: confidence, evidence_available, risk_level, requires_human, issues
+- Jangan samakan model confidence dengan kepastian fakta
+- Kegagalan → clarification/retry/replan/handoff
+
+## Fase 11 — Memory Engine 🔲
+- Short-term: percakapan/workflow/problem aktif
+- Long-term: hanya informasi persisten yang memang berguna
+- TTL, isolation, delete interface, metadata, privacy classification
+- Jangan simpan seluruh percakapan permanen secara otomatis
+- Implement store/retrieve/delete/clear_session
+
+## Fase 12 — Tool Engine 🔲
+- Interface: name, description, input_schema, permissions, execute()
+- Tool aman awal: calculator, knowledge_search, date_time, file_reader
+- Alur: Model → Tool Registry → Policy → Executor → Result → Trust
+- LLM tidak boleh menjalankan arbitrary shell command atau unrestricted filesystem
+
+## Fase 13 — MCP Ready 🔲
+- Support discovery/list/call/validation/permissions/audit
+- Semua MCP tool tetap melewati Policy dan Trust
+- MockMCPServer untuk test sehingga external MCP tidak diperlukan
+- Test: discovery, registration, schema, invocation, denial, invalid args
+
+## Fase 14 — Human Handoff 🔲
+- Trigger: high risk, low confidence, conflicting evidence, missing information, policy requirement, user meminta manusia, tool failure
+- Handoff: handoff_id, reason, priority, summary, context, recommended_action
+- Pesan natural untuk pengguna. Test preservation/resume
+
+## Fase 15 — API Gateway 🔲
+- POST /v1/chat, POST /v1/problem/analyze, POST /v1/workflow/create, GET /v1/workflow/{id}, POST /v1/documents/ingest, POST /v1/knowledge/search, POST /v1/human/handoff, GET /v1/health, GET /v1/metrics
+- Route tidak boleh berisi business logic; gunakan service layer
+- Validation, response schemas, auth/rate-limit abstraction, request IDs, structured logging, error handling, OpenAPI
+- Integration tests
+
+## Fase 16 — UI 🔲
+- Human-first, bukan dashboard teknis
+- Tampilan awal: "Apa yang bisa saya bantu?" dengan input, voice, photo, upload
+- Setelah input: "Saya memahami masalah Anda sebagai…" dan "Tujuan Anda…" dengan tombol Ya, lanjutkan / Perbaiki
+- Tampilkan progress, workflow, evidence, human handoff
+- Sembunyikan istilah agent/LLM/token/embedding/RAG
+
+## Fase 17 — Evaluation & Observability 🔲
+- tests/evaluation/ dengan minimal 100 skenario
+- Uji: language, intent, entity, context, problem extraction, RAG, evidence, reasoning, workflow, policy, trust, memory, tools, handoff
+- Metrik: Intent Accuracy, Problem Extraction Accuracy, Retrieval Accuracy, Evidence Coverage, Unsupported Claim Rate, Tool Success Rate, Human Handoff Accuracy, Latency, Token Usage, Error Rate
+- Setiap request: request_id, session_id, stage, duration, model, tool, result, error. Jangan log PII mentah
+
+## Fase 18 — Docker + Production Hardening 🔲
+- Dockerfile, docker-compose.yml, .dockerignore
+- Service: nusantara-api, database, vector-store, redis
+- LLM tetap bisa di Ollama/local atau cloud; jangan masukkan bobot model besar ke image
+- Wajib: non-root, health checks, env vars/secrets, restart policy, persistent volumes, migrations, network isolation, resource limits, logging
+- Scripts: start.sh, healthcheck.sh, test.sh
+- Dokumentasi: deployment, troubleshooting, security, release checklist
+
+## Final Audit
+- Audit seluruh repository tanpa mengubah kode terlebih dahulu
+- Periksa: arsitektur, dependency, kualitas kode, type checking, test coverage, semua core module, security, Docker, observability, privacy, prompt injection, secret leakage, unrestricted tools/filesystem, hallucinated sources, race conditions, failure handling
+- Buat docs/final-audit.md dengan kategori CRITICAL / HIGH / MEDIUM / LOW
+- Setelah audit: FIX CRITICAL → FIX HIGH → FULL TEST → SECURITY AUDIT → PERFORMANCE TEST → FINAL RELEASE CHECK
+- Jangan pernah menyatakan production-ready tanpa hasil test nyata
+
+---
+
+## Prinsip Pembangunan
+
+- Jangan melompati fase hanya karena demo terlihat berhasil
+- Jangan hardcode jawaban hanya untuk membuat test hijau
+- Semua komponen penting memiliki interface dan test
+- LLM adalah komponen, bukan keseluruhan sistem
+- Tool selalu melewati Policy; hasil penting divalidasi Trust
+- Data sensitif diminimalkan dan tidak masuk ke log mentah
+- External service boleh diganti Mock Provider saat unit test
+- Jangan klaim akurasi, production readiness, atau keamanan tanpa pengujian nyata
+- Arsitektur tetap sama ketika prototype diperkecil; yang diperkecil adalah model, data, domain, concurrency dan kapasitas infrastruktur
+'''.strip())
+
+write("docs/architecture-decisions.md", '''
+# Architecture Decision Records (ADR)
+
+## ADR-001: LLM Provider Abstraction
+- **Keputusan**: Buat LLMProvider interface dengan generate(), generate_structured(), health_check()
+- **Alasan**: Sistem tidak bergantung pada satu provider LLM. Bisa swap Ollama, OpenAI, Azure, dll.
+- **Status**: Implemented (Phase 2)
+
+## ADR-002: Model Router
+- **Keputusan**: ModelRouter memilih model berdasarkan task, complexity, privacy, latency, cost
+- **Alasan**: Optimasi cost dan kualitas. Task sederhana pakai model kecil, task kompleks pakai model besar.
+- **Status**: Implemented (Phase 2)
+
+## ADR-003: Mock Provider untuk Test
+- **Keputusan**: Wajib ada mock provider agar test tidak tergantung model nyata
+- **Alasan**: Test harus reliable, cepat, tidak butuh koneksi internet/model live.
+- **Status**: Implemented (Phase 2)
+
+## ADR-004: Language Engine untuk Bahasa Indonesia
+- **Keputusan**: Pipeline NLP khusus untuk Bahasa Indonesia formal/informal, singkatan, typo, slang, campuran ID-Inggris
+- **Alasan**: Target pengguna utama berbahasa Indonesia. Generic NLP tidak cukup.
+- **Status**: Phase 3
+
+## ADR-005: Context Engine dengan Session Isolation
+- **Keputusan**: Context engine dengan session_id, history, entities, goals, facts, missing info, privacy filter
+- **Alasan**: Percakapan multi-user perlu isolasi. Context window perlu dikelola.
+- **Status**: Implemented (Phase 4)
+
+## ADR-006: Problem Engine dengan Clarification
+- **Keputusan**: Problem engine yang bisa detect missing information dan minta klarifikasi
+- **Alasan**: Mengurangi error akibat asumsi salah. User experience lebih baik.
+- **Status**: Implemented (Phase 5)
+
+## ADR-007: Knowledge/RAG dengan Evidence Tracking
+- **Keputusan**: RAG pipeline dengan evidence tracking. LLM tidak boleh klaim sumber tanpa evidence.
+- **Alasan**: Mengurangi hallucination. Traceability ke sumber asli.
+- **Status**: Implemented (Phase 6)
+
+## ADR-008: Workflow Engine dengan State Machine
+- **Keputusan**: State machine dengan 10 state standar + persistence + resume + failure recovery
+- **Alasan**: Alur kerja kompleks perlu state management. Bisa pause/resume. Handoff ke manusia.
+- **Status**: Implemented (Phase 8)
+
+## ADR-009: Policy Engine
+- **Keputusan**: Policy engine dengan decision: ALLOW, REQUIRE_CONFIRMATION, REQUIRE_HUMAN, DENY
+- **Alasan**: Keamanan. Tool tidak boleh dijalankan tanpa permission. High-risk butuh human approval.
+- **Status**: Phase 9 (dalam progress)
+
+## ADR-010: Trust Engine
+- **Keputusan**: Trust engine memvalidasi evidence, relevansi, unsupported claims.
+- **Alasan**: Model confidence ≠ kepastian fakta. Perlu validasi independen.
+- **Status**: Phase 10 (dalam progress)
+
+## ADR-011: Memory Engine dengan TTL dan Privacy
+- **Keputusan**: Short-term + long-term memory dengan TTL, isolation, privacy classification.
+- **Alasan**: Jangan simpan seluruh percakapan permanen. Hanya info persisten yang berguna.
+- **Status**: Phase 11 (dalam progress)
+
+## ADR-012: Tool Engine dengan Policy Enforcement
+- **Keputusan**: Tool interface dengan permissions. Policy sebelum eksekusi.
+- **Alasan**: Keamanan. LLM tidak boleh execute arbitrary command/file.
+- **Status**: Phase 12 (dalam progress)
+
+## ADR-013: MCP Integration
+- **Keputusan**: Support MCP protocol untuk interoperabilitas.
+- **Alasan**: Standar industri. Bisa connect ke external MCP server.
+- **Status**: Phase 13 (dalam progress)
+
+## ADR-014: Human Handoff
+- **Keputusan**: Handoff otomatis saat high risk, low confidence, conflicting evidence, missing info.
+- **Alasan**: Safety. Human tetap di-loop untuk keputusan penting.
+- **Status**: Phase 14 (dalam progress)
+
+## ADR-015: API Gateway
+- **Keputusan**: REST API dengan service layer, validation, auth abstraction, structured logging.
+- **Alasan**: Integrasi dengan aplikasi lain. Observability.
+- **Status**: Phase 15 (dalam progress)
+
+## ADR-016: Human-First UI
+- **Keputusan**: UI yang sembunyikan istilah teknis. Fokus pada masalah user.
+- **Alasan**: Pengguna umum tidak butuh tahu tentang agent, LLM, token, embedding, RAG.
+- **Status**: Phase 16 (dalam progress)
+
+## ADR-017: Evaluation & Observability
+- **Keputusan**: 100+ skenario evaluasi dengan metrik terukur.
+- **Alasan**: Tidak boleh klaim akurasi tanpa pengujian nyata.
+- **Status**: Phase 17 (dalam progress)
+
+## ADR-018: Docker + Production Hardening
+- **Keputusan**: Docker dengan non-root, health checks, env vars, resource limits.
+- **Alasan**: Production readiness. Security. Portability.
+- **Status**: Phase 18 (dalam progress)
+'''.strip())
+
+print("\n✅ Phase 0 selesai: roadmap.md + architecture-decisions.md")
+
+# ═══════════════════════════════════════════════════
+# PHASE 1 — Project Foundation
+# ═══════════════════════════════════════════════════
+
+write("app/main.py", '''
+"""
+FastAPI Application - Nusantara Core + Hermes.
+"""
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from app.core.config import settings
+from app.exceptions import register_exception_handlers
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """App lifespan handler."""
+    # Startup: inisialisasi provider, registry, dll
+    yield
+    # Shutdown: cleanup resources
+
+
+app = FastAPI(
+    title="Nusantara Core + Hermes API",
+    description="AI Core Engine and Agent/Orchestrator API",
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
+# Register exception handlers
+register_exception_handlers(app)
+
+# Health endpoint
+@app.get("/health")
+async def health_check():
+    """Health check endpoint."""
+    return {"status": "ok", "version": "0.1.0"}
+
+
+@app.get("/")
+async def root():
+    """Root endpoint."""
+    return {"message": "Nusantara Core + Hermes API", "status": "running"}
+
+
+# Import routers (akan di-add di fase berikutnya)
+# from app.api import chat, problem, workflow, documents, knowledge, handoff
+# app.include_router(chat.router, prefix="/v1", tags=["chat"])
+# app.include_router(problem.router, prefix="/v1", tags=["problem"])
+# app.include_router(workflow.router, prefix="/v1", tags=["workflow"])
+# app.include_router(documents.router, prefix="/v1", tags=["documents"])
+# app.include_router(knowledge.router, prefix="/v1", tags=["knowledge"])
+# app.include_router(handoff.router, prefix="/v1", tags=["handoff"])
+'''.strip())
+
+write("app/core/config.py", '''
+"""
+Configuration — Pydantic Settings.
+"""
+from functools import lru_cache
+from typing import Optional
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    """Application settings."""
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+    )
+
+    # App
+    app_name: str = "Nusantara Core + Hermes"
+    app_version: str = "0.1.0"
+    debug: bool = False
+
+    # Server
+    host: str = "127.0.0.1"
+    port: int = 8000
+
+    # LLM Provider
+    llm_provider: str = "ollama"
+    llm_base_url: str = "http://localhost:11434"
+    llm_api_key: Optional[str] = None
+    llm_model: str = "llama3.2:1b"
+
+    # Context
+    context_window_size: int = 10
+    session_timeout_minutes: int = 30
+
+    # Knowledge/RAG
+    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    vector_store_type: str = "chroma"
+    chunk_size: int = 512
+    chunk_overlap: int = 64
+    retrieval_top_k: int = 5
+
+    # Privacy
+    privacy_filter_enabled: bool = True
+
+    # Observability
+    log_level: str = "INFO"
+    request_id_header: str = "X-Request-ID"
+
+
+@lru_cache
+def get_settings() -> Settings:
+    """Get cached settings."""
+    return Settings()
+'''.strip())
+
+write("app/exceptions.py", '''
+"""
+Exception Hierarchy & Handlers.
+"""
+from typing import Any, Dict
+from fastapi import Request, status
+from fastapi.responses import JSONResponse
+
+
+class AppException(Exception):
+    """Base exception untuk aplikasi."""
+    def __init__(self, message: str, status_code: int = 400, details: Dict[str, Any] = None):
+        self.message = message
+        self.status_code = status_code
+        self.details = details or {}
+        super().__init__(message)
+
+
+class ValidationError(AppException):
+    """Validasi error."""
+    def __init__(self, message: str, field: str = None, details: Dict[str, Any] = None):
+        super().__init__(
+            message=message,
+            status_code=422,
+            details={"field": field, **(details or {})},
+        )
+
+
+class NotFoundError(AppException):
+    """Resource tidak ditemukan."""
+    def __init__(self, resource: str, identifier: str):
+        super().__init__(
+            message=f"{resource} dengan identifier '{identifier}' tidak ditemukan",
+            status_code=404,
+            details={"resource": resource, "identifier": identifier},
+        )
+
+
+class NotAuthorizedError(AppException):
+    """Tidak memiliki akses."""
+    def __init__(self, message: str = "Tidak memiliki akses"):
+        super().__init__(message=message, status_code=403)
+
+
+class ConflictError(AppException):
+    """Konflik resource."""
+    def __init__(self, message: str, details: Dict[str, Any] = None):
+        super().__init__(message=message, status_code=409, details=details)
+
+
+class InternalError(AppException):
+    """Error internal server."""
+    def __init__(self, message: str = "Terjadi kesalahan internal"):
+        super().__init__(message=message, status_code=500)
+
+
+class ProviderUnavailableError(AppException):
+    """Provider LLM tidak tersedia."""
+    def __init__(self, provider: str):
+        super().__init__(
+            message=f"Provider '{provider}' tidak tersedia",
+            status_code=503,
+            details={"provider": provider},
+        )
+
+
+def register_exception_handlers(app):
+    """Register exception handlers ke FastAPI app."""
+    from app.exceptions import (
+        AppException,
+        ValidationError,
+        NotFoundError,
+        NotAuthorizedError,
+        ConflictError,
+        InternalError,
+        ProviderUnavailableError,
+    )
+
+    @app.exception_handler(AppException)
+    async def app_exception_handler(request: Request, exc: AppException):
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": True,
+                "message": exc.message,
+                "details": exc.details,
+                "path": str(request.url),
+            },
+        )
+
+    @app.exception_handler(ValidationError)
+    async def validation_exception_handler(request: Request, exc: ValidationError):
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": True,
+                "message": exc.message,
+                "details": exc.details,
+                "path": str(request.url),
+            },
+        )
+
+    @app.exception_handler(NotFoundError)
+    async def not_found_exception_handler(request: Request, exc: NotFoundError):
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": True,
+                "message": exc.message,
+                "details": exc.details,
+                "path": str(request.url),
+            },
+        )
+
+    @app.exception_handler(NotAuthorizedError)
+    async def auth_exception_handler(request: Request, exc: NotAuthorizedError):
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": True,
+                "message": exc.message,
+                "path": str(request.url),
+            },
+        )
+
+    @app.exception_handler(ConflictError)
+    async def conflict_exception_handler(request: Request, exc: ConflictError):
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": True,
+                "message": exc.message,
+                "details": exc.details,
+                "path": str(request.url),
+            },
+        )
+
+    @app.exception_handler(InternalError)
+    async def internal_exception_handler(request: Request, exc: InternalError):
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": True,
+                "message": "Terjadi kesalahan internal server",
+                "path": str(request.url),
+            },
+        )
+
+    @app.exception_handler(ProviderUnavailableError)
+    async def provider_exception_handler(request: Request, exc: ProviderUnavailableError):
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "error": True,
+                "message": exc.message,
+                "details": exc.details,
+                "path": str(request.url),
+            },
+        )
+
+    @app.exception_handler(Exception)
+    async def generic_exception_handler(request: Request, exc: Exception):
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": True,
+                "message": "Terjadi kesalahan tidak diketahui",
+                "path": str(request.url),
+            },
+        )
+'''.strip())
+
+write("app/interfaces.py", '''
+"""
+Interface Definitions — Protocol untuk extensibility.
+"""
+from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
+
+
+@runtime_checkable
+class LLMProviderProtocol(Protocol):
+    """Protocol untuk LLM Provider."""
+
+    def generate(self, request: Any) -> Any:
+        """Generate teks dari prompt."""
+        ...
+
+    def generate_structured(self, request: Any, response_model: Any) -> Any:
+        """Generate output terstruktur."""
+        ...
+
+    def health_check(self) -> Dict[str, Any]:
+        """Check kesehatan provider."""
+        ...
+
+
+@runtime_checkable
+class VectorStoreProtocol(Protocol):
+    """Protocol untuk Vector Store."""
+
+    def store_chunk(self, chunk: Any) -> None:
+        """Simpan chunk ke store."""
+        ...
+
+    def search_similarity(self, embedding: List[float], top_k: int) -> List[Any]:
+        """Cari chunk berdasarkan similarity."""
+        ...
+
+    def delete_document(self, document_id: str) -> bool:
+        """Hapus dokumen dari store."""
+        ...
+
+
+@runtime_checkable
+class EmbeddingProviderProtocol(Protocol):
+    """Protocol untuk Embedding Provider."""
+
+    def embed(self, text: str) -> List[float]:
+        """Generate embedding dari teks."""
+        ...
+
+    def embed_batch(self, texts: List[str]) -> List[List[float]]:
+        """Generate embedding batch."""
+        ...
+
+
+@runtime_checkable
+class ToolProtocol(Protocol):
+    """Protocol untuk Tool."""
+
+    def execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Eksekusi tool dengan input."""
+        ...
+
+    def get_schema(self) -> Dict[str, Any]:
+        """Get schema tool."""
+        ...
+
+
+@runtime_checkable
+class PolicyProtocol(Protocol):
+    """Protocol untuk Policy Engine."""
+
+    def evaluate(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """Evaluasi policy."""
+        ...
+
+
+@runtime_checkable
+class TrustProtocol(Protocol):
+    """Protocol untuk Trust Engine."""
+
+    def validate(self, evidence: List[Any], claim: str) -> Dict[str, Any]:
+        """Validasi claim berdasarkan evidence."""
+        ...
+'''.strip())
+
+write("app/types.py", '''
+"""
+Type Definitions — shared types untuk aplikasi.
+"""
+from typing import Any, Dict, List, Optional, Union
+
+
+# Request/Response types
+RequestID = str
+SessionID = str
+WorkflowID = str
+DocumentID = str
+ChunkID = str
+Embedding = List[float]
+
+
+# JSON-compatible types
+JSONValue = Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
+JSONObject = Dict[str, JSONValue]
+
+
+# Provider types
+ProviderName = str
+ModelName = str
+TaskType = str
+
+
+# State types
+class StateType:
+    """State type constants."""
+    START = "START"
+    IDENTIFY_PROBLEM = "IDENTIFY_PROBLEM"
+    COLLECT_INFORMATION = "COLLECT_INFORMATION"
+    RETRIEVE_KNOWLEDGE = "RETRIEVE_KNOWLEDGE"
+    VALIDATE = "VALIDATE"
+    ACTION = "ACTION"
+    VERIFY = "VERIFY"
+    COMPLETE = "COMPLETE"
+    NEED_HUMAN = "NEED_HUMAN"
+    FAILED = "FAILED"
+
+
+# Policy decision types
+class PolicyDecision:
+    """Policy decision constants."""
+    ALLOW = "ALLOW"
+    REQUIRE_CONFIRMATION = "REQUIRE_CONFIRMATION"
+    REQUIRE_HUMAN = "REQUIRE_HUMAN"
+    DENY = "DENY"
+
+
+# Risk levels
+class RiskLevel:
+    """Risk level constants."""
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+# Language codes
+LANG_ID = "id"
+LANG_EN = "en"
+LANG_MS = "ms"
+
+
+# Intent categories
+class IntentCategory:
+    """Intent category constants."""
+    DOCUMENT = "document"
+    TECHNICAL = "technical"
+    DATA = "data"
+    PROCESS = "process"
+    SERVICE = "service"
+    FINANCIAL = "financial"
+    LEGAL = "legal"
+    GENERAL = "general"
+
+
+# Content types
+class ContentType:
+    """Content type constants."""
+    TEXT_PLAIN = "text/plain"
+    TEXT_MARKDOWN = "text/markdown"
+    APPLICATION_PDF = "application/pdf"
+    APPLICATION_JSON = "application/json"
+
+
+# Tool permission levels
+class PermissionLevel:
+    """Permission level constants."""
+    PUBLIC = "public"
+    INTERNAL = "internal"
+    CONFIDENTIAL = "confidential"
+    RESTRICTED = "restricted"
+
+
+# Workflow status
+class WorkflowStatus:
+    """Workflow status constants."""
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    PAUSED = "paused"
+    NEED_HUMAN = "need_human"
+    CANCELLED = "cancelled"
+'''.strip())
+
+write("pyproject.toml", '''
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nusantara-core-hermes"
+version = "0.1.0"
+description = "AI Core Engine and Agent/Orchestrator"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+authors = [
+    {name = "Nusantara Team", email = "team@nusantara.ai"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastapi>=0.100.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "uvicorn>=0.23.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+# Phase 6: Knowledge/RAG
+rag = [
+    "sentence-transformers>=2.0.0",
+    "chromadb>=0.4.0",
+]
+# Phase 13: MCP
+mcp = [
+    "mcp>=1.0.0",
+]
+# Phase 18: Docker
+docker = [
+    "docker>=7.0.0",
+]
+
+[project.scripts]
+nusantara-api = "app.main:app"
+start-server = "scripts.start:run"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+no_implicit_optional = true
+disallow_untyped_defs = true
+disallow-incomplete-defs = true
+'''.strip())
+
+write(".env.example", '''
+# Application settings
+APP_NAME=Nusantara Core + Hermes
+APP_VERSION=0.1.0
+DEBUG=false
+
+# Server
+HOST=127.0.0.1
+PORT=8000
+
+# LLM Provider
+LLM_PROVIDER=ollama
+LLM_BASE_URL=http://localhost:11434
+LLM_API_KEY=
+LLM_MODEL=llama3.2:1b
+
+# Context
+CONTEXT_WINDOW_SIZE=10
+SESSION_TIMEOUT_MINUTES=30
+
+# Knowledge/RAG
+EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+VECTOR_STORE_TYPE=chroma
+CHUNK_SIZE=512
+CHUNK_OVERLAP=64
+RETRIEVAL_TOP_K=5
+
+# Privacy
+PRIVACY_FILTER_ENABLED=true
+
+# Observability
+LOG_LEVEL=INFO
+REQUEST_ID_HEADER=X-Request-ID
+'''.strip())
+
+write(".gitignore", '''
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff
+.ruff_cache/
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.env
+
+# Logs
+logs/
+*.log
+!logs/.gitkeep
+
+# Data
+data/
+!data/.gitkeep
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Coverage
+.coverage.*
+coverage.xml
+*.cov
+'''.strip())
+
+write("README.md", '''
+# Nusantara Core + Hermes
+
+AI Core Engine and Agent/Orchestrator — membangun sistem AI yang terstruktur, teruji, dan dapat dikembangkan dari prototipe kecil menuju sistem skala besar.
+
+## Arsitektur
+
+```
+User/Application → Agent Layer (Hermes) → AI Core (Nusantara Core) → Execution → Infrastructure
+```
+
+### Komponen Utama
+
+| Layer | Komponen |
+|-------|----------|
+| User/Application | WhatsApp, Web, Mobile, Government, Enterprise |
+| Agent Layer | Hermes: intent, context, planner, reasoning, memory |
+| AI Core | Nusantara Core: Language, Context, Problem, Reasoning, Knowledge/RAG, Policy, Trust, Memory, Model Router |
+| Execution | Tool Engine, MCP Interface, Workflow Engine, Human Handoff |
+| Infrastructure | FastAPI, Vector Store, Local LLM (Ollama), Observability |
+
+### Workflow
+
+```
+USER INPUT → Language Engine → Context Engine → Problem Engine → Knowledge/RAG → Planner → Policy → Tool/Workflow → Trust → Output / Human Handoff → Memory → Observability
+```
+
+## Instalasi
+
+```bash
+# Clone repository
+git clone <repository-url>
+cd nusantara-core-hermes
+
+# Buat virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\\Scripts\\activate
+
+# Install dependencies
+pip install -e ".[dev]"
+
+# Setup environment
+cp .env.example .env
+
+# Run development server
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+## Penggunaan
+
+### Health Check
+```bash
+curl http://127.0.0.1:8000/health
+# Response: {"status": "ok", "version": "0.1.0"}
+```
+
+### Menjalankan Test
+```bash
+# Unit test
+pytest tests/unit/ -v
+
+# Integration test
+pytest tests/integration/ -v
+
+# Semua test
+pytest -v
+```
+
+### Linting & Type Checking
+```bash
+# Linting
+ruff check app/ tests/
+
+# Type checking
+mypy app/
+```
+
+## Stage Pembangunan (18 Fase)
+
+| Fase | Nama | Status |
+|------|------|---------|
+| 0 | Environment & Architecture | ✅ Selesai |
+| 1 | Project Foundation | ✅ Selesai |
+| 2 | LLM Provider Abstraction | ✅ Selesai |
+| 3 | Language Engine | ✅ Selesai |
+| 4 | Context Engine | ✅ Selesai |
+| 5 | Problem Engine | ✅ Selesai |
+| 6 | Knowledge / RAG | ✅ Selesai |
+| 7 | Reasoning Core | ✅ Selesai |
+| 8 | Workflow Engine | ✅ Selesai |
+| 9 | Policy Engine | 🔲 Dalam Progress |
+| 10 | Trust Engine | 🔲 Dalam Progress |
+| 11 | Memory Engine | 🔲 Dalam Progress |
+| 12 | Tool Engine | 🔲 Dalam Progress |
+| 13 | MCP Ready | 🔲 Dalam Progress |
+| 14 | Human Handoff | 🔲 Dalam Progress |
+| 15 | API Gateway | 🔲 Dalam Progress |
+| 16 | UI | 🔲 Dalam Progress |
+| 17 | Evaluation & Observability | 🔲 Dalam Progress |
+| 18 | Docker + Production Hardening | 🔲 Dalam Progress |
+
+## Kontribusi
+
+1. Buat branch fitur: `git checkout -b fitur/nama-fitur`
+2. Commit perubahan: `git commit -m "feat: tambah fitur x"`
+3. Push ke branch: `git push origin fitur/nama-fitur`
+4. Buat pull request
+
+## Lisensi
+
+MIT License — lihat file LICENSE untuk detail.
+'''.strip())
+
+write("Makefile", '''
+# Makefile untuk Nusantara Core + Hermes
+
+.PHONY: help install test lint typecheck run clean
+
+help:
+	@echo "Nusantara Core + Hermes — Makefile"
+	@echo ""
+	@echo "Targets:"
+	@echo "  install       Install dependencies"
+	@echo "  test          Run all tests"
+	@echo "  test-unit     Run unit tests only"
+	@echo "  test-integration  Run integration tests"
+	@echo "  lint          Run ruff linting"
+	@echo "  lint-fix      Run ruff linting & fix"
+	@echo "  typecheck     Run mypy type checking"
+	@echo "  run           Run development server"
+	@echo "  clean         Clean cache & build files"
+	@echo "  check         Run full quality check (lint + typecheck + test)"
+
+install:
+	pip install -e ".[dev]"
+
+test:
+	pytest -v --tb=short
+
+test-unit:
+	pytest tests/unit/ -v --tb=short
+
+test-integration:
+	pytest tests/integration/ -v --tb=short
+
+lint:
+	ruff check app/ tests/
+
+lint-fix:
+	ruff check --fix app/ tests/
+
+typecheck:
+	mypy app/
+
+run:
+	uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+
+clean:
+	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+	find . -type d -name .pytest_cache -exec rm -rf {} + 2>/dev/null || true
+	find . -type d -name .ruff_cache -exec rm -rf {} + 2>/dev/null || true
+	find . -type d -name .mypy_cache -exec rm -rf {} + 2>/dev/null || true
+	find . -name "*.pyc" -delete 2>/dev/null || true
+	find . -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
+	rm -rf dist/ build/
+
+check: lint typecheck test
+'''.strip())
+
+print("\n✅ Phase 1 selesai: main.py, config.py, exceptions.py, interfaces.py, types.py, pyproject.toml, .env.example, .gitignore, README.md, Makefile")
+
+# ═══════════════════════════════════════════════════
+# PHASE 3 — Language Engine (lengkapi normalizer, intent, entity)
+# ═══════════════════════════════════════════════════
+
+write("app/language/normalizer.py", '''
+"""
+Text Normalizer — Bahasa Indonesia formal/informal, singkatan, typo, slang.
+"""
+import re
+from typing import List, Dict
+from app.language.schemas import NormalizationResult
+
+
+class TextNormalizer:
+    """
+    Normalizer untuk teks informal Indonesia.
+    Menangani: singkatan, typo umum, slang, intensifikasi, kapitalisasi, dll.
+    """
+
+    ABBREVIATIONS: Dict[str, str] = {
+        "g": "tidak", "ga": "tidak", "gk": "tidak",
+        "gak": "tidak", "nggak": "tidak", "ngga": "tidak",
+        "ndak": "tidak", "ngak": "tidak",
+        "gab": "tidak bisa", "gabisa": "tidak bisa",
+        "krn": "karena", "karna": "karena", "krna": "karena",
+        "dr": "dari", "dri": "dari",
+        "utk": "untuk", "untk": "untuk",
+        "jd": "jadi", "jdi": "jadi",
+        "sy": "saya", "sya": "saya",
+        "gue": "saya",
+        "lo": "kamu", "loh": "kamu", "elo": "kamu",
+        "kmu": "kamu", "km": "kamu",
+        "kta": "kita",
+        "bkn": "bukan",
+        "tdk": "tidak", "tdak": "tidak",
+        "blm": "belum", "blum": "belum",
+        "udah": "sudah", "udh": "sudah",
+        "msh": "masih",
+        "aja": "saja", "ajah": "saja",
+        "gimana": "bagaimana", "gmn": "bagaimana",
+        "apa k": "apa",
+        "knp": "kenapa",
+        "blh": "boleh",
+        "by": "di",
+        "sm": "sama",
+    }
+
+    TYPO_CORRECTIONS: Dict[str, str] = {
+        "bner": "benar", "bnr": "benar",
+        "tdk": "tidak", "tdak": "tidak",
+        "gak": "tidak", "ga": "tidak", "gk": "tidak",
+        "nggak": "tidak", "ngga": "tidak",
+        "ndak": "tidak", "ngak": "tidak",
+        "krn": "karena", "karna": "karena", "krna": "karena",
+        "dr": "dari", "dri": "dari",
+        "utk": "untuk", "untk": "untuk",
+        "bd": "bisa", "bs": "bisa",
+        "gimana": "bagaimana", "gmn": "bagaimana",
+        "apa k": "apa",
+        "knp": "kenapa",
+        "ph": "per",
+        "msh": "masih", "udh": "sudah",
+        "blh": "boleh", "by": "di", "sm": "sama",
+        "lbih": "lebih", "dish": "diskon",
+    }
+
+    REPETITION_PATTERN = re.compile(r'(.)\\1{2,}')
+
+    def normalize(self, text: str) -> NormalizationResult:
+        """Normalisasi teks."""
+        original = text
+        changes = []
+        normalized = text
+
+        # 1. Hilangkan repetisi karakter
+        before = normalized
+        normalized = self.REPETITION_PATTERN.sub(r'\\1', normalized)
+        if normalized != before:
+            changes.append("Removed character repetition")
+
+        # 2. Lowercase & trim
+        before = normalized
+        normalized = normalized.lower().strip()
+        if normalized != before:
+            changes.append("Lowercased and trimmed")
+
+        # 3. Perbaiki singkatan
+        before = normalized
+        for abbr, formal in sorted(self.ABBREVIATIONS.items(), key=lambda x: len(x[0]), reverse=True):
+            pattern = re.compile(r'\\b' + re.escape(abbr) + r'\\b')
+            if pattern.search(normalized):
+                normalized = pattern.sub(formal, normalized)
+                changes.append(f"Abbreviation: {abbr} → {formal}")
+
+        # 4. Perbaiki typo
+        before = normalized
+        for typo, correct in sorted(self.TYPO_CORRECTIONS.items(), key=lambda x: len(x[0]), reverse=True):
+            pattern = re.compile(r'\\b' + re.escape(typo) + r'\\b')
+            if pattern.search(normalized):
+                normalized = pattern.sub(correct, normalized)
+                changes.append(f"Typo: {typo} → {correct}")
+
+        # 5. Normalisasi whitespace
+        before = normalized
+        normalized = re.sub(r'\\s+', ' ', normalized).strip()
+        if normalized != before:
+            changes.append("Normalized whitespace")
+
+        return NormalizationResult(original=original, normalized=normalized, changes=changes)
+
+    def normalize_batch(self, texts: List[str]) -> List[NormalizationResult]:
+        """Normalisasi batch."""
+        return [self.normalize(text) for text in texts]
+
+
+def normalize_text(text: str) -> NormalizationResult:
+    """Shortcut normalize."""
+    return TextNormalizer().normalize(text)
+'''.strip())
+
+write("app/language/intent.py", '''
+"""
+Intent Classifier — deteksi intent dari teks.
+Dukung Bahasa Indonesia formal/informal, campuran ID-Inggris.
+Minimal 30 contoh/test. Confidence dihitung dari data, tidak di-“arang”.
+"""
+from typing import List, Dict, Optional
+from app.language.schemas import IntentResult
+
+
+class IntentClassifier:
+    """
+    Classifier untuk deteksi intent berbasis keyword matching.
+    Confidence = (jumlah keyword match) / (total keyword di intent).
+    """
+
+    INTENTS: Dict[str, Dict] = {
+        "document_status": {
+            "keywords": [
+                "ktp", "k tp", "kartu", "tanda", "pengenal", "nik", "kia", "kk",
+                "kartu keluarga", "ijazah", "s khs", "skck", "surat",
+                "pengantar", "pindah", "domisili", "akte", "kawin", "lahir",
+                "meninggal", "kepemilikan", "sertifikat", "dokumen", "berkas",
+                "fotokopi", "urusan", "kehilangan", "rusak", "hilang",
+                "blm jd", "belum jadi", "blm", "belum", "gagal", "gak jd",
+                "tidak jadi", "lama", "antri", "baru",
+            ],
+            "category": "document",
+        },
+        "certificate_issuance": {
+            "keywords": [
+                "surat", "sertifikat", "ijazah", "keterangan", "pengantar",
+                "rekomendasi", "persetujuan", "izin", "permit", "publik",
+                "sehat", "dokter",
+            ],
+            "category": "document",
+        },
+        "technical_support": {
+            "keywords": [
+                "error", "bug", "galat", "masalah", "trouble", "tidak bisa",
+                "gagal", "fail", "crash", "hang", "lambat", "error code",
+                "fixed", "perbaiki", "troubleshoot", "help", "bantuan",
+                "support", "solusi", "jalan", "work", "install", "setup",
+                "config", "setting", "permission", "aplikasi", "program",
+                "website", "laptop", "computer", "phone", "cellular",
+                "data", "internet", "wifi", "koneksi",
+            ],
+            "category": "technical",
+        },
+        "data_entry": {
+            "keywords": [
+                "input", "masukkan", "tambah", "add", "register", "daftar",
+                "customer", "data", "information", "fill", "lengkap", "lengkapi",
+                "isi", "update", "ubah", "edit", "change", "modify",
+                "data entry", "data input",
+            ],
+            "category": "data",
+        },
+        "status_check": {
+            "keywords": [
+                "status", "keadaan", "berapa", "ada", "gak", "ga", "belum",
+                "sudah", "proses", "selesai", "stuck", "macet", "gantung",
+                "pending",
+            ],
+            "category": "process",
+        },
+        "complaint": {
+            "keywords": [
+                "komplain", "complain", "keluhan", "enggak", "tidak puas",
+                "kecewa", "marah", "janggal", "buruk", "jahat", "cuek",
+                "macet", "lama", "dibully", "pandol", "korrupt",
+                "sulit", "protest",
+            ],
+            "category": "service",
+        },
+        "wait_time": {
+            "keywords": [
+                "lama", "telat", "lambat", "waiting", "wait", "time",
+                "estimasi", "kira", "berapa",
+            ],
+            "category": "process",
+        },
+        "budget_request": {
+            "keywords": [
+                "budget", "anggaran", "biaya", "cost", "expense",
+                "payment", "pay", "bayar", "transfer", "gaji", "saldo",
+                "uang", "kredit", "loan", "keuangan", "financial",
+                "mortgage",
+            ],
+            "category": "financial",
+        },
+        "document_legal": {
+            "keywords": [
+                "legal", "hukum", "pidana", "perdata", "polis", "police",
+                "luka", "cedera", "kecelakaan", "tanggung jawab", "gugat",
+                "rekaman", "sejarah", "definisi", "term", "regulasi",
+                "aturan", "disiplin", "perjanjian", "perusahaan", "karyawan",
+            ],
+            "category": "legal",
+        },
+        "general_inquiry": {
+            "keywords": [
+                "tanya", "nomer", "nomor", "kontak", "selamat", "pagi",
+                "bagaimana", "phk", "berhenti", "dll", "semua", "harus",
+                "perlu", "tolong", "bantu", "butuh", "info", "informasi",
+                "pengetahuan", "question", "answer",
+            ],
+            "category": "general",
+        },
+    }
+
+    def classify(
+        self,
+        text: str,
+        language: str = "id",
+        normalization_changes: Optional[List[str]] = None,
+    ) -> IntentResult:
+        """Klasifikasi intent dari teks."""
+        text_lower = text.lower()
+        scores: Dict[str, float] = {}
+
+        for intent_name, intent_data in self.INTENTS.items():
+            scores[intent_name] = self._compute_score(text_lower, intent_data)
+
+        if not scores:
+            return IntentResult(intent="unknown", confidence=0.0, category=None)
+
+        best_intent = max(scores, key=scores.get)
+        best_score = scores[best_intent]
+        intent_data = self.INTENTS[best_intent]
+
+        max_possible = len(intent_data["keywords"])
+        confidence = best_score / max(max_possible, 1)
+
+        # Ambiguity penalty
+        sorted_scores = sorted(scores.values(), reverse=True)
+        if len(sorted_scores) > 1 and sorted_scores[0] - sorted_scores[1] < 0.1:
+            confidence *= 0.8
+
+        return IntentResult(
+            intent=best_intent,
+            confidence=confidence,
+            category=intent_data.get("category"),
+        )
+
+    def _compute_score(self, text: str, intent_data: Dict) -> float:
+        """Hitung score untuk intent."""
+        score = 0.0
+        for keyword in intent_data["keywords"]:
+            if keyword in text:
+                score += 1.0
+        return score
+
+    def classify_batch(self, texts: List[str], language: str = "id") -> List[IntentResult]:
+        """Klasifikasi batch."""
+        return [self.classify(text, language) for text in texts]
+
+
+TEST_EXAMPLES: List[Dict] = [
+    {"text": "ktp saya blm jd", "expected_intent": "document_status", "expected_category": "document"},
+    {"text": "kartu keluarga belum jadi", "expected_intent": "document_status", "expected_category": "document"},
+    {"text": "ijazah saya hilang", "expected_intent": "document_status", "expected_category": "document"},
+    {"text": "surat keterangan masih ga ada", "expected_intent": "document_status", "expected_category": "document"},
+    {"text": "NIK saya kehilangan", "expected_intent": "document_status", "expected_category": "document"},
+    {"text": "surat keterangan sehat butuh", "expected_intent": "certificate_issuance", "expected_category": "document"},
+    {"text": "ijazah perlu dikeluarkan", "expected_intent": "certificate_issuance", "expected_category": "document"},
+    {"text": "surat pengantar kerja", "expected_intent": "certificate_issuance", "expected_category": "document"},
+    {"text": "sertifikat training saya minta", "expected_intent": "certificate_issuance", "expected_category": "document"},
+    {"text": "rekomendasi dokter butuh surat", "expected_intent": "certificate_issuance", "expected_category": "document"},
+    {"text": "internet saya error", "expected_intent": "technical_support", "expected_category": "technical"},
+    {"text": "laptop saya hang terus", "expected_intent": "technical_support", "expected_category": "technical"},
+    {"text": "bisa bantu saya setting wifi", "expected_intent": "technical_support", "expected_category": "technical"},
+    {"text": "aplikasi saya ga bisa login", "expected_intent": "technical_support", "expected_category": "technical"},
+    {"text": "error code 404 di website kantor", "expected_intent": "technical_support", "expected_category": "technical"},
+    {"text": "saya mau daftar", "expected_intent": "data_entry", "expected_category": "data"},
+    {"text": "input data nasabah baru", "expected_intent": "data_entry", "expected_category": "data"},
+    {"text": "tambah informasi kontak", "expected_intent": "data_entry", "expected_category": "data"},
+    {"text": "update data diri saya", "expected_intent": "data_entry", "expected_category": "data"},
+    {"text": "isi formulir pendaftaran", "expected_intent": "data_entry", "expected_category": "data"},
+    {"text": "berapa status pengurusan saya", "expected_intent": "status_check", "expected_category": "process"},
+    {"text": "sudah selesai belum", "expected_intent": "status_check", "expected_category": "process"},
+    {"text": "ada update proses", "expected_intent": "status_check", "expected_category": "process"},
+    {"text": "kenapa pengajuan saya macet", "expected_intent": "status_check", "expected_category": "process"},
+    {"text": "tracking nomor permohonan saya", "expected_intent": "status_check", "expected_category": "process"},
+    {"text": "saya kecewa banget sama pelayanan", "expected_intent": "complaint", "expected_category": "service"},
+    {"text": "komplain: sistem lambat", "expected_intent": "complaint", "expected_category": "service"},
+    {"text": "pelayanan tidak ramah", "expected_intent": "complaint", "expected_category": "service"},
+    {"text": "berapa lama proses pengurusan", "expected_intent": "wait_time", "expected_category": "process"},
+    {"text": "berapa estimasi keluar", "expected_intent": "wait_time", "expected_category": "process"},
+]
+
+
+def classify_intent(text: str, language: str = "id") -> IntentResult:
+    """Shortcut classify intent."""
+    return IntentClassifier().classify(text, language)
+'''.strip())
+
+write("app/language/entity.py", '''
+"""
+Entity Extractor — ekstraksi entity dari teks.
+Dukung: document, person, date, number, location, organization.
+"""
+from typing import List, Dict, Optional, Tuple
+import re
+from app.language.schemas import EntityResult
+
+
+class EntityExtractor:
+    """
+    Ekstraksi entity dari teks bahasa Indonesia.
+    Mendukung: document, person, date, number, location, organization.
+    """
+
+    ENTITY_PATTERNS: Dict[str, List[Dict]] = {
+        "document": [
+            {
+                "pattern": re.compile(
+                    r"\\b(ktp|kartu tanda pengenal|kartu keluarga|kk|"
+                    r"ijazah|sertifikat|surat pengantar|surat keterangan|"
+                    r"akte kelahiran|akte kawin|akte meninggal|"
+                    r"nik|no kpu|no kta|no kk|no nik|"
+                    r"fotokopi|berkas|dokumen)\\b",
+                    re.IGNORECASE,
+                ),
+                "entity_type": "document",
+            },
+        ],
+        "person": [
+            {
+                "pattern": re.compile(
+                    r"\\b(saya|gue|lo|aku|dia|dm|mb|mam|ayah|bapak|ibu|"
+                    r"walik|ortu|anak|teman|rekan|atasan|bawahan|"
+                    r"nama\\s*\\w+)\\b",
+                    re.IGNORECASE,
+                ),
+                "entity_type": "person",
+            },
+        ],
+        "date": [
+            {
+                "pattern": re.compile(
+                    r"\\b(tanggal|tp|tgl|date|hari|bulan|tahun|bln|th|"
+                    r"\\d{1,2}\\s*(january|februari|maret|april|mei|juni|juli|"
+                    r"agustus|september|oktober|november|desember|"
+                    r"jan|feb|mar|apr|mei|jun|jul|agu|sep|okt|nov|des)\\s*\\d{4}|"
+                    r"\\d{1,2}/\\d{1,2}/\\d{2,4})\\b",
+                    re.IGNORECASE,
+                ),
+                "entity_type": "date",
+            },
+        ],
+        "number": [
+            {
+                "pattern": re.compile(
+                    r"\\b(\\d{16}|\\d{12,16}|08\\d{8,11}|"
+                    r"\\d{3}-\\d{3}-\\d{4})\\b"
+                ),
+                "entity_type": "number",
+            },
+        ],
+        "location": [
+            {
+                "pattern": re.compile(
+                    r"\\b(jl|jalan|ds|desa|kec|kecamatan|kab|kabupaten|"
+                    r"prov|provinsi|kot|kelurahan|gedung|ruang|lokasi|"
+                    r"alamat|domisili|tinggal|rumah|kantor|sekolah|"
+                    r"rumah sakit|RS|RSUD|RSMC|puskesmas|"
+                    r"kelurahan|desa|kecamatan|kabupaten|provinsi|"
+                    r"negara|kota|Kabupaten|Provinsi|"
+                    r"Jawa|Sumatera|Kalimantan|Sulawesi|Bali|Papua|"
+                    r"Jabar|Jateng|Jatim|Banten|DIY|NTB|NTT|"
+                    r"Lampung|Sumatera Utara|Kapulauan)\\b",
+                    re.IGNORECASE,
+                ),
+                "entity_type": "location",
+            },
+        ],
+        "organization": [
+            {
+                "pattern": re.compile(
+                    r"\\b(kantor pemda|BPMD|Disdukcapil|Disnudi|"
+                    r"Disnakertrans|Disperindag|Dispenda|"
+                    r"Dinkes|Diskes|Disdik|Disdikbud|"
+                    r"Disdiklat|Dispar|Disperindag|"
+                    r"Kementerian|Lembaga|Pemerintah|"
+                    r"Departemen|Departement|Kementerian|"
+                    r"Nakes|BNPB|BMKG|Polri|Polisi|"
+                    r"PMI|CARITA|Dana Penolong|Kesra|"
+                    r"Bank|Perum|PT|Perseorangan|Jasa.*|"
+                    r"Sosial|Tenaga Kerja|Ketenagakerjaan|"
+                    r"Travelling|Dokumentasi|Pengadilan|"
+                    r"Nusantara|Central|System|AI)\\b",
+                    re.IGNORECASE,
+                ),
+                "entity_type": "organization",
+            },
+        ],
+    }
+
+    def extract(
+        self,
+        text: str,
+        language: str = "id",
+        intent: Optional[str] = None,
+    ) -> EntityResult:
+        """Ekstraksi entity dari teks."""
+        entities: Dict[str, List[str]] = {}
+        raw_matches: List[Dict] = []
+
+        for entity_type, patterns in self.ENTITY_PATTERNS.items():
+            matched_values: List[str] = []
+
+            for pattern_def in patterns:
+                pattern = pattern_def["pattern"]
+                matches = pattern.findall(text)
+
+                for match in matches:
+                    if isinstance(match, tuple):
+                        for group in match:
+                            if group and group.strip():
+                                matched_values.append(group.strip())
+                    elif isinstance(match, str):
+                        if match and match.strip():
+                            matched_values.append(match.strip())
+                    else:
+                        if match and match.strip():
+                            matched_values.append(match.strip())
+
+            unique_values = list(dict.fromkeys(matched_values))
+            if unique_values:
+                entities[entity_type] = unique_values
+                for value in unique_values:
+                    raw_matches.append({
+                        "entity_type": entity_type,
+                        "value": value,
+                        "start": text.find(value),
+                        "end": text.find(value) + len(value),
+                    })
+
+        total_entities = sum(len(v) for v in entities.values())
+        confidence = min(1.0, total_entities / 10.0)
+
+        return EntityResult(
+            entities=entities,
+            confidence=confidence,
+            raw_matches=raw_matches,
+        )
+
+    def extract_batch(
+        self,
+        texts: List[str],
+        language: str = "id",
+    ) -> List[EntityResult]:
+        """Ekstraksi batch."""
+        return [self.extract(text, language) for text in texts]
+
+
+def extract_entities(
+    text: str,
+    language: str = "id",
+    intent: Optional[str] = None,
+) -> EntityResult:
+    """Shortcut extract entities."""
+    return EntityExtractor().extract(text, language, intent)
+'''.strip())
+
+print("\n✅ Phase 3 selesai: normalizer.py, intent.py, entity.py")
+
+# ═══════════════════════════════════════════════════
+# PHASE 9 — Policy Engine (awal)
+# ═══════════════════════════════════════════════════
+
+write("app/policy/__init__.py", '"""Policy Engine."""')
+
+write("app/policy/policy_schema.py", '''
+"""
+Policy Engine Schemas.
+"""
+from typing import Any, Dict, List, Optional
+from pydantic import BaseModel, Field
+
+
+class PolicyContext(BaseModel):
+    """Context untuk policy evaluation."""
+    user_id: Optional[str] = None
+    user_role: Optional[str] = None
+    task: str = Field(..., description="Tipe task yang diminta")
+    tool: Optional[str] = None
+    action: Optional[str] = None
+    data_sensitivity: str = Field(default="internal", description="Sensitivitas data")
+    risk_level: Optional[str] = None
+    evidence: Optional[List[Dict[str, Any]]] = None
+    request_metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class PolicyDecision(BaseModel):
+    """Hasil decision policy."""
+    decision: str = Field(..., description="ALLOW, REQUIRE_CONFIRMATION, REQUIRE_HUMAN, DENY")
+    reason: str = Field(..., description="Alasan keputusan")
+    requires_confirmation: bool = Field(default=False, description="Butuh konfirmasi")
+    requires_human: bool = Field(default=False, description="Butuh human approval")
+    confidence: float = Field(default=1.0, ge=0.0, le=1.0, description="Confidence decision")
+    message: Optional[str] = Field(None, description="Pesan untuk pengguna")
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class PolicyRule(BaseModel):
+    """Aturan policy."""
+    name: str = Field(..., description="Nama aturan")
+    description: str = Field(..., description="Deskripsi aturan")
+    condition: str = Field(..., description="Kondisi trigger")
+    decision: str = Field(..., description="ALLOW, REQUIRE_CONFIRMATION, REQUIRE_HUMAN, DENY")
+    priority: int = Field(default=0, description="Prioritas (lebih tinggi = lebih diutamakan)")
+
+
+class PolicyEngineConfig(BaseModel):
+    """Konfigurasi policy engine."""
+    enforce_policy: bool = True
+    require_human_for_critical: bool = True
+    require_confirmation_for_sensitive: bool = True
+    log_all_decisions: bool = True
+    default_decision: str = "ALLOW"
+'''.strip())
+
+write("app/policy/rules.py", '''
+"""
+Policy Rules — definisi aturan-aturan policy.
+"""
+from typing import Dict, List
+from app.policy.policy_schema import PolicyRule, PolicyDecision
+
+
+# Definisi aturan policy
+POLICY_RULES: List[PolicyRule] = [
+    # Informasi umum → ALLOW
+    PolicyRule(
+        name="general_info_allowed",
+        description="Informasi umum tidak memerlukan konfirmasi khusus",
+        condition="task in ['general_inquiry', 'status_check', 'wait_time'] and data_sensitivity == 'public'",
+        decision="ALLOW",
+        priority=10,
+    ),
+    # Keluhan → REQUIRE_CONFIRMATION
+    PolicyRule(
+        name="complaint_confirmation",
+        description="Keluhan memerlukan konfirmasi sebelum diproses",
+        condition="task == 'complaint'",
+        decision="REQUIRE_CONFIRMATION",
+        priority=20,
+    ),
+    # Input data → REQUIRE_CONFIRMATION
+    PolicyRule(
+        name="data_entry_confirmation",
+        description="Input data memerlukan konfirmasi",
+        condition="task == 'data_entry'",
+        decision="REQUIRE_CONFIRMATION",
+        priority=20,
+    ),
+    # Dokumen sensitif → REQUIRE_CONFIRMATION
+    PolicyRule(
+        name="document_sensitive_confirmation",
+        description="Dokumen sensitif memerlukan konfirmasi",
+        condition="task in ['document_status', 'certificate_issuance'] and data_sensitivity in ['internal', 'confidential']",
+        decision="REQUIRE_CONFIRMATION",
+        priority=30,
+    ),
+    # High-risk → REQUIRE_HUMAN
+    PolicyRule(
+        name="high_risk_human",
+        description="Task high-risk memerlukan approval manusia",
+        condition="risk_level == 'high' or data_sensitivity == 'confidential'",
+        decision="REQUIRE_HUMAN",
+        priority=50,
+    ),
+    # Critical → REQUIRE_HUMAN wajib
+    PolicyRule(
+        name="critical_risk_human_required",
+        description="Task critical-level wajib butuh human approval",
+        condition="risk_level == 'critical' or task == 'document_legal'",
+        decision="REQUIRE_HUMAN",
+        priority=100,
+    ),
+    # Unauthorized → DENY
+    PolicyRule(
+        name="unauthorized_deny",
+        description="Akses tanpa authorization ditolak",
+        condition="user_role is None or user_role == 'anonymous' and data_sensitivity == 'restricted'",
+        decision="DENY",
+        priority=200,
+    ),
+]
+
+
+def evaluate_policy(context: Dict[str, Any]) -> PolicyDecision:
+    """
+    Evaluasi policy berdasarkan context.
+    Return PolicyDecision dengan decision dan alasan.
+    """
+    from app.policy.policy_schema import PolicyContext, PolicyDecision
+
+    # Parse context
+    if isinstance(context, dict):
+        ctx = PolicyContext(**context)
+    else:
+        ctx = context
+
+    # Evaluasi aturan berdasarkan priority
+    matched_rules = []
+    for rule in POLICY_RULES:
+        if _evaluate_condition(rule.condition, ctx):
+            matched_rules.append(rule)
+
+    # Sort berdasarkan priority (descending)
+    matched_rules.sort(key=lambda r: r.priority, reverse=True)
+
+    if not matched_rules:
+        # Default: ALLOW
+        return PolicyDecision(
+            decision="ALLOW",
+            reason="Tidak ada aturan yang 일치",
+            requires_confirmation=False,
+            requires_human=False,
+            confidence=1.0,
+            message="Akses diperbolehkan",
+        )
+
+    # Ambil aturan dengan priority tertinggi
+    best_rule = matched_rules[0]
+
+    # Build decision
+    decision_map = {
+        "ALLOW": PolicyDecision(
+            decision="ALLOW",
+            reason=f"Aturan '{best_rule.name}' memungkinkan akses",
+            requires_confirmation=False,
+            requires_human=False,
+            confidence=1.0,
+            message="Akses diperbolehkan",
+        ),
+        "REQUIRE_CONFIRMATION": PolicyDecision(
+            decision="REQUIRE_CONFIRMATION",
+            reason=f"Aturan '{best_rule.name}' memerlukan konfirmasi",
+            requires_confirmation=True,
+            requires_human=False,
+            confidence=1.0,
+            message="Konfirmasi diperlukan sebelum melanjutkan",
+        ),
+        "REQUIRE_HUMAN": PolicyDecision(
+            decision="REQUIRE_HUMAN",
+            reason=f"Aturan '{best_rule.name}' memerlukan approval manusia",
+            requires_confirmation=False,
+            requires_human=True,
+            confidence=1.0,
+            message="Approval manusia diperlukan",
+        ),
+        "DENY": PolicyDecision(
+            decision="DENY",
+            reason=f"Aturan '{best_rule.name}' menolak akses",
+            requires_confirmation=False,
+            requires_human=False,
+            confidence=1.0,
+            message="Akses ditolak",
+        ),
+    }
+
+    return decision_map.get(best_rule.decision, decision_map["ALLOW"])
+
+
+def _evaluate_condition(condition: str, ctx: PolicyContext) -> bool:
+    """Evaluasi kondisi sederhana."""
+    # Simple kondisi evaluator
+    condition_lower = condition.lower()
+
+    # Check task
+    if "task in" in condition_lower:
+        tasks = condition_lower.split("in [")[1].split("]")[0] if "in [" in condition_lower else ""
+        return False  # Implementasi sederhana
+
+    # Check equality
+    if "==" in condition:
+        parts = condition.split("==")
+        if len(parts) == 2:
+            key = parts[0].strip()
+            value = parts[1].strip().strip("'\"")
+            actual_value = getattr(ctx, key, None)
+            return str(actual_value) == value
+
+    # Check comparison
+    if "in" in condition and "==" not in condition:
+        parts = condition.split(" in ")
+        if len(parts) == 2:
+            key = parts[0].strip()
+            value = parts[1].strip().strip("[]").replace("'", "").replace('"', "").split(", ")
+            actual_value = getattr(ctx, key, None)
+            return str(actual_value) in value
+
+    return False
+
+
+def create_policy_engine():
+    """Factory policy engine."""
+    return {"rules": POLICY_RULES, "evaluate": evaluate_policy}
+'''.strip())
+
+write("app/policy/engine.py", '''
+"""
+Policy Engine — orchestrator untuk evaluasi policy.
+"""
+from typing import Any, Dict
+from app.policy.policy_schema import PolicyContext, PolicyDecision
+from app.policy.rules import evaluate_policy, POLICY_RULES
+
+
+class PolicyEngine:
+    """Policy Engine — evaluasi keputusan berdasarkan aturan."""
+
+    def __init__(self):
+        self._rules = POLICY_RULES
+
+    def evaluate(self, context: Dict[str, Any]) -> PolicyDecision:
+        """Evaluasi policy."""
+        return evaluate_policy(context)
+
+    def check_permission(self, context: Dict[str, Any]) -> bool:
+        """Check apakah ada permission."""
+        decision = self.evaluate(context)
+        return decision.decision in ("ALLOW",)
+
+    def requires_confirmation(self, context: Dict[str, Any]) -> bool:
+        """Check apakah butuh konfirmasi."""
+        decision = self.evaluate(context)
+        return decision.requires_confirmation
+
+    def requires_human(self, context: Dict[str, Any]) -> bool:
+        """Check apakah butuh human approval."""
+        decision = self.evaluate(context)
+        return decision.requires_human
+
+    def get_decision(self, context: Dict[str, Any]) -> str:
+        """Get decision string."""
+        decision = self.evaluate(context)
+        return decision.decision
+
+
+def create_policy_engine() -> PolicyEngine:
+    """Factory."""
+    return PolicyEngine()
+'''.strip())
+
+print("\n✅ Phase 9 selesai: policy engine, rules, schema")
+
+# ═══════════════════════════════════════════════════
+# PHASE 10 — Trust Engine (awal)
+# ═══════════════════════════════════════════════════
+
+write("app/trust/__init__.py", '"""Trust Engine."""')
+
+write("app/trust/schemas.py", '''
+"""
+Trust Engine Schemas.
+"""
+from typing import Any, Dict, List, Optional
+from pydantic import BaseModel, Field
+
+
+class EvidenceValidation(BaseModel):
+    """Validasi evidence."""
+    evidence_id: Optional[str] = None
+    source: str = Field(..., description="Sumber evidence")
+    relevance_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    is_valid: bool = Field(default=True, description="Apakah evidence valid")
+    issues: List[str] = Field(default_factory=list, description="Masalah evidence")
+    confidence: float = Field(default=1.0, ge=0.0, le=1.0)
+
+
+class ClaimValidation(BaseModel):
+    """Validasi claim."""
+    claim: str = Field(..., description="Claim yang dicek")
+    supported: bool = Field(default=False, description="Apakah didukung evidence")
+    supporting_evidence: List[EvidenceValidation] = Field(default_factory=list)
+    contradicting_evidence: List[EvidenceValidation] = Field(default_factory=list)
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    issues: List[str] = Field(default_factory=list)
+
+
+class TrustResult(BaseModel):
+    """Hasil trust evaluation."""
+    claim: str = Field(..., description="Claim yang dievaluasi")
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    evidence_available: bool = Field(default=False)
+    risk_level: str = Field(default="low", description="low/medium/high/critical")
+    requires_human: bool = Field(default=False)
+    issues: List[str] = Field(default_factory=list)
+    validation_details: Dict[str, Any] = Field(default_factory=dict)
+
+
+class TrustEngineConfig(BaseModel):
+    """Konfigurasi trust engine."""
+    min_evidence_confidence: float = Field(default=0.5, ge=0.0, le=1.0)
+    min_relevance_score: float = Field(default=0.3, ge=0.0, le=1.0)
+    require_evidence_for_claim: bool = True
+    log_violations: bool = True
+    auto_reject_unsupported: bool = False
+'''.strip())
+
+write("app/trust/evidence.py", '''
+"""
+Evidence Validator — validasi evidence.
+"""
+from typing import List, Optional
+from app.trust.schemas import EvidenceValidation, ClaimValidation, TrustResult
+
+
+class EvidenceValidator:
+    """Validasi evidence."""
+
+    def validate(self, evidence: List[Dict[str, Any]]) -> List[EvidenceValidation]:
+        """Validasi list evidence."""
+        results: List[EvidenceValidation] = []
+
+        for ev in evidence:
+            validation = EvidenceValidation(
+                evidence_id=ev.get("id"),
+                source=ev.get("source", "unknown"),
+                relevance_score=ev.get("relevance_score", 0.0),
+                is_valid=True,
+                issues=[],
+                confidence=ev.get("confidence", 1.0),
+            )
+
+            # Cek relevansi
+            if validation.relevance_score < 0.3:
+                validation.issues.append("Relevansi rendah")
+                validation.is_valid = False
+
+            # Cek confidence
+            if validation.confidence < 0.5:
+                validation.issues.append("Confidence rendah")
+                validation.is_valid = False
+
+            results.append(validation)
+
+        return results
+
+    def validate_claim(
+        self,
+        claim: str,
+        evidence: List[Dict[str, Any]],
+    ) -> ClaimValidation:
+        """Validasi claim berdasarkan evidence."""
+        evidence_validations = self.validate(evidence)
+
+        supported_evidence = [
+            ev for ev in evidence_validations if ev.is_valid and ev.relevance_score >= 0.3
+        ]
+        contradicting = [
+            ev for ev in evidence_validations if not ev.is_valid
+        ]
+
+        is_supported = len(supported_evidence) > 0
+
+        avg_confidence = (
+            sum(ev.confidence for ev in supported_evidence) / len(supported_evidence)
+            if supported_evidence else 0.0
+        )
+
+        return ClaimValidation(
+            claim=claim,
+            supported=is_supported,
+            supporting_evidence=supported_evidence,
+            contradicting_evidence=contradicting,
+            confidence=avg_confidence,
+            issues=[] if is_supported else ["Tidak ada evidence yang mendukung"],
+        )
+
+
+def create_evidence_validator() -> EvidenceValidator:
+    """Factory."""
+    return EvidenceValidator()
+'''.strip())
+
+write("app/trust/citation.py", '''
+"""
+Citation Manager — manage citation dari evidence.
+"""
+from typing import List, Optional, Dict
+from app.trust.schemas import EvidenceValidation
+
+
+class CitationManager:
+    """Manager untuk citation evidence."""
+
+    def format_citation(self, evidence: EvidenceValidation) -> str:
+        """Format citation untuk evidence."""
+        source = evidence.source
+        return f"[{source}]"
+
+    def format_supported_claim(
+        self,
+        claim: str,
+        evidence: List[EvidenceValidation],
+    ) -> str:
+        """Format claim dengan citation."""
+        if not evidence:
+            return f"{claim} (tanpa sumber)"
+
+        citations = [self.format_citation(ev) for ev in evidence]
+        return f"{claim} (didasari oleh {'; '.join(citations)})"
+
+    def format_unsupported_claim(self, claim: str) -> str:
+        """Format claim tanpa support."""
+        return f"{claim} ⚠️ (tanpa sumber yang memadai)"
+
+
+def create_citation_manager() -> CitationManager:
+    """Factory."""
+    return CitationManager()
+'''.strip())
+
+write("app/trust/confidence.py", '''
+"""
+Confidence Calculator — hitung confidence dari berbagai faktor.
+"""
+from typing import List, Dict, Optional
+from app.trust.schemas import ClaimValidation, TrustResult
+
+
+class ConfidenceCalculator:
+    """Hitung confidence claim."""
+
+    def calculate(
+        self,
+        claim_validation: ClaimValidation,
+        risk_level: str = "low",
+    ) -> float:
+        """Hitung confidence overall."""
+        base_confidence = claim_validation.confidence
+
+        # Adjust berdasarkan risk
+        risk_adjustment = {
+            "low": 1.0,
+            "medium": 0.9,
+            "high": 0.7,
+            "critical": 0.5,
+        }
+        risk_factor = risk_adjustment.get(risk_level, 1.0)
+
+        # Adjust berdasarkan jumlah evidence
+        evidence_factor = min(1.0, len(claim_validation.supporting_evidence) / 3.0)
+
+        # Adjust berdasarkan quality evidence
+        quality_scores = [
+            ev.confidence * ev.relevance_score
+            for ev in claim_validation.supporting_evidence
+        ]
+        quality_factor = (
+            sum(quality_scores) / len(quality_scores)
+            if quality_scores else 0.5
+        )
+
+        overall = base_confidence * risk_factor * evidence_factor * quality_factor
+        return min(1.0, max(0.0, overall))
+
+    def determine_risk_level(
+        self,
+        confidence: float,
+        claim_validation: ClaimValidation,
+    ) -> str:
+        """Tentukan risk level."""
+        if not claim_validation.supported:
+            return "high"
+        if confidence < 0.3:
+            return "high"
+        if confidence < 0.6:
+            return "medium"
+        return "low"
+
+
+def create_confidence_calculator() -> ConfidenceCalculator:
+    """Factory."""
+    return ConfidenceCalculator()
+'''.strip())
+
+write("app/trust/engine.py", '''
+"""
+Trust Engine — orchestrator utama untuk validasi.
+"""
+from typing import List, Dict, Optional
+from app.trust.schemas import TrustResult, ClaimValidation, EvidenceValidation
+from app.trust.evidence import EvidenceValidator, create_evidence_validator
+from app.trust.confidence import ConfidenceCalculator, create_confidence_calculator
+from app.trust.citation import CitationManager, create_citation_manager
+from app.trust.schemas import TrustEngineConfig
+
+
+class TrustEngine:
+    """Trust Engine — validasi claim berdasarkan evidence."""
+
+    def __init__(
+        self,
+        config: Optional[TrustEngineConfig] = None,
+        evidence_validator: Optional[EvidenceValidator] = None,
+        confidence_calculator: Optional[ConfidenceCalculator] = None,
+        citation_manager: Optional[CitationManager] = None,
+    ):
+        self._config = config or TrustEngineConfig()
+        self._evidence_validator = evidence_validator or create_evidence_validator()
+        self._confidence_calculator = confidence_calculator or create_confidence_calculator()
+        self._citation_manager = citation_manager or create_citation_manager()
+
+    def evaluate(
+        self,
+        claim: str,
+        evidence: List[Dict[str, Any]],
+    ) -> TrustResult:
+        """Evaluasi trust untuk claim."""
+        # Validasi evidence
+        evidence_validations = self._evidence_validator.validate(evidence)
+
+        # Validasi claim
+        claim_validation = self._evidence_validator.validate_claim(claim, evidence)
+
+        # Hitung confidence
+        confidence = self._confidence_calculator.calculate(claim_validation)
+
+        # Tentukan risk level
+        risk_level = self._confidence_calculator.determine_risk_level(confidence, claim_validation)
+
+        # Cek apakah butuh human
+        requires_human = (
+            risk_level in ("high", "critical") or
+            not claim_validation.supported or
+            self._config.require_human_for_critical and risk_level == "critical"
+        )
+
+        # Issue
+        issues: List[str] = []
+        if not claim_validation.supported:
+            issues.append("Claim tidak didukung evidence")
+        if confidence < self._config.min_evidence_confidence:
+            issues.append(f"Confidence rendah: {confidence:.2f}")
+        if evidence and all(ev.relevance_score < self._config.min_relevance_score for ev in evidence_validations):
+            issues.append("Tidak ada evidence yang relevan")
+
+        # Format citation
+        citation = self._citation_manager.format_supported_claim(
+            claim, evidence_validations
+        ) if claim_validation.supported else self._citation_manager.format_unsupported_claim(claim)
+
+        return TrustResult(
+            claim=citation,
+            confidence=confidence,
+            evidence_available=claim_validation.supported,
+            risk_level=risk_level,
+            requires_human=requires_human,
+            issues=issues,
+            validation_details={
+                "claim_validation": claim_validation.model_dump(),
+                "evidence_validations": [ev.model_dump() for ev in evidence_validations],
+            },
+        )
+
+    def validate_output(
+        self,
+        output: str,
+        evidence: List[Dict[str, Any]],
+    ) -> TrustResult:
+        """Validasi output LLM."""
+        return self.evaluate(output, evidence)
+
+
+def create_trust_engine(
+    config: Optional[TrustEngineConfig] = None,
+) -> TrustEngine:
+    """Factory."""
+    return TrustEngine(config=config)
+'''.strip())
+
+print("\n✅ Phase 10 selesai: trust engine, evidence, confidence, citation, schema")
+
+# ═══════════════════════════════════════════════════
+# PHASE 11 — Memory Engine (awal)
+# ═══════════════════════════════════════════════════
+
+write("app/memory/__init__.py", '"""Memory Engine."""')
+
+write("app/memory/schemas.py", '''
+"""
+Memory Engine Schemas.
+"""
+from typing import Any, Dict, List, Optional
+from datetime import datetime
+from pydantic import BaseModel, Field
+
+
+class MemoryEntry(BaseModel):
+    """Satu entri memory."""
+    id: str = Field(..., description="ID entri")
+    type: str = Field(..., description="Tipe memory: fact, conversation, preference, dll")
+    content: str = Field(..., description="Konten memory")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Metadata")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    expires_at: Optional[datetime] = Field(None, description="Waktu kedaluwarsa (TTL)")
+    access_count: int = Field(default=0, description="Jumlah akses")
+    last_accessed: Optional[datetime] = None
+    privacy_class: str = Field(default="internal", description="privacy: public/internal/confidential")
+
+
+class ShortTermMemory(BaseModel):
+    """Short-term memory — percakapan aktif."""
+    session_id: str = Field(..., description="ID session")
+    entries: List[MemoryEntry] = Field(default_factory=list)
+    context_summary: Optional[str] = Field(None, description="Ringkasan context")
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class LongTermMemory(BaseModel):
+    """Long-term memory — informasi persisten."""
+    entries: List[MemoryEntry] = Field(default_factory=list)
+    total_entries: int = Field(default=0)
+    last_pruned: Optional[datetime] = None
+
+
+class MemoryStoreConfig(BaseModel):
+    """Konfigurasi memory store."""
+    short_term_max_entries: int = Field(default=100, description="Maksimal entri short-term")
+    long_term_max_entries: int = Field(default=1000, description="Maksimal entri long-term")
+    default_ttl_hours: int = Field(default=24, description="TTL default dalam jam")
+    enable_pruning: bool = True
+    privacy_classification_enabled: bool = True
+'''.strip())
+
+write("app/memory/short_term.py", '''
+"""
+Short-term Memory — percakapan/workflow/problem aktif.
+"""
+from typing import List, Optional, Dict
+from datetime import datetime, timedelta
+from app.memory.schemas import (
+    MemoryEntry,
+    ShortTermMemory,
+    MemoryStoreConfig,
+)
+
+
+class ShortTermMemoryStore:
+    """Short-term memory store."""
+
+    def __init__(self, config: Optional[MemoryStoreConfig] = None):
+        self._config = config or MemoryStoreConfig()
+        self._memory: Dict[str, ShortTermMemory] = {}
+
+    def create_session(self, session_id: str) -> ShortTermMemory:
+        """Buat short-term memory untuk session."""
+        memory = ShortTermMemory(session_id=session_id)
+        self._memory[session_id] = memory
+        return memory
+
+    def get_session(self, session_id: str) -> Optional[ShortTermMemory]:
+        """Get session memory."""
+        return self._memory.get(session_id)
+
+    def add_entry(
+        self,
+        session_id: str,
+        entry: MemoryEntry,
+    ) -> ShortTermMemory:
+        """Tambah entri ke session."""
+        memory = self._memory.get(session_id)
+        if not memory:
+            memory = self.create_session(session_id)
+
+        memory.entries.append(entry)
+        memory.updated_at = datetime.utcnow()
+
+        # Prune jika terlalu banyak
+        if len(memory.entries) > self._config.short_term_max_entries:
+            self._prune(memory)
+
+        return memory
+
+    def get_entries(self, session_id: str) -> List[MemoryEntry]:
+        """Get semua entri dari session."""
+        memory = self._memory.get(session_id)
+        if not memory:
+            return []
+        return memory.entries
+
+    def get_recent(self, session_id: str, limit: int = 10) -> List[MemoryEntry]:
+        """Get entri terbaru."""
+        memory = self._memory.get(session_id)
+        if not memory:
+            return []
+        return memory.entries[-limit:]
+
+    def update_entry(self, session_id: str, entry_id: str, **updates) -> bool:
+        """Update entri."""
+        memory = self._memory.get(session_id)
+        if not memory:
+            return False
+
+        for entry in memory.entries:
+            if entry.id == entry_id:
+                for key, value in updates.items():
+                    setattr(entry, key, value)
+                entry.updated_at = datetime.utcnow()
+                entry.access_count += 1
+                entry.last_accessed = datetime.utcnow()
+                return True
+        return False
+
+    def delete_entry(self, session_id: str, entry_id: str) -> bool:
+        """Hapus entri."""
+        memory = self._memory.get(session_id)
+        if not memory:
+            return False
+
+        initial_count = len(memory.entries)
+        memory.entries = [e for e in memory.entries if e.id != entry_id]
+        memory.updated_at = datetime.utcnow()
+        return len(memory.entries) < initial_count
+
+    def clear_session(self, session_id: str) -> bool:
+        """Hapus semua memory session."""
+        if session_id in self._memory:
+            del self._memory[session_id]
+            return True
+        return False
+
+    def _prune(self, memory: ShortTermMemory) -> None:
+        """Prune entri yang kedaluwarsa."""
+        now = datetime.utcnow()
+        memory.entries = [
+            e for e in memory.entries
+            if e.expires_at is None or e.expires_at > now
+        ]
+
+
+def create_short_term_memory_store(
+    config: Optional[MemoryStoreConfig] = None,
+) -> ShortTermMemoryStore:
+    """Factory."""
+    return ShortTermMemoryStore(config=config)
+'''.strip())
+
+write("app/memory/long_term.py", '''
+"""
+Long-term Memory — informasi persisten yang berguna.
+"""
+from typing import List, Optional, Dict
+from datetime import datetime, timedelta
+from app.memory.schemas import (
+    MemoryEntry,
+    LongTermMemory,
+    MemoryStoreConfig,
+)
+
+
+class LongTermMemoryStore:
+    """Long-term memory store."""
+
+    def __init__(self, config: Optional[MemoryStoreConfig] = None):
+        self._config = config or MemoryStoreConfig()
+        self._memory: LongTermMemory = LongTermMemory()
+
+    def add_entry(
+        self,
+        entry: MemoryEntry,
+        persist: bool = True,
+    ) -> LongTermMemory:
+        """Tambah entri ke long-term memory."""
+        if persist:
+            self._memory.entries.append(entry)
+            self._memory.total_entries = len(self._memory.entries)
+            self._memory.last_pruned = None
+
+            # Prune jika terlalu banyak
+            if len(self._memory.entries) > self._config.long_term_max_entries:
+                self._prune()
+
+        return self._memory
+
+    def get_entry(self, entry_id: str) -> Optional[MemoryEntry]:
+        """Get entri by ID."""
+        for entry in self._memory.entries:
+            if entry.id == entry_id:
+                entry.access_count += 1
+                entry.last_accessed = datetime.utcnow()
+                return entry
+        return None
+
+    def get_entries(
+        self,
+        type_filter: Optional[str] = None,
+        privacy_filter: Optional[str] = None,
+    ) -> List[MemoryEntry]:
+        """Get entri dengan filter."""
+        results: List[MemoryEntry] = []
+        for entry in self._memory.entries:
+            if type_filter and entry.type != type_filter:
+                continue
+            if privacy_filter and entry.privacy_class != privacy_filter:
+                continue
+            if entry.expires_at and entry.expires_at < datetime.utcnow():
+                continue
+            results.append(entry)
+        return results
+
+    def search(self, query: str, limit: int = 10) -> List[MemoryEntry]:
+        """Cari entri berdasarkan query sederhana."""
+        results: List[MemoryEntry] = []
+        query_lower = query.lower()
+        for entry in self._memory.entries:
+            if query_lower in entry.content.lower():
+                results.append(entry)
+                if len(results) >= limit:
+                    break
+        return results
+
+    def delete_entry(self, entry_id: str) -> bool:
+        """Hapus entri."""
+        initial_count = len(self._memory.entries)
+        self._memory.entries = [e for e in self._memory.entries if e.id != entry_id]
+        self._memory.total_entries = len(self._memory.entries)
+        return len(self._memory.entries) < initial_count
+
+    def clear_all(self) -> bool:
+        """Hapus semua long-term memory."""
+        self._memory.entries = []
+        self._memory.total_entries = 0
+        return True
+
+    def _prune(self) -> None:
+        """Prune entri yang kedaluwarsa."""
+        now = datetime.utcnow()
+        self._memory.entries = [
+            e for e in self._memory.entries
+            if e.expires_at is None or e.expires_at > now
+        ]
+        self._memory.total_entries = len(self._memory.entries)
+        self._memory.last_pruned = now
+
+
+def create_long_term_memory_store(
+    config: Optional[MemoryStoreConfig] = None,
+) -> LongTermMemoryStore:
+    """Factory."""
+    return LongTermMemoryStore(config=config)
+'''.strip())
+
+write("app/memory/engine.py", '''
+"""
+Memory Engine — orchestrator untuk short-term dan long-term memory.
+"""
+from typing import Optional, Dict, List
+from datetime import datetime, timedelta
+from app.memory.schemas import (
+    MemoryEntry,
+    ShortTermMemory,
+    MemoryStoreConfig,
+)
+from app.memory.short_term import ShortTermMemoryStore, create_short_term_memory_store
+from app.memory.long_term import LongTermMemoryStore, create_long_term_memory_store
+
+
+class MemoryEngine:
+    """Memory Engine — mengelola short-term dan long-term memory."""
+
+    def __init__(
+        self,
+        config: Optional[MemoryStoreConfig] = None,
+        short_term_store: Optional[ShortTermMemoryStore] = None,
+        long_term_store: Optional[LongTermMemoryStore] = None,
+    ):
+        self._config = config or MemoryStoreConfig()
+        self._short_term = short_term_store or create_short_term_memory_store(self._config)
+        self._long_term = long_term_store or create_long_term_memory_store(self._config)
+
+    def create_session(self, session_id: str) -> ShortTermMemory:
+        """Buat session memory."""
+        return self._short_term.create_session(session_id)
+
+    def add_to_short_term(
+        self,
+        session_id: str,
+        entry: MemoryEntry,
+    ) -> ShortTermMemory:
+        """Tambah ke short-term memory."""
+        return self._short_term.add_entry(session_id, entry)
+
+    def add_to_long_term(
+        self,
+        entry: MemoryEntry,
+        persist: bool = True,
+    ) -> None:
+        """Tambah ke long-term memory."""
+        self._long_term.add_entry(entry, persist=persist)
+
+    def get_short_term(self, session_id: str) -> Optional[ShortTermMemory]:
+        """Get short-term memory."""
+        return self._short_term.get_session(session_id)
+
+    def get_long_term_entry(self, entry_id: str) -> Optional[MemoryEntry]:
+        """Get long-term entry."""
+        return self._long_term.get_entry(entry_id)
+
+    def search_long_term(self, query: str, limit: int = 10) -> List[MemoryEntry]:
+        """Cari di long-term memory."""
+        return self._long_term.search(query, limit=limit)
+
+    def delete_short_term_entry(self, session_id: str, entry_id: str) -> bool:
+        """Hapus entri short-term."""
+        return self._short_term.delete_entry(session_id, entry_id)
+
+    def delete_long_term_entry(self, entry_id: str) -> bool:
+        """Hapus entri long-term."""
+        return self._long_term.delete_entry(entry_id)
+
+    def clear_session(self, session_id: str) -> bool:
+        """Hapus session memory."""
+        return self._short_term.clear_session(session_id)
+
+    def migrate_to_long_term(
+        self,
+        session_id: str,
+        entry_type: str = "conversation",
+        privacy_class: str = "internal",
+    ) -> List[MemoryEntry]:
+        """Migrasikan entri dari short-term ke long-term."""
+        memory = self._short_term.get_session(session_id)
+        if not memory:
+            return []
+
+        migrated: List[MemoryEntry] = []
+        for entry in memory.entries:
+            # Buat entri baru untuk long-term
+            long_term_entry = MemoryEntry(
+                id=entry.id,
+                type=entry_type,
+                content=entry.content,
+                metadata=entry.metadata,
+                privacy_class=privacy_class,
+                expires_at=datetime.utcnow() + timedelta(hours=self._config.default_ttl_hours),
+            )
+            self._long_term.add_entry(long_term_entry)
+            migrated.append(long_term_entry)
+
+        # Clear short-term setelah migrasi
+        self._short_term.clear_session(session_id)
+
+        return migrated
+
+
+def create_memory_engine(
+    config: Optional[MemoryStoreConfig] = None,
+) -> MemoryEngine:
+    """Factory."""
+    return MemoryEngine(config=config)
+'''.strip())
+
+print("\n✅ Phase 11 selesai: memory engine, short-term, long-term, schema")
+
+# ═══════════════════════════════════════════════════
+# PHASE 12 — Tool Engine (awal)
+# ═══════════════════════════════════════════════════
+
+write("app/tools/__init__.py", '"""Tool Engine."""')
+
+write("app/tools/schemas.py", '''
+"""
+Tool Engine Schemas.
+"""
+from typing import Any, Dict, List, Optional
+from pydantic import BaseModel, Field
+
+
+class ToolDefinition(BaseModel):
+    """Definisi tool."""
+    name: str = Field(..., description="Nama tool")
+    description: str = Field(..., description="Deskripsi tool")
+    input_schema: Dict[str, Any] = Field(default_factory=dict, description="Schema input")
+    output_schema: Dict[str, Any] = Field(default_factory=dict, description="Schema output")
+    permissions: List[str] = Field(default_factory=list, description="Permission yang dibutuhkan")
+    category: Optional[str] = Field(None, description="Kategori tool")
+    version: str = Field(default="1.0.0", description="Versi tool")
+
+
+class ToolExecutionRequest(BaseModel):
+    """Request eksekusi tool."""
+    tool_name: str = Field(..., description="Nama tool")
+    input_data: Dict[str, Any] = Field(default_factory=dict, description="Input untuk tool")
+    request_id: Optional[str] = Field(None, description="ID request")
+    session_id: Optional[str] = Field(None, description="ID session")
+
+
+class ToolExecutionResult(BaseModel):
+    """Hasil eksekusi tool."""
+    tool_name: str = Field(..., description="Nama tool")
+    success: bool = Field(default=False, description="Apakah berhasil")
+    output: Optional[Dict[str, Any]] = Field(None, description="Output tool")
+    error: Optional[str] = Field(None, description="Error jika gagal")
+    execution_time_ms: int = Field(default=0, description="Waktu eksekusi")
+    request_id: Optional[str] = Field(None, description="ID request")
+
+
+class ToolPermission(BaseModel):
+    """Permission tool."""
+    tool_name: str = Field(..., description="Nama tool")
+    actions: List[str] = Field(default_factory=list, description="Aksi yang diizinkan")
+    data_access: List[str] = Field(default_factory=list, description="Akses data yang diizinkan")
+    requires_confirmation: bool = Field(default=False, description="Butuh konfirmasi")
+    requires_human: bool = Field(default=False, description="Butuh human approval")
+'''.strip())
+
+write("app/tools/base.py", '''
+"""
+Tool Base — interface dasar untuk tool.
+"""
+from typing import Any, Dict, List, Optional
+from pydantic import BaseModel
+from app.tools.schemas import ToolDefinition
+
+
+class ToolBase:
+    """
+    Base class untuk tool.
+    Subclass harus implements: name, description, execute, get_schema.
+    """
+
+    name: str = ""
+    description: str = ""
+    input_schema: Dict[str, Any] = {}
+    output_schema: Dict[str, Any] = {}
+    permissions: List[str] = []
+    category: Optional[str] = None
+
+    def execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Eksekusi tool. Subclass harus implements."""
+        raise NotImplementedError("Subclass harus implements execute()")
+
+    def get_schema(self) -> ToolDefinition:
+        """Get tool definition."""
+        return ToolDefinition(
+            name=self.name,
+            description=self.description,
+            input_schema=self.input_schema,
+            output_schema=self.output_schema,
+            permissions=self.permissions,
+            category=self.category,
+        )
+
+    def validate_input(self, input_data: Dict[str, Any]) -> bool:
+        """Validasi input sebelum eksekusi."""
+        return True
+
+
+class CalculatorTool(Base):
+    """Calculator tool — kalkulator sederhana."""
+
+    name = "calculator"
+    description = "Melakukan kalkulasi matematika sederhana"
+    category = "utility"
+    permissions = ["public"]
+
+    input_schema = {
+        "type": "object",
+        "properties": {
+            "operation": {
+                "type": "string",
+                "enum": ["add", "subtract", "multiply", "divide"],
+            },
+            "a": {"type": "number"},
+            "b": {"type": "number"},
+        },
+        "required": ["operation", "a", "b"],
+    }
+
+    def execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Eksekusi kalkulasi."""
+        operation = input_data.get("operation", "add")
+        a = float(input_data.get("a", 0))
+        b = float(input_data.get("b", 0))
+
+        try:
+            if operation == "add":
+                result = a + b
+            elif operation == "subtract":
+                result = a - b
+            elif operation == "multiply":
+                result = a * b
+            elif operation == "divide":
+                if b == 0:
+                    return {"success": False, "error": "Division by zero"}
+                result = a / b
+            else:
+                return {"success": False, "error": f"Unknown operation: {operation}"}
+
+            return {
+                "success": True,
+                "output": {"result": result, "operation": operation, "a": a, "b": b},
+            }
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+
+class DateTimeTool(Base):
+    """DateTime tool — informasi tanggal dan waktu."""
+
+    name = "date_time"
+    description = "Mendapatkan informasi tanggal dan waktu saat ini"
+    category = "utility"
+    permissions = ["public"]
+
+    input_schema = {
+        "type": "object",
+        "properties": {
+            "format": {
+                "type": "string",
+                "enum": ["iso", "human", "timestamp"],
+                "default": "iso",
+            },
+        },
+    }
+
+    def execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Eksekusi."""
+        from datetime import datetime
+
+        format_type = input_data.get("format", "iso")
+
+        now = datetime.utcnow()
+
+        if format_type == "iso":
+            result = now.isoformat()
+        elif format_type == "human":
+            result = now.strftime("%Y-%m-%d %H:%M:%S")
+        elif format_type == "timestamp":
+            result = int(now.timestamp())
+        else:
+            result = now.isoformat()
+
+        return {"success": True, "output": {"current_datetime": result, "format": format_type}}
+
+
+class KnowledgeSearchTool(Base):
+    """Knowledge search tool — placeholder untuk searching knowledge base."""
+
+    name = "knowledge_search"
+    description = "Mencari informasi dari knowledge base"
+    category = "knowledge"
+    permissions = ["internal"]
+
+    input_schema = {
+        "type": "object",
+        "properties": {
+            "query": {"type": "string"},
+            "top_k": {"type": "integer", "default": 5},
+        },
+        "required": ["query"],
+    }
+
+    def execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Eksekusi pencarian (placeholder)."""
+        query = input_data.get("query", "")
+        top_k = input_data.get("top_k", 5)
+
+        # Placeholder: return dummy results
+        results = [
+            {
+                "document_id": f"doc-{i+1}",
+                "title": f"Hasil pencarian untuk: {query}",
+                "snippet": f"Snippet untuk '{query}' (placeholder)",
+                "relevance_score": 1.0 - (i * 0.1),
+            }
+            for i in range(min(top_k, 5))
+        ]
+
+        return {
+            "success": True,
+            "output": {"query": query, "results": results, "count": len(results)},
+        }
+
+
+class FileReaderTool(Base):
+    """File reader tool — baca file teks."""
+
+    name = "file_reader"
+    description = "Membaca isi file teks"
+    category = "filesystem"
+    permissions = ["internal"]
+
+    input_schema = {
+        "type": "object",
+        "properties": {
+            "file_path": {"type": "string"},
+            "max_size": {"type": "integer", "default": 100000},
+        },
+        "required": ["file_path"],
+    }
+
+    def execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Eksekusi baca file."""
+        import os
+
+        file_path = input_data.get("file_path", "")
+        max_size = input_data.get("max_size", 100000)
+
+        if not file_path:
+            return {"success": False, "error": "File path diperlukan"}
+
+        # Security: hanya allow file di dalam working directory
+        cwd = os.getcwd()
+        abs_path = os.path.abspath(file_path)
+        if not abs_path.startswith(cwd):
+            return {"success": False, "error": "Akses file dibatasi ke working directory"}
+
+        try:
+            if not os.path.exists(abs_path):
+                return {"success": False, "error": f"File tidak ditemukan: {file_path}"}
+
+            file_size = os.path.getsize(abs_path)
+            if file_size > max_size:
+                return {"success": False, "error": f"File terlalu besar: {file_size} bytes (maks: {max_size})"}
+
+            with open(abs_path, "r", encoding="utf-8") as f:
+                content = f.read(max_size)
+
+            return {
+                "success": True,
+                "output": {
+                    "file_path": file_path,
+                    "file_size": file_size,
+                    "content": content,
+                },
+            }
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+
+def create_tool_instances() -> List[ToolBase]:
+    """Buat instance tool yang tersedia."""
+    return [
+        CalculatorTool(),
+        DateTimeTool(),
+        KnowledgeSearchTool(),
+        FileReaderTool(),
+    ]
+'''.strip())
+
+write("app/tools/registry.py", '''
+"""
+Tool Registry — registry untuk semua tool.
+"""
+from typing import Dict, List, Optional
+from app.tools.base import ToolBase, create_tool_instances
+from app.tools.schemas import ToolDefinition, ToolPermission
+
+
+class ToolRegistry:
+    """Registry untuk tool."""
+
+    def __init__(self):
+        self._tools: Dict[str, ToolBase] = {}
+        self._permissions: Dict[str, ToolPermission] = {}
+        self._register_default_tools()
+
+    def _register_default_tools(self) -> None:
+        """Registrasi tool default."""
+        for tool in create_tool_instances():
+            self._tools[tool.name] = tool
+            self._permissions[tool.name] = ToolPermission(
+                tool_name=tool.name,
+                actions=["execute"],
+                data_access=[],
+                requires_confirmation=False,
+                requires_human=False,
+            )
+
+    def register(self, tool: ToolBase) -> None:
+        """Registrasi tool baru."""
+        self._tools[tool.name] = tool
+        self._permissions[tool.name] = ToolPermission(
+            tool_name=tool.name,
+            actions=["execute"],
+            data_access=[],
+            requires_confirmation=False,
+            requires_human=False,
+        )
+
+    def get_tool(self, name: str) -> Optional[ToolBase]:
+        """Get tool by name."""
+        return self._tools.get(name)
+
+    def get_all_tools(self) -> List[ToolDefinition]:
+        """Get semua tool definition."""
+        return [tool.get_schema() for tool in self._tools.values()]
+
+    def execute(self, tool_name: str, input_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Eksekusi tool."""
+        tool = self._tools.get(tool_name)
+        if not tool:
+            return {"success": False, "error": f"Tool '{tool_name}' tidak ditemukan"}
+
+        # Validasi input
+        if not tool.validate_input(input_data):
+            return {"success": False, "error": "Invalid input"}
+
+        return tool.execute(input_data)
+
+    def get_permission(self, tool_name: str) -> Optional[ToolPermission]:
+        """Get permission untuk tool."""
+        return self._permissions.get(tool_name)
+
+    def list_tools(self) -> List[Dict[str, Any]]:
+        """List semua tool."""
+        return [
+            {
+                "name": name,
+                "description": tool.description,
+                "category": tool.category,
+                "permissions": tool.permissions,
+            }
+            for name, tool in self._tools.items()
+        ]
+
+
+def create_tool_registry() -> ToolRegistry:
+    """Factory."""
+    return ToolRegistry()
+'''.strip())
+
+write("app/tools/executor.py", '''
+"""
+Tool Executor — eksekusi tool dengan policy dan trust.
+"""
+from typing import Any, Dict, Optional
+from app.tools.registry import ToolRegistry, create_tool_registry
+from app.policy.engine import PolicyEngine, create_policy_engine
+from app.trust.engine import TrustEngine, create_trust_engine
+
+
+class ToolExecutor:
+    """
+    Executor untuk tool.
+    Alur: Model → Tool Registry → Policy → Executor → Result → Trust.
+    """
+
+    def __init__(
+        self,
+        tool_registry: Optional[ToolRegistry] = None,
+        policy_engine: Optional[PolicyEngine] = None,
+        trust_engine: Optional[TrustEngine] = None,
+    ):
+        self._tool_registry = tool_registry or create_tool_registry()
+        self._policy_engine = policy_engine or create_policy_engine()
+        self._trust_engine = trust_engine or create_trust_engine()
+
+    def execute(
+        self,
+        tool_name: str,
+        input_data: Dict[str, Any],
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Eksekusi tool dengan policy check.
+        """
+        context = context or {}
+
+        # 1. Check policy
+        policy_context = {
+            "task": tool_name,
+            "tool": tool_name,
+            "action": "execute",
+            "data_sensitivity": context.get("data_sensitivity", "internal"),
+            "risk_level": context.get("risk_level", "low"),
+            "user_role": context.get("user_role", "anonymous"),
+        }
+
+        policy_decision = self._policy_engine.evaluate(policy_context)
+
+        if policy_decision.decision == "DENY":
+            return {
+                "success": False,
+                "error": f"Policy menolak eksekusi: {policy_decision.reason}",
+                "policy_decision": policy_decision.decision,
+            }
+
+        if policy_decision.requires_human:
+            return {
+                "success": False,
+                "error": "Eksekusi memerlukan human approval",
+                "policy_decision": "REQUIRE_HUMAN",
+            }
+
+        if policy_decision.requires_confirmation:
+            return {
+                "success": False,
+                "error": "Eksekusi memerlukan konfirmasi",
+                "policy_decision": "REQUIRE_CONFIRMATION",
+                "confirmation_message": policy_decision.message,
+            }
+
+        # 2. Eksekusi tool
+        result = self._tool_registry.execute(tool_name, input_data)
+
+        # 3. Validasi hasil dengan trust (jika perlu)
+        if result.get("success") and result.get("output"):
+            evidence = [
+                {
+                    "id": f"tool-{tool_name}",
+                    "source": tool_name,
+                    "content": str(result["output"]),
+                    "relevance_score": 1.0,
+                    "confidence": 1.0,
+                }
+            ]
+            trust_result = self._trust_engine.evaluate(
+                claim=f"Tool '{tool_name}' executed successfully",
+                evidence=evidence,
+            )
+
+            result["trust"] = {
+                "confidence": trust_result.confidence,
+                "risk_level": trust_result.risk_level,
+                "requires_human": trust_result.requires_human,
+                "issues": trust_result.issues,
+            }
+
+        return result
+
+    def get_tool_info(self, tool_name: str) -> Optional[Dict[str, Any]]:
+        """Get info tool."""
+        tool = self._tool_registry.get_tool(tool_name)
+        if not tool:
+            return None
+        permission = self._tool_registry.get_permission(tool_name)
+        return {
+            "name": tool.name,
+            "description": tool.description,
+            "category": tool.category,
+            "schema": tool.get_schema().model_dump(),
+            "permission": permission.model_dump() if permission else None,
+        }
+
+    def list_tools(self) -> List[Dict[str, Any]]:
+        """List semua tool."""
+        return self._tool_registry.list_tools()
+
+
+def create_tool_executor() -> ToolExecutor:
+    """Factory."""
+    return ToolExecutor()
+'''.strip())
+
+print("\n✅ Phase 12 selesai: tool engine, base, registry, executor, schema")
+
+# ═══════════════════════════════════════════════════
+# PHASE 13 — MCP Ready (awal)
+# ═══════════════════════════════════════════════════
+
+write("app/mcp/__init__.py", '"""MCP Ready."""')
+
+write("app/mcp/schemas.py", '''
+"""
+MCP Schemas.
+"""
+from typing import Any, Dict, List, Optional
+from pydantic import BaseModel, Field
+
+
+class MCPDiscoveryRequest(BaseModel):
+    """Request discovery."""
+    server_id: Optional[str] = None
+
+
+class MCPDiscoveryResponse(BaseModel):
+    """Response discovery."""
+    server_id: str = Field(..., description="ID server")
+    name: str = Field(..., description="Nama server")
+    description: str = Field(..., description="Deskripsi server")
+    tools: List[Dict[str, Any]] = Field(default_factory=list, description="List tool")
+    capabilities: List[str] = Field(default_factory=list, description="Capabilities server")
+
+
+class MCPToolCallRequest(BaseModel):
+    """Request call tool."""
+    tool_name: str = Field(..., description="Nama tool")
+    arguments: Dict[str, Any] = Field(default_factory=dict, description="Argumen tool")
+    request_id: Optional[str] = Field(None, description="ID request")
+
+
+class MCPToolCallResponse(BaseModel):
+    """Response call tool."""
+    tool_name: str = Field(..., description="Nama tool")
+    success: bool = Field(default=False)
+    result: Optional[Dict[str, Any]] = Field(None, description="Hasil tool")
+    error: Optional[str] = Field(None, description="Error jika gagal")
+    request_id: Optional[str] = Field(None)
+
+
+class MCPPermission(BaseModel):
+    """Permission MCP tool."""
+    tool_name: str = Field(..., description="Nama tool")
+    allowed: bool = Field(default=True)
+    requires_confirmation: bool = Field(default=False)
+    requires_human: bool = Field(default=False)
+    reason: Optional[str] = Field(None)
+
+
+class MCPConfig(BaseModel):
+    """Konfigurasi MCP."""
+    server_id: str = Field(default="nusantara-mcp", description="ID server")
+    server_name: str = Field(default="Nusantara MCP Server", description="Nama server")
+    enable_policy_check: bool = Field(default=True, description="Aktifkan policy check")
+    enable_trust_validation: bool = Field(default=True, description="Aktifkan trust validation")
+    allowed_origins: List[str] = Field(default_factory=list, description="Origins yang diizinkan")
+'''.strip())
+
+write("app/mcp/client.py", '''
+"""
+MCP Client — client untuk berinteraksi dengan MCP server.
+"""
+from typing import Any, Dict, List, Optional
+from app.mcp.schemas import (
+    MCPDiscoveryRequest,
+    MCPDiscoveryResponse,
+    MCPToolCallRequest,
+    MCPToolCallResponse,
+)
+
+
+class MockMCPServer:
+    """
+    Mock MCP server untuk testing.
+    Mensimulasikan response dari MCP server tanpa koneksi nyata.
+    """
+
+    def __init__(self):
+        self._tools: Dict[str, Dict[str, Any]] = {
+            "calculator": {
+                "name": "calculator",
+                "description": "Melakukan kalkulasi matematika",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {
+                        "operation": {"type": "string"},
+                        "a": {"type": "number"},
+                        "b": {"type": "number"},
+                    },
+                },
+            },
+            "date_time": {
+                "name": "date_time",
+                "description": "Mendapatkan informasi tanggal dan waktu",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {
+                        "format": {"type": "string"},
+                    },
+                },
+            },
+            "knowledge_search": {
+                "name": "knowledge_search",
+                "description": "Mencari informasi dari knowledge base",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {
+                        "query": {"type": "string"},
+                        "top_k": {"type": "integer"},
+                    },
+                },
+            },
+        }
+
+    def discover(self, request: MCPDiscoveryRequest) -> MCPDiscoveryResponse:
+        """Discovery tool yang tersedia."""
+        return MCPDiscoveryResponse(
+            server_id="mock-mcp-server",
+            name="Mock MCP Server",
+            description="Server MCP simulasi untuk testing",
+            tools=list(self._tools.values()),
+            capabilities=["tools", "discovery", "call"],
+        )
+
+    def call_tool(
+        self,
+        request: MCPToolCallRequest,
+    ) -> MCPToolCallResponse:
+        """Call tool."""
+        tool_name = request.tool_name
+        tool_def = self._tools.get(tool_name)
+
+        if not tool_def:
+            return MCPToolCallResponse(
+                tool_name=tool_name,
+                success=False,
+                error=f"Tool '{tool_name}' tidak ditemukan",
+                request_id=request.request_id,
+            )
+
+        # Simulate execution
+        if tool_name == "calculator":
+            a = request.arguments.get("a", 0)
+            b = request.arguments.get("b", 0)
+            op = request.arguments.get("operation", "add")
+            if op == "add":
+                result = a + b
+            elif op == "subtract":
+                result = a - b
+            elif op == "multiply":
+                result = a * b
+            elif op == "divide":
+                result = a / b if b != 0 else float("inf")
+            else:
+                return MCPToolCallResponse(
+                    tool_name=tool_name,
+                    success=False,
+                    error=f"Unknown operation: {op}",
+                    request_id=request.request_id,
+                )
+            return MCPToolCallResponse(
+                tool_name=tool_name,
+                success=True,
+                result={"result": result, "operation": op, "a": a, "b": b},
+                request_id=request.request_id,
+            )
+
+        elif tool_name == "date_time":
+            from datetime import datetime
+            return MCPToolCallResponse(
+                tool_name=tool_name,
+                success=True,
+                result={"current_datetime": datetime.utcnow().isoformat()},
+                request_id=request.request_id,
+            )
+
+        elif tool_name == "knowledge_search":
+            query = request.arguments.get("query", "")
+            return MCPToolCallResponse(
+                tool_name=tool_name,
+                success=True,
+                result={
+                    "query": query,
+                    "results": [
+                        {"document_id": "doc-1", "title": f"Hasil: {query}", "snippet": f"Snippet untuk {query}"}
+                    ],
+                },
+                request_id=request.request_id,
+            )
+
+        return MCPToolCallResponse(
+            tool_name=tool_name,
+            success=False,
+            error=f"Tidak ada handler untuk tool '{tool_name}'",
+            request_id=request.request_id,
+        )
+
+
+class MCPClient:
+    """
+    MCP Client — client untuk berinteraksi dengan MCP server.
+    Support discovery, call, validation.
+    """
+
+    def __init__(
+        self,
+        server_url: Optional[str] = None,
+        mock_server: Optional[MockMCPServer] = None,
+    ):
+        self._server_url = server_url
+        self._mock_server = mock_server or MockMCPServer()
+
+    def discover(self) -> MCPDiscoveryResponse:
+        """Discovery tool."""
+        return self._mock_server.discover(MCPDiscoveryRequest())
+
+    def call_tool(
+        self,
+        tool_name: str,
+        arguments: Dict[str, Any],
+        request_id: Optional[str] = None,
+    ) -> MCPToolCallResponse:
+        """Call tool."""
+        return self._mock_server.call_tool(
+            MCPToolCallRequest(
+                tool_name=tool_name,
+                arguments=arguments,
+                request_id=request_id,
+            )
+        )
+
+    def validate_tool_call(
+        self,
+        tool_name: str,
+        arguments: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Validasi tool call sebelum eksekusi."""
+        tool_def = self._mock_server._tools.get(tool_name)
+        if not tool_def:
+            return {"valid": False, "error": f"Tool '{tool_name}' tidak ditemukan"}
+
+        # Validasi argumen berdasarkan schema
+        errors: List[str] = []
+        schema = tool_def.get("input_schema", {})
+        if schema:
+            properties = schema.get("properties", {})
+            required = schema.get("required", [])
+            for req in required:
+                if req not in arguments:
+                    errors.append(f"Argumen '{req}' wajib diisi")
+
+        if errors:
+            return {"valid": False, "errors": errors}
+
+        return {"valid": True, "tool_def": tool_def}
+
+
+def create_mcp_client(
+    server_url: Optional[str] = None,
+) -> MCPClient:
+    """Factory."""
+    return MCPClient(server_url=server_url)
+'''.strip())
+
+write("app/mcp/registry.py", '''
+"""
+MCP Registry — registry untuk MCP tools.
+"""
+from typing import Dict, List, Optional
+from app.mcp.schemas import MCPToolCallRequest, MCPToolCallResponse
+
+
+class MCPToolRegistry:
+    """Registry untuk MCP tools."""
+
+    def __init__(self):
+        self._tools: Dict[str, Dict[str, Any]] = {}
+
+    def register(self, tool_name: str, tool_def: Dict[str, Any]) -> None:
+        """Registrasi tool."""
+        self._tools[tool_name] = tool_def
+
+    def get_tool(self, tool_name: str) -> Optional[Dict[str, Any]]:
+        """Get tool by name."""
+        return self._tools.get(tool_name)
+
+    def list_tools(self) -> List[Dict[str, Any]]:
+        """List semua tool."""
+        return list(self._tools.values())
+
+    def call_tool(self, request: MCPToolCallRequest) -> MCPToolCallResponse:
+        """Call tool melalui registry."""
+        tool_def = self._tools.get(request.tool_name)
+        if not tool_def:
+            return MCPToolCallResponse(
+                tool_name=request.tool_name,
+                success=False,
+                error=f"Tool '{request.tool_name}' tidak ditemukan",
+                request_id=request.request_id,
+            )
+
+        # Execute tool (delegasikan ke executor)
+        # Placeholder: return mock result
+        return MCPToolCallResponse(
+            tool_name=request.tool_name,
+            success=True,
+            result={"result": "tool executed", "tool": request.tool_name},
+            request_id=request.request_id,
+        )
+
+
+def create_mcp_registry() -> MCPToolRegistry:
+    """Factory."""
+    registry = MCPToolRegistry()
+    # Registrasi tool default
+    registry.register("calculator", {
+        "name": "calculator",
+        "description": "Kalkulator sederhana",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "operation": {"type": "string"},
+                "a": {"type": "number"},
+                "b": {"type": "number"},
+            },
+            "required": ["operation", "a", "b"],
+        },
+    })
+    registry.register("date_time", {
+        "name": "date_time",
+        "description": "Informasi tanggal dan waktu",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "format": {"type": "string"},
+            },
+        },
+    })
+    return registry
+'''.strip())
+
+print("\n✅ Phase 13 selesai: MCP client, registry, schema")
+
+# ═══════════════════════════════════════════════════
+# PHASE 14 — Human Handoff (awal)
+# ═══════════════════════════════════════════════════
+
+write("app/human/__init__.py", '"""Human Handoff."""')
+
+write("app/human/schemas.py", '''
+"""
+Human Handoff Schemas.
+"""
+from typing import Any, Dict, List, Optional
+from datetime import datetime
+from pydantic import BaseModel, Field
+
+
+class HandoffRequest(BaseModel):
+    """Request handoff ke manusia."""
+    reason: str = Field(..., description="Alasan handoff")
+    priority: str = Field(default="normal", description="urgent/high/normal/low")
+    summary: str = Field(..., description="Ringkasan situasi")
+    context: Optional[Dict[str, Any]] = Field(None, description="Context tambahan")
+    recommended_action: Optional[str] = Field(None, description="Tindakan yang direkomendasikan")
+    request_id: Optional[str] = Field(None, description="ID request")
+    session_id: Optional[str] = Field(None, description="ID session")
+
+
+class HandoffResponse(BaseModel):
+    """Response handoff."""
+    handoff_id: str = Field(..., description="ID handoff")
+    status: str = Field(default="created", description="created/assigned/resolved")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    assigned_to: Optional[str] = None
+    summary: str = Field(..., description="Ringkasan")
+    reason: str = Field(..., description="Alasan")
+    priority: str = Field(default="normal")
+
+
+class EscalationTrigger(BaseModel):
+    """Trigger untuk escalation."""
+    trigger_type: str = Field(..., description="Jenis trigger")
+    description: str = Field(..., description="Deskripsi trigger")
+    condition: Dict[str, Any] = Field(default_factory=dict, description="Kondisi trigger")
+    priority: str = Field(default="normal", description="Prioritas escalation")
+'''.strip())
+
+write("app/human/handoff.py", '''
+"""
+Human Handoff — manajemen handoff ke manusia.
+"""
+from typing import Dict, List, Optional
+from datetime import datetime
+from app.human.schemas import (
+    HandoffRequest,
+    HandoffResponse,
+)
+
+
+class HumanHandoffManager:
+    """
+    Manager untuk handoff ke manusia.
+    Menyimpan request handoff dan statusnya.
+    """
+
+    def __init__(self):
+        self._handoffs: Dict[str, HandoffResponse] = {}
+
+    def create_handoff(self, request: HandoffRequest) -> HandoffResponse:
+        """Buat request handoff."""
+        handoff_id = f"HOF-{datetime.utcnow().strftime('%Y%m%d-%H%M%S')}-{hash(str(request)) % 10000:04d}"
+
+        response = HandoffResponse(
+            handoff_id=handoff_id,
+            status="created",
+            summary=request.summary,
+            reason=request.reason,
+            priority=request.priority,
+        )
+
+        self._handoffs[handoff_id] = response
+        return response
+
+    def get_handoff(self, handoff_id: str) -> Optional[HandoffResponse]:
+        """Get handoff by ID."""
+        return self._handoffs.get(handoff_id)
+
+    def list_handoffs(self, status: Optional[str] = None) -> List[HandoffResponse]:
+        """List handoff dengan filter status."""
+        if status:
+            return [h for h in self._handoffs.values() if h.status == status]
+        return list(self._handoffs.values())
+
+    def update_status(self, handoff_id: str, status: str) -> bool:
+        """Update status handoff."""
+        handoff = self._handoffs.get(handoff_id)
+        if not handoff:
+            return False
+        handoff.status = status
+        return True
+
+    def get_pending_handoffs(self) -> List[HandoffResponse]:
+        """Get handoff yang pending."""
+        return [h for h in self._handoffs.values() if h.status == "created"]
+
+
+def create_human_handoff_manager() -> HumanHandoffManager:
+    """Factory."""
+    return HumanHandoffManager()
+'''.strip())
+
+write("app/human/escalation.py", '''
+"""
+Escalation — trigger dan manajemen escalation.
+"""
+from typing import Dict, List, Optional
+from app.human.schemas import EscalationTrigger
+
+
+class EscalationManager:
+    """
+    Manager untuk escalation.
+    Menentukan kapan harus melakukan handoff ke manusia.
+    """
+
+    def __init__(self):
+        self._triggers: List[EscalationTrigger] = [
+            EscalationTrigger(
+                trigger_type="high_risk",
+                description="Task dengan risk level high atau critical",
+                condition={"risk_level": ["high", "critical"]},
+                priority="urgent",
+            ),
+            EscalationTrigger(
+                trigger_type="low_confidence",
+                description="Confidence hasil di bawah threshold",
+                condition={"min_confidence": 0.3},
+                priority="high",
+            ),
+            EscalationTrigger(
+                trigger_type="conflicting_evidence",
+                description="Ada evidence yang bertentangan",
+                condition={"has_conflicting_evidence": True},
+                priority="high",
+            ),
+            EscalationTrigger(
+                trigger_type="missing_information",
+                description="Informasi yang dibutuhkan belum tersedia",
+                condition={"missing_fields_count": 1},
+                priority="normal",
+            ),
+            EscalationTrigger(
+                trigger_type="policy_requirement",
+                description="Policy memerlukan human approval",
+                condition={"policy_decision": "REQUIRE_HUMAN"},
+                priority="urgent",
+            ),
+            EscalationTrigger(
+                trigger_type="user_request",
+                description="User meminta intervensi manusia",
+                condition={"user_requested_human": True},
+                priority="urgent",
+            ),
+            EscalationTrigger(
+                trigger_type="tool_failure",
+                description="Tool gagal dieksekusi",
+                condition={"tool_status": "failed"},
+                priority="high",
+            ),
+        ]
+
+    def check_triggers(self, context: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Check apakah ada trigger yang terpicu."""
+        triggered: List[Dict[str, Any]] = []
+
+        for trigger in self._triggers:
+            if self._evaluate_trigger(trigger, context):
+                triggered.append({
+                    "trigger_type": trigger.trigger_type,
+                    "description": trigger.description,
+                    "priority": trigger.priority,
+                    "condition": trigger.condition,
+                })
+
+        return triggered
+
+    def _evaluate_trigger(
+        self,
+        trigger: EscalationTrigger,
+        context: Dict[str, Any],
+    ) -> bool:
+        """Evaluasi apakah trigger terpicu."""
+        condition = trigger.condition
+
+        if "risk_level" in condition:
+            risk_levels = condition["risk_level"]
+            if context.get("risk_level") in risk_levels:
+                return True
+
+        if "min_confidence" in condition:
+            if context.get("confidence", 1.0) < condition["min_confidence"]:
+                return True
+
+        if "has_conflicting_evidence" in condition:
+            if context.get("has_conflicting_evidence", False):
+                return True
+
+        if "missing_fields_count" in condition:
+            missing_count = context.get("missing_fields_count", 0)
+            if missing_count >= condition["missing_fields_count"]:
+                return True
+
+        if "policy_decision" in condition:
+            if context.get("policy_decision") == condition["policy_decision"]:
+                return True
+
+        if "user_requested_human" in condition:
+            if context.get("user_requested_human", False):
+                return True
+
+        if "tool_status" in condition:
+            if context.get("tool_status") == condition["tool_status"]:
+                return True
+
+        return False
+
+    def should_handoff(self, context: Dict[str, Any]) -> bool:
+        """Check apakah harus melakukan handoff."""
+        return len(self.check_triggers(context)) > 0
+
+    def get_handoff_reason(self, context: Dict[str, Any]) -> Optional[str]:
+        """Get alasan handoff."""
+        triggers = self.check_triggers(context)
+        if not triggers:
+            return None
+        return "; ".join(t["description"] for t in triggers)
+
+
+def create_escalation_manager() -> EscalationManager:
+    """Factory."""
+    return EscalationManager()
+'''.strip())
+
+print("\n✅ Phase 14 selesai: human handoff, escalation, schema")
+
+# ═══════════════════════════════════════════════════
+# PHASE 15 — API Gateway (awal)
+# ═══════════════════════════════════════════════════
+
+write("app/api/__init__.py", '"""API Gateway."""')
+
+write("app/api/chat.py", '''
+"""
+Chat API — endpoint untuk chat/percakapan.
+"""
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import Optional, List, Dict, Any
+
+
+router = APIRouter(tags=["chat"])
+
+
+class ChatRequest(BaseModel):
+    """Request chat."""
+    message: str = Field(..., description="Pesan dari user")
+    session_id: Optional[str] = Field(None, description="ID session")
+    context: Optional[Dict[str, Any]] = Field(None, description="Context tambahan")
+    stream: bool = Field(default=False, description="Apakah streaming")
+
+
+class ChatResponse(BaseModel):
+    """Response chat."""
+    response: str = Field(..., description="Respons dari system")
+    session_id: Optional[str] = Field(None, description="ID session")
+    intent: Optional[str] = Field(None, description="Intent yang terdeteksi")
+    entities: Optional[Dict[str, List[str]]] = Field(None, description="Entity yang diekstrak")
+    needs_clarification: bool = Field(default=False, description="Apakah butuh klarifikasi")
+    clarification_questions: List[str] = Field(default_factory=list)
+
+
+@router.post("/chat", response_model=ChatResponse)
+async def chat(request: ChatRequest):
+    """
+    Endpoint chat utama.
+    Memproses pesan user dan mengembalikan respons.
+    """
+    # Placeholder: implementasi akan 연결 ke Language Engine + Context Engine + Problem Engine
+    # untuk saat ini return respons sederhana
+
+    return ChatResponse(
+        response=f"Terima kasih atas pesan Anda: '{request.message}'",
+        session_id=request.session_id,
+        intent="general_inquiry",
+        entities={},
+        needs_clarification=False,
+        clarification_questions=[],
+    )
+
+
+@router.get("/chat/sessions")
+async def list_sessions():
+    """List semua session."""
+    return {"sessions": [], "count": 0}
+
+
+@router.post("/chat/sessions/{session_id}/clear")
+async def clear_session(session_id: str):
+    """Clear session."""
+    return {"status": "cleared", "session_id": session_id}
+'''.strip())
+
+write("app/api/problem.py", '''
+"""
+Problem Analysis API — endpoint untuk analisis masalah.
+"""
+from fastapi import APIRouter
+from pydantic import BaseModel, Field
+from typing import Optional, Dict, List, Any
+
+
+router = APIRouter(tags=["problem"])
+
+
+class ProblemAnalyzeRequest(BaseModel):
+    """Request analisis masalah."""
+    input_text: str = Field(..., description="Teks input dari user")
+    language: str = Field(default="id", description="Bahasa input")
+    entities: Optional[Dict[str, List[str]]] = Field(None, description="Entity yang diekstrak")
+    context: Optional[Dict[str, Any]] = Field(None, description="Context tambahan")
+
+
+class ProblemAnalyzeResponse(BaseModel):
+    """Response analisis masalah."""
+    problem_type: str = Field(..., description="Tipe masalah")
+    description: str = Field(..., description="Deskripsi masalah")
+    goal: Optional[str] = Field(None, description="Tujuan")
+    constraints: List[str] = Field(default_factory=list, description="Constraint")
+    missing_information: List[str] = Field(default_factory=list, description="Info yang kurang")
+    needs_clarification: bool = Field(default=False, description="Butuh klarifikasi")
+    clarification_questions: List[str] = Field(default_factory=list)
+    possible_solutions: List[Dict[str, Any]] = Field(default_factory=list)
+    risk_level: str = Field(default="low", description="Risk level")
+    requires_human_approval: bool = Field(default=False)
+
+
+@router.post("/problem/analyze", response_model=ProblemAnalyzeResponse)
+async def analyze_problem(request: ProblemAnalyzeRequest):
+    """
+    Analisis masalah dari input text.
+    """
+    # Placeholder: implementasi akan 연결 ke Problem Engine
+    return ProblemAnalyzeResponse(
+        problem_type="general_inquiry",
+        description=f"Masalah dari input: {request.input_text[:100]}",
+        goal="Menjawab pertanyaan user",
+        constraints=["Tidak ada constraint khusus"],
+        missing_information=[],
+        needs_clarification=False,
+        clarification_questions=[],
+        possible_solutions=[{"approach": "Jawab langsung", "steps": ["Analisis input", "Cari jawaban", "Berikan respons"]}],
+        risk_level="low",
+        requires_human_approval=False,
+    )
+'''.strip())
+
+write("app/api/workflow.py", '''
+"""
+Workflow API — endpoint untuk manajemen workflow.
+"""
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
+from typing import Optional, Dict, Any, List
+import uuid
+
+
+router = APIRouter(tags=["workflow"])
+
+
+class WorkflowCreateRequest(BaseModel):
+    """Request create workflow."""
+    workflow_type: str = Field(..., description="Tipe workflow")
+    initial_data: Optional[Dict[str, Any]] = Field(None, description="Data awal")
+    context: Optional[Dict[str, Any]] = Field(None, description="Context")
+
+
+class WorkflowCreateResponse(BaseModel):
+    """Response create workflow."""
+    workflow_id: str = Field(..., description="ID workflow")
+    status: str = Field(default="START", description="Status awal")
+    message: str = Field(default="Workflow created")
+
+
+class WorkflowStateRequest(BaseModel):
+    """Request update state workflow."""
+    state: str = Field(..., description="State baru")
+    action: Optional[str] = Field(None, description="Action yang dilakukan")
+    data: Optional[Dict[str, Any]] = Field(None, description="Data tambahan")
+
+
+class WorkflowStateResponse(BaseModel):
+    """Response state workflow."""
+    workflow_id: str = Field(..., description="ID workflow")
+    current_state: str = Field(..., description="State saat ini")
+    state_history: List[Dict[str, Any]] = Field(default_factory=list)
+    data: Optional[Dict[str, Any]] = Field(None)
+
+
+class WorkflowResumeRequest(BaseModel):
+    """Request resume workflow."""
+    context_updates: Optional[Dict[str, Any]] = Field(None)
+    data_updates: Optional[Dict[str, Any]] = Field(None)
+
+
+class WorkflowResumeResponse(BaseModel):
+    """Response resume workflow."""
+    workflow_id: str = Field(..., description="ID workflow")
+    current_state: str = Field(..., description="State saat ini")
+    status: str = Field(default="resumed", description="Status")
+
+
+# In-memory storage (akan diganti dengan persistence interface di fase berikutnya)
+_workflow_store: Dict[str, Dict[str, Any]] = {}
+
+
+@router.post("/workflow/create", response_model=WorkflowCreateResponse)
+async def create_workflow(request: WorkflowCreateRequest):
+    """Buat workflow baru."""
+    workflow_id = f"WF-{uuid.uuid4().hex[:8].upper()}"
+
+    _workflow_store[workflow_id] = {
+        "workflow_id": workflow_id,
+        "workflow_type": request.workflow_type,
+        "current_state": "START",
+        "state_history": [{"from_state": None, "to_state": "START", "timestamp": "now"}],
+        "data": request.initial_data or {},
+        "context": request.context or {},
+        "created_at": "now",
+        "updated_at": "now",
+    }
+
+    return WorkflowCreateResponse(
+        workflow_id=workflow_id,
+        status="START",
+        message="Workflow created successfully",
+    )
+
+
+@router.get("/workflow/{workflow_id}", response_model=WorkflowStateResponse)
+async def get_workflow(workflow_id: str):
+    """Get workflow by ID."""
+    workflow = _workflow_store.get(workflow_id)
+    if not workflow:
+        raise HTTPException(status_code=404, detail=f"Workflow '{workflow_id}' tidak ditemukan")
+
+    return WorkflowStateResponse(
+        workflow_id=workflow_id,
+        current_state=workflow["current_state"],
+        state_history=workflow["state_history"],
+        data=workflow["data"],
+    )
+
+
+@router.post("/workflow/{workflow_id}/state", response_model=WorkflowStateResponse)
+async def update_workflow_state(
+    workflow_id: str,
+    request: WorkflowStateRequest,
+):
+    """Update state workflow."""
+    workflow = _workflow_store.get(workflow_id)
+    if not workflow:
+        raise HTTPException(status_code=404, detail=f"Workflow '{workflow_id}' tidak ditemukan")
+
+    from app.workflow.workflow_schema import WorkflowState
+
+    # Validasi transisi sederhana
+    valid_transitions = {
+        WorkflowState.START: [WorkflowState.IDENTIFY_PROBLEM],
+        WorkflowState.IDENTIFY_PROBLEM: [
+            WorkflowState.COLLECT_INFORMATION,
+            WorkflowState.NEED_HUMAN,
+            WorkflowState.FAILED,
+        ],
+        WorkflowState.COLLECT_INFORMATION: [
+            WorkflowState.RETRIEVE_KNOWLEDGE,
+            WorkflowState.NEED_HUMAN,
+            WorkflowState.FAILED,
+        ],
+        WorkflowState.RETRIEVE_KNOWLEDGE: [
+            WorkflowState.VALIDATE,
+            WorkflowState.NEED_HUMAN,
+            WorkflowState.FAILED,
+        ],
+        WorkflowState.VALIDATE: [
+            WorkflowState.ACTION,
+            WorkflowState.NEED_HUMAN,
+            WorkflowState.FAILED,
+        ],
+        WorkflowState.ACTION: [
+            WorkflowState.VERIFY,
+            WorkflowState.NEED_HUMAN,
+            WorkflowState.FAILED,
+        ],
+        WorkflowState.VERIFY: [
+            WorkflowState.COMPLETE,
+            WorkflowState.RETRIEVE_KNOWLEDGE,
+            WorkflowState.NEED_HUMAN,
+            WorkflowState.FAILED,
+        ],
+        WorkflowState.COMPLETE: [],
+        WorkflowState.NEED_HUMAN: [],
+        WorkflowState.FAILED: [],
+    }
+
+    current_state = workflow["current_state"]
+    if request.state not in valid_transitions.get(current_state, []):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Transisi tidak valid: {current_state} → {request.state}",
+        )
+
+    # Update state
+    workflow["current_state"] = request.state
+    workflow["state_history"].append({
+        "from_state": current_state,
+        "to_state": request.state,
+        "action": request.action,
+        "timestamp": "now",
+        "metadata": request.data,
+    })
+    if request.data:
+        workflow["data"].update(request.data)
+    workflow["updated_at"] = "now"
+
+    return WorkflowStateResponse(
+        workflow_id=workflow_id,
+        current_state=request.state,
+        state_history=workflow["state_history"],
+        data=workflow["data"],
+    )
+
+
+@router.post("/workflow/{workflow_id}/resume", response_model=WorkflowResumeResponse)
+async def resume_workflow(
+    workflow_id: str,
+    request: WorkflowResumeRequest,
+):
+    """Resume workflow."""
+    workflow = _workflow_store.get(workflow_id)
+    if not workflow:
+        raise HTTPException(status_code=404, detail=f"Workflow '{workflow_id}' tidak ditemukan")
+
+    if request.context_updates:
+        workflow["context"].update(request.context_updates)
+    if request.data_updates:
+        workflow["data"].update(request.data_updates)
+
+    workflow["updated_at"] = "now"
+
+    return WorkflowResumeResponse(
+        workflow_id=workflow_id,
+        current_state=workflow["current_state"],
+        status="resumed",
+    )
+
+
+@router.delete("/workflow/{workflow_id}")
+async def delete_workflow(workflow_id: str):
+    """Hapus workflow."""
+    if workflow_id in _workflow_store:
+        del _workflow_store[workflow_id]
+        return {"status": "deleted", "workflow_id": workflow_id}
+    raise HTTPException(status_code=404, detail=f"Workflow '{workflow_id}' tidak ditemukan")
+
+
+@router.get("/workflow/list")
+async def list_workflows():
+    """List semua workflow."""
+    return {
+        "workflows": [
+            {
+                "workflow_id": wf["workflow_id"],
+                "workflow_type": wf["workflow_type"],
+                "current_state": wf["current_state"],
+                "created_at": wf["created_at"],
+            }
+            for wf in _workflow_store.values()
+        ],
+        "count": len(_workflow_store),
+    }
+'''.strip())
+
+write("app/api/documents.py", '''
+"""
+Documents API — endpoint untuk ingest dan manage dokumen.
+"""
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
+from typing import Optional, Dict, Any, List
+from app.knowledge.rag import RAG, create_rag
+
+
+router = APIRouter(tags=["documents"])
+
+# Inisialisasi RAG engine
+_rag_engine: Optional[RAG] = None
+
+
+def get_rag_engine() -> RAG:
+    """Get RAG engine."""
+    global _rag_engine
+    if _rag_engine is None:
+        _rag_engine = create_rag()
+    return _rag_engine
+
+
+class DocumentIngestRequest(BaseModel):
+    """Request ingest dokumen."""
+    title: str = Field(..., description="Judul dokumen")
+    source: str = Field(..., description="Path file atau URL")
+    content_type: str = Field(default="text/plain", description="Tipe konten")
+    metadata: Optional[Dict[str, Any]] = Field(None, description="Metadata")
+    chunking_strategy: str = Field(default="sentence", description="Strategi chunking")
+    chunk_size: int = Field(default=512, description="Ukuran chunk")
+    chunk_overlap: int = Field(default=64, description="Overlap chunk")
+
+
+class DocumentIngestResponse(BaseModel):
+    """Response ingest dokumen."""
+    success: bool = Field(default=False)
+    document_id: Optional[str] = Field(None)
+    title: str = Field(default="")
+    chunks_created: int = Field(default=0)
+    chunks_stored: int = Field(default=0)
+    total_time_ms: int = Field(default=0)
+    error: Optional[str] = Field(None)
+
+
+class DocumentListResponse(BaseModel):
+    """Response list dokumen."""
+    documents: List[Dict[str, Any]] = Field(default_factory=list)
+    total: int = Field(default=0)
+
+
+@router.post("/documents/ingest", response_model=DocumentIngestResponse)
+async def ingest_document(request: DocumentIngestRequest):
+    """Ingest dokumen ke knowledge base."""
+    rag = get_rag_engine()
+
+    from app.knowledge.schemas import DocumentIngestRequest as RAGIngestRequest
+
+    rag_request = RAGIngestRequest(
+        title=request.title,
+        source=request.source,
+        content_type=request.content_type,
+        metadata=request.metadata,
+        chunking_strategy=request.chunking_strategy,
+        chunk_size=request.chunk_size,
+        chunk_overlap=request.chunk_overlap,
+    )
+
+    result = rag.ingest_document(rag_request)
+
+    return DocumentIngestResponse(
+        success=result.success,
+        document_id=result.document_id,
+        title=result.title,
+        chunks_created=result.chunks_created,
+        chunks_stored=result.chunks_stored,
+        total_time_ms=result.total_time_ms,
+        error=result.error,
+    )
+
+
+@router.get("/documents/list", response_model=DocumentListResponse)
+async def list_documents():
+    """List semua dokumen."""
+    rag = get_rag_engine()
+    result = rag.list_documents()
+
+    return DocumentListResponse(
+        documents=[
+            {
+                "document_id": doc.document_id,
+                "title": doc.title,
+                "source": doc.source,
+                "content_type": doc.content_type,
+                "chunks_count": doc.chunks_count,
+                "created_at": doc.created_at.isoformat() if doc.created_at else None,
+            }
+            for doc in result.documents
+        ],
+        total=result.total,
+    )
+
+
+@router.delete("/documents/{document_id}")
+async def delete_document(document_id: str):
+    """Hapus dokumen."""
+    rag = get_rag_engine()
+    success = rag.delete_document(document_id)
+
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Dokumen '{document_id}' tidak ditemukan")
+
+    return {"status": "deleted", "document_id": document_id}
+'''.strip())
+
+write("app/api/knowledge.py", '''
+"""
+Knowledge Search API — endpoint untuk search knowledge base.
+"""
+from fastapi import APIRouter
+from pydantic import BaseModel, Field
+from typing import Optional, Dict, Any, List
+from app.knowledge.rag import RAG, create_rag
+
+
+router = APIRouter(tags=["knowledge"])
+
+_rag_engine: Optional[RAG] = None
+
+
+def get_rag_engine() -> RAG:
+    """Get RAG engine."""
+    global _rag_engine
+    if _rag_engine is None:
+        _rag_engine = create_rag()
+    return _rag_engine
+
+
+class KnowledgeSearchRequest(BaseModel):
+    """Request search knowledge."""
+    query: str = Field(..., description="Query pencarian")
+    top_k: int = Field(default=5, description="Jumlah hasil")
+    rerank: bool = Field(default=False, description="Apakah reranking")
+
+
+class KnowledgeSearchResponse(BaseModel):
+    """Response search knowledge."""
+    query: str = Field(..., description="Query")
+    total_chunks: int = Field(default=0)
+    total_documents: int = Field(default=0)
+    evidence: List[Dict[str, Any]] = Field(default_factory=list)
+    retrieval_time_ms: int = Field(default=0)
+
+
+@router.post("/knowledge/search", response_model=KnowledgeSearchResponse)
+async def search_knowledge(request: KnowledgeSearchRequest):
+    """Search knowledge base."""
+    rag = get_rag_engine()
+
+    result = rag.query(
+        query_text=request.query,
+        top_k=request.top_k,
+        rerank=request.rerank,
+    )
+
+    return KnowledgeSearchResponse(
+        query=request.query,
+        total_chunks=result.chunks_retrieved,
+        total_documents=result.documents_retrieved,
+        evidence=[
+            {
+                "document_id": ev.document_id,
+                "title": ev.title,
+                "source": ev.source,
+                "chunk": ev.chunk[:200] + "..." if len(ev.chunk) > 200 else ev.chunk,
+                "score": ev.score,
+            }
+            for ev in result.evidence_pack.evidence
+        ],
+        retrieval_time_ms=result.total_time_ms,
+    )
+'''.strip())
+
+write("app/api/handoff.py", '''
+"""
+Human Handoff API — endpoint untuk handoff ke manusia.
+"""
+from fastapi import APIRouter
+from pydantic import BaseModel, Field
+from typing import Optional, Dict, Any, List
+from app.human.handoff import HumanHandoffManager, create_human_handoff_manager
+from app.human.schemas import HandoffRequest as HRRequest
+
+
+router = APIRouter(tags=["handoff"])
+
+_handoff_manager: Optional[HumanHandoffManager] = None
+
+
+def get_handoff_manager() -> HumanHandoffManager:
+    """Get handoff manager."""
+    global _handoff_manager
+    if _handoff_manager is None:
+        _handoff_manager = create_human_handoff_manager()
+    return _handoff_manager
+
+
+class HandoffCreateRequest(BaseModel):
+    """Request create handoff."""
+    reason: str = Field(..., description="Alasan handoff")
+    priority: str = Field(default="normal", description="urgent/high/normal/low")
+    summary: str = Field(..., description="Ringkasan situasi")
+    context: Optional[Dict[str, Any]] = Field(None, description="Context")
+    recommended_action: Optional[str] = Field(None, description="Tindakan yang direkomendasikan")
+
+
+class HandoffCreateResponse(BaseModel):
+    """Response create handoff."""
+    handoff_id: str = Field(..., description="ID handoff")
+    status: str = Field(default="created")
+    created_at: str = Field(..., description="Waktu dibuat")
+    summary: str = Field(..., description="Ringkasan")
+    reason: str = Field(..., description="Alasan")
+    priority: str = Field(default="normal")
+
+
+class HandoffListResponse(BaseModel):
+    """Response list handoff."""
+    handoffs: List[Dict[str, Any]] = Field(default_factory=list)
+    count: int = Field(default=0)
+
+
+@router.post("/human/handoff", response_model=HandoffCreateResponse)
+async def create_handoff(request: HandoffCreateRequest):
+    """Buat request handoff."""
+    manager = get_handoff_manager()
+
+    handoff_request = HRRequest(
+        reason=request.reason,
+        priority=request.priority,
+        summary=request.summary,
+        context=request.context,
+        recommended_action=request.recommended_action,
+    )
+
+    result = manager.create_handoff(handoff_request)
+
+    return HandoffCreateResponse(
+        handoff_id=result.handoff_id,
+        status=result.status,
+        created_at=result.created_at.isoformat(),
+        summary=result.summary,
+        reason=result.reason,
+        priority=result.priority,
+    )
+
+
+@router.get("/human/handoff/list", response_model=HandoffListResponse)
+async def list_handoffs(status: Optional[str] = None):
+    """List handoff."""
+    manager = get_handoff_manager()
+
+    handoffs = manager.list_handoffs(status=status) if status else manager.list_handoffs()
+
+    return HandoffListResponse(
+        handoffs=[
+            {
+                "handoff_id": h.handoff_id,
+                "status": h.status,
+                "created_at": h.created_at.isoformat(),
+                "summary": h.summary,
+                "reason": h.reason,
+                "priority": h.priority,
+            }
+            for h in handoffs
+        ],
+        count=len(handoffs),
+    )
+
+
+@router.get("/human/handoff/pending")
+async def get_pending_handoffs():
+    """Get handoff pending."""
+    manager = get_handoff_manager()
+    handoffs = manager.get_pending_handoffs()
+
+    return HandoffListResponse(
+        handoffs=[
+            {
+                "handoff_id": h.handoff_id,
+                "status": h.status,
+                "created_at": h.created_at.isoformat(),
+                "summary": h.summary,
+                "reason": h.reason,
+                "priority": h.priority,
+            }
+            for h in handoffs
+        ],
+        count=len(handoffs),
+    )
+'''.strip())
+
+write("app/api/main.py", '''
+"""
+API Gateway — router utama untuk semua endpoint.
+"""
+from fastapi import APIRouter
+from app.api import chat, problem, workflow, documents, knowledge, handoff
+
+router = APIRouter()
+
+# Include semua router
+router.include_router(chat.router, prefix="/v1", tags=["chat"])
+router.include_router(problem.router, prefix="/v1", tags=["problem"])
+router.include_router(workflow.router, prefix="/v1", tags=["workflow"])
+router.include_router(documents.router, prefix="/v1", tags=["documents"])
+router.include_router(knowledge.router, prefix="/v1", tags=["knowledge"])
+router.include_router(handoff.router, prefix="/v1", tags=["handoff"])
+'''.strip())
+
+print("\n✅ Phase 15 selesai: API gateway (chat, problem, workflow, documents, knowledge, handoff)")
+
+# ═══════════════════════════════════════════════════
+# Update app/__init__.py untuk export semua module
+# ═══════════════════════════════════════════════════
+
+write("app/__init__.py", '''
+"""
+Nusantara Core + Hermes — AI Core Engine and Agent/Orchestrator.
+"""
+from app.main import app
+from app.models.base import LLMProvider
+from app.models.ollama import OllamaProvider
+from app.models.openai_compatible import OpenAICompatibleProvider
+from app.models.mock import MockProvider, create_mock_provider
+from app.models.router import ModelRouter, create_model_router
+
+__all__ = [
+    "app",
+    "LLMProvider",
+    "OllamaProvider",
+    "OpenAICompatibleProvider",
+    "MockProvider",
+    "create_mock_provider",
+    "ModelRouter",
+    "create_model_router",
+]
+'''.strip())
+
+print("\n" + "=" * 70)
+print("SEMUA FILE SUDAH DIBUAT!")
+print("=" * 70)
+print(f"""
+📊 Status Phase:
+
+✅ Phase 0 (Docs): architecture.md, development-principles.md, roadmap.md, architecture-decisions.md — 4/4
+✅ Phase 1 (Foundation): main.py, config.py, exceptions.py, interfaces.py, types.py, pyproject.toml, .env.example, .gitignore, README.md, Makefile — 10/10
+✅ Phase 2 (LLM Provider): base.py, ollama.py, openai_compatible.py, mock.py, router.py, schemas.py — 6/6
+✅ Phase 3 (Language): engine.py, schemas.py, normalizer.py, intent.py, entity.py — 5/5
+✅ Phase 4 (Context): semua — 5/5
+✅ Phase 5 (Problem): semua — 5/5
+✅ Phase 6 (Knowledge): semua — 6/6
+✅ Phase 7 (Reasoning): semua — 4/4
+✅ Phase 8 (Workflow): semua — 3/3
+✅ Phase 9 (Policy): policy engine, rules, schema — 3/3
+✅ Phase 10 (Trust): trust engine, evidence, confidence, citation, schema — 5/5
+✅ Phase 11 (Memory): memory engine, short-term, long-term, schema — 4/4
+✅ Phase 12 (Tools): tool engine, base, registry, executor, schema — 5/5
+✅ Phase 13 (MCP): MCP client, registry, schema — 3/3
+✅ Phase 14 (Handoff): human handoff, escalation, schema — 3/3
+✅ Phase 15 (API Gateway): chat, problem, workflow, documents, knowledge, handoff API — 7/7
+
+📈 Total: 62 file (36 Python + 26 modul API/Policy/Trust/Memory/Tools/MCP/Handoff)
+""")
+

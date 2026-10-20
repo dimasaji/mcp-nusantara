@@ -1,22 +1,61 @@
 """FastAPI application - Nusantara Core + Hermes."""
 from contextlib import asynccontextmanager
+import time
+import os
+import json
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 
-from app.api.routes import router as api_router
-from app.api.v2_routes import router as v2_router
-from app.observability import configure_logging, request_context
+# Explicit local evidence-only boot; default runtime composition is preserved.
+_READ_ONLY_EVIDENCE = os.environ.get('NUSANTARA_CONTROL_PLANE_READ_ONLY') == '1'
+_configuration = None
+_ATTESTATION = False
+if not _READ_ONLY_EVIDENCE:
+    from app.core.config import settings
+
+    # Compose through the existing owner before either API constructs dependencies.
+    _configuration = settings.effective_configuration
+    _ATTESTATION = _configuration.runtime.profile == 'ATTESTATION'
+    if not _ATTESTATION:
+        from app.api.routes import router as api_router
+        from app.api.v2_routes import router as v2_router
+from app.api.control_plane import router as control_plane_router
+from app.observability import configure_logging, request_context, metrics
 from app.exceptions import register_exception_handlers
+from app.core.runtime_identity import BUILD_ID
+from app.core.runtime_attestation import install_runtime_attestation
 
 UI_FILE = Path(__file__).parent / "ui" / "index.html"
+CONTROL_PLANE_BUNDLE = Path(__file__).resolve().parents[1] / 'control-plane' / 'dist'
+_LOCAL_SERVICES_FILE = Path(__file__).resolve().parents[1] / 'config' / 'local-services.json'
+_LOCAL_SERVICES = json.loads(_LOCAL_SERVICES_FILE.read_text(encoding='utf-8')) if _LOCAL_SERVICES_FILE.exists() else {'frontendPort': 5180}
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    yield
+    watcher = None
+    if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
+        import asyncio
+        import logging
+        from app.api.routes import _knowledge
+        logger=logging.getLogger(__name__)
+        async def monitor():
+            while True:
+                try:
+                    await asyncio.to_thread(_knowledge.scan_knowledge_watch)
+                except Exception:
+                    # Pipeline failures are retained per source; service stays available.
+                    logger.exception('Knowledge folder monitor failed')
+                await asyncio.sleep(5)
+        watcher=asyncio.create_task(monitor())
+    try:
+        yield
+    finally:
+        if watcher:
+            watcher.cancel()
 
 
 app = FastAPI(
@@ -25,34 +64,76 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+app.state.effective_configuration = _configuration
+app.state.configuration_owner = settings if not _READ_ONLY_EVIDENCE and not _ATTESTATION else None
+app.state.runtime_profile = 'ATTESTATION' if _ATTESTATION else 'NORMAL'
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000", "http://127.0.0.1:8000"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8765", "http://127.0.0.1:8765",
+                   f"http://localhost:{_LOCAL_SERVICES['frontendPort']}", f"http://127.0.0.1:{_LOCAL_SERVICES['frontendPort']}"],
     allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
 )
 register_exception_handlers(app)
-app.include_router(api_router)
-app.include_router(v2_router)
-configure_logging()
+if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
+    app.include_router(api_router)
+    app.include_router(v2_router)
+app.include_router(control_plane_router)
+if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
+    configure_logging(_configuration.runtime.log_level)
 
 
 @app.middleware("http")
 async def request_id_middleware(request, call_next):
-    """Correlation ID: pakai X-Request-ID dari klien (dibatasi) atau buat baru."""
-    incoming = request.headers.get("x-request-id", "")[:64]
+    """Correlation ID + V1 HTTP observability."""
+    incoming = '' if getattr(request.app.state, 'runtime_profile', 'NORMAL') == 'ATTESTATION' else request.headers.get("x-request-id", "")[:64]
     rid = incoming if incoming.replace("-", "").replace("_", "").isalnum() else None
+
+    started = time.perf_counter()
+    metrics.incr("requests_total")
+
     with request_context(request_id=rid or None) as ids:
-        response = await call_next(request)
-        response.headers["X-Request-ID"] = ids["request_id"]
-        return response
+        try:
+            response = await call_next(request)
+            response.headers["X-Request-ID"] = ids["request_id"]
+            return response
+        finally:
+            elapsed_ms = (time.perf_counter() - started) * 1000.0
+            metrics.observe("http_request", elapsed_ms)
 
 
 @app.get("/health")
 async def health_check():
-    return {"status": "ok", "version": "0.1.0"}
+    if _READ_ONLY_EVIDENCE:
+        return {'status': 'evidence_only', 'runtime': 'NOT_VERIFIED', 'mode': 'READ_ONLY'}
+    return {"status": "ok", "version": "0.1.0", "build_id": BUILD_ID}
 
 
 @app.get("/", include_in_schema=False)
 @app.get("/ui", include_in_schema=False)
-async def dashboard():
-    return FileResponse(UI_FILE)
+@app.get("/assistant", include_in_schema=False)
+async def dashboard(request: Request):
+    if _READ_ONLY_EVIDENCE:
+        from fastapi import HTTPException
+        raise HTTPException(404, 'Legacy runtime UI is unavailable in evidence-only mode')
+    if _ATTESTATION:
+        return FileResponse(UI_FILE)
+    target = request.url.replace(scheme='http', netloc=f"{_LOCAL_SERVICES.get('host', '127.0.0.1')}:{_LOCAL_SERVICES['frontendPort']}")
+    return RedirectResponse(str(target), status_code=307)
+
+
+for ui_path in ('console', 'review-execute', 'overview', 'system', 'evidence', 'test', 'review', 'decision',
+                'engineering-overview', 'roadmap', 'architecture', 'engineering',
+                'governance', 'verification', 'runtime', 'knowledge',
+                'dashboard', 'workspace', 'tasks', 'blockers', 'approvals', 'costs', 'settings', 'technical'):
+    if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
+        app.add_api_route('/' + ui_path, dashboard, methods=['GET'], include_in_schema=False)
+
+
+if _ATTESTATION:
+    from app.api.runtime_verification import install_runtime_verification
+    from app.approval.runtime_authorization import install_authorization_foundation
+    controller = install_runtime_verification(app, _configuration)
+    # No policy provisioning, IPC listener, live grant or deployment authorization.
+    install_authorization_foundation(app, controller)
+
+install_runtime_attestation(app, entrypoint='app.main:app')

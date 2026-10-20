@@ -2,7 +2,7 @@
 import asyncio
 from types import SimpleNamespace
 import pytest
-from app.hermes.agent import _conversation_request
+from app.hermes.agent import _conversation_prompt, _contextual_followup, _conversation_request
 from test_v1_langgraph import fixture
 
 
@@ -22,3 +22,22 @@ def test_identity_with_greeting_reaches_model_conversation(question):
  'Halo, apa fungsi Nusantara?','Halo, siapa kamu? Permohonan saya sudah disetujui?'])
 def test_greeting_cannot_bypass_evidence_required_requests(question):
     assert not _conversation_request(question)
+
+
+def test_contextual_followup_uses_same_session_transcript_without_bypassing_sop_policy():
+    history = [
+        {'role': 'user', 'content': 'Jelaskan fotosintesis.'},
+        {'role': 'assistant', 'content': 'Tumbuhan menggunakan cahaya untuk membuat makanan.'},
+    ]
+    followup = 'Sebutkan satu kebutuhan utama agar proses itu berlangsung.'
+    assert _contextual_followup(followup, history)
+    prompt = _conversation_prompt(history, followup)
+    assert 'Tumbuhan menggunakan cahaya' in prompt
+    assert prompt.endswith(followup)
+    assert not _contextual_followup('Apa syarat permohonan data pribadi?', history)
+    assert not _contextual_followup(followup, [])
+    service_history = history + [
+        {'role': 'assistant', 'content': 'Silakan siapkan Surat Permohonan.',
+         'metadata': {'service_context': {'topic': 'data pribadi'}}},
+    ]
+    assert not _contextual_followup('Bagaimana prosesnya?', service_history)

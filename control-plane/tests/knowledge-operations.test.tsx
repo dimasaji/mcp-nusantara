@@ -55,7 +55,7 @@ describe('general knowledge operations',()=>{
     fireEvent.click(screen.getAllByRole('button',{name:'Proses dan validasi'})[0]);
     const retry=await screen.findByRole('button',{name:'Coba Lagi'});
     expect(retry).toBeEnabled();fireEvent.click(retry);
-    expect(await screen.findByRole('link',{name:'Buka Chat'})).toHaveAttribute('href','/ui');
+    expect(await screen.findByRole('link',{name:'Buka Chat'})).toHaveAttribute('href','/');
     expect(attempts).toBe(2);
   });
   it('shows real pipeline summary, failure reason and source authority boundary',async()=>{

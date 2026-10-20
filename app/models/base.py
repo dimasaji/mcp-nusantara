@@ -20,9 +20,13 @@ class GenerateResponse(TypedDict):
     """Response dari generate."""
     content: str
     model: str
-    tokens_used: int
+    tokens_used: int | None
     latency_ms: int
     execution_identity: NotRequired[Dict[str, Any]]
+    usage: NotRequired[Dict[str, Any]]
+    requested_model: NotRequired[str]
+    reported_model: NotRequired[str | None]
+    provider_status: NotRequired[str]
 
 
 class StructuredGenerateRequest(TypedDict, total=False):

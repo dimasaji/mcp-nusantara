@@ -1,105 +1,28 @@
-$ErrorActionPreference = "Continue"
-
-$ROOT = "C:\Users\dmaza\mcp-starter"
-$VENV = "$ROOT\.venv\Scripts\python.exe"
-$LOGDIR = "$ROOT\data\logs"
-
-New-Item -ItemType Directory -Path $LOGDIR -Force | Out-Null
-
-$CORE_LOG = "$LOGDIR\nusantara-core.log"
-$SUP_LOG  = "$LOGDIR\nusantara-supervisor.log"
-
-function Write-Log($Message) {
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    Add-Content -Path $SUP_LOG -Value "[$timestamp] $Message"
-}
-
-function Test-Port($Port) {
-    $connection = Get-NetTCPConnection `
-        -LocalPort $Port `
-        -State Listen `
-        -ErrorAction SilentlyContinue
-
-    return ($null -ne $connection)
-}
-
-function Start-Ollama {
-
-    if (Test-Port 11434) {
-        Write-Log "Ollama sudah berjalan."
-        return
-    }
-
-    Write-Log "Memulai Ollama..."
-
-    Start-Process `
-        -FilePath "ollama" `
-        -ArgumentList "serve" `
-        -WindowStyle Hidden
-
-    $timeout = 30
-
-    while ($timeout -gt 0) {
-
-        Start-Sleep -Seconds 1
-
-        if (Test-Port 11434) {
-            Write-Log "Ollama berhasil berjalan."
-            return
+﻿param([switch]$Once)
+. "$PSScriptRoot/local-services.ps1"
+Initialize-LocalState
+$mutex = New-Object Threading.Mutex($false, 'Global\NUSANTARA-V1-Supervisor')
+$locked = $false
+try {
+    try { $locked = $mutex.WaitOne(0) } catch [Threading.AbandonedMutexException] { $locked = $true }
+    if (-not $locked) { exit 0 }
+    do {
+        $monitor = Join-Path $script:StateDirectory 'monitor-state'
+        if ((Test-Path $monitor) -and (Get-Content $monitor -Raw).Trim() -eq 'disabled') { break }
+        $desired = Join-Path $script:StateDirectory 'desired-state'
+        if ((Test-Path $desired) -and (Get-Content $desired -Raw).Trim() -eq 'stopped') { break }
+        try {
+            Invoke-WithLifecycleLock {
+                # Recheck inside lock so explicit stop cannot race a monitor tick.
+                if (-not (Test-Path $desired) -or (Get-Content $desired -Raw).Trim() -ne 'stopped') { Invoke-LocalStart }
+            }
+            $status = Get-LocalStatus
+            $status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $script:StateDirectory 'health.json') -Encoding UTF8
+        } catch {
+            # Capture a safe diagnostic, never credentials or response bodies.
+            [pscustomobject]@{at=(Get-Date).ToUniversalTime().ToString('o');status='HOLD';errorType=$_.Exception.GetType().Name} |
+                ConvertTo-Json | Add-Content (Join-Path $script:StateDirectory 'supervisor-errors.jsonl')
         }
-
-        $timeout--
-    }
-
-    Write-Log "ERROR: Ollama gagal start."
-}
-
-function Start-Nusantara {
-
-    if (Test-Port 8000) {
-        Write-Log "Nusantara Core sudah berjalan."
-        return
-    }
-
-    Write-Log "Memulai Nusantara Core..."
-
-    Start-Process `
-        -FilePath $VENV `
-        -ArgumentList "-m uvicorn app.main:app --host 127.0.0.1 --port 8000" `
-        -WorkingDirectory $ROOT `
-        -RedirectStandardOutput $CORE_LOG `
-        -RedirectStandardError $CORE_LOG `
-        -WindowStyle Hidden
-
-    $timeout = 30
-
-    while ($timeout -gt 0) {
-
-        Start-Sleep -Seconds 1
-
-        if (Test-Port 8000) {
-            Write-Log "Nusantara Core berhasil berjalan."
-            return
-        }
-
-        $timeout--
-    }
-
-    Write-Log "ERROR: Nusantara Core gagal start."
-}
-
-Write-Log "=========================================="
-Write-Log "NUSANTARA AI SUPERVISOR START"
-Write-Log "=========================================="
-
-while ($true) {
-
-    Start-Ollama
-    Start-Nusantara
-
-    if (-not (Test-Port 8000)) {
-        Write-Log "Nusantara Core tidak aktif. Akan dicoba kembali."
-    }
-
-    Start-Sleep -Seconds 10
-}
+        if (-not $Once) { Start-Sleep -Seconds $script:LocalConfig.monitorSeconds }
+    } while (-not $Once)
+} finally { if ($locked) { $mutex.ReleaseMutex() }; $mutex.Dispose() }

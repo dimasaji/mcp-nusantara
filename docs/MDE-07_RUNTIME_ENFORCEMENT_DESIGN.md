@@ -1,0 +1,23 @@
+# MDE07 Runtime Enforcement — design only
+
+Decision: KEEP existing router, optional gateway, orchestration hardening, governance/executor and read-only DeveloperCore. EXTEND identity/configuration enforcement only after separate Level C approval; no source changes or default activation performed.
+
+Required chain: configured -> composed -> injected -> consumed -> effective runtime; request -> selection -> execution -> receipt -> verification. A constructor label or source build hash cannot prove this chain. Capture configuration fingerprint/build/process/invocation correlation with provenance for each consumed parameter. Keep runtime host/port, feature flags and capabilities separately verified, not inferred from model success.
+
+Selection must capture immutable registered-provider key, adapter ID, chosen model/endpoint and allowed capability operation. Validate identity at dispatch and completion without silently overwriting original selection. Mutation or foreign response identity must become an explicit drift outcome, not a verified label. Preserve upstream model claims separately; claims still require evidence appropriate to the trust boundary. Record requested_model, selected_model, actual_model (nullable), identity_status and fallback reason for the same invocation. Unknown actual model stays null/NOT_VERIFIED.
+
+Current HTTP adapters return self.model after execution; fixture mutation proves response can differ from sent payload. Current gateway does not compare returned model and text callback loses identity. Design must preserve metadata internally without breaking current text-only callbacks/public schemas unless separately approved. Direct evidence, static DeveloperCore, tool-only and offline fallbacks must indicate model_not_executed and never promote constructor labels to executed identity. Existing correlation ID/stage latency is supporting evidence, not execution identity.
+
+RAG/embedding execution must respect MDE05 effective profile and MDE06 hard compatibility gate. Production coverage PARTIAL and canonical compatibility UNKNOWN remain unresolved; MDE07 audit does not authorize production retrieval, index rebuild, model download or worker activation. Capability/feature declaration does not prove availability/readiness or permission; governance remains authoritative. Timeout/circuit breaker failure must preserve the unverified state rather than imply successful provider failover.
+
+## Concrete Level C proposal — not executed
+
+Action: extend existing selection/dispatch/result boundaries and composition handoff with immutable identity and effective-config receipts. Candidate files: app/models/router.py, app/models/gateway.py, app/models/ollama.py, app/models/openai_compatible.py, app/v2/orchestrator.py, app/api/routes.py, app/api/v2_routes.py, app/core/runtime_identity.py; configuration/RAG handoff must align with separately approved MDE05/MDE06 designs. No mandatory new gateway/default pipeline or public schema change is approved by this document.
+
+Reason: current requested/selected/payload/returned labels can diverge without detection, and deployed /health omits build_id at observed localhost endpoint. This observation does not identify a stale process conclusively: owner-approved process/listener/source inspection is needed before restart or replacement. Proposed behavior must include drift/error and text-callback compatibility semantics.
+
+Risk HIGH: dispatch blocking, public compatibility, callbacks and default composition may change; do not alter sensitive security/governance rules or auto-activate services. Before implementation: review exact field/consumer impact, expected requested-selected-actual semantics, same-invocation validation, default profile policy and backwards compatibility. Required tests: mid-invocation provider/model mutation, foreign response identity, missing metadata, no-generation/offline/tool paths, timeout/degraded states and same-invocation correlation. Fixture success still needs separately authorized deployed verification.
+
+Rollback: snapshot/hash exact authorized source patch before change; restore only approved files and rerun focused contracts. Production state/index is not part of this patch; any service rollout or migration has a separate approval/rollback plan. Current audit has no production rollback to execute.
+
+Acceptance: same-invocation configured/selected/consumed/actual receipt with evidence; default consumer coverage; missing identity explicitly NOT_VERIFIED; effective config/host/port/flags/capability truth proven by corresponding evidence; index compatibility gate satisfied; existing trust/policy/security/public API respected. Source names, caller flags and generic health ok cannot satisfy acceptance.

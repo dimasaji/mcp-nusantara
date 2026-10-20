@@ -6,6 +6,7 @@ import re
 from dataclasses import dataclass, field
 
 from app.devcore.workspace import is_sensitive_name
+from app.devcore.inspection import inspection_preview
 
 _EXT = "py|md|toml|json|ya?ml|txt|ini|cfg|env|html|css|js|ts|tsx|jsx|ps1|sh|bat|sql|csv|lock|example"
 _FILE = re.compile(rf"(?<![\w/\\.:@-])((?:[A-Za-z]:[/\\]|/)?(?:[\w.\-]+[/\\])*[\w.\-]+\.(?:{_EXT}))(?![\w])", re.I)
@@ -35,6 +36,7 @@ class DevPlan:
     actions: list[tuple[str, str]] = field(default_factory=list)   # (mode, target)
     modify_requested: bool = False
     verbatim: bool = False
+    inspection: dict | None = None
 
 
 def extract_file_refs(text: str) -> list[str]:
@@ -56,6 +58,11 @@ def plan(text: str, max_files: int = 3) -> DevPlan:
     read_v, find_v, modify_v = has(_READ), has(_FIND), has(_MODIFY)
     folder_ctx = has(_FOLDER) or _DIR_SLASH.search(norm) is not None
     list_v = has(_LIST) and folder_ctx
+    preview = inspection_preview(orig, explicit_source=bool(refs) or list_v or bool(
+        re.search(r'\b(?:cari|temukan|find|search)\s+file\b', low)))
+    if preview is not None:
+        return DevPlan(True, 'inspection_preview', orig, norm, modify_requested=modify_v,
+                       inspection=preview)
     actions: list[tuple[str, str]] = []
     if refs:
         for r in refs:

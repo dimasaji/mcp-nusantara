@@ -1,4 +1,4 @@
-﻿"""
+"""
 Nusantara AI - Production Hybrid RAG Bridge
 Phase 19.3
 
@@ -396,21 +396,48 @@ class ProductionHybridRAG:
         self,
         evidence: ProductionEvidence,
     ) -> bool:
+        """Fail closed for strict authoritative-evidence filtering."""
+        metadata = evidence.metadata
+        if not isinstance(metadata, dict):
+            return False
 
-        status = (
-            self._safe_text(
-                evidence.source_status
-            )
-            .lower()
+        hydrated_from = self._safe_text(
+            metadata.get("authority_hydrated_from", "")
+        ).lower()
+        if hydrated_from != "documents":
+            return False
+
+        status = self._safe_text(
+            evidence.source_status or metadata.get("source_status", "")
+        ).lower()
+        if status not in {"official", "verified"}:
+            return False
+
+        authority = self._safe_text(
+            evidence.authority or metadata.get("authority", "")
+        ).lower()
+        if authority in {
+            "", "unknown", "none", "null", "false",
+            "test", "untrusted", "unverified"
+        }:
+            return False
+
+        verified = metadata.get(
+            "verified_raw",
+            metadata.get("verified", False),
         )
+        if isinstance(verified, bool):
+            is_verified = verified
+        elif isinstance(verified, int):
+            is_verified = verified == 1
+        elif isinstance(verified, str):
+            is_verified = verified.strip().lower() in {
+                "1", "true", "yes", "verified"
+            }
+        else:
+            is_verified = False
 
-        if not status:
-            return self.allow_unknown_sources
-
-        if status in self.ALLOWED_SOURCE_STATUSES:
-            return True
-
-        return False
+        return is_verified
 
     # --------------------------------------------------------
     # METADATA FILTER
@@ -623,19 +650,31 @@ class ProductionHybridRAG:
     def _retrieve_raw(
         self,
         query: str,
-        top_k: int,
-    ) -> Iterable[Any]:
+        top_k: int, require_authoritative_source: bool = False) -> Iterable[Any]:
 
         retriever = self._get_retriever()
 
         if hasattr(retriever, "search"):
 
-            result = retriever.search(
-                query=query,
-                top_k=top_k,
-            )
+            search_kwargs = {"query": query, "top_k": top_k}
+
+            if require_authoritative_source:
+
+                search_kwargs["require_authoritative_source"] = True
+
+            result = retriever.search(**search_kwargs)
 
         elif hasattr(retriever, "retrieve"):
+
+            if require_authoritative_source:
+
+                raise RuntimeError(
+
+                    "Validasi sumber resmi memerlukan retriever.search() "
+
+                    "yang mendukung require_authoritative_source."
+
+                )
 
             result = retriever.retrieve(
                 query=query,
@@ -717,6 +756,7 @@ class ProductionHybridRAG:
         raw_results = self._retrieve_raw(
             query=query,
             top_k=top_k,
+            require_authoritative_source=require_authoritative_source,
         )
 
         normalized: list[ProductionEvidence] = []

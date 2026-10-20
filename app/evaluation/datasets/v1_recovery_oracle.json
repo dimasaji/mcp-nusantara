@@ -1,0 +1,210 @@
+{
+  "schema_version": 2,
+  "scope": "Frozen local knowledge recovery; fixture scores do not establish production correctness",
+  "acceptance": "Official source cases require human source/version review before release",
+  "cases": [
+    {
+      "id": "ktp-definition-local",
+      "question": "Apa itu KTP-el?",
+      "expected_document": "DOC-FC9058E1-1a08",
+      "expected_answer": "KTP-el adalah dokumen identitas penduduk.",
+      "required_evidence": [
+        "KTP-el adalah dokumen identitas penduduk."
+      ],
+      "domain": "KTP",
+      "risk": "low",
+      "oracle_status": "PROJECT_FIXTURE",
+      "source": "data/knowledge/nusantara_knowledge.db",
+      "intent": "general_information",
+      "negative_documents": [
+        "BENCH-PASPOR-001",
+        "BENCH-MASAK-001"
+      ],
+      "source_authority": "project_test_fixture",
+      "service_region": "LOCAL_EVALUATION_ONLY",
+      "version": "sha256:08b785956d797a677532985fcf17e885af9f1882c0fabfd771f49bccaf25ba59",
+      "effective_date": null,
+      "authoritative_status": "FIXTURE_ONLY_NOT_OFFICIAL",
+      "metadata_review_status": "NOT_APPLICABLE",
+      "effective_date_status": "NOT_APPLICABLE_TO_FIXTURE"
+    },
+    {
+      "id": "paspor-definition-local",
+      "question": "Apa itu paspor?",
+      "expected_document": "BENCH-PASPOR-001",
+      "expected_answer": "Paspor adalah dokumen perjalanan yang digunakan oleh warga negara untuk melakukan perjalanan ke luar negeri.",
+      "required_evidence": [
+        "Paspor adalah dokumen perjalanan"
+      ],
+      "domain": "Paspor",
+      "risk": "low",
+      "oracle_status": "PROJECT_FIXTURE",
+      "source": "data/knowledge/nusantara_knowledge.db",
+      "intent": "general_information",
+      "negative_documents": [
+        "DOC-FC9058E1-1a08",
+        "API-TEST-001",
+        "BENCH-MASAK-001"
+      ],
+      "source_authority": "project_test_fixture",
+      "service_region": "LOCAL_EVALUATION_ONLY",
+      "version": "sha256:90dc5749a0cb91c0e4311772efaa05346eafd2bf54ce669c01637731a71d1a03",
+      "effective_date": null,
+      "authoritative_status": "FIXTURE_ONLY_NOT_OFFICIAL",
+      "metadata_review_status": "NOT_APPLICABLE",
+      "effective_date_status": "NOT_APPLICABLE_TO_FIXTURE"
+    },
+    {
+      "id": "nasi-goreng-local",
+      "question": "Apa bahan nasi goreng?",
+      "expected_document": "BENCH-MASAK-001",
+      "expected_answer": "Bahan yang umum digunakan antara lain nasi, bawang, kecap, telur, dan minyak.",
+      "required_evidence": [
+        "nasi, bawang, kecap, telur, dan minyak"
+      ],
+      "domain": "Nasi Goreng",
+      "risk": "low",
+      "oracle_status": "PROJECT_FIXTURE",
+      "source": "data/knowledge/nusantara_knowledge.db",
+      "intent": "general_information",
+      "negative_documents": [
+        "DOC-FC9058E1-1a08",
+        "API-TEST-001",
+        "BENCH-PASPOR-001"
+      ],
+      "source_authority": "project_test_fixture",
+      "service_region": "LOCAL_EVALUATION_ONLY",
+      "version": "sha256:370ef9135d20cfe16f2146b607306d226e69c9121fc11131b3c6fb7126818620",
+      "effective_date": null,
+      "authoritative_status": "FIXTURE_ONLY_NOT_OFFICIAL",
+      "metadata_review_status": "NOT_APPLICABLE",
+      "effective_date_status": "NOT_APPLICABLE_TO_FIXTURE"
+    },
+    {
+      "id": "tangerang-ktp-pemula-snapshot",
+      "question": "Apa persyaratan perekaman KTP-el pemula menurut Dukcapil Nyaba Kelurahan Desember 2025?",
+      "expected_document": "DOC-8AEBCDBF09964B9B",
+      "expected_answer": "Persyaratan perekaman KTP-el pemula - Fotocopy kartu keluarga - Fotocopy akta kelahiran",
+      "required_evidence": [
+        "Persyaratan perekaman KTP-el pemula - Fotocopy kartu keluarga - Fotocopy akta kelahiran"
+      ],
+      "domain": "Tangerang SOP",
+      "risk": "high",
+      "oracle_status": "REVIEW_REQUIRED",
+      "source": "data/knowledge/official_sources/ktp_el/tng-ktpel-001.md",
+      "source_location": "L418",
+      "intent": "ask_document_requirements",
+      "negative_documents": [
+        "BENCH-PASPOR-001",
+        "BENCH-MASAK-001"
+      ],
+      "runtime_knowledge_status": "MISSING_FROM_V1_DEFAULT_DATABASE",
+      "source_authority": "official_as_declared_in_snapshot",
+      "service_region": "Kota Tangerang",
+      "version": "sha256:8aebcdbf09964b9bdf082d8fd67b7b1ebce78655d1a5cf81cca1ef178bc561df",
+      "effective_date": null,
+      "authoritative_status": "DECLARED_OFFICIAL_PENDING_GOVERNANCE_REVIEW",
+      "metadata_review_status": "REVIEW_REQUIRED",
+      "effective_date_status": "NOT_ESTABLISHED_BY_SNAPSHOT",
+      "published_at": "2025-12-03",
+      "retrieved_at": "2026-10-02T09:55:08.409647+00:00",
+      "source_url": "https://disdukcapil.tangerangkota.go.id/berita/dukcapil-nyaba-kelurahan-desember-2025",
+      "source_declared_hash": "39aa82acb367f1f1fee4b83233cb7f4e9ecf2b208dda98c25850320edd4a6190",
+      "metadata_review_notes": [
+        "Published date is not an effective date; case is scoped to December 2025 snapshot.",
+        "Manifest hash is declared source content hash, distinct from full Markdown snapshot hash; hash derivation not independently established.",
+        "2022/2024 snapshots contain different requirements/context; current validity and conflicts need owner review.",
+        "Absent from V1 default database; no production ingestion/promotion performed."
+      ]
+    },
+    {
+      "id": "tangerang-sop-data-pribadi-snapshot",
+      "question": "Apa nomor SOP Permohonan Data Pribadi pada dokumen Tangerang yang tersedia?",
+      "expected_document": null,
+      "expected_answer": "PIAK-03",
+      "required_evidence": [
+        "Nomor SOP PIAK-03"
+      ],
+      "domain": "Tangerang SOP",
+      "risk": "high",
+      "oracle_status": "REVIEW_REQUIRED",
+      "source": "data/knowledge/sop/extracted/PERMOHONAN_DATA_PRIBADI.md",
+      "intent": "general_information",
+      "negative_documents": [],
+      "runtime_knowledge_status": "MISSING_FROM_V1_DEFAULT_DATABASE",
+      "source_authority": "official_as_declared_in_snapshot",
+      "service_region": "Kota Tangerang",
+      "version": "sha256:a9ef9045d254cfd1796011eb5d24d7c81be91d851c8824ba3cba1f68cec6dda2",
+      "effective_date": null,
+      "authoritative_status": "DECLARED_OFFICIAL_PENDING_GOVERNANCE_REVIEW",
+      "metadata_review_status": "REVIEW_REQUIRED",
+      "effective_date_status": "NOT_ESTABLISHED_BY_SNAPSHOT",
+      "source_declared_hash": "75d5b40df368e826f8dc5eace35ccc0daaaf26499b241a278962832334e8db50",
+      "original_pdf_hash": "75d5b40df368e826f8dc5eace35ccc0daaaf26499b241a278962832334e8db50",
+      "original_pdf_hash_matches": true,
+      "created_date_as_printed": "21-Sep-15",
+      "revision_as_printed": "Agustus 2018",
+      "metadata_review_notes": [
+        "SOP PIAK-03 is present in extracted text; ratification date is blank.",
+        "SERVICE and UNIT are blank; SCENARIO kedatangan requires review against document purpose.",
+        "Creation/revision dates do not establish effective date or current legal validity.",
+        "Expected runtime document ID is unknown; no production ingestion/promotion performed."
+      ]
+    },
+    {
+      "id": "paspor-requirements-missing",
+      "question": "Apa syarat paspor yang berlaku di wilayah layanan Nusantara?",
+      "expected_document": null,
+      "expected_answer": null,
+      "required_evidence": [],
+      "domain": "Paspor",
+      "risk": "high",
+      "oracle_status": "MISSING",
+      "source": null,
+      "intent": "ask_document_requirements",
+      "negative_documents": [
+        "DOC-FC9058E1-1a08",
+        "API-TEST-001"
+      ],
+      "missing_reason": "Only a passport definition fixture exists; approved official requirements and service region are absent",
+      "source_authority": null,
+      "service_region": null,
+      "version": null,
+      "effective_date": null,
+      "authoritative_status": "UNAVAILABLE",
+      "metadata_review_status": "MISSING",
+      "effective_date_status": "UNKNOWN",
+      "metadata_review_notes": [
+        "Official passport requirements, service region and approved version unavailable; stop this case."
+      ]
+    },
+    {
+      "id": "unknown-service-negative",
+      "question": "Apa syarat layanan dokumen fiktif ZYX-998?",
+      "expected_document": null,
+      "expected_answer": null,
+      "required_evidence": [],
+      "domain": "Negative retrieval",
+      "risk": "high",
+      "oracle_status": "NEGATIVE_CASE",
+      "source": null,
+      "intent": "ask_document_requirements",
+      "negative_documents": [
+        "DOC-FC9058E1-1a08",
+        "API-TEST-001",
+        "BENCH-PASPOR-001",
+        "BENCH-MASAK-001",
+        "BENCH-ALAMAT-001"
+      ],
+      "expected_behavior": "clarify_or_refuse_without_fabricated_requirements",
+      "source_authority": "synthetic_negative_test",
+      "service_region": "LOCAL_EVALUATION_ONLY",
+      "version": "synthetic-negative-v1",
+      "effective_date": null,
+      "authoritative_status": "NOT_APPLICABLE_NEGATIVE_CASE",
+      "metadata_review_status": "NOT_APPLICABLE",
+      "effective_date_status": "NOT_APPLICABLE"
+    }
+  ],
+  "metadata_policy": "Unknown effective dates remain null; snapshot official declarations are not release approval."
+}

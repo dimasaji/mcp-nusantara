@@ -1,4 +1,4 @@
-﻿"""
+"""
 Nusantara AI - Production Semantic Retriever
 Phase 19.2
 
@@ -914,6 +914,13 @@ class ProductionSemanticRetriever:
         if not evidence:
             return evidence
 
+        # Cabut provenance lama sebelum hydration baru.
+        # Metadata lama tidak membuktikan DB berhasil diakses sekarang.
+        for item in evidence:
+            metadata = getattr(item, "metadata", None)
+            if isinstance(metadata, dict):
+                metadata.pop("authority_hydrated_from", None)
+
         try:
             conn = self._connect()
         except Exception as exc:
@@ -1166,6 +1173,11 @@ class ProductionSemanticRetriever:
                 "Authority metadata hydration gagal: %s",
                 exc,
             )
+            # Batch gagal: cabut seluruh penanda hydration.
+            for item in evidence:
+                metadata = getattr(item, "metadata", None)
+                if isinstance(metadata, dict):
+                    metadata.pop("authority_hydrated_from", None)
             return evidence
 
         finally:
@@ -1253,6 +1265,59 @@ class ProductionSemanticRetriever:
     # ------------------------------------------------------------------
     # PUBLIC SEARCH
     # ------------------------------------------------------------------
+
+    @staticmethod
+    def _authority_valid(item) -> bool:
+        """Fail closed unless source authority was hydrated and verified."""
+        metadata = getattr(item, "metadata", None)
+        if not isinstance(metadata, dict):
+            return False
+
+        hydrated_from = str(
+            metadata.get("authority_hydrated_from", "")
+        ).strip().lower()
+        if hydrated_from != "documents":
+            return False
+
+        status = str(
+            getattr(item, "source_status", None)
+            or metadata.get("source_status", "")
+        ).strip().lower()
+
+        authority = str(
+            getattr(item, "authority", None)
+            or metadata.get("authority", "")
+        ).strip().lower()
+
+        # Status must explicitly indicate an official/verified source.
+        if status not in {"official", "verified"}:
+            return False
+
+        # Reject missing or explicitly untrusted authority labels.
+        if authority in {
+            "", "unknown", "none", "null", "false",
+            "test", "untrusted", "unverified"
+        }:
+            return False
+
+        # Parse verification values safely; bool("false") is True in Python.
+        verified = metadata.get(
+            "verified_raw",
+            metadata.get("verified", False)
+        )
+
+        if isinstance(verified, bool):
+            is_verified = verified
+        elif isinstance(verified, int):
+            is_verified = verified == 1
+        elif isinstance(verified, str):
+            is_verified = verified.strip().lower() in {
+                "1", "true", "yes", "verified"
+            }
+        else:
+            is_verified = False
+
+        return is_verified
 
     def search(
         self,

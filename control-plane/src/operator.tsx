@@ -1,9 +1,9 @@
-﻿import {UserChat} from './assistant';
-import {HermesConnectionPanel} from './hermes-connection';
-import {useMemo} from 'react';
+﻿import {DetailDrawer} from './operator-panels';
+export {DetailDrawer} from './operator-panels';
+import {useMemo,useState} from 'react';
 import {useQuery,useQueryClient} from '@tanstack/react-query';
 import {Link} from '@tanstack/react-router';
-import {fetchOperationsSummary,fetchCostSummary,fetchEvidencePackage,fetchExecutionHistory,fetchExecutionContext,fetchModelStatus,fetchSnapshot} from './api';
+import {fetchOperationsSummary,fetchCostSummary,fetchEvidencePackage,fetchExecutionHistory,fetchExecutionContext,fetchModelStatus,fetchSnapshot,fetchRuntimeHealth} from './api';
 import {useAdminAuth} from './auth';
 import {isAttestation} from './schemas';
 import {EngineeringConsole} from './engineering-console';
@@ -12,6 +12,20 @@ export const operatorMenus=[
   ['/dashboard','Beranda'],['/workspace','AI Workspace'],
   ['/approvals','Human Control'],['/settings','Pengaturan & Teknis'],
 ] as const;
+function RuntimeOverview(){
+  const health=useQuery({queryKey:['runtime-health'],queryFn:fetchRuntimeHealth,retry:false,refetchInterval:30000});
+  const snapshot=useQuery({queryKey:['control-plane','snapshot'],queryFn:({signal})=>fetchSnapshot(signal),retry:false});
+  const state=snapshot.data&&!isAttestation(snapshot.data.state)?snapshot.data.state:undefined;
+  const checked=Math.max(health.dataUpdatedAt,health.errorUpdatedAt);
+  return <div className="runtime-overview"><section className="panel"><p className="eyebrow">KONDISI SISTEM</p><h2>Health &amp; koneksi</h2>
+    {health.isPending?<p role="status">Membaca health…</p>:health.isError?<p role="alert">Belum tersedia — {health.error.message}</p>:<p className="health-reading">{health.data.status} <small>HTTP {health.data.httpStatus} · {health.data.service??'Backend'}</small></p>}
+    <p>Pembacaan terakhir: {checked?new Date(checked).toLocaleString('id-ID'):'Belum tersedia'}. Pembacaan berkala setiap 30 detik; hasil gagal tidak membuktikan health terkini.</p>
+    <DetailDrawer label="Detail health"><Source path="/health"/><p>Hasil: {health.isError?'Belum tersedia':health.data?.status??'Menunggu pembacaan'}</p><p>Versi: {health.data?.version??'Belum tersedia'}</p><p>Pembacaan: {checked?new Date(checked).toLocaleString('id-ID'):'Belum tersedia'}</p><p>Health backend tidak membuktikan inferensi atau kesiapan VPS. Periksa layanan lokal bila pembacaan gagal.</p><Link to="/settings">Buka pengaturan dan recovery</Link></DetailDrawer>
+  </section><section className="panel"><p className="eyebrow">PRASYARAT &amp; EVIDENCE</p><h2>Gate penerimaan</h2>
+    {snapshot.isPending?<p role="status">Membaca gate…</p>:snapshot.isError?<p role="alert">Belum tersedia — {snapshot.error.message}</p>:state?<><p>{state.gates.filter(g=>g.status==='PASS').length} / {state.gates.length} gate PASS dalam snapshot</p><p>Asal evidence: {state.timestamp} · runtime {state.runtime.current_status}. Snapshot historis tidak membuktikan health saat ini.</p></>:<p>Belum tersedia — proyeksi ATTESTATION tidak memuat gate NORMAL.</p>}
+    <DetailDrawer label="Detail gate"><Source path="/v1/control-plane/snapshot"/>{state?state.gates.map(g=><article key={g.id}><h3>{g.id} · {g.status}</h3><p>Evidence: {g.evidence.join(', ')||'Belum tersedia'}</p></article>):<p>Belum tersedia. Periksa evidence teknis dan kontrak proyeksi backend.</p>}<Link to="/approvals">Tinjau prasyarat keputusan</Link></DetailDrawer>
+  </section></div>;
+}
 export function OperatorConnection(){
   const q=useQuery({queryKey:['operator','model'],queryFn:fetchModelStatus,retry:false});
   return <span role="status">{q.isPending?'Memeriksa koneksi…':q.isError?'Backend belum terhubung':`API terhubung · identitas ${q.data.status} · diperiksa ${new Date(q.dataUpdatedAt).toLocaleTimeString('id-ID')}`}<details><summary>Sumber pemeriksaan</summary><p>/v1/control-plane/model-status · proses {q.data?.process_id??'belum diketahui'}. Ketersediaan API tidak membuktikan identitas build aktif.</p></details></span>;
@@ -58,12 +72,13 @@ export function OperatorHome(){
   const client=useQueryClient();
   const pkg=useQuery({queryKey:['operator','package'],queryFn:fetchEvidencePackage,retry:false});
   return <><header><div><p className="eyebrow">NUSANTARA · V1</p><h1>Beranda</h1><p>Pekerjaan, hambatan, keputusan, dan penggunaan.</p></div><button onClick={()=>void client.invalidateQueries({predicate:q=>['operator','operations-summary','home-costs'].includes(String(q.queryKey[0]))})}>Perbarui Beranda</button></header>
+    <section className="service-focus"><div><p className="eyebrow">FOKUS LAYANAN · PIAK-03</p><h2>Periksa bukti. Tentukan langkah berikutnya.</h2><p>Telusuri tugas, hambatan, dan keputusan dari sumber V1. Kesiapan layanan mengikuti evidence backend.</p></div><Link to="/workspace" className="button-link">Buka workspace ↗</Link></section>
     <div className="operator-cards">
       <section className="panel"><h2>Apa yang sedang dikerjakan?</h2><OperationCounts kind="work"/><Missing>jumlah tugas aktif dan progres global belum disediakan backend.</Missing><CurrentWork/><Link to="/tasks">Buka Aktivitas Tugas →</Link></section>
       <section className="panel"><h2>Apa masalahnya?</h2>{pkg.isPending?<p role="status">Membaca blocker…</p>:pkg.isError?<ErrorState error={pkg.error} retry={()=>void pkg.refetch()}/>:<><p>{pkg.data.blockers.length} blocker dalam paket evidence ini; jumlah masalah aktif global belum tersedia.</p><p>{pkg.data.blockers[0]?.reason??'Tidak ada blocker di paket yang dibaca.'}</p><p>Dampak: penerimaan hasil mengikuti kelengkapan evidence. Prioritas belum tersedia.</p></>}<Link to="/blockers">Buka Masalah &amp; Blocker →</Link></section>
       <section className="panel"><h2>Apa yang perlu saya setujui?</h2><OperationCounts kind="review"/><Missing>jumlah antrean keputusan global belum disediakan.</Missing><p>Tinjau penerimaan paket evidence dan izin eksekusi secara terpisah pada modul persetujuan.</p>{pkg.data&&<p>Paket saat ini: {pkg.data.criteria.length} kriteria, {pkg.data.evidence.length} referensi evidence. Runtime: {pkg.data.runtime_status}. Sumber: /v1/control-plane/evidence-package.</p>}<Link to="/approvals">Buka Persetujuan →</Link></section>
       <section className="panel"><h2>Berapa biayanya?</h2><HomeCosts/><Link to="/costs">Buka Biaya &amp; Model →</Link></section>
-    </div><section className="panel"><h2>Dokumen dan Chat</h2><p>Tambahkan dokumen, periksa hasil pemrosesan, lalu gunakan sumbernya di Chat V1.</p><Link to="/knowledge">Kelola dokumen</Link> · <Link to="/ui">Buka Chat</Link></section><section className="panel"><h2>AI Workspace</h2><p>Ajukan pertanyaan ke Chat V1 dan periksa status rencana serta hasil tugas yang tersedia.</p><Link className="button-link" to="/workspace">Buka AI Workspace</Link></section><Activity/>
+    </div><RuntimeOverview/><section className="panel"><h2>Dokumen dan Chat</h2><p>Tambahkan dokumen, periksa hasil pemrosesan, lalu gunakan sumbernya di Chat V1.</p><Link to="/knowledge">Kelola dokumen</Link> · <Link to="/">Buka Chat</Link></section><Activity/>
   </>;
 }
 export function TasksPage(){
@@ -80,21 +95,18 @@ function SnapshotBlockers(){
 }
 export function BlockersPage(){
   const q=useQuery({queryKey:['operator','package'],queryFn:fetchEvidencePackage,retry:false});
-  return <><header><h1>Masalah &amp; Blocker</h1><button disabled={q.isFetching} onClick={()=>void q.refetch()}>Muat ulang</button></header><SnapshotBlockers/><section className="panel"><Source path="/v1/control-plane/evidence-package"/><p>Cakupan: blocker paket penerimaan. Kelengkapan inventaris error runtime global belum tersedia.</p>{q.isPending?<p role="status">Membaca blocker…</p>:q.isError?<ErrorState error={q.error} retry={()=>void q.refetch()}/>:<><p>Paket: <code>{q.data.package_id}</code> · {q.data.generated_at}</p>{q.data.blockers.length===0?<p>Tidak ada blocker dalam paket ini.</p>:q.data.blockers.map((b,i)=><article className="operator-blocker" id={`blocker-${i}`} key={`${b.id}-${i}`}><h2>{b.id}</h2><p>{b.reason}</p><p>Status: tercatat dalam paket saat dibaca. Dampak: periksa gate penerimaan dan kriteria terkait.</p><p>Penyebab belum diketahui; alasan backend di atas bukan diagnosis akar masalah.</p><Missing>prioritas, hubungan tugas, riwayat penyelesaian, dan tindakan perbaikan terverifikasi belum disediakan.</Missing><details><summary>Kriteria paket untuk ditinjau</summary><p>Hubungan spesifik dengan blocker belum tersedia; berikut kriteria paket yang perlu diperiksa.</p>{q.data.criteria.filter(c=>c.id===b.id||c.status!=='PASS').map(c=><p key={c.id}>{c.id} · {c.summary} · {c.status}<br/>{c.evidence.join(', ')||'Referensi belum tersedia'}</p>)}<Link to="/approvals">Periksa paket evidence lengkap</Link></details></article>)}</>}</section></>;
+  return <><header><h1>Masalah &amp; Blocker</h1><button disabled={q.isFetching} onClick={()=>void q.refetch()}>Muat ulang</button></header><SnapshotBlockers/><section className="panel"><Source path="/v1/control-plane/evidence-package"/><p>Cakupan: blocker paket penerimaan. Kelengkapan inventaris error runtime global belum tersedia.</p>{q.isPending?<p role="status">Membaca blocker…</p>:q.isError?<ErrorState error={q.error} retry={()=>void q.refetch()}/>:<><p>Paket: <code>{q.data.package_id}</code> · {q.data.generated_at}</p>{q.data.blockers.length===0?<p>Tidak ada blocker dalam paket ini.</p>:q.data.blockers.map((b,i)=><article className="operator-blocker" id={`blocker-${i}`} key={`${b.id}-${i}`}><h2>{b.id}</h2><p>{b.reason}</p><p>Status: tercatat dalam paket saat dibaca. Dampak: periksa gate penerimaan dan kriteria terkait.</p><p>Penyebab belum diketahui; alasan backend di atas bukan diagnosis akar masalah.</p><Missing>prioritas, hubungan tugas, riwayat penyelesaian, dan tindakan perbaikan terverifikasi belum disediakan.</Missing><DetailDrawer label={`Detail blocker ${b.id}`}><p>Dampak: penerimaan paket menunggu prasyarat yang belum terpenuhi.</p><p>Asal: /v1/control-plane/evidence-package ? {q.data.generated_at}</p><p>Lingkup: {q.data.read_scope} ? paket {q.data.package_id}</p><p>Task/request ID: belum tersedia pada kontrak blocker.</p><h3>Kriteria paket untuk ditinjau</h3><p>Hubungan spesifik dengan blocker belum tersedia; berikut kriteria paket yang perlu diperiksa.</p>{q.data.criteria.filter(c=>c.id===b.id||c.status!=='PASS').map(c=><p key={c.id}>{c.id} · {c.summary} · {c.status}<br/>{c.evidence.join(', ')||'Referensi belum tersedia'}</p>)}<h3>Evidence terkait kriteria</h3>{q.data.evidence.filter(e=>q.data.criteria.filter(c=>c.id===b.id||c.status!=='PASS').some(c=>c.evidence.includes(e.id))).map(e=><article key={e.id}><strong>{e.id} ? {e.validation_status}</strong><p>{e.path}</p><p>Asal: {e.classification} ? hasil: {e.reason??e.validation_status}</p><p>SHA-256: {e.sha256??'Belum tersedia'}</p></article>)}<p>Langkah: tinjau kriteria, buka referensi evidence, lalu periksa prasyarat di Human Control. Hubungan spesifik yang belum disediakan tidak disimpulkan.</p><Link to="/approvals">Periksa paket evidence lengkap</Link></DetailDrawer></article>)}</>}</section></>;
 }
-export function WorkspacePage(){
-  return <><header><h1>AI Workspace</h1><p>Percakapan memakai Core Engine V1 dan sumber Knowledge existing.</p></header>
-    <UserChat embedded/><WorkspaceTasks/>
-    <details><summary>Koneksi Hermes eksternal</summary><HermesConnectionPanel/><p>Koneksi ACP tidak mengaktifkan eksekusi tugas. Tidak ada agent atau adapter eksekusi baru yang dibuat.</p></details></>;
-}
+export {WorkspacePage} from './workspace';
 export function WorkspaceTasks(){
+  const [search,setSearch]=useState('');
   const {token}=useAdminAuth();const authKey=useMemo(()=>crypto.randomUUID(),[token]);
   const q=useQuery({queryKey:['operations-summary',authKey],queryFn:()=>fetchOperationsSummary(token),enabled:!!token.trim(),retry:false,gcTime:0,refetchInterval:30000});
   return <section className="panel"><h2>Status tugas V1</h2><Source path="/v1/control-plane/operations-summary"/>
     <p>Cakupan: rencana eksekusi terkontrol dan audit tersimpan; percakapan Chat tidak dianggap sebagai eksekusi tugas.</p>
     {!token.trim()?<p>Masukkan token operator di Pengaturan &amp; Teknis untuk membaca status tugas.</p>:q.isPending?<p role="status">Membaca tugas...</p>:q.isError?<ErrorState error={q.error} retry={()=>void q.refetch()}/>:<>
       <p>Diperiksa: {q.data.checked_at}</p>{q.data.reason&&<p>{q.data.reason}</p>}
-      {q.data.tasks.length?<ul>{q.data.tasks.map((task,i)=><li key={`${task.id}-${i}`}><strong>{task.id}</strong>: {task.objective} — <span>{task.status}</span><p>{task.updated_at} · {task.source}</p></li>)}</ul>:<p>Belum ada tugas dalam cakupan yang dibaca.</p>}
+      <label className="task-search">Cari tugas yang dimuat<input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="ID, tujuan, atau status tugas"/></label>{q.data.tasks.filter(task=>`${task.id} ${task.objective} ${task.status}`.toLocaleLowerCase().includes(search.toLocaleLowerCase())).length?<ul>{q.data.tasks.filter(task=>`${task.id} ${task.objective} ${task.status}`.toLocaleLowerCase().includes(search.toLocaleLowerCase())).map((task,i)=><li key={`${task.id}-${i}`}><strong>{task.id}</strong>: {task.objective} — <span>{task.status}</span><p>{task.updated_at} · {task.source}</p></li>)}</ul>:<p>Tidak ada tugas yang cocok dalam cakupan yang dibaca.</p>}
       <button disabled={q.isFetching} onClick={()=>void q.refetch()}>Perbarui status tugas</button></>}
     <Link to="/approvals">Tinjau izin dan hasil eksekusi</Link></section>;
 }

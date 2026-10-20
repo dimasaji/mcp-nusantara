@@ -1,0 +1,21 @@
+# MDE08 Capability / Governance — design only
+
+Decision: KEEP current governed registry, ApprovalQueue/AuditTrail, policy/trust, executor and stdio MCP adapter. EXTEND cross-component capability evidence and governance integration only after separate Level C approval. No security/policy/permission defaults or approval semantics changed by this audit.
+
+Track capability support separately from availability/readiness and invocation identity: SUPPORTED/AVAILABLE/READY/NOT_SUPPORTED/UNAVAILABLE/NOT_PROVEN/BLOCKED, plus DECLARED/CONFIGURED/AVAILABLE/SELECTED/EXECUTED/VERIFIED where applicable. A tool can be visible and still require approval; model registration, supports_structured=True, or a coding routing reason must not imply executable capability. Fixture verification belongs to its build/instance/invocation and does not establish deployed readiness.
+
+Reuse existing governance sequence: trusted actor -> permission -> policy/risk -> input validation -> bound approval if required -> execution boundary -> handler -> output validation -> audit/receipt. Preserve current fail-closed critical/permission rejection, single-use approval and audit tamper rejection. Include trust/source/capability evidence explicitly where the relevant boundary requires it; do not infer them from audit event names or confidence scores.
+
+Current approval consumption binds the tool/args payload and once-only status, but not executor/requester role or request kind. Fixture proves actor-B can consume an actor-A approved same-payload request when existing permission/policy checks pass. This is a binding limitation, not a claim that admin API authentication can be bypassed. Queue is single-worker; concurrent distributed authorization semantics are not proven. Reviewer strings supplied to authenticated endpoints are distinct from authenticated principal attestation.
+
+Legacy MCP permissions are display metadata for direct handler calls; legacy ToolRegistry is a separate filesystem boundary. Keep these separate from governed stdio capability claims. The real isolated stdio fixture verifies only calculator/current_time_utc, not production desktop connection or target control-plane tools. RAG remains BLOCKED under compatibility contract until MDE05/06/07 evidence gaps resolved; no index repair or worker activation is approved here.
+
+## Concrete Level C proposal — not executed
+
+Action: extend existing capability descriptors/receipts and approval binding; review adapters for divergent legacy governance semantics. Candidate files: app/models/base.py, app/models/router.py, app/governance/tools.py, app/approval/queue.py, app/mcp/mcp.py, app/api/v2_routes.py and associated reviewed tests. Exact internal DTO/schema and migration/backward compatibility must be reviewed before changing them. Do not introduce a second approval queue or unconditional policy path.
+
+Reason: current capability declarations and visibility can be mistaken for executable readiness; payload-only approvals and direct legacy handlers do not establish a universal principal-bound governance chain. Risk HIGH: principal binding, approval persistence/replay, existing tool clients and policy behavior can change. Require concrete reviewed semantics for principal/role/kind/tool/args/config/expiry binding, source/code/protocol compatibility, capability operation evidence, fallback and error outcomes. No security or production activation change is authorized by APPROVE MDE-08 audit.
+
+Rollback: capture/hash exact approved sources and approval persistence schema before a future patch; define migration-aware restoration if needed. Existing audit history must not be silently rewritten. Restore only approved patch scope and rerun approval/policy/permission/capability regression. Current fixture artifacts are audit evidence, not production authorization records or restoration instructions.
+
+Acceptance for eventual integration: operation-specific capability evidence, per-instance readiness, permission/trust/policy/risk/authorization/boundary gates, principal-bound replay-safe approval, audited output, explicit legacy bridge semantics and same-invocation receipt. Real deployed verification and public compatibility remain separately gated; unsupported/unproven capability must remain NOT_PROVEN/BLOCKED rather than generic PASS.

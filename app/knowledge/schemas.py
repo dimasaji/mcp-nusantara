@@ -3,9 +3,156 @@ Knowledge & RAG Engine Schemas.
 Evidence dari document, chunking, embedding, retrieval, reranking.
 """
 import hashlib
+import json
+from contextlib import contextmanager
+from contextvars import ContextVar
+from dataclasses import dataclass, replace
 from typing import Any, Dict, List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import BaseModel, Field
+from app.observability.context import current_ids, new_id
+from app.observability.logging import log_event
+
+
+@dataclass(frozen=True)
+class EffectiveRAGProfile:
+    """Immutable internal receipt; JSON storage prevents nested mutation.
+
+    Only the consumed descriptor determines profile_id. Execution data,
+    request correlation, consumer and timestamps are outside that identity.
+    """
+    descriptor_json: str
+    invocation_id: str
+    timestamp: str
+    consumer: str
+    correlation_json: str
+    outcome_json: str = '{}'
+    consumer_filter_json: str = '{}'
+    request_top_k_source: str | None = None
+
+    @property
+    def profile_id(self) -> str:
+        descriptor = json.loads(self.descriptor_json)
+        # Intent/provenance can differ while the same values are consumed
+        # (e.g. omitted top_k versus zero falling back to the instance value).
+        identity = {key: descriptor[key] for key in
+                    ('profile_version', 'source_build_id', 'effective_values', 'retrieval_strategy', 'thresholds')}
+        encoded = json.dumps(identity, sort_keys=True, separators=(',', ':'), allow_nan=False)
+        return 'sha256:' + hashlib.sha256(encoded.encode()).hexdigest()
+
+    def snapshot(self) -> dict[str, Any]:
+        data = json.loads(self.descriptor_json)
+        outcome = json.loads(self.outcome_json)
+        data.update(profile_id=self.profile_id, invocation_id=self.invocation_id,
+                    timestamp=self.timestamp, consumer=self.consumer,
+                    correlation=json.loads(self.correlation_json), execution_outcome=outcome)
+        data['thresholds']['resolved_relevance_gate'] = outcome.get('resolved_relevance_gate')
+        data['thresholds']['consumer_post_filter'] = json.loads(self.consumer_filter_json)
+        data['reranker_identity']['execution_status'] = outcome.get('reranker_status', 'NOT_EXECUTED')
+        for entry in data['provenance'].values():
+            entry.update(consumer=self.consumer, invocation_id=self.invocation_id)
+        if self.request_top_k_source is not None:
+            data['provenance']['top_k'].update(request_source=self.request_top_k_source,
+                request_source_location='app/api/routes.py:KnowledgeSearchRequest.top_k')
+        data['provenance']['resolved_relevance_gate'] = {
+            'parameter': 'resolved_relevance_gate', 'source': 'execution scores',
+            'source_location': 'app/knowledge/rag.py:RAG._apply_relevance_gate',
+            'source_layer': 'EXECUTION', 'configured_value': None,
+            'effective_value': outcome.get('resolved_relevance_gate'),
+            'precedence': 'max(absolute_gate, top_score * relative_threshold)',
+            'override': None, 'status': 'EXECUTED' if outcome.get('gate_status') == 'EXECUTED' else 'NOT_VERIFIED',
+            'consumer': self.consumer, 'invocation_id': self.invocation_id,
+        }
+        consumer_filter = data['thresholds']['consumer_post_filter']
+        data['provenance']['consumer_post_filter'] = {
+            'parameter': 'consumer_post_filter', 'source': 'V1 consumer constant' if self.consumer == 'V1_CHAT' else 'none',
+            'source_location': consumer_filter.get('source_location', 'app/api/routes.py:chat' if self.consumer == 'V1_CHAT' else None),
+            'source_layer': 'CONSUMER', 'configured_value': None,
+            'effective_value': consumer_filter.get('threshold'), 'precedence': 'after canonical RAG gate',
+            'override': None, 'status': consumer_filter.get('status', 'NOT_VERIFIED'),
+            'consumer': self.consumer, 'invocation_id': self.invocation_id,
+        }
+        return data
+
+    def with_descriptor(self, descriptor: dict[str, Any]) -> 'EffectiveRAGProfile':
+        return replace(self, descriptor_json=json.dumps(descriptor, sort_keys=True, separators=(',', ':'), allow_nan=False))
+
+    def complete(self, outcome: dict[str, Any]) -> 'EffectiveRAGProfile':
+        return replace(self, outcome_json=json.dumps(outcome, sort_keys=True, allow_nan=False))
+
+
+class RetrievalEvidenceList(list):
+    """A list-compatible facade result carrying an internal receipt only."""
+    def __init__(self, evidence, receipt=None):
+        super().__init__(evidence)
+        self.retrieval_receipt = receipt
+
+
+class RetrievalCapture:
+    def __init__(self, consumer: str, consumer_post_filter: float | None, request_top_k_source: str | None):
+        self.consumer = consumer
+        self.consumer_post_filter = consumer_post_filter
+        self.request_top_k_source = request_top_k_source
+        self.receipts: list[EffectiveRAGProfile] = []
+
+    def post_filter(self, before: int, after: int) -> None:
+        if not self.receipts:
+            return
+        receipt = self.receipts[-1]
+        stage = {'threshold': self.consumer_post_filter, 'before': before, 'after': after,
+                 'status': 'EXECUTED', 'source_location': 'app/api/routes.py:chat',
+                 'source_layer': 'CONSUMER', 'precedence': 'after canonical RAG gate'}
+        receipt = replace(receipt, consumer_filter_json=json.dumps(stage, sort_keys=True))
+        self.receipts[-1] = receipt
+        _log_receipt(receipt)
+
+
+_retrieval_capture: ContextVar[RetrievalCapture | None] = ContextVar('rag_capture', default=None)
+
+
+@contextmanager
+def capture_retrieval(consumer: str, consumer_post_filter: float | None = None, *, request_top_k_source: str | None = None):
+    """Reuse existing correlation context; never store a global last receipt."""
+    capture = RetrievalCapture(consumer, consumer_post_filter, request_top_k_source)
+    token = _retrieval_capture.set(capture)
+    try:
+        yield capture
+    finally:
+        _retrieval_capture.reset(token)
+
+
+def make_rag_profile(descriptor: dict[str, Any]) -> EffectiveRAGProfile:
+    capture = _retrieval_capture.get()
+    consumer = capture.consumer if capture else 'DIRECT_RAG'
+    stage = ({'threshold': capture.consumer_post_filter, 'status': 'NOT_EXECUTED'}
+             if capture and capture.consumer_post_filter is not None else {'status': 'NOT_APPLICABLE'})
+    return EffectiveRAGProfile(
+        descriptor_json=json.dumps(descriptor, sort_keys=True, separators=(',', ':'), allow_nan=False),
+        invocation_id=new_id('retrieval'), timestamp=datetime.now(timezone.utc).isoformat(),
+        consumer=consumer, correlation_json=json.dumps(current_ids(), sort_keys=True),
+        consumer_filter_json=json.dumps(stage, sort_keys=True),
+        request_top_k_source=capture.request_top_k_source if capture else None)
+
+
+def _log_receipt(receipt: EffectiveRAGProfile) -> None:
+    snapshot = receipt.snapshot()
+    log_event('effective_rag_profile', profile=snapshot)
+    try:
+        from app.knowledge.retrieval_evidence import persist_retrieval_receipt
+        persist_retrieval_receipt(snapshot)
+    except Exception as exc:
+        # Do not log query text, retrieved content, or exception details.
+        log_event(
+            'effective_rag_profile_persistence_failed',
+            invocation_id=snapshot.get('invocation_id'),
+            exception_type=type(exc).__name__,
+        )
+
+def publish_rag_profile(receipt: EffectiveRAGProfile) -> None:
+    capture = _retrieval_capture.get()
+    if capture is not None:
+        capture.receipts.append(receipt)
+    _log_receipt(receipt)
 
 
 class DocumentMetadata(BaseModel):
@@ -82,6 +229,7 @@ class RetrievalResult(BaseModel):
     total_time_ms: int = Field(default=0, description="Waktu retrieval dalam ms")
     chunks_retrieved: int = Field(default=0, description="Jumlah chunk retrieved")
     documents_retrieved: int = Field(default=0, description="Jumlah dokumen retrieved")
+    effective_profile: Optional[EffectiveRAGProfile] = Field(default=None, exclude=True)
 
 
 class DocumentIngestRequest(BaseModel):
@@ -172,4 +320,5 @@ class Document(BaseModel):
 
 Chunks = TextChunk
 Chunk = TextChunk
+
 

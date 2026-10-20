@@ -20,6 +20,8 @@ from app.knowledge.schemas import (
     KnowledgeStore,
     QueryResult,
     RetrievalResult,
+    make_rag_profile,
+    publish_rag_profile,
 )
 from app.knowledge.chunker import (
     Chunker,
@@ -211,6 +213,8 @@ class RAG:
         nusantara_config: NusantaraConfig | None = None,
     ):
         self.configuration = nusantara_config
+        self._kb_source = ('KB_EXPLICIT' if config is not None else
+                           'R1' if nusantara_config is not None else 'KB_DEFAULT')
         if nusantara_config is not None:
             if (nusantara_config.rag.semantic_weight is not None or
                     nusantara_config.rag.similarity_threshold is not None):
@@ -232,6 +236,7 @@ class RAG:
                 reranker_model=nusantara_config.rag.reranker_model,
             )
         self._config = config or KnowledgeBaseConfig()
+        self._kb_initial = self._config.model_dump()
         self._store = vector_store if vector_store is not None else (
             SQLiteVectorStore(str(nusantara_config.knowledge.database))
             if nusantara_config is not None else SQLiteVectorStore())
@@ -260,7 +265,38 @@ class RAG:
         """Set fungsi embedding custom."""
         self._embedding = func
 
-    def ingest_document(
+    def ingest_document(self, request: DocumentIngestRequest) -> DocumentIngestResponse:
+        """Atomic SQLite ingestion; an existing ID can never silently replace knowledge."""
+        if not isinstance(self._store, SQLiteVectorStore):
+            return self._ingest_document(request)
+        class RollbackIngestion(Exception):
+            def __init__(self, response): self.response = response
+        try:
+            with self._store.transaction():
+                doc_id = request.document_id or self._generate_doc_id(request.title, request.source)
+                existing = self._store.get_document_info(doc_id)
+                if existing is not None:
+                    chunks = self._store.get_chunks_by_document(doc_id)
+                    matching = (existing.title == request.title and existing.source == request.source
+                                and existing.metadata == (request.metadata or {})
+                                and len(chunks) == existing.chunks_count and bool(chunks)
+                                and all(c.embedding.dimension == self._config.embedding_dimension
+                                        and c.embedding.model == self._config.embedding_model for c in chunks))
+                    if not matching:
+                        return DocumentIngestResponse(success=False,title=request.title,error='DOCUMENT_ID_CONFLICT_OR_INCOMPLETE; existing knowledge preserved')
+                    return DocumentIngestResponse(success=True,document_id=doc_id,title=request.title,
+                                                  chunks_created=0,chunks_stored=len(chunks))
+                with self._store._connect() as conn:
+                    profiles=conn.execute('SELECT DISTINCT embedding_dimension, embedding_model FROM chunks').fetchall()
+                if any(row[0] != self._config.embedding_dimension or row[1] != self._config.embedding_model for row in profiles):
+                    return DocumentIngestResponse(success=False,title=request.title,error='EMBEDDING_PROFILE_INCOMPATIBLE; no knowledge changed')
+                response=self._ingest_document(request)
+                if not response.success: raise RollbackIngestion(response)
+                return response
+        except RollbackIngestion as exc:
+            return exc.response
+
+    def _ingest_document(
         self,
         request: DocumentIngestRequest,
     ) -> DocumentIngestResponse:
@@ -431,11 +467,137 @@ class RAG:
         """Compute checksum dari konten."""
         return hashlib.md5(content.encode()).hexdigest()
 
-    def query(
+    def _profile_descriptor(self, requested_top_k, top_k, rerank, candidate_k):
+        """Observe existing owners; this is not a configuration loader."""
+        from app.core.runtime_identity import BUILD_ID
+
+        snapshot = self.configuration
+        kb = self._config
+        sqlite_store = type(self._store) is SQLiteVectorStore
+        default_embedding = self._embedding_adapter is not None and self._embedding is self._embedding_adapter
+        known_reranker = getattr(self._simple_rerank, '__func__', None) is RAG._simple_rerank
+        algorithm = ('simple_keyword_overlap' if known_reranker else 'NOT_VERIFIED') if rerank and kb.reranker_enabled else 'NOT_APPLICABLE'
+        values = {
+            'top_k': top_k, 'semantic_weight': 0.70, 'lexical_weight': 0.30,
+            'candidate_count': candidate_k, 'retrieval_mode': 'hybrid',
+            'semantic_normalization': 'cosine_without_rescaling' if sqlite_store else 'NOT_VERIFIED',
+            'lexical_normalization': 'token_overlap/query_tokens_capped_at_1' if sqlite_store else 'NOT_VERIFIED',
+            'missing_stage_score': 0.0, 'absolute_relevance_gate': 0.30,
+            'relative_threshold': 0.50, 'rerank_requested': bool(rerank),
+            'rerank_enabled': kb.reranker_enabled,
+            'actual_reranker': algorithm,
+            'knowledge_source': {'implementation': type(self._store).__module__ + '.' + type(self._store).__qualname__,
+                                 'reference': str(self._store.db_path) if sqlite_store else None,
+                                 'status': 'EFFECTIVE' if sqlite_store else 'NOT_VERIFIED'},
+            'embedding_identity': {'configured_model': kb.embedding_model,
+                                   'configured_dimension': kb.embedding_dimension,
+                                   'implementation': 'IndoBERTEmbeddingAdapter' if default_embedding else 'custom_callable',
+                                   'actual_model': None, 'status': 'NOT_VERIFIED'},
+        }
+        provenance = {}
+
+        def record(name, configured=None, layer='RAG_INTERNAL', location='app/knowledge/rag.py:RAG.query',
+                   override=None, precedence='internal implementation constant', status='EFFECTIVE'):
+            provenance[name] = {'parameter': name, 'source': layer, 'source_location': location,
+                                'source_layer': layer, 'configured_value': configured,
+                                'effective_value': values[name], 'precedence': precedence,
+                                'override': override, 'status': status}
+
+        r1_sources = {entry.field: entry.source for entry in snapshot.provenance} if snapshot else {}
+        for name in values:
+            record(name)
+        for name, field, r1_field in [('top_k', 'retrieval_top_k', 'rag.top_k'),
+                                     ('rerank_enabled', 'reranker_enabled', 'rag.reranker_enabled')]:
+            layer = self._kb_source
+            if getattr(kb, field) != self._kb_initial[field]:
+                layer = 'INSTANCE_MUTATION'
+            if layer == 'R1':
+                layer = 'R1_' + r1_sources.get(r1_field, 'NOT_VERIFIED')
+            record(name, getattr(snapshot.rag, 'top_k' if name == 'top_k' else field) if snapshot else None,
+                   layer=layer, location='app/knowledge/rag.py:RAG.__init__ -> KnowledgeBaseConfig.' + field,
+                   precedence='argument or instance value; KB_EXPLICIT > R1 > KB_DEFAULT',
+                   status='INHERITED' if layer.startswith('R1_') else 'DEFAULT' if layer == 'KB_DEFAULT' else 'EFFECTIVE')
+        if requested_top_k:
+            record('top_k', snapshot.rag.top_k if snapshot else None, layer='INVOCATION',
+                   override=requested_top_k, precedence='truthy argument > instance value', status='OVERRIDDEN')
+        else:
+            provenance['top_k']['override'] = requested_top_k
+        provenance['top_k']['instance_value'] = kb.retrieval_top_k
+        for name in ('semantic_weight', 'lexical_weight'):
+            provenance[name]['configured_value'] = getattr(snapshot.rag, name) if snapshot else None
+        record('candidate_count', layer='DERIVED', precedence='max(effective_top_k * 4, 20)')
+        record('rerank_requested', False, layer='INVOCATION', override=bool(rerank),
+               precedence='query argument; default False', status='OVERRIDDEN' if rerank else 'DEFAULT')
+        for name in ('semantic_normalization', 'lexical_normalization'):
+            record(name, layer='STORE_IMPLEMENTATION', location='app/knowledge/store.py:SQLiteVectorStore',
+                   status='EFFECTIVE' if sqlite_store else 'NOT_VERIFIED')
+        record('knowledge_source', layer='STORE_INSTANCE', location='app/knowledge/rag.py:RAG.__init__',
+               status=values['knowledge_source']['status'])
+        record('embedding_identity', layer='EMBEDDING_INSTANCE', location='app/knowledge/rag.py:RAG.__init__/set_embedding_func',
+               status='NOT_VERIFIED')
+        record('actual_reranker', layer='RERANKER_IMPLEMENTATION', location='app/knowledge/rag.py:RAG._simple_rerank',
+               status='NOT_VERIFIED' if algorithm == 'NOT_VERIFIED' else 'EFFECTIVE')
+        return {
+            'profile_version': 1, 'effective_values': values,
+            'source_config': {'fingerprint': 'sha256:' + hashlib.sha256(snapshot.canonical_json().encode()).hexdigest()
+                              if snapshot else None, 'status': 'R1_SNAPSHOT' if snapshot else 'NOT_VERIFIED'},
+            'source_build_id': BUILD_ID,
+            'retrieval_strategy': 'canonical_hybrid_semantic_lexical_topk_rerank_gate',
+            'reranker_identity': {'algorithm': values['actual_reranker'], 'configured_label': kb.reranker_model,
+                                  'model_identity': 'NOT_APPLICABLE' if known_reranker else 'NOT_VERIFIED', 'requested': bool(rerank),
+                                  'enabled': kb.reranker_enabled},
+            'thresholds': {'absolute_relevance_gate': 0.30, 'relative_threshold': 0.50,
+                           'score_space': 'keyword_overlap' if algorithm == 'simple_keyword_overlap' else 'NOT_VERIFIED' if algorithm == 'NOT_VERIFIED' else 'hybrid'},
+            'provenance': provenance,
+        }
+
+    def query(self, query_text: str, top_k: Optional[int] = None, rerank: bool = False,
+              document_ids: list[str] | None = None) -> RetrievalResult:
+        effective_top_k = top_k or self._config.retrieval_top_k
+        candidate_k = max(effective_top_k * 4, 20)
+        descriptor = self._profile_descriptor(top_k, effective_top_k, rerank, candidate_k)
+        if document_ids is not None:
+            descriptor['document_scope'] = list(document_ids)
+        receipt = make_rag_profile(descriptor)
+        trace = {'status': 'STARTED', 'stage': 'embedding', 'gate_status': 'NOT_EXECUTED',
+                 'reranker_status': 'NOT_EXECUTED', 'resolved_relevance_gate': None}
+
+        def finish_receipt():
+            # Observe mutations by custom callbacks without changing their behavior.
+            if 'rerank_enabled_consumed' in trace:
+                enabled = trace['rerank_enabled_consumed']
+                algorithm = trace['reranker_algorithm_consumed'] if rerank and enabled else 'NOT_APPLICABLE'
+                if enabled != descriptor['effective_values']['rerank_enabled']:
+                    descriptor['provenance']['rerank_enabled'].update(source='INSTANCE_MUTATION', source_layer='INSTANCE_MUTATION')
+                descriptor['effective_values'].update(rerank_enabled=enabled, actual_reranker=algorithm)
+                descriptor['reranker_identity'].update(enabled=enabled, algorithm=algorithm,
+                    configured_label=trace['reranker_label_consumed'],
+                    model_identity='NOT_APPLICABLE' if algorithm != 'NOT_VERIFIED' else 'NOT_VERIFIED')
+                descriptor['thresholds']['score_space'] = 'keyword_overlap' if algorithm == 'simple_keyword_overlap' else 'NOT_VERIFIED' if algorithm == 'NOT_VERIFIED' else 'hybrid'
+                descriptor['provenance']['rerank_enabled']['effective_value'] = enabled
+                descriptor['provenance']['actual_reranker'].update(effective_value=algorithm,
+                    status='NOT_VERIFIED' if algorithm == 'NOT_VERIFIED' else 'EFFECTIVE')
+            return receipt.with_descriptor(descriptor).complete(trace)
+
+        try:
+            result = self._query(query_text, effective_top_k, rerank, trace,
+                                 **({'document_ids': document_ids} if document_ids is not None else {}))
+        except Exception as exc:
+            trace.update(status='FAILED', exception_type=type(exc).__name__)
+            publish_rag_profile(finish_receipt())
+            raise
+        trace.update(status='COMPLETED', stage='result', returned_count=result.chunks_retrieved)
+        result.effective_profile = finish_receipt()
+        publish_rag_profile(result.effective_profile)
+        return result
+
+    def _query(
         self,
         query_text: str,
         top_k: Optional[int] = None,
         rerank: bool = False,
+        trace: Optional[dict] = None,
+        document_ids: list[str] | None = None,
     ) -> RetrievalResult:
         """
         Query knowledge base menggunakan Hybrid Retrieval.
@@ -461,10 +623,15 @@ class RAG:
         # ============================================================
         query_embedding = self._embedding(query_text)
 
+        trace['stage'] = 'semantic_search'
+
         semantic_candidates = self._store.search_similarity(
             query_embedding,
             candidate_k,
+            **({'document_ids': document_ids} if document_ids is not None else {}),
         )
+        trace['semantic_count'] = 0
+        trace['stage'] = 'lexical_search'
 
         # ============================================================
         # 2. LEXICAL RETRIEVAL
@@ -472,7 +639,10 @@ class RAG:
         lexical_candidates = self._store.search_lexical(
             query_text,
             candidate_k,
+            **({'document_ids': document_ids} if document_ids is not None else {}),
         )
+        trace['lexical_count'] = 0
+        trace['stage'] = 'fusion'
 
         # ============================================================
         # 3. FUSION
@@ -482,6 +652,7 @@ class RAG:
         candidates = {}
 
         for chunk, score in semantic_candidates:
+            trace['semantic_count'] += 1
             candidates[chunk.chunk_id] = {
                 "chunk": chunk,
                 "semantic_score": float(score),
@@ -489,6 +660,7 @@ class RAG:
             }
 
         for chunk, score in lexical_candidates:
+            trace['lexical_count'] += 1
             if chunk.chunk_id not in candidates:
                 candidates[chunk.chunk_id] = {
                     "chunk": chunk,
@@ -568,17 +740,29 @@ class RAG:
         # ============================================================
         # 5. OPTIONAL RERANK
         # ============================================================
-        if rerank and self._config.reranker_enabled:
+        trace['rerank_enabled_consumed'] = self._config.reranker_enabled
+        trace['reranker_label_consumed'] = self._config.reranker_model
+        trace['reranker_algorithm_consumed'] = ('simple_keyword_overlap'
+            if getattr(self._simple_rerank, '__func__', None) is RAG._simple_rerank else 'NOT_VERIFIED')
+        if rerank and trace['rerank_enabled_consumed']:
+            trace['stage'] = 'rerank'
             evidence_list = self._simple_rerank(
                 evidence_list,
                 query_text,
             )
+            trace['reranker_status'] = 'EXECUTED'
+
+        trace['stage'] = 'relevance_gate'
+        trace['before_gate_count'] = len(evidence_list)
+        trace['resolved_relevance_gate'] = (max(0.30, max(float(ev.score) for ev in evidence_list) * 0.50)
+                                            if evidence_list else None)
 
         evidence_list = self._apply_relevance_gate(
             evidence_list,
             min_score=0.30,
             relative_threshold=0.50,
         )
+        trace['gate_status'] = 'EXECUTED' if trace['before_gate_count'] else 'NOT_APPLICABLE_EMPTY'
 
         seen_documents = {
             ev.document_id
@@ -668,11 +852,14 @@ class RAG:
         Ini adalah fallback - diimplementasi nanti dengan model reranker nyata.
         """
         # Simple TF-IDF-like scoring
-        query_words = set(query.lower().split())
+        # Match word boundaries as lexical retrieval does: punctuation and KTP-el
+        # must not erase otherwise-supported overlap before the relevance gate.
+        import re
+        query_words = set(re.findall(r"\b[a-zA-Z0-9_]+\b", query.lower()))
         scored = []
 
         for ev in evidence:
-            chunk_words = set(ev.chunk.lower().split())
+            chunk_words = set(re.findall(r"\b[a-zA-Z0-9_]+\b", ev.chunk.lower()))
             overlap = len(query_words & chunk_words)
             score = overlap / max(len(query_words), 1)
             # Batasi score max 1.0

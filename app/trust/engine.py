@@ -14,6 +14,13 @@ class TrustEngine:
     """
     Engine untuk menilai kepercayaan terhadap claim berdasarkan evidence.
     JANGAN samakan confidence model dengan kepastian fakta.
+
+    Batas tanggung jawab:
+    - Trust Engine hanya menghasilkan assessment, BUKAN keputusan policy.
+    - Confidence adalah skor dukungan retrieval, bukan verifikasi fakta.
+    - Jika Grounding Guard menyatakan jawaban tidak grounded, Trust
+      akan menurunkan confidence dan risk_level melalui parameter
+      ``grounded`` (lihat ``evaluate``).
     """
 
     def __init__(self, min_evidence_threshold: float = 0.3):
@@ -24,9 +31,28 @@ class TrustEngine:
         evidence: List[Dict[str, Any]],
         claim: str,
         context: Optional[Dict[str, Any]] = None,
+        grounded: Optional[bool] = None,
     ) -> TrustAssessment:
         """
         Evaluasi trust terhadap claim berdasarkan evidence yang tersedia.
+
+        Parameters
+        ----------
+        evidence : list
+            Daftar evidence. Setiap item minimal berisi ``relevance``
+            (skor retrieval). Konten evidence (chunk/teks) TIDAK
+            diterima oleh Trust Engine sesuai boundary Phase 4;
+            validasi semantik adalah tanggung jawab Grounding Guard.
+        claim : str
+            Klaim yang akan dinilai.
+        context : dict, optional
+            Reserved untuk penggunaan masa depan.
+        grounded : bool, optional
+            Hasil akhir Grounding Guard. ``None`` berarti tidak
+            dievaluasi. Jika ``False`` (jawaban tidak grounded),
+            Trust akan menurunkan confidence dan meningkatkan
+            risk_level agar tidak terjadi kontradiksi publik
+            (``supports_claim=True`` padahal ``grounded=False``).
         """
         if not evidence:
             return TrustAssessment(
@@ -82,6 +108,25 @@ class TrustEngine:
 
         confidence = round(avg_relevance * coverage, 3)
 
+        # ----- Grounding integration (optional) -----
+        # Trust tidak memvalidasi konten evidence, tapi jika Grounding
+        # Guard sudah menyatakan jawaban final TIDAK grounded, Trust
+        # HARUS menurunkan confidence dan risk_level agar API publik
+        # tidak menampilkan ``supports_claim=True`` bersamaan dengan
+        # ``grounded=False``. ``requires_human=True`` dipertahankan
+        # untuk general_knowledge_fallback (pengetahuan umum model
+        # tidak diverifikasi knowledge base).
+        if grounded is False and supports_claim:
+            confidence = min(confidence, 0.20)
+            if risk_level == RiskLevel.LOW:
+                risk_level = RiskLevel.MEDIUM
+            issues = list(issues) + [
+                "Grounding menyatakan jawaban tidak didukung evidence",
+            ]
+            supports_claim = False
+            if not requires_human:
+                requires_human = True
+
         return TrustAssessment(
             supports_claim=supports_claim,
             evidence_count=len(evidence),
@@ -95,6 +140,7 @@ class TrustEngine:
                 "coverage": round(coverage, 3),
                 "relevant_evidence_count": relevant_count,
                 "total_evidence": len(evidence),
+                "grounding_informed": grounded is not None,
             },
         )
 
@@ -109,6 +155,7 @@ class TrustEngine:
                 evidence=item.get("evidence", []),
                 claim=item.get("claim", ""),
                 context=item.get("context"),
+                grounded=item.get("grounded"),
             )
             results.append(result)
         return results

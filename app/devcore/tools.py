@@ -44,9 +44,15 @@ def find_file(ws: Workspace, args: dict[str, Any]) -> dict[str, Any]:
     if not q or ".." in q.split("/"):
         return _fail("find_file", "query tidak valid", query=q)
     matches: list[str] = []
+    traversal_errors: list[str] = []
+
+    def traversal_error(exc: OSError) -> None:
+        traversal_errors.append(type(exc).__name__)
+
     scanned, truncated = 0, False
-    for dirpath, dirs, files in os.walk(ws.root, followlinks=False):
-        dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS and not (dirpath == str(ws.root) and d == "data"))
+    for dirpath, dirs, files in os.walk(ws.root, followlinks=False, onerror=traversal_error):
+        dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS and not is_sensitive_name(d)
+                         and not (dirpath == str(ws.root) and d == "data"))
         for name in sorted(files):
             scanned += 1
             if scanned > MAX_SCAN:
@@ -62,6 +68,10 @@ def find_file(ws: Workspace, args: dict[str, Any]) -> dict[str, Any]:
                     break
         if truncated:
             break
+    if traversal_errors:
+        return {"success": False, "tool": "find_file", "query": q, "matches": matches,
+                "truncated": True, "incomplete": True,
+                "error": "pencarian tidak lengkap: " + ", ".join(sorted(set(traversal_errors)))}
     return {"success": True, "tool": "find_file", "query": q, "matches": matches, "truncated": truncated, "error": None}
 
 
@@ -73,10 +83,15 @@ def list_directory(ws: Workspace, args: dict[str, Any]) -> dict[str, Any]:
     if not p.is_dir():
         return _fail("list_directory", "direktori tidak ditemukan", path=ws.rel(p) if p.is_relative_to(ws.root) else "?")
     entries = []
-    for child in sorted(p.iterdir(), key=lambda c: (not c.is_dir(), c.name.lower())):
-        if child.name in SKIP_DIRS or is_sensitive_name(child.name) or (p == ws.root and child.name == "data"):
-            continue
-        entries.append({"name": child.name, "type": "dir" if child.is_dir() else "file"})
+    try:
+        children = sorted(p.iterdir(), key=lambda c: (not c.is_dir(), c.name.lower()))
+        for child in children:
+            if child.name in SKIP_DIRS or is_sensitive_name(child.name) or (p == ws.root and child.name == "data"):
+                continue
+            entries.append({"name": child.name, "type": "dir" if child.is_dir() else "file"})
+    except OSError as exc:
+        return _fail("list_directory", f"gagal membuka direktori: {type(exc).__name__}",
+                     path=ws.rel(p), incomplete=True)
     return {"success": True, "tool": "list_directory", "path": ws.rel(p), "entries": entries[:MAX_ENTRIES],
             "truncated": len(entries) > MAX_ENTRIES, "error": None}
 

@@ -24,16 +24,22 @@ export const responsibilities=[
 export const engineeringViews=['Roadmap','Architecture','Engineering','Runtime'] as const;
 export function Shell(){
   const pathname=useRouterState({select:s=>s.location.pathname});
-  if(pathname==='/ui')return <main className="user-app"><Outlet/></main>;
+  return <AdminAuthProvider><ShellContent pathname={pathname}/></AdminAuthProvider>;
+}
+function ShellContent({pathname}:{pathname:string}){
+  if(pathname==='/'||pathname==='/ui'||pathname==='/assistant')return <main className="chat-page"><Outlet/></main>;
   const current=operatorMenus.find(([path])=>path===pathname)?.[1]??(pathname==='/'?'Beranda Operator':'Detail V1');
-  return <AdminAuthProvider><HumanProvider><div className="shell operator-shell">
+  return <HumanProvider><div className="shell operator-shell">
     <a className="skip-link" href="#operator-content">Lewati navigasi</a>
     <aside><Link className="brand" to="/dashboard"><span className="mark">N</span><span>NUSANTARA<small>OPERATOR CONTROL PLANE V1</small></span></Link>
-    <nav aria-label="Navigasi operator">{operatorMenus.slice(0,6).map(([to,label])=><Link key={to} to={to} activeProps={{className:'active'}}>{label}</Link>)}</nav>
-    <details className="technical-menu" open={operatorMenus.slice(6).some(([to])=>to===pathname)||undefined}><summary>Developer Core / Pengaturan &amp; Teknis</summary><nav aria-label="Pengaturan dan teknis">{operatorMenus.slice(6).map(([to,label])=><Link key={to} to={to} activeProps={{className:'active'}}>{label}</Link>)}</nav></details>
+    <Link className="chat-return" to="/">← Kembali ke Chat</Link>
+    <div className="workspace-identity"><span>N</span><div>Nusantara V1<small>Workspace utama · lokal</small></div></div>
+    <p className="nav-caption">RUANG OPERATOR</p>
+    <nav aria-label="Navigasi operator">{operatorMenus.map(([to,label],i)=><Link key={to} to={to} activeProps={{className:'active'}}><span className="nav-symbol" aria-hidden="true">{['⌂','◈','✓','⚙'][i]}</span>{label}</Link>)}</nav>
+    <div className="operator-guide"><h3>Satu langkah yang jelas.</h3><p>Pahami masalahnya, periksa buktinya, lalu ambil keputusan.</p><Link to="/approvals">Tinjau Human Control ↗</Link></div>
     <div className="sidebar-foot">Control Plane V1<details><summary>Identitas frontend</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details></div></aside>
-    <main id="operator-content" tabIndex={-1}><div className="operator-topbar"><span>{current}</span><OperatorConnection/></div><Outlet/></main>
-  </div></HumanProvider></AdminAuthProvider>;
+    <main id="operator-content" tabIndex={-1}><div className="operator-topbar"><span>Workspace / <strong>{current}</strong></span><OperatorConnection/></div><div className="runtime-banner"><span className="runtime-dot"/>Mode aktual · API lokal<span>Data yang tidak tersedia tetap ditandai. Keputusan mengikuti backend.</span></div><Outlet/></main>
+  </div></HumanProvider>;
 }
 export function Evidence({state,ids}:{state:SystemHealth;ids:string[]}){return <details className="trace"><summary>Trace to evidence · {ids.length}</summary>{ids.map(id=>{const e=state.evidence.find(x=>x.id===id);return <div key={id}><strong>{id}</strong><Badge status={e?.status??'NOT_VERIFIED'}/><code>{e?.reference??'Source unavailable'}</code><small>SHA-256 {e?.sha256??'NOT_VERIFIED'}</small></div>})}</details>}
 export function Page({name}:{name:PageName}){return name==='Overview'?<EngineeringConsole/>:<EvidencePage name={name}/>}
