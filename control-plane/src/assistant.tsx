@@ -2,6 +2,7 @@ import {useEffect,useState,useRef} from 'react';
 import {Link} from '@tanstack/react-router';
 import {ChatSendError,fetchChatHistory,fetchModelStatus,fetchAvailableModels,selectOperatorModel,sendUserChat,type ModelStatus,type PublicChat} from './api';
 import {useAdminAuth} from './auth';
+import {AppSidebar} from './sidebar';
 
 export function UserChat({embedded=false}:{embedded?:boolean}={}){
   const Title=embedded?'h2':'h1';
@@ -44,15 +45,18 @@ export function UserChat({embedded=false}:{embedded?:boolean}={}){
     finally{setPending(false);void refreshHistory();}
   }
   function newChat(){if(pending)return;logicalRequest.current=null;setSession(`web-${crypto.randomUUID()}`);setMessages([]);setHistoryFailures([]);setQuestion('');setError('');}
-  return <div className="assistant"><header><div><p className="eyebrow">NUSANTARA</p><Title>Asisten Anda</Title><p>Tanyakan hal yang ingin Anda pahami.</p><button type="button" disabled={pending} onClick={newChat}>+ New Chat</button></div>{!embedded&&<Link to="/settings">Pengaturan &amp; Teknis</Link>}</header>
-    <p className="assistant-model">Model aktif: <strong>{model?.model??'Belum terverifikasi'}</strong><span> Dipilih operator · cara kerja standar</span></p>
+  const historyPicker=<label>Sesi pada perangkat ini <select value={session} disabled={pending} onChange={e=>{setMessages([]);setHistoryFailures([]);setSession(e.target.value);}}>{sessions.map((id,i)=><option key={id} value={id}>Percakapan {i+1} · {id.slice(-8)}</option>)}</select></label>;
+  return <div className={embedded?'embedded-chat':'chat-app'}>
+    {!embedded&&<AppSidebar onNewChat={newChat} pending={pending}><h2>Riwayat percakapan</h2>{historyPicker}</AppSidebar>}
+    <div className="assistant"><header><Title>Asisten Anda</Title>{embedded&&<button type="button" disabled={pending} onClick={newChat}>+ New Chat</button>}</header>
+    <p className="assistant-model">Model aktif: <strong>{model?.model??'Belum terverifikasi'}</strong></p>
     <div className="conversation" aria-live="polite">{messages.length===0?<section className="welcome"><h2>Apa yang bisa saya bantu?</h2><p>Mulai dengan pertanyaan. Sumber jawaban akan ditampilkan jika tersedia.</p></section>:messages.map((turn,index)=><article key={index} className="turn"><p className="question">{turn.question}</p><div className="answer"><p>{turn.answer.response}</p>{(turn.answer.trust.requires_human||!turn.answer.grounding.grounded)&&<small>Jawaban ini membutuhkan verifikasi.</small>}
-      {turn.answer.evidence.filter((e,i,all)=>all.findIndex(x=>x.document_id===e.document_id&&x.chunk===e.chunk)===i).map((e,i)=><details className="citation" key={`${e.document_id}-${i}`}><summary>Sumber: {e.title}</summary><blockquote>{e.chunk}</blockquote></details>)}<small>{turn.answer.provider_status==='evidence_fast_path'?'Jawaban disusun dari informasi dalam sumber.':`Model yang menjawab: ${turn.answer.model}`}</small></div></article>)}
+      {turn.answer.evidence.filter((e,i,all)=>all.findIndex(x=>x.document_id===e.document_id&&x.chunk===e.chunk)===i).map((e,i)=><details className="citation" key={`${e.document_id}-${i}`}><summary>Sumber: {e.title}</summary><blockquote>{e.chunk}</blockquote></details>)}<details className="answer-details"><summary>Detail jawaban</summary><small>{turn.answer.provider_status==='evidence_fast_path'?'Jawaban disusun dari informasi dalam sumber.':`Model yang menjawab: ${turn.answer.model}`}</small></details></div></article>)}
       {pending&&<p role="status">Nusantara sedang memproses pertanyaan…</p>}</div>
     {error&&<p role="alert" className="error">{error} Pertanyaan Anda tetap tersedia untuk dicoba lagi.</p>}
-    <form onSubmit={e=>{e.preventDefault();void send();}}><label htmlFor="question">Pertanyaan Anda</label><textarea id="question" value={question} onChange={e=>setQuestion(e.target.value)} maxLength={20000} disabled={pending} required/><button disabled={pending||!question.trim()} type="submit">{pending?'Memproses…':'Kirim pertanyaan'}</button></form>
-    <details><summary>History sesi ini</summary><label>Sesi pada perangkat ini <select value={session} disabled={pending} onChange={e=>{setMessages([]);setHistoryFailures([]);setSession(e.target.value);}}>{sessions.map((id,i)=><option key={id} value={id}>Percakapan {i+1} · {id.slice(-8)}</option>)}</select></label><button disabled={pending} onClick={()=>void refreshHistory()}>Muat ulang History</button>{historyError&&<p role="status">{historyError}</p>}<p>{messages.length} jawaban ditampilkan. Maksimal 20 hasil terakhir disimpan di server. Identitas sesi tersimpan pada perangkat ini.</p>{historyFailures.map((turn,i)=><p key={i}>{turn.timestamp} · Gagal: {turn.question} · {turn.error}</p>)}<p>+ New Chat memulai sesi baru; riwayat lama tetap tersimpan di server dan tidak dihapus.</p></details>
-    <footer>Chat V1. Integrasi Hermes Nous belum tersedia. <Link to="/dashboard">Buka Control Panel</Link></footer></div>;
+    <form onSubmit={e=>{e.preventDefault();void send();}}><label htmlFor="question">Pertanyaan Anda</label><textarea id="question" placeholder="Ketik pesan Anda…" value={question} onChange={e=>setQuestion(e.target.value)} maxLength={20000} disabled={pending} required/><button disabled={pending||!question.trim()} type="submit">{pending?'Memproses…':'Kirim pertanyaan'}</button></form>
+    <details className="chat-details"><summary>History sesi ini</summary>{embedded&&historyPicker}<button disabled={pending} onClick={()=>void refreshHistory()}>Muat ulang History</button>{historyError&&<p role="status">{historyError}</p>}<p>{messages.length} jawaban ditampilkan. Maksimal 20 hasil terakhir disimpan di server. Identitas sesi tersimpan pada perangkat ini.</p>{historyFailures.map((turn,i)=><p key={i}>{turn.timestamp} · Gagal: {turn.question} · {turn.error}</p>)}<p>+ New Chat memulai sesi baru; riwayat lama tetap tersimpan di server dan tidak dihapus.</p></details>
+    <footer>NUSANTARA · Percakapan dan dokumen</footer></div></div>;
 }
 
 export function OperatorConsole({title='Developer Console'}:{title?:string}){
@@ -72,7 +76,7 @@ export function OperatorConsole({title='Developer Console'}:{title?:string}){
     const applied=await selectOperatorModel(choice,status.revision,token);setStatus(applied);setModels([]);setChoice('');
     setNotice('Model diterapkan untuk request berikutnya pada proses ini. Request yang berjalan mempertahankan model awal.');
   }catch(e){await refresh();setError(e instanceof Error?e.message:'Perubahan belum diterapkan.');}finally{setPending(false);}}
-  return <><header><div><p className="eyebrow">KENDALI OPERATOR</p><h1>{title}</h1></div><Link to="/ui">Buka Chat V1 lama</Link></header>
+  return <><header><div><p className="eyebrow">KENDALI OPERATOR</p><h1>{title}</h1></div><Link to="/">Kembali ke chat</Link></header>
     <section className="panel"><h2>Model runtime V1</h2><p>Status: <strong>{status?.status??'NOT_VERIFIED'}</strong></p><p>Model aktif: {status?.model??'NOT_VERIFIED'} · Provider: {status?.provider??'NOT_VERIFIED'}</p>
       <p>Pilihan berlaku pada proses ini saja. Konsistensi antarworker belum dibuktikan. Pilihan kembali ke bootstrap setelah proses berhenti.</p>
       <label htmlFor="operator-token">Token operator</label><input id="operator-token" type="password" autoComplete="off" value={token} onChange={e=>{setToken(e.target.value);setModels([]);setChoice('');}}/>

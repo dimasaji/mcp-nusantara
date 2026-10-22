@@ -1,12 +1,14 @@
 import {useQuery} from '@tanstack/react-query';
 import {lazy,Suspense} from 'react';
 import {EngineeringConsole} from './engineering-console';
-import {Link,Outlet,useRouterState} from '@tanstack/react-router';
+import {Outlet,useRouterState} from '@tanstack/react-router';
 import {fetchSnapshot} from './api';
 import {isAttestation,type SystemHealth,type Snapshot} from './schemas';
 import {HumanProvider,AttestationIdentity} from './human';
 import {AdminAuthProvider} from './auth';
-import {operatorMenus,OperatorConnection} from './operator';
+import {OperatorConnection} from './operator';
+import {AppSidebar} from './sidebar';
+import {SettingsNavigation} from './settings';
 const EngineeringGraph=lazy(()=>import('./graph').then(module=>({default:module.EngineeringGraph})));
 declare const __CPLANE_BUILD__:{version:string;gitCommit:string;timestamp:string;environment:string;sourceId:string};
 export const navigation=['Overview','Roadmap','Architecture','Engineering','Governance','Verification','Runtime','Knowledge'] as const;
@@ -24,15 +26,13 @@ export const responsibilities=[
 export const engineeringViews=['Roadmap','Architecture','Engineering','Runtime'] as const;
 export function Shell(){
   const pathname=useRouterState({select:s=>s.location.pathname});
-  if(pathname==='/ui')return <main className="user-app"><Outlet/></main>;
-  const current=operatorMenus.find(([path])=>path===pathname)?.[1]??(pathname==='/'?'Beranda Operator':'Detail V1');
-  return <AdminAuthProvider><HumanProvider><div className="shell operator-shell">
+  if(['/','/ui','/workspace'].includes(pathname))return <main className="user-app"><Outlet/></main>;
+  return <AdminAuthProvider><HumanProvider><div className="shell operator-shell settings-shell">
     <a className="skip-link" href="#operator-content">Lewati navigasi</a>
-    <aside><Link className="brand" to="/dashboard"><span className="mark">N</span><span>NUSANTARA<small>OPERATOR CONTROL PLANE V1</small></span></Link>
-    <nav aria-label="Navigasi operator">{operatorMenus.slice(0,6).map(([to,label])=><Link key={to} to={to} activeProps={{className:'active'}}>{label}</Link>)}</nav>
-    <details className="technical-menu" open={operatorMenus.slice(6).some(([to])=>to===pathname)||undefined}><summary>Developer Core / Pengaturan &amp; Teknis</summary><nav aria-label="Pengaturan dan teknis">{operatorMenus.slice(6).map(([to,label])=><Link key={to} to={to} activeProps={{className:'active'}}>{label}</Link>)}</nav></details>
-    <div className="sidebar-foot">Control Plane V1<details><summary>Identitas frontend</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details></div></aside>
-    <main id="operator-content" tabIndex={-1}><div className="operator-topbar"><span>{current}</span><OperatorConnection/></div><Outlet/></main>
+    <AppSidebar settingsActive/>
+    <main id="operator-content" tabIndex={-1}><SettingsNavigation pathname={pathname}/><div className="operator-topbar"><OperatorConnection/></div><Outlet/>
+      <details className="settings-build"><summary>Identitas frontend</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details>
+    </main>
   </div></HumanProvider></AdminAuthProvider>;
 }
 export function Evidence({state,ids}:{state:SystemHealth;ids:string[]}){return <details className="trace"><summary>Trace to evidence · {ids.length}</summary>{ids.map(id=>{const e=state.evidence.find(x=>x.id===id);return <div key={id}><strong>{id}</strong><Badge status={e?.status??'NOT_VERIFIED'}/><code>{e?.reference??'Source unavailable'}</code><small>SHA-256 {e?.sha256??'NOT_VERIFIED'}</small></div>})}</details>}
