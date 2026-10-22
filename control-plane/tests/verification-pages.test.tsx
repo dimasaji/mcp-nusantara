@@ -37,11 +37,14 @@ const history=(decisions:DecisionRecord[])=>({decisions,executions:[],decision_a
 
 /** Link needs a real router context, so render inside a memory router. */
 const linkTargets=['/overview','/system','/evidence','/console','/review-execute','/verification','/review'];
-function renderWith(node:ReactNode,token='test-token',entry='/verification'){
+async function renderWith(node:ReactNode,token='test-token',entry='/verification'){
   let current:ReactNode=node;
   const root=createRootRoute({component:()=><>{current}</>});
   const router=createRouter({routeTree:root.addChildren(linkTargets.map(path=>createRoute({getParentRoute:()=>root,path,component:()=>null}))),
     history:createMemoryHistory({initialEntries:[entry]})});
+  // Resolve navigation before testing authentication. Router startup/pending
+  // delays under parallel workers are unrelated to the credential boundary.
+  await router.load();
   const client=new QueryClient({defaultOptions:{queries:{retry:false}}});
   const view=render(<QueryClientProvider client={client}><AdminAuthProvider initialToken={token}><RouterProvider router={router}/></AdminAuthProvider></QueryClientProvider>);
   current=node;
@@ -121,7 +124,7 @@ describe('verification page',()=>{
       if(String(input).includes('/history')&&(init?.headers as Record<string,string>)?.['X-Admin-Token']==='wrong')return {ok:false,status:403,json:async()=>({})};
       return original(input,init);
     }));
-    renderWith(<VerificationPage/>);
+    await renderWith(<VerificationPage/>);
     await waitFor(()=>expect(screen.getByRole('button',{name:'PASS'})).toBeEnabled());
     fireEvent.change(screen.getByLabelText('Token operator'),{target:{value:'wrong'}});
     await waitFor(()=>expect(screen.getByRole('button',{name:'PASS'})).toBeDisabled());
@@ -131,7 +134,7 @@ describe('verification page',()=>{
   });
   it('explains what changed, what was tested and the next step',async()=>{
     stubFetch(validPackage);
-    renderWith(<VerificationPage/>);
+    await renderWith(<VerificationPage/>);
     expect(await screen.findByText('Lima status terpisah')).toBeInTheDocument();
     for(const id of ['EV','PLAN','AUTH','DEC','EXEC'])seen(new RegExp(id+': '));
     expect(await screen.findByRole('heading',{name:'1. Apa yang akan dikerjakan'})).toBeInTheDocument();
@@ -143,7 +146,7 @@ describe('verification page',()=>{
   });
   it('states plainly when no operator token is present',async()=>{
     stubFetch(validPackage);
-    renderWith(<VerificationPage/>,'');
+    await renderWith(<VerificationPage/>,'');
     expect(await screen.findByText('Status operator')).toBeInTheDocument();
     seen(/Anda masih bisa membaca bukti/);
     seen(/AUTH: /);
@@ -153,7 +156,7 @@ describe('verification page',()=>{
 describe('review and execute page',()=>{
   it('shows five separate statuses, disabled reasons and persistent history',async()=>{
     stubFetch(validPackage);
-    renderWith(<ExecutionReview/>,'test-token','/review-execute');
+    await renderWith(<ExecutionReview/>,'test-token','/review-execute');
     expect(await screen.findByText('Lima status terpisah')).toBeInTheDocument();
     seen('Status operator');
     expect(await screen.findByRole('heading',{name:'3. Keputusan pengguna'})).toBeInTheDocument();
@@ -162,7 +165,7 @@ describe('review and execute page',()=>{
   });
   it('locks decisions without a token and explains why',async()=>{
     stubFetch(validPackage);
-    renderWith(<ExecutionReview/>,'','/review-execute');
+    await renderWith(<ExecutionReview/>,'','/review-execute');
     expect(await screen.findByText(/keputusan dan History memerlukan autentikasi/)).toBeInTheDocument();
     expect(await screen.findByRole('button',{name:'PASS'})).toBeDisabled();
     expect(await screen.findByText(/PASS belum tersedia: Masukkan token/)).toBeInTheDocument();
@@ -172,7 +175,7 @@ describe('review and execute page',()=>{
 describe('overview page',()=>{
   it('shows system condition, attention items and the six responsibilities',async()=>{
     stubFetch(validPackage);
-    renderWith(<OverviewPage/>,'test-token','/overview');
+    await renderWith(<OverviewPage/>,'test-token','/overview');
     expect(await screen.findByText('Enam tanggung jawab Developer Core')).toBeInTheDocument();
     seen('Kondisi sistem');
     seen('Yang perlu perhatian');

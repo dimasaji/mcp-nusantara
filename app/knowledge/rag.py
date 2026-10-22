@@ -165,12 +165,12 @@ class ChunkProcessor:
         config: Optional[KnowledgeBaseConfig] = None,
     ):
         self._chunker = chunker or SentenceChunker()
-        self._embedding_func = embedding_func or self._default_embedding
+        self._embedding_func = embedding_func or self.default_embedding
         self._store = vector_store or SQLiteVectorStore()
         self._config = config or KnowledgeBaseConfig()
 
     def default_embedding(self, text: str) -> List[float]:
-        """Embedding default (placeholder - nanti diganti dengan model nyata)."""
+        "Embedding default (placeholder - nanti diganti dengan model nyata)."
         # Placeholder: hash-based embedding (bukan semantic)
         # Diimplementasi nanti dengan model embedding nyata
         return self._hash_embedding(text)
@@ -240,22 +240,23 @@ class RAG:
         self._store = vector_store if vector_store is not None else (
             SQLiteVectorStore(str(nusantara_config.knowledge.database))
             if nusantara_config is not None else SQLiteVectorStore())
-        self._parser = parser or DocParser()
-        self._chunker = chunker or SentenceChunker()
-        # Gunakan IndoBERT 768D sebagai default embedding RAG.
-        # Jika embedding_func diberikan dari luar, tetap gunakan custom embedding.
-        self._embedding_adapter = None
+        self._chunker = chunker if chunker is not None else SentenceChunker(
+            self._config.chunk_size, self._config.chunk_overlap)
+        self._chunk_processor = None
         if embedding_func is not None:
             self._embedding = embedding_func
+            self._embedding_adapter = None
         else:
+            # The authoritative embedding snapshot owns model selection. Legacy
+            # declarations must not silently replace IndoBERT with hash vectors.
             self._embedding_adapter = (IndoBERTEmbeddingAdapter(nusantara_config=nusantara_config)
                                        if nusantara_config is not None else IndoBERTEmbeddingAdapter())
             self._embedding = self._embedding_adapter
-        self._chunk_processor = None
 
-    def _default_embedding(self, text: str) -> List[float]:
-        """Default embedding (placeholder)."""
+    def default_embedding(self, text: str) -> List[float]:
+        """Embedding default (hash-based placeholder - nanti diganti dengan model nyata)."""
         import hashlib
+        import struct
 
         # Simple hash-based embedding untuk testing
         hash_bytes = hashlib.md5(text.encode()).digest()
@@ -383,6 +384,15 @@ class RAG:
                     end_char=len(text_content),
                 )]
 
+            # Validate the complete embedding batch before persisting metadata
+            # or chunks, including stores without SQLite transaction support.
+            embedding_vectors = []
+            for chunk in chunks:
+                vector = self._embedding(chunk.content)
+                if len(vector) != self._config.embedding_dimension:
+                    raise ValueError("EMBEDDING_DIMENSION_MISMATCH; no knowledge changed")
+                embedding_vectors.append(vector)
+
             # 4. Simpan info dokumen terlebih dahulu agar Foreign Key SQLite valid
             doc_info = DocumentInfo(
                 document_id=doc_id,
@@ -399,10 +409,9 @@ class RAG:
 
             # 5. Embedding dan simpan chunk
             chunks_stored = 0
-            for i, chunk in enumerate(chunks):
+            for chunk, embedding_vector in zip(chunks, embedding_vectors, strict=True):
                 # TextChunk is an immutable Pydantic model; keep embedding data in
                 # the StoredChunk instead of mutating the source chunk.
-                embedding_vector = self._embedding(chunk.content)
                 embedding_data = {
                     "vector": embedding_vector,
                     "dimension": len(embedding_vector),

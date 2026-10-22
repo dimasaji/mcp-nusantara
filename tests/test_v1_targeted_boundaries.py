@@ -20,7 +20,7 @@ _pure_names = {
     'test_projection_excludes_internal_mirrors_unknown_fields_and_never_mutates',
     'test_unknown_grounding_reason_and_non_scalar_goal_fail_closed_without_stringifying',
     'test_malformed_public_assessment_is_not_silently_coerced',
-    'test_oversized_citation_is_not_returned_or_silently_truncated',
+    'test_oversized_citation_is_removed_without_mutating_source',
 }
 _nodes = [n for n in _tree.body if (
     isinstance(n, ast.FunctionDef) and n.name in _pure_names

@@ -6,6 +6,7 @@ import hashlib
 import html
 import sqlite3
 import os
+import re
 import shutil
 import subprocess
 import zipfile
@@ -20,6 +21,11 @@ from .schemas import RetrievalEvidenceList
 
 
 class KnowledgeEngine:
+    @staticmethod
+    def _source_title(text: str, fallback: str) -> str:
+        match = re.search(r'^\s*Nama\s+S\.?O\.?P\.?\s*[:\-]?\s+([^\r\n]+)', text, re.M | re.I)
+        return match.group(1).strip()[:1024] if match else fallback
+
     def __init__(self, rag: Optional[RAG] = None, *, nusantara_config: NusantaraConfig | None = None):
         self.configuration = nusantara_config
         self._pipeline_initialized = False
@@ -53,6 +59,18 @@ class KnowledgeEngine:
                 raise ValueError('KNOWLEDGE_DOCUMENT_SCOPE_INVALID')
         result = self.rag.query(query_text=query, top_k=top_k,
                                 **({'document_ids': scope} if scope is not None else {}))
+        for evidence in result.evidence_pack.evidence:
+            info = self.rag.get_document_info(evidence.document_id)
+            metadata = info.metadata if info else {}
+            evidence.title = self._source_title(evidence.source, evidence.title)
+            evidence.metadata['source_pages'] = metadata.get('source_pages', [])
+            # Offset counters from chunkers can be approximate. Cite a page only
+            # when the retrieved quotation occurs exactly once in original text.
+            start = evidence.source.find(evidence.chunk) if evidence.chunk else -1
+            if start >= 0 and evidence.source.find(evidence.chunk, start + 1) < 0:
+                end = start + len(evidence.chunk)
+                evidence.metadata['citation_pages'] = [p['page'] for p in metadata.get('source_pages', [])
+                    if p['start'] < end and p['end'] > start]
         return RetrievalEvidenceList(result.evidence_pack.evidence, getattr(result, 'effective_profile', None))
 
     def search(self, query: str, top_k: int | None = None):
@@ -229,8 +247,22 @@ class KnowledgeEngine:
             metadata={**(source_metadata or {}),'pipeline_status':'READY','source_sha256':digest,'source_filename':safe_name,
                       'source_authority':'UNVERIFIED','revision_status':'NOT_CONFIRMED_CURRENT',
                       'indexed_at':datetime.now(timezone.utc).isoformat()}
+            title = self._source_title(text, safe_name)
+            metadata['source_title'] = title
+            # Record physical PDF pages only when offsets match extracted text.
+            # OCR or other formats retain unknown pagination rather than guesses.
+            if Path(safe_name).suffix.lower() == '.pdf':
+                from pypdf import PdfReader
+                import io
+                pages = [page.extract_text() or '' for page in PdfReader(io.BytesIO(raw)).pages]
+                if '\n'.join(pages) == text:
+                    offset = 0
+                    metadata['source_pages'] = []
+                    for number, page_text in enumerate(pages, 1):
+                        metadata['source_pages'].append({'page': number, 'start': offset, 'end': offset + len(page_text)})
+                        offset += len(page_text) + 1
             from .schemas import DocumentIngestRequest
-            result=self.rag.ingest_document(DocumentIngestRequest(document_id=digest_id,title=safe_name,
+            result=self.rag.ingest_document(DocumentIngestRequest(document_id=digest_id,title=title,
                  source=text,content_type='text/plain',metadata=metadata))
             if not result.success:
                 raise ValueError(result.error or 'INDEXING_FAILED')

@@ -28,7 +28,7 @@ describe('V1 assistant route',()=>{
       history:createMemoryHistory({initialEntries:[path]})});
     const client=new QueryClient({defaultOptions:{queries:{retry:false}}});
     render(<QueryClientProvider client={client}><RouterProvider router={router}/></QueryClientProvider>);
-    expect(await screen.findByRole('heading',{name:'Asisten Anda'})).not.toBeNull();
+    expect(await screen.findByRole('heading',{name:'Mau dibantu apa hari ini?'})).not.toBeNull();
     expect(screen.getByLabelText('Pertanyaan Anda')).not.toBeNull();
     expect((screen.getByRole('button',{name:'Kirim pertanyaan'}) as HTMLButtonElement).disabled).toBe(true);
     expect(screen.queryByRole('navigation',{name:'Runtime control'})).toBeNull();

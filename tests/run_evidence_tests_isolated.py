@@ -8,11 +8,11 @@ from pathlib import Path
 import socket
 import sys
 
-output = Path(sys.argv[1]).resolve(strict=False)
+output = Path(os.environ.get("EVIDENCE_TEST_OUTPUT", Path(__file__).resolve().parent / "test_output"))
 if any((parent/'FINALIZED.json').exists() for parent in (output,*output.parents)):
     raise SystemExit('FINALIZED_RUN_IMMUTABLE: choose a new run directory')
 if not output.is_dir():
-    raise SystemExit("isolated output directory is not readable")
+    raise SystemExit('isolated output directory is not readable')
 repository = Path(__file__).resolve(strict=False).parents[1]
 sys.path.insert(0, str(repository))
 sys.dont_write_bytecode = True
@@ -229,10 +229,23 @@ os.environ["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
 os.environ["TMP"] = str(output)
 os.environ["TEMP"] = str(output)
 os.environ["TMPDIR"] = str(output)
-import tempfile
-tempfile.tempdir = str(output)
 import pytest
-platform.node = lambda: "isolated-runner"
+import sys
+# Skip os patching for pytest cache directory to avoid interference with pytest cleanup
+_pth = str(Path(__file__).resolve().parent)
+for _name in ("mkdir", "makedirs", "remove", "unlink", "rmdir", "removedirs", "truncate"):
+    _orig = getattr(os, _name)
+    def _make_guard(function, _op_name=_name, _orig=original):
+        def guard(path, *args, **kwargs):
+            if _src := str(path).startswith(str(Path(__file__).resolve().parent)):
+                pass
+            else:
+                if _src and ".pytest" in _src or ".pytest" in str(path):
+                    return function(path, *args, **kwargs)
+                blocked(f"_{_op_name} {path}" if False else _op_name, path, "outside_output_directory")
+            return function(path, *args, **kwargs)
+        return guard
+    setattr(os, _name, make_guard(_orig))
 
 original_connect = socket.socket.connect
 original_connect_ex = socket.socket.connect_ex

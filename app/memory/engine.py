@@ -24,7 +24,10 @@ class MemoryEngine:
         self._chat_instance_id = secrets.token_hex(16)
 
     def _store(self, session_id):
-        if self.storage_root is None or not re.fullmatch(r'web-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}', session_id):
+        if self.storage_root is None or not re.fullmatch(
+            r'(?:web-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}|v1-(?:public|operator)-[a-f0-9]{64})',
+            session_id,
+        ):
             return None
         from app.memory.memory import LongTermMemory
         return LongTermMemory(self.storage_root)
@@ -95,7 +98,7 @@ class MemoryEngine:
                 prior = next((turn for turn in turns if turn.get('request_id') == retry_of), None)
                 if (prior is None or prior.get('question') != question or prior.get('document_ids', []) != (document_ids or []) or
                         prior.get('status') != 'FAILED' or
-                        prior.get('error') != 'HTTP_504_PRE_PROVIDER'):
+                        prior.get('error') not in {'HTTP_504_PRE_PROVIDER', 'HTTP_503_PRE_PROVIDER'}):
                     return {'state': 'RETRY_NOT_SAFE'}
 
             turns.append({
@@ -103,6 +106,7 @@ class MemoryEngine:
                 'error': None, 'status': 'PROCESSING', 'timestamp': now,
                 'instance_id': self._chat_instance_id,
                 'document_ids': document_ids or [],
+                **({'retry_of': retry_of} if retry_of else {}),
             })
             self._save(session_id)
             return {'state': 'NEW'}

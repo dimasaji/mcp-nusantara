@@ -36,7 +36,7 @@ class FakeStore:
         return list(zip(self.chunks, self.lexical))
 
     def get_document_info(self, doc):
-        return SimpleNamespace(title='fixture', source='fixture://source')
+        return SimpleNamespace(title='fixture', source='fixture://source', metadata={})
 
 
 def make_rag(tmp_path, *, top_k=2, kb=None, store=None, reranker=False):
@@ -268,7 +268,8 @@ def test_actual_v1_chat_retrieval_and_filter_block(tmp_path):
     ns = {'_evidence_math': __import__('math'), 'capture_retrieval': capture_retrieval, '_knowledge': KnowledgeEngine(rag=make_rag(tmp_path, store=FakeStore((.8,.55), (0,0)))),
           'request': SimpleNamespace(user_input='alpha'),
           # This fixture exercises evidence retrieval, not conversation/repeat.
-          'conversation': False, 'repeated_text': None, 'turn': {'query':'alpha'}}
+          'conversation': False, 'repeated_text': None, 'turn': {'query':'alpha'},
+          'search_scope': {}, 'sop_hint': None}
     async def run_sync(fn, *args, **kwargs):
         return await asyncio.to_thread(fn, *args, **kwargs)
     ns['_run_sync_v1'] = run_sync
@@ -299,20 +300,23 @@ def test_actual_v2_callback_public_shape_and_internal_linkage(tmp_path, caplog):
 
 @pytest.mark.parametrize('request_values,source', [({}, 'REQUEST_DEFAULT'), ({'top_k': 5}, 'REQUEST_EXPLICIT')])
 def test_actual_v1_search_default_override_and_response(tmp_path, caplog, request_values, source):
-    from fastapi import APIRouter, HTTPException
+    from fastapi import APIRouter, Header, HTTPException
     tree = source_tree('app/api/routes.py')
     endpoint = next(n for n in tree.body if isinstance(n, ast.AsyncFunctionDef) and n.name == 'search_knowledge')
     request_class = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'KnowledgeSearchRequest')
     from pydantic import BaseModel, Field
     ns = {'router': APIRouter(), 'BaseModel': BaseModel, 'Field': Field, 'Dict': dict, 'Any': object,
-          'HTTPException': HTTPException, 'capture_retrieval': capture_retrieval,
+          'HTTPException': HTTPException, 'Header': Header, 'capture_retrieval': capture_retrieval,
           '_knowledge': KnowledgeEngine(rag=make_rag(tmp_path))}
     async def run_sync(fn, *args, **kwargs):
         return await asyncio.to_thread(fn, *args, **kwargs)
     ns['_run_sync_v1'] = run_sync
+    def authorize(token):
+        assert token == 'fixture-operator'
+    ns['require_admin'] = authorize
     exec(compile(ast.Module(body=[request_class, endpoint], type_ignores=[]), '<v1-search-source>', 'exec'), ns)
     with caplog.at_level('INFO', logger='nusantara'):
-        response = asyncio.run(ns['search_knowledge'](ns['KnowledgeSearchRequest'](query='alpha', **request_values)))
+        response = asyncio.run(ns['search_knowledge'](ns['KnowledgeSearchRequest'](query='alpha', **request_values), 'fixture-operator'))
     data = next(r.fields['profile'] for r in caplog.records if r.message == 'effective_rag_profile')
     assert data['consumer'] == 'V1_KNOWLEDGE_SEARCH'
     assert data['effective_values']['top_k'] == 5

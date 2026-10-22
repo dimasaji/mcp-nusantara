@@ -1,14 +1,25 @@
 """Focused safety checks for the isolated evidence runner's file guards."""
 import os
 import sys
+from pathlib import Path
 
 import pytest
 
 
-runner = sys.modules["__main__"]
+output = Path(__file__).resolve().parent / "test_output"
+repository = Path(__file__).resolve().parent
+
+def guarded_open(file, mode="r", *args, **kwargs):
+    from run_evidence_tests_isolated import guarded_open as _guarded_open
+    return _guarded_open(file, mode, *args, **kwargs)
+
+runner = type(sys)(__name__ + ".runner")
+runner.output = output
+runner.repository = repository
+runner.guarded_open = guarded_open
 
 
-def test_output_writes_are_allowed_and_outside_writes_blocked(tmp_path):
+def test_output_writes_are_allowed_and_outside_writes_blocked():
     target = runner.output / "guard-write-check.txt"
     with runner.guarded_open(target, "w", encoding="utf-8") as stream:
         stream.write("ok")

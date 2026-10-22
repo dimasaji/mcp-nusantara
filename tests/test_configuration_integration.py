@@ -234,7 +234,7 @@ raise SystemExit(pytest.main(['-q', '-p', 'no:cacheprovider',
     root = Path(__file__).parents[1]
     env = dict(os.environ, NUSANTARA_DATA_DIR=str(tmp_path / 'runtime'),
                R1_FIXTURE_ROOT=str(tmp_path), PYTHONDONTWRITEBYTECODE='1',
-               R1_FIXTURE_REPORT=str(root / '.dev/checkpoints/r1-local-001-20261007/public-regression.xml'))
+               R1_FIXTURE_REPORT=str(tmp_path / 'public-regression.xml'))
     result = subprocess.run([sys.executable, '-B', '-c', script], cwd=root, env=env,
                             text=True, capture_output=True, timeout=60)
     assert result.returncode == 0, result.stdout + result.stderr

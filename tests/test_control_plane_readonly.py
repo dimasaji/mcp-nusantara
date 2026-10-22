@@ -10,6 +10,17 @@ from app.api.control_plane import router
 from app.core.control_plane_projection import project
 
 
+@pytest.fixture(autouse=True)
+def inaccessible_production_assets(monkeypatch):
+    import app.core.control_plane_projection as projection
+    original = projection.digest
+    def fixture_digest(path):
+        if path.resolve().is_relative_to(projection.ROOT / 'data'):
+            raise PermissionError('Production store is outside this fixture')
+        return original(path)
+    monkeypatch.setattr(projection, 'digest', fixture_digest)
+
+
 def client(host='127.0.0.1',base_url='http://127.0.0.1'):
     app=FastAPI();app.include_router(router)
     return TestClient(app,base_url=base_url,client=(host,12345))
@@ -85,6 +96,13 @@ class Guard(importlib.abc.MetaPathFinder):
             raise AssertionError('Production owner imported: ' + fullname)
 sys.meta_path.insert(0, Guard())
 sqlite3.connect = lambda *a, **k: (_ for _ in ()).throw(AssertionError('Database forbidden'))
+import app.core.control_plane_projection as projection
+original_digest = projection.digest
+def fixture_digest(path):
+    if path.resolve().is_relative_to(projection.ROOT / 'data'):
+        raise PermissionError('Production store is outside this fixture')
+    return original_digest(path)
+projection.digest = fixture_digest
 from app.main import app
 from fastapi.testclient import TestClient
 with TestClient(app, base_url='http://127.0.0.1', client=('127.0.0.1', 12345)) as client:

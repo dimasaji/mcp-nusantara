@@ -105,7 +105,8 @@ async def test_other_methods_and_paths_unavailable(app):
 def test_registration_and_existing_dev_preserved():
     root = Path(__file__).resolve().parents[1]
     current = ast.parse((root / "app/api/v2_routes.py").read_text(encoding="utf-8"))
-    before = ast.parse(Path(os.environ["PREVIEW_V2_BEFORE"]).read_text(encoding="utf-8"))
+    archived = root / ".dev/checkpoints/r2-20261007/source-before/app/api/v2_routes.py"
+    before = ast.parse(Path(os.environ.get("PREVIEW_V2_BEFORE", archived)).read_text(encoding="utf-8-sig"))
     for name in ("DevRequest", "dev_chat"):
         old = next(n for n in before.body if getattr(n, "name", None) == name)
         new = next(n for n in current.body if getattr(n, "name", None) == name)

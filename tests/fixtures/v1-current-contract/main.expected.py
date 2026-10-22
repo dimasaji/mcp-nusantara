@@ -33,7 +33,26 @@ CONTROL_PLANE_BUNDLE = Path(__file__).resolve().parents[1] / 'control-plane' / '
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    yield
+    watcher = None
+    if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
+        import asyncio
+        import logging
+        from app.api.routes import _knowledge
+        logger=logging.getLogger(__name__)
+        async def monitor():
+            while True:
+                try:
+                    await asyncio.to_thread(_knowledge.scan_knowledge_watch)
+                except Exception:
+                    # Pipeline failures are retained per source; service stays available.
+                    logger.exception('Knowledge folder monitor failed')
+                await asyncio.sleep(5)
+        watcher=asyncio.create_task(monitor())
+    try:
+        yield
+    finally:
+        if watcher:
+            watcher.cancel()
 
 
 app = FastAPI(
@@ -90,16 +109,15 @@ async def health_check():
 
 @app.get("/", include_in_schema=False)
 @app.get("/ui", include_in_schema=False)
-async def dashboard():
+@app.get("/assistant", include_in_schema=False)
+async def dashboard(request: Request):
     if _READ_ONLY_EVIDENCE:
         from fastapi import HTTPException
         raise HTTPException(404, 'Legacy runtime UI is unavailable in evidence-only mode')
     if _ATTESTATION:
         return FileResponse(UI_FILE)
-    if not (CONTROL_PLANE_BUNDLE / 'index.html').is_file():
-        from fastapi import HTTPException
-        raise HTTPException(503, 'User UI build belum tersedia.')
-    return FileResponse(CONTROL_PLANE_BUNDLE / 'index.html')
+    target = request.url.replace(scheme='http', netloc=f"{_LOCAL_SERVICES.get('host', '127.0.0.1')}:{_LOCAL_SERVICES['frontendPort']}")
+    return RedirectResponse(str(target), status_code=307)
 
 
 for ui_path in ('console', 'review-execute', 'overview', 'system', 'evidence', 'test', 'review', 'decision',

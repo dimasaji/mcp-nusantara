@@ -98,6 +98,7 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = [
+    "--ignore-glob=*.bak-*.py",
     "--strict-markers",
     "--strict-config",
     "-v",

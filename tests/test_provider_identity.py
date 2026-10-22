@@ -365,9 +365,44 @@ def test_public_request_response_models_and_routes_unchanged():
     for name in ['app/api/routes.py', 'app/api/v2_routes.py']:
         def surface(path):
             module = ast.parse(path.read_text(encoding='utf-8-sig'))
-            # HDR-OPENROUTER-01 choice A authorizes exactly one enum member.
-            # Normalize only that additive delta; every other public schema and
-            # route signature still has to match the original baseline.
+            current = path == root/name
+            approved = ast.parse('''class Approved:
+    request_id: str | None = Field(default=None, pattern="^[a-f0-9]{32}$")
+    retry_of: str | None = Field(default=None, pattern="^[a-f0-9]{32}$")
+    document_ids: list[str] = Field(default_factory=list, max_length=20)
+''').body[0]
+            approved_fields = {field.target.id: field for field in approved.body}
+            token_args = ast.parse('def allowed(x_admin_token: str | None = Header(default=None)): pass').body[0].args
+            for node in module.body:
+                if current and isinstance(node, ast.ClassDef) and node.name == 'ChatRequest':
+                    retained = []
+                    for field in node.body:
+                        key = field.target.id if isinstance(field, ast.AnnAssign) else None
+                        if key in approved_fields:
+                            assert ast.dump(field) == ast.dump(approved_fields[key])
+                            continue
+                        if key == 'session_id':
+                            expected = ast.parse("Field(default_factory=lambda: f'web-{uuid4()}', min_length=1, max_length=128)", mode='eval').body
+                            assert ast.dump(field.value) == ast.dump(expected)
+                            field.value = ast.parse("Field(default='web', min_length=1, max_length=128)", mode='eval').body
+                        retained.append(field)
+                    assert approved_fields.keys() <= {field.target.id for field in node.body if isinstance(field, ast.AnnAssign)}
+                    node.body = retained
+                if current and name == 'app/api/routes.py' and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in {
+                    'chat', 'search_knowledge', 'list_knowledge_documents'}:
+                    assert ast.dump(node.args.args[-1]) == ast.dump(token_args.args[0])
+                    assert ast.dump(node.args.defaults[-1]) == ast.dump(token_args.defaults[0])
+                    node.args.args.pop()
+                    node.args.defaults.pop()
+            history = [node for node in module.body if isinstance(node, ast.FunctionDef) and node.name == 'chat_history']
+            if current and name == 'app/api/routes.py':
+                assert len(history) == 1
+                assert ast.unparse(history[0].decorator_list[0]) == "router.get('/chat/history')"
+                expected = ast.parse("def history(x_chat_session: str = Header(default=''), x_admin_token: str | None = Header(default=None)): pass").body[0]
+                assert ast.dump(history[0].args) == ast.dump(expected.args)
+                module.body.remove(history[0])
+            # Explicitly checked P0/idempotency additions above and the provider
+            # enum below are authorized; every unaffected surface stays pinned.
             for node in module.body:
                 if isinstance(node, ast.ClassDef) and node.name == '_PublicChatResponse':
                     for field in node.body:

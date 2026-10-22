@@ -114,11 +114,11 @@ const PublicChatSchema=z.object({session_id:z.string(),response:z.string(),model
   trust:z.object({supports_claim:z.boolean(),confidence:z.number(),risk_level:z.string(),requires_human:z.boolean(),evidence_count:z.number(),evidence_available:z.boolean()}).strict(),
   grounding:z.object({enabled:z.boolean(),grounded:z.boolean(),reason:z.string()}).strict(),
   understanding:z.object({intent:z.string()}).strict(),problem:z.object({goal:z.string().nullable()}).strict(),
-  evidence:z.array(z.object({document_id:z.string(),title:z.string(),chunk:z.string(),score:z.number()}).strict())}).strict();
+  evidence:z.array(z.object({document_id:z.string(),title:z.string(),chunk:z.string().transform(()=>''),score:z.number(),pages:z.array(z.number().int().positive()).optional()}).strict())}).strict();
 export type PublicChat=z.infer<typeof PublicChatSchema>;
-export async function fetchChatHistory(session:string){
-  return z.object({session_id:z.string(),turns:z.array(z.object({request_id:z.string().regex(/^[a-f0-9]{32}$/).optional(),question:z.string(),answer:PublicChatSchema.nullable(),error:z.string().nullable(),status:z.enum(['SUCCEEDED','FAILED','PROCESSING','UNKNOWN']),timestamp:z.string()}))}).parse(
-    await runtimeFetch('/v1/chat/history',{headers:{'X-Chat-Session':session}}));
+export async function fetchChatHistory(session:string,token=''){
+  return z.object({session_id:z.string(),turns:z.array(z.object({request_id:z.string().regex(/^[a-f0-9]{32}$/).optional(),retry_of:z.string().regex(/^[a-f0-9]{32}$/).optional(),question:z.string(),answer:PublicChatSchema.nullable(),error:z.string().nullable(),status:z.enum(['SUCCEEDED','FAILED','PROCESSING','UNKNOWN']),timestamp:z.string()}))}).parse(
+    await runtimeFetch('/v1/chat/history',{headers:{'X-Chat-Session':session,...(token?{'X-Admin-Token':token}:{})}}));
 }
 export class ChatSendError extends Error{
   constructor(message:string,readonly status:number,readonly retrySafe:boolean){super(message);this.name='ChatSendError';}
@@ -139,7 +139,7 @@ export async function sendUserChat(user_input:string,session_id:string,request_i
       },timeoutMs);
     });
     const response=await Promise.race([fetch('/v1/chat',{method:'POST',signal:controller.signal,credentials:'omit',cache:'no-store',redirect:'error',
-      headers:{'Content-Type':'application/json',...(options.documentIds?.length?{'X-Admin-Token':options.token??''}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{})})}),deadline]);
+        headers:{'Content-Type':'application/json',...(options.token&&options.documentIds?.length?{'X-Admin-Token':options.token}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{})})}),deadline]);
     if(!response.ok){
       let body:{detail?:unknown}|null=null;
       try{body=await response.json() as {detail?:unknown};}catch{/* HTTP status remains authoritative when the body is unreadable. */}
@@ -148,9 +148,11 @@ export async function sendUserChat(user_input:string,session_id:string,request_i
         response.status===409&&detail==='CHAT_REQUEST_OUTCOME_UNKNOWN'?'Hasil permintaan sebelumnya belum dapat dipastikan setelah proses berhenti. Request tidak dikirim ulang.':
         response.status===409&&detail==='CHAT_RETRY_NOT_SAFE'?'Hasil provider belum pasti; percobaan baru ditahan agar tidak menggandakan biaya.':
         response.status===504?'Batas waktu pemrosesan tercapai. Periksa History sebelum mencoba lagi.':
+        response.status===503&&detail==='RETRIEVAL_UNAVAILABLE'?'Pencarian dokumen gagal. Sumber belum dapat diperiksa; coba lagi setelah layanan Knowledge pulih.':
+        response.status===503&&response.headers?.get('X-Chat-Retry-Safe')==='pre-provider'?'Model belum tersedia. Periksa Ollama, lalu kirim ulang pertanyaan setelah pulih.':
         response.status>=500?`Layanan Chat gagal (${response.status}). Request ini tidak akan dikirim ulang otomatis.`:
         `Pertanyaan belum berhasil diproses (${response.status}).`;
-      throw new ChatSendError(message,response.status,response.status===504&&response.headers.get('X-Chat-Retry-Safe')==='pre-provider');
+      throw new ChatSendError(message,response.status,[503,504].includes(response.status)&&response.headers?.get('X-Chat-Retry-Safe')==='pre-provider');
     }
     async function readAnswer():Promise<unknown>{
       if(!response.headers?.get('content-type')?.includes('application/x-ndjson'))return response.json();
@@ -163,7 +165,8 @@ export async function sendUserChat(user_input:string,session_id:string,request_i
           for(const line of lines){
             if(!line.trim())continue;
             const event=JSON.parse(line) as {type:string;text?:string;answer?:unknown;status?:number;retry_safe?:boolean;message?:string};
-            if(event.type==='delta'&&typeof event.text==='string')options.onDelta?.(event.text);
+            // Only the final projection is authorized for display. Ignore raw
+            // deltas even from an older backend while P0 buffering is deployed.
             if(event.type==='error')throw new ChatSendError(event.message??'Chat gagal.',event.status??500,event.retry_safe===true);
             if(event.type==='final')return event.answer;
           }

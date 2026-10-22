@@ -127,7 +127,8 @@ def test_truly_generic_no_content_uses_general_knowledge_path(question):
     assert public["grounding"]["grounded"] is False
     # Boleh general_knowledge_fallback (jalur baru) atau no_evidence
     # bila question dipaksa ke evidence-only path.
-    assert public["grounding"]["reason"] in {"general_knowledge_fallback", "no_evidence"}
+    assert public["grounding"]["reason"] == "not_evaluated"
+    assert public['response'] == 'Saya bisa membantu dengan informasi umum.'
 
 
 @pytest.mark.parametrize("answer", [
@@ -144,7 +145,7 @@ def test_conversation_cannot_smuggle_official_or_verified_claims(answer):
 
 
 def test_existing_supported_answer_preserves_evidence_and_guard():
-    public, parts, core = execute("Apa itu KTP-el?", "KTP-el adalah identitas penduduk.", empty=False)
+    public, parts, core = execute("Menurut dokumen, apa itu KTP-el?", "KTP-el adalah identitas penduduk.", empty=False)
     assert public["response"] == "KTP-el adalah identitas penduduk."
     assert public["grounding"]["grounded"] is True and len(public["evidence"]) == 1
     assert core.response_policy == "evidence" and parts[5]["searched"] == 1
@@ -172,7 +173,7 @@ def test_actual_public_endpoint_sanitizes_provider_failure_without_retry():
     parts = fixture(empty=True, failure="error")
     configuration, agent, services, projector, provider, observed = parts
     tree = ast.parse(Path("app/api/routes.py").read_text(encoding="utf-8-sig"))
-    node = next(n for n in tree.body if isinstance(n, ast.AsyncFunctionDef) and n.name == "chat")
+    node = next(n for n in tree.body if isinstance(n, ast.AsyncFunctionDef) and n.name == "_chat_completed")
     node.decorator_list = []
     async def close():
         observed["closed"] = observed.get("closed", 0) + 1
@@ -185,6 +186,9 @@ def test_actual_public_endpoint_sanitizes_provider_failure_without_retry():
         "HermesAgent": lambda **kw: agent, "OllamaProvider": lambda **kw: provider,
         "_project_v1_chat_response": projector, "_language": None,
         "_record_chat_result": record_failure}
+    from app.security.v1_knowledge import V1KnowledgeBoundary
+    namespace.update(V1KnowledgeBoundary=V1KnowledgeBoundary, asyncio=asyncio,
+                     _policy_engine=None, _handoff_engine=None, _mcp_server=None)
     mapping = {"knowledge": "_knowledge", "gates": "_gate_integration", "trust": "_trust_engine",
         "grounding": "_grounding_guard", "developer_core": "_developer_core", "run_sync": "_run_sync_v1"}
     namespace.update({mapping[k]: v for k, v in services.items() if k in mapping})
@@ -192,7 +196,7 @@ def test_actual_public_endpoint_sanitizes_provider_failure_without_retry():
     module = ast.Module(body=[ast.ImportFrom(module="__future__", names=[ast.alias(name="annotations")], level=0), node], type_ignores=[])
     exec(compile(ast.fix_missing_locations(module), "actual-chat-endpoint", "exec"), namespace)
     with pytest.raises(HTTPException) as failure:
-        asyncio.run(namespace["chat"](SimpleNamespace(user_input="Tulis puisi tentang hujan", session_id="same-session", model=None, request_id=None)))
+        asyncio.run(namespace["_chat_completed"](SimpleNamespace(user_input="Tulis puisi tentang hujan", session_id="same-session", model=None, request_id=None)))
     assert failure.value.status_code == 500
     assert "synthetic-private" not in str(failure.value.detail)
     assert provider.calls == 1 and observed["remembered"] == 0 and observed["closed"] == 1

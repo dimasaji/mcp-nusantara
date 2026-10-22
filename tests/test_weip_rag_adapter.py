@@ -102,14 +102,14 @@ def test_remaining_task2_failure_rolls_back_and_preserves_previous(tmp_path, mon
     assert [c.model_dump() for c in store.get_chunks_by_document('previous')] == before_chunks
 
 
-def test_remaining_task2_failed_replacement_restores_existing_version(tmp_path):
+def test_remaining_task2_replay_preserves_existing_version_without_reembedding(tmp_path):
     p, r, rag, store = make_adapter(tmp_path)
     assert p.ingest_into_temporary_rag(r['document_id'], rag, temporary_root=tmp_path).success
     old_doc = store.get_document_info(r['document_id']).model_dump()
     old_chunks = [c.model_dump() for c in store.get_chunks_by_document(r['document_id'])]
     rag._embedding = lambda _: (_ for _ in ()).throw(RuntimeError('fixture failed replacement'))
-    with pytest.raises(EvidenceRejected, match='RAG_INGEST_FAILED'):
-        p.ingest_into_temporary_rag(r['document_id'], rag, temporary_root=tmp_path)
+    replay = p.ingest_into_temporary_rag(r['document_id'], rag, temporary_root=tmp_path)
+    assert replay.success and replay.chunks_created == 0
     assert store.get_document_info(r['document_id']).model_dump() == old_doc
     assert [c.model_dump() for c in store.get_chunks_by_document(r['document_id'])] == old_chunks
 

@@ -7,3 +7,7 @@ Rules:
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
 - After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+
+## Nusantara development workflow
+
+For Nusantara bug fixes, features, or refactoring, follow [the development workflow](docs/NUSANTARA_DEVELOPMENT_WORKFLOW.md): Graphify -> Diagnosing Bugs -> TDD -> Codebase Design -> Code Review. Read each installed skill when its stage applies; record evidence or a justified skip for every stage.

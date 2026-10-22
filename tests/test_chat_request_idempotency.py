@@ -52,7 +52,8 @@ def test_repeated_chat_request_id_replays_answer_without_running_agent_twice(mon
     assert first == ANSWER
     assert repeated == ANSWER
     assert calls == 1
-    history = routes._gate_integration.memory.chat_history(SESSION)
+    from app.security.v1_knowledge import v1_session_id
+    history = routes._gate_integration.memory.chat_history(v1_session_id(SESSION, operator=False))
     assert len(history) == 1
     assert history[0]['status'] == 'SUCCEEDED'
 

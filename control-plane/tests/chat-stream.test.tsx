@@ -6,16 +6,15 @@ vi.mock('@tanstack/react-router',()=>({Link:({children}:{children:React.ReactNod
 afterEach(()=>{vi.useRealTimers();vi.unstubAllGlobals();});
 const answer={session_id:'session',response:'Jawaban final.',model:'fixture',provider_status:'ollama',latency_ms:1,timestamp:'now',trust:{supports_claim:false,confidence:0,risk_level:'low',requires_human:false,evidence_count:0,evidence_available:false},grounding:{enabled:true,grounded:false,reason:'no_evidence'},understanding:{intent:'general'},problem:{goal:null},evidence:[]};
 
-it('delivers a split UTF-8 delta before final projection and does not fabricate chunks',async()=>{
+it('discards split UTF-8 provisional deltas and accepts only the final projection',async()=>{
   let output!:ReadableStreamDefaultController<Uint8Array>;
   const encoder=new TextEncoder();
   vi.stubGlobal('fetch',vi.fn(async()=>new Response(new ReadableStream({start(c){output=c;}}),{headers:{'Content-Type':'application/x-ndjson'}})));
   const delta=vi.fn();const result=sendUserChat('question','session','a'.repeat(32),undefined,90000,{onDelta:delta});
   const bytes=encoder.encode(JSON.stringify({type:'delta',text:'Satu é'})+'\n');
   output.enqueue(bytes.slice(0,bytes.length-3));output.enqueue(bytes.slice(bytes.length-3));
-  await waitFor(()=>expect(delta).toHaveBeenCalledWith('Satu é'));
   output.enqueue(encoder.encode(JSON.stringify({type:'final',answer})+'\n'));output.close();
-  await expect(result).resolves.toEqual(answer);expect(delta).toHaveBeenCalledTimes(1);
+  await expect(result).resolves.toEqual(answer);expect(delta).not.toHaveBeenCalled();
 });
 
 it('allows stop then another send and never sends twice on repeated submit',async()=>{

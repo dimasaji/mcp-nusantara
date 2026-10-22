@@ -103,16 +103,6 @@ class OllamaProvider(LLMProvider):
                 options[key] = request[key]
             elif generation is not None and getattr(generation, key) is not None:
                 options[key] = getattr(generation, key)
-        # CPU/RAM-aware defaults for local Ollama: deterministic sampling,
-        # bounded vocab, prompt cache reuse, and a small batch are the
-        # fastest reliable settings on a 16 GB host without a GPU. These
-        # are only applied when the caller did not already pick a value.
-        if 'top_k' not in options:
-            options['top_k'] = 20
-        if 'repeat_penalty' not in options:
-            options['repeat_penalty'] = 1.05
-        if 'num_batch' not in options:
-            options['num_batch'] = 256
         return options
 
     async def _get_client(self) -> httpx.AsyncClient:

@@ -23,7 +23,10 @@ class FakeRag:
                                    'chunks_stored': 1, 'total_time_ms': 3})()
 
     def list_documents(self):
-        return self.indexed
+        from app.knowledge.schemas import DocumentInfo
+        return [DocumentInfo(document_id=request.document_id, title=request.title,
+                             source=request.source, content_type=request.content_type,
+                             chunks_count=1, metadata=request.metadata) for request in self.indexed]
 
 
 def test_pipeline_deduplicates_and_never_promotes_authority(tmp_path):
@@ -43,6 +46,16 @@ def test_pipeline_deduplicates_and_never_promotes_authority(tmp_path):
     assert len(rag.indexed) == 1
     assert rag.indexed[0].metadata['source_authority'] == 'UNVERIFIED'
     assert rag.indexed[0].metadata['revision_status'] == 'NOT_CONFIRMED_CURRENT'
+
+
+def test_upload_uses_explicit_sop_title_without_promoting_authority(tmp_path):
+    rag = FakeRag(tmp_path / 'chat.db')
+    engine = KnowledgeEngine(rag=rag)
+    result = engine.process_knowledge_source('scan.txt',
+        b'Nomor SOP PIAK-03\nNama S.O.P PERMOHONAN DATA PRIBADI\nIsi contoh dokumen pengujian nonrahasia.')
+    assert result['status'] == 'READY'
+    assert rag.indexed[0].title == 'PERMOHONAN DATA PRIBADI'
+    assert rag.indexed[0].metadata['source_authority'] == 'UNVERIFIED'
 
 
 def test_pipeline_retains_extraction_failure_in_chat_store_history(tmp_path):

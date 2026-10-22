@@ -1,0 +1,571 @@
+﻿# Fase 0 — Baseline dan inventory
+
+Inspeksi: 2026-10-21, Asia/Jakarta. `OW` = E:/OpenWebUI/.venv/Lib/site-packages/open_webui; `N` = C:/Users/dmaza/mcp-starter. Semua klaim source berlabel [FAKTA-KODE]; manifest memakai field, bukan fungsi. Metadata instalasi tidak membuktikan environment proses aktif.
+
+## Bentuk, versi, entry point
+
+- [FAKTA-KODE] Open WebUI merupakan distribusi Python dalam venv: open_webui-0.12.3.dist-info/METADATA:2-3 (Name/Version) menyebut open-webui 0.12.3; entry_points.txt:2 console_scripts menunjuk open_webui:app. `OW/__init__.py:38` serve, port default8080 pada :40, uvicorn.run menuju open_webui.main:app pada :86-92. Launcher `E:/OpenWebUI/start-openwebui.ps1:22` meminta 0.0.0.0:8080. Bukan bukti listener.
+- [FAKTA-KODE] Nusantara adalah source Python/FastAPI: `pyproject.toml:6-10` [project] menyatakan nusantara-ai 2.0.0a3 dan deskripsi V2. Metadata ini berbeda dari scope audit V1; tidak membuktikan V2 digunakan. `app/main.py:61` app=FastAPI, :78-80 router mount. UI React/TypeScript: `control-plane/package.json:3-5` scripts/dependencies.
+- [FAKTA-KODE] Python requirements: Open WebUI METADATA:67 >=3.11,<3.13; Nusantara pyproject.toml:10 >=3.12.
+- [FAKTA-KODE] Open WebUI default DATA_DIR ditentukan `OW/env.py:228-250`, SQLite default :271; VECTOR_DB default chroma atau pgvector untuk slim (`OW/config.py:509`); CHROMA_DATA_PATH DATA_DIR/vector_db (:512). [INFERENSI] Direktori E:/OpenWebUI/data tidak membuktikan lokasi efektif karena environment dapat mengoverride DATA_DIR. Database/secret/environment proses tidak dibaca.
+
+## Dependensi
+
+[FAKTA-KODE] Nusantara `pyproject.toml:26-31`: fastapi>=0.115.0, uvicorn>=0.30.0, pydantic>=2.9.0, pydantic-settings>=2.5.0, python-dotenv>=1.0.0, httpx>=0.27.0. Optional SOP pypdf>=6.20,<7 dan pymupdf>=1.28,<2 (:35), MCP>=1.30,<2 (:36), langgraph==1.2.14 (:37).
+
+[FAKTA-KODE] Terpasang berdasarkan `N/.venv/Lib/site-packages/<nama-versi>.dist-info/METADATA:2-3` Name/Version: fastapi0.141.1; uvicorn0.54.0; pydantic2.13.5; pydantic_settings2.15.0; httpx0.28.1; pytest9.1.1; nusantara_ai2.0.0a3. Tidak mengimport aplikasi.
+
+[FAKTA-KODE] Nusantara UI: React/ReactDOM ^19, TanStack Router^1/Query^5, zod^4, xyflow^12 (`control-plane/package.json:4`); TypeScript^5, Vite^7, Vitest^3, Playwright^1 (:5). Range bukan resolusi lockfile.
+
+[FAKTA-KODE] Open WebUI persyaratan distribusi di `E:/OpenWebUI/.venv/Lib/site-packages/open_webui-0.12.3.dist-info/METADATA`: chromadb1.5.9 (:89), fastapi0.136.3 (:95), httpx0.28.1 (:102), langchain-classic1.0.7 (:105), langchain-core1.4.8 (:106), langchain-text-splitters1.1.2 (:107), mcp1.27.2 (:112), openai2.29.0 (:115), pydantic2.13.4 (:126), python-socketio5.16.2 (:137), rank-bm25 0.2.2 (:141), redis8.0.1 (:143), sentence-transformers5.5.1 (:146), sqlalchemy2.0.50 (:149), transformers5.5.4 (:153), uvicorn0.51.0 (:154). Kehadiran dependency bukan bukti fitur aktif.
+
+## Git, tanggal, dan runtime
+
+[FAKTA-KODE] `.git/HEAD:1` menunjuk refs/heads/codex/fullroot-control-20261007; `.git/refs/heads/codex/fullroot-control-20261007:1` = fe47e90575986d5c65856d0f68ce898038423e36. Tanggal commit belum diverifikasi; nama branch bukan bukti tanggal. [FAKTA-RUNTIME] Test-Path E:/OpenWebUI/.git=False. Pencarian Git awal melalui PATH/lokasi standar gagal, lalu executable ditemukan pada runtime Codex; commit/date/status terverifikasi di bagian verifikasi tambahan di bawah.
+
+[FAKTA-RUNTIME] Percobaan awal Get-NetTCPConnection terbatas gagal (exit1); inventaris pasif koordinator berikutnya berhasil:127.0.0.1:8000 PID49148,127.0.0.1:5180 PID10516,127.0.0.1:11434 PID19204. Port8080 dan8765 tidak terlihat pada snapshot itu. Port/PID bukan bukti identitas aplikasi atau HTTP health. Tidak ada chat/model/request eksternal dijalankan; tidak menyimpulkan Open WebUI sehat atau mati hanya dari snapshot.
+
+## Inventory direktori kedalaman3
+
+[FAKTA-RUNTIME] Nama dari Get-ChildItem -Directory -Force, maksimal3 tingkat. Package Open WebUI dipetakan tersendiri karena lokasinya di bawah kedalaman3 root instalasi. Data, logs, dependency, cache dan backup hanya dicatat nama direktorinya; tidak ditelusuri. Berkas .env Nusantara dan .webui_secret_key Open WebUI terdeteksi ada, isinya tidak dibaca. Hash menyeluruh belum diambil: tidak membaca berkas rahasia/data untuk hashing.
+
+### Nusantara root
+```text
+.agents/
+.archify/
+.backup-embedding-identity-20261012-163112/
+.backup-embedding-identity-20261012-163237/
+.backup-v1-chat-rag-20261013/
+.claude/
+.codex/
+.dev/
+.developer_backups/
+.developer_staging/
+.git/
+.nusantara/
+.pytest_cache/
+.ruff_cache/
+.tmp/
+.venv/
+.venv-laya/
+app/
+  __pycache__/
+  action/
+    __pycache__/
+  api/
+    __pycache__/
+  approval/
+    __pycache__/
+  context/
+  core/
+    __pycache__/
+    hardening/
+  devcore/
+    __pycache__/
+  developer_core/
+    __pycache__/
+  evaluation/
+    baselines/
+    datasets/
+  execution/
+  experience/
+    __pycache__/
+  governance/
+    __pycache__/
+  handoff/
+    __pycache__/
+  hermes/
+    __pycache__/
+  improvement/
+  knowledge/
+    __pycache__/
+  language/
+    __pycache__/
+    semantic/
+  mcp/
+    __pycache__/
+  memory/
+    __pycache__/
+  models/
+    __pycache__/
+  observability/
+    __pycache__/
+  orchestration/
+    __pycache__/
+  policy/
+    __pycache__/
+  problem/
+    __pycache__/
+  rag/
+    __pycache__/
+  reasoning/
+    __pycache__/
+  research/
+    __pycache__/
+  runtime/
+  schemas/
+  security/
+    __pycache__/
+  skills/
+    sop_semantic/
+  tools/
+  trust/
+    __pycache__/
+  ui/
+  v2/
+    __pycache__/
+  workflow/
+    __pycache__/
+app_backup_before_openrouter/
+  api/
+  context/
+  core/
+  handoff/
+  hermes/
+  knowledge/
+  language/
+  mcp/
+  memory/
+  models/
+  policy/
+  problem/
+  reasoning/
+  schemas/
+  tools/
+  trust/
+  ui/
+  workflow/
+archive/
+artifacts/
+audit_reports/
+  staging-2026-10-06/
+    data/
+  staging-drill-20261006T025037193681Z/
+    backups/
+    release-source/
+    restored/
+  staging-drill-20261006T025945053115Z/
+    backups/
+    release-source/
+    restored/
+backup/
+backup_indobert_20261001_091633/
+backups/
+config/
+control-plane/
+  .build-temp-941059bf39fc4a9496f5b341a53ea75a/
+  dist/
+    assets/
+  docs/
+    reports/
+  e2e/
+  node_modules/
+  release-candidates/
+    ac15-hash-binding-20261010/
+    session-fix-20261010-182648/
+    v1-etr-20261010-120500/
+    v1-etr-20261010-120500-pathfix/
+    v1-etr-20261010-verify-02/
+  src/
+  test-results/
+  tests/
+    fixtures/
+data/
+docs/
+  architecture/
+  audit/
+    backups/
+    comparison/
+    evidence/
+    generated/
+    master_engine/
+  commands/
+  contracts/
+  markitdown/
+  operational/
+    published/
+  reports/
+    attestation-browser-e2e-001-20261008-1dfe0389/
+    attestation-browser-e2e-20261008-6c913a2d/
+    caller-auth-boundary-decision-20261008-e6f831b2/
+    cc01-bounded-20261010-202807/
+    cc01-http-suite-20261010-202842/
+    console-evidence-refresh-20261009T195218/
+    control-plane-inspection-integration-20261008-5ab18f90/
+    core-human-first-20261008-4b875c29/
+    cplane-test-repair-20261009T212343/
+    cplane-test-repair-rebuild-20261009/
+    credential-transport-design-20261008-71d2c4a9/
+    d2-isolated-reproduction-20261008-9f4d2a61/
+    decision-diagnostic-20261010-162501/
+    decision-pass-persistence-20261010-01/
+    decision-repair-20261010-162406/
+    decision-repair-20261010-162548/
+    decision-repair-20261010-162642/
+    decision-repair-20261010-162711/
+    decision-repair-ui-20261010-162931/
+    decision-runner-diagnosis-20261010-162614/
+    devcore-goal-integration-20261008-c83f7a21/
+    developer-goal-inspection-preview-20261008-7c19b6e2/
+    evidence-full-20261014/
+    evidence-isolated-20261012/
+    hermes-conversation-20261009T202640/
+    human-console-recovery-20261009T200537/
+    inspection-preview-transport-foundation-20261008-9b73e062/
+    ktpel-fixture-approved-20261009T200140/
+    lc-decimal-comma-20261008/
+    lc-five-gap-20261008/
+    normal-inspection-preview-20261008-01a11b73/
+    nusantara-v1-autonomous-closure-20261010/
+    nusantara-v1-diagnostic-20261014-092006/
+    nus-evidence-completion-20261010/
+    nus-v1-mde-phase01-20261009-111000/
+    openrouter-workflow-20261009T184538/
+    post-weip-console-20261009T175526/
+    r2-a10-isolation-fix-20261008/
+    r2-a11-c0-20261008-observation-8c48f128/
+    r2-a11-level-c-20261008-7d1ea04b/
+    r2-a11-level-c-observer-regression-20261008-78a4c9f2/
+    r2-a11-phase-a-discovery-20261008/
+    r2-a11-phase-b-20261008-55fd917c/
+    r2-a11-phase-b2-20261008-9fb4e38a/
+    r2-a12-readonly-discovery-20261008-c795a3e1/
+    r2-a13-runtime-identity-binding-20261008-841d2e7a/
+    r2-a14-build-provenance-20261008-61f072ac/
+    r2-a3-20261008/
+    r2-a5-live-20261008/
+    r2-a6-live-application-20261008/
+    r2-a7-runtime-attestation-20261008/
+    r2-a8-preflight-20261008/
+    r2-a8-remediation-20261008/
+    r2-a9-auth-design-20261008/
+    r2-a9-auth-foundation-20261008/
+    r2-a9-auth-implementation-20261008/
+    r2-a9-auth-ipc-correction-20261008/
+    r2-a9-control-plane-20261008/
+    r2-a9-control-plane-implementation-20261008/
+    r2-a9-control-plane-integration-preflight-20261008/
+    r2-a9-localhost-verification-20261008/
+    r2-ui-validation-20261008-155741/
+    runtime-verification-20261010-222405/
+    ui04-chat-timeout-20261009-130937/
+    ui04-reverification-20261009-131800/
+    ui-completion-audit-20261008-a14ec92f/
+    ui-route-20261009T205450/
+    v1-alignment-prerequisites-20261009-104217/
+    v1-closure-20261008/
+    v1-functional-closure-20261009-101736/
+    v1-remaining-20261009T182840/
+    v1-rollback-investigation-20261009-105200/
+    v1-runtime-alignment-20261009-103149/
+    v1-targeted-20261009T214132/
+    v1-ui01-candidate-20261009T091424Z/
+    v1-user-hermes-implementation/
+    weip-20261009T102239Z/
+    weip-completion-20261009T104250Z/
+    weip-fixture-verify-20261009T180620/
+    weip-governance-closure-20261009T181812/
+  v2/
+graphify-out/
+  2026-10-05/
+  2026-10-06/
+  2026-10-07/
+  2026-10-08/
+  2026-10-15/
+  2026-10-16/
+  2026-10-19/
+  2026-10-20/
+  cache/
+    ast/
+  graphify-out/
+  memory/
+  nusantara-dashboard/
+  reflections/
+graph-viewer/
+hermes/
+integration/
+laya-hf-7er9jqah/
+legacy_v1_artifacts/
+logs/
+mcp-nusantara/
+  .git/
+nusantara/
+  .git/
+Nusantara-Hermes-ACP-Connection-Patch/
+  payload/
+    app/
+    control-plane/
+  tests/
+nusantara-models/
+  .venv/
+perbaikanbukti/
+  app/
+    action/
+    api/
+    approval/
+    context/
+    core/
+    devcore/
+    developer_core/
+    evaluation/
+    execution/
+    experience/
+    governance/
+    handoff/
+    hermes/
+    improvement/
+    knowledge/
+    language/
+    mcp/
+    memory/
+    models/
+    observability/
+    orchestration/
+    policy/
+    problem/
+    rag/
+    reasoning/
+    research/
+    runtime/
+    security/
+    skills/
+    tools/
+    trust/
+    v2/
+    workflow/
+  tests/
+    evaluation/
+    nevaluation/
+    v2/
+pytest-of-dmaza/
+reports/
+  configuration/
+    closure-ca01/
+    mde-01/
+    phase-00-baseline/
+    phase-01-discovery/
+    phase-02-classification/
+    phase-03-map/
+    phase-04-design/
+    phase-05-source/
+    phase-06-implementation/
+    phase-07-integration/
+    phase-08-validation/
+    phase-09-regression/
+    phase-10-review/
+    phase7-backup-20261006-182914/
+  configuration-phase6-compat-tmp/
+  configuration-phase6-targeted-tmp/
+  configuration-phase7-memory-diagnosis-tmp/
+  configuration-phase7-regression-final-tmp/
+  configuration-phase7-regression-tmp/
+  configuration-phase7-targeted-final-tmp/
+  configuration-phase7-targeted-fixed-tmp/
+  configuration-phase7-targeted-tmp/
+  developer-core-backup-20261006-175153/
+  developer-core-regression-tmp/
+  developer-core-targeted-tmp/
+  evidence-guards-check/
+    pytest-tmp/
+  fullroot-baseline-tmp-20261007/
+  memory-retention-tests-20261006/
+    test_bounded_and_redacted0/
+    test_expired_histories_removed0/
+    test_expired_histories_removed1/
+    test_expired_histories_removed2/
+    test_expired_histories_removed3/
+    test_http_opt_in_and_delete0/
+    test_isolation_restart_retenti0/
+  memory-retention-tests-20261006-final/
+    test_bounded_and_redacted0/
+    test_expired_histories_removed0/
+    test_expired_histories_removed1/
+    test_expired_histories_removed2/
+    test_expired_histories_removed3/
+    test_http_opt_in_and_delete0/
+    test_isolation_restart_retenti0/
+  nusantara-phases/
+  rag-audit/
+  semantic-rag-verification/
+    20261012_112113/
+    20261012_112601/
+  v1-cc01-option-c-backup-20261006/
+    app/
+  v1-cc01-regression-tmp/
+  v1-cc01-targeted-fixed-tmp/
+  v1-cc01-targeted-tmp/
+  v1-closure-backup-20261006/
+    app/
+    reports/
+  v1-closure-targeted-tmp/
+  v1-final-closure-tmp/
+  v1-final-regression-tmp/
+  v1-git-verify-tmp/
+    test_git_branch_requires_durab0/
+  v1-rag-4kvfxegr/
+  v1-recovery-backup-20261006/
+    app/
+    nusantara-models/
+  v1-recovery-candidate/
+    memory/
+  v1-recovery-identity-tmp/
+  v1-recovery-mcp-tmp/
+  v1-recovery-tmp/
+    test_approval_survives_restart0/
+    test_authorized_developer_list0/
+    test_authorized_ingest_keeps_p0/
+    test_backup_restore_verifies_c0/
+    test_binary_parsers_reject_fil0/
+    test_binary_parsers_reject_fil1/
+    test_bounded_and_redacted0/
+    test_corrupt_audit_is_not_a_so0/
+    test_expired_histories_removed0/
+    test_expired_histories_removed1/
+    test_expired_histories_removed2/
+    test_expired_histories_removed3/
+    test_git_branch_requires_durab0/
+    test_http_opt_in_and_delete0/
+    test_hung_worker_is_terminated0/
+    test_isolation_restart_retenti0/
+    test_malicious_archive_cannot_0/
+    test_malicious_archive_cannot_1/
+    test_malicious_archive_cannot_2/
+    test_malicious_archive_cannot_3/
+    test_pinned_connection_size_re0/
+    test_proposals_survive_restart0/
+    test_telemetry_retention_does_0/
+    test_text_content_never_reads_0/
+    test_text_content_never_reads_1/
+    test_text_content_never_reads_2/
+    test_text_content_never_reads_3/
+    test_trust_receives_generated_0/
+  v1-verify-20261006-tmp/
+    test_approval_survives_restart0/
+    test_authorized_developer_list0/
+    test_authorized_ingest_keeps_p0/
+    test_backup_restore_verifies_c0/
+    test_binary_parsers_reject_fil0/
+    test_binary_parsers_reject_fil1/
+    test_bounded_and_redacted0/
+    test_corrupt_audit_is_not_a_so0/
+    test_expired_histories_removed0/
+    test_expired_histories_removed1/
+    test_expired_histories_removed2/
+    test_expired_histories_removed3/
+    test_git_branch_requires_durab0/
+    test_http_opt_in_and_delete0/
+    test_hung_worker_is_terminated0/
+    test_isolation_restart_retenti0/
+    test_malicious_archive_cannot_0/
+    test_malicious_archive_cannot_1/
+    test_malicious_archive_cannot_2/
+    test_malicious_archive_cannot_3/
+    test_pinned_connection_size_re0/
+    test_proposals_survive_restart0/
+    test_telemetry_retention_does_0/
+    test_text_content_never_reads_0/
+    test_text_content_never_reads_1/
+    test_text_content_never_reads_2/
+    test_text_content_never_reads_3/
+    test_trust_receives_generated_0/
+scripts/
+service/
+Template/
+  reference/
+    dist/
+    tests/
+tests/
+  .pytest_cache/
+  __pycache__/
+  context/
+  evaluation/
+  fixtures/
+    v1-current-contract/
+  integration/
+  knowledge/
+  language/
+  nevaluation/
+  problem/
+  reasoning/
+  unit/
+  v2/
+  workflow/
+tools/
+  markitdown/
+    .venv/
+torchinductor_dmaza/
+```
+
+### Open WebUI root
+```text
+.venv/
+data/
+```
+
+### Open WebUI package
+```text
+__pycache__/
+data/
+frontend/
+  _app/
+    immutable/
+  assets/
+    emojis/
+    fonts/
+  audio/
+  licenses/
+    encryption/
+  pyodide/
+  sql.js/
+  static/
+  wasm/
+internal/
+  __pycache__/
+migrations/
+  __pycache__/
+  versions/
+    __pycache__/
+models/
+  __pycache__/
+retrieval/
+  __pycache__/
+  loaders/
+    __pycache__/
+  models/
+    __pycache__/
+  vector/
+    __pycache__/
+    dbs/
+  web/
+    __pycache__/
+routers/
+  __pycache__/
+  audio/
+    __pycache__/
+socket/
+  __pycache__/
+static/
+  swagger-ui/
+storage/
+  __pycache__/
+tools/
+  __pycache__/
+utils/
+  __pycache__/
+  access_control/
+    __pycache__/
+  images/
+    __pycache__/
+  mcp/
+    __pycache__/
+  telemetry/
+    __pycache__/
+```
+
+### Verifikasi Git tambahan
+
+[FAKTA-RUNTIME] Git ditemukan melalui path yang dipakai source `app/core/control_plane_projection.py:13`: `C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/git/cmd/git.exe`. Dengan GIT_OPTIONAL_LOCKS=0, `git log -1 --format=%H %cI` melaporkan commit `fe47e90575986d5c65856d0f68ce898038423e36`, tanggal `2026-10-20T19:28:15+07:00`. Ini menggantikan batasan penemuan executable di atas.
+
+`git status --short --untracked-files=no` saat baseline audit (sebelum implementasi apa pun oleh auditor) memperlihatkan modifikasi yang sudah ada: app/api/routes.py; app/hermes/agent.py; app/knowledge/rag.py; control-plane/README.md; control-plane/tests/ui-routing.test.tsx; control-plane/tests/verification-pages.test.tsx; control-plane/vitest.config.ts. Audit tidak menghapus atau mengubah perubahan tersebut. Snapshot status saja bukan hash pembuktian semua file unchanged; audit tidak memiliki hash konten pra-inspeksi untuk seluruh source. Bandingkan status akhir di ASSUMPTIONS_AND_LIMITS. Open WebUI root tidak memiliki .git sehingga git status tidak berlaku.
+
+

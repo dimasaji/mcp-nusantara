@@ -340,7 +340,23 @@ class TestSecurity(unittest.TestCase):
             self.assertFalse(any("hunter2" in repr(x) for x in f))
 
     def test_project_has_no_secrets(self):
-        self.assertEqual(scan_tree(Path(__file__).resolve().parents[2]), [])
+        # Check publishable tracked sources, without reading private runtime envs,
+        # historical run outputs or locally generated verification evidence.
+        import shutil
+        import subprocess
+        root = Path(__file__).resolve().parents[2]
+        tracked = subprocess.check_output(['git', 'ls-files', '-z'], cwd=root).decode().split('\0')
+        self.assertTrue(tracked and tracked[0])
+        with tempfile.TemporaryDirectory() as temporary:
+            snapshot = Path(temporary)
+            for relative in filter(None, tracked):
+                source = root / relative
+                self.assertNotEqual(source.name, '.env', 'Private .env must never be tracked')
+                if source.is_file():
+                    target = snapshot / relative
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(source, target)
+            self.assertEqual(scan_tree(snapshot), [])
 
     def test_verdict_logic(self):
         ok = Check("a", "PASS")

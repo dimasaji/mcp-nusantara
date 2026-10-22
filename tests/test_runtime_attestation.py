@@ -194,6 +194,8 @@ def test_main_change_only_installs_attestation_and_preserves_existing_handlers()
                     if (isinstance(statement, ast.Assign) and isinstance(statement.value, ast.IfExp)
                             and any(isinstance(target, ast.Name) and target.id == 'incoming'
                                     for target in statement.targets)):
+                        allowed = ast.parse("'' if getattr(request.app.state, 'runtime_profile', 'NORMAL') == 'ATTESTATION' else request.headers.get('x-request-id', '')[:64]", mode='eval').body
+                        assert ast.dump(statement.value) == ast.dump(allowed)
                         statement.value = statement.value.orelse
         return [ast.dump(node) for node in functions]
 

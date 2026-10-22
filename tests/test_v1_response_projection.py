@@ -76,7 +76,7 @@ def test_projection_excludes_internal_mirrors_unknown_fields_and_never_mutates(c
     projected = routes._project_v1_chat_response(payload, intent_name="ask_general_info")
     assert_public(projected)
     assert projected["response"] == "Public answer."
-    assert projected["evidence"][0]["chunk"] == "Public citation."
+    assert projected["evidence"][0]["chunk"] == ""
     assert projected["trust"]["confidence"] == payload["trust"]["confidence"]
     assert payload == before
 
@@ -99,15 +99,17 @@ def test_malformed_public_assessment_is_not_silently_coerced(bad_value):
         routes._project_v1_chat_response(payload, intent_name="unknown")
 
 
-def test_oversized_citation_is_not_returned_or_silently_truncated():
+def test_oversized_citation_is_removed_without_mutating_source():
     payload = sample_payload()
     payload["evidence"][0]["chunk"] = "x" * 20001
-    with pytest.raises(ValidationError):
-        routes._project_v1_chat_response(payload, intent_name="unknown")
+    projected = routes._project_v1_chat_response(payload, intent_name="unknown")
+    assert projected["evidence"][0]["chunk"] == ""
+    assert payload["evidence"][0]["chunk"] == "x" * 20001
 
 
 @pytest.fixture
 def controlled_pipeline(monkeypatch, tmp_path):
+    monkeypatch.setenv("NUSANTARA_ADMIN_TOKEN", "projection-fixture")
     from app.memory.engine import MemoryEngine
     from app.core.nusantara_config import load_nusantara_config
     configuration = load_nusantara_config(overrides={'llm': {'provider': 'ollama'}})
@@ -204,7 +206,13 @@ def test_http_branch_projection_preserves_public_behavior_and_excludes_internal_
     before = deepcopy(state["context"])
     with TestClient(app) as client:
         response = client.post("/v1/chat", json={"session_id": "current-request",
-            "user_input": "Hapus record" if branch == "policy_sensitive" else "Public question?"})
+            "user_input": "Hapus record" if branch == "policy_sensitive" else "Apa status permohonan saya?"},
+            headers={"X-Admin-Token": "projection-fixture"})
+    if branch == 'offline':
+        assert response.status_code == 503
+        assert response.headers['X-Chat-Retry-Safe'] == 'pre-provider'
+        assert state['generated'] == state['remembered'] == 0
+        return
     assert response.status_code == 200
     data = response.json()
     assert_public(data)
@@ -239,7 +247,7 @@ def test_http_branch_projection_preserves_public_behavior_and_excludes_internal_
 
 @pytest.mark.parametrize("context,status", [
     (None, 200), ({}, 200),
-    ({"reasoning": None, "policy": {"internal": PRIVATE}}, 500),
+    ({"reasoning": None, "policy": {"internal": PRIVATE}}, 200),
 ])
 def test_http_partial_context_never_becomes_a_public_dump(context, status, controlled_pipeline):
     # Route currently needs a dict for its internal snapshot access; absence is {}.

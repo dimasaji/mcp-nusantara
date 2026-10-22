@@ -282,6 +282,7 @@ from fastapi import APIRouter
 for module_name, paths in [('app.api.routes', ['/v1/chat']), ('app.api.v2_routes', ['/v2/chat','/v2/dev'])]:
     owner = types.ModuleType(module_name)
     owner.router = APIRouter()
+    owner._knowledge = types.SimpleNamespace(scan_knowledge_watch=lambda: None)
     for path in paths:
         async def synthetic_route(): return {'fixture':'composition-only'}
         owner.router.add_api_route(path, synthetic_route, methods=['POST'])

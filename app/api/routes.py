@@ -8,6 +8,7 @@ import threading
 
 from datetime import datetime, timezone
 from typing import Any, Dict, Literal
+from uuid import uuid4
 
 from fastapi import APIRouter, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
@@ -21,6 +22,7 @@ from app.core.runtime_identity import BUILD_ID
 from app.observability import metrics
 from app.exceptions import ProviderUnavailableError
 from app.security.auth import require_admin
+from app.security.v1_knowledge import V1KnowledgeBoundary, v1_session_id
 from app.core.gate_integration import GateIntegration
 from app.developer_core.graph_bridge import GraphifyBridge
 from app.knowledge.engine import KnowledgeEngine
@@ -68,9 +70,11 @@ _mcp_server = create_server()
 _language = LanguageEngine(sop_intent_adapter=LayaIntentAdapter(_configuration.laya_intent))
 # Both V1 stages use the same model and the client's serialized request pipe.
 # Reuse its worker instead of loading a second 768D model for RAG.
-if _language.semantic_intent_engine is not None:
+if (_language.semantic_intent_engine is not None
+        and _knowledge.rag._embedding_adapter is not None
+        and _knowledge.rag._embedding_adapter.client is not None):
     _knowledge.rag._embedding_adapter.client = _language.semantic_intent_engine.client
-_sync_slots = threading.BoundedSemaphore(2)
+_sync_slots = threading.BoundedSemaphore(10)
 
 
 async def _run_sync_v1(fn, *args, timeout_s=30.0, **kwargs):
@@ -92,6 +96,8 @@ async def _run_sync_v1(fn, *args, timeout_s=30.0, **kwargs):
     try:
         return await asyncio.wait_for(asyncio.shield(task), timeout=timeout_s)
     except TimeoutError:
+        import logging
+        logging.getLogger(__name__).warning('V1 stage timeout: stage=%s', getattr(fn, '__qualname__', type(fn).__name__))
         raise HTTPException(status_code=504, detail="batas waktu pemrosesan terlampaui",
                             headers={"X-Chat-Retry-Safe": "pre-provider"}) from None
 
@@ -105,7 +111,7 @@ _workflows = WorkflowEngine()
 
 class ChatRequest(BaseModel):
     session_id: str = Field(
-        default="web",
+        default_factory=lambda: f"web-{uuid4()}",
         min_length=1,
         max_length=128,
     )
@@ -139,6 +145,7 @@ class _PublicChatEvidence(_PublicChatModel):
     title: str = Field(max_length=1024)
     chunk: str = Field(max_length=20000)
     score: float = Field(ge=0, le=1)
+    pages: list[int] = Field(default_factory=list, max_length=100)
 
 
 class _PublicChatGrounding(_PublicChatModel):
@@ -208,11 +215,16 @@ def _project_v1_chat_response(payload: dict, *, intent_name: str) -> dict:
         problem=_PublicChatProblem(goal=goal),
         evidence=[_PublicChatEvidence(
             document_id=item["document_id"], title=item["title"],
-            chunk=item["chunk"], score=item["score"],
+            # Keep the V1 citation shape compatible without releasing source text.
+            chunk="", score=item["score"], pages=item.get('pages', []),
         ) for item in payload["evidence"]],
         timestamp=payload["timestamp"],
     )
-    return public.model_dump(mode="json")
+    result = public.model_dump(mode="json")
+    for citation in result['evidence']:
+        if not citation['pages']:
+            citation.pop('pages')
+    return result
 
 
 class ProblemAnalyzeRequest(BaseModel):
@@ -998,11 +1010,24 @@ async def health_detail():
 
 
 @router.get('/chat/history')
-def chat_history(x_chat_session: str = Header(default='')):
+def chat_history(x_chat_session: str = Header(default=''),
+                 x_admin_token: str | None = Header(default=None)):
     import re
     if not re.fullmatch(r'web-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}', x_chat_session):
         raise HTTPException(403,'CHAT_SESSION_CAPABILITY_REQUIRED')
-    return {'session_id':x_chat_session,'turns':_gate_integration.memory.chat_history(x_chat_session)}
+    operator = isinstance(x_admin_token, str) and bool(x_admin_token)
+    if operator:
+        require_admin(x_admin_token)
+    session = v1_session_id(x_chat_session, operator=operator)
+    turns = []
+    for turn in _gate_integration.memory.chat_history(session):
+        safe = dict(turn)
+        if isinstance(safe.get('answer'), dict):
+            answer = safe['answer']
+            safe['answer'] = {**answer, 'session_id': x_chat_session,
+                'evidence': [{**item, 'chunk': ''} for item in answer.get('evidence', [])]}
+        turns.append(safe)
+    return {'session_id': x_chat_session, 'turns': turns}
 
 
 def _record_chat_result(session_id, question, *, request_id=None, **result):
@@ -1023,61 +1048,62 @@ async def chat(
     request: ChatRequest,
     x_admin_token: str | None = Header(default=None),
 ):
-    if request.document_ids:
+    operator = isinstance(x_admin_token, str) and bool(x_admin_token)
+    if operator:
         require_admin(x_admin_token)
+    if request.document_ids:
+        if not operator:
+            raise HTTPException(403, 'DOCUMENT_CHAT_REQUIRES_OPERATOR')
         configuration, _ = settings.configuration_snapshot()
         if configuration.llm.provider != 'ollama':
             raise HTTPException(409, 'DOCUMENT_CHAT_REQUIRES_LOCAL_OPERATOR_MODEL')
         if any(not identifier or len(identifier) > 256 or _knowledge.rag.get_document_info(identifier) is None
                for identifier in request.document_ids):
             raise HTTPException(422, 'DOCUMENT_NOT_INDEXED')
-    if not request.stream:
-        return await _chat_completed(request)
-    # The same Hermes/grounding/history path executes once; only its transport
-    # changes. Deltas are provisional until the final grounded public projection.
+    # The same authenticated audience owns retrieval, replay and conversation
+    # context. Old histories are quarantined without reading/migrating them.
+    scoped = request.model_copy(update={
+        'session_id': v1_session_id(request.session_id, operator=operator), 'stream': False})
     import asyncio
-    import contextlib
     import json
     from fastapi.responses import StreamingResponse
     from app.models.streaming import stream_observer
 
-    async def events():
-        queue = asyncio.Queue(maxsize=32)
-
-        async def execute():
-            token = stream_observer.set(queue.put)
-            try:
-                answer = await _chat_completed(request.model_copy(update={'stream': False}))
-                await queue.put({'type': 'final', 'answer': answer})
-            except asyncio.CancelledError:
-                raise
-            except Exception as exc:
-                status = getattr(exc, 'status_code', 500)
-                await queue.put({'type': 'error', 'status': getattr(exc, 'status_code', 500),
-                    'retry_safe': status == 504,
-                    'message': 'Batas waktu pemrosesan tercapai. Periksa History sebelum mencoba kembali.' if status == 504
-                        else 'Chat gagal. Periksa History sebelum mencoba kembali.'})
-            finally:
-                stream_observer.reset(token)
-
-        task = asyncio.create_task(execute())
+    async def complete():
+        # Buffer generation until grounding and public projection finish. A
+        # provisional label does not make a source-bearing delta safe to expose.
+        observer = stream_observer.set(None)
         try:
-            yield json.dumps({'type': 'status', 'message': 'Memproses pertanyaan'}) + '\n'
-            while True:
-                event = await queue.get()
-                yield json.dumps(event, ensure_ascii=False) + '\n'
-                if event['type'] in {'final', 'error'}:
-                    break
+            answer = await _chat_completed(scoped, operator=operator)
+            return {**answer, 'session_id': request.session_id}
         finally:
-            task.cancel()
-            with contextlib.suppress(asyncio.CancelledError):
-                await task
+            stream_observer.reset(observer)
+
+    if not request.stream:
+        return await complete()
+
+    async def events():
+        yield json.dumps({'type': 'status', 'message': 'Memproses pertanyaan'}) + '\n'
+        try:
+            answer = await complete()
+        except asyncio.CancelledError:
+            raise
+        except Exception as exc:
+            status = getattr(exc, 'status_code', 500)
+            retry_safe = (getattr(exc, 'headers', None) or {}).get('X-Chat-Retry-Safe') == 'pre-provider'
+            yield json.dumps({'type': 'error', 'status': status,
+                'retry_safe': retry_safe,
+                'message': 'Batas waktu pemrosesan tercapai. Periksa History sebelum mencoba kembali.' if status == 504
+                    else 'Model belum tersedia. Periksa Ollama, lalu kirim ulang pertanyaan setelah pulih.' if status == 503 and retry_safe
+                    else 'Chat gagal. Periksa History sebelum mencoba kembali.'}) + '\n'
+        else:
+            yield json.dumps({'type': 'final', 'answer': answer}, ensure_ascii=False) + '\n'
 
     return StreamingResponse(events(), media_type='application/x-ndjson',
         headers={'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no'})
 
 
-async def _chat_completed(request: ChatRequest):
+async def _chat_completed(request: ChatRequest, *, operator: bool = False):
     """
     End-to-end local chat.
 
@@ -1105,6 +1131,10 @@ async def _chat_completed(request: ChatRequest):
 
     try:
 
+        configuration, revision = settings.configuration_snapshot()
+        knowledge = V1KnowledgeBoundary(_knowledge, operator=operator,
+                                        provider=configuration.llm.provider)
+
         if request_id:
             try:
                 reservation = _gate_integration.memory.begin_chat(
@@ -1128,6 +1158,9 @@ async def _chat_completed(request: ChatRequest):
                 if error == 'HTTP_504_PRE_PROVIDER':
                     raise HTTPException(504, 'batas waktu pemrosesan terlampaui',
                                         headers={'X-Chat-Retry-Safe': 'pre-provider'})
+                if error == 'HTTP_503_PRE_PROVIDER':
+                    raise HTTPException(503, 'PROVIDER_UNAVAILABLE',
+                                        headers={'X-Chat-Retry-Safe': 'pre-provider'})
                 match = re.fullmatch(r'HTTP_(\d+)_UNKNOWN', error)
                 status_code = int(match.group(1)) if match else 500
                 raise HTTPException(status_code, 'CHAT_REQUEST_PREVIOUSLY_FAILED')
@@ -1138,7 +1171,6 @@ async def _chat_completed(request: ChatRequest):
         # 1. OLLAMA PROVIDER
         # ==============================================================
 
-        configuration, revision = settings.configuration_snapshot()
         if request.model and request.model != configuration.llm.model:
             raise HTTPException(409, 'Model dikendalikan operator; perbarui status model aktif.')
         if configuration.llm.provider == "openrouter":
@@ -1168,7 +1200,7 @@ async def _chat_completed(request: ChatRequest):
 
         agent = HermesAgent(provider=provider, language_engine=_language)
         agent = HermesAgent(provider=provider, language_engine=_language)
-        core = await agent.execute_v1(request, knowledge=_knowledge, gates=_gate_integration,
+        core = await agent.execute_v1(request, knowledge=knowledge, gates=_gate_integration,
             trust=_trust_engine, grounding=_grounding_guard, developer_core=_developer_core,
             policy=_policy_engine, handoff=_handoff_engine, mcp=_mcp_server,
             run_sync=_run_sync_v1, helpers={
@@ -1206,7 +1238,8 @@ async def _chat_completed(request: ChatRequest):
                 headers = dict(getattr(exc, 'headers', None) or {})
                 headers.setdefault('X-Chat-Retry-Safe', 'pre-provider')
                 exc.headers = headers
-            error_code = 'HTTP_504_PRE_PROVIDER' if status_code == 504 else f'HTTP_{status_code}_UNKNOWN'
+            retry_safe = (getattr(exc, 'headers', None) or {}).get('X-Chat-Retry-Safe') == 'pre-provider'
+            error_code = f'HTTP_{status_code}_PRE_PROVIDER' if retry_safe else f'HTTP_{status_code}_UNKNOWN'
             _record_chat_result(request.session_id,request.user_input,request_id=request_id,error=error_code)
         else:
             _record_chat_result(request.session_id,request.user_input,error=f'HTTP_{status_code}')
@@ -1214,6 +1247,8 @@ async def _chat_completed(request: ChatRequest):
 
     except Exception as exc:
         if request_id:
+            import logging
+            logging.getLogger(__name__).exception('V1 chat failed: request_id=%s', request_id)
             _record_chat_result(request.session_id,request.user_input,request_id=request_id,error='INTERNAL_ERROR_UNKNOWN')
         else:
             _record_chat_result(request.session_id,request.user_input,error='INTERNAL_ERROR')
@@ -1365,8 +1400,9 @@ router.include_router(create_knowledge_pipeline_router(_run_sync_v1))
 @router.post("/knowledge/search")
 async def search_knowledge(
     request: KnowledgeSearchRequest,
+    x_admin_token: str | None = Header(default=None),
 ):
-
+    require_admin(x_admin_token)
     if request.filter:
         raise HTTPException(422, 'KNOWLEDGE_FILTER_NOT_SUPPORTED')
 
@@ -1410,8 +1446,8 @@ async def search_knowledge(
 @router.get(
     "/knowledge/documents"
 )
-async def list_knowledge_documents():
-
+async def list_knowledge_documents(x_admin_token: str | None = Header(default=None)):
+    require_admin(x_admin_token)
     result = (
         _knowledge.list_documents()
     )

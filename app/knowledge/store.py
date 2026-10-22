@@ -10,6 +10,7 @@ from contextvars import ContextVar
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
+from uuid import uuid4
 
 from .schemas import DocumentInfo, StoredChunk
 
@@ -58,9 +59,20 @@ class SQLiteVectorStore:
 
     @contextmanager
     def transaction(self):
-        """Opt-in atomic operation across existing store methods; no schema change."""
-        if self._transaction_connection.get() is not None:
-            raise RuntimeError("NESTED_STORE_TRANSACTION_NOT_SUPPORTED")
+        """Atomic operation; nested callers use savepoints under the outer owner."""
+        active = self._transaction_connection.get()
+        if active is not None:
+            savepoint = f"nested_{uuid4().hex}"
+            active.execute(f"SAVEPOINT {savepoint}")
+            try:
+                yield self
+            except BaseException:
+                active.execute(f"ROLLBACK TO SAVEPOINT {savepoint}")
+                active.execute(f"RELEASE SAVEPOINT {savepoint}")
+                raise
+            else:
+                active.execute(f"RELEASE SAVEPOINT {savepoint}")
+            return
         conn = self._connect()
         token = self._transaction_connection.set(conn)
         try:

@@ -55,10 +55,10 @@ describe('V1 user and operator surfaces',()=>{
     expect(await screen.findByText('Jawaban tersimpan')).toBeInTheDocument();
     expect(screen.getByText(answer.response)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button',{name:/Chat baru/}));
-    expect(JSON.parse(localStorage.getItem('nusantara-chat-sessions')!)).toHaveLength(2);
+    expect(JSON.parse(localStorage.getItem('nusantara-chat-p0-public-sessions')!)).toHaveLength(2);
     view.unmount();localStorage.clear();sessionStorage.clear();
   });
-  it('shows a short source title and lets the reader open its supporting quotation',async()=>{
+  it('shows citation metadata without exposing the supporting raw quotation',async()=>{
     const evidence=[{document_id:'sop-private',title:'SOP Permohonan Data Pribadi (PIAK-03)',chunk:'Persyaratan permohonan data pribadi: Surat Permohonan.',score:.9}];
     vi.stubGlobal('fetch',vi.fn(async(path:string)=>({ok:true,json:async()=>path==='/v1/chat'?{...answer,response:'Silakan siapkan Surat Permohonan.',evidence,provider_status:'evidence_fast_path'}:status})));
     render(<UserChat/>);
@@ -71,7 +71,8 @@ describe('V1 user and operator surfaces',()=>{
     await waitFor(()=>expect(details.parentElement).toHaveAttribute('open'));
     fireEvent.click(source);
     await waitFor(()=>expect(details).toHaveAttribute('open'));
-    expect(screen.getByText(evidence[0].chunk)).toBeVisible();
+    expect(screen.queryByText(evidence[0].chunk)).not.toBeInTheDocument();
+    expect(screen.getByText('Referensi: sop-private')).toBeVisible();
     expect(screen.getByText('Silakan siapkan Surat Permohonan.')).toBeInTheDocument();
   });
   it.each([false,true])('releases a stalled chat at 90 seconds and preserves manual retry when fetch honors abort: %s',async(honorsAbort)=>{
@@ -120,7 +121,7 @@ describe('V1 user and operator surfaces',()=>{
     });vi.stubGlobal('fetch',fetch);
     render(<UserChat/>);
     await act(async()=>{await Promise.resolve();});
-    expect(screen.getByText('Ollama · qwen2.5:7b')).toBeInTheDocument();
+    expect(screen.queryByText('Ollama · qwen2.5:7b')).not.toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('Pertanyaan Anda'),{target:{value:'Jelaskan pertanyaan lokal.'}});
     fireEvent.click(screen.getByRole('button',{name:'Kirim pertanyaan'}));
     await act(async()=>{await vi.advanceTimersByTimeAsync(90000);});
@@ -229,10 +230,11 @@ describe('V1 user and operator surfaces',()=>{
     const call=fetch.mock.calls.find(([path])=>path==='/v1/chat') as unknown as [string,RequestInit];
     const body=JSON.parse(call[1].body as string);expect(body.user_input).toBe('Pertanyaan saya');expect(body.session_id).toMatch(/^web-/);expect(body.model).toBeUndefined();expect(screen.queryByLabelText('Pilih model tersedia')).not.toBeInTheDocument();
   });
-  it('labels the active provider and model together in the Chat header',async()=>{
+  it('keeps model details out of the Chat header',async()=>{
     vi.stubGlobal('fetch',vi.fn(async(path:string)=>({ok:true,json:async()=>path==='/v1/control-plane/model-status'?{...status,model:'qwen2.5:7b',provider:'ollama'}:status})));
     render(<UserChat/>);
-    expect(await screen.findByText('Ollama · qwen2.5:7b')).toBeInTheDocument();
+    await act(async()=>{await Promise.resolve();});
+    expect(screen.queryByText('Ollama · qwen2.5:7b')).not.toBeInTheDocument();
   });
   it('retains the question and shows an error when backend is unavailable',async()=>{
     vi.stubGlobal('fetch',vi.fn(async(path:string)=>path==='/v1/chat'?{ok:false,status:503}:{ok:true,json:async()=>status}));

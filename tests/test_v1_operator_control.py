@@ -165,8 +165,11 @@ def test_operator_model_is_used_by_real_hermes_and_public_projection(controlled_
     monkeypatch.setattr(OllamaProvider, "health_check", fixture_health_check)
     monkeypatch.setattr(OllamaProvider, "generate", fixture_generate)
     session = 'operator-memory-preservation'
-    existing = list(routes._gate_integration.memory.context(session))
-    answer = client.post('/v1/chat', json={'user_input': 'Apa itu KTP-el?', 'session_id': session})
+    from app.security.v1_knowledge import v1_session_id
+    memory_session = v1_session_id(session, operator=True)
+    existing = list(routes._gate_integration.memory.context(memory_session))
+    answer = client.post('/v1/chat', json={'user_input': 'Apa itu KTP-el?', 'session_id': session},
+                         headers={'X-Admin-Token': 'isolated-operator-fixture'})
     assert answer.status_code == 200
     data = answer.json()
     assert data['model'] == 'fixture-b' and data['provider_status'] == 'ollama'
@@ -174,7 +177,7 @@ def test_operator_model_is_used_by_real_hermes_and_public_projection(controlled_
     assert data['grounding']['grounded']
     assert 'gate_pipeline' not in data and 'reasoning' not in data
     assert data['evidence'][0]['document_id'] == 'FIXTURE-NOT-OFFICIAL'
-    history = routes._gate_integration.memory.context(session)
+    history = routes._gate_integration.memory.context(memory_session)
     assert len(history) == len(existing) + 2
     assert history[-2]['role'] == 'user' and history[-1]['role'] == 'assistant'
     diagnostic = client.get('/v1/control-plane/model-status').json()['last_request']
@@ -294,7 +297,9 @@ def test_standalone_greeting_is_nonfactual_local_response(controlled_client, mon
     assert data['evidence'] == [] and not data['trust']['supports_claim']
     assert data['trust']['requires_human']  # No relaxation of trust assessment.
     assert data['grounding']['reason'] == 'deterministic_response'
-    assert [turn['role'] for turn in routes._gate_integration.memory.context(session)] == ['user', 'assistant']
+    from app.security.v1_knowledge import v1_session_id
+    assert [turn['role'] for turn in routes._gate_integration.memory.context(
+        v1_session_id(session, operator=False))] == ['user', 'assistant']
     assert 'gate_pipeline' not in data
 
 
@@ -367,7 +372,7 @@ def test_unsupported_knowledge_filter_is_rejected_before_retrieval(controlled_cl
             pytest.fail('unsupported source restriction reached unrestricted retrieval')
     with pytest.raises(ValueError, match='FILTER_NOT_SUPPORTED'):
         KnowledgeEngine(rag=MustNotRun()).search_knowledge('query', filter={'authority': 'official'})
-    assert controlled_client.post('/v1/knowledge/search', json={'query': 'query', 'filter': {'authority': 'official'}}).status_code == 422
+    assert controlled_client.post('/v1/knowledge/search', headers={'X-Admin-Token': 'isolated-operator-fixture'}, json={'query': 'query', 'filter': {'authority': 'official'}}).status_code == 422
 
 
 def test_model_change_during_request_does_not_rebind_its_provider(controlled_client, monkeypatch):

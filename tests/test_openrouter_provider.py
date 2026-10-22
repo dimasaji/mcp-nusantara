@@ -13,6 +13,25 @@ from app.models.ollama import OllamaProvider
 from app.models.router import ModelRouter
 
 
+@pytest.fixture(autouse=True)
+def governed_provider(tmp_path, monkeypatch):
+    """Exercise the real adapter with its required isolated cost governance."""
+    import sys
+    from app.models.cost_ledger import CostLedger
+
+    ledger = CostLedger(tmp_path / "cost.db", budget_usd="10.00", per_request_cap_usd="1.00")
+    original = OpenRouterProvider
+
+    class GovernedProvider(original):
+        def __init__(self, **kwargs):
+            kwargs.setdefault("cost_ledger", ledger)
+            kwargs.setdefault("cost_estimator", lambda payload: "0.01")
+            super().__init__(**kwargs)
+
+    monkeypatch.setattr(sys.modules[__name__], "OpenRouterProvider", GovernedProvider)
+    return ledger
+
+
 def config(**values):
     return load_nusantara_config(overrides={"llm": {"provider": "openrouter", **values}})
 
@@ -215,7 +234,7 @@ def test_existing_chat_projection_contract_without_importing_application():
 
 
 @pytest.mark.parametrize("chosen", ["ollama", "openrouter"])
-def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen):
+def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen, monkeypatch, governed_provider):
     """Execute actual endpoint AST, without application/DB/worker startup."""
     import typing
     from types import SimpleNamespace
@@ -223,11 +242,15 @@ def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen
     from pydantic import BaseModel, ConfigDict, Field
     from app.hermes.agent import V1CoreResult
     from app.exceptions import ProviderUnavailableError
+    from app.security.v1_knowledge import V1KnowledgeBoundary
+    import app.models.cost_ledger as cost_module
+    import app.models.openrouter_cost_policy as policy_module
+    monkeypatch.setattr(cost_module, "CostLedger", lambda *args, **kwargs: governed_provider)
+    monkeypatch.setattr(policy_module, "estimate_openrouter_cost", lambda *args, **kwargs: "0.01")
     tree = ast.parse(Path("app/api/routes.py").read_text(encoding="utf-8-sig"))
     selected = [node for node in tree.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
-                and (node.name in {"chat", "ChatRequest", "_project_v1_chat_response"} or
+                and (node.name in {"_chat_completed", "ChatRequest", "_project_v1_chat_response"} or
                      node.name.startswith("_Public"))]
-    next(node for node in selected if node.name == "chat").decorator_list = []
     calls = {"ollama": 0, "openrouter": 0, "closed": 0, "recorded": 0}
     configuration = load_nusantara_config(overrides={"llm": {"provider": chosen}})
     class LocalFixture:
@@ -260,6 +283,8 @@ def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen
         assert kwargs["provider_status"] == chosen
     namespace = {"BaseModel": BaseModel, "ConfigDict": ConfigDict, "Field": Field,
         "Any": typing.Any, "Literal": typing.Literal, "HTTPException": HTTPException,
+        "V1KnowledgeBoundary": V1KnowledgeBoundary,
+        "_record_chat_result": lambda *args, **kwargs: True,
         "ProviderUnavailableError": ProviderUnavailableError,
         "OllamaProvider": local_factory, "OpenRouterProvider": cloud_factory,
         "HermesAgent": ExistingCapabilityFixture,
@@ -267,7 +292,8 @@ def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen
     for name in ("_language", "_knowledge", "_gate_integration", "_trust_engine", "_grounding_guard",
         "_developer_core", "_run_sync_v1", "_extract_understanding_data", "_extract_intent",
         "_reconcile_problem_with_intent", "_extract_entities", "_get_problem_value", "_build_evidence_text",
-        "_deterministic_response", "_arithmetic_response", "_build_system_prompt", "_build_user_prompt", "_model_dump"):
+        "_deterministic_response", "_arithmetic_response", "_build_system_prompt", "_build_user_prompt", "_model_dump",
+        "_policy_engine", "_handoff_engine", "_mcp_server"):
         namespace[name] = None  # core dependencies owned by separate Hermes regression tests
     module = ast.fix_missing_locations(ast.Module(body=[ast.ImportFrom(module="__future__",
         names=[ast.alias(name="annotations")], level=0), *selected], type_ignores=[]))
@@ -279,7 +305,8 @@ def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen
         nonlocal client
         async with httpx.AsyncClient(transport=httpx.MockTransport(lambda request:
                 httpx.Response(200, json=result()))) as client:
-            public = await namespace["chat"](SimpleNamespace(user_input="fixture question", session_id="fixture", model=None))
+            public = await namespace["_chat_completed"](namespace["ChatRequest"](
+                user_input="fixture question", session_id="fixture", model=None))
             assert public["provider_status"] == chosen
             assert set(public) == {"session_id", "response", "trust", "model", "provider_status", "latency_ms",
                 "grounding", "understanding", "problem", "evidence", "timestamp"}
