@@ -1,12 +1,14 @@
 import {useQuery} from '@tanstack/react-query';
 import {lazy,Suspense} from 'react';
 import {EngineeringConsole} from './engineering-console';
-import {Link,Outlet,useRouterState} from '@tanstack/react-router';
+import {Outlet,useRouterState} from '@tanstack/react-router';
 import {fetchSnapshot} from './api';
 import {isAttestation,type SystemHealth,type Snapshot} from './schemas';
 import {HumanProvider,AttestationIdentity} from './human';
 import {AdminAuthProvider} from './auth';
-import {operatorMenus,OperatorConnection} from './operator';
+import {OperatorConnection} from './operator';
+import {AppSidebar} from './sidebar';
+import {SettingsNavigation} from './settings';
 const EngineeringGraph=lazy(()=>import('./graph').then(module=>({default:module.EngineeringGraph})));
 declare const __CPLANE_BUILD__:{version:string;gitCommit:string;timestamp:string;environment:string;sourceId:string};
 export const navigation=['Overview','Roadmap','Architecture','Engineering','Governance','Verification','Runtime','Knowledge'] as const;
@@ -27,18 +29,13 @@ export function Shell(){
   return <AdminAuthProvider><ShellContent pathname={pathname}/></AdminAuthProvider>;
 }
 function ShellContent({pathname}:{pathname:string}){
-  if(pathname==='/'||pathname==='/ui'||pathname==='/assistant')return <main className="chat-page"><Outlet/></main>;
-  const current=operatorMenus.find(([path])=>path===pathname)?.[1]??(pathname==='/'?'Beranda Operator':'Detail V1');
-  return <HumanProvider><div className="shell operator-shell">
+  if(['/','/ui','/assistant','/workspace'].includes(pathname))return <main className="chat-page"><Outlet/></main>;
+  return <HumanProvider><div className="shell operator-shell settings-shell">
     <a className="skip-link" href="#operator-content">Lewati navigasi</a>
-    <aside><Link className="brand" to="/dashboard"><span className="mark">N</span><span>NUSANTARA<small>OPERATOR CONTROL PLANE V1</small></span></Link>
-    <Link className="chat-return" to="/">← Kembali ke Chat</Link>
-    <div className="workspace-identity"><span>N</span><div>Nusantara V1<small>Workspace utama · lokal</small></div></div>
-    <p className="nav-caption">RUANG OPERATOR</p>
-    <nav aria-label="Navigasi operator">{operatorMenus.map(([to,label],i)=><Link key={to} to={to} activeProps={{className:'active'}}><span className="nav-symbol" aria-hidden="true">{['⌂','◈','✓','⚙'][i]}</span>{label}</Link>)}</nav>
-    <div className="operator-guide"><h3>Satu langkah yang jelas.</h3><p>Pahami masalahnya, periksa buktinya, lalu ambil keputusan.</p><Link to="/approvals">Tinjau Human Control ↗</Link></div>
-    <div className="sidebar-foot">Control Plane V1<details><summary>Identitas frontend</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details></div></aside>
-    <main id="operator-content" tabIndex={-1}><div className="operator-topbar"><span>Workspace / <strong>{current}</strong></span><OperatorConnection/></div><div className="runtime-banner"><span className="runtime-dot"/>Mode aktual · API lokal<span>Data yang tidak tersedia tetap ditandai. Keputusan mengikuti backend.</span></div><Outlet/></main>
+    <AppSidebar settingsActive/>
+    <main id="operator-content" tabIndex={-1}><SettingsNavigation pathname={pathname}/><div className="operator-topbar"><OperatorConnection/></div><Outlet/>
+      <details className="settings-build"><summary>Identitas frontend</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details>
+    </main>
   </div></HumanProvider>;
 }
 export function Evidence({state,ids}:{state:SystemHealth;ids:string[]}){return <details className="trace"><summary>Trace to evidence · {ids.length}</summary>{ids.map(id=>{const e=state.evidence.find(x=>x.id===id);return <div key={id}><strong>{id}</strong><Badge status={e?.status??'NOT_VERIFIED'}/><code>{e?.reference??'Source unavailable'}</code><small>SHA-256 {e?.sha256??'NOT_VERIFIED'}</small></div>})}</details>}
