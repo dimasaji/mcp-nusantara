@@ -5,9 +5,9 @@ import {VerificationPage} from './verification';
 import {OverviewPage,KnowledgeOperationsPage} from './overview';
 import {UserChat,OperatorConsole} from './assistant';
 import {OperatorHome,TasksPage,BlockersPage,WorkspacePage,CostsPage,TechnicalPage} from './operator';
-import {SettingsPage} from './settings';
+import {SettingsPage,RuntimeSettingsPage} from './settings';
 const root=createRootRoute({component:Shell});
-const index=createRoute({getParentRoute:()=>root,path:'/',component:OperatorHome});
+const index=createRoute({getParentRoute:()=>root,path:'/',component:UserChat});
 const uiAlias=createRoute({getParentRoute:()=>root,path:'/ui',component:UserChat});
 const consoleRoute=createRoute({getParentRoute:()=>root,path:'/console',component:OperatorConsole});
 const dashboard=createRoute({getParentRoute:()=>root,path:'/dashboard',component:OperatorHome});
@@ -27,12 +27,14 @@ const verification=createRoute({getParentRoute:()=>root,path:'/verification',com
 const runtime=createRoute({getParentRoute:()=>root,path:'/runtime',component:()=> <Page name="Runtime"/>});
 const knowledge=createRoute({getParentRoute:()=>root,path:'/knowledge',component:KnowledgeOperationsPage});
 const operatorRoutes=[
- createRoute({getParentRoute:()=>root,path:'/workspace',component:WorkspacePage}),
+ createRoute({getParentRoute:()=>root,path:'/workspace',component:UserChat}),
  createRoute({getParentRoute:()=>root,path:'/tasks',component:TasksPage}),
  createRoute({getParentRoute:()=>root,path:'/blockers',component:BlockersPage}),
  createRoute({getParentRoute:()=>root,path:'/approvals',component:()=> <ExecutionReview title="Human Control"/>}),
  createRoute({getParentRoute:()=>root,path:'/costs',component:CostsPage}),
  createRoute({getParentRoute:()=>root,path:'/settings',component:SettingsPage}),
+ createRoute({getParentRoute:()=>root,path:'/settings/models',component:RuntimeSettingsPage}),
+ createRoute({getParentRoute:()=>root,path:'/settings/workspace',component:WorkspacePage}),
  createRoute({getParentRoute:()=>root,path:'/technical',component:TechnicalPage}),
 ];
 export const router=createRouter({routeTree:root.addChildren([...operatorRoutes,executionReview,index,uiAlias,consoleRoute,dashboard,overview,system,evidence,humanTest,review,decision,engineeringOverview,roadmap,architecture,engineering,governance,verification,runtime,knowledge])});
