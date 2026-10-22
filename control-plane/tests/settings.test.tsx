@@ -1,17 +1,27 @@
 import {render,screen,fireEvent,waitFor} from '@testing-library/react';
 import {vi,it,expect,beforeEach} from 'vitest';
 import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
-import {SettingsPage} from '../src/settings';
+import {RuntimeSettingsPage,SettingsPage} from '../src/settings';
 import {AdminAuthProvider} from '../src/auth';
 import * as api from '../src/api';
 vi.mock('@tanstack/react-router',()=>({Link:({to,children}:{to:string;children:React.ReactNode})=><a href={to}>{children}</a>}));
 vi.mock('../src/api',()=>({fetchModelStatus:vi.fn(),fetchKnowledgePipelineStatus:vi.fn(),fetchRuntimeHealth:vi.fn(),fetchAvailableModels:vi.fn(),selectOperatorModel:vi.fn()}));
-function mount(token=''){render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><AdminAuthProvider initialToken={token}><SettingsPage/></AdminAuthProvider></QueryClientProvider>)}
+function mount(token=''){render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><AdminAuthProvider initialToken={token}><RuntimeSettingsPage/></AdminAuthProvider></QueryClientProvider>)}
 beforeEach(()=>{
  vi.resetAllMocks();
  vi.mocked(api.fetchModelStatus).mockResolvedValue({model:'fixture',provider:'ollama',revision:0,process_id:1,consistency_scope:'CURRENT_PROCESS_ONLY',availability:'NOT_VERIFIED',status:'NOT_VERIFIED',selection_enabled:true,selection_source:'BOOTSTRAP',last_request:null});
  vi.mocked(api.fetchRuntimeHealth).mockResolvedValue({status:'ok',service:'nusantara-core',version:'0.1.0',httpStatus:200});
  vi.mocked(api.fetchKnowledgePipelineStatus).mockResolvedValue({source:'fixture',database:'fixture.db',documents_indexed:7,pipeline_ready_documents:3,watch:{enabled:false,folder:'inbox',updated_at:'now'},runs:[],checked_at:'now'});
+});
+it('groups model, documents and Control Plane under Settings without loading their panels',()=>{
+ render(<SettingsPage/>);
+ expect(screen.getByRole('heading',{name:'Pengaturan'})).toBeInTheDocument();
+ expect(screen.getByRole('link',{name:/Control Plane/})).toHaveAttribute('href','/dashboard');
+ expect(screen.getByRole('link',{name:/Model & koneksi/})).toHaveAttribute('href','/settings/models');
+ expect(screen.getByRole('link',{name:/Dokumen/})).toHaveAttribute('href','/knowledge');
+ expect(api.fetchRuntimeHealth).not.toHaveBeenCalled();
+ expect(api.fetchKnowledgePipelineStatus).not.toHaveBeenCalled();
+ expect(api.fetchModelStatus).not.toHaveBeenCalled();
 });
 it('reads health without credentials and keeps privileged knowledge gated',async()=>{
  mount();expect(await screen.findByText(/nusantara-core: ok/)).toBeInTheDocument();

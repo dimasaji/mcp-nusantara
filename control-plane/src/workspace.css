@@ -1,0 +1,71 @@
+/* Chat is the landing surface; operational controls live in Settings. */
+.user-app{max-width:none;margin:0;padding:0;background:#fff}
+.chat-app,.settings-shell{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh;background:#fff}
+.app-sidebar,.settings-shell .app-sidebar{background:#f6f7f8;color:#25312c;border-right:1px solid #e4e8e5;padding:24px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:20px;min-width:0;overflow-y:auto}
+.app-sidebar .app-brand{display:block;color:#243b2e;font-size:16px;font-weight:600;letter-spacing:1px;padding:2px 8px}
+.app-sidebar .app-brand span{display:block;font-size:12px;font-weight:400;letter-spacing:0;color:#64736a;margin-top:6px}
+.app-sidebar nav{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;margin:0}
+.settings-shell .app-sidebar nav a,.app-sidebar nav a,.app-sidebar button,.app-sidebar .settings-entry{display:block;text-align:left;color:#293a30;border:0;border-radius:10px;background:transparent;padding:12px;min-height:44px;width:100%;font-size:14px;white-space:nowrap}
+.app-sidebar nav a:hover,.app-sidebar button:hover:not(:disabled),.app-sidebar .settings-entry:hover,.app-sidebar .settings-entry.active{background:#e7ede9;color:#183c28}
+.app-sidebar .settings-entry{margin-top:auto}
+.sidebar-history{display:grid;gap:12px}
+.sidebar-history h2{margin:0 8px;font-size:13px;font-weight:500;color:#64736a}
+.sidebar-history label{display:grid;gap:8px;font-size:12px;color:#64736a;padding:0 8px}
+.sidebar-history select{width:100%;padding:10px 8px;min-height:44px;background:#fff;color:#293a30;border:1px solid #d9e2dc;border-radius:8px;font:inherit}
+.chat-app .assistant{width:100%;max-width:900px;margin:0 auto;padding:28px 40px;min-width:0;display:flex;flex-direction:column}
+.chat-app .assistant header{margin:0;display:flex;align-items:center;justify-content:space-between;border:0}
+.chat-app .assistant header h1{font-size:20px;font-weight:500;margin:0;color:#26352c}
+.chat-app .assistant-model{border:0;border-radius:0;background:transparent;padding:8px 0;margin:0;font-size:12px;color:#69776e}
+.chat-app .conversation{flex:1;min-height:38vh;padding:40px 0;gap:28px}
+.chat-app .welcome{padding:50px 0;background:transparent;border:0;box-shadow:none}
+.chat-app .welcome h2{font-size:28px;font-weight:500;letter-spacing:-.5px;color:#243b2e}
+.chat-app .welcome p{font-size:14px;color:#718077}
+.chat-app .turn{border:0;border-radius:0;padding:0;box-shadow:none;background:transparent}
+.chat-app .question{background:#edf2ef;color:#243b2e;padding:12px 18px;margin:0;border-radius:18px}
+.chat-app .answer{border:0;background:transparent;padding:0 2px}
+.chat-app .answer p{color:#2e3b33}
+.chat-app .assistant textarea{min-height:84px;background:#fff;color:#243b2e;border:1px solid #d5ded8;font:inherit;line-height:1.6;border-radius:16px;padding:16px}
+.chat-app .assistant form{gap:10px}
+.chat-app .assistant form label{font-size:13px;color:#617168}
+.chat-app .assistant button{width:auto;min-height:44px}
+.chat-app .assistant footer{font-size:12px;text-align:center;color:#7a877f;margin-top:22px;border-top:0}
+.chat-details,.answer-details{font-size:12px;margin-top:20px;color:#67766d}
+.chat-details summary,.answer-details summary{min-height:32px;padding:8px 0}
+.chat-details p{font-size:12px}
+.settings-shell main{background:#fff;padding:24px 36px;min-width:0}
+.settings-breadcrumb{font-size:13px;margin:0 0 14px;color:#68786e}
+.settings-navigation nav{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 14px}
+.settings-navigation nav a{display:block;padding:10px 12px;border-radius:8px;font-size:13px;color:#4c6153;min-height:40px}
+.settings-navigation nav a.active,.settings-navigation nav a:hover{background:#edf3ef;color:#224b32}
+.settings-shell .operator-topbar{border-bottom:1px solid #e5ebe7;padding:4px 0 14px;font-size:12px}
+.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0}
+.settings-grid a{display:flex;flex-direction:column;gap:12px;padding:24px;border:1px solid #e0e8e2;border-radius:14px;color:#2e4f39;background:#fff;min-width:0}
+.settings-grid a:hover{background:#f5f8f6;border-color:#b9cdbf}
+.settings-grid a strong{font-size:17px;font-weight:500}
+.settings-grid a span{font-size:13px;line-height:1.6;color:#6e7e73}
+.settings-grid a span:last-child{color:#356447}
+.settings-build{font-size:12px;margin-top:28px;padding-top:16px;border-top:1px solid #e0e8e2}
+.settings-build code{display:block;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:12px}
+@media(max-width:900px){
+  .chat-app,.settings-shell{grid-template-columns:200px minmax(0,1fr)}
+  .settings-shell .app-sidebar{position:sticky;height:100vh;max-height:100vh}
+  .chat-app .assistant,.settings-shell main{padding:24px}
+}
+@media(max-width:640px){
+  .chat-app,.settings-shell{grid-template-columns:minmax(0,1fr)}
+  .app-sidebar,.settings-shell .app-sidebar{position:static;height:auto;max-height:none;padding:16px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;border-right:0;border-bottom:1px solid #e0e8e2}
+  .app-sidebar .app-brand{grid-column:1}
+  .app-sidebar nav{grid-column:2;grid-row:1}
+  .app-sidebar .settings-entry{grid-column:2;grid-row:2;margin:0;align-self:end}
+  .sidebar-history{grid-column:1;grid-row:2;gap:6px;min-width:0}
+  .sidebar-history h2{margin-left:0}
+  .sidebar-history label{padding:0;font-size:12px}
+  .sidebar-history select{max-width:100%}
+  .chat-app .assistant,.settings-shell main{padding:20px 16px}
+  .chat-app .welcome{padding:36px 0}
+  .chat-app .welcome h2{font-size:24px}
+  .chat-app .conversation{padding:24px 0}
+  .chat-app .assistant header{display:flex}
+  .settings-grid{grid-template-columns:minmax(0,1fr)}
+  .settings-navigation nav a{min-height:44px}
+}
