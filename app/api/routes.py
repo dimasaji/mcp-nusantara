@@ -110,6 +110,8 @@ _workflows = WorkflowEngine()
 
 
 class ChatRequest(BaseModel):
+    sop_version: str | None = Field(default=None, pattern=r'^[a-f0-9]{64}$')
+    sop_case: Literal['requirements', 'procedure', 'time_cost', 'followup', 'missing'] | None = None
     session_id: str = Field(
         default_factory=lambda: f"web-{uuid4()}",
         min_length=1,
@@ -146,6 +148,7 @@ class _PublicChatEvidence(_PublicChatModel):
     chunk: str = Field(max_length=20000)
     score: float = Field(ge=0, le=1)
     pages: list[int] = Field(default_factory=list, max_length=100)
+    block_ids: list[str] = Field(default_factory=list, max_length=200)
 
 
 class _PublicChatGrounding(_PublicChatModel):
@@ -216,12 +219,14 @@ def _project_v1_chat_response(payload: dict, *, intent_name: str) -> dict:
         evidence=[_PublicChatEvidence(
             document_id=item["document_id"], title=item["title"],
             # Keep the V1 citation shape compatible without releasing source text.
-            chunk="", score=item["score"], pages=item.get('pages', []),
+            chunk="", score=item["score"], pages=item.get('pages', []), block_ids=item.get('block_ids', []),
         ) for item in payload["evidence"]],
         timestamp=payload["timestamp"],
     )
     result = public.model_dump(mode="json")
     for citation in result['evidence']:
+        if not citation['block_ids']:
+            citation.pop('block_ids')
         if not citation['pages']:
             citation.pop('pages')
     return result
@@ -1051,6 +1056,23 @@ async def chat(
     operator = isinstance(x_admin_token, str) and bool(x_admin_token)
     if operator:
         require_admin(x_admin_token)
+    from app.knowledge.sop_review import SOPReview
+    review = SOPReview(_knowledge) if operator else None
+    binding = review.session_binding(v1_session_id(request.session_id, operator=True)) if review else None
+    if binding and not request.document_ids and not request.sop_version:
+        request = request.model_copy(update={'document_ids': [binding['document_id']], 'sop_version': binding['version_id'],
+                                             'sop_case': request.sop_case or 'followup'})
+    if binding and (request.sop_version != binding['version_id'] or request.document_ids != [binding['document_id']]):
+        raise HTTPException(409, 'Sesi terikat pada SOP dan versi percobaan. Gunakan sesi baru untuk chat biasa.')
+    if request.sop_version:
+        if not operator or len(request.document_ids) != 1 or not request.sop_case:
+            raise HTTPException(403, 'Percobaan memerlukan operator, satu SOP, versi dan jenis pertanyaan.')
+        try:
+            review.bind_session(v1_session_id(request.session_id, operator=True), request.document_ids[0], request.sop_version)
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from None
+    elif review and any(review.is_pilot(identifier) and review.detail(identifier)['status'] != 'Aktif' for identifier in request.document_ids):
+        raise HTTPException(409, 'SOP belum aktif. Gunakan Coba chat SOP ini pada halaman Dokumen.')
     if request.document_ids:
         if not operator:
             raise HTTPException(403, 'DOCUMENT_CHAT_REQUIRES_OPERATOR')
@@ -1064,6 +1086,8 @@ async def chat(
     # context. Old histories are quarantined without reading/migrating them.
     scoped = request.model_copy(update={
         'session_id': v1_session_id(request.session_id, operator=operator), 'stream': False})
+    if review and not request.sop_version and len(request.document_ids) == 1 and review.is_pilot(request.document_ids[0]):
+        scoped = scoped.model_copy(update={'sop_version': review.detail(request.document_ids[0])['version_id']})
     import asyncio
     import json
     from fastapi.responses import StreamingResponse
@@ -1075,6 +1099,12 @@ async def chat(
         observer = stream_observer.set(None)
         try:
             answer = await _chat_completed(scoped, operator=operator)
+            if request.sop_version:
+                try:
+                    review.record_trial(request.document_ids[0], request.sop_version, request.sop_case,
+                        request.user_input, answer, 'shared-admin-token')
+                except ValueError as exc:
+                    raise HTTPException(409, str(exc)) from None
             return {**answer, 'session_id': request.session_id}
         finally:
             stream_observer.reset(observer)
@@ -1095,6 +1125,7 @@ async def chat(
                 'retry_safe': retry_safe,
                 'message': 'Batas waktu pemrosesan tercapai. Periksa History sebelum mencoba kembali.' if status == 504
                     else 'Model belum tersedia. Periksa Ollama, lalu kirim ulang pertanyaan setelah pulih.' if status == 503 and retry_safe
+                    else str(getattr(exc, 'detail', '')) if str(getattr(exc, 'detail', '')).startswith('Masalah pembacaan SOP:')
                     else 'Chat gagal. Periksa History sebelum mencoba kembali.'}) + '\n'
         else:
             yield json.dumps({'type': 'final', 'answer': answer}, ensure_ascii=False) + '\n'
@@ -1133,7 +1164,9 @@ async def _chat_completed(request: ChatRequest, *, operator: bool = False):
 
         configuration, revision = settings.configuration_snapshot()
         knowledge = V1KnowledgeBoundary(_knowledge, operator=operator,
-                                        provider=configuration.llm.provider)
+                                        provider=configuration.llm.provider,
+                                        sop_version=getattr(request, 'sop_version', None),
+                                        document_ids=getattr(request, 'document_ids', []), document_query=request.user_input)
 
         if request_id:
             try:

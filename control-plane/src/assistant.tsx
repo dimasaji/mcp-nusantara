@@ -35,6 +35,9 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
   const [partial,setPartial]=useState('');
   const [documents,setDocuments]=useState<{document_id:string;title:string}[]>([]);
   const [selectedDocument,setSelectedDocument]=useState('');
+  const [trialVersion,setTrialVersion]=useState('');
+  const [activeDocument,setActiveDocument]=useState<{title:string;status:string;version_id:string;source_type?:string|null;extraction?:{status:string}}|null>(null);
+  const documentBlocked=!!selectedDocument&&(!activeDocument||(activeDocument.status!=='Aktif'&&!trialVersion));
   const activeRequest=useRef<AbortController|null>(null);
   const [error,setError]=useState('');
   const [historyError,setHistoryError]=useState('');
@@ -56,12 +59,25 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
     void refreshHistory(()=>active);
     return ()=>{active=false;};},[session,selectedDocument,token]);
   useEffect(()=>{void fetchModelStatus().then(setModel).catch(()=>setModel(null));},[]);
-  useEffect(()=>{if(!token){setSelectedDocument('');return;}const pendingDocument=sessionStorage.getItem('nusantara-chat-document-pending');const selected=pendingDocument??sessionStorage.getItem(storagePrefix+'-document-'+session)??'';setSelectedDocument(selected);if(pendingDocument){sessionStorage.setItem(storagePrefix+'-document-'+session,pendingDocument);sessionStorage.removeItem('nusantara-chat-document-pending');}},[session]);
+  useEffect(()=>{let live=true;setActiveDocument(null);if(selectedDocument&&token)void fetch(`/v1/knowledge/pipeline/reviews/${encodeURIComponent(selectedDocument)}`,{headers:{'X-Admin-Token':token},cache:'no-store'}).then(async r=>{if(!r.ok)throw new Error('Status dokumen tidak dapat dibaca');return r.json();}).then(d=>{if(live)setActiveDocument(d);}).catch(e=>{if(live)setError(e.message);});return()=>{live=false;};},[selectedDocument,token]);
+  useEffect(()=>{
+    if(!token){setSelectedDocument('');setTrialVersion('');return;}
+    const pendingDocument=sessionStorage.getItem('nusantara-chat-document-pending');
+    if(pendingDocument){
+      const pendingVersion=sessionStorage.getItem('nusantara-chat-sop-version-pending')??'';
+      sessionStorage.removeItem('nusantara-chat-document-pending');sessionStorage.removeItem('nusantara-chat-sop-version-pending');
+      openDocumentSession(pendingDocument,pendingVersion);return;
+    }
+    const selected=sessionStorage.getItem(storagePrefix+'-document-'+session)??'';
+    const version=sessionStorage.getItem(storagePrefix+'-sop-version-'+session);
+    setSelectedDocument(selected);setTrialVersion(version&&/^[a-f0-9]{64}$/.test(version)?version:'');
+  },[session]);
   useEffect(()=>{if(conversationRef.current)conversationRef.current.scrollTop=conversationRef.current.scrollHeight;},[messages,pending,partial]);
   useEffect(()=>()=>activeRequest.current?.abort(),[]);
   async function send(){
     if(activeRequest.current||!question.trim())return;
     if(selectedDocument&&!token.trim()){setError('Token operator diperlukan untuk chat dokumen. Verifikasi akses melalui Lampirkan dokumen.');return;}
+    if(documentBlocked){setError('SOP belum disetujui. Pilih Uji SOP ini (belum disetujui) untuk percobaan operator.');return;}
     const controller=new AbortController();activeRequest.current=controller;
     const submitted=question.trim();setPartial('');setPending(true);setError('');
     if(!titles[session])setTitles(old=>{const next={...old,[session]:submitted.replace(/\s+/g,' ').slice(0,60)};if(!token)localStorage.setItem(storagePrefix+'-titles',JSON.stringify(next));return next;});
@@ -69,7 +85,7 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
       logicalRequest.current={question:submitted,session,id:crypto.randomUUID().replaceAll('-','')};
     }
     const request=logicalRequest.current;
-    try{const answer=await sendUserChat(submitted,session,request.id,request.retryOf,model?.provider==='ollama'?270000:90000,{signal:controller.signal,onDelta:text=>setPartial(old=>old+text),documentIds:selectedDocument?[selectedDocument]:undefined,token:selectedDocument?token:undefined});setMessages(old=>[...old,{question:submitted,answer}]);setQuestion('');logicalRequest.current=null;
+    try{const answer=await sendUserChat(submitted,session,request.id,request.retryOf,model?.provider==='ollama'?270000:90000,{signal:controller.signal,onDelta:text=>setPartial(old=>old+text),documentIds:selectedDocument?[selectedDocument]:undefined,token:selectedDocument?token:undefined,...(trialVersion?{sopVersion:trialVersion,sopCase:'followup'}:{})});setMessages(old=>[...old,{question:submitted,answer}]);setQuestion('');logicalRequest.current=null;
       void fetchModelStatus().then(setModel).catch(()=>setModel(null));
     }catch(e){
       if(e instanceof ChatSendError&&e.retrySafe){logicalRequest.current={...request,id:crypto.randomUUID().replaceAll('-',''),retryOf:request.id};}
@@ -80,15 +96,25 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
   function stop(){activeRequest.current?.abort();logicalRequest.current=null;}
   function newChat(){if(pending)return;logicalRequest.current=null;setSession(`web-${crypto.randomUUID()}`);setMessages([]);setHistoryFailures([]);setQuestion('');setError('');setSidebarOpen(false);}
   async function verifyUpload(){setUploadBusy(true);setUploadError('');setUploadStatus('');try{const pipeline=await fetchKnowledgePipelineStatus(token);setDocuments(pipeline.documents??[]);setUploadReady(true);setUploadStatus('Knowledge siap. Pilih dokumen untuk diunggah atau ditanyakan.');}catch(e){setUploadReady(false);setUploadError(e instanceof Error?e.message:'Knowledge belum dapat dibaca.');}finally{setUploadBusy(false);}}
-  function chooseDocument(id:string){setSelectedDocument(id);sessionStorage.setItem(storagePrefix+'-document-'+session,id);logicalRequest.current=null;}
+  function openDocumentSession(id:string,version=''){
+    const next=`web-${crypto.randomUUID()}`;
+    sessionStorage.setItem(storagePrefix+'-document-'+next,id);
+    if(/^[a-f0-9]{64}$/.test(version))sessionStorage.setItem(storagePrefix+'-sop-version-'+next,version);
+    logicalRequest.current=null;setMessages([]);setHistoryFailures([]);setError('');setSelectedDocument(id);setTrialVersion(/^[a-f0-9]{64}$/.test(version)?version:'');setSession(next);
+  }
+  function chooseDocument(id:string){if(id!==selectedDocument)openDocumentSession(id);}
+  function beginTrial(){if(!token||!activeDocument||!/^[a-f0-9]{64}$/.test(activeDocument.version_id))return;openDocumentSession(selectedDocument,activeDocument.version_id);}
   async function submitUpload(){if(!uploadReady||!uploadFile||!token.trim())return;setUploadBusy(true);setUploadError('');setUploadStatus('Menyimpan, mengekstrak, dan mengindeks dokumen…');try{const result=await uploadKnowledgeDocument(uploadFile,token);if(!['READY','DUPLICATE'].includes(result.status)||!result.document_id)throw new Error(`Dokumen belum siap ditanyakan. ${result.reason??'Periksa History Knowledge.'}`);setDocuments(old=>[...old.filter(d=>d.document_id!==result.document_id),{document_id:result.document_id!,title:result.filename}]);chooseDocument(result.document_id);setUploadStatus(`Dokumen ${result.filename} siap ditanyakan dan dipilih sebagai sumber. Otoritas sumber belum disahkan.`);setUploadFile(null);}catch(e){setUploadStatus('');setUploadError(e instanceof Error?e.message:'Dokumen belum berhasil diproses.');}finally{setUploadBusy(false);}}
   const uniqueEvidence=(items:PublicChat['evidence'])=>items.filter((e,i,all)=>all.findIndex(x=>x.document_id===e.document_id)===i);
   const Composer= <form className="message-composer" onSubmit={e=>{e.preventDefault();void send();}}>    <label className="chat-document-scope">Sumber dokumen <select aria-label="Sumber dokumen" disabled={pending} value={selectedDocument} onChange={e=>chooseDocument(e.target.value)}><option value="">Semua knowledge</option>{selectedDocument&&!documents.some(d=>d.document_id===selectedDocument)&&<option value={selectedDocument}>Dokumen sesi ini — verifikasi akses untuk membaca judul</option>}{documents.map(d=><option key={d.document_id} value={d.document_id}>{d.title}</option>)}</select></label>
-    {selectedDocument&&<small>Jawaban dibatasi ke dokumen pilihan dengan model lokal. Jika informasi tidak ditemukan, jawaban akan menyatakannya.</small>}
+    {selectedDocument&&<small>Dokumen aktif: {activeDocument?.title??'Memuat judul resmi'} · Ekstraksi: {activeDocument?.extraction?.status??'Belum diverifikasi'} · {activeDocument?.status??''}</small>}
+    {!token&&<small>Chat umum belum membaca SOP internal. <Link to="/knowledge">Verifikasi akses operator dan pilih SOP</Link>.</small>}
+    {trialVersion&&<p role="status">Mode uji operator: SOP belum disetujui. Sesi terikat pada versi {trialVersion.slice(0,12)}; persetujuan isi tidak berubah.</p>}
+    {documentBlocked&&activeDocument&&<div><p>SOP ini belum disetujui untuk penggunaan biasa. Operator dapat menguji hasil pembacaannya.</p><button type="button" disabled={pending||!(activeDocument.extraction?.status==='COMPLETE'||(activeDocument.source_type&&activeDocument.source_type!=='.pdf'))} onClick={beginTrial}>Uji SOP ini (belum disetujui)</button><Link to="/knowledge">Buka pemeriksaan SOP</Link></div>}
 <div className="composer-box">
     <details className="chat-upload" open={uploadPanelOpen} onToggle={event=>{const open=event.currentTarget.open;setUploadPanelOpen(open);if(open&&token.trim()&&!uploadReady&&!uploadBusy)void verifyUpload();}}><summary aria-label="Lampirkan dokumen" title="Lampirkan dokumen"><PaperclipIcon/></summary><div className="composer-upload-panel"><strong>Unggah dokumen</strong>{!token.trim()?<><p>Upload memerlukan akses operator.</p><Link className="chat-upload-settings" to="/knowledge">Buka Knowledge untuk mengatur akses</Link></>:<>{uploadBusy?<p role="status">Memeriksa akses Knowledge…</p>:uploadError?<p role="alert">{uploadError}</p>:uploadStatus&&<p role="status">{uploadStatus}</p>}<input aria-label="Dokumen untuk knowledge" type="file" accept=".pdf,.docx,.txt,.md,.html,.htm" disabled={!uploadReady||uploadBusy} onChange={e=>setUploadFile(e.target.files?.[0]??null)}/><button type="button" disabled={!uploadReady||!uploadFile||uploadBusy} onClick={()=>void submitUpload()}>{uploadBusy?'Memproses…':'Upload dan proses'}</button><small>Dokumen diproses melalui Knowledge lokal dan mengikuti pemeriksaan akses yang berlaku.</small></>}</div></details>
     <textarea aria-label="Pertanyaan Anda" id={embedded?'embedded-question':'question'} value={question} onChange={e=>setQuestion(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();void send();}}} maxLength={20000} disabled={pending} required placeholder="Tanyakan sesuatu atau lampirkan dokumen…"/>
-    {uploadFile&&<span className="upload-filename" title={uploadFile.name}>{uploadFile.name}</span>}<button className="composer-send" aria-label={pending?'Memproses…':'Kirim pertanyaan'} title="Kirim" disabled={pending||!question.trim()} type="submit"><SendIcon/></button>{pending&&<button type="button" onClick={stop}>Berhenti</button>}</div>
+    {uploadFile&&<span className="upload-filename" title={uploadFile.name}>{uploadFile.name}</span>}<button className="composer-send" aria-label={pending?'Memproses…':'Kirim pertanyaan'} title="Kirim" disabled={pending||!question.trim()||documentBlocked} type="submit"><SendIcon/></button>{pending&&<button type="button" onClick={stop}>Berhenti</button>}</div>
     {pending&&<div role="status" className="stream-preview"><p>{partial?'Jawaban sementara — pemeriksaan sumber belum selesai.':'Menunggu respons model…'}</p>{partial&&<p style={{whiteSpace:'pre-wrap'}}>{partial}</p>}</div>}{uploadStatus&&<p className="upload-feedback" role="status">{uploadStatus}</p>}{uploadError&&<p className="upload-feedback" role="alert">{uploadError}</p>}</form>;
   const Header= <header className="chat-header">{!embedded&&<button className="sidebar-toggle" type="button" aria-label={sidebarOpen?'Ciutkan sidebar':'Buka sidebar'} title={sidebarOpen?'Ciutkan sidebar':'Buka sidebar'} onClick={()=>setSidebarOpen(v=>!v)}><span aria-hidden="true">☰</span></button>}<Link className="chat-header-brand" to="/">NUSANTARA</Link></header>;
   const Sidebar=!embedded&&<aside className="chat-sidebar"><button className="drawer-close" type="button" aria-label="Tutup sidebar" onClick={()=>setSidebarOpen(false)}>×</button><Link className="chat-brand" to="/"><span className="mark">N</span><span className="sidebar-brand-label">NUSANTARA<small>AI WORKSPACE</small></span></Link><button className="chat-new" type="button" aria-label="Chat baru" disabled={pending} onClick={newChat}><span aria-hidden="true">＋</span><span className="sidebar-label">Chat baru</span></button><div className="chat-history"><div className="chat-history-head"><p className="nav-caption">RIWAYAT CHAT</p><button type="button" className="history-refresh" aria-label="Muat ulang History" title="Muat ulang History" disabled={pending} onClick={()=>void refreshHistory()}>↻</button></div><nav aria-label="Riwayat Chat">{[...sessions].reverse().map((id,i)=><button type="button" key={id} title={titles[id]??('Percakapan '+(sessions.length-i))} aria-current={id===session?'page':undefined} onClick={()=>{if(pending)return;logicalRequest.current=null;setSession(id);setMessages([]);setHistoryFailures([]);setError('');setSidebarOpen(false);}}><span>{titles[id]??('Percakapan '+(sessions.length-i))}</span></button>)}</nav></div><Link className="chat-control-link" aria-label="Pengaturan" to="/settings"><span aria-hidden="true">⚙</span><span className="sidebar-label">Pengaturan</span></Link></aside>;

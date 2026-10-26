@@ -11,6 +11,32 @@ def execute(parts, question, session='contract-session', **extra):
     return parts[3](core.payload, intent_name=core.intent_name)
 
 
+def test_sop_trial_status_question_uses_model_instead_of_dumping_full_source():
+    parts = fixture(answer='Informasi belum tersedia dalam SOP.')
+    result = execute(parts, 'Berapa waktu menurut SOP ini?', document_ids=['fixture-ktp'], sop_version='a'*64)
+    assert parts[4].calls == 1
+    assert result['provider_status'] == 'ollama'
+
+
+def test_sop_prompt_preserves_all_source_words_or_refuses_before_generation():
+    import pytest
+    from app.knowledge.sop_review import sop_prompt
+    system, prompt = sop_prompt('Judul\nPersyaratan surat.\nProses lengkap.\nWaktu tiga hari.', 'Apa persyaratannya?', [], 4096)
+    assert 'Judul\nPersyaratan surat.\nProses lengkap.\nWaktu tiga hari.' in prompt
+    assert len((system+prompt).encode()) + 96 + 128 <= 4096
+    with pytest.raises(ValueError, match='tidak muat utuh'):
+        sop_prompt('X' * 5000, 'Apa persyaratannya?', [], 4096)
+
+
+def test_pilot_does_not_accept_a_new_channel_merely_from_topic_overlap():
+    from app.knowledge.sop_review import sop_wording_supported
+    source = 'Nomor SOP. Pemohon menyampaikan Surat Permohonan. Proses selesai 3 Hari Kerja.'
+    assert not sop_wording_supported('Ya, nomor WhatsApp petugas tercantum dalam SOP ini.', source)
+    assert not sop_wording_supported('Pemohon harus mengisi formulir dan memverifikasi database.', source)
+    assert sop_wording_supported('Pemohon menyampaikan Surat Permohonan.', source)
+    assert sop_wording_supported('Nomor WhatsApp belum ditemukan dalam SOP ini.', source)
+
+
 def test_general_definition_does_not_require_knowledge():
     parts = fixture(empty=True, answer='KTP elektronik adalah kartu identitas penduduk dengan data elektronik.')
     result = execute(parts, 'Apa itu KTP elektronik?')

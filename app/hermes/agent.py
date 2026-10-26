@@ -330,8 +330,11 @@ class HermesAgent:
         )
         # Document selection supplies scope, while the current message supplies
         # intent. A definition can return to general chat without retrieving.
-        if scoped_document_ids and not (conversation and not _CONTEXTUAL_FOLLOWUP.search(
-                re.sub(r'\bapa\s+itu\b', '', request.user_input, flags=re.I))):
+        if getattr(request, 'sop_version', None):
+            conversation = False
+            repeated_text = None
+        if scoped_document_ids and (turn.get('facet') or not (conversation and not _CONTEXTUAL_FOLLOWUP.search(
+                re.sub(r'\bapa\s+itu\b', '', request.user_input, flags=re.I)))):
             conversation = False
             repeated_text = None
             if _CONTEXTUAL_FOLLOWUP.search(request.user_input):
@@ -376,6 +379,8 @@ class HermesAgent:
                     turn['query'], top_k=None, **search_scope)
             except Exception as exc:
                 # Retrieval failure is not an empty result or a provider error.
+                if getattr(exc, 'status_code', None) == 409 and str(getattr(exc, 'detail', '')).startswith('Masalah pembacaan SOP:'):
+                    raise
                 from fastapi import HTTPException
                 logging.getLogger(__name__).warning('V1 retrieval unavailable: %s', type(exc).__name__)
                 raise HTTPException(503, 'RETRIEVAL_UNAVAILABLE',
@@ -471,7 +476,11 @@ class HermesAgent:
 
         retrieval_capture.post_filter(before_consumer_filter, len(evidence))
         from app.knowledge.grounding import service_answer_facts, GroundingResult
-        service_facts=None if (conversation or repeated_text is not None) else service_answer_facts(turn,evidence,previous)
+        pilot_chat = bool(getattr(request, 'sop_version', None))
+        service_facts=None if (conversation or repeated_text is not None or pilot_chat) else service_answer_facts(turn,evidence,previous)
+        if pilot_chat and evidence:
+            from app.knowledge.document_answers import document_answer_facts
+            service_facts = document_answer_facts(request.user_input, evidence)
         answer_evidence=evidence
         service_context={} if conversation or (turn.get('facet') and turn.get('topic_hint')) else None
         # ==============================================================
@@ -568,7 +577,8 @@ class HermesAgent:
             intent_name, intent_confidence = 'greeting', 1.0
         elif service_facts and not service_facts.get('clarify'):
             intent_name={'requirements':'ask_document_requirements','procedure':'ask_procedure',
-                         'duration':'ask_processing_time','channel':'ask_general_info'}[service_facts['facet']]
+                               'duration':'ask_processing_time','channel':'ask_general_info',
+                               'cost':'ask_general_info','product':'ask_general_info','missing':'ask_general_info'}[service_facts['facet']]
 
         # ----------------------------------------------------------
         # INTENT / PROBLEM RECONCILIATION
@@ -679,7 +689,7 @@ class HermesAgent:
 
             latency_ms = 0
 
-        elif turn['needs_clarification'] or (service_facts and service_facts.get('clarify')):
+        elif (turn['needs_clarification'] and not (scoped_document_ids and evidence)) or (service_facts and service_facts.get('clarify')):
             response_text=('Saya belum menemukan SOP yang sesuai untuk layanan tersebut.'
                            if service_facts and service_facts.get('missing') and turn.get('topic_hint') else
                            'Layanan apa yang Anda maksud?' if not previous or (service_facts and not service_facts.get('missing')) else
@@ -724,13 +734,15 @@ class HermesAgent:
             metadata = getattr(original, 'metadata', {})
             quote_start = facts['source'].find(facts['quote'])
             quote_end = quote_start + len(facts['quote'])
-            pages = []
-            if quote_start >= 0 and facts['source'].find(facts['quote'], quote_start + 1) < 0:
+            pages = facts.get('pages', [])
+            if 'pages' not in facts and quote_start >= 0 and facts['source'].find(facts['quote'], quote_start + 1) < 0:
                 pages = [p['page'] for p in metadata.get('source_pages', [])
                          if p['start'] < quote_end and p['end'] > quote_start]
             answer_evidence=[SimpleNamespace(document_id=facts['document_id'],title=facts['title'],
                                             source=facts['source'],chunk=facts['quote'],score=facts['score'],
-                                            metadata={'citation_pages': pages})]
+                                            metadata={'citation_pages': pages,
+                                                'block_ids': [b['block_id'] for b in metadata.get('all_document_blocks' if facts['unknown'] else 'docling_blocks', [])
+                                                              if any(p in pages for p in b['page_numbers'])]})]
             trust_input=[{'relevance':facts['score']}]
             model_used=provider.model;latency_ms=int((time.perf_counter()-started)*1000)
 
@@ -791,6 +803,9 @@ class HermesAgent:
 
                 if source_text:
                     fast_evidence_response = source_text
+
+            if pilot_chat:
+                fast_evidence_response = None
 
             if fast_evidence_response:
 
@@ -871,6 +886,10 @@ class HermesAgent:
                         + "\n\n"
                         + _grounding_guard.build_system_instruction()
                     )
+                    if getattr(request, 'sop_version', None):
+                        system_prompt += ('\nJawab hanya dari SOP dan versi terpilih. Bila informasi tidak tercantum, '
+                            'katakan belum ditemukan dalam SOP. Ketiadaan informasi bukan larangan layanan. '
+                            'Jangan menambah syarat, prosedur, waktu atau biaya dari pengetahuan umum.')
 
                 prompt = _conversation_prompt(prior_conversation, request.user_input) if conversation else _build_user_prompt(
                     user_input=request.user_input,
@@ -897,12 +916,21 @@ class HermesAgent:
                         "Jangan menambahkan kata atau fakta. Jika tidak ada definisi yang relevan, "
                         "jawab: Informasi belum tersedia dalam knowledge base."
                     )
+                if pilot_chat:
+                    from app.knowledge.sop_review import sop_prompt
+                    from fastapi import HTTPException
+                    configuration = getattr(provider, '_configuration', None)
+                    context_tokens = configuration.llm.generation.context_length if configuration else 4096
+                    try:
+                        system_prompt, prompt = sop_prompt(evidence[0].source, request.user_input, prior_conversation, context_tokens)
+                    except ValueError as exc:
+                        raise HTTPException(409, str(exc)) from None
                 result = await provider.generate(
                     {
                         "system": system_prompt,
                         "prompt": prompt,
                         "temperature": 0.1,
-                        "max_tokens": 220,
+                        "max_tokens": 128 if pilot_chat else 220,
                     }
                 )
 
@@ -1039,6 +1067,15 @@ class HermesAgent:
         # 10. FINAL RESPONSE
         # ==============================================================
 
+        if pilot_chat and grounding_result is not None and grounding_result.grounded:
+            from app.knowledge.sop_review import sop_wording_supported
+            if not sop_wording_supported(response_text, evidence[0].source):
+                grounding_result = GroundingResult(response_text, False, 'sop_wording_not_supported', [response_text])
+            from app.knowledge.document_citations import citations_supported
+            source_blocks = getattr(evidence[0], 'metadata', {}).get('docling_blocks', [])
+            if source_blocks and not citations_supported(response_text, source_blocks):
+                grounding_result = GroundingResult(response_text, False, 'document_citation_not_supplied', [response_text])
+
         # Re-evaluasi Trust dengan grounding final agar API publik
         # tidak menampilkan kontradiksi ``supports_claim=True`` ketika
         # ``grounded=False``. Pemanggilan awal ``trust_assessment``
@@ -1052,7 +1089,9 @@ class HermesAgent:
             )
 
         if scoped_document_ids and grounding_result is not None and not grounding_result.grounded:
-            response_text = 'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.'
+            response_text = ('Jawaban model belum dapat dipastikan sesuai SOP ini. Periksa sumber atau coba pertanyaan yang lebih spesifik.'
+                             if pilot_chat and grounding_result.reason != 'no_evidence' else
+                             'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.')
         remember_kwargs={'session_id':request.session_id,'response':response_text}
         if service_context is not None:remember_kwargs['service_context']=service_context
         _gate_integration.remember_response(**remember_kwargs)
@@ -1178,6 +1217,7 @@ class HermesAgent:
                         None,
                     ),
                     "pages": getattr(e, 'metadata', {}).get('citation_pages', []),
+                    "block_ids": getattr(e, 'metadata', {}).get('block_ids', []),
                 }
                 for e in answer_evidence
             ],

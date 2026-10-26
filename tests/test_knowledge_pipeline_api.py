@@ -63,6 +63,25 @@ def upload(client, payload, filename='Petunjuk layanan.pdf'):
         'Content-Type': 'application/octet-stream', 'X-Document-Name': quote(filename)})
 
 
+def test_review_source_access_notes_and_server_approval_gate(client):
+    raw = pdf_bytes()
+    doc = upload(client, raw).json()['document_id']
+    url = '/v1/knowledge/pipeline/reviews/' + doc
+    assert client.get(url).status_code == 403
+    detail = client.get(url, headers=AUTH).json()
+    assert detail['status'] == 'Menunggu pemeriksaan isi'
+    assert 'Surat Permohonan' in detail['text']
+    assert client.get(url + '/source', headers=AUTH).content == raw
+    assert client.get(url + '/source').status_code == 403
+    version = detail['version_id']
+    assert client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'approve'}).status_code == 409
+    assert client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'problem'}).status_code == 409
+    response = client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'problem', 'note': 'Teks perlu diperiksa'})
+    assert response.status_code == 200
+    assert client.get(url, headers=AUTH).json()['problems'][0]['note'] == 'Teks perlu diperiksa'
+    assert client.post(url + '/decision', headers=AUTH, json={'version_id': 'a'*64, 'action': 'content_ok'}).status_code == 409
+
+
 def test_pdf_upload_processing_history_and_duplicate(client, tmp_path):
     before = client.get(STATUS, headers=AUTH)
     assert before.status_code == 200

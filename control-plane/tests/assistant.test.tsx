@@ -8,6 +8,34 @@ afterEach(()=>{vi.useRealTimers();vi.restoreAllMocks();vi.unstubAllGlobals();});
 const status={model:'fixture-a',provider:'ollama',revision:0,process_id:42,consistency_scope:'CURRENT_PROCESS_ONLY',availability:'NOT_VERIFIED',status:'NOT_VERIFIED',selection_enabled:true,selectable_providers:['ollama','openrouter'] as ('ollama'|'openrouter')[],selection_source:'BOOTSTRAP',last_request:null};
 const answer={session_id:'session',response:'Jawaban aman dari Hermes.',model:'fixture-a',provider_status:'ollama',latency_ms:2,timestamp:'2026-10-09',trust:{supports_claim:true,confidence:.9,risk_level:'low',requires_human:false,evidence_count:0,evidence_available:false},grounding:{enabled:true,grounded:true,reason:'grounded'},understanding:{intent:'general'},problem:{goal:null},evidence:[]};
 describe('V1 user and operator surfaces',()=>{
+  it('explicitly opens an unapproved processed SOP in operator trial mode on the main chat',async()=>{
+    sessionStorage.clear();localStorage.clear();
+    const previous='web-11111111-1111-4111-8111-111111111111';
+    sessionStorage.setItem('nusantara-chat-p0-operator-session',previous);
+    sessionStorage.setItem('nusantara-chat-p0-operator-document-'+previous,'OLD-SOP');
+    sessionStorage.setItem('nusantara-chat-p0-operator-sop-version-'+previous,'b'.repeat(64));
+    sessionStorage.setItem('nusantara-chat-document-pending','SOP-LOCAL');
+    const calls:{body:any;headers:any}[]=[];
+    vi.stubGlobal('fetch',vi.fn(async(path:string,options?:RequestInit)=>{
+      if(path.includes('/reviews/'))return {ok:true,json:async()=>({title:'SOP Layanan Contoh',version_id:'a'.repeat(64),status:'Menunggu pemeriksaan isi',extraction:{status:'COMPLETE'}})};
+      if(path==='/v1/chat/history')return {ok:true,json:async()=>({session_id:'fixture',turns:[]})};
+      if(path==='/v1/chat'){calls.push({body:JSON.parse(options?.body as string),headers:options?.headers});return {ok:true,json:async()=>answer};}
+      return {ok:true,json:async()=>status};
+    }));
+    const view=render(<UserChat token="fixture"/>);
+    await screen.findByText(/Dokumen aktif: SOP Layanan Contoh/);
+    fireEvent.change(screen.getByLabelText('Pertanyaan Anda'),{target:{value:'Apa persyaratannya?'}});
+    expect(screen.getByRole('button',{name:'Kirim pertanyaan'})).toBeDisabled();
+    fireEvent.click(await screen.findByRole('button',{name:'Uji SOP ini (belum disetujui)'}));
+    expect(await screen.findByText(/Mode uji operator/)).toBeVisible();
+    fireEvent.click(screen.getByRole('button',{name:'Kirim pertanyaan'}));
+    await waitFor(()=>expect(calls).toHaveLength(1));
+    expect(calls[0].body).toMatchObject({document_ids:['SOP-LOCAL'],sop_version:'a'.repeat(64),sop_case:'followup'});
+    expect(calls[0].headers['X-Admin-Token']).toBe('fixture');
+    expect(calls[0].body.session_id).not.toBe(previous);
+    expect(sessionStorage.getItem('nusantara-chat-p0-operator-document-'+previous)).toBe('OLD-SOP');
+    view.unmount();sessionStorage.clear();localStorage.clear();
+  });
   it('keeps the same focused composer DOM while typing each character',async()=>{
     vi.stubGlobal('fetch',vi.fn(async(path:string)=>({ok:true,json:async()=>path==='/v1/chat/history'?{session_id:'fixture',turns:[]}:status})));
     const view=render(<UserChat/>);

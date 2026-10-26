@@ -4,6 +4,7 @@ import {Link} from '@tanstack/react-router';
 import {fetchSnapshot,fetchEvidencePackage,fetchExecutionContext,fetchExecutionHistory,fetchModelStatus,
   fetchKnowledgePipelineStatus,uploadKnowledgeDocument,setKnowledgeWatch,retryKnowledgeDocument} from './api';
 import {useAdminAuth} from './auth';
+import {SOPReviewPanel} from './sop-review';
 
 function explainUploadFailure(reason:string|null|undefined){
   if(!reason)return 'Periksa file, koneksi backend, dan izin operator.';
@@ -106,11 +107,15 @@ export function OverviewPage(){
 export function KnowledgeOperationsPage(){
   const {token,setToken}=useAdminAuth();
   const [tokenDraft,setTokenDraft]=useState(token);
+  const [reviewDocument,setReviewDocument]=useState<string|null>(null);
   const [selected,setSelected]=useState<File|null>(null);
   const fileInput=useRef<HTMLInputElement>(null);
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState('');
   const [uploadFailed,setUploadFailed]=useState(false);
+  const [showAllRuns,setShowAllRuns]=useState(false);
+  const uploadInFlight=useRef(false);
+  const [existingFile,setExistingFile]=useState<{authKey:string;documentId:string}|null>(null);
   const authKey=useMemo(()=>crypto.randomUUID(),[token]);
   const query=useQuery({queryKey:['knowledge-pipeline',authKey],queryFn:()=>fetchKnowledgePipelineStatus(token),enabled:!!token.trim(),retry:false,refetchInterval:busy?2000:30000,gcTime:0});
   async function retryRun(id:string){
@@ -120,11 +125,23 @@ export function KnowledgeOperationsPage(){
     finally{setBusy(false);}
   }
   async function submit(){
-    if(!selected||busy||!token.trim())return;
-    setBusy(true);setMessage('');setUploadFailed(false);
-    try{const run=await uploadKnowledgeDocument(selected,token);const status=run.status==='READY'?'Dokumen berhasil disimpan dan diproses.':run.status==='DUPLICATE'?'File tersimpan; isinya sudah ada di index Chat.':explainUploadFailure(run.reason);setMessage(`${status}${run.status==='READY'?' Sumber belum disahkan sebagai revisi resmi.':''}`);const failed=run.status==='FAILED';setUploadFailed(failed);if(!failed){setSelected(null);if(fileInput.current)fileInput.current.value='' ;}await query.refetch();}
+    if(!selected||busy||uploadInFlight.current||!token.trim())return;
+    uploadInFlight.current=true;
+    setBusy(true);setMessage('');setUploadFailed(false);setExistingFile(null);
+    try{
+      if(selected.size<=20*1024*1024&&crypto.subtle){
+        const digest=await crypto.subtle.digest('SHA-256',await selected.arrayBuffer());
+        const hash=Array.from(new Uint8Array(digest),byte=>byte.toString(16).padStart(2,'0')).join('');
+        const existing=query.data?.documents?.find(doc=>doc.status==='READY'&&doc.source_sha256===hash);
+        if(existing){
+          setExistingFile({authKey,documentId:existing.document_id});
+          setMessage('File identik sudah tersedia. Gunakan dokumen tersimpan; tidak perlu unggah ulang.');
+          setSelected(null);if(fileInput.current)fileInput.current.value='';return;
+        }
+      }
+      const run=await uploadKnowledgeDocument(selected,token);const status=run.status==='READY'?'Dokumen berhasil disimpan dan diproses.':run.status==='DUPLICATE'?'File tersimpan; isinya sudah ada di index Chat.':explainUploadFailure(run.reason);setMessage(`${status}${run.status==='READY'?' Sumber belum disahkan sebagai revisi resmi.':''}`);const failed=run.status==='FAILED';setUploadFailed(failed);if(!failed){setSelected(null);if(fileInput.current)fileInput.current.value='' ;}await query.refetch();}
     catch(e){setUploadFailed(true);const message=e instanceof Error?e.message:'Terjadi kesalahan saat mengirim dokumen.';const lower=message.toLowerCase();setMessage(lower.includes('di luar cakupan')||lower.includes('out_of_scope')?'Akun operator tidak memiliki izin untuk menambahkan dokumen. Hubungi administrator.':lower.includes('403')||lower.includes('401')?'Autentikasi operator gagal. Periksa token operator lalu coba lagi.':message);}
-    finally{setBusy(false);}
+    finally{setBusy(false);uploadInFlight.current=false;}
   }
   async function watch(enabled:boolean){
     if(busy)return;setBusy(true);setMessage('');
@@ -133,11 +150,21 @@ export function KnowledgeOperationsPage(){
     finally{setBusy(false);}
   }
   const runs=query.data?.runs??[];
+  const duplicateGroups=new Map<string,typeof runs>();
+  const summarizedRuns=runs.filter(run=>{
+    if(run.status!=='DUPLICATE')return true;
+    const key=JSON.stringify([run.source_sha256,run.document_id,run.filename,run.reason]);
+    const group=duplicateGroups.get(key);
+    if(group){group.push(run);return false;}
+    duplicateGroups.set(key,[run]);return true;
+  });
+  const duplicateCounts=new Map([...duplicateGroups.values()].map(group=>[group[0].run_id,group.length]));
+  const visibleRuns=showAllRuns?runs:summarizedRuns;
   const ready=query.data?.pipeline_ready_documents??runs.filter(r=>r.status==='READY').length;
   const failed=runs.filter(r=>r.status==='FAILED').length;
   const canUpload=!!token.trim()&&query.isSuccess&&!busy;
   return <>
-    <header><div><div className="eyebrow">NUSANTARA - KNOWLEDGE</div><h1>Dokumen dan pemantauan</h1><p>Satu pipeline untuk membaca, mengekstrak, mengindeks, dan memvalidasi knowledge.</p></div><button onClick={()=>void query.refetch()} disabled={!token.trim()||query.isFetching}>Muat ulang</button></header>
+    <header><div><div className="eyebrow">NUSANTARA - KNOWLEDGE</div><h1>Dokumen — Pemeriksaan SOP</h1><p>Buka dokumen tersimpan, periksa isinya, dan uji jawaban sebelum menyetujui versi SOP.</p></div><button onClick={()=>void query.refetch()} disabled={!token.trim()||query.isFetching}>Muat ulang</button></header>
     <section className="panel" aria-label="Akses upload"><h2>Akses operator</h2>
       <p>Pilih file dari drive mana pun melalui browser. Untuk mengunggah dan membaca History, masukkan token operator yang sudah diberikan administrator di bawah ini.</p>
       <form onSubmit={e=>{e.preventDefault();setMessage('');if(tokenDraft.trim()===token)void query.refetch();else setToken(tokenDraft.trim());}}>
@@ -157,17 +184,19 @@ export function KnowledgeOperationsPage(){
         <p>Siap di index berarti ekstraksi, deduplikasi, dan indexing teknis berhasil. Ini tidak mengesahkan otoritas atau menetapkan dokumen sebagai revisi resmi yang berlaku.</p>
       </>}
     </section>
+
     <section className="panel" aria-label="Tambahkan dokumen"><h2>Tambahkan dokumen</h2><p>Didukung: PDF, DOCX, TXT, Markdown, HTML. Setelah dikirim, file asli disimpan utuh dan dokumen diproses dengan index Chat. File sumber tidak diubah.</p>
-      <label>Pilih dokumen <input ref={fileInput} type="file" accept=".pdf,.docx,.txt,.md,.html,.htm" disabled={busy} onChange={e=>{setSelected(e.target.files?.[0]??null);setMessage('');setUploadFailed(false);}}/></label>
+      <label>Pilih dokumen <input ref={fileInput} type="file" accept=".pdf,.docx,.txt,.md,.html,.htm" disabled={busy} onChange={e=>{setSelected(e.target.files?.[0]??null);setExistingFile(null);setMessage('');setUploadFailed(false);}}/></label>
       {selected&&<p>File dipilih: <strong>{selected.name}</strong> · {(selected.size/1024).toLocaleString('id-ID',{maximumFractionDigits:1})} KB</p>}
       <button className="primary" aria-describedby="knowledge-upload-help" disabled={!canUpload||!selected} onClick={()=>void submit()}>{busy?'Memproses...':'Proses dan validasi'}</button>
       <p id="knowledge-upload-help">{!token.trim()?'Verifikasi akses operator di halaman ini untuk mengaktifkan upload.':!query.isSuccess?'Upload menunggu akses backend terverifikasi.':!selected?'Pilih dokumen dari perangkat Anda.':'Siap diunggah melalui browser dan diproses otomatis.'}</p>
-      {message&&<p role={uploadFailed?'alert':'status'}>{message}</p>}
+      {message&&<p role={uploadFailed?'alert':'status'}>{message}</p>}{existingFile?.authKey===authKey&&<Link to="/" onClick={()=>{sessionStorage.setItem('nusantara-chat-document-pending',existingFile.documentId);sessionStorage.removeItem('nusantara-chat-sop-version-pending');}}>Tanyakan dokumen tersimpan</Link>}
       {uploadFailed&&<button disabled={busy||!selected||!token.trim()} onClick={()=>void submit()}>Coba Lagi</button>}
         {ready>0&&query.isSuccess&&<Link to="/">Buka Chat</Link>}
     </section>
     <section className="panel" aria-label="Pemantauan folder"><h2>Pemantauan folder</h2>{query.data?<><p>Folder inbox: <code>{query.data.watch.folder}</code></p><p>Status: {query.data.watch.enabled?'AKTIF':'NONAKTIF'}. File baru diproses otomatis saat backend berjalan.</p><button disabled={!token.trim()||busy} onClick={()=>void watch(!query.data.watch.enabled)}>{query.data.watch.enabled?'Hentikan pemantauan':'Aktifkan pemantauan'}</button></>:<p>Folder tersedia setelah status pipeline berhasil dibaca.</p>}</section>
-    <section className="panel" aria-label="Dokumen terindeks"><h2>Dokumen terindeks</h2>{query.data?.documents?.length?query.data.documents.map(doc=><article key={doc.document_id}><h3>{doc.title}</h3><p>{doc.status} · {doc.chunks_count} chunk · Verifikasi sumber: {doc.source_verification}</p><p>{doc.verification_reason??'Kesesuaian sumber belum diperiksa.'}</p><p>Diperbarui: {doc.updated_at}</p><Link to="/" onClick={()=>sessionStorage.setItem('nusantara-chat-document-pending',doc.document_id)}>Tanyakan dokumen ini</Link></article>):<p>Inventaris dokumen belum tersedia. Verifikasi akses lalu muat ulang.</p>}</section>
-    <section className="panel" aria-label="History knowledge"><h2>History proses</h2>{!token.trim()?<p>History memerlukan autentikasi operator, tanpa keputusan PASS.</p>:query.isPending?<p role="status">Memuat History...</p>:query.isError?<p role="alert">History gagal dimuat: {query.error.message}</p>:runs.length===0?<p>Belum ada dokumen yang diproses.</p>:<div className="table-scroll"><table><thead><tr><th>Waktu</th><th>Dokumen</th><th>Hasil</th><th>Alasan/status sumber</th><th>Detail</th></tr></thead><tbody>{runs.map(run=><tr key={run.run_id}><td>{new Date(run.created_at).toLocaleString('id-ID')}</td><td>{run.filename}</td><td>{run.status}</td><td>{run.status==='FAILED'?explainUploadFailure(run.reason):run.reason??'Berhasil dibaca dan disimpan ke Chat; otoritas/revisi belum disahkan.'}</td><td>{run.status==='FAILED'&&run.source_path&&<button disabled={busy} onClick={()=>void retryRun(run.run_id)}>Coba Lagi</button>}<details><summary>Detail</summary><p>ID run: <code>{run.run_id}</code></p><p>SHA-256: <code>{run.source_sha256}</code></p>{run.source_path&&<p>File tersimpan: <code>{run.source_path}</code></p>}{run.document_id&&<p>Dokumen index: <code>{run.document_id}</code></p>}</details></td></tr>)}</tbody></table></div>}</section>
+    <section className="panel" aria-label="Dokumen terindeks"><h2>Dokumen terindeks</h2>{query.data?.documents?.length?query.data.documents.map(doc=><article key={doc.document_id}><h3>{doc.title}</h3><p>{doc.status} · {doc.chunks_count} chunk · Verifikasi sumber: {doc.source_verification}</p><p>{doc.verification_reason??'Kesesuaian sumber belum diperiksa.'}</p><p>Diperbarui: {doc.updated_at}</p>{doc.document_id===query.data?.documents?.find(d=>d.title==='PERMOHONAN DATA PRIBADI')?.document_id?<><p>Status pemeriksaan: {doc.review_status??'Menunggu pemeriksaan isi'}</p>{doc.review_status==='Aktif'?<Link to="/" onClick={()=>sessionStorage.setItem('nusantara-chat-document-pending',doc.document_id)}>Buka chat</Link>:<button onClick={()=>setReviewDocument(doc.document_id)}>{{'File sumber belum ditemukan':'Lihat masalah','Menunggu pemeriksaan isi':'Periksa isi','Isi sudah diperiksa':'Coba chat','Ada masalah':'Lihat catatan masalah','Siap disetujui':'Setujui untuk digunakan','Aktif':'Buka chat'}[doc.review_status??'Menunggu pemeriksaan isi']??'Periksa isi'}</button>}</>:<Link to="/" onClick={()=>sessionStorage.setItem('nusantara-chat-document-pending',doc.document_id)}>Tanyakan dokumen ini</Link>}</article>):<p>Inventaris dokumen belum tersedia. Verifikasi akses lalu muat ulang.</p>}</section>
+    {reviewDocument&&!!token.trim()&&query.isSuccess&&<SOPReviewPanel key={`${reviewDocument}-${authKey}`} documentId={reviewDocument} token={token}/>}
+    <section className="panel" aria-label="History knowledge"><h2>History proses</h2>{runs.length>summarizedRuns.length&&<><p>Pengulangan file identik diringkas. Catatan asli tetap tersimpan; kegagalan tetap ditampilkan.</p><button onClick={()=>setShowAllRuns(value=>!value)}>{showAllRuns?'Ringkas pengulangan':`Tampilkan semua catatan (${runs.length})`}</button></>}{!token.trim()?<p>History memerlukan autentikasi operator, tanpa keputusan PASS.</p>:query.isPending?<p role="status">Memuat History...</p>:query.isError?<p role="alert">History gagal dimuat: {query.error.message}</p>:runs.length===0?<p>Belum ada dokumen yang diproses.</p>:<div className="table-scroll"><table><thead><tr><th>Waktu</th><th>Dokumen</th><th>Hasil</th><th>Alasan/status sumber</th><th>Detail</th></tr></thead><tbody>{visibleRuns.map(run=><tr key={run.run_id}><td>{new Date(run.created_at).toLocaleString('id-ID')}</td><td>{run.filename}</td><td>{run.status}{!showAllRuns&&(duplicateCounts.get(run.run_id)??0)>1&&<small> · {duplicateCounts.get(run.run_id)} percobaan identik</small>}</td><td>{run.status==='FAILED'?explainUploadFailure(run.reason):run.reason??'Berhasil dibaca dan disimpan ke Chat; otoritas/revisi belum disahkan.'}</td><td>{run.status==='FAILED'&&run.source_path&&<button disabled={busy} onClick={()=>void retryRun(run.run_id)}>Coba Lagi</button>}<details><summary>Detail</summary><p>ID run: <code>{run.run_id}</code></p><p>SHA-256: <code>{run.source_sha256}</code></p>{run.source_path&&<p>File tersimpan: <code>{run.source_path}</code></p>}{run.document_id&&<p>Dokumen index: <code>{run.document_id}</code></p>}</details></td></tr>)}</tbody></table></div>}</section>
   </>;
 }
