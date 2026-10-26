@@ -62,7 +62,7 @@ export async function fetchOperationsSummary(token:string):Promise<OperationsSum
   return runtimeFetch('/v1/control-plane/operations-summary',{headers:{'X-Admin-Token':token}}) as Promise<OperationsSummary>;
 }
 export type KnowledgePipelineRun={run_id:string;filename:string;source_sha256:string;status:string;reason:string|null;document_id:string|null;created_at:string;source_path:string|null};
-export type KnowledgeDocument={document_id:string;title:string;chunks_count:number;status:string;source_verification:string;verification_reason?:string|null;source_sha256?:string|null;updated_at:string};
+export type KnowledgeDocument={document_id:string;title:string;chunks_count:number;status:string;source_verification:string;verification_reason?:string|null;source_sha256?:string|null;updated_at:string;review_status?:string};
 export type KnowledgePipelineStatus={source:string;database:string;documents_indexed:number;pipeline_ready_documents:number;documents?:KnowledgeDocument[];watch:{enabled:boolean;folder:string;updated_at:string};runs:KnowledgePipelineRun[];checked_at:string};
 export async function fetchKnowledgePipelineStatus(token:string):Promise<KnowledgePipelineStatus>{
   if(!token.trim())throw new Error('Token operator diperlukan untuk melihat History knowledge.');
@@ -114,7 +114,7 @@ const PublicChatSchema=z.object({session_id:z.string(),response:z.string(),model
   trust:z.object({supports_claim:z.boolean(),confidence:z.number(),risk_level:z.string(),requires_human:z.boolean(),evidence_count:z.number(),evidence_available:z.boolean()}).strict(),
   grounding:z.object({enabled:z.boolean(),grounded:z.boolean(),reason:z.string()}).strict(),
   understanding:z.object({intent:z.string()}).strict(),problem:z.object({goal:z.string().nullable()}).strict(),
-  evidence:z.array(z.object({document_id:z.string(),title:z.string(),chunk:z.string().transform(()=>''),score:z.number(),pages:z.array(z.number().int().positive()).optional()}).strict())}).strict();
+  evidence:z.array(z.object({document_id:z.string(),title:z.string(),chunk:z.string().transform(()=>''),score:z.number(),pages:z.array(z.number().int().positive()).optional(),block_ids:z.array(z.string()).optional()}).strict())}).strict();
 export type PublicChat=z.infer<typeof PublicChatSchema>;
 export async function fetchChatHistory(session:string,token=''){
   return z.object({session_id:z.string(),turns:z.array(z.object({request_id:z.string().regex(/^[a-f0-9]{32}$/).optional(),retry_of:z.string().regex(/^[a-f0-9]{32}$/).optional(),question:z.string(),answer:PublicChatSchema.nullable(),error:z.string().nullable(),status:z.enum(['SUCCEEDED','FAILED','PROCESSING','UNKNOWN']),timestamp:z.string()}))}).parse(
@@ -123,7 +123,7 @@ export async function fetchChatHistory(session:string,token=''){
 export class ChatSendError extends Error{
   constructor(message:string,readonly status:number,readonly retrySafe:boolean){super(message);this.name='ChatSendError';}
 }
-export type ChatOptions={signal?:AbortSignal;onDelta?:(text:string)=>void;documentIds?:string[];token?:string};
+export type ChatOptions={signal?:AbortSignal;onDelta?:(text:string)=>void;documentIds?:string[];token?:string;sopVersion?:string;sopCase?:string};
 export async function sendUserChat(user_input:string,session_id:string,request_id:string=crypto.randomUUID().replaceAll('-',''),retry_of?:string,timeoutMs=90000,options:ChatOptions={}){
   const controller=new AbortController();
   const abort=()=>controller.abort();
@@ -139,14 +139,17 @@ export async function sendUserChat(user_input:string,session_id:string,request_i
       },timeoutMs);
     });
     const response=await Promise.race([fetch('/v1/chat',{method:'POST',signal:controller.signal,credentials:'omit',cache:'no-store',redirect:'error',
-        headers:{'Content-Type':'application/json',...(options.token&&options.documentIds?.length?{'X-Admin-Token':options.token}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{})})}),deadline]);
+        headers:{'Content-Type':'application/json',...(options.token&&options.documentIds?.length?{'X-Admin-Token':options.token}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{}),...(options.sopVersion?{sop_version:options.sopVersion,sop_case:options.sopCase}:{})})}),deadline]);
     if(!response.ok){
       let body:{detail?:unknown}|null=null;
       try{body=await response.json() as {detail?:unknown};}catch{/* HTTP status remains authoritative when the body is unreadable. */}
       const detail=typeof body?.detail==='string'?body.detail:'';
       const message=response.status===409&&detail==='CHAT_REQUEST_IN_PROGRESS'?'Permintaan sebelumnya masih diproses. Muat ulang History; request tidak dikirim ulang.':
+        response.status===409&&detail.startsWith('SOP belum aktif.')?detail:
+        response.status===409&&detail.startsWith('Masalah pembacaan SOP:')?detail:
         response.status===409&&detail==='CHAT_REQUEST_OUTCOME_UNKNOWN'?'Hasil permintaan sebelumnya belum dapat dipastikan setelah proses berhenti. Request tidak dikirim ulang.':
         response.status===409&&detail==='CHAT_RETRY_NOT_SAFE'?'Hasil provider belum pasti; percobaan baru ditahan agar tidak menggandakan biaya.':
+          response.status===409&&options.sopVersion&&detail.startsWith('Konteks SOP tidak muat utuh')?detail:
         response.status===504?'Batas waktu pemrosesan tercapai. Periksa History sebelum mencoba lagi.':
         response.status===503&&detail==='RETRIEVAL_UNAVAILABLE'?'Pencarian dokumen gagal. Sumber belum dapat diperiksa; coba lagi setelah layanan Knowledge pulih.':
         response.status===503&&response.headers?.get('X-Chat-Retry-Safe')==='pre-provider'?'Model belum tersedia. Periksa Ollama, lalu kirim ulang pertanyaan setelah pulih.':

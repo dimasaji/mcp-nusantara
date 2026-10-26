@@ -143,7 +143,14 @@ function Stop-LocalServices([switch]$AllowStop) {
     # Ollama is shared and is never stopped by NUSANTARA.
 }
 function Invoke-WithLifecycleLock([scriptblock]$Action) {
-    $mutex = New-Object Threading.Mutex($false, 'Global\NUSANTARA-V1-Lifecycle')
+    try {
+        $mutex = New-Object Threading.Mutex($false, 'Global\NUSANTARA-V1-Lifecycle')
+    } catch {
+        # An existing supervisor may deny FullControl but permit the rights
+        # needed to acquire/release this exact same lock. Never use a new name.
+        $rights = [System.Security.AccessControl.MutexRights]::Synchronize -bor [System.Security.AccessControl.MutexRights]::Modify
+        $mutex = [Threading.Mutex]::OpenExisting('Global\NUSANTARA-V1-Lifecycle', $rights)
+    }
     $locked = $false
     try {
         try { $locked = $mutex.WaitOne(30000) } catch [Threading.AbandonedMutexException] { $locked = $true }

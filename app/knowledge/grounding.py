@@ -36,6 +36,10 @@ def service_answer_facts(turn: dict, evidence: Any, previous: dict | None = None
     or a duration from a service name, and never mix requirements across services.
     """
     if not turn.get('facet'): return None
+    from .pdf_sop import table_facts
+    selected_table = table_facts(turn, evidence)
+    if selected_table is not None:
+        return selected_table
     previous=previous or {}
     ignored={'permohonan','pengajuan','pelayanan','layanan','penerbitan','untuk','bagi','sop',
              'menurut','berdasarkan','sesuai','dalam','dokumen'}
@@ -176,6 +180,7 @@ class EvidenceGroundingGuard:
     }
 
     REQUIREMENT_MARKERS = (
+        "kelengkapan:",
         "syarat",
         "persyaratan",
         "persyaratan dokumen",
@@ -473,6 +478,14 @@ class EvidenceGroundingGuard:
         if not result.grounded:return result
         if facts['unknown']:return result
         quote=facts['quote']
+        if facts.get('table_derived'):
+            from .sop_review import sop_wording_supported
+            # A list's order is factual too. Token overlap cannot prove it;
+            # table procedures must retain the complete ordered source quote.
+            complete = (facts['facet'] != 'procedure' or
+                        self._normalize_text(quote).casefold() == self._normalize_text(answer).casefold())
+            if not complete or not sop_wording_supported(answer, quote):
+                return GroundingResult(answer, False, 'table_wording_not_supported', [answer])
         concepts=(r'\b(?:datang|kunjungi|mendatangi)\b',r'\b(?:unggah|mengunggah|upload)\b',
                   r'\b(?:bayar|membayar|gratis|biaya)\b',r'\b(?:online|daring|website|aplikasi)\b',
                   r'\b(?:ktp(?:-el)?|ktpel)\b',r'\b(?:kk|kartu keluarga)\b',r'\bformulir\b',
@@ -766,6 +779,10 @@ class EvidenceGroundingGuard:
             return False
 
         abstention_markers = (
+            "belum tercantum",
+            "tidak tercantum",
+            "belum disebutkan",
+            "tidak disebutkan",
             "tidak tersedia",
             "belum tersedia",
             "tidak ada informasi",

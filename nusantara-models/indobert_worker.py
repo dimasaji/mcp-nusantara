@@ -1,3 +1,4 @@
+#!/c/Users/dmaza/mcp-starter/nusantara-models/.venv/Scripts/python.exe
 import json
 import sys
 import time

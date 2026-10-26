@@ -1,9 +1,10 @@
-import {render,screen,fireEvent,waitFor} from '@testing-library/react';
+import {render,screen,fireEvent,waitFor,within} from '@testing-library/react';
 import {createMemoryHistory,createRootRoute,createRoute,createRouter,RouterProvider} from '@tanstack/react-router';
 import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
-import {describe,it,expect,vi} from 'vitest';
+import {afterEach,beforeEach,describe,it,expect,vi} from 'vitest';
 import {AdminAuthProvider} from '../src/auth';
 import {KnowledgeOperationsPage} from '../src/overview';
+import {webcrypto} from 'node:crypto';
 
 const status={source:'Chat RAG SQLite store',database:'data/knowledge/nusantara_knowledge.db',documents_indexed:2,pipeline_ready_documents:1,
   watch:{enabled:false,folder:'data/knowledge/inbox',updated_at:''},checked_at:'2026-10-15T00:00:00Z',runs:[
@@ -18,7 +19,39 @@ function renderPage(token='operator-test'){
   return render(<QueryClientProvider client={client}><AdminAuthProvider initialToken={token}><RouterProvider router={router}/></AdminAuthProvider></QueryClientProvider>);
 }
 
+beforeEach(()=>{vi.stubGlobal('scrollTo',vi.fn());});
+afterEach(()=>vi.unstubAllGlobals());
 describe('general knowledge operations',()=>{
+  it('uses an existing matching file without uploading it again, including a renamed copy',async()=>{
+    vi.stubGlobal('crypto',webcrypto);
+    const fetch=vi.fn(async()=>({ok:true,status:200,json:async()=>({...status,documents:[{
+      document_id:'existing-doc',title:'Dokumen tersedia',status:'READY',chunks_count:1,
+      source_verification:'NOT_VERIFIED',updated_at:'',source_sha256:'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'}]})}));
+    vi.stubGlobal('fetch',fetch);renderPage();
+    const file=new File(['abc'],'nama-lain.txt');
+    Object.defineProperty(file,'arrayBuffer',{value:async()=>new TextEncoder().encode('abc').buffer});
+    fireEvent.change(await screen.findByLabelText('Pilih dokumen'),{target:{files:[file]}});
+    await waitFor(()=>expect(screen.getByRole('button',{name:'Proses dan validasi'})).toBeEnabled());
+    fireEvent.click(screen.getByRole('button',{name:'Proses dan validasi'}));
+    expect(await screen.findByText('File identik sudah tersedia. Gunakan dokumen tersimpan; tidak perlu unggah ulang.')).toBeInTheDocument();
+    expect(fetch.mock.calls.some(call=>(call as unknown as [unknown,RequestInit])[1]?.method==='POST')).toBe(false);
+    fireEvent.click(screen.getByRole('link',{name:'Tanyakan dokumen tersimpan'}));
+    expect(sessionStorage.getItem('nusantara-chat-document-pending')).toBe('existing-doc');
+  });
+  it('summarizes identical duplicate attempts while keeping failures and full history available',async()=>{
+    const duplicate={...status.runs[0],filename:'SOP contoh.txt',status:'DUPLICATE',reason:'File identik sudah terindeks di Chat.'};
+    const runs=[{...duplicate,run_id:'dup2'},{...duplicate,run_id:'dup1'},status.runs[1],status.runs[0]];
+    vi.stubGlobal('fetch',vi.fn(async()=>({ok:true,status:200,json:async()=>({...status,runs})})));
+    renderPage();
+    const history=await screen.findByRole('region',{name:'History knowledge'});
+    await waitFor(()=>expect(within(history).getAllByText('SOP contoh.txt')).toHaveLength(1));
+    expect(within(history).getByText(/2 percobaan identik/)).toBeInTheDocument();
+    expect(within(history).getByText('scan.pdf')).toBeInTheDocument();
+    fireEvent.click(within(history).getByRole('button',{name:'Tampilkan semua catatan (4)'}));
+    expect(within(history).getAllByText('SOP contoh.txt')).toHaveLength(2);
+    expect(within(history).getByText('dup1')).toBeInTheDocument();
+    expect(within(history).getByText('dup2')).toBeInTheDocument();
+  });
   it('lets a direct visitor choose a file and authenticate on the same page before uploading',async()=>{
     const fetch=vi.fn(async(_path:RequestInfo|URL,init?:RequestInit)=>{
       const token=(init?.headers as Record<string,string>|undefined)?.['X-Admin-Token'];
@@ -61,7 +94,7 @@ describe('general knowledge operations',()=>{
   it('shows real pipeline summary, failure reason and source authority boundary',async()=>{
     vi.stubGlobal('fetch',vi.fn(async()=>({ok:true,status:200,json:async()=>status})));
     renderPage();
-    expect(await screen.findByRole('heading',{name:'Dokumen dan pemantauan'})).toBeInTheDocument();
+    expect(await screen.findByRole('heading',{name:'Dokumen — Pemeriksaan SOP'})).toBeInTheDocument();
     expect(await screen.findByText('1 dokumen lulus pipeline')).toBeInTheDocument();
     expect(await screen.findByText('2 dokumen ada di index Chat')).toBeInTheDocument();
     expect(screen.getByText('scan.pdf')).toBeInTheDocument();

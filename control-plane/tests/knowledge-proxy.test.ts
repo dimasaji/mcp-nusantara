@@ -40,12 +40,30 @@ it('forwards document bytes, operator auth and pipeline History through the Cont
   const history = await fetch(`${origin}/v1/knowledge/pipeline/status`, {headers: {'X-Admin-Token': 'isolated-fixture'}});
   expect(history.status).toBe(200);
   expect(await history.json()).toEqual({runs: [{status: 'READY'}]});
+  const reviewBase='/v1/knowledge/pipeline/reviews/DOC-SHA256-fixture';
+  for(const path of [reviewBase,`${reviewBase}/source?version_id=${'a'.repeat(64)}`]){
+    const response=await fetch(origin+path,{headers:{'X-Admin-Token':'isolated-fixture'}});
+    expect(response.headers.get('content-type')).toContain('application/json');
+    expect(await response.json()).toEqual({runs:[{status:'READY'}]});
+  }
+  const reviewBody=JSON.stringify({version_id:'a'.repeat(64),action:'content_ok'});
+  const ratingBody=JSON.stringify({version_id:'a'.repeat(64),ok:false,note:'Perlu diperiksa'});
+  const processBody=JSON.stringify({version_id:'a'.repeat(64)});
+  for(const [path,body] of [[`${reviewBase}/process`,processBody],[`${reviewBase}/decision`,reviewBody],[`${reviewBase}/trials/trial-fixture/rating`,ratingBody]]){
+    const response=await fetch(origin+path,{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Token':'isolated-fixture'},body});
+    expect(await response.json()).toEqual({status:'READY'});
+  }
   const watch = await fetch(`${origin}/v1/knowledge/pipeline/watch?enabled=true`, {method: 'POST',
     headers: {'X-Admin-Token': 'isolated-fixture'}});
   expect(watch.status).toBe(200);
   expect(received).toEqual([
     {method: 'POST', url: '/v1/knowledge/pipeline/documents', token: 'isolated-fixture', name: 'petunjuk.pdf', body: bytes},
     {method: 'GET', url: '/v1/knowledge/pipeline/status', token: 'isolated-fixture', name: undefined, body: Buffer.alloc(0)},
+    {method:'GET',url:reviewBase,token:'isolated-fixture',name:undefined,body:Buffer.alloc(0)},
+    {method:'GET',url:`${reviewBase}/source?version_id=${'a'.repeat(64)}`,token:'isolated-fixture',name:undefined,body:Buffer.alloc(0)},
+    {method:'POST',url:`${reviewBase}/process`,token:'isolated-fixture',name:undefined,body:Buffer.from(processBody)},
+    {method:'POST',url:`${reviewBase}/decision`,token:'isolated-fixture',name:undefined,body:Buffer.from(reviewBody)},
+    {method:'POST',url:`${reviewBase}/trials/trial-fixture/rating`,token:'isolated-fixture',name:undefined,body:Buffer.from(ratingBody)},
     {method: 'POST', url: '/v1/knowledge/pipeline/watch?enabled=true', token: 'isolated-fixture', name: undefined, body: Buffer.alloc(0)},
   ]);
 }, 20000);

@@ -4,6 +4,26 @@ from urllib.parse import unquote
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
 
 from app.security.auth import require_admin
+from pydantic import BaseModel, Field
+from typing import Literal
+from app.knowledge.sop_review import SOPReview
+
+
+class ReviewDecision(BaseModel):
+    version_id: str = Field(min_length=64, max_length=64)
+    action: Literal['content_ok', 'problem', 'resolve', 'approve']
+    note: str = Field(default='', max_length=2000)
+    problem_id: str | None = None
+
+
+class TrialRating(BaseModel):
+    version_id: str = Field(min_length=64, max_length=64)
+    ok: bool
+    note: str = Field(default='', max_length=2000)
+
+
+class ExtractionRequest(BaseModel):
+    version_id: str = Field(pattern=r'^[a-f0-9]{64}$')
 
 
 def get_knowledge_engine():
@@ -15,6 +35,79 @@ def get_knowledge_engine():
 
 def create_knowledge_pipeline_router(run_sync):
     router = APIRouter(prefix='/knowledge/pipeline')
+
+    @router.get('/reviews/{document_id}')
+    def review_detail(document_id: str, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
+        require_admin(x_admin_token)
+        try:
+            review = SOPReview(knowledge)
+            review.enroll(document_id)
+            detail = review.detail(document_id)
+            from app.knowledge.document_tools import DocumentTools, DocumentReadError
+            tools = DocumentTools(knowledge, operator=True)
+            detail['extraction'] = tools.status(document_id, detail['version_id'])
+            try:
+                extracted = tools.inspect(document_id, detail['version_id'])
+                detail['extracted_blocks'] = extracted['blocks']
+                detail['extraction']['warnings'] = extracted['warnings']
+            except DocumentReadError:
+                detail['extracted_blocks'] = []
+            return detail
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from None
+
+    @router.post('/reviews/{document_id}/process')
+    def process_review(document_id: str, body: ExtractionRequest, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
+        require_admin(x_admin_token)
+        from app.knowledge.document_tools import DocumentTools
+        try:
+            return DocumentTools(knowledge, operator=True).process(document_id, body.version_id, force=True)
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from None
+
+    @router.get('/reviews/{document_id}/source')
+    def review_source(document_id: str, version_id: str | None = None, page_number: int | None = None, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
+        from fastapi.responses import Response
+        require_admin(x_admin_token)
+        try:
+            review = SOPReview(knowledge)
+            if version_id is not None:
+                review._check(document_id, version_id)
+            path, raw, digest = review.source(document_id)
+        except ValueError:
+            path = None
+        if path is None:
+            raise HTTPException(404, 'File sumber belum ditemukan')
+        if page_number is not None:
+            if path.suffix.lower() != '.pdf':
+                raise HTTPException(415, 'Pratinjau halaman hanya tersedia untuk PDF')
+            import pymupdf
+            with pymupdf.open(stream=raw, filetype='pdf') as pdf:
+                if not 1 <= page_number <= len(pdf):
+                    raise HTTPException(422, 'DOCUMENT_PAGE_INVALID')
+                page = pdf[page_number-1]
+                scale = min(1.25, 1600 / max(1, page.rect.width, page.rect.height))
+                preview = page.get_pixmap(matrix=pymupdf.Matrix(scale, scale), alpha=False).tobytes('png')
+            return Response(preview, media_type='image/png', headers={'Cache-Control': 'no-store',
+                'X-Content-Type-Options': 'nosniff', 'X-Source-SHA256': digest, 'X-Source-Page': str(page_number)})
+        return Response(raw, media_type='application/pdf' if path.suffix.lower() == '.pdf' else 'application/octet-stream',
+            headers={'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff'})
+
+    @router.post('/reviews/{document_id}/decision')
+    def review_decision(document_id: str, body: ReviewDecision, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
+        require_admin(x_admin_token)
+        try:
+            return SOPReview(knowledge).decide(document_id, body.version_id, body.action, 'shared-admin-token', body.note, body.problem_id)
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from None
+
+    @router.post('/reviews/{document_id}/trials/{trial_id}/rating')
+    def trial_rating(document_id: str, trial_id: str, body: TrialRating, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
+        require_admin(x_admin_token)
+        try:
+            return SOPReview(knowledge).rate(document_id, body.version_id, trial_id, body.ok, body.note, 'shared-admin-token')
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from None
 
     @router.post('/documents')
     async def add_knowledge_source(
@@ -52,7 +145,12 @@ def create_knowledge_pipeline_router(run_sync):
         knowledge=Depends(get_knowledge_engine),
     ):
         require_admin(x_admin_token)
-        return knowledge.knowledge_pipeline_status()
+        status = knowledge.knowledge_pipeline_status()
+        pilot = next((doc for doc in status.get('documents', []) if doc['title'] == 'PERMOHONAN DATA PRIBADI'), None)
+        if pilot:
+            detail = SOPReview(knowledge).detail(pilot['document_id'])
+            pilot['review_status'] = detail['status']
+        return status
 
     @router.post('/watch')
     def configure_knowledge_watch(

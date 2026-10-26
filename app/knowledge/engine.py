@@ -76,6 +76,29 @@ class KnowledgeEngine:
     def search(self, query: str, top_k: int | None = None):
         return self.search_knowledge(query, top_k=top_k)
 
+    def selected_document_evidence(self, document_id: str):
+        """Exact operator selection can read the verified PDF table, without reindexing."""
+        from .sop_review import SOPReview
+        from .pdf_sop import activity_rows, rows_text
+        from .schemas import Evidence
+
+        doc = self.rag.get_document_info(document_id)
+        if doc is None:
+            return None
+        path, raw, digest = SOPReview(self).source(document_id)
+        if path is None or path.suffix.lower() != '.pdf':
+            return None
+        rows = activity_rows(raw)
+        if not rows:
+            return None
+        text = rows_text(rows)
+        # This is an exact source read, not a semantic relevance score upgrade.
+        return RetrievalEvidenceList([Evidence(document_id=document_id,
+            title=self._source_title(doc.source, doc.title), source=text, chunk=text,
+            chunk_id=digest + ':tables', chunk_index=0, start_char=0, end_char=len(text),
+            score=1., metadata={'sop_rows': rows, 'source_sha256': digest,
+                'citation_pages': sorted({row['page'] for row in rows})})])
+
     def list_documents(self):
         return self.rag.list_documents()
 
