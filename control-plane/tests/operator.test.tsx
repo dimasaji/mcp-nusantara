@@ -5,6 +5,8 @@ import {AdminAuthProvider,useAdminAuth} from '../src/auth';
 import {OperatorHome,WorkspacePage,WorkspaceTasks,CostsPage,TasksPage,BlockersPage,operatorMenus} from '../src/operator';
 import * as api from '../src/api';
 import {HumanNavigation} from '../src/human';
+import {SystemHealthSchema} from '../src/schemas';
+import {readSnapshotFile} from './snapshot-file';
 vi.mock('@tanstack/react-router',()=>({Link:({to,children}:{to:string;children:React.ReactNode})=><a href={to}>{children}</a>}));
 vi.mock('../src/api',()=>({fetchRuntimeHealth:vi.fn(),fetchOperationsSummary:vi.fn(),fetchCostSummary:vi.fn(),fetchEvidencePackage:vi.fn(),fetchExecutionHistory:vi.fn(),fetchExecutionContext:vi.fn(),fetchModelStatus:vi.fn(),fetchSnapshot:vi.fn(),fetchChatHistory:vi.fn(),sendUserChat:vi.fn(),ChatSendError:class extends Error{}}));
 const binding={plan_id:'plan-fixture',version:'v1',action:'CONTROLLED_FILE_WRITE'};
@@ -25,6 +27,14 @@ beforeEach(()=>{
  vi.mocked(api.fetchSnapshot).mockRejectedValue(new Error('Snapshot offline'));
 });
 describe('Operator contract boundaries',()=>{
+ it('summarizes snapshot blockers while retaining their codes only in technical details',async()=>{
+  const state=SystemHealthSchema.parse(readSnapshotFile());
+  vi.mocked(api.fetchSnapshot).mockResolvedValue({state,source:'fixture',fetchedAt:'fixture',latencyMs:0});
+  mount(<BlockersPage/>);
+  expect(await screen.findByText('R4: LOCKED')).not.toBeVisible();
+  expect(screen.getByText('3 pemeriksaan sistem memerlukan peninjauan.')).toBeVisible();
+  expect(screen.getByText('R5: LOCKED')).not.toBeVisible();
+ });
  it('filters only loaded backend tasks and reports empty search without dispatch',async()=>{
   vi.mocked(api.fetchOperationsSummary).mockResolvedValue({scope:'TEST_ONLY',source:'fixture',pending_work:1,pending_review:0,reason:null,checked_at:'2026-10-19',tasks:[{id:'PIAK-03',objective:'Tinjau evidence',status:'HOLD',updated_at:'2026-10-19',source:'fixture'}]});
   mount(<WorkspaceTasks/>,'test-only');
@@ -92,4 +102,5 @@ describe('Operator contract boundaries',()=>{
   expect(screen.getByText('/v1/control-plane/evidence-package')).toBeInTheDocument();
  });
 });
+
 
