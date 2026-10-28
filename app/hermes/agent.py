@@ -90,7 +90,7 @@ def _repeat_text(text: str) -> str | None:
 def _conversation_request(text: str) -> bool:
     if _DOCUMENT_REQUEST.search(text):
         return False
-    if _general_definition(text):
+    if _general_definition(text) and not _EVIDENCE_REQUIRED.search(text):
         return True
     if _technical_request(text) and not _FALSE_VERIFICATION.search(text):
         return True

@@ -473,8 +473,11 @@ class EvidenceGroundingGuard:
         Additional checks strengthen the ordinary guard; they do not accept a
         failed lexical/claim check or lower any retrieval/grounding threshold.
         """
+        # Validated submission cells use the source label "Kelengkapan".
+        # Their closed list and wording are checked below; prose requirements
+        # still require the ordinary explicit-requirement markers.
         result=self.validate(answer,facts['proof'],
-            'ask_document_requirements' if facts['facet']=='requirements' else '')
+            'ask_document_requirements' if facts['facet']=='requirements' and not facts.get('table_derived') else '')
         if not result.grounded:return result
         if facts['unknown']:return result
         quote=facts['quote']
