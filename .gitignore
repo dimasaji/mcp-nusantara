@@ -25,3 +25,34 @@ requirements-docling.lock
 
 # Temp test artifacts
 tmpko75acgi/
+
+# Rahasia
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Frontend
+node_modules/
+dist/
+
+# Model dan program Ollama
+Model/
+ollama/
+*.gguf
+
+# Data lokal dan log
+*.log
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3

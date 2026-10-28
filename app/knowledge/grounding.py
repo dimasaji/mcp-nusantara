@@ -799,7 +799,19 @@ class EvidenceGroundingGuard:
             "belum terdapat informasi",
         )
 
-        if not any(
+        # Contact absence need not be prefixed with "informasi". Limit the
+        # subject and the entire sentence so other factual clauses cannot pass.
+        missing_statement = bool(re.fullmatch(
+            r"(?:informasi\s+)?(?:nomor\s+|alamat\s+)?"
+            r"(?:whatsapp|telepon|email|e-mail|kontak)(?:\s+petugas)?"
+            r"\s+(?:belum|tidak)\s+ditemukan"
+            r"(?:\s+(?:dalam|di|pada)\s+(?:sop|dokumen|evidence)"
+            r"(?:\s+(?:ini|tersebut))?)?[.!]?",
+            lower,
+        ))
+
+        from .sop_review import contact_absence_statement
+        if not (missing_statement or contact_absence_statement(sentence)) and not any(
             marker in lower
             for marker in abstention_markers
         ):

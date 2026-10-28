@@ -1027,6 +1027,7 @@ def chat_history(x_chat_session: str = Header(default=''),
     turns = []
     for turn in _gate_integration.memory.chat_history(session):
         safe = dict(turn)
+        safe.pop('source_versions', None)
         if isinstance(safe.get('answer'), dict):
             answer = safe['answer']
             safe['answer'] = {**answer, 'session_id': x_chat_session,
@@ -1071,6 +1072,8 @@ async def chat(
             review.bind_session(v1_session_id(request.session_id, operator=True), request.document_ids[0], request.sop_version)
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from None
+    elif request.sop_case:
+        raise HTTPException(422, 'Percobaan memerlukan versi SOP yang diperiksa.')
     elif review and any(review.is_pilot(identifier) and review.detail(identifier)['status'] != 'Aktif' for identifier in request.document_ids):
         raise HTTPException(409, 'SOP belum aktif. Gunakan Coba chat SOP ini pada halaman Dokumen.')
     if request.document_ids:
@@ -1166,7 +1169,8 @@ async def _chat_completed(request: ChatRequest, *, operator: bool = False):
         knowledge = V1KnowledgeBoundary(_knowledge, operator=operator,
                                         provider=configuration.llm.provider,
                                         sop_version=getattr(request, 'sop_version', None),
-                                        document_ids=getattr(request, 'document_ids', []), document_query=request.user_input)
+                                        document_ids=getattr(request, 'document_ids', []), document_query=request.user_input,
+                                        review_trial=bool(getattr(request, 'sop_case', None)))
 
         if request_id:
             try:
@@ -1177,6 +1181,7 @@ async def _chat_completed(request: ChatRequest, *, operator: bool = False):
                 raise HTTPException(503, 'HISTORY_PERSISTENCE_FAILED') from None
             state = reservation.get('state')
             if state == 'SUCCEEDED':
+                knowledge.validate_response(reservation['answer'], reservation.get('source_versions'))
                 return reservation['answer']
             if state == 'PROCESSING':
                 raise HTTPException(409, 'CHAT_REQUEST_IN_PROGRESS')
@@ -1250,11 +1255,15 @@ async def _chat_completed(request: ChatRequest, *, operator: bool = False):
                 '_model_dump': _model_dump,
             })
         public = _project_v1_chat_response(core.payload, intent_name=core.intent_name)
+        knowledge.validate_response(public)
+        if request.sop_version and not public['response'].strip():
+            raise HTTPException(502, 'Model tidak menghasilkan jawaban untuk SOP terpilih. Sumber dan sitasi tersedia, tetapi belum ada jawaban yang dapat ditampilkan.')
         settings.record_v1_execution(revision=revision, model=public['model'],
             provider_status=public['provider_status'], grounded=public['grounding']['grounded'],
             stages=('HERMES_RUN', 'KNOWLEDGE', 'TRUST', 'GATES', 'GROUNDING', 'PUBLIC_PROJECTION'),
             execution_identity=getattr(provider, 'last_execution_identity', None))
-        if not _record_chat_result(request.session_id,request.user_input,request_id=request_id,answer=public):
+        if not _record_chat_result(request.session_id,request.user_input,request_id=request_id,answer=public,
+                                   source_versions=knowledge.source_versions(public)):
             raise HTTPException(503,'HISTORY_PERSISTENCE_FAILED')
         return public
 

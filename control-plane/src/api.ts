@@ -179,6 +179,7 @@ export async function sendUserChat(user_input:string,session_id:string,request_i
     }
     const result=PublicChatSchema.safeParse(await Promise.race([readAnswer(),deadline]));
     if(!result.success)throw new Error('Jawaban tidak sesuai kontrak layanan. Silakan coba kembali.');
+      if(!result.data.response.trim())throw new Error('Model tidak menghasilkan jawaban. Sumber dokumen tidak dapat menggantikan jawaban; periksa status model lalu coba kembali.');
     return result.data;
   }catch(error){if(controller.signal.aborted&&options.signal?.aborted)throw new ChatSendError('Permintaan dihentikan. Jawaban sementara tidak disimpan sebagai jawaban final.',0,false);throw error;}
   finally{if(timeout!==undefined)clearTimeout(timeout);options.signal?.removeEventListener('abort',abort);}

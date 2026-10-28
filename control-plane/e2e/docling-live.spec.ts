@@ -35,6 +35,7 @@ test('real stored SOP: PDF, extraction, nine chat turns, citations and unchanged
   await expect(panel.getByRole('heading',{name:'PERMOHONAN DATA PRIBADI',exact:true})).toBeVisible();
   await expect(panel).toContainText(id);
   console.log('PASS UI selected official SOP');
+  await panel.getByText('Perbaikan pembacaan dan detail teknis',{exact:true}).click();
   // Verify the real reprocessing action and poll the actual backend job.
   const reuse=process.env.NUSANTARA_UI_REUSE_EXTRACTION==='1';
   if(!reuse){
@@ -49,11 +50,11 @@ test('real stored SOP: PDF, extraction, nine chat turns, citations and unchanged
   const converted=await (await request.get(base,{headers})).json();
   if(!reuse)expect(converted.extraction.job_id).not.toBe(before.extraction.job_id);
   console.log('PASS UI extraction COMPLETE');
-  await panel.getByRole('button',{name:'Periksa isi',exact:true}).click();
   await expect(panel.getByRole('table',{name:'Tabel SOP halaman 1',exact:true})).toBeVisible();
-  await expect(panel.getByRole('table',{name:'Tabel SOP halaman 2',exact:true})).toBeVisible();
   await expect(panel.getByAltText('PDF asli SOP halaman 1',{exact:true})).toBeVisible();
   await expect.poll(()=>panel.getByAltText('PDF asli SOP halaman 1',{exact:true}).evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBeTruthy();
+  await panel.getByRole('button',{name:'Halaman 2',exact:true}).click();
+  await expect(panel.getByRole('table',{name:'Tabel SOP halaman 2',exact:true})).toBeVisible();
   await panel.getByRole('heading',{name:'PERMOHONAN DATA PRIBADI',exact:true}).scrollIntoViewIfNeeded();
   await page.screenshot({path:screenshots.extraction,fullPage:false,timeout:15000});
   console.log('PASS UI source PDF and two tables');

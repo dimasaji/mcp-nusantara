@@ -39,6 +39,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from app.knowledge.sqlite_backup import backup_sqlite_database
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -645,7 +646,7 @@ def backup_database(
         )
 
     timestamp = datetime.now().strftime(
-        "%Y%m%d_%H%M%S"
+        "%Y%m%d_%H%M%S_%f"
     )
 
     destination = (
@@ -653,10 +654,7 @@ def backup_database(
         / f"production_knowledge_{timestamp}.db"
     )
 
-    shutil.copy2(
-        db_path,
-        destination,
-    )
+    backup_sqlite_database(db_path, destination)
 
     append_audit(
         "database_backup",

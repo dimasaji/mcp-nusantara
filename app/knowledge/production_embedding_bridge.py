@@ -4,9 +4,9 @@ import sqlite3
 import hashlib
 import json
 import math
-import shutil
 import sys
 from datetime import datetime, timezone
+from app.knowledge.sqlite_backup import backup_sqlite_database
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -45,7 +45,7 @@ def backup_database():
     )
 
     timestamp = datetime.now().strftime(
-        "%Y%m%d_%H%M%S"
+        "%Y%m%d_%H%M%S_%f"
     )
 
     backup = (
@@ -53,10 +53,7 @@ def backup_database():
         / f"production_knowledge_{timestamp}.db"
     )
 
-    shutil.copy2(
-        DB_PATH,
-        backup,
-    )
+    backup_sqlite_database(DB_PATH, backup)
 
     return backup
 

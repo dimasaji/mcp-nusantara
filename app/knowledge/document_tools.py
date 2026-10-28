@@ -39,23 +39,34 @@ class DocumentTools:
             raise DocumentReadError('DOCUMENT_NOT_FOUND')
         detail = self.review.detail(document_id)
         if version is not None and version != detail['version_id']:
-            # Historical extractions remain readable by their immutable version.
+            # Retain immutable historical extraction reads without allowing an
+            # old review version to start processing or authorize current Chat.
             with self.engine._pipeline_db() as conn:
-                exists = conn.execute('SELECT 1 FROM document_extractions WHERE document_id=? AND version=?',
-                                      (document_id, version)).fetchone()
-            if not exists:
-                raise DocumentReadError('DOCUMENT_VERSION_NOT_FOUND')
+                rows = conn.execute("SELECT job_id,version,payload FROM document_extractions "
+                    "WHERE document_id=? AND status='COMPLETE' ORDER BY rowid DESC", (document_id,)).fetchall()
+            for row in rows:
+                payload = json.loads(row['payload']) if row['payload'] else None
+                if payload and self.review.extracted_version(row['version'], payload) == version:
+                    return {**detail, 'version_id': version, 'source_version_id': row['version'],
+                            'extraction_job_id': row['job_id'], '_historical': True}
+            raise DocumentReadError('DOCUMENT_VERSION_NOT_FOUND')
         return detail
+
+    @staticmethod
+    def _row(conn, document_id, detail):
+        if detail.get('_historical'):
+            return conn.execute('SELECT * FROM document_extractions WHERE document_id=? AND job_id=?',
+                (document_id, detail['extraction_job_id'])).fetchone()
+        return conn.execute('SELECT * FROM document_extractions WHERE document_id=? AND version=? '
+            'ORDER BY rowid DESC LIMIT 1', (document_id, detail['source_version_id'])).fetchone()
 
     def status(self, document_id, version=None):
         detail = self._identity(document_id, version)
-        version = version or detail['version_id']
         with self.engine._pipeline_db() as conn:
             conn.execute("UPDATE document_extractions SET status='FAILED',error='WORKER_LEASE_EXPIRED: proses terhenti; proses ulang tersedia',updated_at=CURRENT_TIMESTAMP WHERE status IN ('QUEUED','PROCESSING') AND updated_at < datetime('now','-20 minutes')")
-            row = conn.execute('SELECT job_id,status,error,updated_at FROM document_extractions '
-                               'WHERE document_id=? AND version=? ORDER BY rowid DESC LIMIT 1',
-                               (document_id, version)).fetchone()
-        return dict(row) if row else {'status': 'NOT_PROCESSED', 'error': None}
+            row = self._row(conn, document_id, detail)
+        return ({key: row[key] for key in ('job_id', 'status', 'error', 'updated_at')}
+                if row else {'status': 'NOT_PROCESSED', 'error': None})
 
     def cari_dokumen(self, query, limit=5):
         if not 1 <= limit <= 20:
@@ -82,15 +93,16 @@ class DocumentTools:
 
     def inspect(self, document_id, version):
         """Operator inspection may show partial blocks; chat reads remain strict."""
-        self._identity(document_id, version)
+        detail = self._identity(document_id, version)
         self.status(document_id, version)
         with self.engine._pipeline_db() as conn:
-            row = conn.execute('SELECT * FROM document_extractions WHERE document_id=? AND version=? '
-                               'ORDER BY rowid DESC LIMIT 1', (document_id, version)).fetchone()
+            row = self._row(conn, document_id, detail)
         if row is None:
             raise DocumentReadError('DOCUMENT_NOT_PROCESSED')
         payload = json.loads(row['payload']) if row['payload'] else {'blocks': [], 'warnings': [row['error'] or 'Periksa status ekstraksi']}
-        return {**payload, 'status': row['status']}
+        if row['status'] == 'COMPLETE' and self.review.extracted_version(row['version'], payload) != detail['version_id']:
+            raise DocumentReadError('DOCUMENT_VERSION_CHANGED: hasil pembacaan berubah; muat ulang versi terbaru')
+        return {**payload, 'version': detail['version_id'], 'status': row['status']}
 
     def baca_halaman(self, document_id, version, page_number):
         doc = self.baca_dokumen(document_id, version)
@@ -103,13 +115,14 @@ class DocumentTools:
     def process(self, document_id, version, *, force=False):
         detail = self._identity(document_id, version)
         self.status(document_id, version)
-        if version != detail['version_id']:
+        if detail.get('_historical') or version != detail['version_id']:
             raise DocumentReadError('DOCUMENT_VERSION_NOT_FOUND')
         path, _, digest = self.review.source(document_id)
         if path is None or path.suffix.lower() != '.pdf':
             raise DocumentReadError('DOCUMENT_PDF_SOURCE_NOT_FOUND')
         configuration = effective_config()
-        key = hashlib.sha256(json.dumps([document_id, version, digest, PARSER_VERSION, configuration], sort_keys=True).encode()).hexdigest()
+        source_version = detail['source_version_id']
+        key = hashlib.sha256(json.dumps([document_id, source_version, digest, PARSER_VERSION, configuration], sort_keys=True).encode()).hexdigest()
         with self.engine._pipeline_db() as conn:
             conn.execute('BEGIN IMMEDIATE')
             row = conn.execute("SELECT job_id,status FROM document_extractions WHERE cache_key=? AND status IN ('QUEUED','PROCESSING','COMPLETE') ORDER BY rowid DESC LIMIT 1", (key,)).fetchone()
@@ -119,7 +132,7 @@ class DocumentTools:
                 raise DocumentReadError('DOCUMENT_CONVERSION_BUSY: satu konversi sedang berjalan')
             job = uuid4().hex
             conn.execute('INSERT INTO document_extractions(job_id,document_id,version,cache_key,status) VALUES(?,?,?,?,?)',
-                         (job, document_id, version, key, 'QUEUED'))
+                         (job, document_id, source_version, key, 'QUEUED'))
         _executor.submit(self._convert, job, path, detail, digest, force, configuration)
         return {'job_id': job, 'status': 'QUEUED'}
 
@@ -138,7 +151,7 @@ class DocumentTools:
             if not force:
                 with self.engine._pipeline_db() as conn:
                     previous = conn.execute("SELECT payload FROM document_extractions WHERE document_id=? AND version=? AND status='COMPLETE' ORDER BY rowid DESC LIMIT 1",
-                                            (detail['document_id'], detail['version_id'])).fetchone()
+                                            (detail['document_id'], detail['source_version_id'])).fetchone()
                 if previous:
                     cached = json.loads(previous['payload'])
                     if (cached.get('pdf_sha256') == digest and cached.get('configuration') == configuration and
@@ -156,6 +169,7 @@ class DocumentTools:
             payload = normalize_activity_grids(payload, path)
             payload.update(document_id=detail['document_id'], title=detail['title'], version=detail['version_id'],
                            pdf_sha256=digest, parser_version=PARSER_VERSION, configuration=configuration)
+            payload['version'] = self.review.extracted_version(detail['source_version_id'], payload)
             status = payload['status']
             error = '; '.join(payload['warnings']) or None
             temporary = output.with_suffix('.tmp')
