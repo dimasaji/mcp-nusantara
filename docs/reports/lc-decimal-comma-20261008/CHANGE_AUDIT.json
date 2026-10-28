@@ -1,0 +1,49 @@
+{
+  "contract": "NUS-MDE-LC-20261008-DECIMAL-COMMA",
+  "timestamp": "2026-10-08T20:53:00.378516+07:00",
+  "authorization": "APPROVE LEVEL C — LC-DECIMAL-001 ONLY",
+  "disposition": "PARTIAL / REVIEW_REQUIRED — STOPPED FOR OUT-OF-SCOPE GRAPH QUERY CACHE EFFECT",
+  "files_before": {
+    "app/devcore/grounding.py": "c3ebd43afcc8bb03e86f15e6689fb836f2dd9bf8b2361c70d437750c8df32009",
+    "tests/v2/test_devcore_grounding_response.py": "951e5c8ad3a9223ade46d4326f31e9f057e518e6e4a60b9486b50f4171838a65"
+  },
+  "files_after": {
+    "app/devcore/grounding.py": "b1d4292f5bdee8bb4aac1a5a9407617ce082421b4816a1de7d0c9a3eefc2a488",
+    "tests/v2/test_devcore_grounding_response.py": "5ff8520bff112a820272f67e2ca908fa5cf7e2865c23d0c7e8774451f15e6fff"
+  },
+  "files_changed": [
+    "app/devcore/grounding.py",
+    "tests/v2/test_devcore_grounding_response.py",
+    "graphify-out/cache/last_query_stamp"
+  ],
+  "diff": "PATCH_DIFF.patch",
+  "tests_added": [
+    "test_decimal_comma_fix_preserves_integer_and_dot_decimal",
+    "test_decimal_comma_fix_preserves_local_and_clause_negation",
+    "test_decimal_comma_matching_value_is_retained_in_human_answer",
+    "test_decimal_comma_mismatch_is_rejected_in_human_answer",
+    "test_decimal_comma_mixed_supported_value_and_unsupported_claim",
+    "test_decimal_comma_timeout_value_is_preserved"
+  ],
+  "new_parameterized_cases": 18,
+  "tests_changed": [],
+  "tests_removed": [],
+  "unauthorized_changes": [
+    "graphify-out/cache/last_query_stamp"
+  ],
+  "unauthorized_source_changes": [],
+  "unauthorized_test_changes": [],
+  "incident": "Required graph query automatically changed cache/last_query_stamp before patch. Baseline discrepancy was not inspected before applying two-file patch. No automatic restoration performed.",
+  "tests_executed": [],
+  "targeted_test": "NOT_RUN — STOP CONDITION",
+  "regression_test": "NOT_RUN — STOP CONDITION",
+  "reproduction": "REPRODUCTION_BEFORE.json",
+  "root_cause": "Unconditional comma clause separator splits decimal timeout 3,5 into integer 3 and separate clause 5.",
+  "patch": "One-line clause regex preserves comma only when both neighboring characters are digits; decimal normalization and negation logic unchanged.",
+  "evidence_preserved": true,
+  "runtime_identity": "NOT_VERIFIED",
+  "live_integration": "NOT_VERIFIED",
+  "v1_acceptance": "HOLD",
+  "live_operations": 0,
+  "source_syntax": "PASS_AST_PARSE"
+}

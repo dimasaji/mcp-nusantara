@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-06",
+  "docker_command": null,
+  "default_docker_path_exists": false,
+  "privileges": "\r\nPRIVILEGES INFORMATION\r\n----------------------\r\n\r\nPrivilege Name                Description                          State   \r\n============================= ==================================== ========\r\nSeShutdownPrivilege           Shut down the system                 Disabled\r\nSeChangeNotifyPrivilege       Bypass traverse checking             Enabled \r\nSeUndockPrivilege             Remove computer from docking station Disabled\r\nSeIncreaseWorkingSetPrivilege Increase a process working set       Disabled\r\nSeTimeZonePrivilege           Change the time zone                 Disabled\r\n",
+  "deployment_status": "NOT_RUN",
+  "production_target": "OPEN_NOT_DEFINED",
+  "inspected_files": [
+    "Dockerfile",
+    "docker-compose.yml",
+    "docker-compose.audit.yml"
+  ],
+  "deployment_note": "Compose defines a local loopback candidate topology, not an identified production host. Docker build/start/health/workload/restart/rollback were not run. No install, deployment or service restart performed.",
+  "filesystem_requirement": "Windows account with SeCreateSymbolicLinkPrivilege or Developer Mode allowing symlink creation; alternatively a controlled Linux runner."
+}

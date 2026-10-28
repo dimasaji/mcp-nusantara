@@ -1,0 +1,99 @@
+{
+  "document_id": "WEIP-bded4f4af6694cf493bbf668d84ed86c529c9d0e7f6cb6189178e3da72b2ff58",
+  "source_id": "fixture",
+  "original_url": "https://example.org/allowed/doc",
+  "final_url": "https://example.org/allowed/doc",
+  "redirects": [],
+  "retrieved_at": "2026-10-09T14:43:58.856465+00:00",
+  "content_type": "text/plain",
+  "content_hash": "48838be0d6a69cacaa21846040d868a991afc605254335e90508d680adab7a92",
+  "version": "sha256:48838be0d6a69cacaa21846040d868a991afc605254335e90508d680adab7a92",
+  "version_conflict": false,
+  "metadata": {
+    "title": "Fixture",
+    "publisher": "Fixture Publisher",
+    "agency": "Fixture Agency",
+    "domain": "example.org",
+    "jurisdiction": "FIXTURE_ONLY",
+    "service": "fixture-service",
+    "publication_date": "2020-01-01",
+    "effective_date": "2020-01-01",
+    "expiry_date": "2099-01-01",
+    "risk": "HIGH",
+    "source_verification_status": "VERIFIED",
+    "source_verification_reference": "fixture-review-001",
+    "source_assurance": "OWNER_DECLARED_NOT_INDEPENDENTLY_AUTHENTICATED",
+    "registry_fingerprint": "8e515af3a274c9b1c09bc98eec1549e917772a32a56c5b358a5098093af6c4bc",
+    "validation_status": "OWNER_REVIEW_RECORDED",
+    "chunk_reference": "FULL_PARSED_DOCUMENT"
+  },
+  "text": "Syarat KTP-el: pemohon berusia 17 tahun dan membawa Kartu Keluarga.",
+  "status": "APPROVED_FOR_INGESTION",
+  "audit": [
+    {
+      "at": "2026-10-09T14:43:58.860433+00:00",
+      "from": "DISCOVERED",
+      "to": "FETCHED",
+      "reason": "FETCH_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "",
+      "content_hash": "48838be0d6a69cacaa21846040d868a991afc605254335e90508d680adab7a92",
+      "event_hash": "538e6974f72b1c8302f5924932cdd60f8b2abf44eaf780644b8679afc63929df"
+    },
+    {
+      "at": "2026-10-09T14:43:58.863505+00:00",
+      "from": "FETCHED",
+      "to": "PARSED",
+      "reason": "PARSE_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "538e6974f72b1c8302f5924932cdd60f8b2abf44eaf780644b8679afc63929df",
+      "content_hash": "48838be0d6a69cacaa21846040d868a991afc605254335e90508d680adab7a92",
+      "event_hash": "8029cec50b846bd5efd2c1ea65cdf42af307d20d66e64001009324f535fd54c4"
+    },
+    {
+      "at": "2026-10-09T14:43:58.868612+00:00",
+      "from": "PARSED",
+      "to": "VALIDATION_PENDING",
+      "reason": "PROVENANCE_REVIEW",
+      "actor": "pipeline",
+      "previous_hash": "8029cec50b846bd5efd2c1ea65cdf42af307d20d66e64001009324f535fd54c4",
+      "content_hash": "48838be0d6a69cacaa21846040d868a991afc605254335e90508d680adab7a92",
+      "event_hash": "743b5f3fa7cab1359ef9d8f561de137531cc7149bb942f2486a991d932650590"
+    },
+    {
+      "at": "2026-10-09T14:43:58.872599+00:00",
+      "from": "VALIDATION_PENDING",
+      "to": "REVIEW_REQUIRED",
+      "reason": "OWNER_DOCUMENT_REVIEW",
+      "actor": "pipeline",
+      "previous_hash": "743b5f3fa7cab1359ef9d8f561de137531cc7149bb942f2486a991d932650590",
+      "content_hash": "48838be0d6a69cacaa21846040d868a991afc605254335e90508d680adab7a92",
+      "event_hash": "5bdaee3d8ebc0a265d3dcf49e2b627e0ebfa116ada893bb58879f17a64fa3d32"
+    },
+    {
+      "at": "2026-10-09T14:43:58.880163+00:00",
+      "from": "REVIEW_REQUIRED",
+      "to": "APPROVED_FOR_INGESTION",
+      "reason": "OWNER_REVIEW_RECORDED",
+      "actor": "fixture-reviewer",
+      "previous_hash": "5bdaee3d8ebc0a265d3dcf49e2b627e0ebfa116ada893bb58879f17a64fa3d32",
+      "content_hash": "48838be0d6a69cacaa21846040d868a991afc605254335e90508d680adab7a92",
+      "event_hash": "99de4c9c3606099076b92c55f63477aec487891e389ddf7e5de12a81ec90d640"
+    }
+  ],
+  "parsed_hash": "48838be0d6a69cacaa21846040d868a991afc605254335e90508d680adab7a92",
+  "approval": {
+    "reviewer": "fixture-reviewer",
+    "reference": "fixture-only",
+    "identity_status": "VERIFIED_BY_HOST_AUTHORIZER",
+    "identity_reference": "fixture-auth-record",
+    "binding": "fbed2d3d49aa477356464a6e7675061adea4c856a099579047d3f26fc8043ee4",
+    "approved_at": "2026-10-09T00:00:00+00:00",
+    "status": "APPROVED",
+    "purpose": "temporary_rag_ingestion",
+    "expires_at": "2099-01-01T00:00:00+00:00",
+    "conditions": [],
+    "revoked": false,
+    "provenance_reference": "fixture-provenance-only"
+  }
+}

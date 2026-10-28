@@ -1,0 +1,30 @@
+{
+  "findings": [],
+  "count": 0,
+  "excluded_directories": [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pycache__",
+    "data",
+    "node_modules"
+  ],
+  "extensions": [
+    ".cfg",
+    ".env",
+    ".example",
+    ".html",
+    ".ini",
+    ".json",
+    ".md",
+    ".ps1",
+    ".py",
+    ".sh",
+    ".toml",
+    ".txt",
+    ".yaml",
+    ".yml"
+  ],
+  "limitations": "Static pattern scan only; skips excluded directories and unreadable files. Does not prove absence of every secret or all runtime security risks."
+}

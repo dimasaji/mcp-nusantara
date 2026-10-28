@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "C:\Users\dmaza\mcp-starter\docs\reports\v1-user-hermes-implementation\verify_final_source_20261009T094140.py", line 118, in <module>
+    response = http('/v1/chat', {'message': 'Apa itu KTP-el?', 'session_id': 'final-source-verification-20261009-094140'})
+  File "C:\Users\dmaza\mcp-starter\docs\reports\v1-user-hermes-implementation\verify_final_source_20261009T094140.py", line 51, in http
+    with urlopen(request, timeout=150) as response:
+         ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dmaza\AppData\Local\Programs\Python\Python313\Lib\urllib\request.py", line 189, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dmaza\AppData\Local\Programs\Python\Python313\Lib\urllib\request.py", line 495, in open
+    response = meth(req, response)
+  File "C:\Users\dmaza\AppData\Local\Programs\Python\Python313\Lib\urllib\request.py", line 604, in http_response
+    response = self.parent.error(
+        'http', request, response, code, msg, hdrs)
+  File "C:\Users\dmaza\AppData\Local\Programs\Python\Python313\Lib\urllib\request.py", line 533, in error
+    return self._call_chain(*args)
+           ~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\dmaza\AppData\Local\Programs\Python\Python313\Lib\urllib\request.py", line 466, in _call_chain
+    result = func(*args)
+  File "C:\Users\dmaza\AppData\Local\Programs\Python\Python313\Lib\urllib\request.py", line 613, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 422: Unprocessable Content

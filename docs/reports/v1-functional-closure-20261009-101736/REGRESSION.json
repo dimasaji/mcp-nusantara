@@ -1,0 +1,87 @@
+{
+  "timestamp": "2026-10-09T10:29:21.262559+07:00",
+  "status": "PASS",
+  "commands": [
+    ".venv/Scripts/python.exe -B docs/reports/v1-functional-closure-20261009-101736/prepare_baseline.py",
+    ".venv/Scripts/python.exe -B docs/reports/v1-functional-closure-20261009-101736/verify_backend.py targeted (before and after greeting patch)",
+    ".venv/Scripts/python.exe -B docs/reports/v1-functional-closure-20261009-101736/verify_backend.py regression",
+    "C:\\Users\\dmaza\\AppData\\Local\\hermes\\node\\node.exe --require ./tests/inspection-preview-network-guard.cjs node_modules/vitest/vitest.mjs run tests/assistant.test.tsx --pool=threads --maxWorkers=1 --minWorkers=1 --reporter=json --outputFile=../docs/reports/v1-functional-closure-20261009-101736/FRONTEND_TARGETED.json",
+    "C:\\Users\\dmaza\\AppData\\Local\\hermes\\node\\node.exe --require ./tests/inspection-preview-network-guard.cjs node_modules/vitest/vitest.mjs run tests/assistant.test.tsx --pool=threads --maxWorkers=1 --minWorkers=1 --reporter=json --outputFile=../docs/reports/v1-functional-closure-20261009-101736/FRONTEND_REGRESSION.json",
+    "C:\\Users\\dmaza\\AppData\\Local\\hermes\\node\\node.exe node_modules/typescript/bin/tsc --noEmit",
+    "C:\\Users\\dmaza\\AppData\\Local\\hermes\\node\\node.exe node_modules/vite/bin/vite.js build --emptyOutDir false",
+    "$env:V1_LOCAL_PROVIDER='1'; & .venv\\Scripts\\python.exe -B docs/reports/v1-functional-closure-20261009-101736/native_candidate.py (port 18013)",
+    "C:\\Users\\dmaza\\AppData\\Local\\hermes\\git\\cmd\\git.exe --no-optional-locks diff --check",
+    "Read-only GET user port8000 /health and /openapi.json; socket and Win32 process checks; stop only owned candidate PID35788",
+    "Browser CUA: root Hallo, + New Chat, mixed greeting/question, Console inventory and refresh",
+    "HTTP POST candidate /v1/chat with user_input in Hallo/Halo/Hai/Selamat pagi; GET candidate /v1/control-plane/model-status and authenticated /models"
+  ],
+  "initial_reproduction": {
+    "evidence": "targeted-20261009-102003/results.xml",
+    "pass": 43,
+    "fail": 5,
+    "skip": 0,
+    "reason": "Five greeting cases returned knowledge-base insufficiency before fix; genuine reproduction retained"
+  },
+  "targeted_backend": {
+    "evidence": "targeted-20261009-102040/results.xml",
+    "pass": 48,
+    "fail": 0,
+    "skip": 0
+  },
+  "backend_regression": {
+    "evidence": "regression-20261009-102112/results.xml",
+    "pass": 257,
+    "fail": 0,
+    "skip": 0,
+    "deselected": 1
+  },
+  "frontend": {
+    "evidence": "FRONTEND_REGRESSION.json",
+    "pass": 10,
+    "fail": 0,
+    "skip": 0
+  },
+  "guards": {
+    "pytest_exit": 0,
+    "violations": [],
+    "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+    "sqlite": "BLOCKED",
+    "subprocess": "ONLY_EXACT_READ_ONLY_IDENTITY_PROBE",
+    "writes": "NEW_EVIDENCE_DIRECTORY_ONLY",
+    "semantic_and_retrieval": "EXPLICIT_FIXTURES",
+    "provider": "ACTUAL_OLLAMA_ADAPTER_WITH_MOCK_TRANSPORT",
+    "v2": "NOT_EXERCISED",
+    "deselected": "One pre-existing nested subprocess assembly test incompatible with this guard"
+  },
+  "typescript": {
+    "status": "PASS",
+    "exit": 0
+  },
+  "build": {
+    "status": "PASS",
+    "exit": 0
+  },
+  "python_syntax": {
+    "status": "PASS",
+    "files": [
+      "app/hermes/agent.py",
+      "tests/test_v1_operator_control.py"
+    ]
+  },
+  "whitespace": {
+    "status": "PASS",
+    "exit": 0
+  },
+  "not_run": [
+    "Full historical test suites; selected bounded regression reused for changed Hermes/model/projection/grounding path",
+    "One pre-existing nested subprocess assembly test DESELECTED due guard, not PASS or SKIP",
+    "Native semantic-worker/production RAG/database integration",
+    "Native symlink operational tests with Windows privilege",
+    "Full legacy Playwright suite; direct CUA browser verification used",
+    "Two-real-model switching; one model installed"
+  ],
+  "limits": [
+    "Guarded backend uses actual Ollama adapter with mock transport and explicit language/retrieval fixtures",
+    "Shared pure grounding tests housed under tests/v2 are regression only; no V2 endpoint or implementation changed"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "scope": "CONTROLLED_LOCALHOST_BROWSER_E2E",
+  "provider": "ACTUAL_OLLAMA_ADAPTER_MOCK_TRANSPORT",
+  "semantic": "EXPLICIT_FIXTURE",
+  "retrieval": "EXPLICIT_NON_OFFICIAL_FIXTURE",
+  "url": "http://127.0.0.1:18011/",
+  "observed": [
+    "User root opens with active fixture-a",
+    "Question submitted and answer fixture-a displayed",
+    "Developer Console opened through navigation",
+    "Authorized inventory exposed fixture-a and fixture-b",
+    "Operator selection acknowledged with active fixture-b",
+    "Next user question displays fixture-b and a citation",
+    "Invalid operator token rejected; fixture-b remains active",
+    "Responsive viewport: scrollWidth=375,clientWidth=375"
+  ],
+  "unobserved": [
+    "actual installed model generation",
+    "actual semantic worker",
+    "official source authority",
+    "production deployment"
+  ],
+  "screenshots": [
+    "USER_CHAT_BROWSER.jpg",
+    "USER_MOBILE_BROWSER.jpg",
+    "OPERATOR_ERROR_BROWSER.jpg"
+  ]
+}

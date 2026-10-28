@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Review Nusantara</title><style>
+body{font:16px system-ui;background:#111827;color:#e5e7eb;max-width:960px;margin:40px auto;padding:20px}
+input,textarea,button{font:inherit;padding:10px;border-radius:8px;margin:6px;background:#1f2937;color:inherit;border:1px solid #4b5563}
+label{display:block}article{padding:20px;border:1px solid #4b5563;border-radius:12px;margin:20px 0}
+button{cursor:pointer}a{color:#93c5fd}pre{white-space:pre-wrap;overflow-wrap:anywhere}
+</style></head><body>
+<a href="/">← Kembali ke chat</a><h1>Review perubahan</h1>
+<p>Periksa bukti, risiko, dan ruang lingkup sebelum mengambil keputusan.</p>
+<label>Token admin <input id="token" type="password" autocomplete="off"></label>
+<label>Nama reviewer <input id="reviewer" maxlength="128" autocomplete="off"></label>
+<button id="load">Muat antrean</button><button id="metrics">Lihat monitoring</button>
+<p id="status" role="status" aria-live="polite"></p><section id="queue"></section>
+<script>
+const $=id=>document.getElementById(id);
+async function admin(path, body){
+ const response=await fetch(path,{method:body?'POST':'GET',headers:{'Content-Type':'application/json','X-Admin-Token':$('token').value},body:body?JSON.stringify(body):undefined});
+ const data=await response.json();if(!response.ok)throw new Error(data.detail||'Permintaan gagal');return data;
+}
+async function load(){
+ $('status').textContent='Memuat…';$('queue').replaceChildren();
+ try{const data=await admin('/v2/approvals/pending');
+  $('status').textContent=data.pending.length?`${data.pending.length} permintaan menunggu review`:'Tidak ada permintaan tertunda.';
+  for(const item of data.pending){const card=document.createElement('article');
+   const title=document.createElement('h2');title.textContent=`${item.kind} · risiko ${item.risk}`;
+   const summary=document.createElement('pre');summary.textContent=JSON.stringify(item.summary,null,2);
+   const detail=document.createElement('p');detail.textContent=`Peminta: ${item.requested_by}. Berlaku sampai ${item.expires_at}.`;
+   const reason=document.createElement('textarea');reason.placeholder='Alasan keputusan (wajib)';reason.maxLength=2000;reason.setAttribute('aria-label','Alasan keputusan');
+   card.append(title,summary,detail,reason);
+   for(const [decision,label] of [['approved','Setujui'],['rejected','Tolak'],['request_changes','Minta perubahan']]){
+    const button=document.createElement('button');button.textContent=label;
+    button.onclick=async()=>{if(!$('reviewer').value.trim()||!reason.value.trim()){$('status').textContent='Isi reviewer dan alasan terlebih dahulu.';return;}
+     for(const b of card.querySelectorAll('button'))b.disabled=true;
+     try{await admin(`/v2/approvals/${encodeURIComponent(item.approval_id)}/decision`,{reviewer:$('reviewer').value.trim(),decision,reason:reason.value.trim()});await load();}
+     catch(error){$('status').textContent=error.message;for(const b of card.querySelectorAll('button'))b.disabled=false;}
+    };card.append(button);
+   }$('queue').append(card);
+  }
+ }catch(error){$('status').textContent=error.message;}
+}
+$('load').onclick=load;
+$('metrics').onclick=async()=>{try{const [metrics,analysis]=await Promise.all([admin('/v2/metrics'),admin('/v2/experience/analysis')]);const pre=document.createElement('pre');pre.textContent=JSON.stringify({metrics,analysis},null,2);$('queue').replaceChildren(pre);$('status').textContent='Monitoring saat ini';}catch(error){$('status').textContent=error.message;}};
+// Credentials stay only in the current page, never browser storage.
+</script></body></html>

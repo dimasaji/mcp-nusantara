@@ -1,0 +1,1985 @@
+{
+  "/health": {
+    "timestamp": "2026-10-09T10:35:25.237219+07:00",
+    "method": "GET",
+    "url": "http://127.0.0.1:8000/health",
+    "provider_invoked": false,
+    "request_body": null,
+    "status": 200,
+    "headers": {
+      "date": "Fri, 09 Oct 2026 03:35:24 GMT",
+      "server": "uvicorn",
+      "content-length": "118",
+      "content-type": "application/json",
+      "vary": "Origin",
+      "x-request-id": "req_35797e69006c4598",
+      "connection": "close"
+    },
+    "sha256": "d479e7b824de6f9633eb03d3d1644e3f839be83e6f1159befc093411300e5c40",
+    "bytes_observed": 118,
+    "body": {
+      "status": "ok",
+      "version": "0.1.0",
+      "build_id": "sha256:b7455ef0823df00d73a576147c6331ed69f9b74c145de39281819c3cad78d27f"
+    }
+  },
+  "/openapi.json": {
+    "timestamp": "2026-10-09T10:35:25.294428+07:00",
+    "method": "GET",
+    "url": "http://127.0.0.1:8000/openapi.json",
+    "provider_invoked": false,
+    "request_body": null,
+    "status": 200,
+    "headers": {
+      "date": "Fri, 09 Oct 2026 03:35:24 GMT",
+      "server": "uvicorn",
+      "content-length": "21935",
+      "content-type": "application/json",
+      "vary": "Origin",
+      "x-request-id": "req_ca6ad5948cc3447f",
+      "connection": "close"
+    },
+    "sha256": "fb7209e7da70bbda0d686288ce196ce31efaf37a203938b60a2134e591a78b54",
+    "bytes_observed": 21935,
+    "body": {
+      "openapi": "3.1.0",
+      "info": {
+        "title": "Nusantara Core + Hermes API",
+        "description": "AI Core Engine and Agent/Orchestrator API",
+        "version": "0.1.0"
+      },
+      "paths": {
+        "/v1/health": {
+          "get": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Health Check",
+            "operationId": "health_check_v1_health_get",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HealthResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/health/detail": {
+          "get": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Health Detail",
+            "operationId": "health_detail_v1_health_detail_get",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/chat": {
+          "post": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Chat",
+            "description": "End-to-end local chat.\n\nFlow:\n\nUser\n  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“\nLanguage Engine\n  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“\nProblem Engine\n  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“\nKnowledge Engine\n  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“\nDeterministic Safety / Routing\n  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“\nHermes\n  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“\nOllama\n  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“\nResponse",
+            "operationId": "chat_v1_chat_post",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ChatRequest"
+                  }
+                }
+              },
+              "required": true
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/problem/analyze": {
+          "post": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Analyze Problem",
+            "operationId": "analyze_problem_v1_problem_analyze_post",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProblemAnalyzeRequest"
+                  }
+                }
+              },
+              "required": true
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/workflow/create": {
+          "post": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Create Workflow",
+            "operationId": "create_workflow_v1_workflow_create_post",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WorkflowCreateRequest"
+                  }
+                }
+              },
+              "required": true
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/workflow/{workflow_id}": {
+          "get": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Get Workflow",
+            "operationId": "get_workflow_v1_workflow__workflow_id__get",
+            "parameters": [
+              {
+                "name": "workflow_id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "title": "Workflow Id"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/documents/ingest": {
+          "post": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Ingest Document",
+            "operationId": "ingest_document_v1_documents_ingest_post",
+            "parameters": [
+              {
+                "name": "x-admin-token",
+                "in": "header",
+                "required": false,
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "X-Admin-Token"
+                }
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DocumentIngestRequest"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/knowledge/search": {
+          "post": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Search Knowledge",
+            "operationId": "search_knowledge_v1_knowledge_search_post",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/KnowledgeSearchRequest"
+                  }
+                }
+              },
+              "required": true
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/knowledge/documents": {
+          "get": {
+            "tags": [
+              "api"
+            ],
+            "summary": "List Knowledge Documents",
+            "operationId": "list_knowledge_documents_v1_knowledge_documents_get",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/human/handoff": {
+          "post": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Request Handoff",
+            "operationId": "request_handoff_v1_human_handoff_post",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HumanHandoffRequest"
+                  }
+                }
+              },
+              "required": true
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/metrics": {
+          "get": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Get Metrics",
+            "operationId": "get_metrics_v1_metrics_get",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/developer-core": {
+          "get": {
+            "tags": [
+              "api"
+            ],
+            "summary": "Developer Core Status",
+            "description": "Read-only Developer Core / Graphify runtime inspection.",
+            "operationId": "developer_core_status_v1_developer_core_get",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/dev/inspection-preview": {
+          "post": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Preview",
+            "operationId": "preview_v2_dev_inspection_preview_post",
+            "parameters": [
+              {
+                "name": "x-admin-token",
+                "in": "header",
+                "required": false,
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "X-Admin-Token"
+                }
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/InspectionPreviewRequest"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "title": "Response Preview V2 Dev Inspection Preview Post"
+                    }
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/health": {
+          "get": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Health",
+            "operationId": "health_v2_health_get",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "additionalProperties": true,
+                      "type": "object",
+                      "title": "Response Health V2 Health Get"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/chat": {
+          "post": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Chat",
+            "description": "V2 canonical runtime:\n\n    Policy\n    -> Memory\n    -> Knowledge\n    -> Hermes(Language -> Problem -> Reasoning)\n    -> Ollama generation\n    -> Trust\n    -> Audit\n\nV1 engines remain untouched. Hermes is injected as the V2 runtime\nboundary rather than duplicating Language/Problem/Reasoning engines.",
+            "operationId": "chat_v2_chat_post",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ChatV2Request"
+                  }
+                }
+              },
+              "required": true
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "additionalProperties": true,
+                      "type": "object",
+                      "title": "Response Chat V2 Chat Post"
+                    }
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/memory/sessions": {
+          "post": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Create Memory Session",
+            "operationId": "create_memory_session_v2_memory_sessions_post",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "additionalProperties": true,
+                      "type": "object",
+                      "title": "Response Create Memory Session V2 Memory Sessions Post"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/memory/delete": {
+          "post": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Delete Memory Session",
+            "operationId": "delete_memory_session_v2_memory_delete_post",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MemoryDeleteRequest"
+                  }
+                }
+              },
+              "required": true
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "additionalProperties": true,
+                      "type": "object",
+                      "title": "Response Delete Memory Session V2 Memory Delete Post"
+                    }
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/metrics": {
+          "get": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Get Metrics",
+            "operationId": "get_metrics_v2_metrics_get",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "additionalProperties": true,
+                      "type": "object",
+                      "title": "Response Get Metrics V2 Metrics Get"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/approvals/pending": {
+          "get": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Pending",
+            "operationId": "pending_v2_approvals_pending_get",
+            "parameters": [
+              {
+                "name": "x-admin-token",
+                "in": "header",
+                "required": false,
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "X-Admin-Token"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "title": "Response Pending V2 Approvals Pending Get"
+                    }
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/approvals/{approval_id}/decision": {
+          "post": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Decide",
+            "operationId": "decide_v2_approvals__approval_id__decision_post",
+            "parameters": [
+              {
+                "name": "approval_id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "title": "Approval Id"
+                }
+              },
+              {
+                "name": "x-admin-token",
+                "in": "header",
+                "required": false,
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "X-Admin-Token"
+                }
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DecisionRequest"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "title": "Response Decide V2 Approvals  Approval Id  Decision Post"
+                    }
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/audit/verify": {
+          "get": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Audit Verify",
+            "operationId": "audit_verify_v2_audit_verify_get",
+            "parameters": [
+              {
+                "name": "x-admin-token",
+                "in": "header",
+                "required": false,
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "X-Admin-Token"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "title": "Response Audit Verify V2 Audit Verify Get"
+                    }
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/feedback": {
+          "post": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Submit Feedback",
+            "description": "Endpoint publik: sumber dipaksa 'user' sehingga klien tidak bisa memalsukan feedback system/evaluator.",
+            "operationId": "submit_feedback_v2_feedback_post",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FeedbackRequest"
+                  }
+                }
+              },
+              "required": true
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "additionalProperties": true,
+                      "type": "object",
+                      "title": "Response Submit Feedback V2 Feedback Post"
+                    }
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/experience/analysis": {
+          "get": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Experience Analysis",
+            "operationId": "experience_analysis_v2_experience_analysis_get",
+            "parameters": [
+              {
+                "name": "x-admin-token",
+                "in": "header",
+                "required": false,
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "X-Admin-Token"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "title": "Response Experience Analysis V2 Experience Analysis Get"
+                    }
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/research/proposals": {
+          "post": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Propose Improvement",
+            "operationId": "propose_improvement_v2_research_proposals_post",
+            "parameters": [
+              {
+                "name": "x-admin-token",
+                "in": "header",
+                "required": false,
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "X-Admin-Token"
+                }
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProposalRequest"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/discovery/candidates": {
+          "post": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Discover",
+            "operationId": "discover_v2_discovery_candidates_post",
+            "parameters": [
+              {
+                "name": "x-admin-token",
+                "in": "header",
+                "required": false,
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "X-Admin-Token"
+                }
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DiscoveryRequest"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v2/dev": {
+          "post": {
+            "tags": [
+              "v2"
+            ],
+            "summary": "Dev Chat",
+            "description": "Developer Core (read-only): baca/cari/list file di NUSANTARA_WORKSPACE dengan grounding.",
+            "operationId": "dev_chat_v2_dev_post",
+            "parameters": [
+              {
+                "name": "x-admin-token",
+                "in": "header",
+                "required": false,
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "X-Admin-Token"
+                }
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DevRequest"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "title": "Response Dev Chat V2 Dev Post"
+                    }
+                  }
+                }
+              },
+              "422": {
+                "description": "Validation Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HTTPValidationError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/control-plane/snapshot": {
+          "get": {
+            "tags": [
+              "engineering-control-plane"
+            ],
+            "summary": "Snapshot",
+            "operationId": "snapshot_v1_control_plane_snapshot_get",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/control-plane/human-acceptance": {
+          "post": {
+            "tags": [
+              "engineering-control-plane"
+            ],
+            "summary": "Save Human Acceptance",
+            "operationId": "save_human_acceptance_v1_control_plane_human_acceptance_post",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/control-plane/human-acceptance/read": {
+          "post": {
+            "tags": [
+              "engineering-control-plane"
+            ],
+            "summary": "Read Human Acceptance",
+            "operationId": "read_human_acceptance_v1_control_plane_human_acceptance_read_post",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/control-plane/intention": {
+          "post": {
+            "tags": [
+              "engineering-control-plane"
+            ],
+            "summary": "Intention",
+            "description": "Local browser intention only; never an operator/authentication bridge.",
+            "operationId": "intention_v1_control_plane_intention_post",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/health": {
+          "get": {
+            "summary": "Health Check",
+            "operationId": "health_check_health_get",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/v1/runtime/attestation": {
+          "get": {
+            "tags": [
+              "runtime-attestation"
+            ],
+            "summary": "Runtime Attestation",
+            "operationId": "runtime_attestation_v1_runtime_attestation_get",
+            "responses": {
+              "200": {
+                "description": "Successful Response",
+                "content": {
+                  "application/json": {
+                    "schema": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "components": {
+        "schemas": {
+          "ChatRequest": {
+            "properties": {
+              "session_id": {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "title": "Session Id",
+                "default": "web"
+              },
+              "user_input": {
+                "type": "string",
+                "maxLength": 20000,
+                "minLength": 1,
+                "title": "User Input"
+              },
+              "model": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Model"
+              },
+              "stream": {
+                "type": "boolean",
+                "title": "Stream",
+                "default": false
+              }
+            },
+            "type": "object",
+            "required": [
+              "user_input"
+            ],
+            "title": "ChatRequest"
+          },
+          "ChatV2Request": {
+            "properties": {
+              "session_id": {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "title": "Session Id",
+                "default": "web"
+              },
+              "user_input": {
+                "type": "string",
+                "maxLength": 20000,
+                "minLength": 1,
+                "title": "User Input"
+              },
+              "model": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Model"
+              },
+              "remember": {
+                "type": "boolean",
+                "title": "Remember",
+                "default": false
+              }
+            },
+            "type": "object",
+            "required": [
+              "user_input"
+            ],
+            "title": "ChatV2Request"
+          },
+          "DecisionRequest": {
+            "properties": {
+              "reviewer": {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "title": "Reviewer"
+              },
+              "decision": {
+                "type": "string",
+                "title": "Decision"
+              },
+              "reason": {
+                "type": "string",
+                "maxLength": 2000,
+                "minLength": 1,
+                "title": "Reason"
+              }
+            },
+            "type": "object",
+            "required": [
+              "reviewer",
+              "decision",
+              "reason"
+            ],
+            "title": "DecisionRequest"
+          },
+          "DevRequest": {
+            "properties": {
+              "session_id": {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "title": "Session Id",
+                "default": "dev"
+              },
+              "user_input": {
+                "type": "string",
+                "maxLength": 4000,
+                "minLength": 1,
+                "title": "User Input"
+              }
+            },
+            "type": "object",
+            "required": [
+              "user_input"
+            ],
+            "title": "DevRequest"
+          },
+          "DiscoveryRequest": {
+            "properties": {
+              "uri": {
+                "type": "string",
+                "maxLength": 2000,
+                "title": "Uri"
+              },
+              "gap_id": {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "title": "Gap Id"
+              },
+              "title": {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1,
+                "title": "Title"
+              },
+              "topic": {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "title": "Topic"
+              },
+              "requested_by": {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "title": "Requested By"
+              }
+            },
+            "type": "object",
+            "required": [
+              "uri",
+              "gap_id",
+              "title",
+              "topic",
+              "requested_by"
+            ],
+            "title": "DiscoveryRequest"
+          },
+          "DocumentIngestRequest": {
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id",
+                "description": "Document ID; kosong = otomatis",
+                "default": ""
+              },
+              "title": {
+                "type": "string",
+                "title": "Title"
+              },
+              "content": {
+                "type": "string",
+                "minLength": 1,
+                "title": "Content"
+              },
+              "metadata": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Metadata"
+              }
+            },
+            "type": "object",
+            "required": [
+              "title",
+              "content"
+            ],
+            "title": "DocumentIngestRequest"
+          },
+          "FeedbackRequest": {
+            "properties": {
+              "request_id": {
+                "type": "string",
+                "maxLength": 64,
+                "minLength": 1,
+                "title": "Request Id"
+              },
+              "type": {
+                "type": "string",
+                "title": "Type"
+              },
+              "comment": {
+                "type": "string",
+                "maxLength": 2000,
+                "title": "Comment",
+                "default": ""
+              },
+              "session_id": {
+                "type": "string",
+                "title": "Session Id",
+                "default": "-"
+              },
+              "user": {
+                "type": "string",
+                "maxLength": 128,
+                "title": "User",
+                "default": "anonymous"
+              }
+            },
+            "type": "object",
+            "required": [
+              "request_id",
+              "type"
+            ],
+            "title": "FeedbackRequest"
+          },
+          "HTTPValidationError": {
+            "properties": {
+              "detail": {
+                "items": {
+                  "$ref": "#/components/schemas/ValidationError"
+                },
+                "type": "array",
+                "title": "Detail"
+              }
+            },
+            "type": "object",
+            "title": "HTTPValidationError"
+          },
+          "HealthResponse": {
+            "properties": {
+              "status": {
+                "type": "string",
+                "title": "Status",
+                "default": "ok"
+              },
+              "service": {
+                "type": "string",
+                "title": "Service",
+                "default": "nusantara-core"
+              },
+              "version": {
+                "type": "string",
+                "title": "Version",
+                "default": "0.1.0"
+              },
+              "build_id": {
+                "type": "string",
+                "title": "Build Id",
+                "default": "sha256:b7455ef0823df00d73a576147c6331ed69f9b74c145de39281819c3cad78d27f"
+              }
+            },
+            "type": "object",
+            "title": "HealthResponse"
+          },
+          "HumanHandoffRequest": {
+            "properties": {
+              "reason": {
+                "type": "string",
+                "title": "Reason"
+              },
+              "priority": {
+                "type": "string",
+                "title": "Priority",
+                "default": "normal"
+              },
+              "context": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Context"
+              }
+            },
+            "type": "object",
+            "required": [
+              "reason"
+            ],
+            "title": "HumanHandoffRequest"
+          },
+          "InspectionPreviewRequest": {
+            "properties": {
+              "user_input": {
+                "type": "string",
+                "maxLength": 4000,
+                "minLength": 1,
+                "title": "User Input"
+              }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+              "user_input"
+            ],
+            "title": "InspectionPreviewRequest"
+          },
+          "KnowledgeSearchRequest": {
+            "properties": {
+              "query": {
+                "type": "string",
+                "minLength": 1,
+                "title": "Query"
+              },
+              "top_k": {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 1.0,
+                "title": "Top K",
+                "default": 5
+              },
+              "filter": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Filter"
+              }
+            },
+            "type": "object",
+            "required": [
+              "query"
+            ],
+            "title": "KnowledgeSearchRequest"
+          },
+          "MemoryDeleteRequest": {
+            "properties": {
+              "session_id": {
+                "type": "string",
+                "maxLength": 128,
+                "title": "Session Id"
+              }
+            },
+            "type": "object",
+            "required": [
+              "session_id"
+            ],
+            "title": "MemoryDeleteRequest"
+          },
+          "ProblemAnalyzeRequest": {
+            "properties": {
+              "user_input": {
+                "type": "string",
+                "maxLength": 20000,
+                "minLength": 1,
+                "title": "User Input"
+              },
+              "session_id": {
+                "type": "string",
+                "title": "Session Id",
+                "default": ""
+              }
+            },
+            "type": "object",
+            "required": [
+              "user_input"
+            ],
+            "title": "ProblemAnalyzeRequest"
+          },
+          "ProposalRequest": {
+            "properties": {
+              "gap_id": {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "title": "Gap Id"
+              },
+              "proposed_change": {
+                "type": "string",
+                "maxLength": 4000,
+                "minLength": 1,
+                "title": "Proposed Change"
+              },
+              "root_cause": {
+                "type": "string",
+                "maxLength": 2000,
+                "minLength": 1,
+                "title": "Root Cause"
+              },
+              "affected_components": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 20,
+                "minItems": 1,
+                "title": "Affected Components"
+              },
+              "affected_files": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 50,
+                "title": "Affected Files"
+              },
+              "test_plan": {
+                "type": "string",
+                "maxLength": 4000,
+                "minLength": 1,
+                "title": "Test Plan"
+              },
+              "rollback_plan": {
+                "type": "string",
+                "maxLength": 4000,
+                "minLength": 1,
+                "title": "Rollback Plan"
+              },
+              "requested_by": {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "title": "Requested By"
+              }
+            },
+            "type": "object",
+            "required": [
+              "gap_id",
+              "proposed_change",
+              "root_cause",
+              "affected_components",
+              "test_plan",
+              "rollback_plan",
+              "requested_by"
+            ],
+            "title": "ProposalRequest"
+          },
+          "ValidationError": {
+            "properties": {
+              "loc": {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "type": "array",
+                "title": "Location"
+              },
+              "msg": {
+                "type": "string",
+                "title": "Message"
+              },
+              "type": {
+                "type": "string",
+                "title": "Error Type"
+              },
+              "input": {
+                "title": "Input"
+              },
+              "ctx": {
+                "type": "object",
+                "title": "Context"
+              }
+            },
+            "type": "object",
+            "required": [
+              "loc",
+              "msg",
+              "type"
+            ],
+            "title": "ValidationError"
+          },
+          "WorkflowCreateRequest": {
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "title": "Name"
+              },
+              "definition": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Definition"
+              }
+            },
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "title": "WorkflowCreateRequest"
+          }
+        }
+      }
+    }
+  },
+  "/v1/control-plane/model-status": {
+    "timestamp": "2026-10-09T10:35:25.309952+07:00",
+    "method": "GET",
+    "url": "http://127.0.0.1:8000/v1/control-plane/model-status",
+    "provider_invoked": false,
+    "request_body": null,
+    "status": 404,
+    "headers": {
+      "date": "Fri, 09 Oct 2026 03:35:24 GMT",
+      "server": "uvicorn",
+      "content-length": "22",
+      "content-type": "application/json",
+      "vary": "Origin",
+      "x-request-id": "req_512e0855d5744379",
+      "connection": "close"
+    },
+    "sha256": "37ec4665a8102d115ffd1ac20dae94c98b4dac64b0c1a68228aa2a531caeb35d",
+    "bytes_observed": 22,
+    "body": {
+      "detail": "Not Found"
+    }
+  },
+  "/v1/control-plane/models": {
+    "timestamp": "2026-10-09T10:35:25.315085+07:00",
+    "method": "GET",
+    "url": "http://127.0.0.1:8000/v1/control-plane/models",
+    "provider_invoked": false,
+    "request_body": null,
+    "status": 404,
+    "headers": {
+      "date": "Fri, 09 Oct 2026 03:35:24 GMT",
+      "server": "uvicorn",
+      "content-length": "22",
+      "content-type": "application/json",
+      "vary": "Origin",
+      "x-request-id": "req_69d1ebaa6c8f459c",
+      "connection": "close"
+    },
+    "sha256": "37ec4665a8102d115ffd1ac20dae94c98b4dac64b0c1a68228aa2a531caeb35d",
+    "bytes_observed": 22,
+    "body": {
+      "detail": "Not Found"
+    }
+  },
+  "/v1/runtime/attestation": {
+    "timestamp": "2026-10-09T10:35:25.324021+07:00",
+    "method": "GET",
+    "url": "http://127.0.0.1:8000/v1/runtime/attestation",
+    "provider_invoked": false,
+    "request_body": null,
+    "status": 200,
+    "headers": {
+      "date": "Fri, 09 Oct 2026 03:35:24 GMT",
+      "server": "uvicorn",
+      "content-length": "5814",
+      "content-type": "application/json",
+      "vary": "Origin",
+      "x-request-id": "req_1c0b2c2ddb2b4a20",
+      "connection": "close"
+    },
+    "sha256": "fd42cc1b4a5e2c3349a4c4ee04442ac4aace11fccbe73a8295a33ca63aed4386",
+    "bytes_observed": 5814,
+    "body": {
+      "attestation": {
+        "application": {
+          "service_name": "Nusantara Core + Hermes API",
+          "service_version": "0.1.0",
+          "application_entrypoint": "app.main:app"
+        },
+        "process": {
+          "process_id": 33160,
+          "parent_process_id": 37704,
+          "process_start_time": "2026-10-08T13:03:49.631080+00:00",
+          "working_directory": "C:\\Users\\dmaza\\mcp-starter",
+          "executable_path": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "interpreter_path": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+          "os_metadata_source": "WINDOWS_CURRENT_PROCESS_API",
+          "observed_process_id": 33160,
+          "valid_for_current_process": true
+        },
+        "runtime_instance_id": "aa2cedfaddfc48608dd9d64fc4e481ab",
+        "instance_captured_at": "2026-10-08T13:03:50.198889+00:00",
+        "build": {
+          "loaded_code_hash": "sha256:32ded208827b1693c4d3e726f2c66d2be4dc7ceecb437baf00af7e9e4f2a4cfb",
+          "current_registered_code_hash": "sha256:32ded208827b1693c4d3e726f2c66d2be4dc7ceecb437baf00af7e9e4f2a4cfb",
+          "loaded_code_binding": "MATCH",
+          "coverage": "REGISTERED_PYTHON_HANDLERS_HTTP_DISPATCH_AND_IDENTITY_FUNCTIONS",
+          "limitations": "Non-transitive code objects; excludes globals, closures, assets and provider dependencies",
+          "source_build_hash": "sha256:b7455ef0823df00d73a576147c6331ed69f9b74c145de39281819c3cad78d27f",
+          "source_build_evidence": "IMPORT_TIME_SOURCE_SNAPSHOT_ONLY",
+          "full_application_build_verified": false,
+          "loaded_code_manifest": [
+            {
+              "symbol": "identity:app.core.runtime_attestation._code_fingerprint",
+              "code_sha256": "0b1f26552141a5b54a3f41f011a3e1ee739f908956420ed62ba0d3f0b06c80c2"
+            },
+            {
+              "symbol": "identity:app.core.runtime_attestation._loaded_code_manifest",
+              "code_sha256": "505137f49e486501c5b3a14cbc3a371050c25167814f38e3aa89e4aea765fcb5"
+            },
+            {
+              "symbol": "identity:app.core.runtime_attestation._manifest_hash",
+              "code_sha256": "fe21b487b13508f6d3daf2df0b09fc5dae3088dabca085a0da4eaa5cc7edfb69"
+            },
+            {
+              "symbol": "identity:app.core.runtime_attestation._process_identity",
+              "code_sha256": "fff687519f9f091cc2f4593dd1d6ff3dbe324176a7fd17c0d621caee1b789e1c"
+            },
+            {
+              "symbol": "identity:app.core.runtime_attestation.install_runtime_attestation",
+              "code_sha256": "3a3384bfe0509af9b3cfc878982b15aa167051b8665a46470f9e4d65a90afc3c"
+            },
+            {
+              "symbol": "identity:app.core.runtime_build_provenance.BuildDefinition.build_id",
+              "code_sha256": "f64af68ad63ecf84130e97a11b9d29a89a331b39d7f3c8e29639fa9916310557"
+            },
+            {
+              "symbol": "identity:app.core.runtime_build_provenance.BuildDefinition.validate",
+              "code_sha256": "d11bee2641893f72304d8a66b0438ed290b4c80d3d20f16ad2b785b5c96425c8"
+            },
+            {
+              "symbol": "identity:app.core.runtime_build_provenance.BuildProvenanceOwner.__init__",
+              "code_sha256": "6adb07ccae4af6f5abb42d877ec940b1fe490208cfb75dfb930c3f43b808fc38"
+            },
+            {
+              "symbol": "identity:app.core.runtime_build_provenance.BuildProvenanceOwner.assess",
+              "code_sha256": "31c14f71557b02c83f540a41e58c926aae0a65ee76d6aa8052d4f8cadb6b2f6a"
+            },
+            {
+              "symbol": "identity:app.core.runtime_build_provenance.BuildProvenanceOwner.observe_consumed_artifact",
+              "code_sha256": "74d973dba76514bc964236a5d0bdee2d7fcd74972f03047ec71c449ae522aebf"
+            },
+            {
+              "symbol": "identity:app.core.runtime_build_provenance.ProcessBinding.valid",
+              "code_sha256": "4b6c807daf4adadef014e96a78f5f1c6332496cd399411f0e233d90c608fbd5d"
+            },
+            {
+              "symbol": "identity:app.core.runtime_build_provenance._hash",
+              "code_sha256": "fa378a39171432f820dfbb64e30f53c4ccaff7715ababdcda85ecd8e5bc00523"
+            },
+            {
+              "symbol": "identity:app.core.runtime_build_provenance._name",
+              "code_sha256": "4abf9684033b85a4671d0a556ba3fb4a2b747fbdfbaf2661344d629118b9656d"
+            },
+            {
+              "symbol": "identity:app.core.runtime_build_provenance._result",
+              "code_sha256": "e5323cf42e29079f58926d76f7803a88746165777f7dac69f93152faf7d67e00"
+            },
+            {
+              "symbol": "identity:app.core.runtime_build_provenance.assess_untrusted_build_provenance",
+              "code_sha256": "1f1df000cd07fba03f3ad9f383d4c6559230b70ec8a8a09669a48626932d6c5a"
+            },
+            {
+              "symbol": "identity:app.core.runtime_identity.current_runtime_instance",
+              "code_sha256": "d4392b563b96e23331aa08cc23c8e86238d56a4d98afbc6f216496e6876fc9a3"
+            },
+            {
+              "symbol": "middleware:app.main.request_id_middleware",
+              "code_sha256": "1fd5429342b7f4cb57eb260e16f846c32392c6ab6126ba19196ea3ed6dae8925"
+            },
+            {
+              "symbol": "route:GET,HEAD:/docs/oauth2-redirect:fastapi.applications.FastAPI.setup.<locals>.swagger_ui_redirect",
+              "code_sha256": "60a5aa46a876be11928ca46de87b360cb56f5657e8f3b0c14f27213f938dd5a2"
+            },
+            {
+              "symbol": "route:GET,HEAD:/docs:fastapi.applications.FastAPI.setup.<locals>.swagger_ui_html",
+              "code_sha256": "f5b96a3f603528c95b27c4119429e129badef19f05cd7add0a883009cdfa8b11"
+            },
+            {
+              "symbol": "route:GET,HEAD:/openapi.json:fastapi.applications.FastAPI.setup.<locals>.openapi",
+              "code_sha256": "1f284d0b1440c449c7ffece35a9f5d99344b6925dc965af6b17205378521345e"
+            },
+            {
+              "symbol": "route:GET,HEAD:/redoc:fastapi.applications.FastAPI.setup.<locals>.redoc_html",
+              "code_sha256": "c0ad85adb0888d8307cc853a504975a82f7de65f78d9cbdf56829a93c66d15eb"
+            },
+            {
+              "symbol": "route:GET:/:app.main.dashboard",
+              "code_sha256": "82e2768ce38c64ff0166e66465281891273eb252dfa2e4a42c5ea604de420bd5"
+            },
+            {
+              "symbol": "route:GET:/health:app.main.health_check",
+              "code_sha256": "52464558561bb9ee1c717e2248dc19276e6f62a3856a8a800fcba14bd7b3f8ad"
+            },
+            {
+              "symbol": "route:GET:/ui:app.main.dashboard",
+              "code_sha256": "82e2768ce38c64ff0166e66465281891273eb252dfa2e4a42c5ea604de420bd5"
+            },
+            {
+              "symbol": "route:GET:/v1/runtime/attestation:app.core.runtime_attestation.install_runtime_attestation.<locals>.runtime_attestation",
+              "code_sha256": "61dc5e00133066210ebb6dfc6550c99b4d44577fe6148fe801ef171356958277"
+            }
+          ]
+        },
+        "provider_invocation": null,
+        "provider_observation": "NOT_OBSERVED",
+        "correlation_readiness": {
+          "runtime_instance_id": "aa2cedfaddfc48608dd9d64fc4e481ab",
+          "process_id": 33160,
+          "source_build_hash": "sha256:b7455ef0823df00d73a576147c6331ed69f9b74c145de39281819c3cad78d27f",
+          "required_external_receipt_fields": [
+            "runtime_instance_id",
+            "process_id",
+            "build_id",
+            "request_id",
+            "invocation_id",
+            "provider_id",
+            "actual_model",
+            "timestamp",
+            "identity_status"
+          ],
+          "provider_receipt_exposed": false
+        },
+        "runtime_identity": "NOT_VERIFIED"
+      }
+    }
+  },
+  "/": {
+    "timestamp": "2026-10-09T10:35:25.361105+07:00",
+    "method": "GET",
+    "url": "http://127.0.0.1:8000/",
+    "provider_invoked": false,
+    "request_body": null,
+    "status": 200,
+    "headers": {
+      "date": "Fri, 09 Oct 2026 03:35:24 GMT",
+      "server": "uvicorn",
+      "content-type": "text/html; charset=utf-8",
+      "accept-ranges": "bytes",
+      "content-length": "57797",
+      "last-modified": "Tue, 06 Oct 2026 02:43:23 GMT",
+      "etag": "\"1cdc076ddc49f43c1e2e3ec61a1de90f\"",
+      "vary": "Origin",
+      "x-request-id": "req_a0fa1722353e46d1",
+      "connection": "close"
+    },
+    "sha256": "e1d42fbfd2c055191840496814f35a80c119b98fb86b83818e41ded47226e054",
+    "bytes_observed": 57797,
+    "html_title": "Nusantara Core + Hermes",
+    "contains_new_chat": true,
+    "contains_built_control_plane_assets": false
+  },
+  "/console": {
+    "timestamp": "2026-10-09T10:35:25.382914+07:00",
+    "method": "GET",
+    "url": "http://127.0.0.1:8000/console",
+    "provider_invoked": false,
+    "request_body": null,
+    "status": 404,
+    "headers": {
+      "date": "Fri, 09 Oct 2026 03:35:24 GMT",
+      "server": "uvicorn",
+      "content-length": "22",
+      "content-type": "application/json",
+      "vary": "Origin",
+      "x-request-id": "req_6039d7a5c3b34d7f",
+      "connection": "close"
+    },
+    "sha256": "37ec4665a8102d115ffd1ac20dae94c98b4dac64b0c1a68228aa2a531caeb35d",
+    "bytes_observed": 22,
+    "body": {
+      "detail": "Not Found"
+    }
+  }
+}

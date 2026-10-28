@@ -1,0 +1,99 @@
+{
+  "document_id": "WEIP-2bac0dca2de6ce14a7d0ad59daf11e9eb9c653cd40158e51b690e95d66418ac3",
+  "source_id": "fixture",
+  "original_url": "https://example.org/allowed/doc",
+  "final_url": "https://example.org/allowed/doc",
+  "redirects": [],
+  "retrieved_at": "2026-10-27T02:40:59.169432+00:00",
+  "content_type": "text/plain",
+  "content_hash": "79f4c46d0e3cd3d99ba50846fa519f94701cf6e3967becd2696f8c0211c3bee0",
+  "version": "sha256:79f4c46d0e3cd3d99ba50846fa519f94701cf6e3967becd2696f8c0211c3bee0",
+  "version_conflict": false,
+  "metadata": {
+    "title": "Fixture",
+    "publisher": "Fixture Publisher",
+    "agency": "Fixture Agency",
+    "domain": "example.org",
+    "jurisdiction": "FIXTURE_ONLY",
+    "service": "fixture-service",
+    "publication_date": "2020-01-01",
+    "effective_date": "2020-01-01",
+    "expiry_date": "2099-01-01",
+    "risk": "HIGH",
+    "source_verification_status": "VERIFIED",
+    "source_verification_reference": "fixture-review-001",
+    "source_assurance": "OWNER_DECLARED_NOT_INDEPENDENTLY_AUTHENTICATED",
+    "registry_fingerprint": "8e515af3a274c9b1c09bc98eec1549e917772a32a56c5b358a5098093af6c4bc",
+    "validation_status": "OWNER_REVIEW_RECORDED",
+    "chunk_reference": "FULL_PARSED_DOCUMENT"
+  },
+  "text": "Evidence fixture. No official authority.",
+  "status": "APPROVED_FOR_INGESTION",
+  "audit": [
+    {
+      "at": "2026-10-27T02:40:59.172879+00:00",
+      "from": "DISCOVERED",
+      "to": "FETCHED",
+      "reason": "FETCH_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "",
+      "content_hash": "79f4c46d0e3cd3d99ba50846fa519f94701cf6e3967becd2696f8c0211c3bee0",
+      "event_hash": "e4978bb1fce908ab823c40c0fe6c86a40af87134a1a87c5a87cf23ca0e10781f"
+    },
+    {
+      "at": "2026-10-27T02:40:59.175981+00:00",
+      "from": "FETCHED",
+      "to": "PARSED",
+      "reason": "PARSE_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "e4978bb1fce908ab823c40c0fe6c86a40af87134a1a87c5a87cf23ca0e10781f",
+      "content_hash": "79f4c46d0e3cd3d99ba50846fa519f94701cf6e3967becd2696f8c0211c3bee0",
+      "event_hash": "6422a768a62a7b33996101e87402c15429d5664703e4746937073d024ce6f4e9"
+    },
+    {
+      "at": "2026-10-27T02:40:59.192373+00:00",
+      "from": "PARSED",
+      "to": "VALIDATION_PENDING",
+      "reason": "PROVENANCE_REVIEW",
+      "actor": "pipeline",
+      "previous_hash": "6422a768a62a7b33996101e87402c15429d5664703e4746937073d024ce6f4e9",
+      "content_hash": "79f4c46d0e3cd3d99ba50846fa519f94701cf6e3967becd2696f8c0211c3bee0",
+      "event_hash": "56ef4ada49fe118e63801d7a67bf84972fcc1870b4b64f9177043d5ec392a0dd"
+    },
+    {
+      "at": "2026-10-27T02:40:59.207900+00:00",
+      "from": "VALIDATION_PENDING",
+      "to": "REVIEW_REQUIRED",
+      "reason": "OWNER_DOCUMENT_REVIEW",
+      "actor": "pipeline",
+      "previous_hash": "56ef4ada49fe118e63801d7a67bf84972fcc1870b4b64f9177043d5ec392a0dd",
+      "content_hash": "79f4c46d0e3cd3d99ba50846fa519f94701cf6e3967becd2696f8c0211c3bee0",
+      "event_hash": "a3ba660ee12dba4cb1825619985cd6052527d71eb1873340e1f96bfd128ada7f"
+    },
+    {
+      "at": "2026-10-27T02:40:59.223112+00:00",
+      "from": "REVIEW_REQUIRED",
+      "to": "APPROVED_FOR_INGESTION",
+      "reason": "OWNER_REVIEW_RECORDED",
+      "actor": "fixture-reviewer",
+      "previous_hash": "a3ba660ee12dba4cb1825619985cd6052527d71eb1873340e1f96bfd128ada7f",
+      "content_hash": "79f4c46d0e3cd3d99ba50846fa519f94701cf6e3967becd2696f8c0211c3bee0",
+      "event_hash": "b12bb6d117cfc56a9e8ddba0fa7def5c1128a610063c558ea7b1fdabe0601764"
+    }
+  ],
+  "parsed_hash": "79f4c46d0e3cd3d99ba50846fa519f94701cf6e3967becd2696f8c0211c3bee0",
+  "approval": {
+    "reviewer": "fixture-reviewer",
+    "reference": "fixture-decision",
+    "identity_status": "VERIFIED_BY_HOST_AUTHORIZER",
+    "identity_reference": "fixture-auth-record",
+    "binding": "844e2dfcded3d599cfe0a5face8710209b8cb1fb355f1b3dbc170ecfcda14eb7",
+    "approved_at": "2026-10-27T02:40:59.223092+00:00",
+    "status": "APPROVED",
+    "purpose": "v1_request_projection",
+    "expires_at": "2099-01-01T00:00:00+00:00",
+    "conditions": [],
+    "revoked": false,
+    "provenance_reference": "fixture-provenance-only"
+  }
+}

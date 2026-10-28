@@ -1,0 +1,146 @@
+{
+  "tests": 20,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": 20,
+  "timestamp": "2026-10-08T20:55:34.539348+07:00",
+  "cases": [
+    {
+      "name": "test_mixed_negation_does_not_hide_unsupported_positive_claim",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_negation_after_positive_claim_and_adjacent_claims",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_timeout_value_is_preserved[False-1,5]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_timeout_value_is_preserved[False-3,5]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_timeout_value_is_preserved[False-10,25]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_timeout_value_is_preserved[False-0,75]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_timeout_value_is_preserved[True-1,5]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_timeout_value_is_preserved[True-3,5]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_timeout_value_is_preserved[True-10,25]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_timeout_value_is_preserved[True-0,75]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_fix_preserves_integer_and_dot_decimal[3]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_fix_preserves_integer_and_dot_decimal[3.5]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_fix_preserves_local_and_clause_negation[Request tidak menggunakan timeout 3 detik.-expected0]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_fix_preserves_local_and_clause_negation[Request tidak menggunakan timeout 3,5 detik.-expected1]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_fix_preserves_local_and_clause_negation[Tidak ada retry, tetapi Request menggunakan timeout 3,5 detik.-expected2]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_fix_preserves_local_and_clause_negation[Request menggunakan timeout 3,5 detik, tidak ada retry.-expected3]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_fix_preserves_local_and_clause_negation[Request menggunakan timeout 3 detik, tidak ada retry, tetapi menyimpan response ke file.-expected4]",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_mixed_supported_value_and_unsupported_claim",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_mismatch_is_rejected_in_human_answer",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    },
+    {
+      "name": "test_decimal_comma_matching_value_is_retained_in_human_answer",
+      "classname": "tests.v2.test_devcore_grounding_response",
+      "status": "PASS",
+      "skip_reason": null
+    }
+  ],
+  "guards": {
+    "violations": [],
+    "pytest_exit": 0,
+    "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+    "real_application_composition": "BLOCKED",
+    "provider_knowledge_imports": "BLOCKED",
+    "sqlite": "BLOCKED",
+    "subprocess": "BLOCKED",
+    "live_persistence": "BLOCKED",
+    "writes": "EVIDENCE_DIRECTORY_ONLY"
+  },
+  "evidence": [
+    "TARGETED_RESULTS.xml",
+    "TARGETED_OUTPUT.txt",
+    "TARGETED_GUARDS.json"
+  ]
+}

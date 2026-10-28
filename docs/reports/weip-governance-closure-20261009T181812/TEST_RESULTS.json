@@ -1,0 +1,82 @@
+{
+  "runs": [
+    {
+      "run": "regression-20261009-182327",
+      "command": ".venv/Scripts/python.exe -B docs/reports/weip-governance-closure-20261009T181812/verify.py regression",
+      "exit_code": 1,
+      "counts": {
+        "tests": 179,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 178
+      },
+      "deselected": 6,
+      "guards": {
+        "pytest_exit": 1,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not actual_v2 and not dev_endpoint and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      },
+      "xml": "docs\\reports\\weip-governance-closure-20261009T181812\\regression-20261009-182327\\results.xml"
+    },
+    {
+      "run": "regression-20261009-182347",
+      "command": ".venv/Scripts/python.exe -B docs/reports/weip-governance-closure-20261009T181812/verify.py regression",
+      "exit_code": 0,
+      "counts": {
+        "tests": 179,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 179
+      },
+      "deselected": 6,
+      "guards": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not actual_v2 and not dev_endpoint and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      },
+      "xml": "docs\\reports\\weip-governance-closure-20261009T181812\\regression-20261009-182347\\results.xml"
+    },
+    {
+      "run": "targeted-20261009-182256",
+      "command": ".venv/Scripts/python.exe -B docs/reports/weip-governance-closure-20261009T181812/verify.py targeted",
+      "exit_code": 0,
+      "counts": {
+        "tests": 25,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 25
+      },
+      "deselected": 69,
+      "guards": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "remediation_"
+      },
+      "xml": "docs\\reports\\weip-governance-closure-20261009T181812\\targeted-20261009-182256\\results.xml"
+    }
+  ],
+  "failure_preserved": "regression-20261009-182327: WinError 5 on temporary staging replacement; cause unestablished. Repeat passed without source/test changes.",
+  "regression_exclusions": [
+    "actual_v2",
+    "dev_endpoint",
+    "consumers_correlation",
+    "empty_result",
+    "bootstrap_layers",
+    "owner_reads"
+  ]
+}

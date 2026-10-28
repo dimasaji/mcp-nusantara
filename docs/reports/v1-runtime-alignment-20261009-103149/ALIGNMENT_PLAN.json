@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-10-09T10:36:30.909467+07:00",
+  "status": "BLOCKED_PENDING_AUTHORIZATION_AND_ROLLBACK_PREFLIGHT",
+  "exact_404_cause": "Running application does not register the model-control paths: direct GET returns404 and OpenAPI omits all three. Source has existing matching prefixes; candidate registered them. Different import-source fingerprint and pre-implementation process start corroborate stale in-memory application registration.",
+  "source_changes_required": "None established for this routing mismatch; do not add duplicate routes or change frontend URLs",
+  "configuration_changes_required": "None established; intended bootstrap must be reviewed through existing configuration owner. Inherited process environment is not observable from this audit and cannot be assumed identical to a new shell.",
+  "restart_necessary": true,
+  "restart_reason": "Existing launch has no --reload; Python imports/FastAPI router table remain in memory. Replacing this application process is required to consume current source; no hot patch or forced reconfiguration is proposed.",
+  "authorization": "Explicit approval required for controlled shutdown/replacement of identified port8000 process. This audit issues no signal and performs no startup.",
+  "preconditions": [
+    "Source fingerprint remains sha256:9916a16a8411c1d892157fad11e3bfdf4200efe4e20a259ec23dd9de74b90fcd",
+    "Verify final frontend index/assets hashes against previous runtime evidence",
+    "Prepare an immutable, runnable rollback artifact with known dependencies/configuration; old b7455 fingerprint is not recoverable from health metadata or Git HEAD alone",
+    "Review native NORMAL bootstrap configuration and worker/embedding/model resources; candidate used semantic/retrieval fixtures",
+    "Review existing knowledge-store startup initialization side effects; no DB migration/delete/ingest authorized",
+    "Arrange a brief interruption; drain in-flight requests and use original foreground console/service owner for graceful stop after approval",
+    "Verify port8000 is free; do not launch competing process or kill a stale remembered PID"
+  ],
+  "operator_shutdown": "After explicit approval and identity recheck, operator uses Ctrl+C in the original foreground server console. If service-managed or unavailable, obtain its verified owner-controlled shutdown procedure; do not use blanket Stop-Process.",
+  "proposed_launch_command": "Set-Location -LiteralPath 'C:\\Users\\dmaza\\mcp-starter'\n& 'C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe' -B -m uvicorn app.main:app --app-dir 'C:\\Users\\dmaza\\mcp-starter' --host 127.0.0.1 --port 8000 --workers 1",
+  "launch_command_executed": false,
+  "expected_impact": [
+    "Brief chat/Console unavailability while replacing process",
+    "In-flight requests must finish or be handled before stop",
+    "Process-local legacy conversation memory may be lost on restart; no deletion/migration command proposed",
+    "Volatile operator model revision resets to bootstrap; single-process selection contract unchanged",
+    "NORMAL startup initializes existing native dependencies; successful bootstrap and native chat are not established by fixture candidate"
+  ],
+  "verification_after_approval": [
+    "Socket PID/start/command line and source import fingerprint must be newly captured",
+    "GET /health and real port8000 attestation using legitimate loopback boundary; verify limited loaded-code binding without full-closure claim",
+    "OpenAPI contains three required model-control methods; GET model-status succeeds; unauthenticated /models rejects and operator-authenticated inventory succeeds",
+    "New UI root and New Chat render expected compiled bundle",
+    "Only if separately approved for memory/provider effects, send controlled greeting and substantive request, correlate native provider receipt and public response",
+    "Keep HOLD if native semantic/RAG/security/oracle/memory gates remain open"
+  ],
+  "rollback": [
+    "Do not stop current runtime until a verified immutable rollback artifact and launch configuration are available",
+    "If replacement fails, operator gracefully stops only the newly created replacement",
+    "Launch the verified prior artifact from its separate preserved directory with its recorded interpreter/configuration on free port8000",
+    "Check socket ownership, health/source identity, routes and required behavior against rollback baseline",
+    "Never reset/clean/checkout/discard the current working tree; restarting current checkout is not an exact rollback to old loaded source"
+  ],
+  "rollback_command": "BLOCKED: no verified path/artifact for prior loaded build is available; do not invent a runnable rollback command"
+}

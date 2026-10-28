@@ -1,0 +1,53 @@
+{
+  "document_id": "WEIP-6bf23114a6e7227997d68c025efe3dded3e83ab9aef6c122b01b9b5008b12889",
+  "source_id": "fixture",
+  "original_url": "https://example.org/allowed/doc",
+  "final_url": "https://example.org/allowed/doc",
+  "redirects": [],
+  "retrieved_at": "2026-10-09T10:31:03.042763+00:00",
+  "content_type": "application/pdf",
+  "content_hash": "4c672c429960cd75d9af5a1c78a721658c7df402304f7ae169c1e51c79e8fa14",
+  "version": "sha256:4c672c429960cd75d9af5a1c78a721658c7df402304f7ae169c1e51c79e8fa14",
+  "version_conflict": false,
+  "metadata": {
+    "title": "Fixture",
+    "publisher": "Fixture Publisher",
+    "agency": "Fixture Agency",
+    "domain": "example.org",
+    "jurisdiction": "FIXTURE_ONLY",
+    "service": "fixture-service",
+    "publication_date": null,
+    "effective_date": null,
+    "expiry_date": null,
+    "risk": "HIGH",
+    "source_verification_status": "UNVERIFIED",
+    "source_verification_reference": null,
+    "registry_fingerprint": "362c69469cc111aef2edee8719e9f54a11baca49a5286ed46a5c64ba8cc00898",
+    "validation_status": "PENDING",
+    "chunk_reference": "FULL_PARSED_DOCUMENT"
+  },
+  "text": null,
+  "status": "QUARANTINED",
+  "audit": [
+    {
+      "at": "2026-10-09T10:31:03.044878+00:00",
+      "from": "DISCOVERED",
+      "to": "FETCHED",
+      "reason": "FETCH_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "",
+      "content_hash": "4c672c429960cd75d9af5a1c78a721658c7df402304f7ae169c1e51c79e8fa14",
+      "event_hash": "2212d663adc0e061488935fb5a1fe05d43069a6897dba3a332c2987562b9a97c"
+    },
+    {
+      "at": "2026-10-09T10:31:03.046920+00:00",
+      "from": "FETCHED",
+      "to": "QUARANTINED",
+      "reason": "PARSE_UNSAFE_OR_UNAVAILABLE",
+      "actor": "pipeline",
+      "previous_hash": "2212d663adc0e061488935fb5a1fe05d43069a6897dba3a332c2987562b9a97c",
+      "content_hash": "4c672c429960cd75d9af5a1c78a721658c7df402304f7ae169c1e51c79e8fa14",
+      "event_hash": "8cd84cb6cb5ca83cb6a8ee1378b1e4ba90f9d2e2979d43c163032c81a043174d"
+    }
+  ]
+}

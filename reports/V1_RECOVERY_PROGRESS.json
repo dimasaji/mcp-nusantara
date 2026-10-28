@@ -1,0 +1,166 @@
+{
+  "command": "docs/commands/NUSANTARA V1 RECOVERY MASTER.md",
+  "date": "2026-10-06",
+  "current_phase": 13,
+  "phases": {
+    "0": {
+      "status": "DONE_WITH_MISSING_CONTRACTS",
+      "present": [
+        "NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md",
+        "NUSANTARA-ARCHITECTURE-CONTRACT-V1.md",
+        "docs/audit/GATES.md"
+      ],
+      "missing": [
+        "NUSANTARA-RUNTIME-EXECUTION-CONTRACT-V1.md",
+        "NUSANTARA-INTELLIGENCE-MODEL-CONTRACT-V1.md",
+        "NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md",
+        "NUSANTARA-AGENT-ORCHESTRATION-CONTRACT-V1.md",
+        "NUSANTARA-TOOL-MCP-API-CONTRACT-V1.md",
+        "NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md"
+      ]
+    },
+    "1": {
+      "status": "DONE",
+      "mapping": "V1 route -> persistent LanguageEngine / IndoBERTClient; KnowledgeEngine -> RAG -> IndoBERTEmbeddingAdapter -> dedicated model worker; HermesAgent -> existing model provider; final V1 route response omits calculated trust. Existing governed MCP stdio adapter retained."
+    },
+    "2": {
+      "status": "DONE",
+      "result": "232 passed, 4 failed, 3 skipped, 28 subtests passed in 30.05s",
+      "evidence": "reports/V1_RECOVERY_BASELINE.xml",
+      "environment": "reports/V1_RECOVERY_ENVIRONMENT.json"
+    },
+    "3": {
+      "status": "PASS_TARGETED",
+      "root_cause": "Two distinct issues proven: sandbox launcher denial and native RAG worker crash DefaultCPUAllocator not enough memory. Language and RAG each instantiated the same model in separate workers.",
+      "evidence": [
+        "reports/V1_RECOVERY_INDOBERT_FAILURE.json",
+        "reports/V1_RECOVERY_INDOBERT_NATIVE.json",
+        "reports/V1_RECOVERY_INDOBERT_CLIENT.json",
+        "reports/V1_RECOVERY_INDOBERT_NOWINDOW.json",
+        "reports/V1_RECOVERY_TEST_STDERR_1.txt"
+      ],
+      "targeted_tests": "reports/V1_RECOVERY_INDOBERT_TARGETED.xml",
+      "remaining": "Captured native route tests: 3 passed, 2 failed solely on missing trust response; worker stderr records successful model load. No worker source modification.",
+      "fix": "app/api/routes.py reuses the existing semantic intent client for RAG. No model/engine/configuration replacement."
+    },
+    "4": {
+      "status": "PASS_TARGETED",
+      "file": "app/api/routes.py",
+      "change": "Serialize six public fields from existing trust_assessment; no issues/details leakage or engine rewrite",
+      "risk": "Low additive response change, authorized by recovery command",
+      "backup": "reports/v1-recovery-backup-20261006/app/api/routes.py",
+      "result": "5 passed, 0 failed in 35.17s, original tests unchanged, native environment"
+    },
+    "5": {
+      "status": "VERIFY_OPEN_OFFICIAL_KNOWLEDGE",
+      "evidence": "reports/V1_RECOVERY_RAG.json",
+      "result": "4 fixture/negative cases PASS; 4 unsupported claims rejected; official content not in V1 default DB. No guard weakening or database modification.",
+      "closure_evidence": "reports/V1_CLOSURE_ORACLE_AUDIT.json",
+      "closure_result": "All 7 audited. Historical fixture/negative retrieval evidence retained; no algorithm/answer change or production ingestion. Official content still absent from default V1 DB."
+    },
+    "6": {
+      "status": "AUDITED_WITH_GAPS",
+      "specification": "app/evaluation/datasets/v1_recovery_oracle.json",
+      "result": "7 maintainable cases; 3 fixture, 1 negative, 2 REVIEW_REQUIRED, 1 MISSING. Official production oracle not approved.",
+      "closure_evidence": "reports/V1_CLOSURE_ORACLE_AUDIT.json",
+      "closure_result": "Metadata added for all 7 cases. 3 PROJECT_FIXTURE, 1 NEGATIVE_CASE, 2 REVIEW_REQUIRED, 1 MISSING. Unknown effective dates null; original question/answer/evidence/status preserved."
+    },
+    "7": {
+      "status": "PASS",
+      "result": "1 passed in 1.71s",
+      "evidence": "reports/V1_RECOVERY_MCP.xml",
+      "dependency": "Existing mcp 1.30; no install"
+    },
+    "8": {
+      "status": "SKIP_PRIVILEGE_OPEN",
+      "result": "1 skipped even outside sandbox. Windows symlink creation privilege unavailable; no test/security weakening.",
+      "evidence": "reports/V1_RECOVERY_FILESYSTEM.xml",
+      "required_environment": "Windows account with SeCreateSymbolicLinkPrivilege or Developer Mode; alternatively controlled Linux runner",
+      "closure_evidence": "reports/V1_CLOSURE_FILESYSTEM.xml",
+      "closure_result": "Targeted security check skipped; SeCreateSymbolicLinkPrivilege absent. Final regression retains same mandatory skip. No security/test change."
+    },
+    "9": {
+      "status": "PASS_LOCAL",
+      "change": "Startup content fingerprint in /health and /v1/health, environment and runtime data excluded",
+      "tests": "2 passed",
+      "evidence": "reports/V1_RECOVERY_IDENTITY_TESTS.xml",
+      "runtime_evidence": "reports/V1_RECOVERY_RUNTIME.json"
+    },
+    "10": {
+      "status": "NOT_RUN_CONTAINER_PRODUCTION_OPEN",
+      "evidence": "reports/V1_RECOVERY_RUNTIME.json",
+      "result": "Native candidate startup, health/build identity, /v1/knowledge/search and /v1/chat verified. Docker executable unavailable. No production target/release performed. Candidate process tree stopped.",
+      "closure_evidence": "reports/V1_CLOSURE_ENVIRONMENT.json",
+      "closure_result": "Docker unavailable; compose topology inspected, no identified production host. Build/start/workload/stop/restart/rollback NOT_RUN. Earlier local candidate evidence is historical and does not prove latest build deployment."
+    },
+    "11": {
+      "status": "PASS_WITH_REQUIRED_SKIP",
+      "result": "240 passed, 0 failed, 1 skipped, 28 subtests passed in 60.28s",
+      "evidence": "reports/V1_FINAL_REGRESSION.xml"
+    },
+    "12": {
+      "status": "PASS_SCOPED",
+      "result": "0 findings, scanner exclusions unchanged",
+      "evidence": "reports/V1_RECOVERY_SECURITY.json"
+    },
+    "13": {
+      "status": "FAIL_OPEN_MANDATORY_GATES",
+      "report": "reports/NUSANTARA-V1-RECOVERY-REPORT-2026-10-06.md",
+      "open": [
+        "official knowledge/oracle review and passport requirements",
+        "Windows symlink privilege",
+        "container/production deployment and representative load/restart/rollback"
+      ],
+      "closure_report": "reports/NUSANTARA-V1-FINAL-CLOSURE-REPORT-2026-10-06.md"
+    }
+  },
+  "resume_rule": "Read this checkpoint first. Never rerun a completed phase or overwrite historical evidence. Repeat checks only after changes or to resolve a documented failure.",
+  "acceptance": "FAIL / HOLD",
+  "graphify": {
+    "status": "AST_UPDATED",
+    "result": "4341 nodes, 8721 edges, 301 communities; no LLM API used. Protected temp directories were not scanned."
+  },
+  "execution_status": "CLOSURE_COMPLETE_WITH_OPEN_MANDATORY_GATES",
+  "next_safe_action": "Resume only remaining gates when approved official sources/review, a symlink-capable runner, and Docker plus defined production target become available. Do not repeat completed phases or final closure regression without relevant change/new evidence.",
+  "closure": {
+    "command": "docs/commands/NUSANTARA-V1-OPEN-GATES-CLOSURE.md",
+    "completed_steps": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "current_step": 7,
+    "status": "COMPLETE_WITH_OPEN_MANDATORY_GATES",
+    "contracts_status": "SIX_MISSING_DOCUMENTS_CREATED_WITH_OPEN_GATES",
+    "created_contracts": [
+      "docs/contracts/NUSANTARA-RUNTIME-EXECUTION-CONTRACT-V1.md",
+      "docs/contracts/NUSANTARA-INTELLIGENCE-MODEL-CONTRACT-V1.md",
+      "docs/contracts/NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md",
+      "docs/contracts/NUSANTARA-AGENT-ORCHESTRATION-CONTRACT-V1.md",
+      "docs/contracts/NUSANTARA-TOOL-MCP-API-CONTRACT-V1.md",
+      "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md"
+    ],
+    "oracle_audit": "reports/V1_CLOSURE_ORACLE_AUDIT.json",
+    "filesystem_evidence": "reports/V1_CLOSURE_FILESYSTEM.xml",
+    "filesystem_status": "SKIP_PRIVILEGE",
+    "deployment_status": "NOT_RUN_DOCKER_UNAVAILABLE_TARGET_OPEN",
+    "historical_phases_preserved": true,
+    "final_regression_runs": 1,
+    "final_regression_status": "PASS_WITH_MANDATORY_SKIP",
+    "targeted_result": "31 passed, 4 subtests passed; reports/V1_CLOSURE_TARGETED.xml",
+    "final_regression_result": "240 passed, 0 failed, 0 errors, 1 skipped, 28 subtests passed in 90.63s",
+    "final_regression_evidence": "reports/V1_FINAL_CLOSURE.xml",
+    "security_evidence": "reports/V1_CLOSURE_SECURITY.json",
+    "environment_evidence": "reports/V1_CLOSURE_ENVIRONMENT.json",
+    "integrity_evidence": "reports/V1_CLOSURE_INTEGRITY.json",
+    "build_id": "sha256:1f6298a5c04d9a751cf3f16b461ba376429970669758a77cdd595f61d6d91b8d",
+    "report": "reports/NUSANTARA-V1-FINAL-CLOSURE-REPORT-2026-10-06.md",
+    "acceptance": "FAIL / HOLD",
+    "graphify": "AST only updated: 4410 nodes, 8787 edges, 307 communities; protected temp directories not scanned; no semantic labeling/model API",
+    "historical_phase_snapshot": "reports/v1-closure-backup-20261006/reports/V1_RECOVERY_PROGRESS.json"
+  }
+}

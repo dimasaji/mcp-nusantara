@@ -1,0 +1,45 @@
+import {useState} from 'react';
+import evidence from './engineering-evidence';
+import './engineering-console.css';
+
+declare const __CPLANE_BUILD__:{version:string;gitCommit:string;timestamp:string;environment:string;sourceId:string};
+const sections=['Dashboard','Phase Manager 0–21','WEIP-01–12','Test & Evidence','Keputusan manusia'] as const;
+type Section=typeof sections[number];
+function Status({value}:{value:string}){return <span className={`badge ${value==='PASS'?'good':value.includes('FAIL')?'bad':'neutral'}`}>{value}</span>}
+function Reference({path}:{path:string}){
+  const source=evidence.sources.find(s=>s.path===path);
+  return <details className="eng-reference"><summary>Sumber status</summary><code>{path}</code><p>SHA-256 arsip: <code>{source?.sha256??'NOT_VERIFIED'}</code></p></details>;
+}
+const decisions=[
+  {id:'FIXTURE',title:'Fixture sumber resmi',status:'NOT_RUN',need:'Path fixture lokal dan referensi persetujuan belum diberikan. Pilihan A belum menunjuk dokumen.',next:'Owner menentukan kedua referensi; engineering memeriksa provenance dan validitas secara terpisah.'},
+  {id:'PDF',title:'Isolasi parser PDF',status:'REVIEW_REQUIRED',need:'Parser native dan batas sumber daya worker belum diverifikasi. Default extraction ditolak dan dikarantina.',next:'Susun rencana worker terisolasi dengan batas CPU, memori, waktu, ukuran, dan uji file rusak. Instalasi memerlukan izin terpisah.'},
+  {id:'AUTH',title:'Identitas operator',status:'REVIEW_REQUIRED',need:'Authorizer hanya diuji menggunakan fixture. Integrasi identitas operator tepercaya belum tersedia.',next:'Owner menentukan penyedia identitas dan aturan kewenangan. Uji penolakan serta binding operasi/dokumen sebelum integrasi.'},
+  {id:'ROLLBACK',title:'Transaksi adapter dan rollback',status:'REVIEW_REQUIRED',need:'Kompatibilitas temporary SQLite lulus; kegagalan ingest menyeluruh dan kompensasinya belum dibuktikan.',next:'Pekerjaan terpisah: failure injection, atomicity, deduplikasi, versi, dan rollback hanya pada database sementara.'},
+  {id:'PRESERVATION',title:'Atribusi WAL/SHM',status:'REVIEW_REQUIRED',need:'Bukti yang tersedia tidak menjelaskan hilangnya sidecar.',next:'Tinjau bukti filesystem historis yang tersedia; jangan membuka, memulihkan, atau menghapus sidecar aktif.'},
+] as const;
+
+export function EngineeringConsole(){
+  const [section,setSection]=useState<Section>('Dashboard');
+  return <div className="engineering-console">
+    <header><div><div className="eyebrow">NUSANTARA · V1 ENGINEERING</div><h1>Engineering Console</h1><p>Read-only · snapshot bukti historis</p></div><Status value={evidence.v1}/></header>
+    <section className="panel eng-boundary" aria-label="Batas verifikasi">
+      <strong>V1 {evidence.v1} · V2 {evidence.v2}</strong>
+      <p>WEIP {evidence.weip}. Integrasi knowledge aktif: <Status value={evidence.activeIntegration}/></p>
+      <p>Bukti dicatat {new Date(evidence.capturedAt).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'})} WIB. Tampilan ini tidak memeriksa runtime, tidak menjalankan tes, dan tidak menerima persetujuan.</p>
+    </section>
+    <nav className="eng-tabs" aria-label="Panel engineering">{sections.map(s=><button key={s} aria-pressed={s===section} onClick={()=>setSection(s)}>{s}</button>)}</nav>
+    <section aria-label={section}>
+      {section==='Dashboard'&&<>
+        <div className="grid-two"><section className="panel"><h2>Ringkasan gate</h2><p>{evidence.gates.filter(g=>g.status==='PASS').length} dari 12 gate memiliki PASS terbatas pada fixture.</p><p>PASS fixture tidak mengesahkan sumber resmi atau penerimaan V1.</p><Reference path="docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md"/></section>
+          <section className="panel"><h2>Preservation · {evidence.preservation.id}</h2><Status value={evidence.preservation.status}/><p>{evidence.preservation.explanation}</p><p>Atribusi: <Status value={evidence.preservation.attribution}/>. Database aktif tidak diperiksa pada review ini.</p><Reference path={evidence.preservation.reference}/></section></div>
+        <section className="panel"><h2>Identitas dan cakupan build</h2><p>HEAD arsip: <code>{evidence.head}</code></p><p>Branch arsip: <code>{evidence.branch}</code></p><h3>Fingerprint source disk yang diuji sebelumnya</h3><code>{evidence.diskFingerprint}</code><p>{evidence.fingerprintScope}</p><p>Identitas kode yang dimuat runtime sekarang: <Status value={evidence.runtimeIdentity}/></p><Reference path="docs/reports/weip-completion-20261009T104250Z/CHANGE_AUDIT.json"/><details><summary>Identitas frontend ini</summary><pre>{JSON.stringify(__CPLANE_BUILD__,null,2)}</pre><p>Fingerprint frontend tidak membuktikan build backend, loaded model, atau closure dependensi.</p></details></section>
+        <section className="panel"><h2>Blocker V1 dari laporan historis</h2><p>Daftar berikut belum diverifikasi ulang pada runtime saat ini.</p><ul>{evidence.blockers.map(b=><li key={b}>{b} <Status value="NOT_VERIFIED"/></li>)}</ul><Reference path="docs/reports/v1-functional-closure-20261009-101736/REMAINING_GATES.json"/></section>
+      </>}
+      {section==='Phase Manager 0–21'&&<><h2>Phase Manager 0–21</h2><p>Status fase memerlukan bukti yang terikat pada fase dan target build. Tidak ada promosi fase otomatis.</p><div className="phase-grid">{evidence.phases.map(p=><article className="panel" key={p.id}><h3>Fase {p.id}</h3><Status value={p.status}/><p>{p.detail}</p><small>Sumber status: belum tersedia pemetaan evidence fase.</small></article>)}</div></>}
+      {section==='WEIP-01–12'&&<><h2>WEIP-01–12</h2><p>Status di bawah berasal dari laporan historis; PASS berlaku pada lingkup tes yang disebutkan.</p><div className="phase-grid">{evidence.gates.map(g=><article className="panel" key={g.id}><h3>{g.id} · {g.name}</h3><Status value={g.status}/><p>{g.detail}</p><Reference path={g.reference}/></article>)}</div></>}
+      {section==='Test & Evidence'&&<><h2>Test & Evidence</h2><p>Hasil historis, bukan tes baru atau live verification. Kegagalan awal tetap ditampilkan.</p><div className="eng-table"><table><thead><tr><th>Run</th><th>Status / exit</th><th>PASS</th><th>FAIL</th><th>ERROR</th><th>SKIP</th><th>Tidak dipilih</th><th>Bukti</th></tr></thead><tbody>{evidence.tests.map(t=><tr key={t.id}><td>{t.id}</td><td><Status value={t.status}/> / {t.exitCode}</td><td>{t.tests-t.failures-t.errors-t.skipped}</td><td>{t.failures}</td><td>{t.errors}</td><td>{t.skipped}</td><td>{t.deselected}</td><td><Reference path={t.reference}/></td></tr>)}</tbody></table></div><section className="panel"><h3>Pengecualian regresi · NOT_RUN</h3><p>Enam kasus deselected: actual_v2, dev_endpoint, consumers_correlation, empty_result, bootstrap_layers, owner_reads. Tidak dihitung sebagai PASS atau SKIP.</p><p>62 peringatan deprecation tercatat pada regresi. Fixture SQLite dan embedding sintetis tidak membuktikan RAG produksi atau model native.</p></section><section className="panel"><h3>Arsip bukti</h3>{evidence.sources.map(s=><Reference key={s.path} path={s.path}/>)}<p>Checksum mengidentifikasi arsip, bukan autentikasi sumber pemerintah. Snapshot tidak diperbarui otomatis saat arsip berubah.</p></section></>}
+      {section==='Keputusan manusia'&&<><h2>Keputusan manusia</h2><p>Daftar kebutuhan review, bukan keputusan owner yang sudah disetujui. Tidak ada tombol approve, ingest, atau restart.</p><div className="grid-two">{decisions.map(d=><article className="panel" key={d.id}><h3>{d.title}</h3><Status value={d.status}/><p>{d.need}</p><h4>Pekerjaan terpisah berikutnya</h4><p>{d.next}</p><Reference path="docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md"/></article>)}</div><p>Promosi dokumen dan integrasi database aktif tetap NOT_AUTHORIZED.</p></>}
+    </section>
+    <footer>Read-only evidence · V1 HOLD · V2 DEFERRED</footer>
+  </div>;
+}

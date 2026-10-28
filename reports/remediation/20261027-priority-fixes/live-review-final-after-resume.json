@@ -1,0 +1,36 @@
+{
+  "phase": "final-after-resume",
+  "configured_provider": "ollama",
+  "configured_model": "llama3.2:1b",
+  "credential_present": true,
+  "observations": [
+    {
+      "name": "backend_health",
+      "url": "http://127.0.0.1:8000/health",
+      "at_utc": "2026-10-28T03:41:10.949528+00:00",
+      "http_status": 200
+    },
+    {
+      "name": "frontend_health",
+      "url": "http://127.0.0.1:5180/health",
+      "at_utc": "2026-10-28T03:41:11.001666+00:00",
+      "http_status": null,
+      "error_type": "TimeoutError",
+      "reason_type": "NoneType"
+    },
+    {
+      "name": "ollama",
+      "url": "http://127.0.0.1:11434/api/version",
+      "at_utc": "2026-10-28T03:41:26.013142+00:00",
+      "http_status": 200
+    },
+    {
+      "name": "review",
+      "url": "http://127.0.0.1:5180/v1/knowledge/pipeline/reviews/DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+      "at_utc": "2026-10-28T03:41:26.035850+00:00",
+      "http_status": null,
+      "error_type": "TimeoutError",
+      "reason_type": "NoneType"
+    }
+  ]
+}

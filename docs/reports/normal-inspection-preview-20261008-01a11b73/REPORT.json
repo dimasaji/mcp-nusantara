@@ -1,0 +1,122 @@
+{
+  "contract_id": "NUS-MDA-CURRENT-STATE-20261008",
+  "record_type": "ENGINEERING_EVIDENCE_ONLY_NOT_AUTHORITY",
+  "created_at": "2026-10-08T19:44:13.5548331+07:00",
+  "A_Repository_Truth": {
+    "branch": "codex/fullroot-control-20261007",
+    "root": "C:\\Users\\dmaza\\mcp-starter",
+    "limitations": [
+      "Five inherited report directories cannot be enumerated by Git/graphify.",
+      "Preservation inventory excludes protected database/WAL/SHM and secrets.",
+      "No active-process build claim."
+    ],
+    "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+    "initial_untracked_entries": 218,
+    "initial_staged": 0,
+    "initial_modified_tracked": 28,
+    "inventory_file": "FILES_BEFORE.json"
+  },
+  "B_Blocker": {
+    "implementation_blockers": [],
+    "remaining": [
+      "Live NORMAL transport, proxy serving and active-process loading are NOT_VERIFIED.",
+      "Human acceptance has not been recorded."
+    ],
+    "historical_observation": "Discovery OpenAPI lacked human-acceptance routes present in current source; cause not proven."
+  },
+  "C_Minimal_Change": {
+    "boundaries": [
+      "Existing require_admin retained unchanged.",
+      "Existing /v2/dev function and request schema unchanged by AST comparison.",
+      "Only five supported preview goals return PREVIEW_READY.",
+      "Unknown/source/execute/mutation requests rejected with 403 or 422.",
+      "No provider, DevCore, workspace or persistent audit construction on the new request path.",
+      "Token is memory-only and cleared on submit/unmount; no automatic retries or redirects.",
+      "UI preview does not update human tests, acknowledgements or decisions."
+    ],
+    "purpose": "Authenticated deterministic NORMAL preview; exact proxy; isolated UI evidence, no execution fallback.",
+    "existing_files": [
+      "app/api/v2_routes.py",
+      "control-plane/vite.config.ts",
+      "control-plane/src/api.ts",
+      "control-plane/src/human.tsx"
+    ],
+    "new_files": [
+      "app/api/inspection_preview.py",
+      "tests/test_inspection_preview_api.py",
+      "tests/inspection_preview_isolated_runner.py",
+      "control-plane/tests/inspection-preview.test.tsx",
+      "control-plane/tests/inspection-preview-network-guard.cjs"
+    ]
+  },
+  "D_Test_Plan": {
+    "regressions": [
+      "Existing DevCore preview, workspace and grounding tests.",
+      "All existing frontend tests, including NORMAL human workflow and ATTESTATION."
+    ],
+    "backend": "Isolated FastAPI/ASGI requests with real router/helper/admin function; live composition forbidden.",
+    "frontend": "Mocked fetch/jsdom and actual proxy-rule matching; no real browser or service.",
+    "guards": [
+      "Backend blocks real HTTP, socket connections except stdlib socketpair, model/knowledge imports, subprocess, SQLite, protected IO and writes outside evidence.",
+      "Frontend blocks network/listeners/default fetch and protected data IO; subprocesses blocked except installed esbuild tooling.",
+      "Vite drive-map and Rollup diagnostic subprocesses replaced with explicit tooling fixtures."
+    ]
+  },
+  "E_Execution_Result": {
+    "test_sources": [
+      "tests/test_inspection_preview_api.py",
+      "control-plane/tests/inspection-preview.test.tsx"
+    ],
+    "live_operations": "NONE_BY_THIS_TASK",
+    "implementation": "COMPLETE_WITHIN_AUTHORIZED_SCOPE",
+    "frontend": {
+      "failed": 0,
+      "note": "Focused rerun counts are not added to the suite total.",
+      "guards": "FRONTEND_GUARDS.json",
+      "results": "FRONTEND_RESULTS.xml",
+      "passed": 63
+    },
+    "commit_push_restart": "NOT_PERFORMED",
+    "graph_update": "GRAPH_UPDATE.txt",
+    "typescript": {
+      "output": "TYPESCRIPT_OUTPUT.txt",
+      "exit_code": 0
+    },
+    "task_diff": "TASK_DIFF.patch",
+    "backend": {
+      "passed": 81,
+      "guards": "BACKEND_GUARDS.json",
+      "failed": 0,
+      "results": "BACKEND_RESULTS.xml",
+      "skipped": 1,
+      "skip_reason": "Windows symlink privilege unavailable"
+    },
+    "attempts": [
+      "Initial backend runner blocked pytest log output outside evidence; redirected log into evidence.",
+      "Backend registration assertion adjusted for lazy FastAPI included-router representation; production handler unchanged.",
+      "Frontend guard blocked Vite and Rollup tooling probes; replaced with no-execution fixtures.",
+      "Existing jsdom window.scrollTo warnings remain in regression output; assertions passed."
+    ]
+  },
+  "acceptance_evidence": {
+    "AC04": "PASS_ISOLATED_AUTHENTICATION",
+    "AC06": "PASS_GUARDED_NO_LIVE_EFFECTS",
+    "AC05": "PASS_ISOLATED_SERVER_PREVIEW_BOUNDARY",
+    "AC10": "EVIDENCE_SAVED_WITH_FAILED_ATTEMPTS_AND_LIMITATIONS",
+    "AC09": "NOT_VERIFIED_STATUSES_PRESERVED",
+    "AC07": "PASS_SCOPED_REGRESSION_WITH_ONE_SKIP",
+    "AC03": "NOT_VERIFIED_LIVE_NORMAL_TRANSPORT",
+    "AC08": "PASS_SCOPED_HUMAN_STATE_SEPARATION",
+    "AC02": "AUTHORIZED_SCOPE_VERIFIED",
+    "AC01": "BOUNDED_PRESERVATION_VERIFIED_SEE_PRESERVATION_JSON"
+  },
+  "F_Final_Disposition": {
+    "R2_A8": "BLOCKED_NOT_VERIFIED_UNCHANGED",
+    "human_acceptance": "PENDING_SEPARATE_HUMAN_DECISION",
+    "reason": "Source implementation and isolated acceptance/regression tests complete; live integration and human acceptance remain unverified.",
+    "provider_model_correlation": "NOT_VERIFIED",
+    "status": "NOT_VERIFIED",
+    "active_process_build": "NOT_VERIFIED",
+    "runtime_identity": "NOT_VERIFIED"
+  }
+}

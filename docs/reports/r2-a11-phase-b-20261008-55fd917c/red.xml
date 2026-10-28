@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="29" skipped="0" tests="29" time="0.419" timestamp="2026-10-08T14:48:32.273301+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_separates_provider_send_and_full_identity" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:162: in test_receipt_assessment_separates_provider_send_and_full_identity
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_changed_binding[pid-124]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:176: in test_receipt_assessment_rejects_changed_binding
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_changed_binding[process_start-2026-10-07T00:00:00+00:00]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:176: in test_receipt_assessment_rejects_changed_binding
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_changed_binding[runtime_instance-other]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:176: in test_receipt_assessment_rejects_changed_binding
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_changed_binding[source_snapshot-sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:176: in test_receipt_assessment_rejects_changed_binding
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_changed_binding[scoped_loaded_code-sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:176: in test_receipt_assessment_rejects_changed_binding
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_changed_binding[provider_id-other]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:176: in test_receipt_assessment_rejects_changed_binding
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_changed_binding[endpoint-value6]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:176: in test_receipt_assessment_rejects_changed_binding
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change0]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change1]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change2]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change3]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change4]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change5]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change6]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change7]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change8]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change9]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change10]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_conflicting_or_incomplete_receipt[change11]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:188: in test_receipt_assessment_rejects_conflicting_or_incomplete_receipt
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_fixture_and_insufficient_freshness[change0]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:197: in test_receipt_assessment_rejects_fixture_and_insufficient_freshness
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_fixture_and_insufficient_freshness[change1]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:197: in test_receipt_assessment_rejects_fixture_and_insufficient_freshness
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_fixture_and_insufficient_freshness[change2]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:197: in test_receipt_assessment_rejects_fixture_and_insufficient_freshness
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_fixture_and_insufficient_freshness[change3]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:197: in test_receipt_assessment_rejects_fixture_and_insufficient_freshness
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_fixture_and_insufficient_freshness[change4]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:197: in test_receipt_assessment_rejects_fixture_and_insufficient_freshness
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_fixture_and_insufficient_freshness[change5]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:197: in test_receipt_assessment_rejects_fixture_and_insufficient_freshness
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_fixture_and_insufficient_freshness[change6]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:197: in test_receipt_assessment_rejects_fixture_and_insufficient_freshness
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_fixture_and_insufficient_freshness[change7]" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:197: in test_receipt_assessment_rejects_fixture_and_insufficient_freshness
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase><testcase classname="tests.test_runtime_correlation" name="test_receipt_assessment_rejects_absence_expiry_and_unsafe_age" time="0.001"><failure message="AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'">..\..\..\tests\test_runtime_correlation.py:203: in test_receipt_assessment_rejects_absence_expiry_and_unsafe_age
+    owner, receipt, observation, expected = receipt_assessment_fixture()
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\tests\test_runtime_correlation.py:152: in receipt_assessment_fixture
+    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: module 'app.core.runtime_correlation' has no attribute 'ReceiptObservation'</failure></testcase></testsuite></testsuites>

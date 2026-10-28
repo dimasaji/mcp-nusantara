@@ -1,0 +1,145 @@
+"""Characterization tests: PASS confirms a gap, not safe production behavior."""
+import json
+import os
+from pathlib import Path
+
+from app.devcore.core import DevCore
+from app.devcore.grounding import check_grounding
+from app.devcore.tools import find_file, list_directory, read_file
+from app.devcore.workspace import Workspace
+
+OBSERVATIONS = []
+
+
+def record(finding, observed, control, limitation):
+    OBSERVATIONS.append(dict(finding=finding, observed=observed, control=control, limitation=limitation))
+    Path(__file__).with_name('OBSERVATIONS.json').write_text(
+        json.dumps(OBSERVATIONS, indent=2, ensure_ascii=False), encoding='utf-8')
+
+
+def workspace(tmp_path):
+    root = tmp_path / 'workspace'
+    (root / 'app').mkdir(parents=True)
+    (root / 'app/example.py').write_text('x = 1\n', encoding='utf-8')
+    return root
+
+
+def test_d2_01_mixed_negation_bypasses_grounding(tmp_path):
+    root = workspace(tmp_path)
+    unsupported = 'Script menyimpan response ke file.'
+    mixed = 'Tidak ada retry, tetapi script menyimpan response ke file.'
+    assert check_grounding(unsupported, 'x = 1\n')
+    assert check_grounding(mixed, 'x = 1\n') == []
+    result = DevCore(str(root), generate=lambda _: mixed).handle_sync('Analisis app/example.py')
+    assert result['verification']['status'] == 'passed'
+    assert mixed in result['answer']
+    record('D2-01', {'verification': result['verification'], 'answer': result['answer']},
+           'Positive unsupported storage claim is rejected without the negation clause.',
+           'Synthetic callback only; no provider or real model invoked.')
+
+
+class SyntheticBackend:
+    def __init__(self, outside):
+        self.outside = str(outside)
+        self.calls = []
+
+    def execute(self, name, args):
+        self.calls.append((name, args))
+        if name == 'find_file':
+            return dict(success=True, tool=name, matches=[self.outside], error=None)
+        return dict(success=True, tool=name, path=self.outside,
+                    content='synthetic_foreign_content = 42\n', truncated=False, error=None)
+
+
+def test_d2_02_backend_read_result_not_bound_to_request(tmp_path):
+    root = workspace(tmp_path)
+    backend = SyntheticBackend(tmp_path / 'outside.py')
+    core = DevCore(str(root), backend=backend)
+    result = core.handle_sync('Analisis app/example.py')
+    tool = result['tool']['result']
+    assert tool['success'] and tool['path'] == backend.outside.replace('\\', '/')
+    assert tool['content'] == 'synthetic_foreign_content = 42\n'
+    assert backend.calls == [('read_file', {'path': 'app/example.py'})]
+    before = len(backend.calls)
+    denied = core._backend_call('read_file', {'path': backend.outside})
+    assert not denied['success'] and len(backend.calls) == before
+    record('D2-02-read', {'requested': 'app/example.py', 'tool_result': tool,
+                        'verification': result['verification']},
+           'An explicitly requested outside path is blocked before backend invocation.',
+           'Injected backend fabricates content; no outside file was read; live adapter not verified.')
+
+
+def test_d2_02_backend_find_outside_result_survives_sanitization(tmp_path):
+    root = workspace(tmp_path)
+    backend = SyntheticBackend(tmp_path / 'outside.py')
+    core = DevCore(str(root), backend=backend)
+    found = core._backend_call('find_file', {'name': 'outside.py'})
+    assert found['matches'] == [backend.outside.replace('\\', '/')]
+    denied = core._backend_call('read_file', {'path': found['matches'][0]})
+    assert not denied['success']
+    assert len(backend.calls) == 1
+    record('D2-02-find', found, 'Subsequent read of the returned outside path is blocked.',
+           'Synthetic adapter; result sanitation reproduced without live registry integration.')
+
+
+def test_d2_03_sensitive_directory_metadata_leak(tmp_path):
+    root = workspace(tmp_path)
+    (root / 'secrets').mkdir()
+    (root / 'secrets/visible.py').write_text('# synthetic fixture only\n', encoding='utf-8')
+    ws = Workspace(str(root))
+    found = find_file(ws, {'name': 'visible.py'})
+    denied = read_file(ws, {'path': 'secrets/visible.py'})
+    listing = list_directory(ws, {'path': '.'})
+    assert found['success'] and found['matches'] == ['secrets/visible.py']
+    assert not denied['success']
+    assert 'secrets' not in [e['name'] for e in listing['entries']]
+    record('D2-03', found, {'read': denied, 'root_listing': listing},
+           'Only synthetic filename metadata; no actual secret or credential file accessed.')
+
+
+def test_d2_04_denied_walk_silently_reports_complete_search(tmp_path, monkeypatch):
+    root = workspace(tmp_path)
+    inaccessible = root / 'restricted'
+    inaccessible.mkdir()
+    (inaccessible / 'hidden.py').write_text('x = 2\n', encoding='utf-8')
+    original = os.scandir
+    denied_calls = []
+
+    def denied_scandir(path):
+        if Path(path).resolve() == inaccessible.resolve():
+            denied_calls.append(str(path))
+            raise PermissionError('D2 simulated access denial')
+        return original(path)
+
+    monkeypatch.setattr(os, 'scandir', denied_scandir)
+    result = find_file(Workspace(str(root)), {'name': 'hidden.py'})
+    assert len(denied_calls) == 1
+    assert result['success'] and result['matches'] == []
+    assert result['error'] is None and result['truncated'] is False
+    monkeypatch.setattr(os, 'scandir', original)
+    control = find_file(Workspace(str(root)), {'name': 'hidden.py'})
+    assert control['matches'] == ['restricted/hidden.py']
+    record('D2-04', {'result': result, 'denied_scandir_calls': denied_calls}, control,
+           'PermissionError injected at real os.walk/scandir boundary; Windows ACLs untouched.')
+
+
+def test_d2_05_truncated_source_receives_unqualified_pass(tmp_path):
+    root = workspace(tmp_path)
+    prefix = 'x = 1\n' + '# harmless padding\n' * 8
+    full = prefix + 'print("synthetic later behavior")\n'
+    (root / 'app/example.py').write_text(full, encoding='utf-8')
+    claim = 'Tidak ada print().'
+    core = DevCore(str(root), generate=lambda _: claim)
+    core.ws.max_read_bytes = len(prefix.encode('utf-8'))
+    result = core.handle_sync('Analisis app/example.py')
+    tool = result['tool']['result']
+    assert tool['truncated'] and tool['content'] == prefix
+    assert result['verification']['status'] == 'passed'
+    assert claim in result['answer'] and '(dipotong)' not in result['answer']
+    control = read_file(Workspace(str(root)), {'path': 'app/example.py'})
+    assert not control['truncated'] and 'print(' in control['content']
+    record('D2-05', {'truncated': tool['truncated'], 'verification': result['verification'],
+                    'answer': result['answer'], 'read_bytes': core.ws.max_read_bytes,
+                    'total_bytes': tool['size_bytes']},
+           'Full fixture read contains print(); partial prefix does not.',
+           'Synthetic callback; absence claim also intersects the negation gap D2-01.')

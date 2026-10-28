@@ -1,0 +1,129 @@
+{
+  "timestamp": "2026-10-09T10:29:21.262559+07:00",
+  "status": "PASS",
+  "scope": "Controlled candidate source/build UI, actual V1/Hermes HTTP and local Ollama execution",
+  "source_fingerprint": "sha256:9916a16a8411c1d892157fad11e3bfdf4200efe4e20a259ec23dd9de74b90fcd",
+  "provider_receipt": {
+    "failed": false,
+    "request_id": "req_29c3a649ebc8409a",
+    "timestamp": "2026-10-09T03:23:39.203057+00:00",
+    "build_id": "sha256:9916a16a8411c1d892157fad11e3bfdf4200efe4e20a259ec23dd9de74b90fcd",
+    "process_id": 35788,
+    "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+    "provider_id": "ollama",
+    "configured_model": "llama3.2:1b",
+    "effective_model": "llama3.2:1b",
+    "configuration_source": "DEFAULT",
+    "configuration_fingerprint": "612387756a02fe377f769b3e0f7e1c0194dd02017f80043523053773af568549",
+    "selected_model": "llama3.2:1b",
+    "requested_model": null,
+    "override_source": "CONFIGURATION",
+    "payload_model": "llama3.2:1b",
+    "invocation_id": "4ec75a977c494f8aa0611d0cfb40eb8e",
+    "runtime_instance_id": "a67ddd04560442f3826e6256af6f4f7d",
+    "instance_captured_at": "2026-10-09T03:22:56.763578+00:00",
+    "working_directory": "C:\\Users\\dmaza\\mcp-starter",
+    "request_id_source": "REQUEST_CONTEXT",
+    "actual_model": "llama3.2:1b",
+    "identity_status": "RUNTIME_CONFIRMED",
+    "confirmation_source": "PROVIDER_RESPONSE",
+    "fallback_status": "NOT_ATTEMPTED"
+  },
+  "candidate": {
+    "timestamp": "2026-10-09T10:25:31.1433075+07:00",
+    "socket_pid": 35788,
+    "process": {
+      "ProcessId": 35788,
+      "ParentProcessId": 22760,
+      "CreationDate": "2026-10-09T10:22:55.852414+07:00",
+      "CommandLine": "\"C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe\" -B docs/reports/v1-functional-closure-20261009-101736/native_candidate.py"
+    },
+    "status": {
+      "provider": "ollama",
+      "model": "llama3.2:1b",
+      "revision": 0,
+      "selected_at": null,
+      "selection_source": "BOOTSTRAP",
+      "consistency_scope": "CURRENT_PROCESS_ONLY",
+      "process_id": 35788,
+      "availability": "NOT_VERIFIED",
+      "status": "NOT_VERIFIED",
+      "selection_enabled": true,
+      "last_request": {
+        "revision": 0,
+        "model": "llama3.2:1b",
+        "provider_status": "ollama",
+        "grounded": false,
+        "stages": [
+          "HERMES_RUN",
+          "KNOWLEDGE",
+          "TRUST",
+          "GATES",
+          "GROUNDING",
+          "PUBLIC_PROJECTION"
+        ],
+        "timestamp": "2026-10-09T10:23:47.827344+07:00"
+      },
+      "source_build_id": "sha256:9916a16a8411c1d892157fad11e3bfdf4200efe4e20a259ec23dd9de74b90fcd",
+      "memory": "LEGACY_BEHAVIOR_PRESERVED_TEMPORARILY",
+      "memory_governance": "REVIEW_REQUIRED",
+      "knowledge": "NOT_VERIFIED",
+      "official_oracle": "REVIEW_REQUIRED",
+      "approval": "REVIEW_REQUIRED",
+      "execution_mode": "V1_DEFAULT"
+    },
+    "inventory": {
+      "models": [
+        "llama3.2:1b"
+      ],
+      "provider": "ollama",
+      "observed_revision": 0,
+      "availability": "INVENTORY_OBSERVED",
+      "consistency_scope": "CURRENT_PROCESS_ONLY"
+    }
+  },
+  "cleanup": {
+    "timestamp": "2026-10-09T10:25:34.1487826+07:00",
+    "candidate_pid": 35788,
+    "candidate_stopped": true,
+    "user_pid": 33160,
+    "user_runtime_unchanged": true,
+    "health": {
+      "status": "ok",
+      "version": "0.1.0",
+      "build_id": "sha256:b7455ef0823df00d73a576147c6331ed69f9b74c145de39281819c3cad78d27f"
+    }
+  },
+  "bundle_hashes": {
+    "control-plane/dist/index.html": "5b44d0568002fb04ec69e19da7cac87f8ad7e0ef0adfbeb43b33397416952349",
+    "control-plane/dist/assets/index-DWlaYDof.js": "6fb9ab9da2222cb7d001a9b31fde528bcc7e600eeeb88291e72f69b591a13e90"
+  },
+  "browser_observations": [
+    "Root Hallo renders natural greeting",
+    "+ New Chat removes displayed previous turn and restores empty state",
+    "Loading disables submit and New Chat",
+    "Mixed greeting/KTP question reaches real Ollama and displays grounded abstention",
+    "Console actual model/provider renders; inventory exposes only llama3.2:1b; refresh works",
+    "No browser error logs"
+  ],
+  "public_http_greetings": {
+    "status": "PASS",
+    "count": 4,
+    "contract_schema": "Unchanged strict backend public response schema"
+  },
+  "screenshots": [
+    "GREETING_BROWSER.jpg",
+    "SUBSTANTIVE_BROWSER.jpg",
+    "CONSOLE_BROWSER.jpg"
+  ],
+  "provider": "ACTUAL_LOCAL_OLLAMA_UNMODIFIED_HTTP_CLIENT",
+  "semantic": "EXPLICIT_FIXTURE",
+  "retrieval": "EXPLICIT_NON_OFFICIAL_FIXTURE",
+  "limitations": [
+    "Greeting is nonfactual local_rule, not a model-generated answer; mixed substantive question has actual provider receipt",
+    "Provider model name is not loaded-weight attestation",
+    "App fingerprint is disk/import source snapshot, not all transitive loaded code or frontend bundle; separate bundle hashes recorded",
+    "No official knowledge or native semantic/production RAG verified; no port attestation bypass",
+    "Current user runtime remains different build with missing model-control endpoints"
+  ]
+}

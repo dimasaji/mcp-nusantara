@@ -1,0 +1,97 @@
+{
+  "phase": "MDE07_RUNTIME_ENFORCEMENT",
+  "status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+  "timestamp": "2026-10-07T04:40:08.552362+00:00",
+  "git_head": "c24aa1b0db391009af44682bf2f2eb091f4f0f75",
+  "branch": "codex/fullroot-control-20261007",
+  "baseline": ".dev/MDE07_BASELINE_20261007.json",
+  "previous_checkpoint": ".dev/MDE06_CHECKPOINT.json",
+  "authorization": "Human APPROVE MDE-07; audit/design/isolated fixtures and read-only existing health",
+  "decision": "KEEP_IMPLEMENTATIONS_EXTEND_ENFORCEMENT_DESIGN_ONLY",
+  "changes": [
+    ".dev/MDE07_BASELINE_20261007.json",
+    "docs/reports/MDE07_FOCUSED_20261007.xml",
+    "docs/reports/MDE07_ISOLATED_OBSERVATIONS_20261007.json",
+    "docs/reports/MDE07_RUNTIME_HEALTH_OBSERVATION_20261007.json",
+    "docs/reports/MDE07_RUNTIME_ENFORCEMENT_MAP_20261007.json",
+    "docs/MDE-07_RUNTIME_ENFORCEMENT_DESIGN.md",
+    "docs/reports/MDE07_INTEGRITY_20261007.json",
+    "docs/reports/MDE07_EXECUTION_REPORT_20261007.md",
+    ".dev/checkpoints/mde07-20261007/orchestrator-fixture.jsonl",
+    ".dev/MDE07_CHECKPOINT.json"
+  ],
+  "tests": {
+    "focused_passed": 30,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "junit": "docs/reports/MDE07_FOCUSED_20261007.xml",
+    "isolated_observations_passed": 8,
+    "evidence": "docs/reports/MDE07_ISOLATED_OBSERVATIONS_20261007.json",
+    "full_regression": "Historical reuse, not rerun"
+  },
+  "runtime_verification": {
+    "health": "docs/reports/MDE07_RUNTIME_HEALTH_OBSERVATION_20261007.json",
+    "existing_listener": "REACHABLE",
+    "reported_build_id": "ABSENT",
+    "actual_model": null,
+    "identity_status": "NOT_VERIFIED",
+    "live_provider_calls": false,
+    "production_retrieval": false,
+    "worker_activation": false,
+    "enforcement_implemented": false
+  },
+  "evidence_sha256": {
+    ".dev/MDE07_BASELINE_20261007.json": "d1f79a05e135a5fa60149e84e562ba9a8b4e6022679231cca525ae31ef755e1d",
+    "docs/reports/MDE07_FOCUSED_20261007.xml": "1bbb1abd5898a3723e841a8eb64595a3ce3dd95d2fb3bd8ff57226b0e01414bd",
+    "docs/reports/MDE07_ISOLATED_OBSERVATIONS_20261007.json": "476c5ddc265dc2d1c84987928fc3648113267693ef065da6e4d6b0e26effa110",
+    "docs/reports/MDE07_RUNTIME_HEALTH_OBSERVATION_20261007.json": "1683a7642ca78569e47ddd9e3208b0e511065cb426e1f61c648b6d8822137bef",
+    "docs/reports/MDE07_RUNTIME_ENFORCEMENT_MAP_20261007.json": "90b693733919674e76a8812294377da560ad562cba878b706ea00362340376b4",
+    "docs/MDE-07_RUNTIME_ENFORCEMENT_DESIGN.md": "9c3466578ca52020261698ac5e448367474e7bcc90e1b3d396a4304223eaec8e",
+    "docs/reports/MDE07_INTEGRITY_20261007.json": "873da87e252dfab6aa8c64720d44849d0a10c0cc2a2f2c4ab0e75b29c49951f2",
+    "docs/reports/MDE07_EXECUTION_REPORT_20261007.md": "235f52f3463ffbe4e0bf99ed770d4079ea8cfa3972ef8a2c197df90d63cbbcb1",
+    ".dev/checkpoints/mde07-20261007/orchestrator-fixture.jsonl": "aa691d6585d6adf9b14137a2b46d72a176c373631de288d8fed5145e1ae95439"
+  },
+  "protected_verification": {
+    "evidence": "docs/reports/MDE07_INTEGRITY_20261007.json",
+    "checked": 313,
+    "mismatches": []
+  },
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "source_changes": [],
+  "index_rebuilt": false,
+  "limitations": [
+    "Mutable selection/provider and registry drift",
+    "Adapter response labels may differ from sent payload",
+    "Callback metadata loss and absent invocation identity receipt",
+    "Default effective configuration consumption unproven",
+    "Existing health response omits build identity",
+    "Index PARTIAL/UNKNOWN retained, no runtime compatibility proof",
+    "Historical Windows symlink skip",
+    "MDE09/MDE10 scope conflict unresolved"
+  ],
+  "rollback": "Only new audit outputs/fixtures if requested; production source/data/service rollback not needed or executed",
+  "next_phase": "MDE08_CAPABILITY_GOVERNANCE",
+  "next_action": "WAIT_FOR_HUMAN_APPROVAL_MDE08",
+  "approval_required": true,
+  "approval_source": {
+    "file": "docs/commands/MDE-04 -09.md",
+    "section": 34,
+    "quote": "STOP. GENERATE CHECKPOINT. WAIT FOR HUMAN APPROVAL."
+  },
+  "completed_steps": [
+    "checkpoint verification",
+    "golden baseline",
+    "runtime consumer discovery",
+    "30 focused tests",
+    "8 counterexample observations",
+    "existing health read-only observation",
+    "enforcement design/gap/risk",
+    "source build/hash impact self-audit",
+    "report/checkpoint"
+  ],
+  "resume_instruction": "Verify protected/evidence hashes; do not repeat MDE01-07. Await explicit MDE08 approval. Level C runtime/source/index changes remain separately gated.",
+  "runtime_acceptance": "NOT_VERIFIED",
+  "overall_status": "NOT_READY",
+  "overall_v1_acceptance": "FAIL/HOLD"
+}

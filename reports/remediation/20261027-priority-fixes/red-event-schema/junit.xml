@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.620" timestamp="2026-10-27T16:36:40.239223+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="tests.test_sop_review" name="test_content_check_event_persists_with_optional_trial_id_column" time="0.148"><failure message="sqlite3.OperationalError: table sop_review_events has 8 columns but 7 values were supplied">tests\test_sop_review.py:101: in test_content_check_event_persists_with_optional_trial_id_column
+    saved = review.decide(doc['document_id'], doc['version_id'], 'content_ok', 'operator-fixture')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app\knowledge\sop_review.py:211: in decide
+    self._event(conn, document_id, version, action,
+app\knowledge\sop_review.py:188: in _event
+    conn.execute('INSERT INTO sop_review_events VALUES (?,?,?,?,?,?,?)',
+E   sqlite3.OperationalError: table sop_review_events has 8 columns but 7 values were supplied</failure></testcase></testsuite></testsuites>

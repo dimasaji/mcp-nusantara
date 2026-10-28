@@ -1,0 +1,243 @@
+{
+  "phase": 10,
+  "status": "COMPLETE_WITH_OPEN_GAPS",
+  "completed_at": "2026-10-06T12:10:29.426474+00:00",
+  "authorization": "User: lanjutkan Phase 10",
+  "source_build_id": "sha256:487ace8eb2a8ba4d8c979fdc7728cefe7802eb0b3f8f01d3f6462d9c83e9492a",
+  "review_answers": [
+    {
+      "question": "Engine masih memiliki hard-coded configuration?",
+      "answer": "YA — gap terbuka",
+      "evidence_and_limits": "ModelRouter masih memilih literal llama/gpt; RAG memakai bobot 0.70/0.30 dan cutoff 0.30; KnowledgeEngine mempertahankan default top_k=5. Default di schema sah sebagai fallback; literal dalam consumer belum seluruhnya dipindahkan."
+    },
+    {
+      "question": "Model dapat diganti tanpa mengubah engine?",
+      "answer": "SEBAGIAN",
+      "evidence_and_limits": "OllamaProvider yang diberi snapshot memakai llm.model pada payload HTTP mocked. Default API memakai Settings existing, ModelRouter masih literal. Adapter embedding menolak model/dimensi selain IndoBERT base-p1/768; pergantian embedding/index belum tersedia."
+    },
+    {
+      "question": "Provider dapat diganti?",
+      "answer": "BELUM melalui snapshot",
+      "evidence_and_limits": "llm.provider hanya menerima ollama; embedding.provider hanya indobert; store_backend hanya sqlite. Kemampuan register provider pada router existing tidak membuktikan configuration-driven switching."
+    },
+    {
+      "question": "RAG parameter terpusat?",
+      "answer": "SEBAGIAN",
+      "evidence_and_limits": "Snapshot mengatur top_k, chunk_size/overlap pada RAG opt-in. Explicit KnowledgeBaseConfig/store/callback tetap memiliki prioritas. Bobot dan similarity_threshold ditolak oleh consumer, bukan diabaikan. Metadata reranker diteruskan; reranker model nyata belum dibuktikan. Facade search masih default top_k=5."
+    },
+    {
+      "question": "Path terkontrol?",
+      "answer": "SEBAGIAN",
+      "evidence_and_limits": "Path snapshot dinormalisasi secara lexical; database dan worker paths diteruskan pada consumer opt-in. Absolute path di luar project tetap diperbolehkan, symlink/existence/access tidak divalidasi loader. Jadi lexical resolution bukan workspace containment atau jaminan kecocokan index."
+    },
+    {
+      "question": "Secret aman?",
+      "answer": "PASS_SCOPED",
+      "evidence_and_limits": "Credential ENV tidak disalin, auth_env_ref tidak di-resolve dan tidak masuk dump/repr/provenance, URL dengan credential/query/fragment ditolak, public loader errors disanitasi. Public metadata bukan secret classifier; memasukkan secret ke field publik dapat mengeksposnya. Tidak mengklaim keamanan seluruh aplikasi/service."
+    },
+    {
+      "question": "Configuration dapat divalidasi?",
+      "answer": "PASS_SCOPED",
+      "evidence_and_limits": "Frozen strict schema, range/finite/cross-field checks, bounded JSON, duplicate/unknown-key rejection, env alias conflict checks, safe error boundary. Consumer preflight menolak embedding/RAG profile yang tidak didukung. Live health dan persisted-index compatibility belum dibuktikan."
+    },
+    {
+      "question": "Konfigurasi mudah ditest?",
+      "answer": "PASS_SCOPED",
+      "evidence_and_limits": "Loader isolated tanpa auto dotenv/os.environ, urutan DEFAULT < FILE < selected ENV < EXPLICIT; 52 contract dan 12 integration cases. Mock HTTP/worker/store dan isolated RAG ingestion/query; snapshot immutable."
+    },
+    {
+      "question": "Backward compatibility tetap terjaga?",
+      "answer": "PASS_SCOPED",
+      "evidence_and_limits": "Legacy constructors/default facade behavior dipertahankan dan regresi final lulus. Non-default explicit Ollama args mengalahkan snapshot, tetapi default-valued args dianggap unspecified saat opt-in. External clients, produksi dan deployment belum diverifikasi."
+    }
+  ],
+  "definition_of_done": [
+    {
+      "requirement": "Seluruh konfigurasi existing teridentifikasi",
+      "status_and_limits": "PARTIAL — 3371 candidates terinventarisasi; 46 UNKNOWN; completeness semantik belum terbukti"
+    },
+    {
+      "requirement": "Sumber setiap konfigurasi diketahui",
+      "status_and_limits": "PASS_SCOPED_STATIC — setiap row punya source occurrence; sumber efektif runtime belum seluruhnya diketahui"
+    },
+    {
+      "requirement": "Consumer setiap konfigurasi diketahui",
+      "status_and_limits": "NOT_COMPLETE — 3365 rows LOCAL_OCCURRENCE_ONLY; 6 STATIC_SETTINGS_READ; map bukan bukti seluruh consumer runtime"
+    },
+    {
+      "requirement": "Hard-coded configuration terpetakan",
+      "status_and_limits": "PASS_SCOPED_STATIC — candidate map dan consumer terpilih; bukan bukti migrasi seluruh literal"
+    },
+    {
+      "requirement": "Configuration domain terdefinisi",
+      "status_and_limits": "PASS_SCOPED"
+    },
+    {
+      "requirement": "Configuration contract tersedia",
+      "status_and_limits": "PASS_SCOPED"
+    },
+    {
+      "requirement": "Configuration loader tervalidasi",
+      "status_and_limits": "PASS_SCOPED"
+    },
+    {
+      "requirement": "Validation tersedia",
+      "status_and_limits": "PASS_SCOPED"
+    },
+    {
+      "requirement": "Engine dapat membaca configuration",
+      "status_and_limits": "PASS_SCOPED_OPT_IN — provider, embedding adapter, RAG dan KnowledgeEngine; default startup belum aktif"
+    },
+    {
+      "requirement": "Model dapat diganti melalui configuration",
+      "status_and_limits": "PARTIAL — Ollama opt-in terbukti; router/default API/embedding belum lengkap"
+    },
+    {
+      "requirement": "Provider dapat diganti melalui configuration",
+      "status_and_limits": "NOT_COMPLETE"
+    },
+    {
+      "requirement": "RAG configuration terstruktur",
+      "status_and_limits": "PASS_SCOPED_SCHEMA; consumer coverage PARTIAL"
+    },
+    {
+      "requirement": "Runtime configuration terstruktur",
+      "status_and_limits": "PASS_SCOPED_SCHEMA; runtime controls belum terhubung"
+    },
+    {
+      "requirement": "Secret tidak bocor",
+      "status_and_limits": "PASS_SCOPED_CONFIGURATION_SURFACES"
+    },
+    {
+      "requirement": "Backward compatibility terjaga",
+      "status_and_limits": "PASS_SCOPED_EXISTING_TESTS"
+    },
+    {
+      "requirement": "Targeted tests PASS",
+      "status_and_limits": "PASS_SCOPED — 93 final targeted cases"
+    },
+    {
+      "requirement": "Regression PASS",
+      "status_and_limits": "PASS_SCOPED_WITH_EXISTING_SKIP — 353 pass, 28 passing subtests, 1 skip"
+    },
+    {
+      "requirement": "DeveloperCore tetap PASS_SCOPED",
+      "status_and_limits": "PASS_SCOPED"
+    },
+    {
+      "requirement": "Tidak ada perubahan production",
+      "status_and_limits": "PASS_SCOPED_WORKSPACE_INTEGRITY — protected DB/config/deploy source unchanged; no runtime activation"
+    }
+  ],
+  "architecture_dod": "NOT_COMPLETE",
+  "closure_backlog": [
+    {
+      "gap_id": "CA-01",
+      "gap": "Consumer discovery belum lengkap",
+      "closure_work_and_evidence": "Review 46 UNKNOWN dan candidate aktif; buktikan source-to-consumer links, pisahkan legacy declarations dari runtime effective values.",
+      "implemented_in_phase10": false
+    },
+    {
+      "gap_id": "CA-02",
+      "gap": "Default startup/API belum memakai snapshot",
+      "closure_work_and_evidence": "Desain composition root dan precedence terhadap Settings/request overrides, lalu integrasi serta API compatibility tests. Tetap tunduk pada batas CC-01/API publik dan production activation.",
+      "implemented_in_phase10": false
+    },
+    {
+      "gap_id": "CA-03",
+      "gap": "Model/provider switching belum lengkap",
+      "closure_work_and_evidence": "Desain provider factory/capability contract dan routing model per task; buktikan pergantian melalui config tanpa literal engine. Tidak mengganti installation/model permanen dalam review ini.",
+      "implemented_in_phase10": false
+    },
+    {
+      "gap_id": "CA-04",
+      "gap": "Embedding/index compatibility",
+      "closure_work_and_evidence": "Tetapkan preflight dimensi/model dan prosedur index compatibility; hindari penggunaan embedding baru terhadap index lama tanpa bukti. Schema/migrasi/database movement memerlukan scope terpisah.",
+      "implemented_in_phase10": false
+    },
+    {
+      "gap_id": "CA-05",
+      "gap": "RAG knobs belum seluruhnya consumed",
+      "closure_work_and_evidence": "Putuskan semantics bobot/threshold/facade defaults/reranker nyata; tutup dengan behavior tests pada query, bukan hanya schema acceptance.",
+      "implemented_in_phase10": false
+    },
+    {
+      "gap_id": "CA-06",
+      "gap": "Runtime/features/governance masih declarations",
+      "closure_work_and_evidence": "Tentukan consumer tiap field, enforcement sesuai contract existing dan diagnostics CONSUMED; auth reference resolution, batch dan production profiles perlu desain. Perubahan security policy tidak termasuk review.",
+      "implemented_in_phase10": false
+    },
+    {
+      "gap_id": "CA-07",
+      "gap": "Path/live runtime belum terbukti",
+      "closure_work_and_evidence": "Tentukan apakah containment wajib; buktikan access, worker/provider health dan effective runtime build/config dalam verifikasi terpisah.",
+      "implemented_in_phase10": false
+    },
+    {
+      "gap_id": "CA-08",
+      "gap": "Acceptance V1 masih HOLD",
+      "closure_work_and_evidence": "Tutup symlink mandatory gate, oracle review/missing, compliance CC02–06 serta deployment/restart/workload/rollback dengan evidence masing-masing.",
+      "implemented_in_phase10": false
+    }
+  ],
+  "inventory_limits": {
+    "candidates": 3371,
+    "unknown_candidates": 46,
+    "consumer_local_occurrence_only": 3365,
+    "consumer_static_settings_read": 6,
+    "runtime_completeness_proven": false
+  },
+  "implementation_regression_status": "PASS_SCOPED_WITH_EXISTING_SKIP",
+  "developer_core_status": "PASS_SCOPED",
+  "regression_reused": {
+    "passed": 353,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "subtests_passed": 28,
+    "seconds": 108.26,
+    "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml"
+  },
+  "current_Hermes_supplemental": {
+    "cases_passed": 1,
+    "assertions_passed": 8,
+    "generation_proven": false
+  },
+  "integrity": {
+    "checkpoint_evidence_hashes_match": true,
+    "protected_file_count": 296,
+    "unexpected_source_drift": 0,
+    "reviewed_source_sha256": {
+      "app/core/nusantara_config.py": "3d18304750d9b43e6cf33a19f5f1d73ea5b05bf2b22d9686deecd6fd4371911d",
+      "app/models/ollama.py": "73f4f268d655ee425b25b0a4b399bd4c503c773d1a7d5949831e2fbb34ad904b",
+      "app/models/router.py": "c5f9ab1b2c91167cde0a6fb31bee7fe5d8885589fbc17ec59c3fd150798b2e3e",
+      "app/knowledge/rag.py": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b",
+      "app/knowledge/engine.py": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b",
+      "app/knowledge/indobert_embedding.py": "065202822c8ec152a692cf6eb47aaf221d4be1f29216e640b911183a53968fb9",
+      "app/hermes/agent.py": "0f7a2d1c69aa38c49368d44931ea8069f5c9b1f57bf5e273777ba2c20dbe0ff8",
+      "app/api/routes.py": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4",
+      "tests/test_configuration_contract.py": "bc4478e0100bab03d2dc8580cbf6a8e29176b7fdbc690795a745a732551d7123",
+      "tests/test_configuration_integration.py": "2becf4883d6eccc9cd364c64a7b9be1638f5a8cd04136d8d4229e8399f2d680b"
+    },
+    "evidence_sha256": {
+      "reports/NUSANTARA_CONFIGURATION_REGRESSION_20261006.json": "38d463bd354605fa13bf4cab02a25fa6cfe387b6738cf5d13be053614356d543",
+      "reports/NUSANTARA_CONFIGURATION_VALIDATION_20261006.json": "78efa855942c38b9bee40d104f48e522bf3983b15068144902ce47f919e2bc0a",
+      "reports/configuration/phase-03-map/CONFIGURATION_MAP_20261006.json": "bd2ca84820b7a499fb19c030d0b4be669ebc040fa7f08bf989d4b7962657653d",
+      "reports/configuration/phase-04-design/DESIGN_REVIEW_CHECKS_20261006.json": "8693f700f2269bfaa593d0b1e7cbf15e20cf98e35b3cae27626f679ddd62de16",
+      "reports/configuration/CONFIGURATION_PHASE10_ARCHITECTURE_REVIEW_20261006.md": "323ed6aba06c02e7ede308de8b408149391e2f8f493184c38982d58fd5a90d8f"
+    }
+  },
+  "graph_navigation": {
+    "cli_status": "UNAVAILABLE_UV_TRAMPOLINE",
+    "fallback": "Existing graph BFS then focused OllamaProvider/ModelRouter source seeds; source current used to verify details",
+    "graph_updated": false
+  },
+  "source_changes_this_phase": false,
+  "test_changes_this_phase": false,
+  "new_test_suite_runs": 0,
+  "runtime_activation": "NOT_DONE",
+  "production_changes": false,
+  "overall_v1_acceptance": "FAIL/HOLD",
+  "next_phase": null,
+  "next_step": "Scope and close documented configuration architecture gaps; do not repeat completed phases or claim overall DoD/V1 complete."
+}

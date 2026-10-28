@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="4" time="0.225" timestamp="2026-10-08T16:57:48.052689+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="tests.v2.test_devcore_grounding_response" name="test_rejected_model_analysis_is_not_the_human_answer" time="0.018"><failure message="assert 'Script ini ...ut 10 detik.' not in 'Analisis `h...n) terlihat.'&#10;  &#10;  'Script ini menampi...n timeout 10 detik.' is contained here:&#10;    Analisis `healthcheck.py`:&#10;    Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 detik.&#10;    &#10;    PERINGATAN verifikasi grounding: klaim berikut tidak didukung source -&gt; [print/menampilkan hasil] &quot;Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti&quot;; [retry/pengulangan] &quot;Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti&quot;; [nilai timeout tidak sesuai source] &quot;Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti&quot;&#10;    Gunakan fakta statis:...&#10;  &#10;  ...Full output truncated (7 lines hidden), use '-vv' to show">..\..\..\tests\v2\test_devcore_grounding_response.py:25: in test_rejected_model_analysis_is_not_the_human_answer
+    assert UNSUPPORTED not in result['answer']
+E   assert 'Script ini ...ut 10 detik.' not in 'Analisis `h...n) terlihat.'
+E     
+E     'Script ini menampi...n timeout 10 detik.' is contained here:
+E       Analisis `healthcheck.py`:
+E       Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 detik.
+E       
+E       PERINGATAN verifikasi grounding: klaim berikut tidak didukung source -&gt; [print/menampilkan hasil] "Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti"; [retry/pengulangan] "Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti"; [nilai timeout tidak sesuai source] "Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti"
+E       Gunakan fakta statis:...
+E     
+E     ...Full output truncated (7 lines hidden), use '-vv' to show</failure></testcase><testcase classname="tests.v2.test_devcore_grounding_response" name="test_supported_model_analysis_is_preserved" time="0.007" /><testcase classname="tests.v2.test_devcore_grounding_response" name="test_missing_model_response_keeps_existing_static_fallback" time="0.006" /><testcase classname="tests.v2.test_devcore_grounding_response" name="test_rejected_analysis_does_not_enable_requested_edits" time="0.006"><failure message="assert 'Script ini ...ut 10 detik.' not in 'Analisis `h...diaktifkan).'&#10;  &#10;  'Script ini menampi...n timeout 10 detik.' is contained here:&#10;    Analisis `healthcheck.py`:&#10;    Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 detik.&#10;    &#10;    PERINGATAN verifikasi grounding: klaim berikut tidak didukung source -&gt; [print/menampilkan hasil] &quot;Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti&quot;; [retry/pengulangan] &quot;Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti&quot;; [nilai timeout tidak sesuai source] &quot;Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti&quot;&#10;    Gunakan fakta statis:...&#10;  &#10;  ...Full output truncated (9 lines hidden), use '-vv' to show">..\..\..\tests\v2\test_devcore_grounding_response.py:57: in test_rejected_analysis_does_not_enable_requested_edits
+    assert UNSUPPORTED not in result['answer']
+E   assert 'Script ini ...ut 10 detik.' not in 'Analisis `h...diaktifkan).'
+E     
+E     'Script ini menampi...n timeout 10 detik.' is contained here:
+E       Analisis `healthcheck.py`:
+E       Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 detik.
+E       
+E       PERINGATAN verifikasi grounding: klaim berikut tidak didukung source -&gt; [print/menampilkan hasil] "Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti"; [retry/pengulangan] "Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti"; [nilai timeout tidak sesuai source] "Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 deti"
+E       Gunakan fakta statis:...
+E     
+E     ...Full output truncated (9 lines hidden), use '-vv' to show</failure></testcase></testsuite></testsuites>

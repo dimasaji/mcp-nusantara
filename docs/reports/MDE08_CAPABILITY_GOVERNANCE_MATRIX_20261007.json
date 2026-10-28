@@ -1,0 +1,236 @@
+{
+  "phase": "MDE08",
+  "created_at": "2026-10-07T04:44:03.158903+00:00",
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "components": [
+    {
+      "component": "provider/model",
+      "path": "app/models/base.py",
+      "sha256": "009297b09ddb3a56b4c038473d1839aa2f431409f7c9951a1cb94a40c2041892",
+      "identity_state": "DECLARED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "get_model_info declares tasks/context/structured universally; no operation-specific live proof."
+    },
+    {
+      "component": "structured output",
+      "path": "app/models/openai_compatible.py",
+      "sha256": "2832989348208b0d3706660d3dfe30d04590e83c11ab6f1662cc18806e23981a",
+      "identity_state": "DECLARED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "_supports_json_schema defaults True; actual endpoint/schema execution unverified."
+    },
+    {
+      "component": "routing",
+      "path": "app/models/router.py",
+      "sha256": "dd7e3a9da2aac5b9edc742f1bb6670ded6ed96f212079f720d2918fe9f9fbfff",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Task preference does not evaluate capability readiness/health/authorization; mutable identity gaps remain."
+    },
+    {
+      "component": "governed tools",
+      "path": "app/governance/tools.py",
+      "sha256": "0a8806de8d85b996c3ffcb2bd40b8d0d51ea2cbeb54aa4a72fd74ae0fdfd3cf1",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Permission/policy/schema/approval/handler/audit fixture verified; registration and visibility do not prove readiness/execution."
+    },
+    {
+      "component": "approval",
+      "path": "app/approval/queue.py",
+      "sha256": "4449daedcf95a1f5bae946522b0ffdeb32e4c6d74aa7c4537bb3ddb83589126b",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Hash-bound same tool/args and single-use; requester/role/kind not part of consume payload binding; single-worker persistence model."
+    },
+    {
+      "component": "audit",
+      "path": "app/approval/audit_trail.py",
+      "sha256": "75e28f8d8086e5f524548a6c80b3c910d3b5e78cf416dafe6bc76e615e9e1c64",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Hash-chain integrity fixture verified; not cryptographic actor identity attestation or deployed availability."
+    },
+    {
+      "component": "review/auth",
+      "path": "app/api/v2_routes.py",
+      "sha256": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Decision endpoints require admin auth; reviewer value supplied in body; no API called or credentials read."
+    },
+    {
+      "component": "admin boundary",
+      "path": "app/security/auth.py",
+      "sha256": "4d3105ba4d5c34d864392f0918dda797bf296a2987ec5964245949dbc55f7552",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Existing authorization implementation preserved; deployment credentials/principal trust not exercised."
+    },
+    {
+      "component": "MCP stdio",
+      "path": "app/mcp/stdio_server.py",
+      "sha256": "5340ea4e7c1fc62f101d6c313f962d7afdc3c86f783e17a21aa24d39f238cf6e",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Two read-only governed builtins executed in real isolated stdio test; production desktop/session connection not proven."
+    },
+    {
+      "component": "MCP manifest",
+      "path": "app/governance/mcp_bridge.py",
+      "sha256": "e71bd0da48aaccb09a426d731df19d505ab4fd5198eb8d8406087a639922a89e",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Invalid handlers/schema/names rejected; unknown class/risk conservatively external/high; exposure distinct from execution."
+    },
+    {
+      "component": "legacy MCP",
+      "path": "app/mcp/mcp.py",
+      "sha256": "1c16486f63bd02bb71c0eb7ee9555488b6e019674b9b532a5237a6a1b1f06c8f",
+      "identity_state": "DECLARED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Permission metadata does not gate direct handler call; fixture confirms separate governance path."
+    },
+    {
+      "component": "legacy tools",
+      "path": "app/tools/registry.py",
+      "sha256": "50975eb665f9f3f967c7dbf0d0098c39ac72badacbf3f6e8213d1eb7994cc61e",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Direct filesystem dispatch has own boundary; not automatically governed registry-equivalent."
+    },
+    {
+      "component": "executor",
+      "path": "app/execution/native.py",
+      "sha256": "f241ccedbff9de32b40d9a07e5fd617f74b27db2b398a8021db06069d47a45e3",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Trusted actor wiring delegates governance; isolated permission rejection verified; production activation not proved."
+    },
+    {
+      "component": "policy",
+      "path": "app/policy/policy_engine.py",
+      "sha256": "8be4d1b2e6684aeff04627faf0c1ea066fa2550d3d04a3ead43a05d25e592244",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "ALLOW/confirmation/human/deny rules independent of capability readiness; distinct safe-policy module also exists."
+    },
+    {
+      "component": "trust",
+      "path": "app/trust/engine.py",
+      "sha256": "c0a962ef941cb6c1afecb32891e7b34eb44a166c0fa964c23683a03f495a8274",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Evidence support/risk fixture tested; confidence does not prove facts, source authorization or capability/model readiness."
+    },
+    {
+      "component": "V2 callback/fallback",
+      "path": "app/v2/orchestrator.py",
+      "sha256": "e0e421bdac53b5ec89a3f04ff6062d506c820348006d132c486823849d67f215",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Optional policy/trust callbacks and degraded states; omitted callbacks not universal governance enforcement; no actual-model receipt."
+    },
+    {
+      "component": "RAG/embedding",
+      "path": "app/knowledge/rag.py",
+      "sha256": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b",
+      "identity_state": "CONFIGURED",
+      "availability_state": "BLOCKED",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Effective profile open; MDE06 production index PARTIAL, canonical compatibility UNKNOWN; no runtime safe-use proof."
+    },
+    {
+      "component": "DeveloperCore writes",
+      "path": "app/developer_core/execution_boundary.py",
+      "sha256": "0797587505a6a9b33bb3d4744389a08119175516beea54a992f5ba7b6e5f11a5",
+      "identity_state": "CONFIGURED",
+      "availability_state": "NOT_PROVEN",
+      "support_state": "SUPPORTED_IN_SOURCE",
+      "live_execution_state": "NOT_VERIFIED",
+      "fixture_scope": "See test/observation evidence; not a global READY claim",
+      "finding": "Read-only plan/boundary validation distinct from authorized actual patch execution; no write capability activation."
+    }
+  ],
+  "identity_axis": [
+    "DECLARED",
+    "CONFIGURED",
+    "AVAILABLE",
+    "SELECTED",
+    "EXECUTED",
+    "VERIFIED"
+  ],
+  "capability_axis": [
+    "SUPPORTED",
+    "AVAILABLE",
+    "READY",
+    "NOT_SUPPORTED",
+    "UNAVAILABLE",
+    "NOT_PROVEN",
+    "BLOCKED"
+  ],
+  "axis_rule": "Source support/declaration is distinct from per-instance availability and per-invocation execution/verification. Any fixture proof is scoped to fixture only.",
+  "overall_capability": "PARTIAL_NOT_READY",
+  "production_model_and_rag": "NOT_VERIFIED",
+  "governed_fixture_scope": [
+    "approval replay/tamper rejection",
+    "permission and policy boundaries",
+    "calculator/time MCP stdio discovery/invocation/rejection/audit"
+  ],
+  "governance_limits": [
+    "Approval consumption payload contains tool/args only, not actor/role/kind binding",
+    "Legacy MCP direct calls bypass governed registry path",
+    "Provider info/json-schema support are declarations, not availability",
+    "Optional callbacks do not prove universal policy/trust enforcement"
+  ]
+}

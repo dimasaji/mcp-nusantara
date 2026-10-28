@@ -1,0 +1,66 @@
+warning: in the working copy of 'docs/reports/r2-a8-remediation-20261008/profile-before/app__main.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/main.py', LF will be replaced by CRLF the next time Git touches it
+diff --git a/docs/reports/r2-a8-remediation-20261008/profile-before/app__main.py b/app/main.py
+index d2d092f..3634b25 100644
+--- a/docs/reports/r2-a8-remediation-20261008/profile-before/app__main.py
++++ b/app/main.py
+@@ -11,14 +11,16 @@ from fastapi.responses import FileResponse
+ # Explicit local evidence-only boot; default runtime composition is preserved.
+ _READ_ONLY_EVIDENCE = os.environ.get('NUSANTARA_CONTROL_PLANE_READ_ONLY') == '1'
+ _configuration = None
++_ATTESTATION = False
+ if not _READ_ONLY_EVIDENCE:
+     from app.core.config import settings
+ 
+     # Compose through the existing owner before either API constructs dependencies.
+     _configuration = settings.effective_configuration
+-
+-    from app.api.routes import router as api_router
+-    from app.api.v2_routes import router as v2_router
++    _ATTESTATION = _configuration.runtime.profile == 'ATTESTATION'
++    if not _ATTESTATION:
++        from app.api.routes import router as api_router
++        from app.api.v2_routes import router as v2_router
+ from app.api.control_plane import router as control_plane_router
+ from app.observability import configure_logging, request_context, metrics
+ from app.exceptions import register_exception_handlers
+@@ -40,24 +42,25 @@ app = FastAPI(
+     lifespan=lifespan,
+ )
+ app.state.effective_configuration = _configuration
++app.state.runtime_profile = 'ATTESTATION' if _ATTESTATION else 'NORMAL'
+ app.add_middleware(
+     CORSMiddleware,
+     allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000", "http://127.0.0.1:8000"],
+     allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
+ )
+ register_exception_handlers(app)
+-if not _READ_ONLY_EVIDENCE:
++if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
+     app.include_router(api_router)
+     app.include_router(v2_router)
+ app.include_router(control_plane_router)
+-if not _READ_ONLY_EVIDENCE:
++if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
+     configure_logging(_configuration.runtime.log_level)
+ 
+ 
+ @app.middleware("http")
+ async def request_id_middleware(request, call_next):
+     """Correlation ID + V1 HTTP observability."""
+-    incoming = request.headers.get("x-request-id", "")[:64]
++    incoming = '' if getattr(request.app.state, 'runtime_profile', 'NORMAL') == 'ATTESTATION' else request.headers.get("x-request-id", "")[:64]
+     rid = incoming if incoming.replace("-", "").replace("_", "").isalnum() else None
+ 
+     started = time.perf_counter()
+@@ -89,6 +92,10 @@ async def dashboard():
+     return FileResponse(UI_FILE)
+ 
+ 
++if _ATTESTATION:
++    from app.api.runtime_verification import install_runtime_verification
++    install_runtime_verification(app, _configuration)
++
+ install_runtime_attestation(app, entrypoint='app.main:app')
+ 
+ 

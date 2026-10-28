@@ -1,0 +1,471 @@
+--- before/tests/test_configuration_contract.py
++++ after/tests/test_configuration_contract.py
+@@ -196,3 +196,53 @@
+     assert not any(f"from {prefix}" in source for prefix in ["app.api", "app.knowledge", "app.models", "app.main"])
+     config = load_nusantara_config(project_root=tmp_path)
+     assert config.knowledge.database == tmp_path / "data/knowledge/nusantara_knowledge.db"
++
++
++def test_bootstrap_layers_preserve_provenance_and_secrets(tmp_path):
++    from app.core.config import Settings
++    file = tmp_path / 'bootstrap.json'
++    file.write_text(json.dumps({'llm': {'model': 'file'}, 'rag': {'top_k': 7}}))
++    owner = Settings(_env_file=None)
++    config = owner.compose_configuration(
++        project_root=tmp_path, config_file=file,
++        dotenv_environment={'LLM_MODEL': 'dotenv', 'PORT': '8011', 'LLM_API_KEY': 'secret-sentinel'},
++        environment={'NUSANTARA_LLM_MODEL': 'process', 'RETRIEVAL_TOP_K': '3'},
++        overrides={'llm': {'model': 'explicit'}},
++    )
++    assert owner.effective_configuration is config
++    assert config.llm.model == 'explicit'
++    assert config.runtime.port == 8011
++    assert config.rag.top_k == 3
++    sources = {p.field: p.source for p in config.provenance}
++    assert sources['llm.model'] == 'EXPLICIT'
++    assert sources['runtime.port'] == 'DOTENV'
++    assert sources['rag.top_k'] == 'ENV'
++    assert 'secret-sentinel' not in config.canonical_json() + repr(config)
++    with pytest.raises(ConfigurationError, match='CONFIGURATION_ALREADY_COMPOSED'):
++        owner.compose_configuration(overrides={'rag': {'top_k': 9}})
++    with pytest.raises(Exception):
++        config.rag.top_k = 9
++    assert config.rag.top_k == 3
++    assert not (tmp_path / 'data').exists()
++
++
++def test_owner_reads_dotenv_once_and_process_environment_wins(tmp_path, monkeypatch):
++    from app.core.config import Settings
++    monkeypatch.setenv('LLM_MODEL', 'process')
++    (tmp_path / '.env').write_text('LLM_MODEL=dotenv\nRETRIEVAL_TOP_K=4\nLLM_API_KEY=private-sentinel\n')
++    owner = Settings(_env_file=None)
++    config = owner.compose_configuration(project_root=tmp_path)
++    assert config.llm.model == 'process'
++    assert config.rag.top_k == 4
++    assert {p.field: p.source for p in config.provenance}['rag.top_k'] == 'DOTENV'
++    monkeypatch.setenv('LLM_MODEL', 'later')
++    (tmp_path / '.env').write_text('LLM_MODEL=later\n')
++    assert owner.effective_configuration is config
++    assert config.llm.model == 'process'
++    assert 'private-sentinel' not in config.canonical_json()
++
++
++def test_dotenv_alias_conflict_rejected_even_if_process_overrides_it():
++    with pytest.raises(ConfigurationError, match='ENV_ALIAS_CONFLICT'):
++        load_nusantara_config(dotenv_environment={'LLM_MODEL': 'one', 'NUSANTARA_LLM_MODEL': 'two'},
++                              environment={'LLM_MODEL': 'process'})
+--- before/app/api/v2_routes.py
++++ after/app/api/v2_routes.py
+@@ -47,7 +47,8 @@
+ approvals = ApprovalQueue(audit)
+ _recorder = EventRecorder(_DATA_DIR / "experience" / "events.jsonl")
+ _feedback = FeedbackStore(_DATA_DIR / "experience" / "feedback.jsonl")
+-_knowledge = KnowledgeEngine()
++_configuration = settings.effective_configuration
++_knowledge = KnowledgeEngine(nusantara_config=_configuration)
+ _language = LanguageEngine()
+ _policy = v1_policy_check()
+ _trust = v1_trust_check()
+@@ -100,8 +101,8 @@
+         except ValueError as exc:
+             raise HTTPException(status_code=422, detail=str(exc)) from exc
+     provider = OllamaProvider(
+-        base_url=settings.llm_base_url,
+-        model=req.model or settings.llm_model,
++        nusantara_config=_configuration,
++        model=req.model or _configuration.llm.model,
+     )
+ 
+     async def generate(prompt: str) -> str:
+@@ -127,7 +128,7 @@
+             }
+             for e in _knowledge.search_knowledge(
+                 text,
+-                top_k=settings.retrieval_top_k,
++                top_k=None,
+             )
+         ]
+ 
+@@ -323,14 +324,14 @@
+ async def dev_chat(req: DevRequest, x_admin_token: str | None = Header(default=None)) -> dict[str, Any]:
+     """Developer Core (read-only): baca/cari/list file di NUSANTARA_WORKSPACE dengan grounding."""
+     _require_admin(x_admin_token)
+-    provider = OllamaProvider(base_url=settings.llm_base_url, model=settings.llm_model)
++    provider = OllamaProvider(nusantara_config=_configuration)
+ 
+     async def generate(prompt: str) -> str:
+         out = await provider.generate({"prompt": prompt, "temperature": 0.1, "max_tokens": 700})
+         return out["content"]
+ 
+     core = DevCore(os.getenv("NUSANTARA_WORKSPACE", os.getcwd()), generate=generate,
+-                   model_name=settings.llm_model, audit=audit, recorder=_recorder)
++                   model_name=_configuration.llm.model, audit=audit, recorder=_recorder)
+     try:
+         return await core.handle(req.user_input, req.session_id)
+     finally:
+--- before/app/main.py
++++ after/app/main.py
+@@ -6,6 +6,11 @@
+ from fastapi import FastAPI
+ from fastapi.middleware.cors import CORSMiddleware
+ from fastapi.responses import FileResponse
++
++from app.core.config import settings
++
++# Compose through the existing owner before either API constructs dependencies.
++_configuration = settings.effective_configuration
+ 
+ from app.api.routes import router as api_router
+ from app.api.v2_routes import router as v2_router
+@@ -27,6 +32,7 @@
+     version="0.1.0",
+     lifespan=lifespan,
+ )
++app.state.effective_configuration = _configuration
+ app.add_middleware(
+     CORSMiddleware,
+     allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000", "http://127.0.0.1:8000"],
+@@ -35,7 +41,7 @@
+ register_exception_handlers(app)
+ app.include_router(api_router)
+ app.include_router(v2_router)
+-configure_logging()
++configure_logging(_configuration.runtime.log_level)
+ 
+ 
+ @app.middleware("http")
+--- before/app/core/config.py
++++ after/app/core/config.py
+@@ -1,6 +1,11 @@
+ from functools import lru_cache
++import os
++from pathlib import Path
+ from typing import Optional
++from dotenv import dotenv_values
++from pydantic import PrivateAttr
+ from pydantic_settings import BaseSettings, SettingsConfigDict
++from app.core.nusantara_config import ConfigurationError, NusantaraConfig, load_nusantara_config
+ 
+ class Settings(BaseSettings):
+     model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8', case_sensitive=False, extra='ignore')
+@@ -23,6 +28,36 @@
+     retrieval_top_k: int = 5
+     privacy_filter_enabled: bool = True
+     log_level: str = 'INFO'
++    _effective_configuration: NusantaraConfig | None = PrivateAttr(default=None)
++
++    def compose_configuration(self, *, config_file=None, dotenv_environment=None,
++                              environment=None, overrides=None, project_root=None) -> NusantaraConfig:
++        """Compose once on the existing owner, before constructing dependencies.
++
++        Explicit bootstrap layers may be supplied before the first consumer.
++        Reloading or changing the shared context requires a new application boot.
++        Legacy Settings remains available to consumers outside the R1 scope.
++        """
++        if self._effective_configuration is not None:
++            if any(value is not None for value in
++                   (config_file, dotenv_environment, environment, overrides, project_root)):
++                raise ConfigurationError('CONFIGURATION_ALREADY_COMPOSED')
++            return self._effective_configuration
++        root = Path(project_root) if project_root is not None else Path.cwd()
++        if dotenv_environment is None:
++            # Interpolation could resolve credentials into otherwise safe fields.
++            dotenv_environment = dotenv_values(root / '.env', interpolate=False)
++        configuration = load_nusantara_config(
++            config_file=config_file, dotenv_environment=dotenv_environment,
++            environment=os.environ if environment is None else environment,
++            overrides=overrides, project_root=project_root,
++        )
++        self._effective_configuration = configuration
++        return configuration
++
++    @property
++    def effective_configuration(self) -> NusantaraConfig:
++        return self.compose_configuration()
+ 
+ @lru_cache(maxsize=1)
+ def get_settings() -> Settings:
+--- before/app/knowledge/engine.py
++++ after/app/knowledge/engine.py
+@@ -28,12 +28,12 @@
+         )
+         return self.rag.ingest_document(request)
+ 
+-    def search_knowledge(self, query: str, top_k: int = 5, filter: Optional[dict] = None):
++    def search_knowledge(self, query: str, top_k: int | None = None, filter: Optional[dict] = None):
+         del filter  # reserved for vector-store filters in the persistent backend
+         result = self.rag.query(query_text=query, top_k=top_k)
+         return result.evidence_pack.evidence
+ 
+-    def search(self, query: str, top_k: int = 5):
++    def search(self, query: str, top_k: int | None = None):
+         return self.search_knowledge(query, top_k=top_k)
+ 
+     def list_documents(self):
+--- before/app/api/routes.py
++++ after/app/api/routes.py
+@@ -38,7 +38,8 @@
+ 
+ _started_at = datetime.now(timezone.utc)
+ 
+-_knowledge = KnowledgeEngine()
++_configuration = settings.effective_configuration
++_knowledge = KnowledgeEngine(nusantara_config=_configuration)
+ _gate_integration = GateIntegration()
+ _developer_core = GraphifyBridge()
+ 
+@@ -799,8 +800,7 @@
+ async def health_detail():
+ 
+     provider = OllamaProvider(
+-        base_url=settings.llm_base_url,
+-        model=settings.llm_model,
++        nusantara_config=_configuration,
+     )
+ 
+     try:
+@@ -877,10 +877,10 @@
+         # ==============================================================
+ 
+         provider = OllamaProvider(
+-            base_url=settings.llm_base_url,
++            nusantara_config=_configuration,
+             model=(
+                 request.model
+-                or settings.llm_model
++                or _configuration.llm.model
+             ),
+         )
+ 
+@@ -921,7 +921,7 @@
+ 
+         evidence = await _run_sync_v1(_knowledge.search_knowledge,
+             request.user_input,
+-            top_k=settings.retrieval_top_k,
++            top_k=None,
+         )
+ 
+         # --------------------------------------------------------------
+--- before/tests/test_configuration_integration.py
++++ after/tests/test_configuration_integration.py
+@@ -115,6 +115,9 @@
+     result = rag.query("nusantara configuration")
+     assert len(result.evidence_pack.evidence) == 2
+     assert len(rag.query("nusantara", top_k=1).evidence_pack.evidence) == 1
++    engine = KnowledgeEngine(rag=rag, nusantara_config=config)
++    assert len(engine.search('nusantara configuration')) == 2
++    assert len(engine.search('nusantara configuration', top_k=3)) == 3
+     assert not (tmp_path / "data").exists()
+     rag._embedding_adapter.stop()
+ 
+@@ -145,7 +148,7 @@
+     assert not (tmp_path / "custom").exists()
+ 
+ 
+-def test_knowledge_facade_forwards_config_and_preserves_legacy_topk(tmp_path, monkeypatch):
++def test_knowledge_facade_preserves_omitted_and_explicit_topk(tmp_path, monkeypatch):
+     import app.knowledge.engine as module
+     config = configured(tmp_path, rag={"top_k": 3})
+     seen = []
+@@ -161,15 +164,66 @@
+     engine = KnowledgeEngine(nusantara_config=config)
+     engine.search("question")
+     engine.search("question", top_k=2)
+-    assert [item["top_k"] for item in seen] == [5, 2]
++    engine.search("question", top_k=5)
++    assert [item["top_k"] for item in seen] == [None, 2, 5]
+     assert KnowledgeEngine(rag=fake, nusantara_config=config).rag is fake
+ 
+ 
+-def test_existing_protected_sources_have_no_integration_edits():
++def test_r1_preserves_out_of_scope_protected_sources():
+     import json
+     root = Path(__file__).parents[1]
+     baseline = json.loads((root / "reports/CONFIGURATION_BASELINE_20261006.json").read_text())
+     assert baseline["status"] == "AUDIT_ONLY"
+     checkpoint = json.loads((root / "reports/configuration/CONFIGURATION_PROGRESS.json").read_text())
+-    for relative in ["app/api/routes.py", "app/developer_core/engine.py", "app/trust/engine.py", "app/policy/engine.py"]:
++    # API routes is now explicitly authorized for R1; its pre-change bytes must
++    # still agree with the historical audit. Other protected code stays intact.
++    r1 = json.loads((root / '.dev/checkpoints/r1-local-001-20261007/BASELINE.json').read_text(encoding='utf-8-sig'))
++    before = {item['path']: item['before_sha256'] for item in r1['files']}
++    assert before['app/api/routes.py'] == checkpoint['protected_hashes_before']['app/api/routes.py']
++    for relative in ["app/developer_core/engine.py", "app/trust/engine.py", "app/policy/engine.py"]:
+         assert hashlib.sha256((root / relative).read_bytes()).hexdigest() == checkpoint["protected_hashes_before"][relative]
++
++
++def test_guarded_api_assembly_and_public_regression(tmp_path):
++    """Real API composition, fake persistence/semantic worker, no production I/O."""
++    import os
++    import subprocess
++    import sys
++    script = r'''
++import os, pathlib, socket, sqlite3, subprocess
++def forbidden(*args, **kwargs):
++    raise AssertionError('Forbidden database/worker/network operation in R1 fixture')
++sqlite3.connect = forbidden
++subprocess.Popen = forbidden
++socket.socket.connect = forbidden
++import app.knowledge.rag as rag
++rag.SQLiteVectorStore = lambda *a, **k: rag.MemoriaVectorStore()
++import app.language.engine as language
++language.SemanticIntentEngine = None
++from app.core.config import settings
++config = settings.compose_configuration(dotenv_environment={}, environment={},
++    overrides={'llm': {'model': 'composed-fixture'}, 'rag': {'top_k': 3}})
++from app.main import app
++from app.api import routes, v2_routes
++assert app.state.effective_configuration is config
++assert routes._configuration is v2_routes._configuration is config
++assert routes._knowledge.configuration is v2_routes._knowledge.configuration is config
++assert routes._knowledge.rag._config.retrieval_top_k == 3
++assert v2_routes._knowledge.rag._config.retrieval_top_k == 3
++from app.models.ollama import OllamaProvider
++assert OllamaProvider(nusantara_config=config).model == 'composed-fixture'
++assert OllamaProvider(model='llama3.2:1b', nusantara_config=config).model == 'llama3.2:1b'
++import pytest
++raise SystemExit(pytest.main(['-q', '-p', 'no:cacheprovider',
++    '--basetemp=' + os.environ['R1_FIXTURE_ROOT'] + '/regression-tmp',
++    '--junitxml=' + os.environ['R1_FIXTURE_REPORT'],
++    'tests/test_v1_response_projection.py', 'tests/test_v1_stage_budget.py',
++    'tests/test_runtime_identity.py']))
++'''
++    root = Path(__file__).parents[1]
++    env = dict(os.environ, NUSANTARA_DATA_DIR=str(tmp_path / 'runtime'),
++               R1_FIXTURE_ROOT=str(tmp_path), PYTHONDONTWRITEBYTECODE='1',
++               R1_FIXTURE_REPORT=str(root / '.dev/checkpoints/r1-local-001-20261007/public-regression.xml'))
++    result = subprocess.run([sys.executable, '-B', '-c', script], cwd=root, env=env,
++                            text=True, capture_output=True, timeout=60)
++    assert result.returncode == 0, result.stdout + result.stderr
+--- before/tests/test_model_router_configuration.py
++++ after/tests/test_model_router_configuration.py
+@@ -49,3 +49,14 @@
+ def test_empty_registry_still_fails_clearly():
+     with pytest.raises(RuntimeError, match="Tidak ada provider"):
+         ModelRouter().route(task="coding")
++
++
++def test_explicit_legacy_defaults_win_over_snapshot():
++    config = load_nusantara_config(overrides={'llm': {
++        'base_url': 'http://127.0.0.1:9999', 'model': 'snapshot', 'connection_timeout_s': 8.0}})
++    provider = OllamaProvider('http://localhost:11434', 'llama3.2:1b', 120.0,
++                              nusantara_config=config)
++    assert (provider.base_url, provider.model, provider.timeout) == (
++        'http://localhost:11434', 'llama3.2:1b', 120.0)
++    assert ModelRouter().register(provider).route().model_name == 'llama3.2:1b'
++    assert provider._client is None
+--- before/app/core/nusantara_config.py
++++ after/app/core/nusantara_config.py
+@@ -1,4 +1,4 @@
+-"""Isolated configuration snapshots. No existing runtime consumes this module yet.
++"""Validated snapshots used by the existing configuration owner and consumers.
+ 
+ Use load_nusantara_config as the validation/error boundary. No dotenv loading,
+ credential resolution, engine imports, filesystem writes, or command execution.
+@@ -172,7 +172,7 @@
+ @dataclass(frozen=True)
+ class Provenance:
+     field: str
+-    source: Literal["DEFAULT", "FILE", "ENV", "EXPLICIT"]
++    source: Literal["DEFAULT", "FILE", "DOTENV", "ENV", "EXPLICIT"]
+     status: Literal["UNWIRED", "DECLARED_ONLY"]
+ 
+ 
+@@ -298,17 +298,18 @@
+ 
+ 
+ def load_nusantara_config(*, config_file: str | Path | None = None,
++                         dotenv_environment: Mapping[str, str] | None = None,
+                          environment: Mapping[str, str] | None = None,
+                          overrides: Mapping[str, Any] | None = None,
+                          project_root: str | Path | None = None) -> NusantaraConfig:
+-    """DEFAULT < explicit JSON FILE < selected ENV < EXPLICIT override.
++    """DEFAULT < explicit JSON FILE < selected DOTENV < ENV < EXPLICIT.
+ 
+     Environment defaults to empty. Provide os.environ explicitly to opt in.
+     Path resolution is lexical; no existence check, symlink traversal or mkdir.
+     Consumer preflight, provider health and execution belong to a later phase.
+     """
+     try:
+-        return _load(config_file, environment, overrides, project_root)
++        return _load(config_file, dotenv_environment, environment, overrides, project_root)
+     except ConfigurationError:
+         raise
+     except (ValidationError, ValueError, TypeError, OSError, RecursionError, OverflowError):
+@@ -316,7 +317,7 @@
+         raise ConfigurationError("INVALID_CONFIGURATION") from None
+ 
+ 
+-def _load(config_file, environment, overrides, project_root) -> NusantaraConfig:
++def _load(config_file, dotenv_environment, environment, overrides, project_root) -> NusantaraConfig:
+     root = Path(os.path.abspath(project_root if project_root is not None else Path.cwd()))
+     worker_root = root if project_root is not None else Path(__file__).absolute().parents[2]
+     snapshot = _Snapshot(knowledge=_Knowledge(root=root / "data/knowledge",
+@@ -352,11 +353,13 @@
+             raise ConfigurationError("FILE_SIZE_LIMIT")
+         merge(json.loads(raw.decode("utf-8-sig"), object_pairs_hook=_pairs,
+                          parse_constant=_reject_constant), "FILE")
+-    if environment is not None:
+-        if not isinstance(environment, Mapping):
++    for environment_layer, source in ((dotenv_environment, "DOTENV"), (environment, "ENV")):
++        if environment_layer is None:
++            continue
++        if not isinstance(environment_layer, Mapping):
+             raise ConfigurationError("ENV_OBJECT_REQUIRED")
+         selected = {}
+-        for name, value in environment.items():
++        for name, value in environment_layer.items():
+             if not isinstance(name, str):
+                 raise ConfigurationError("ENV_IDENTIFIER_REQUIRED")
+             field = _ALIASES.get(name.upper())
+@@ -371,7 +374,7 @@
+             selected[field] = value
+         for key, value in selected.items():
+             _set(data, key, value)
+-            provenance[key] = "ENV"
++            provenance[key] = source
+     if overrides is not None:
+         merge(overrides, "EXPLICIT")
+     for group, fields in {"knowledge": ("root", "database", "document_root", "index", "cache"),
+--- before/app/models/ollama.py
++++ after/app/models/ollama.py
+@@ -35,28 +35,27 @@
+ 
+     def __init__(
+         self,
+-        base_url: str = "http://localhost:11434",
+-        model: str = "llama3.2:1b",
+-        timeout: float = 120.0,
++        base_url: str | None = None,
++        model: str | None = None,
++        timeout: float | None = None,
+         *,
+         nusantara_config: NusantaraConfig | None = None,
+     ):
+-        # Existing positional values remain authoritative when non-default.
+-        # Default-valued legacy arguments are interpreted as unspecified when
+-        # opting into a snapshot; omit snapshot to retain exact legacy behavior.
++        # Omitted values use the snapshot; explicit values always win, including
++        # values equal to the old defaults. No provider registry is duplicated.
+         self._configuration = nusantara_config
+         if nusantara_config is not None:
+             if nusantara_config.llm.provider != self.provider_name:
+                 raise ConfigurationError("PROVIDER_MISMATCH")
+-            if base_url == "http://localhost:11434":
++            if base_url is None:
+                 base_url = nusantara_config.llm.base_url
+-            if model == "llama3.2:1b":
++            if model is None:
+                 model = nusantara_config.llm.model
+-            if timeout == 120.0:
++            if timeout is None:
+                 timeout = nusantara_config.llm.connection_timeout_s
+-        self.base_url = base_url.rstrip("/")
+-        self.model_name = model
+-        self.timeout = timeout
++        self.base_url = (base_url if base_url is not None else "http://localhost:11434").rstrip("/")
++        self.model_name = model if model is not None else "llama3.2:1b"
++        self.timeout = timeout if timeout is not None else 120.0
+         self._client: Optional[httpx.AsyncClient] = None
+ 
+     def _options(self, request) -> dict:

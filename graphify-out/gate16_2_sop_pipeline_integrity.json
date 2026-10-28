@@ -1,0 +1,70 @@
+{
+  "gate": "16.2",
+  "name": "SOP Pipeline Integrity",
+  "version": "16.2.0",
+  "timestamp": "2026-10-05T13:49:51.303087",
+  "status": "PASS",
+  "checks": {
+    "passed": 7,
+    "total": 7,
+    "results": {
+      "pdf_sources": true,
+      "all_pdfs_nonempty": true,
+      "parsed_available": true,
+      "semantic_master_available": true,
+      "semantic_output_available": true,
+      "quality_gate_available": true,
+      "core_json_valid": true
+    }
+  },
+  "documents": [
+    {
+      "pdf": "CAPIL_02_(1).pdf",
+      "size": 1171138,
+      "related_artifacts": 3
+    },
+    {
+      "pdf": "DAFDUK_01.pdf",
+      "size": 913794,
+      "related_artifacts": 4
+    },
+    {
+      "pdf": "DAFDUK_24_new24.pdf",
+      "size": 643903,
+      "related_artifacts": 5
+    },
+    {
+      "pdf": "PERMOHONAN_DATA_INFORMASI_ADMINISTRASI_KEPENDUDUKAN_(UNTUK_INDIVIDU).pdf",
+      "size": 463386,
+      "related_artifacts": 4
+    },
+    {
+      "pdf": "PERMOHONAN_DATA_PRIBADI.pdf",
+      "size": 462551,
+      "related_artifacts": 3
+    },
+    {
+      "pdf": "PERMOHONAN_INFORMASI_DATA_PENDUDUK_UNTUK_OPD_INSTANSI_SWASTA.pdf",
+      "size": 465732,
+      "related_artifacts": 3
+    }
+  ],
+  "artifacts": {
+    "parsed": 9,
+    "semantic_master": 5,
+    "semantic_output": 6,
+    "quality_gates": 6,
+    "validated_json": 26,
+    "valid_json": 26,
+    "invalid_json": []
+  },
+  "contract": {
+    "pdf_sources_required": true,
+    "pdfs_must_be_nonempty": true,
+    "parsed_representation_required": true,
+    "semantic_representation_required": true,
+    "quality_gate_required": true,
+    "core_json_must_be_valid": true,
+    "no_llm_required": true
+  }
+}

@@ -1,0 +1,12 @@
+--- a/app/api/control_plane.py
++++ b/app/api/control_plane.py
+@@ -14,4 +14,9 @@
+     origin = request.headers.get('origin')
+     if origin and urlsplit(origin).hostname not in loopback:
+         raise HTTPException(403, 'Non-local origin rejected')
++    if getattr(request.app.state, 'runtime_profile', None) == 'ATTESTATION':
++        owner = getattr(request.app.state, 'runtime_authorization', None)
++        if owner is None:
++            raise HTTPException(503, 'ATTESTATION_AUTHORIZATION_UNAVAILABLE')
++        return owner.evidence()  # Never execute legacy DB/WAL/SHM digest projection.
+     return project()

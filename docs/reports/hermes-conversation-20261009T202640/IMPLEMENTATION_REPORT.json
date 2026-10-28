@@ -1,0 +1,281 @@
+{
+  "status": "IMPLEMENTED_TARGETED_VERIFIED / BROADER_REGRESSION_REVIEW_REQUIRED",
+  "files": [
+    {
+      "path": "app/hermes/agent.py",
+      "before_sha256": "5a4e24af50205beaafba6ba6e65d18fa8215d7754a2adbc233998d4be0580072",
+      "after_sha256": "dba818e420f2c50e325d8f7dfb376fec0e2a25ca67e20e5dce49d947963b7cff",
+      "baseline": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\app__hermes__agent.py.before"
+    },
+    {
+      "path": "app/workflow/v1_langgraph.py",
+      "before_sha256": "ae587482c4812f7237a0aa7ae5ea74d2e46c7e30e6408439a8eee4763a898388",
+      "after_sha256": "c95799d4884f6884c8b0ee462c83cb2d086efc46de215db9679f38489d5df2c6",
+      "baseline": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\app__workflow__v1_langgraph.py.before"
+    },
+    {
+      "path": "tests/test_hermes_v1_conversation.py",
+      "before_sha256": null,
+      "after_sha256": "cbb5faa5fa5a02db53527049217cd6caf006de1049e8de5b2426f34862647809",
+      "baseline": "NEW_FILE"
+    }
+  ],
+  "test_runs": [
+    {
+      "command": ".venv/Scripts/python.exe docs/reports/hermes-conversation-20261009T202640/verify.py memory-review",
+      "evidence": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\memory-review-20261009-203318\\results.xml",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 1
+      },
+      "exit_code": 0,
+      "guard": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "expired_histories_removed_from_disk and create"
+      }
+    },
+    {
+      "command": ".venv/Scripts/python.exe docs/reports/hermes-conversation-20261009T202640/verify.py regression",
+      "evidence": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\regression-20261009-203229\\results.xml",
+      "counts": {
+        "tests": 231,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 229
+      },
+      "exit_code": 1,
+      "guard": {
+        "pytest_exit": 1,
+        "violations": [
+          "EXTERNAL_EFFECT_BLOCKED"
+        ],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not runtime_instances_differ_in_real_subprocesses and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      }
+    },
+    {
+      "command": ".venv/Scripts/python.exe docs/reports/hermes-conversation-20261009T202640/verify.py regression-core",
+      "evidence": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\regression-core-20261009-203459\\results.xml",
+      "counts": {
+        "tests": 228,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 228
+      },
+      "exit_code": 0,
+      "guard": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not runtime_instances_differ_in_real_subprocesses and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      }
+    },
+    {
+      "command": ".venv/Scripts/python.exe docs/reports/hermes-conversation-20261009T202640/verify.py regression-core",
+      "evidence": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\regression-core-20261009-203606\\results.xml",
+      "counts": {
+        "tests": 232,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 232
+      },
+      "exit_code": 0,
+      "guard": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not runtime_instances_differ_in_real_subprocesses and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      }
+    },
+    {
+      "command": ".venv/Scripts/python.exe docs/reports/hermes-conversation-20261009T202640/verify.py regression-final",
+      "evidence": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\regression-final-20261009-203330\\results.xml",
+      "counts": {
+        "tests": 230,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 229
+      },
+      "exit_code": 1,
+      "guard": {
+        "pytest_exit": 1,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not runtime_instances_differ_in_real_subprocesses and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads and not http_opt_in_and_delete"
+      }
+    },
+    {
+      "command": ".venv/Scripts/python.exe docs/reports/hermes-conversation-20261009T202640/verify.py targeted",
+      "evidence": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\targeted-20261009-203043\\results.xml",
+      "counts": {
+        "tests": 36,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 36
+      },
+      "exit_code": 0,
+      "guard": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not runtime_instances_differ_in_real_subprocesses and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      }
+    },
+    {
+      "command": ".venv/Scripts/python.exe docs/reports/hermes-conversation-20261009T202640/verify.py targeted",
+      "evidence": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\targeted-20261009-203215\\results.xml",
+      "counts": {
+        "tests": 42,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 42
+      },
+      "exit_code": 0,
+      "guard": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not runtime_instances_differ_in_real_subprocesses and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      }
+    },
+    {
+      "command": ".venv/Scripts/python.exe docs/reports/hermes-conversation-20261009T202640/verify.py targeted",
+      "evidence": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\targeted-20261009-203427\\results.xml",
+      "counts": {
+        "tests": 46,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 46
+      },
+      "exit_code": 0,
+      "guard": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not runtime_instances_differ_in_real_subprocesses and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      }
+    },
+    {
+      "command": ".venv/Scripts/python.exe docs/reports/hermes-conversation-20261009T202640/verify.py targeted",
+      "evidence": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\hermes-conversation-20261009T202640\\targeted-20261009-203602\\results.xml",
+      "counts": {
+        "tests": 50,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 50
+      },
+      "exit_code": 0,
+      "guard": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not runtime_instances_differ_in_real_subprocesses and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      }
+    }
+  ],
+  "final_source_tests": [
+    "targeted-20261009-203602",
+    "regression-core-20261009-203606"
+  ],
+  "final_targeted": {
+    "pass": 50,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0
+  },
+  "final_core_regression": {
+    "pass": 232,
+    "fail": 0,
+    "skip": 0,
+    "deselected": 3,
+    "exit": 0
+  },
+  "excluded_core_cases": [
+    "runtime_instances_differ_in_real_subprocesses",
+    "bootstrap_layers",
+    "owner_reads"
+  ],
+  "unresolved": [
+    {
+      "finding": "TEMPORARY_MEMORY_REPLACE_ACCESS_DENIED",
+      "status": "REVIEW_REQUIRED",
+      "evidence": [
+        "regression-20261009-203229/results.xml",
+        "regression-final-20261009-203330/results.xml"
+      ],
+      "detail": "Windows WinError 5 in two temporary-memory os.replace cases; one isolated rerun passed. Cause unknown; no memory code changed."
+    },
+    {
+      "finding": "HTTP_MEMORY_TEST_STARTUP_BLOCKED",
+      "status": "NOT_VERIFIED / OUT_OF_SCOPE_V2",
+      "detail": "Existing test imports app.main before substituting fixtures. SQLite guard stopped active-store initialization before connection. Excluded thereafter; no V2 requests executed."
+    }
+  ],
+  "behavior": "Explicit non-evidence conversation uses the already selected provider; repeat is local. Official/unknown requests and sensitive generated claims retain the unchanged evidence guard. Empty evidence never earns conversational grounding or trust.",
+  "limits": [
+    "Conservative rules: unrecognized requests retain evidence requirements",
+    "No live API or real provider test",
+    "No full-suite claim",
+    "No loaded-process/build identity claim"
+  ],
+  "preservation": {
+    "runtime_operations": 0,
+    "database_connections_to_active_store": 0,
+    "v2_source_changes": 0,
+    "dependency_installations": 0,
+    "public_schema_changes": 0,
+    "source_changes": [
+      "app/hermes/agent.py",
+      "app/workflow/v1_langgraph.py"
+    ],
+    "new_test": "tests/test_hermes_v1_conversation.py",
+    "other_writes": "This new evidence directory only",
+    "git_destructive_operations": 0,
+    "graph_queries_updates": 0,
+    "test_cache": "pytest cache provider disabled",
+    "note": "Original source bytes retained in .before snapshots; patch is relative to those snapshots, not HEAD. Pre-existing working-tree changes retained; restricted historical directories produce Git permission warnings."
+  },
+  "rollback": "Reverse SCOPED_CHANGES.patch only after inspecting subsequent edits. Do not restore from HEAD or overwrite either source wholesale; pre-existing changes are in the .before snapshots.",
+  "v1_acceptance": "HOLD",
+  "v2": "DEFERRED"
+}

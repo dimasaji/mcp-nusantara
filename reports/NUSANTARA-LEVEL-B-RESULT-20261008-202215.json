@@ -1,0 +1,47 @@
+﻿{
+  "contract": "NUS-MDE-DEV-CURRENT-20261008",
+  "phase": "LEVEL_B_ISOLATED_REPRODUCTION",
+  "mode": "READ_ONLY",
+  "production_source_modified": false,
+  "provider_runtime_called": false,
+  "database_touched": false,
+  "rag_touched": false,
+  "wal_shm_touched": false,
+  "results": [
+    {
+      "case": "B1",
+      "title": "Mixed negation / positive claim",
+      "status": "INCONCLUSIVE",
+      "observation": "Negation handling tidak ditemukan secara statis."
+    },
+    {
+      "case": "B2",
+      "title": "External backend provenance",
+      "status": "REPRODUCED",
+      "observation": "Jalur external backend/find_file ditemukan. Backend live TIDAK dipanggil."
+    },
+    {
+      "case": "B3",
+      "title": "Sensitive directory search pruning",
+      "status": "INCONCLUSIVE",
+      "observation": "Pola implementasi tidak lengkap."
+    },
+    {
+      "case": "B4",
+      "title": "Inaccessible directory enumeration",
+      "status": "NOT_REPRODUCED",
+      "observation": "onerror ditemukan atau os.walk tidak digunakan."
+    },
+    {
+      "case": "B5",
+      "title": "Truncated source grounding",
+      "status": "REPRODUCED",
+      "observation": "Marker truncation ditemukan; automatic abstention belum terkonfirmasi."
+    }
+  ],
+  "counts": {
+    "REPRODUCED": 2,
+    "NOT_REPRODUCED": 1,
+    "INCONCLUSIVE": 2
+  }
+}

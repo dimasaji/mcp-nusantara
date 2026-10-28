@@ -1,0 +1,289 @@
+{
+  "rounds": [
+    {
+      "round": 1,
+      "observations": [
+        {
+          "name": "backend",
+          "at_utc": "2026-10-28T05:09:54.217611+00:00",
+          "http_status": 200,
+          "elapsed_ms": 164
+        },
+        {
+          "name": "frontend",
+          "at_utc": "2026-10-28T05:09:54.219334+00:00",
+          "http_status": null,
+          "error_type": "TimeoutError",
+          "elapsed_ms": 8161
+        },
+        {
+          "name": "proxy_health",
+          "at_utc": "2026-10-28T05:09:54.219777+00:00",
+          "http_status": null,
+          "error_type": "TimeoutError",
+          "elapsed_ms": 8161
+        },
+        {
+          "name": "ollama",
+          "at_utc": "2026-10-28T05:09:54.220242+00:00",
+          "http_status": 200,
+          "elapsed_ms": 157
+        },
+        {
+          "name": "review_direct",
+          "at_utc": "2026-10-28T05:09:54.220618+00:00",
+          "http_status": 200,
+          "review": {
+            "document_id": "DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+            "version_id": "2c79e2bf120c90c8dcb9bc568e9c8067e2ac587a16fd901bbf6f5b1b83a0f09c",
+            "source_sha256": "d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+            "content_ok": true,
+            "can_approve": false,
+            "approval_requirements": [
+              {
+                "key": "source_available",
+                "satisfied": true
+              },
+              {
+                "key": "extraction_complete",
+                "satisfied": true
+              },
+              {
+                "key": "content_checked",
+                "satisfied": true
+              },
+              {
+                "key": "case:requirements",
+                "satisfied": true
+              },
+              {
+                "key": "case:procedure",
+                "satisfied": true
+              },
+              {
+                "key": "case:time_cost",
+                "satisfied": true
+              },
+              {
+                "key": "case:followup",
+                "satisfied": true
+              },
+              {
+                "key": "case:missing",
+                "satisfied": false
+              },
+              {
+                "key": "all_trials_reviewed",
+                "satisfied": false
+              },
+              {
+                "key": "no_open_problems",
+                "satisfied": true
+              }
+            ],
+            "approval_present": false,
+            "extraction_status": "COMPLETE"
+          },
+          "elapsed_ms": 291
+        },
+        {
+          "name": "review_proxy",
+          "at_utc": "2026-10-28T05:09:54.221173+00:00",
+          "http_status": null,
+          "error_type": "TimeoutError",
+          "elapsed_ms": 8160
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "observations": [
+        {
+          "name": "backend",
+          "at_utc": "2026-10-28T05:10:07.383927+00:00",
+          "http_status": 200,
+          "elapsed_ms": 4
+        },
+        {
+          "name": "frontend",
+          "at_utc": "2026-10-28T05:10:07.384278+00:00",
+          "http_status": null,
+          "error_type": "TimeoutError",
+          "elapsed_ms": 8016
+        },
+        {
+          "name": "proxy_health",
+          "at_utc": "2026-10-28T05:10:07.384573+00:00",
+          "http_status": null,
+          "error_type": "TimeoutError",
+          "elapsed_ms": 8016
+        },
+        {
+          "name": "ollama",
+          "at_utc": "2026-10-28T05:10:07.384831+00:00",
+          "http_status": 200,
+          "elapsed_ms": 3
+        },
+        {
+          "name": "review_direct",
+          "at_utc": "2026-10-28T05:10:07.385133+00:00",
+          "http_status": 200,
+          "review": {
+            "document_id": "DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+            "version_id": "2c79e2bf120c90c8dcb9bc568e9c8067e2ac587a16fd901bbf6f5b1b83a0f09c",
+            "source_sha256": "d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+            "content_ok": true,
+            "can_approve": false,
+            "approval_requirements": [
+              {
+                "key": "source_available",
+                "satisfied": true
+              },
+              {
+                "key": "extraction_complete",
+                "satisfied": true
+              },
+              {
+                "key": "content_checked",
+                "satisfied": true
+              },
+              {
+                "key": "case:requirements",
+                "satisfied": true
+              },
+              {
+                "key": "case:procedure",
+                "satisfied": true
+              },
+              {
+                "key": "case:time_cost",
+                "satisfied": true
+              },
+              {
+                "key": "case:followup",
+                "satisfied": true
+              },
+              {
+                "key": "case:missing",
+                "satisfied": false
+              },
+              {
+                "key": "all_trials_reviewed",
+                "satisfied": false
+              },
+              {
+                "key": "no_open_problems",
+                "satisfied": true
+              }
+            ],
+            "approval_present": false,
+            "extraction_status": "COMPLETE"
+          },
+          "elapsed_ms": 85
+        },
+        {
+          "name": "review_proxy",
+          "at_utc": "2026-10-28T05:10:07.385357+00:00",
+          "http_status": null,
+          "error_type": "TimeoutError",
+          "elapsed_ms": 8016
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "observations": [
+        {
+          "name": "backend",
+          "at_utc": "2026-10-28T05:10:20.402938+00:00",
+          "http_status": 200,
+          "elapsed_ms": 2
+        },
+        {
+          "name": "frontend",
+          "at_utc": "2026-10-28T05:10:20.403240+00:00",
+          "http_status": null,
+          "error_type": "TimeoutError",
+          "elapsed_ms": 8011
+        },
+        {
+          "name": "proxy_health",
+          "at_utc": "2026-10-28T05:10:20.403785+00:00",
+          "http_status": null,
+          "error_type": "TimeoutError",
+          "elapsed_ms": 8011
+        },
+        {
+          "name": "ollama",
+          "at_utc": "2026-10-28T05:10:20.404104+00:00",
+          "http_status": 200,
+          "elapsed_ms": 7
+        },
+        {
+          "name": "review_direct",
+          "at_utc": "2026-10-28T05:10:20.404360+00:00",
+          "http_status": 200,
+          "review": {
+            "document_id": "DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+            "version_id": "2c79e2bf120c90c8dcb9bc568e9c8067e2ac587a16fd901bbf6f5b1b83a0f09c",
+            "source_sha256": "d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+            "content_ok": true,
+            "can_approve": false,
+            "approval_requirements": [
+              {
+                "key": "source_available",
+                "satisfied": true
+              },
+              {
+                "key": "extraction_complete",
+                "satisfied": true
+              },
+              {
+                "key": "content_checked",
+                "satisfied": true
+              },
+              {
+                "key": "case:requirements",
+                "satisfied": true
+              },
+              {
+                "key": "case:procedure",
+                "satisfied": true
+              },
+              {
+                "key": "case:time_cost",
+                "satisfied": true
+              },
+              {
+                "key": "case:followup",
+                "satisfied": true
+              },
+              {
+                "key": "case:missing",
+                "satisfied": false
+              },
+              {
+                "key": "all_trials_reviewed",
+                "satisfied": false
+              },
+              {
+                "key": "no_open_problems",
+                "satisfied": true
+              }
+            ],
+            "approval_present": false,
+            "extraction_status": "COMPLETE"
+          },
+          "elapsed_ms": 109
+        },
+        {
+          "name": "review_proxy",
+          "at_utc": "2026-10-28T05:10:20.404651+00:00",
+          "http_status": null,
+          "error_type": "TimeoutError",
+          "elapsed_ms": 8025
+        }
+      ]
+    }
+  ]
+}

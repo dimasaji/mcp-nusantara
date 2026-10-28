@@ -1,0 +1,40 @@
+﻿{
+    "contract":  "NUS-MDE-DEV-CURRENT-20261008",
+    "phase":  "LEVEL_B_BEHAVIORAL_IMPACT_B2_B5",
+    "mode":  "ISOLATED_READ_ONLY",
+    "results":  [
+                    {
+                        "case":  "B2",
+                        "title":  "External backend provenance",
+                        "status":  "INCONCLUSIVE",
+                        "observation":  "Exception saat behavioral fixture B2.",
+                        "evidence":  {
+                                         "error":  "ModuleNotFoundError(\"No module named \u0027app.devcore\u0027\")",
+                                         "traceback":  "Traceback (most recent call last):\n  File \"C:\\Users\\dmaza\\AppData\\Local\\Temp\\nusantara_level_b_behavioral_impact_b2_b5.py\", line 56, in \u003cmodule\u003e\n    import app.devcore.core as core\nModuleNotFoundError: No module named \u0027app.devcore\u0027\n"
+                                     }
+                    },
+                    {
+                        "case":  "B5",
+                        "title":  "Truncated source grounding",
+                        "status":  "INCONCLUSIVE",
+                        "observation":  "Exception saat behavioral fixture B5.",
+                        "evidence":  {
+                                         "error":  "ModuleNotFoundError(\"No module named \u0027app.devcore\u0027\")",
+                                         "traceback":  "Traceback (most recent call last):\n  File \"C:\\Users\\dmaza\\AppData\\Local\\Temp\\nusantara_level_b_behavioral_impact_b2_b5.py\", line 189, in \u003cmodule\u003e\n    import app.devcore.core as core\nModuleNotFoundError: No module named \u0027app.devcore\u0027\n"
+                                     }
+                    }
+                ],
+    "counts":  {
+                   "BEHAVIOR_REPRODUCED":  0,
+                   "BEHAVIOR_NOT_REPRODUCED":  0,
+                   "INCONCLUSIVE":  2
+               },
+    "safety":  {
+                   "production_source_modified":  false,
+                   "provider_runtime_called":  false,
+                   "database_touched":  false,
+                   "rag_touched":  false,
+                   "wal_shm_touched":  false,
+                   "admin_token_changed":  false
+               }
+}

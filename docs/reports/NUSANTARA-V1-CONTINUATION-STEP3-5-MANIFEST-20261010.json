@@ -1,0 +1,27 @@
+{
+  "schema": "nusantara-v1-continuation-step3-5-manifest-v1",
+  "recorded_at_utc": "2026-10-10T09:36:59Z",
+  "decision": "V1_HOLD",
+  "package": {
+    "path": "docs/reports/nusantara-v1-autonomous-closure-20261010/runs/step3-5-continuation-20261010-01/package.json",
+    "package_id": "evp_sha256_36bb8d0cdb4ff24fc994d87f8713877caf5a53bfe674d23dd0c9519ddeb574b6",
+    "sha256": "871A194F5C5599661084CFB3D16C5904E1EAD5004897211E87600DE1B18E1796",
+    "criteria_not_verified": 15,
+    "pass_allowed": false,
+    "runtime_status": "NOT_VERIFIED"
+  },
+  "report": {
+    "path": "docs/reports/NUSANTARA-V1-CONTINUATION-STEP3-5-20261010.md",
+    "sha256": "ACA08F73203A62FCA6804D7A083DD72073E0EC611E6F2E8720F9D58C821BC581"
+  },
+  "blockers": [
+    "CC-01 HTTP socketpair blocked before route dispatch",
+    "Docker/runtime/CC-06 candidate inaccessible",
+    "Official knowledge governance approval absent",
+    "Memory consent/session/retention policy absent",
+    "Symlink privilege/security test unverified",
+    "Production target missing",
+    "Declared current test-run manifest invalid due source hash drift"
+  ],
+  "evidence_classification_note": "Online government pages are source leads only; not local snapshots and not ingested."
+}

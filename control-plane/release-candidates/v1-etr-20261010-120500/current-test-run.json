@@ -1,0 +1,142 @@
+{
+  "command": [
+    "python tests/run_evidence_tests_isolated.py control-plane/release-candidates/v1-etr-20261010-120500"
+  ],
+  "counts": {
+    "errors": 0,
+    "failed": 0,
+    "pytest_passed": 22,
+    "skipped": 0
+  },
+  "criteria": {
+    "AC1": {
+      "status": "PASS",
+      "test_ids": [
+        "test_registry_covers_all_acceptance_criteria"
+      ]
+    },
+    "AC10": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    },
+    "AC11": {
+      "status": "PASS",
+      "test_ids": [
+        "test_package_id_changes_when_evidence_changes"
+      ]
+    },
+    "AC12": {
+      "status": "PASS",
+      "test_ids": [
+        "test_audit_chain_detects_tampering_and_appends"
+      ]
+    },
+    "AC13": {
+      "status": "PASS",
+      "test_ids": [
+        "uses only PASS, FAIL and HOLD with optional notes and keeps PASS blocked"
+      ]
+    },
+    "AC14": {
+      "status": "PASS",
+      "test_ids": [
+        "test_legacy_snapshot_route_is_unchanged"
+      ]
+    },
+    "AC15": {
+      "status": "PASS",
+      "test_ids": [
+        "test_missing_test_run_blocks_pass",
+        "test_package_id_changes_when_evidence_changes",
+        "test_test_run_manifest_is_bound_to_result_hashes"
+      ]
+    },
+    "AC2": {
+      "status": "PASS",
+      "test_ids": [
+        "test_collector_records_real_artifact_references"
+      ]
+    },
+    "AC3": {
+      "status": "PASS",
+      "test_ids": [
+        "test_validator_distinguishes_all_statuses"
+      ]
+    },
+    "AC4": {
+      "status": "PASS",
+      "test_ids": [
+        "test_each_criterion_links_sources_and_tests"
+      ]
+    },
+    "AC5": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    },
+    "AC6": {
+      "status": "PASS",
+      "test_ids": [
+        "test_test_run_manifest_is_bound_to_result_hashes"
+      ]
+    },
+    "AC7": {
+      "status": "PASS",
+      "test_ids": [
+        "uses only PASS, FAIL and HOLD with optional notes and keeps PASS blocked"
+      ]
+    },
+    "AC8": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_rejects_stale_or_client_forged_package"
+      ]
+    },
+    "AC9": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    }
+  },
+  "exit_code": 0,
+  "isolation": {
+    "active_data_blocked": true,
+    "cache_isolated": true,
+    "exceptions": [
+      "Runner allowed only verified standard descriptor and loopback socketpair behavior required by pytest capture; no external provider/runtime requests were made."
+    ],
+    "filesystem_writes_scoped": true,
+    "network_blocked": true,
+    "python_output": "control-plane/release-candidates/v1-etr-20261010-120500/python-results.xml",
+    "subprocess_blocked": true
+  },
+  "results_path": "control-plane/release-candidates/v1-etr-20261010-120500/results-bundle.json",
+  "results_sha256": "5c9603f0a724d1ac2b3bbc83baba78cd081036308d0525d0a2cced8ce837aab5",
+  "run_id": "NUS-MASTER-V1-ETR-20261010-001-001",
+  "schema_version": 1,
+  "scope": "isolated evidence runner regression: registry, decision API, runner guards",
+  "source_sha256": {
+    "app/api/control_plane.py": "339ac38bcbbc42825caf09b9f1ec3bad837cf8a0202672ed0c1a11df4475a958",
+    "app/core/evidence_registry.py": "2cdf516a0c258e661d456e4de30450421d08f80d6a670cebc4d07816a780ed0a",
+    "app/security/auth.py": "4d3105ba4d5c34d864392f0918dda797bf296a2987ec5964245949dbc55f7552",
+    "control-plane/evidence-requirements.json": "f884ddd56f3b0431b7e83db3f4cccb12b5748d42edc59dac4431151030258e4a",
+    "control-plane/src/api.ts": "952437f4c2780f7127d8b54bcd3c15089c0cdd0251a086c5cee7ad9d62d9dd40",
+    "control-plane/src/human.tsx": "34f0fe783812f7a9dce05bcc19b103f091f0a478a94870495b4d58eecbfb6b51",
+    "control-plane/tests/acceptance.test.ts": "3d36accee4ac33362e89adecf961154269138de21881b6c2352957d74365f8b3",
+    "control-plane/tests/human.test.tsx": "236ca6029cbd9a1c4e1f40b7bb80797107de2a93b65fc5e7eca76680353de460",
+    "control-plane/tests/inspection-preview-network-guard.cjs": "5ef717288c1af29c6a8e3cf35ad9004f481261ee16cbaf9d01344a9c58dc00cd",
+    "control-plane/vitest.config.ts": "5dd0ce20a3cec5ea7cc3a680d827022900f5e27a8f94e90c28183866e7e6253f",
+    "docs/reports/nus-evidence-completion-20261010/EVIDENCE-WORK-INVENTORY.md": "e188cc864810436ad027bea324a5935e267fb158009ce14ec73a637a58f78cd0",
+    "docs/reports/nus-evidence-completion-20261010/MDA-E2-E3-OFFLINE-EVIDENCE-AND-MAPPING.md": "6d149a42ca1a49a7a4506653cb7bf45e6d154dab524b4cc368dee36650ef9083",
+    "tests/pytest-evidence.ini": "c14b489a30afe60312242394d2e54d37d23e99ccef8d68f203807b76e325c758",
+    "tests/run_evidence_tests_isolated.py": "2d88efe965631f00c8b80c20f1b880f1f636e0f08c922b1fceaf83ad2dbd3521",
+    "tests/test_evidence_decision_api.py": "60bccc558b2f6f8f42547341a575615de6acbad5c8dbf5956b423bc78fd7157a",
+    "tests/test_evidence_registry.py": "d6dc1e02252d948429d360b3c9a8955d316afbcdb057c602fd97c62e3504c506",
+    "tests/test_evidence_runner_guards.py": "8858f4ad4f5fe6fe594bad89c0cd4969ab397e184c0001c91a37cb595fb3288b"
+  },
+  "timestamp": "2026-10-10T12:10:00Z"
+}

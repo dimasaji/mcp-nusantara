@@ -1,0 +1,200 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261008155741
+Username: DESKTOP-GJHS3LR\dmaza
+RunAs User: DESKTOP-GJHS3LR\dmaza
+Configuration Name: 
+Machine: DESKTOP-GJHS3LR (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+Process ID: 31224
+PSVersion: 5.1.26100.9444
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9444
+BuildVersion: 10.0.26100.9444
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\dmaza\mcp-starter\docs\reports\r2-ui-validation-20261008-155741\powershell-transcript.txt
+PS C:\Users\dmaza\mcp-starter> function Write-Section($Name) {
+    Write-Host "`n========== $Name ==========" -ForegroundColor Cyan
+}
+PS C:\Users\dmaza\mcp-starter> try {
+    Set-Location $Root
+    Write-Section "1. REPOSITORY BASELINE"
+    git rev-parse --show-toplevel
+    git branch --show-current
+    git rev-parse HEAD
+    git status --short
+    git diff --cached --quiet
+    Write-Host "Staging empty: $($LASTEXITCODE -eq 0)"
+
+    Write-Section "2. UI AND TEST FILES"
+    Get-ChildItem (Join-Path $Root "control-plane") -Force |
+        Select-Object Mode, Name
+    Get-ChildItem (Join-Path $Root "control-plane\e2e") -Filter "*.spec.ts" -ErrorAction SilentlyContinue |
+        Select-Object FullName
+    Test-Path (Join-Path $Root "control-plane\node_modules\@playwright\test\cli.js")
+
+    Write-Section "3. CURRENT LOCAL ENDPOINTS"
+    foreach ($Url in @(
+        "http://localhost:5173/",
+        "http://localhost:5173/system",
+        "http://localhost:5173/evidence",
+        "http://localhost:5173/test",
+        "http://localhost:5173/review",
+        "http://localhost:5173/decision",
+        "http://127.0.0.1:8000/openapi.json"
+    )) {
+        try {
+            $Response = Invoke-WebRequest -Uri $Url -TimeoutSec 5 -UseBasicParsing
+            [PSCustomObject]@{
+                Url = $Url
+                Status = [int]$Response.StatusCode
+                ContentType = $Response.Headers["Content-Type"]
+                Bytes = $Response.RawContentLength
+            } | Format-Table -AutoSize
+        } catch {
+            [PSCustomObject]@{
+                Url = $Url
+                Status = "UNAVAILABLE"
+                ContentType = ""
+                Bytes = 0
+                Error = $_.Exception.Message
+            } | Format-List
+        }
+    }
+
+    Write-Section "4. FRONTEND TARGETED TESTS"
+    $ControlPlane = Join-Path $Root "control-plane"
+    if (Test-Path (Join-Path $ControlPlane "node_modules\.bin\vitest.cmd")) {
+        Push-Location $ControlPlane
+        try {
+            & ".\node_modules\.bin\vitest.cmd" run
+            $FrontendExit = $LASTEXITCODE
+            Write-Host "Frontend test exit code: $FrontendExit"
+        } finally {
+            Pop-Location
+        }
+    } else {
+        Write-Host "SKIPPED: local Vitest executable not found; no installation attempted."
+    }
+
+    Write-Section "5. EXISTING MOCK-ONLY ATTESTATION E2E"
+    $E2EReport = Join-Path $Root "docs\reports\attestation-browser-e2e-001-20261008-1dfe0389"
+    $E2EConfig = Join-Path $E2EReport "playwright.mock.config.cjs"
+    $E2ESpec = Join-Path $ControlPlane "e2e\attestation.spec.ts"
+    if ((Test-Path $E2EConfig) -and (Test-Path $E2ESpec)) {
+        Write-Host "Existing mock-only E2E evidence found."
+        Write-Host "Do not rerun E2E automatically: the previous authorized run already passed 12/12."
+        Write-Host "Existing report: $E2EReport"
+    } else {
+        Write-Host "No complete existing mock-only E2E harness found; live E2E will not be started."
+    }
+
+    Write-Section "6. REPORT FILES"
+    Write-Host "Transcript: $(Join-Path $Report 'powershell-transcript.txt')"
+    git status --short
+}
+finally {
+    Stop-Transcript | Out-Null
+}
+
+========== 1. REPOSITORY BASELINE ==========
+
+
+
+
+
+Staging empty: True
+
+========== 2. UI AND TEST FILES ==========
+
+
+========== 3. CURRENT LOCAL ENDPOINTS ==========
+Mode   Name
+----   ----
+d----- dist
+d----- e2e
+d----- node_modules
+d----- src
+d----- test-results
+d----- tests
+-a---- .gitignore
+-a---- CPLANE_OWNER_AUTHORIZATION.json
+-a---- evidence-sources.json
+-a---- index.html
+-a---- package-lock.json
+-a---- package.json
+-a---- playwright.config.ts
+-a---- README.md
+-a---- SCOPE.json
+-a---- tsconfig.json
+-a---- vite.config.ts
+-a---- vitest.config.ts
+
+
+
+True
+
+
+
+Url                    Status ContentType Bytes
+---                    ------ ----------- -----
+http://localhost:5173/    200 text/html     531
+
+
+
+Url                          Status ContentType Bytes
+---                          ------ ----------- -----
+http://localhost:5173/system    200 text/html     531
+
+
+
+Url                            Status ContentType Bytes
+---                            ------ ----------- -----
+http://localhost:5173/evidence    200 text/html     531
+
+
+
+Url                        Status ContentType Bytes
+---                        ------ ----------- -----
+http://localhost:5173/test    200 text/html     531
+
+
+
+Url                          Status ContentType Bytes
+---                          ------ ----------- -----
+http://localhost:5173/review    200 text/html     531
+
+
+
+Url                            Status ContentType Bytes
+---                            ------ ----------- -----
+http://localhost:5173/decision    200 text/html     531
+
+
+
+Url                                Status ContentType      Bytes
+---                                ------ -----------      -----
+http://127.0.0.1:8000/openapi.json    200 application/json 20345
+
+
+
+========== 4. FRONTEND TARGETED TESTS ==========
+
+Frontend test exit code: 1
+
+========== 5. EXISTING MOCK-ONLY ATTESTATION E2E ==========
+Existing mock-only E2E evidence found.
+Do not rerun E2E automatically: the previous authorized run already passed 12/12.
+Existing report: C:\Users\dmaza\mcp-starter\docs\reports\attestation-browser-e2e-001-20261008-1dfe0389
+
+========== 6. REPORT FILES ==========
+Transcript: C:\Users\dmaza\mcp-starter\docs\reports\r2-ui-validation-20261008-155741\powershell-transcript.txt
+
+**********************
+Windows PowerShell transcript end
+End time: 20261008155748
+**********************

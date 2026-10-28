@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="9" failures="0" skipped="0" tests="9" time="5.338" timestamp="2026-10-27T09:33:58.588510+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="" name="tests.test_ncp_v1_chat_contract" time="0.000"><error message="collection failure">tests\test_ncp_v1_chat_contract.py:4: in &lt;module&gt;
+    from test_v1_langgraph import fixture
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+&lt;frozen importlib._bootstrap&gt;:1331: in _find_and_load_unlocked
+    ???
+&lt;frozen importlib._bootstrap&gt;:935: in _load_unlocked
+    ???
+.venv\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\test_v1_langgraph.py:14: in &lt;module&gt;
+    from app.hermes.agent import HermesAgent
+app\hermes\__init__.py:1: in &lt;module&gt;
+    from .agent import HermesAgent
+app\hermes\agent.py:11: in &lt;module&gt;
+    from app.models.mock import MockProvider
+app\models\__init__.py:3: in &lt;module&gt;
+    from app.models.ollama import OllamaProvider
+app\models\ollama.py:12: in &lt;module&gt;
+    from app.core.config import settings
+app\core\config.py:173: in &lt;module&gt;
+    settings = get_settings()
+               ^^^^^^^^^^^^^^
+app\core\config.py:171: in get_settings
+    return Settings()
+           ^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\main.py:229: in __init__
+    else __pydantic_self__.__class__._settings_init_sources(
+.venv\Lib\site-packages\pydantic_settings\main.py:418: in _settings_init_sources
+    dotenv_settings = DotEnvSettingsSource(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:60: in __init__
+    super().__init__(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\env.py:84: in __init__
+    self.env_vars = self._load_env_vars()
+                    ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:74: in _load_env_vars
+    return self._read_env_files()
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:116: in _read_env_files
+    dotenv_vars.update(self._read_env_file(env_path))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:92: in _read_env_file
+    return self._static_read_env_file(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:85: in _static_read_env_file
+    file_vars: dict[str, str | None] = dotenv_values(file_path, encoding=encoding or 'utf8')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:472: in dotenv_values
+    ).dict()
+      ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:84: in dict
+    resolve_variables(raw_values, override=self.override)
+.venv\Lib\site-packages\dotenv\main.py:300: in resolve_variables
+    for name, value in values:
+                       ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:92: in parse
+    with self._get_stream() as stream:
+         ^^^^^^^^^^^^^^^^^^
+..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:63: in _get_stream
+    with open(self.dotenv_path, encoding=self.encoding) as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reports\audit\evidence\run_guarded_tests.py:43: in audit
+    deny(event, 'credential_file')
+reports\audit\evidence\run_guarded_tests.py:34: in deny
+    raise PermissionError('AUDIT_GUARD_BLOCKED: ' + event + ': ' + reason)
+E   PermissionError: AUDIT_GUARD_BLOCKED: open: credential_file</error></testcase><testcase classname="" name="tests.test_docling_layout" time="0.000"><error message="collection failure">tests\test_docling_layout.py:1: in &lt;module&gt;
+    from test_selected_pdf_chat import table_pdf
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+&lt;frozen importlib._bootstrap&gt;:1331: in _find_and_load_unlocked
+    ???
+&lt;frozen importlib._bootstrap&gt;:935: in _load_unlocked
+    ???
+.venv\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\test_selected_pdf_chat.py:6: in &lt;module&gt;
+    from test_v1_langgraph import fixture
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+&lt;frozen importlib._bootstrap&gt;:1331: in _find_and_load_unlocked
+    ???
+&lt;frozen importlib._bootstrap&gt;:935: in _load_unlocked
+    ???
+.venv\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\test_v1_langgraph.py:14: in &lt;module&gt;
+    from app.hermes.agent import HermesAgent
+app\hermes\__init__.py:1: in &lt;module&gt;
+    from .agent import HermesAgent
+app\hermes\agent.py:11: in &lt;module&gt;
+    from app.models.mock import MockProvider
+app\models\__init__.py:3: in &lt;module&gt;
+    from app.models.ollama import OllamaProvider
+app\models\ollama.py:12: in &lt;module&gt;
+    from app.core.config import settings
+app\core\config.py:173: in &lt;module&gt;
+    settings = get_settings()
+               ^^^^^^^^^^^^^^
+app\core\config.py:171: in get_settings
+    return Settings()
+           ^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\main.py:229: in __init__
+    else __pydantic_self__.__class__._settings_init_sources(
+.venv\Lib\site-packages\pydantic_settings\main.py:418: in _settings_init_sources
+    dotenv_settings = DotEnvSettingsSource(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:60: in __init__
+    super().__init__(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\env.py:84: in __init__
+    self.env_vars = self._load_env_vars()
+                    ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:74: in _load_env_vars
+    return self._read_env_files()
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:116: in _read_env_files
+    dotenv_vars.update(self._read_env_file(env_path))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:92: in _read_env_file
+    return self._static_read_env_file(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:85: in _static_read_env_file
+    file_vars: dict[str, str | None] = dotenv_values(file_path, encoding=encoding or 'utf8')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:472: in dotenv_values
+    ).dict()
+      ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:84: in dict
+    resolve_variables(raw_values, override=self.override)
+.venv\Lib\site-packages\dotenv\main.py:300: in resolve_variables
+    for name, value in values:
+                       ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:92: in parse
+    with self._get_stream() as stream:
+         ^^^^^^^^^^^^^^^^^^
+..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:63: in _get_stream
+    with open(self.dotenv_path, encoding=self.encoding) as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reports\audit\evidence\run_guarded_tests.py:43: in audit
+    deny(event, 'credential_file')
+reports\audit\evidence\run_guarded_tests.py:34: in deny
+    raise PermissionError('AUDIT_GUARD_BLOCKED: ' + event + ': ' + reason)
+E   PermissionError: AUDIT_GUARD_BLOCKED: open: credential_file</error></testcase><testcase classname="" name="tests.test_selected_pdf_chat" time="0.000"><error message="collection failure">tests\test_selected_pdf_chat.py:6: in &lt;module&gt;
+    from test_v1_langgraph import fixture
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+&lt;frozen importlib._bootstrap&gt;:1331: in _find_and_load_unlocked
+    ???
+&lt;frozen importlib._bootstrap&gt;:935: in _load_unlocked
+    ???
+.venv\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\test_v1_langgraph.py:14: in &lt;module&gt;
+    from app.hermes.agent import HermesAgent
+app\hermes\__init__.py:1: in &lt;module&gt;
+    from .agent import HermesAgent
+app\hermes\agent.py:11: in &lt;module&gt;
+    from app.models.mock import MockProvider
+app\models\__init__.py:3: in &lt;module&gt;
+    from app.models.ollama import OllamaProvider
+app\models\ollama.py:12: in &lt;module&gt;
+    from app.core.config import settings
+app\core\config.py:173: in &lt;module&gt;
+    settings = get_settings()
+               ^^^^^^^^^^^^^^
+app\core\config.py:171: in get_settings
+    return Settings()
+           ^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\main.py:229: in __init__
+    else __pydantic_self__.__class__._settings_init_sources(
+.venv\Lib\site-packages\pydantic_settings\main.py:418: in _settings_init_sources
+    dotenv_settings = DotEnvSettingsSource(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:60: in __init__
+    super().__init__(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\env.py:84: in __init__
+    self.env_vars = self._load_env_vars()
+                    ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:74: in _load_env_vars
+    return self._read_env_files()
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:116: in _read_env_files
+    dotenv_vars.update(self._read_env_file(env_path))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:92: in _read_env_file
+    return self._static_read_env_file(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:85: in _static_read_env_file
+    file_vars: dict[str, str | None] = dotenv_values(file_path, encoding=encoding or 'utf8')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:472: in dotenv_values
+    ).dict()
+      ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:84: in dict
+    resolve_variables(raw_values, override=self.override)
+.venv\Lib\site-packages\dotenv\main.py:300: in resolve_variables
+    for name, value in values:
+                       ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:92: in parse
+    with self._get_stream() as stream:
+         ^^^^^^^^^^^^^^^^^^
+..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:63: in _get_stream
+    with open(self.dotenv_path, encoding=self.encoding) as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reports\audit\evidence\run_guarded_tests.py:43: in audit
+    deny(event, 'credential_file')
+reports\audit\evidence\run_guarded_tests.py:34: in deny
+    raise PermissionError('AUDIT_GUARD_BLOCKED: ' + event + ': ' + reason)
+E   PermissionError: AUDIT_GUARD_BLOCKED: open: credential_file</error></testcase><testcase classname="" name="tests.test_openrouter_provider" time="0.000"><error message="collection failure">tests\test_openrouter_provider.py:11: in &lt;module&gt;
+    from app.models.openrouter import OpenRouterError, OpenRouterProvider
+app\models\__init__.py:3: in &lt;module&gt;
+    from app.models.ollama import OllamaProvider
+app\models\ollama.py:12: in &lt;module&gt;
+    from app.core.config import settings
+app\core\config.py:173: in &lt;module&gt;
+    settings = get_settings()
+               ^^^^^^^^^^^^^^
+app\core\config.py:171: in get_settings
+    return Settings()
+           ^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\main.py:229: in __init__
+    else __pydantic_self__.__class__._settings_init_sources(
+.venv\Lib\site-packages\pydantic_settings\main.py:418: in _settings_init_sources
+    dotenv_settings = DotEnvSettingsSource(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:60: in __init__
+    super().__init__(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\env.py:84: in __init__
+    self.env_vars = self._load_env_vars()
+                    ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:74: in _load_env_vars
+    return self._read_env_files()
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:116: in _read_env_files
+    dotenv_vars.update(self._read_env_file(env_path))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:92: in _read_env_file
+    return self._static_read_env_file(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:85: in _static_read_env_file
+    file_vars: dict[str, str | None] = dotenv_values(file_path, encoding=encoding or 'utf8')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:472: in dotenv_values
+    ).dict()
+      ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:84: in dict
+    resolve_variables(raw_values, override=self.override)
+.venv\Lib\site-packages\dotenv\main.py:300: in resolve_variables
+    for name, value in values:
+                       ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:92: in parse
+    with self._get_stream() as stream:
+         ^^^^^^^^^^^^^^^^^^
+..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:63: in _get_stream
+    with open(self.dotenv_path, encoding=self.encoding) as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reports\audit\evidence\run_guarded_tests.py:43: in audit
+    deny(event, 'credential_file')
+reports\audit\evidence\run_guarded_tests.py:34: in deny
+    raise PermissionError('AUDIT_GUARD_BLOCKED: ' + event + ': ' + reason)
+E   PermissionError: AUDIT_GUARD_BLOCKED: open: credential_file</error></testcase><testcase classname="" name="tests.test_cost_ledger_v1" time="0.000"><error message="collection failure">tests\test_cost_ledger_v1.py:5: in &lt;module&gt;
+    from app.models.cost_ledger import CostGovernanceDenied, CostLedger
+app\models\__init__.py:3: in &lt;module&gt;
+    from app.models.ollama import OllamaProvider
+app\models\ollama.py:12: in &lt;module&gt;
+    from app.core.config import settings
+app\core\config.py:173: in &lt;module&gt;
+    settings = get_settings()
+               ^^^^^^^^^^^^^^
+app\core\config.py:171: in get_settings
+    return Settings()
+           ^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\main.py:229: in __init__
+    else __pydantic_self__.__class__._settings_init_sources(
+.venv\Lib\site-packages\pydantic_settings\main.py:418: in _settings_init_sources
+    dotenv_settings = DotEnvSettingsSource(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:60: in __init__
+    super().__init__(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\env.py:84: in __init__
+    self.env_vars = self._load_env_vars()
+                    ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:74: in _load_env_vars
+    return self._read_env_files()
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:116: in _read_env_files
+    dotenv_vars.update(self._read_env_file(env_path))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:92: in _read_env_file
+    return self._static_read_env_file(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:85: in _static_read_env_file
+    file_vars: dict[str, str | None] = dotenv_values(file_path, encoding=encoding or 'utf8')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:472: in dotenv_values
+    ).dict()
+      ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:84: in dict
+    resolve_variables(raw_values, override=self.override)
+.venv\Lib\site-packages\dotenv\main.py:300: in resolve_variables
+    for name, value in values:
+                       ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:92: in parse
+    with self._get_stream() as stream:
+         ^^^^^^^^^^^^^^^^^^
+..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:63: in _get_stream
+    with open(self.dotenv_path, encoding=self.encoding) as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reports\audit\evidence\run_guarded_tests.py:43: in audit
+    deny(event, 'credential_file')
+reports\audit\evidence\run_guarded_tests.py:34: in deny
+    raise PermissionError('AUDIT_GUARD_BLOCKED: ' + event + ': ' + reason)
+E   PermissionError: AUDIT_GUARD_BLOCKED: open: credential_file</error></testcase><testcase classname="" name="tests.test_cost_summary_api" time="0.000"><error message="collection failure">tests\test_cost_summary_api.py:4: in &lt;module&gt;
+    from app.models.cost_ledger import CostLedger
+app\models\__init__.py:3: in &lt;module&gt;
+    from app.models.ollama import OllamaProvider
+app\models\ollama.py:12: in &lt;module&gt;
+    from app.core.config import settings
+app\core\config.py:173: in &lt;module&gt;
+    settings = get_settings()
+               ^^^^^^^^^^^^^^
+app\core\config.py:171: in get_settings
+    return Settings()
+           ^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\main.py:229: in __init__
+    else __pydantic_self__.__class__._settings_init_sources(
+.venv\Lib\site-packages\pydantic_settings\main.py:418: in _settings_init_sources
+    dotenv_settings = DotEnvSettingsSource(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:60: in __init__
+    super().__init__(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\env.py:84: in __init__
+    self.env_vars = self._load_env_vars()
+                    ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:74: in _load_env_vars
+    return self._read_env_files()
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:116: in _read_env_files
+    dotenv_vars.update(self._read_env_file(env_path))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:92: in _read_env_file
+    return self._static_read_env_file(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:85: in _static_read_env_file
+    file_vars: dict[str, str | None] = dotenv_values(file_path, encoding=encoding or 'utf8')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:472: in dotenv_values
+    ).dict()
+      ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:84: in dict
+    resolve_variables(raw_values, override=self.override)
+.venv\Lib\site-packages\dotenv\main.py:300: in resolve_variables
+    for name, value in values:
+                       ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:92: in parse
+    with self._get_stream() as stream:
+         ^^^^^^^^^^^^^^^^^^
+..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:63: in _get_stream
+    with open(self.dotenv_path, encoding=self.encoding) as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reports\audit\evidence\run_guarded_tests.py:43: in audit
+    deny(event, 'credential_file')
+reports\audit\evidence\run_guarded_tests.py:34: in deny
+    raise PermissionError('AUDIT_GUARD_BLOCKED: ' + event + ': ' + reason)
+E   PermissionError: AUDIT_GUARD_BLOCKED: open: credential_file</error></testcase><testcase classname="" name="tests.test_runtime_authorization" time="0.000"><error message="collection failure">tests\test_runtime_authorization.py:20: in &lt;module&gt;
+    from app.api.runtime_verification import install_runtime_verification, VERIFICATION_PATH
+app\api\runtime_verification.py:23: in &lt;module&gt;
+    from app.models.ollama import OllamaProvider
+app\models\__init__.py:3: in &lt;module&gt;
+    from app.models.ollama import OllamaProvider
+app\models\ollama.py:12: in &lt;module&gt;
+    from app.core.config import settings
+app\core\config.py:173: in &lt;module&gt;
+    settings = get_settings()
+               ^^^^^^^^^^^^^^
+app\core\config.py:171: in get_settings
+    return Settings()
+           ^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\main.py:229: in __init__
+    else __pydantic_self__.__class__._settings_init_sources(
+.venv\Lib\site-packages\pydantic_settings\main.py:418: in _settings_init_sources
+    dotenv_settings = DotEnvSettingsSource(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:60: in __init__
+    super().__init__(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\env.py:84: in __init__
+    self.env_vars = self._load_env_vars()
+                    ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:74: in _load_env_vars
+    return self._read_env_files()
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:116: in _read_env_files
+    dotenv_vars.update(self._read_env_file(env_path))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:92: in _read_env_file
+    return self._static_read_env_file(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:85: in _static_read_env_file
+    file_vars: dict[str, str | None] = dotenv_values(file_path, encoding=encoding or 'utf8')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:472: in dotenv_values
+    ).dict()
+      ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:84: in dict
+    resolve_variables(raw_values, override=self.override)
+.venv\Lib\site-packages\dotenv\main.py:300: in resolve_variables
+    for name, value in values:
+                       ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:92: in parse
+    with self._get_stream() as stream:
+         ^^^^^^^^^^^^^^^^^^
+..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:63: in _get_stream
+    with open(self.dotenv_path, encoding=self.encoding) as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reports\audit\evidence\run_guarded_tests.py:43: in audit
+    deny(event, 'credential_file')
+reports\audit\evidence\run_guarded_tests.py:34: in deny
+    raise PermissionError('AUDIT_GUARD_BLOCKED: ' + event + ': ' + reason)
+E   PermissionError: AUDIT_GUARD_BLOCKED: open: credential_file</error></testcase><testcase classname="" name="tests.test_pdf_preview" time="0.000"><error message="collection failure">tests\test_pdf_preview.py:8: in &lt;module&gt;
+    from test_selected_pdf_chat import table_pdf
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+&lt;frozen importlib._bootstrap&gt;:1331: in _find_and_load_unlocked
+    ???
+&lt;frozen importlib._bootstrap&gt;:935: in _load_unlocked
+    ???
+.venv\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\test_selected_pdf_chat.py:6: in &lt;module&gt;
+    from test_v1_langgraph import fixture
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+&lt;frozen importlib._bootstrap&gt;:1331: in _find_and_load_unlocked
+    ???
+&lt;frozen importlib._bootstrap&gt;:935: in _load_unlocked
+    ???
+.venv\Lib\site-packages\_pytest\assertion\rewrite.py:188: in exec_module
+    exec(co, module.__dict__)
+tests\test_v1_langgraph.py:14: in &lt;module&gt;
+    from app.hermes.agent import HermesAgent
+app\hermes\__init__.py:1: in &lt;module&gt;
+    from .agent import HermesAgent
+app\hermes\agent.py:11: in &lt;module&gt;
+    from app.models.mock import MockProvider
+app\models\__init__.py:3: in &lt;module&gt;
+    from app.models.ollama import OllamaProvider
+app\models\ollama.py:12: in &lt;module&gt;
+    from app.core.config import settings
+app\core\config.py:173: in &lt;module&gt;
+    settings = get_settings()
+               ^^^^^^^^^^^^^^
+app\core\config.py:171: in get_settings
+    return Settings()
+           ^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\main.py:229: in __init__
+    else __pydantic_self__.__class__._settings_init_sources(
+.venv\Lib\site-packages\pydantic_settings\main.py:418: in _settings_init_sources
+    dotenv_settings = DotEnvSettingsSource(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:60: in __init__
+    super().__init__(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\env.py:84: in __init__
+    self.env_vars = self._load_env_vars()
+                    ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:74: in _load_env_vars
+    return self._read_env_files()
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:116: in _read_env_files
+    dotenv_vars.update(self._read_env_file(env_path))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:92: in _read_env_file
+    return self._static_read_env_file(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:85: in _static_read_env_file
+    file_vars: dict[str, str | None] = dotenv_values(file_path, encoding=encoding or 'utf8')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:472: in dotenv_values
+    ).dict()
+      ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:84: in dict
+    resolve_variables(raw_values, override=self.override)
+.venv\Lib\site-packages\dotenv\main.py:300: in resolve_variables
+    for name, value in values:
+                       ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:92: in parse
+    with self._get_stream() as stream:
+         ^^^^^^^^^^^^^^^^^^
+..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:63: in _get_stream
+    with open(self.dotenv_path, encoding=self.encoding) as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reports\audit\evidence\run_guarded_tests.py:43: in audit
+    deny(event, 'credential_file')
+reports\audit\evidence\run_guarded_tests.py:34: in deny
+    raise PermissionError('AUDIT_GUARD_BLOCKED: ' + event + ': ' + reason)
+E   PermissionError: AUDIT_GUARD_BLOCKED: open: credential_file</error></testcase><testcase classname="" name="tests.test_v1_chat_rag_regression" time="0.000"><error message="collection failure">tests\test_v1_chat_rag_regression.py:24: in &lt;module&gt;
+    from app.hermes.agent import (
+app\hermes\__init__.py:1: in &lt;module&gt;
+    from .agent import HermesAgent
+app\hermes\agent.py:11: in &lt;module&gt;
+    from app.models.mock import MockProvider
+app\models\__init__.py:3: in &lt;module&gt;
+    from app.models.ollama import OllamaProvider
+app\models\ollama.py:12: in &lt;module&gt;
+    from app.core.config import settings
+app\core\config.py:173: in &lt;module&gt;
+    settings = get_settings()
+               ^^^^^^^^^^^^^^
+app\core\config.py:171: in get_settings
+    return Settings()
+           ^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\main.py:229: in __init__
+    else __pydantic_self__.__class__._settings_init_sources(
+.venv\Lib\site-packages\pydantic_settings\main.py:418: in _settings_init_sources
+    dotenv_settings = DotEnvSettingsSource(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:60: in __init__
+    super().__init__(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\env.py:84: in __init__
+    self.env_vars = self._load_env_vars()
+                    ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:74: in _load_env_vars
+    return self._read_env_files()
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:116: in _read_env_files
+    dotenv_vars.update(self._read_env_file(env_path))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:92: in _read_env_file
+    return self._static_read_env_file(
+.venv\Lib\site-packages\pydantic_settings\sources\providers\dotenv.py:85: in _static_read_env_file
+    file_vars: dict[str, str | None] = dotenv_values(file_path, encoding=encoding or 'utf8')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:472: in dotenv_values
+    ).dict()
+      ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:84: in dict
+    resolve_variables(raw_values, override=self.override)
+.venv\Lib\site-packages\dotenv\main.py:300: in resolve_variables
+    for name, value in values:
+                       ^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:92: in parse
+    with self._get_stream() as stream:
+         ^^^^^^^^^^^^^^^^^^
+..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\dotenv\main.py:63: in _get_stream
+    with open(self.dotenv_path, encoding=self.encoding) as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reports\audit\evidence\run_guarded_tests.py:43: in audit
+    deny(event, 'credential_file')
+reports\audit\evidence\run_guarded_tests.py:34: in deny
+    raise PermissionError('AUDIT_GUARD_BLOCKED: ' + event + ': ' + reason)
+E   PermissionError: AUDIT_GUARD_BLOCKED: open: credential_file</error></testcase></testsuite></testsuites>

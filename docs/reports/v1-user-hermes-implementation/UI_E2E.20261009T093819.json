@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-10-09T09:38:19.061274+07:00",
+  "status": "PARTIAL",
+  "observed_evidence": [
+    "Actual localhost browser, built UI, real HTTP V1 handlers, existing Hermes and public projection observed",
+    "Two-model fixture selection flow and safe invalid-token path observed",
+    "One actual local model generation observed with matching socket PID/source/request receipt"
+  ],
+  "files_changed": [
+    "control-plane/e2e/control-plane.spec.ts",
+    "control-plane/tests/assistant.test.tsx"
+  ],
+  "reason": "Separate observed browser integration from mocked and unverified native dependencies",
+  "tests_run": [
+    "FRONTEND_REGRESSION.json",
+    "BROWSER_OBSERVATIONS.json",
+    "LOCAL_PROVIDER_BROWSER_OBSERVATIONS.20261009T093819.json",
+    "SOCKET_PROCESS_IDENTITY.json",
+    "SOCKET_PROCESS_IDENTITY.v2.json",
+    "LOCAL_PROVIDER_RECEIPTS.jsonl",
+    "SOURCE_IDENTITY_CHECK.json"
+  ],
+  "limitations": [
+    "One installed model only; no switch between distinct actual models",
+    "Model name returned by provider is not loaded-weight attestation",
+    "Semantic and retrieval fixtures do not prove native semantic/RAG production integration",
+    "Current-source identity is app disk fingerprint, not full transitive loaded closure",
+    "Port-8000 attestation endpoint refused candidate port with 403; boundary not bypassed; initial null attestation artifact retained",
+    "Legacy Playwright CLI suite not run; CUA browser flow exercised directly",
+    "User backend PID 33160 left untouched; candidates stopped"
+  ],
+  "remaining_blockers": [
+    "Full native semantic-worker plus production RAG/store/model UI integration not verified",
+    "Production deployment, provisioned credentials/resources and launch-worker consistency unverified; no deployment authorized"
+  ]
+}

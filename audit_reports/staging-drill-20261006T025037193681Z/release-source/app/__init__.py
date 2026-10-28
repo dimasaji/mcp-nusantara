@@ -1,0 +1,3 @@
+"""
+MCP Starter - FastAPI Application.
+"""

@@ -1,0 +1,142 @@
+diff --git a/docs/reports/normal-inspection-preview-20261008-01a11b73/app__api__v2_routes.py.before b/app/api/v2_routes.py
+index 993ddee..f3995bc 100644
+--- a/docs/reports/normal-inspection-preview-20261008-01a11b73/app__api__v2_routes.py.before
++++ b/app/api/v2_routes.py
+@@ -15,6 +15,7 @@ from pydantic import BaseModel, Field
+ from app.approval import ApprovalError, ApprovalQueue, AuditTrail
+ from app.core.config import settings
+ from app.security.auth import require_admin as _require_admin
++from app.api.inspection_preview import router as inspection_preview_router
+ from app.devcore import DevCore
+ from app.experience import EventRecorder, FeedbackRejected, FeedbackStore
+ from app.research.failure_analysis import analyze
+@@ -37,6 +38,7 @@ from app.v2.orchestrator import V2Orchestrator
+ from app.v2.wiring import v1_policy_check, v1_trust_check
+ 
+ router = APIRouter(prefix="/v2", tags=["v2"])
++router.include_router(inspection_preview_router)
+ 
+ 
+ @router.get("/review", include_in_schema=False)
+diff --git a/docs/reports/normal-inspection-preview-20261008-01a11b73/control-plane__vite.config.ts.before b/control-plane/vite.config.ts
+index 3a53656..e164555 100644
+--- a/docs/reports/normal-inspection-preview-20261008-01a11b73/control-plane__vite.config.ts.before
++++ b/control-plane/vite.config.ts
+@@ -6,5 +6,5 @@ import {join} from 'node:path';
+ import {execFileSync} from 'node:child_process';
+ function sources(dir: string): string[] {return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?sources(join(dir,e.name)):[join(dir,e.name)]).sort();}
+ function commit(){try{return execFileSync('C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/git/cmd/git.exe',['rev-parse','HEAD'],{cwd:'..',encoding:'utf8'}).trim();}catch{return 'NOT_VERIFIED';}}
+-export default defineConfig(({mode})=>({plugins:[react()], server:{host:'127.0.0.1',port:5173,strictPort:true,proxy:{'/v1/control-plane':{target:'http://127.0.0.1:8000',changeOrigin:true},'/health':{target:'http://127.0.0.1:8000',changeOrigin:true}}},preview:{host:'127.0.0.1'},
++export default defineConfig(({mode})=>({plugins:[react()], server:{host:'127.0.0.1',port:5173,strictPort:true,proxy:{'^/v2/dev/inspection-preview$':{target:'http://127.0.0.1:8000',changeOrigin:true},'/v1/control-plane':{target:'http://127.0.0.1:8000',changeOrigin:true},'/health':{target:'http://127.0.0.1:8000',changeOrigin:true}}},preview:{host:'127.0.0.1'},
+   define:{__CPLANE_BUILD__:JSON.stringify({version:'0.1.0',gitCommit:commit(),timestamp:new Date().toISOString(),environment:mode,sourceId:createHash('sha256').update(sources('src').map(f=>f+'\0'+readFileSync(f,'utf8')).join('\0')).digest('hex')})}}));
+diff --git a/docs/reports/normal-inspection-preview-20261008-01a11b73/control-plane__src__api.ts.before b/control-plane/src/api.ts
+index 3c0fc3f..ff38aff 100644
+--- a/docs/reports/normal-inspection-preview-20261008-01a11b73/control-plane__src__api.ts.before
++++ b/control-plane/src/api.ts
+@@ -1,4 +1,41 @@
+ import {parseSnapshot,PendingIntentionSchema,type Snapshot,type Attestation,type PendingIntention} from './schemas';
++import {z} from 'zod';
++
++const InspectionPreviewSchema = z.object({
++  scope:z.literal('inspection-preview'),profile:z.literal('NORMAL'),
++  source:z.literal('/v2/dev/inspection-preview'),captured_at:z.string().datetime({offset:true}),
++  runtime_identity:z.literal('NOT_VERIFIED'),active_process_build:z.literal('NOT_VERIFIED'),
++  provider_model_correlation:z.literal('NOT_VERIFIED'),
++  inspection_preview:z.object({
++    goal:z.string(),understanding:z.string(),intent:z.literal('INSPECT'),target:z.string(),
++    status:z.literal('PREVIEW_READY'),root_cause:z.literal('UNKNOWN'),
++    discovery:z.array(z.string()),likely_files:z.array(z.string()),
++    plan:z.array(z.object({action:z.literal('STATIC_SOURCE_INSPECTION'),step:z.string()})),
++    expected_evidence:z.array(z.string()),risk:z.literal('LOW'),
++    write_required:z.literal('NO'),runtime_required:z.literal('NO'),
++    provider_required:z.literal('NO'),database_required:z.literal('NO'),
++    human_decision:z.literal('NOT REQUIRED'),next_step:z.string(),
++    requirements_scope:z.literal('PROPOSED_NEXT_STATIC_INSPECTION'),
++    goal_resolution_requirements:z.literal('UNKNOWN_PENDING_DISCOVERY'),
++    file_evidence:z.literal('CANDIDATES_NOT_INSPECTED'),authorized_operations:z.array(z.never()).length(0),
++    boundaries:z.array(z.string()),
++  }),
++});
++export type InspectionPreviewResult = z.infer<typeof InspectionPreviewSchema>;
++export async function fetchInspectionPreview(goal:string,adminToken:string,signal?:AbortSignal):Promise<InspectionPreviewResult>{
++  if(!adminToken.trim())throw new Error('Admin token required. Preview was not requested.');
++  const input=goal.trim();
++  if(!input||input.length>4000)throw new Error('Enter a goal of 1–4000 characters.');
++  const response=await fetch('/v2/dev/inspection-preview',{method:'POST',credentials:'omit',cache:'no-store',
++    redirect:'error',signal,headers:{'Content-Type':'application/json','X-Admin-Token':adminToken},
++    body:JSON.stringify({user_input:input})});
++  if(!response.ok)throw new Error(response.status===403?'Preview rejected (403). Check authorization and preview scope.':
++    response.status===422?'Preview rejected (422). Choose a supported goal; execution requests are unavailable.':
++    `Preview unavailable (${response.status}). No test or decision inferred.`);
++  const result=InspectionPreviewSchema.parse(await response.json());
++  if(result.inspection_preview.goal!==input)throw new Error('Preview goal mismatch. No evidence accepted.');
++  return result;
++}
+ export type SnapshotResult={state:Snapshot;latencyMs:number;fetchedAt:string;source:string};
+ export async function fetchSnapshot(signal?:AbortSignal):Promise<SnapshotResult>{
+   const start=performance.now();
+diff --git a/docs/reports/normal-inspection-preview-20261008-01a11b73/control-plane__src__human.tsx.before b/control-plane/src/human.tsx
+index 335a61d..79b2735 100644
+--- a/docs/reports/normal-inspection-preview-20261008-01a11b73/control-plane__src__human.tsx.before
++++ b/control-plane/src/human.tsx
+@@ -1,7 +1,7 @@
+ import {createContext, useContext, useEffect, useRef, useState, type ReactNode, type Dispatch, type SetStateAction} from 'react';
+ import {useQuery} from '@tanstack/react-query';
+ import {Link, useNavigate, useRouterState} from '@tanstack/react-router';
+-import {fetchSnapshot,submitIntention} from './api';
++import {fetchSnapshot,submitIntention,fetchInspectionPreview,type InspectionPreviewResult} from './api';
+ import {isAttestation,type SystemHealth,type Snapshot,type Attestation,type PendingIntention} from './schemas';
+ import {canApprove, counts, emptySession, evidenceKey, gateEvidenceReady, humanCases, limitations, stagePath, stages, workflow,
+   attestationKey,attestationWorkflow,type Decision, type HumanResult, type Session, type Stage} from './acceptance';
+@@ -39,6 +39,43 @@ function Explanation({status}:{status:string}) {
+ export function KnownLimitations({state}:{state:SystemHealth}) {
+   return <section className="panel human-limits"><h2>Known limitations</h2><p>Warnings remain part of the review. They do not silently change engineering gate results.</p><ul>{limitations(state).map(w=><li key={w}>△ {w}</li>)}</ul></section>;
+ }
++const previewGoals=['Perbaiki RAG Nusantara.','Periksa kenapa jawaban AI kurang akurat.',
++  'Buat Nusantara lebih cepat.','Periksa konfigurasi provider.','Cari masalah pada Developer Engine.'];
++export function InspectionPreviewPanel(){
++  const [goal,setGoal]=useState(previewGoals[0]);
++  const [token,setToken]=useState('');
++  const [result,setResult]=useState<InspectionPreviewResult|null>(null);
++  const [error,setError]=useState('');
++  const [pending,setPending]=useState(false);
++  const request=useRef<AbortController|null>(null);
++  useEffect(()=>()=>request.current?.abort(),[]);
++  async function preview(){
++    if(request.current)return;
++    const controller=new AbortController();request.current=controller;
++    setPending(true);setResult(null);setError('');
++    const suppliedToken=token;setToken('');
++    try{const value=await fetchInspectionPreview(goal,suppliedToken,controller.signal);
++      if(!controller.signal.aborted)setResult(value);
++    }catch(e){if(!controller.signal.aborted)setError(e instanceof Error?e.message:'Preview unavailable.');}
++    finally{if(!controller.signal.aborted){request.current=null;setPending(false);}}
++  }
++  return <section className="panel" aria-label="Inspection plan preview"><h2>Inspection plan preview</h2>
++    <p>Planning only. No files are inspected and no plan is executed. This does not record a human test or decision.</p>
++    <label>Engineering goal<select value={goal} disabled={pending} onChange={e=>{setGoal(e.target.value);setResult(null);setError('');}}>{previewGoals.map(g=><option key={g}>{g}</option>)}</select></label>
++    <label>Admin token<input type="password" autoComplete="off" value={token} disabled={pending} onChange={e=>setToken(e.target.value)}/></label>
++    <p>The token stays in memory and clears when submitted or when this panel closes.</p>
++    <button disabled={pending||!token.trim()} onClick={()=>void preview()}>{pending?'Preparing preview…':'Preview inspection plan'}</button>
++    {error&&<p role="alert">{error}</p>}
++    {result&&<div role="region" aria-label="Preview evidence"><p>PREVIEW READY · candidates have not been inspected.</p>
++      <p>{result.inspection_preview.understanding}</p><p>Source: {result.source} · Captured: {result.captured_at}</p>
++      <p>Runtime identity, active process build and provider/model correlation: NOT VERIFIED.</p>
++      <p>Ultimate goal requirements and root cause remain unknown. Human review and decision are separate.</p>
++      <h3>Proposed static inspection</h3><ol>{result.inspection_preview.plan.map((s,i)=><li key={i}>{s.step}</li>)}</ol>
++      <h3>Candidate files</h3><ul>{result.inspection_preview.likely_files.map(f=><li key={f}><code>{f}</code></li>)}</ul>
++      <p>{result.inspection_preview.next_step}</p><details><summary>Preview evidence details</summary><pre>{JSON.stringify(result,null,2)}</pre></details>
++    </div>}
++  </section>;
++}
+ export function HumanPage({stage}:{stage:Stage}) {
+   const q=useQuery({queryKey:['control-plane','snapshot'],queryFn:({signal})=>fetchSnapshot(signal)});
+   const navigate=useNavigate();
+@@ -106,6 +143,7 @@ function NormalHumanContent({stage,state,navigate,inspectRuntime,busy=false}:{st
+   if(!flow.available[stage])return <><HumanProgress stage={stage} session={current}/>{changed&&<p role="status">Evidence changed. Review the new evidence from System.</p>}<section className="panel" aria-label="Locked stage"><h2>{stage==='Test'?'Human Test':stage} — Locked</h2><p>Complete these prerequisites to unlock this stage. No human result or decision has been inferred.</p><ul>{flow.blockers[stage].map(reason=><li key={reason}>{reason}</li>)}</ul><button onClick={()=>navigate(flow.next)}>Go to {flow.next==='Test'?'Human Test':flow.next} →</button></section></>;
+   return <>
+     <HumanProgress stage={stage} session={current}/>
++    {stage==='System'&&<InspectionPreviewPanel/>}
+     {changed&&<div className="review-notice" role="status">Evidence changed. Previous human results, acknowledgements and decisions were cleared. Review the new evidence before deciding.</div>}
+     <div className="session-boundary"><strong>Review scope: Control Plane UI acceptance.</strong> Your selections stay in this session. They do not approve R2 authorization or modify R2/R3, production or engineering state.</div>
+     {stage==='System'&&<><section className="human-intro"><div className="eyebrow">01 / UNDERSTAND THE SYSTEM</div><h2>Start with what we can prove.</h2><p>This console helps you inspect evidence, perform your own tests and make an explicit review decision.</p></section><div className="human-cards">

@@ -1,0 +1,2259 @@
+{
+  "stage": "MDE-01",
+  "status": "STATIC_EFFECTIVE_CANDIDATES_ONLY",
+  "created_at": "2026-10-06T12:34:29.351779+00:00",
+  "conceptual_effective_configuration_schema": {
+    "required_concepts": [
+      "provider",
+      "model",
+      "embedding",
+      "embedding_dimension",
+      "vector_store",
+      "top_k",
+      "chunk_size",
+      "chunk_overlap",
+      "semantic_weight",
+      "lexical_weight",
+      "threshold",
+      "reranker",
+      "runtime_host",
+      "runtime_port",
+      "source",
+      "consumer",
+      "status",
+      "risk"
+    ],
+    "record_columns": [
+      "FIELD",
+      "VALUE_CANDIDATE",
+      "SOURCE",
+      "CONSUMER",
+      "STATUS",
+      "RISK"
+    ],
+    "design_only": true,
+    "implementation_created": false,
+    "active_diagnostics_endpoint": false,
+    "secret_values": "EXCLUDED",
+    "effective_requires": "Runtime dependency inspection plus source build/selected layers/actual consumer identity; no inference from schema alone"
+  },
+  "field_candidates": [
+    {
+      "field": "snapshot.system.environment",
+      "value_candidate": "development",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 39,
+        "class": "_System"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.system.debug",
+      "value_candidate": false,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 40,
+        "class": "_System"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.system.application_name",
+      "value_candidate": "Nusantara Core + Hermes",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 41,
+        "class": "_System"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.system.version",
+      "value_candidate": "0.1.0",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 42,
+        "class": "_System"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.system.timezone",
+      "value_candidate": "Asia/Jakarta",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 43,
+        "class": "_System"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.runtime.host",
+      "value_candidate": "127.0.0.1",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 47,
+        "class": "_Runtime"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.runtime.port",
+      "value_candidate": 8000,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 48,
+        "class": "_Runtime"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.runtime.workers",
+      "value_candidate": 1,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 49,
+        "class": "_Runtime"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.runtime.stage_timeout_s",
+      "value_candidate": 30.0,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 50,
+        "class": "_Runtime"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.runtime.log_level",
+      "value_candidate": "INFO",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 51,
+        "class": "_Runtime"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.runtime.request_limit",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 52,
+        "class": "_Runtime"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.llm.provider",
+      "value_candidate": "ollama",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 69,
+        "class": "_LLM"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.llm.provider",
+          "file": "app/models/ollama.py",
+          "line": 49,
+          "symbol": "nusantara_config.llm.provider",
+          "function": "__init__",
+          "class": "OllamaProvider",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.llm.base_url",
+      "value_candidate": "http://localhost:11434",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 70,
+        "class": "_LLM"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.llm.base_url",
+          "file": "app/models/ollama.py",
+          "line": 52,
+          "symbol": "nusantara_config.llm.base_url",
+          "function": "__init__",
+          "class": "OllamaProvider",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_provider_payload_uses_snapshot_and_request_precedence",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "reason": "Snapshot provider/options flow verified with MockTransport; effective live provider not proven"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.llm.model",
+      "value_candidate": "llama3.2:1b",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 71,
+        "class": "_LLM"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.llm.model",
+          "file": "app/models/ollama.py",
+          "line": 54,
+          "symbol": "nusantara_config.llm.model",
+          "function": "__init__",
+          "class": "OllamaProvider",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_provider_payload_uses_snapshot_and_request_precedence",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "reason": "Snapshot provider/options flow verified with MockTransport; effective live provider not proven"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.llm.auth_env_ref",
+      "value_candidate": "VALUE_NOT_RECORDED",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 72,
+        "class": "_LLM"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.llm.connection_timeout_s",
+      "value_candidate": 120.0,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 73,
+        "class": "_LLM"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.llm.connection_timeout_s",
+          "file": "app/models/ollama.py",
+          "line": 56,
+          "symbol": "nusantara_config.llm.connection_timeout_s",
+          "function": "__init__",
+          "class": "OllamaProvider",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_provider_payload_uses_snapshot_and_request_precedence",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "reason": "Snapshot provider/options flow verified with MockTransport; effective live provider not proven"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.llm.generation.temperature",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 56,
+        "class": "_Generation"
+      },
+      "consumer": [],
+      "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_provider_payload_uses_snapshot_and_request_precedence",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "reason": "Snapshot provider/options flow verified with MockTransport; effective live provider not proven"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.llm.generation.top_p",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 57,
+        "class": "_Generation"
+      },
+      "consumer": [],
+      "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_provider_payload_uses_snapshot_and_request_precedence",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "reason": "Snapshot provider/options flow verified with MockTransport; effective live provider not proven"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.llm.generation.max_tokens",
+      "value_candidate": 512,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 58,
+        "class": "_Generation"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.llm.generation.max_tokens",
+          "file": "app/models/ollama.py",
+          "line": 67,
+          "symbol": "generation.max_tokens",
+          "function": "_options",
+          "class": "OllamaProvider",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_provider_payload_uses_snapshot_and_request_precedence",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "reason": "Snapshot provider/options flow verified with MockTransport; effective live provider not proven"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.llm.generation.context_length",
+      "value_candidate": 4096,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 59,
+        "class": "_Generation"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.llm.generation.context_length",
+          "file": "app/models/ollama.py",
+          "line": 64,
+          "symbol": "generation.context_length",
+          "function": "_options",
+          "class": "OllamaProvider",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_provider_payload_uses_snapshot_and_request_precedence",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "reason": "Snapshot provider/options flow verified with MockTransport; effective live provider not proven"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_HTTP",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.embedding.provider",
+      "value_candidate": "indobert",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 90,
+        "class": "_Embedding"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.embedding.provider",
+          "file": "app/knowledge/indobert_embedding.py",
+          "line": 22,
+          "symbol": "config.embedding.provider",
+          "function": "validate_configuration",
+          "class": "IndoBERTEmbeddingAdapter",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.embedding.model",
+      "value_candidate": "indobenchmark/indobert-base-p1",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 91,
+        "class": "_Embedding"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.embedding.model",
+          "file": "app/knowledge/indobert_embedding.py",
+          "line": 23,
+          "symbol": "config.embedding.model",
+          "function": "validate_configuration",
+          "class": "IndoBERTEmbeddingAdapter",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        },
+        {
+          "field_id": "snapshot.embedding.model",
+          "file": "app/knowledge/rag.py",
+          "line": 225,
+          "symbol": "nusantara_config.embedding.model",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.embedding.dimension",
+      "value_candidate": 768,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 92,
+        "class": "_Embedding"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.embedding.dimension",
+          "file": "app/knowledge/indobert_embedding.py",
+          "line": 24,
+          "symbol": "config.embedding.dimension",
+          "function": "validate_configuration",
+          "class": "IndoBERTEmbeddingAdapter",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        },
+        {
+          "field_id": "snapshot.embedding.dimension",
+          "file": "app/knowledge/rag.py",
+          "line": 226,
+          "symbol": "nusantara_config.embedding.dimension",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.embedding.batch_size",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 93,
+        "class": "_Embedding"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.embedding.timeout_s",
+      "value_candidate": 60.0,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 94,
+        "class": "_Embedding"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.embedding.timeout_s",
+          "file": "app/knowledge/indobert_embedding.py",
+          "line": 37,
+          "symbol": "nusantara_config.embedding.timeout_s",
+          "function": "__init__",
+          "class": "IndoBERTEmbeddingAdapter",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_MOCKED_CLIENT",
+      "risk": "HIGH",
+      "behavior_evidence": {
+        "test": "test_adapter_constructs_existing_client_without_starting_worker",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_CLIENT",
+        "reason": "Constructor handoff verified; no worker execution proof"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_CLIENT",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.rag.top_k",
+      "value_candidate": 5,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 98,
+        "class": "_RAG"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.rag.top_k",
+          "file": "app/knowledge/rag.py",
+          "line": 230,
+          "symbol": "nusantara_config.rag.top_k",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_ISOLATED_RAG",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_rag_actual_query_and_ingestion_use_config",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_ISOLATED_RAG",
+        "reason": "Ingestion/query behavior tested against isolated store; facade default top_k remains 5"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_ISOLATED_RAG",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.rag.chunk_size",
+      "value_candidate": 512,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 99,
+        "class": "_RAG"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.rag.chunk_size",
+          "file": "app/knowledge/rag.py",
+          "line": 228,
+          "symbol": "nusantara_config.rag.chunk_size",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_ISOLATED_RAG",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_rag_actual_query_and_ingestion_use_config",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_ISOLATED_RAG",
+        "reason": "Ingestion/query behavior tested against isolated store; facade default top_k remains 5"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_ISOLATED_RAG",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.rag.chunk_overlap",
+      "value_candidate": 64,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 100,
+        "class": "_RAG"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.rag.chunk_overlap",
+          "file": "app/knowledge/rag.py",
+          "line": 229,
+          "symbol": "nusantara_config.rag.chunk_overlap",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_ISOLATED_RAG",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_rag_actual_query_and_ingestion_use_config",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_ISOLATED_RAG",
+        "reason": "Ingestion/query behavior tested against isolated store; facade default top_k remains 5"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_ISOLATED_RAG",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.rag.semantic_weight",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 101,
+        "class": "_RAG"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.rag.semantic_weight",
+          "file": "app/knowledge/rag.py",
+          "line": 215,
+          "symbol": "nusantara_config.rag.semantic_weight",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "DECLARED_REJECTED_BY_OPT_IN_CONSUMER_NOT_BEHAVIOR_CONFIGURABLE",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_REJECTED_BY_OPT_IN_CONSUMER_NOT_BEHAVIOR_CONFIGURABLE",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.rag.lexical_weight",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 102,
+        "class": "_RAG"
+      },
+      "consumer": [],
+      "status": "DECLARED_REJECTED_BY_OPT_IN_CONSUMER_NOT_BEHAVIOR_CONFIGURABLE",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_REJECTED_BY_OPT_IN_CONSUMER_NOT_BEHAVIOR_CONFIGURABLE",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.rag.reranker_enabled",
+      "value_candidate": false,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 103,
+        "class": "_RAG"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.rag.reranker_enabled",
+          "file": "app/knowledge/rag.py",
+          "line": 231,
+          "symbol": "nusantara_config.rag.reranker_enabled",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.rag.reranker_model",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 104,
+        "class": "_RAG"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.rag.reranker_model",
+          "file": "app/knowledge/rag.py",
+          "line": 232,
+          "symbol": "nusantara_config.rag.reranker_model",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.rag.similarity_threshold",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 105,
+        "class": "_RAG"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.rag.similarity_threshold",
+          "file": "app/knowledge/rag.py",
+          "line": 216,
+          "symbol": "nusantara_config.rag.similarity_threshold",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "DECLARED_REJECTED_BY_OPT_IN_CONSUMER_NOT_BEHAVIOR_CONFIGURABLE",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_REJECTED_BY_OPT_IN_CONSUMER_NOT_BEHAVIOR_CONFIGURABLE",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.knowledge.root",
+      "value_candidate": "REQUIRED_OR_LOADER_DERIVED",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 122,
+        "class": "_Knowledge"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.knowledge.database",
+      "value_candidate": "REQUIRED_OR_LOADER_DERIVED",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 123,
+        "class": "_Knowledge"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.knowledge.database",
+          "file": "app/knowledge/rag.py",
+          "line": 236,
+          "symbol": "nusantara_config.knowledge.database",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_MOCKED_STORE",
+      "risk": "HIGH",
+      "behavior_evidence": {
+        "test": "test_database_path_handoff_without_real_database",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_STORE",
+        "reason": "Path passed to store factory; production DB not opened"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_STORE",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.knowledge.document_root",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 124,
+        "class": "_Knowledge"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.knowledge.index",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 125,
+        "class": "_Knowledge"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.knowledge.cache",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 126,
+        "class": "_Knowledge"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.knowledge.store_backend",
+      "value_candidate": "sqlite",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 127,
+        "class": "_Knowledge"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.knowledge.store_backend",
+          "file": "app/knowledge/rag.py",
+          "line": 227,
+          "symbol": "nusantara_config.knowledge.store_backend",
+          "function": "__init__",
+          "class": "RAG",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.paths.project_root",
+      "value_candidate": "REQUIRED_OR_LOADER_DERIVED",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 131,
+        "class": "_Paths"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.paths.worker",
+      "value_candidate": "REQUIRED_OR_LOADER_DERIVED",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 132,
+        "class": "_Paths"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.paths.worker",
+          "file": "app/knowledge/indobert_embedding.py",
+          "line": 36,
+          "symbol": "nusantara_config.paths.worker",
+          "function": "__init__",
+          "class": "IndoBERTEmbeddingAdapter",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_MOCKED_CLIENT",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_adapter_constructs_existing_client_without_starting_worker",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_CLIENT",
+        "reason": "Constructor handoff verified; no worker execution proof"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_CLIENT",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.paths.worker_python",
+      "value_candidate": "REQUIRED_OR_LOADER_DERIVED",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 133,
+        "class": "_Paths"
+      },
+      "consumer": [
+        {
+          "field_id": "snapshot.paths.worker_python",
+          "file": "app/knowledge/indobert_embedding.py",
+          "line": 35,
+          "symbol": "nusantara_config.paths.worker_python",
+          "function": "__init__",
+          "class": "IndoBERTEmbeddingAdapter",
+          "proof": "SCOPED_PARAMETER_OR_CTOR_MEMBER_ALIAS_STATIC_ACCESS",
+          "role": "VALIDATION_OR_BEHAVIOR_READ_REQUIRES_REVIEW",
+          "path_condition": "Snapshot explicitly injected; aliases resolved locally; no live execution proof"
+        }
+      ],
+      "status": "CONSUMED_OPT_IN_MOCKED_CLIENT",
+      "risk": "MEDIUM",
+      "behavior_evidence": {
+        "test": "test_adapter_constructs_existing_client_without_starting_worker",
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+        "status": "CONSUMED_OPT_IN_MOCKED_CLIENT",
+        "reason": "Constructor handoff verified; no worker execution proof"
+      },
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "CONSUMED_OPT_IN_MOCKED_CLIENT",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.governance.trust_contract_ref",
+      "value_candidate": "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 137,
+        "class": "_Governance"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.governance.policy_contract_ref",
+      "value_candidate": "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 138,
+        "class": "_Governance"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.governance.grounding_contract_ref",
+      "value_candidate": "docs/contracts/NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 139,
+        "class": "_Governance"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.governance.evidence_requirement_ref",
+      "value_candidate": "docs/contracts/NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 140,
+        "class": "_Governance"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.features.semantic_search",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 144,
+        "class": "_Features"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.features.reranker",
+      "value_candidate": false,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 145,
+        "class": "_Features"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.features.graph_context",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 146,
+        "class": "_Features"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.features.developer_core",
+      "value_candidate": null,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 147,
+        "class": "_Features"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.features.experimental_features",
+      "value_candidate": false,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 148,
+        "class": "_Features"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.legacy_declarations.embedding_model",
+      "value_candidate": "local-hash",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 152,
+        "class": "_Legacy"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.legacy_declarations.vector_store_type",
+      "value_candidate": "memory",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 153,
+        "class": "_Legacy"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.legacy_declarations.privacy_filter_enabled",
+      "value_candidate": true,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 154,
+        "class": "_Legacy"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.legacy_declarations.context_window_size",
+      "value_candidate": 10,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 155,
+        "class": "_Legacy"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "snapshot.legacy_declarations.session_timeout_minutes",
+      "value_candidate": 30,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/nusantara_config.py",
+        "line": 156,
+        "class": "_Legacy"
+      },
+      "consumer": [],
+      "status": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_ENFORCEMENT_NOT_PROVEN",
+        "EFFECTIVE": "NOT_DEFAULT_RUNTIME"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.app_name",
+      "value_candidate": "Nusantara Core + Hermes",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 7,
+        "class": "Settings"
+      },
+      "consumer": [
+        {
+          "field_id": "settings.app_name",
+          "file": "app/api/routes.py",
+          "line": 816,
+          "symbol": "settings.app_name",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.app_version",
+      "value_candidate": "0.1.0",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 8,
+        "class": "Settings"
+      },
+      "consumer": [
+        {
+          "field_id": "settings.app_version",
+          "file": "app/api/routes.py",
+          "line": 259,
+          "symbol": "settings.app_version",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        },
+        {
+          "field_id": "settings.app_version",
+          "file": "app/api/routes.py",
+          "line": 817,
+          "symbol": "settings.app_version",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        },
+        {
+          "field_id": "settings.app_version",
+          "file": "app/api/routes.py",
+          "line": 1661,
+          "symbol": "settings.app_version",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.debug",
+      "value_candidate": false,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 9,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.host",
+      "value_candidate": "127.0.0.1",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 10,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.port",
+      "value_candidate": 8000,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 11,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.llm_provider",
+      "value_candidate": "ollama",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 12,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.llm_base_url",
+      "value_candidate": "http://localhost:11434",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 13,
+        "class": "Settings"
+      },
+      "consumer": [
+        {
+          "field_id": "settings.llm_base_url",
+          "file": "app/api/routes.py",
+          "line": 802,
+          "symbol": "settings.llm_base_url",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        },
+        {
+          "field_id": "settings.llm_base_url",
+          "file": "app/api/routes.py",
+          "line": 880,
+          "symbol": "settings.llm_base_url",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        },
+        {
+          "field_id": "settings.llm_base_url",
+          "file": "app/api/v2_routes.py",
+          "line": 103,
+          "symbol": "settings.llm_base_url",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        },
+        {
+          "field_id": "settings.llm_base_url",
+          "file": "app/api/v2_routes.py",
+          "line": 326,
+          "symbol": "settings.llm_base_url",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.llm_api_key",
+      "value_candidate": "VALUE_NOT_RECORDED",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 14,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "HIGH",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.llm_model",
+      "value_candidate": "llama3.2:1b",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 15,
+        "class": "Settings"
+      },
+      "consumer": [
+        {
+          "field_id": "settings.llm_model",
+          "file": "app/api/routes.py",
+          "line": 803,
+          "symbol": "settings.llm_model",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        },
+        {
+          "field_id": "settings.llm_model",
+          "file": "app/api/routes.py",
+          "line": 883,
+          "symbol": "settings.llm_model",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        },
+        {
+          "field_id": "settings.llm_model",
+          "file": "app/api/v2_routes.py",
+          "line": 326,
+          "symbol": "settings.llm_model",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        },
+        {
+          "field_id": "settings.llm_model",
+          "file": "app/api/v2_routes.py",
+          "line": 333,
+          "symbol": "settings.llm_model",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        },
+        {
+          "field_id": "settings.llm_model",
+          "file": "app/api/v2_routes.py",
+          "line": 104,
+          "symbol": "settings.llm_model",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.llm_context_tokens",
+      "value_candidate": 4096,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 16,
+        "class": "Settings"
+      },
+      "consumer": [
+        {
+          "field_id": "settings.llm_context_tokens",
+          "file": "app/models/ollama.py",
+          "line": 64,
+          "symbol": "settings.llm_context_tokens",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.context_window_size",
+      "value_candidate": 10,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 17,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.session_timeout_minutes",
+      "value_candidate": 30,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 18,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.embedding_model",
+      "value_candidate": "local-hash",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 19,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.vector_store_type",
+      "value_candidate": "memory",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 20,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.chunk_size",
+      "value_candidate": 512,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 21,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.chunk_overlap",
+      "value_candidate": 64,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 22,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.retrieval_top_k",
+      "value_candidate": 5,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 23,
+        "class": "Settings"
+      },
+      "consumer": [
+        {
+          "field_id": "settings.retrieval_top_k",
+          "file": "app/api/routes.py",
+          "line": 924,
+          "symbol": "settings.retrieval_top_k",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        },
+        {
+          "field_id": "settings.retrieval_top_k",
+          "file": "app/api/v2_routes.py",
+          "line": 130,
+          "symbol": "settings.retrieval_top_k",
+          "proof": "IMPORTED_SETTINGS_DIRECT_STATIC_ACCESS",
+          "role": "READ_SITE_NOT_RUNTIME_VALUE_PROOF",
+          "path_condition": "Existing Settings path; effective ENV/default precedence not inspected"
+        }
+      ],
+      "status": "DECLARED_STATIC_READ_ONLY",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "YES_STATIC",
+        "CONSUMED": "DECLARED_STATIC_READ_ONLY",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.privacy_filter_enabled",
+      "value_candidate": true,
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 24,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    },
+    {
+      "field": "settings.log_level",
+      "value_candidate": "INFO",
+      "value_type": "STATIC_DEFAULT_CANDIDATE_NOT_LIVE_VALUE",
+      "source": {
+        "file": "app/core/config.py",
+        "line": 25,
+        "class": "Settings"
+      },
+      "consumer": [],
+      "status": "DECLARED_NO_DIRECT_READ_FOUND",
+      "risk": "MEDIUM",
+      "behavior_evidence": null,
+      "lifecycle": {
+        "DISCOVERED": "YES",
+        "DECLARED": "YES",
+        "MAPPED": "NO_DIRECT_READ_FOUND",
+        "CONSUMED": "DECLARED_NO_DIRECT_READ_FOUND",
+        "EFFECTIVE": "NOT_PROVEN_LIVE"
+      },
+      "values_from_environment": false
+    }
+  ],
+  "behavior_literal_and_index_candidates": [
+    {
+      "field": "canonical_rag.semantic_weight",
+      "value_candidate": 0.7,
+      "source": {
+        "file": "app/knowledge/rag.py",
+        "line": 508
+      },
+      "consumer": "RAG.query weighted score",
+      "status": "HARDCODED_SOURCE_BEHAVIOR_LIVE_EFFECTIVE_NOT_PROVEN",
+      "risk": "HIGH"
+    },
+    {
+      "field": "canonical_rag.lexical_weight",
+      "value_candidate": 0.3,
+      "source": {
+        "file": "app/knowledge/rag.py",
+        "line": 509
+      },
+      "consumer": "RAG.query weighted score",
+      "status": "HARDCODED_SOURCE_BEHAVIOR_LIVE_EFFECTIVE_NOT_PROVEN",
+      "risk": "HIGH"
+    },
+    {
+      "field": "canonical_rag.evidence_min_score",
+      "value_candidate": 0.3,
+      "source": {
+        "file": "app/knowledge/rag.py",
+        "line": 579
+      },
+      "consumer": "RAG.query evidence selection",
+      "status": "HARDCODED_SOURCE_BEHAVIOR_LIVE_EFFECTIVE_NOT_PROVEN",
+      "risk": "HIGH"
+    },
+    {
+      "field": "knowledge_facade.top_k",
+      "value_candidate": 5,
+      "source": {
+        "file": "app/knowledge/engine.py",
+        "line": 31
+      },
+      "consumer": "KnowledgeEngine.search/search_knowledge",
+      "status": "LEGACY_FACADE_DEFAULT_NOT_SNAPSHOT_DEFAULT",
+      "risk": "MEDIUM"
+    },
+    {
+      "field": "persisted_index.embedding_identity_dimension",
+      "value_candidate": "NOT_PROVEN",
+      "source": {
+        "file": "app/knowledge/store.py"
+      },
+      "consumer": "Embedding/index compatibility preflight",
+      "status": "NOT_PROVEN_DB_NOT_OPENED",
+      "risk": "CRITICAL"
+    }
+  ],
+  "total_candidates": 80,
+  "behavior_consumed_opt_in_fields": 14,
+  "effective_verified_live": 0,
+  "live_values_read": false,
+  "regression_reference": {
+    "file": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml",
+    "sha256": "44976b72408fb65e3bfe9cce8a49fe135b91208bb75ab45eaf463bb18dd2e082",
+    "passed": 353,
+    "subtests_passed": 28,
+    "skipped": 1
+  },
+  "limitations": [
+    "AST default candidates are not effective runtime values.",
+    "Ctor/request explicit overrides can supersede snapshot; preserve source per leaf in future context.",
+    "Provenance UNWIRED/DECLARED_ONLY in current loader is unchanged; this audit overlay does not activate fields.",
+    "ModelRouter selection metadata may disagree with provider actual model; Hermes.run does not establish provider generation."
+  ]
+}

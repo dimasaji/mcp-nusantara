@@ -1,0 +1,88 @@
+{
+  "asserted": 8,
+  "passed": 8,
+  "observations": [
+    {
+      "name": "selection_mutable_provider_drift",
+      "status": "PASS_SCOPED_COUNTEREXAMPLE",
+      "observed": {
+        "captured_selection": "selected-A",
+        "provider_now": "executed-B"
+      },
+      "scope": "Local fixture/MockTransport only; not actual model verification"
+    },
+    {
+      "name": "registry_key_drift",
+      "status": "PASS_SCOPED_COUNTEREXAMPLE",
+      "observed": {
+        "registry_keys": [
+          "ollama"
+        ],
+        "provider_name_now": "renamed-provider"
+      },
+      "scope": "Local fixture/MockTransport only; not actual model verification"
+    },
+    {
+      "name": "gateway_accepts_foreign_identity",
+      "status": "PASS_SCOPED_COUNTEREXAMPLE",
+      "observed": {
+        "returned_model": "foreign-response-model",
+        "selected_model": "mock-model"
+      },
+      "scope": "Local fixture/MockTransport only; not actual model verification"
+    },
+    {
+      "name": "gateway_text_drops_identity",
+      "status": "PASS_SCOPED_COUNTEREXAMPLE",
+      "observed": {
+        "return_type": "str",
+        "model_metadata_retained": false
+      },
+      "scope": "Local fixture/MockTransport only; not actual model verification"
+    },
+    {
+      "name": "OllamaProvider_response_label_drift",
+      "status": "PASS_SCOPED_COUNTEREXAMPLE",
+      "observed": {
+        "payload_model": "configured-A",
+        "upstream_claim": "upstream-C",
+        "returned_label": "mutated-B"
+      },
+      "scope": "Local fixture/MockTransport only; not actual model verification"
+    },
+    {
+      "name": "OpenAICompatibleProvider_response_label_drift",
+      "status": "PASS_SCOPED_COUNTEREXAMPLE",
+      "observed": {
+        "payload_model": "configured-A",
+        "upstream_claim": "upstream-C",
+        "returned_label": "mutated-B"
+      },
+      "scope": "Local fixture/MockTransport only; not actual model verification"
+    },
+    {
+      "name": "runtime_snapshot_accepts_caller_status",
+      "status": "PASS_SCOPED_COUNTEREXAMPLE",
+      "observed": {
+        "caller_status": "verified",
+        "gate14_label": "active",
+        "actual_model_field_present": false
+      },
+      "scope": "Local fixture/MockTransport only; not actual model verification"
+    },
+    {
+      "name": "v2_result_has_no_model_identity",
+      "status": "PASS_SCOPED_COUNTEREXAMPLE",
+      "observed": {
+        "response_status": "ok",
+        "actual_model_field_present": false,
+        "request_id_present": true
+      },
+      "scope": "Local fixture/MockTransport only; not actual model verification"
+    }
+  ],
+  "harness_correction": "Initial probe used attribute access for TypedDict HTTP response and raised AttributeError; corrected to dict access. No project code changed; only successful assertions counted.",
+  "live_model_calls": false,
+  "production_retrieval": false,
+  "production_database_used": false
+}

@@ -1,0 +1,185 @@
+{
+  "phase": "MDE07",
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "consumers": [
+    {
+      "domain": "Composition",
+      "path": "app/main.py",
+      "sha256": "40debcba1d369cc25838ae7ac46cb145a845d0e7170f3a25c016fb867e24743c",
+      "finding": "Imports already-constructed API modules; no universal EffectiveConfiguration composition/injection. /health reports BUILD_ID in current source; import would instantiate routes, so app not imported.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Provider/model selection",
+      "path": "app/models/router.py",
+      "sha256": "dd7e3a9da2aac5b9edc742f1bb6670ded6ed96f212079f720d2918fe9f9fbfff",
+      "finding": "ModelSelection captures model_name but holds mutable provider; registry key and provider ID can drift; health not a route prerequisite; native openai_compatible differs from openai preference.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Gateway",
+      "path": "app/models/gateway.py",
+      "sha256": "a79fbaa0f3b9a1e3f386e33646e8cbda934168146f5213b4aab860092c3991e3",
+      "finding": "Optional gateway awaits provider response but does not validate response identity; generate_text removes metadata; default API does not use this boundary.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Ollama response",
+      "path": "app/models/ollama.py",
+      "sha256": "73f4f268d655ee425b25b0a4b399bd4c503c773d1a7d5949831e2fbb34ad904b",
+      "finding": "Configured/request payload consumes self.model, then response label reads mutable self.model; ignores upstream response model. MockTransport proves mid-invocation mutation label drift.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Compatible response",
+      "path": "app/models/openai_compatible.py",
+      "sha256": "2832989348208b0d3706660d3dfe30d04590e83c11ab6f1662cc18806e23981a",
+      "finding": "Self.model payload/response label; upstream identity ignored; MockTransport demonstrates mid-invocation mutation drift.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "V1",
+      "path": "app/api/routes.py",
+      "sha256": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4",
+      "finding": "Creates direct provider from settings/request model; response model_used=provider.model on generated, direct evidence and offline paths; these labels do not prove execution.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "V2 callbacks",
+      "path": "app/api/v2_routes.py",
+      "sha256": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7",
+      "finding": "Generate returns content string; retrieve dictionaries drop profile descriptor; direct provider from settings/request, optional snapshot/gateway not consumed by default path.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "V2 runtime",
+      "path": "app/v2/orchestrator.py",
+      "sha256": "e0e421bdac53b5ec89a3f04ff6062d506c820348006d132c486823849d67f215",
+      "finding": "Stage hardening and correlation exist, but V2Result no invocation identity/EffectiveConfiguration receipt; degraded fallback is not provider failover proof.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "DevCore",
+      "path": "app/devcore/core.py",
+      "sha256": "94aa97883ecbb4330458caffe4898aa02503b52c9a5ef4887a5d45cc529a4004",
+      "finding": "Read-only workspace/tools and guarded generation; model_name constructor label also available when generation absent/static fallback; grounding does not attest model.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "DeveloperRuntime",
+      "path": "app/developer_core/runtime.py",
+      "sha256": "b8b0b7ea6f5229c1ebe7d397e16c513e8bb176699f0ede4b8dde978e4716fa7a",
+      "finding": "Caller provider_status copied; Gate14 active label unconditional; these are observations, not runtime verification.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Tools",
+      "path": "app/execution/native.py",
+      "sha256": "f241ccedbff9de32b40d9a07e5fd617f74b27db2b398a8021db06069d47a45e3",
+      "finding": "Trusted role/permissions delegate to GovernedToolRegistry; fixture verified policy. Tool outcome is not model or RAG execution proof.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Governance outcome",
+      "path": "app/governance/tools.py",
+      "sha256": "0a8806de8d85b996c3ffcb2bd40b8d0d51ea2cbeb54aa4a72fd74ae0fdfd3cf1",
+      "finding": "Tool-specific allow/deny/approval and audit; not a universal requested-selected-actual model receipt.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "RAG",
+      "path": "app/knowledge/rag.py",
+      "sha256": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b",
+      "finding": "Optional config support with rejected unwired settings; scattered effective parameters remain; index safety inherited PARTIAL/UNKNOWN from MDE06.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Embedding",
+      "path": "app/knowledge/indobert_embedding.py",
+      "sha256": "065202822c8ec152a692cf6eb47aaf221d4be1f29216e640b911183a53968fb9",
+      "finding": "Configuration/output dimension guards without actual model revision/index attestation.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Runtime config/flags",
+      "path": "app/core/nusantara_config.py",
+      "sha256": "3d18304750d9b43e6cf33a19f5f1d73ea5b05bf2b22d9686deecd6fd4371911d",
+      "finding": "Immutable configured snapshot and flags validate input; default routes do not universally consume it; host/port declaration not listener proof.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Legacy settings",
+      "path": "app/core/config.py",
+      "sha256": "996bfaed79b989576ec31dd10f9d94f5bc419466dc67e4da5c54f7666e3af5b6",
+      "finding": "Cached settings influence API defaults; distinct from frozen opt-in configuration and executed receipt.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Host/port launcher",
+      "path": "service/nusantara-supervisor.ps1",
+      "sha256": "42af97c27a58eee642c38e0e2d5c735dfb5664af08ab43b20dd854477ab6494a",
+      "finding": "Hardcoded uvicorn 127.0.0.1:8000; runtime host/port snapshot not read; script can start services and was not executed.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    },
+    {
+      "domain": "Build identity",
+      "path": "app/core/runtime_identity.py",
+      "sha256": "3ec47b16c5cf9c4d56210db854e5c460a4f714d292665719ccabf15b7ebae791",
+      "finding": "Content hash excludes env/data and is captured at import; proves source identity only, not effective config/models/process identity.",
+      "basis": "Static source plus explicitly scoped isolated observations; no default route import"
+    }
+  ],
+  "configuration_consumption": [
+    {
+      "component": "provider/model",
+      "configured": "DECLARED_OR_CONFIGURED",
+      "composed_injected_consumed": "PARTIAL_OPT_IN_AND_LEGACY_PATHS",
+      "effective_runtime": "NOT_VERIFIED",
+      "evidence": "Router/gateway/client fixtures"
+    },
+    {
+      "component": "RAG",
+      "configured": "DECLARED_OR_CONFIGURED",
+      "composed_injected_consumed": "PARTIAL_OPT_IN",
+      "effective_runtime": "NOT_VERIFIED",
+      "evidence": "MDE05 map; default KnowledgeEngine path"
+    },
+    {
+      "component": "embedding/index",
+      "configured": "DECLARED_OR_CONFIGURED",
+      "composed_injected_consumed": "BLOCKED_COMPATIBILITY_UNPROVEN",
+      "effective_runtime": "NOT_VERIFIED",
+      "evidence": "MDE06 production PARTIAL and canonical UNKNOWN"
+    },
+    {
+      "component": "runtime host/port",
+      "configured": "DECLARED_OR_CONFIGURED",
+      "composed_injected_consumed": "NOT_UNIVERSALLY_WIRED",
+      "effective_runtime": "NOT_VERIFIED",
+      "evidence": "Supervisor literals; localhost8000 health observed"
+    },
+    {
+      "component": "feature flags",
+      "configured": "DECLARED_OR_CONFIGURED",
+      "composed_injected_consumed": "DECLARED_NOT_PROVEN_CONSUMED",
+      "effective_runtime": "NOT_VERIFIED",
+      "evidence": "Frozen snapshot is not active feature proof"
+    },
+    {
+      "component": "capabilities",
+      "configured": "DECLARED_OR_CONFIGURED",
+      "composed_injected_consumed": "DECLARED_NOT_PROVEN_READY",
+      "effective_runtime": "NOT_VERIFIED",
+      "evidence": "Capability availability/identity not attested; MDE08 scope pending"
+    }
+  ],
+  "invocation_chain": {
+    "request": "partially recorded",
+    "selection": "mutable selected provider with captured label",
+    "execution": "mock/fixture scoped; live NOT_RUN",
+    "receipt": "no universal same-invocation identity receipt",
+    "verification": "NOT_VERIFIED"
+  },
+  "actual_model": null,
+  "identity_status": "NOT_VERIFIED"
+}

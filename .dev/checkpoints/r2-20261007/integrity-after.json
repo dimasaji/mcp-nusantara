@@ -1,0 +1,158 @@
+{
+  "protected_unmodified_count": 350,
+  "protected_mismatch": [],
+  "outside_scope_source_mismatch": [],
+  "unexpected_new_source": [],
+  "evidence_mismatch": [],
+  "scope": [
+    {
+      "path": "app/core/runtime_identity.py",
+      "before_sha256": "3ec47b16c5cf9c4d56210db854e5c460a4f714d292665719ccabf15b7ebae791",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/core/runtime_identity.py",
+      "after_sha256": "13eeb4b0dc2286bcc0f635cea840f4a1ab7d49ae85a96580c5461078f6b9c7fa"
+    },
+    {
+      "path": "app/models/base.py",
+      "before_sha256": "009297b09ddb3a56b4c038473d1839aa2f431409f7c9951a1cb94a40c2041892",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/base.py",
+      "after_sha256": "ebce1420ea29cc2604fa552bc855568755b5190fe53ca1c090fb20179599136e"
+    },
+    {
+      "path": "app/models/ollama.py",
+      "before_sha256": "a066e2930aa2d30be82e2b54a1a159a2406f75090c85121dec615af043126892",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/ollama.py",
+      "after_sha256": "d52921a64f0e18eea3990d0b560d474799f92e5afeae164c174543585662eaa9"
+    },
+    {
+      "path": "app/models/openai_compatible.py",
+      "before_sha256": "2832989348208b0d3706660d3dfe30d04590e83c11ab6f1662cc18806e23981a",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/openai_compatible.py",
+      "after_sha256": "8c906eac626234335447340611d27e69eaa46d6c1deaea90e9a37f887d4ca492"
+    },
+    {
+      "path": "app/models/router.py",
+      "before_sha256": "dd7e3a9da2aac5b9edc742f1bb6670ded6ed96f212079f720d2918fe9f9fbfff",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/router.py",
+      "after_sha256": "81c6c84339dc6d1a1aa3a466d14fe97bbb8bbd4cccc242689e021ce9c65f8cfd"
+    },
+    {
+      "path": "app/models/gateway.py",
+      "before_sha256": "a79fbaa0f3b9a1e3f386e33646e8cbda934168146f5213b4aab860092c3991e3",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/gateway.py",
+      "after_sha256": "c0e31d563675e4b81be24c74c27b76a2b9447f23f5401374b77b5a7ed7d7a2cd"
+    },
+    {
+      "path": "app/api/routes.py",
+      "before_sha256": "336ca3c55e85b33e604f8494e4ceb89221dc0d8c79a0e98db550634bd59e1b51",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/api/routes.py",
+      "after_sha256": "3c81015088a448c23d9d31a02fb62a451887e99509ab9e8bde433e72ec244141"
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "before_sha256": "668fd8422ff90c0e365c6fb5a3d468e2e02121dd3e9819bd0a6281609bf9bac8",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/api/v2_routes.py",
+      "after_sha256": "65b2c77d795aff6094634a22d09c1c82292d6c2a993d968e11bdc2c40eab992b"
+    },
+    {
+      "path": "tests/test_provider_identity.py",
+      "before_sha256": null,
+      "existed": false,
+      "after_sha256": "f41691854732a574de093213ae63841201d4cd8c2428f006a738e79002b64a3f"
+    }
+  ],
+  "database": {
+    "nusantara_knowledge.db": {
+      "mode": "read-only immutable=1",
+      "integrity_check": [
+        "ok"
+      ],
+      "before_hashes": {
+        "data\\knowledge\\nusantara_knowledge.db": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+        "data\\knowledge\\nusantara_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "data\\knowledge\\nusantara_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+      },
+      "after_hashes": {
+        "data\\knowledge\\nusantara_knowledge.db": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+        "data\\knowledge\\nusantara_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "data\\knowledge\\nusantara_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+      },
+      "unchanged": true,
+      "baseline_match": true
+    },
+    "production_knowledge.db": {
+      "mode": "read-only immutable=1",
+      "integrity_check": [
+        "ok"
+      ],
+      "before_hashes": {
+        "data\\knowledge\\production_knowledge.db": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+        "data\\knowledge\\production_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "data\\knowledge\\production_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+      },
+      "after_hashes": {
+        "data\\knowledge\\production_knowledge.db": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+        "data\\knowledge\\production_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "data\\knowledge\\production_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+      },
+      "unchanged": true,
+      "baseline_match": true
+    }
+  },
+  "owned_diff_stats": [
+    {
+      "path": "app/core/runtime_identity.py",
+      "added": 64,
+      "removed": 0
+    },
+    {
+      "path": "app/models/base.py",
+      "added": 3,
+      "removed": 1
+    },
+    {
+      "path": "app/models/ollama.py",
+      "added": 30,
+      "removed": 7
+    },
+    {
+      "path": "app/models/openai_compatible.py",
+      "added": 30,
+      "removed": 10
+    },
+    {
+      "path": "app/models/router.py",
+      "added": 20,
+      "removed": 14
+    },
+    {
+      "path": "app/models/gateway.py",
+      "added": 11,
+      "removed": 0
+    },
+    {
+      "path": "app/api/routes.py",
+      "added": 2,
+      "removed": 4
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "added": 2,
+      "removed": 1
+    },
+    {
+      "path": "tests/test_provider_identity.py",
+      "added": 187,
+      "removed": 0
+    }
+  ],
+  "owned_added_line_whitespace": [],
+  "status": "PASS"
+}

@@ -1,0 +1,1998 @@
+{
+  "schema_version": 1,
+  "timestamp": "2026-10-09T02:04:30.385632+00:00",
+  "status": "PARTIAL",
+  "system": "NUSANTARA CORE + HERMES",
+  "phases": [
+    {
+      "id": "R1",
+      "name": "Configuration Intelligence",
+      "status": "CLOSED_PASS",
+      "evidence": [
+        "r1"
+      ],
+      "kind": "EXISTING"
+    },
+    {
+      "id": "R2",
+      "name": "Provider / Model Runtime Identity",
+      "status": "CLOSED_PASS",
+      "evidence": [
+        "r2",
+        "r2-owner"
+      ],
+      "kind": "EXISTING"
+    },
+    {
+      "id": "R3",
+      "name": "Effective RAG Profile",
+      "status": "R3_IMPLEMENTATION_PASS_WITH_CONDITIONS",
+      "evidence": [
+        "r3"
+      ],
+      "kind": "EXISTING"
+    },
+    {
+      "id": "R4",
+      "name": "Embedding / Index Compatibility",
+      "status": "LOCKED",
+      "evidence": [
+        "cplane-contract"
+      ],
+      "kind": "PROPOSED"
+    },
+    {
+      "id": "R5",
+      "name": "Runtime Enforcement",
+      "status": "LOCKED",
+      "evidence": [
+        "cplane-contract"
+      ],
+      "kind": "PROPOSED"
+    },
+    {
+      "id": "MDE10",
+      "name": "Master Developer Engine",
+      "status": "NOT_AUTHORIZED",
+      "evidence": [
+        "cplane-contract"
+      ],
+      "kind": "PROPOSED"
+    }
+  ],
+  "current_phase": "R3",
+  "contract": {
+    "id": "MDA-CPLANE-UI-AUTH-001",
+    "status": "APPROVED",
+    "evidence": [
+      "cplane-owner",
+      "cplane-contract"
+    ]
+  },
+  "gates": [
+    {
+      "id": "R3.1",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.2",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.3",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.4",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.5",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.6",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.7",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.8",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.9",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.10",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.11",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.12",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.13",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.14",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "r1",
+      "reference": "C:\\Users\\dmaza\\mcp-starter\\.dev\\MDA_R1_OFFICIAL_CLOSURE_20261007_143016.json",
+      "sha256": "c87deb447b9954d5aa2b68fa9cea43d3001a2fc90909b87b269205b4d4889686",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "r2",
+      "reference": "C:\\Users\\dmaza\\mcp-starter\\.dev\\MDA_R2_IMPLEMENTATION_CHECKPOINT.json",
+      "sha256": "00226723385ac78e4f2a9fa584e82b18cd40dcc31ed7a4541d9e170467854cba",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "r2-owner",
+      "reference": "C:\\Users\\dmaza\\mcp-starter\\.dev\\checkpoints\\r2-20261007\\FINAL_OWNER_ACCEPTANCE_RECORD.json",
+      "sha256": "bac54cbfb7182b3a1a0e133923777c52e04a9fc049c97bea3cdf7c4a094e8e6e",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "sources",
+      "reference": "C:\\Users\\dmaza\\mcp-starter\\control-plane\\evidence-sources.json",
+      "sha256": "ee2b35808de00f409c5bae53609d1b84089969290bff36e76319b336fc215fea",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "r3",
+      "reference": "C:\\Users\\dmaza\\AppData\\Local\\Temp\\MDA_R3_192d8662e6d649c5b7d1d67afe752ef1\\closure-manifest.json",
+      "sha256": "417bbec98e444368c0d895daaba6cab659739da988d2b7625e62e7d0e8b5dd44",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "r2-runtime",
+      "reference": "C:\\Users\\dmaza\\mcp-starter\\.dev\\checkpoints\\r2-20261007\\health-gate\\runtime-verification.json",
+      "sha256": "4272046f80d09e48a80b72052f8ebcaa29d2cf8e3770f1dc9b9bd56811f69bf9",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "rag-profile",
+      "reference": "C:\\Users\\dmaza\\AppData\\Local\\Temp\\MDA_R3_192d8662e6d649c5b7d1d67afe752ef1\\actual-profile.json",
+      "sha256": "718257f6994170bb431673d0bd0eded71f34e5d6d4023b9882361d95e2ef5412",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "r3-integrity",
+      "reference": "C:\\Users\\dmaza\\AppData\\Local\\Temp\\MDA_R3_192d8662e6d649c5b7d1d67afe752ef1\\integrity-final.json",
+      "sha256": "e9907ced8def68809635e3784bf39167f8f22d5af7cd3df447fb1cd19827abda",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "cplane-owner",
+      "reference": "C:\\Users\\dmaza\\mcp-starter\\control-plane\\CPLANE_OWNER_AUTHORIZATION.json",
+      "sha256": "8d15c9a7bf99bbdb6341ee1442a7ba051e07535d89e009e301e9444e7569e067",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "cplane-contract",
+      "reference": "C:\\Users\\dmaza\\mcp-starter\\docs\\commands\\MDA-CPLANE-UI-AUTH-001.md",
+      "sha256": "c54b79904a76840191c5f9227c6c64afc1079abfd443ef9f830d0a10a8f63448",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "focused",
+      "reference": "C:\\Users\\dmaza\\AppData\\Local\\Temp\\MDA_R3_192d8662e6d649c5b7d1d67afe752ef1\\closure-focused.xml",
+      "sha256": "7bf8e91c2c7baf7dac54b9bac171f5c74b3b791b98c63d77c031d44cc679dc47",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "regression",
+      "reference": "C:\\Users\\dmaza\\AppData\\Local\\Temp\\MDA_R3_192d8662e6d649c5b7d1d67afe752ef1\\closure-regression.xml",
+      "sha256": "c8ac913431fc7a697ec900655471ecaf09a99c8f5b7543cde4dcb6f4da23e61a",
+      "status": "VERIFIED_ARTIFACT"
+    },
+    {
+      "id": "parity",
+      "reference": "C:\\Users\\dmaza\\AppData\\Local\\Temp\\MDA_R3_192d8662e6d649c5b7d1d67afe752ef1\\query-parity.json",
+      "sha256": "3df3ce0261d0dbaa92bb7da40052b9221abb5e4bae6afa2e8e5062080e720ab0",
+      "status": "VERIFIED_ARTIFACT"
+    }
+  ],
+  "verification": [
+    {
+      "id": "focused",
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "evidence": [
+        "focused"
+      ]
+    },
+    {
+      "id": "regression",
+      "tests": 161,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "evidence": [
+        "regression"
+      ]
+    },
+    {
+      "id": "query-parity",
+      "tests": 24,
+      "failures": 0,
+      "status": "PASS",
+      "evidence": [
+        "parity"
+      ]
+    }
+  ],
+  "runtime": {
+    "configured_model": "llama3.2:1b",
+    "effective_model": "llama3.2:1b",
+    "selected_provider": "ollama",
+    "actual_model": "llama3.2:1b",
+    "build_id": "sha256:40661a1e1338f29d5f5ad9886bbf149b713e71bc18880fe3a4b99efbcc6b7e4e",
+    "process_id": 25156,
+    "identity_status": "RUNTIME_CONFIRMED",
+    "timestamp": "2026-10-07T08:52:14.173139+00:00",
+    "scope": "HISTORICAL_CONTROLLED_RUNTIME",
+    "current_status": "NOT_VERIFIED",
+    "evidence": [
+      "r2-runtime"
+    ]
+  },
+  "rag": {
+    "status": "FIXTURE_EVIDENCE",
+    "profile": {
+      "effective_values": {
+        "absolute_relevance_gate": 0.3,
+        "actual_reranker": "NOT_APPLICABLE",
+        "candidate_count": 20,
+        "embedding_identity": {
+          "actual_model": null,
+          "configured_dimension": 768,
+          "configured_model": "indobenchmark/indobert-base-p1",
+          "implementation": "custom_callable",
+          "status": "NOT_VERIFIED"
+        },
+        "knowledge_source": {
+          "implementation": "r3_fixture.FakeStore",
+          "reference": null,
+          "status": "NOT_VERIFIED"
+        },
+        "lexical_normalization": "NOT_VERIFIED",
+        "lexical_weight": 0.3,
+        "missing_stage_score": 0.0,
+        "relative_threshold": 0.5,
+        "rerank_enabled": false,
+        "rerank_requested": false,
+        "retrieval_mode": "hybrid",
+        "semantic_normalization": "NOT_VERIFIED",
+        "semantic_weight": 0.7,
+        "top_k": 2
+      },
+      "profile_version": 1,
+      "provenance": {
+        "absolute_relevance_gate": {
+          "configured_value": null,
+          "effective_value": 0.3,
+          "override": null,
+          "parameter": "absolute_relevance_gate",
+          "precedence": "internal implementation constant",
+          "source": "RAG_INTERNAL",
+          "source_layer": "RAG_INTERNAL",
+          "source_location": "app/knowledge/rag.py:RAG.query",
+          "status": "EFFECTIVE",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "actual_reranker": {
+          "configured_value": null,
+          "effective_value": "NOT_APPLICABLE",
+          "override": null,
+          "parameter": "actual_reranker",
+          "precedence": "internal implementation constant",
+          "source": "RERANKER_IMPLEMENTATION",
+          "source_layer": "RERANKER_IMPLEMENTATION",
+          "source_location": "app/knowledge/rag.py:RAG._simple_rerank",
+          "status": "EFFECTIVE",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "candidate_count": {
+          "configured_value": null,
+          "effective_value": 20,
+          "override": null,
+          "parameter": "candidate_count",
+          "precedence": "max(effective_top_k * 4, 20)",
+          "source": "DERIVED",
+          "source_layer": "DERIVED",
+          "source_location": "app/knowledge/rag.py:RAG.query",
+          "status": "EFFECTIVE",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "embedding_identity": {
+          "configured_value": null,
+          "effective_value": {
+            "actual_model": null,
+            "configured_dimension": 768,
+            "configured_model": "indobenchmark/indobert-base-p1",
+            "implementation": "custom_callable",
+            "status": "NOT_VERIFIED"
+          },
+          "override": null,
+          "parameter": "embedding_identity",
+          "precedence": "internal implementation constant",
+          "source": "EMBEDDING_INSTANCE",
+          "source_layer": "EMBEDDING_INSTANCE",
+          "source_location": "app/knowledge/rag.py:RAG.__init__/set_embedding_func",
+          "status": "NOT_VERIFIED",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "knowledge_source": {
+          "configured_value": null,
+          "effective_value": {
+            "implementation": "r3_fixture.FakeStore",
+            "reference": null,
+            "status": "NOT_VERIFIED"
+          },
+          "override": null,
+          "parameter": "knowledge_source",
+          "precedence": "internal implementation constant",
+          "source": "STORE_INSTANCE",
+          "source_layer": "STORE_INSTANCE",
+          "source_location": "app/knowledge/rag.py:RAG.__init__",
+          "status": "NOT_VERIFIED",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "lexical_normalization": {
+          "configured_value": null,
+          "effective_value": "NOT_VERIFIED",
+          "override": null,
+          "parameter": "lexical_normalization",
+          "precedence": "internal implementation constant",
+          "source": "STORE_IMPLEMENTATION",
+          "source_layer": "STORE_IMPLEMENTATION",
+          "source_location": "app/knowledge/store.py:SQLiteVectorStore",
+          "status": "NOT_VERIFIED",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "lexical_weight": {
+          "configured_value": null,
+          "effective_value": 0.3,
+          "override": null,
+          "parameter": "lexical_weight",
+          "precedence": "internal implementation constant",
+          "source": "RAG_INTERNAL",
+          "source_layer": "RAG_INTERNAL",
+          "source_location": "app/knowledge/rag.py:RAG.query",
+          "status": "EFFECTIVE",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "missing_stage_score": {
+          "configured_value": null,
+          "effective_value": 0.0,
+          "override": null,
+          "parameter": "missing_stage_score",
+          "precedence": "internal implementation constant",
+          "source": "RAG_INTERNAL",
+          "source_layer": "RAG_INTERNAL",
+          "source_location": "app/knowledge/rag.py:RAG.query",
+          "status": "EFFECTIVE",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "relative_threshold": {
+          "configured_value": null,
+          "effective_value": 0.5,
+          "override": null,
+          "parameter": "relative_threshold",
+          "precedence": "internal implementation constant",
+          "source": "RAG_INTERNAL",
+          "source_layer": "RAG_INTERNAL",
+          "source_location": "app/knowledge/rag.py:RAG.query",
+          "status": "EFFECTIVE",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "rerank_enabled": {
+          "configured_value": false,
+          "effective_value": false,
+          "override": null,
+          "parameter": "rerank_enabled",
+          "precedence": "argument or instance value; KB_EXPLICIT > R1 > KB_DEFAULT",
+          "source": "R1_EXPLICIT",
+          "source_layer": "R1_EXPLICIT",
+          "source_location": "app/knowledge/rag.py:RAG.__init__ -> KnowledgeBaseConfig.reranker_enabled",
+          "status": "INHERITED",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "rerank_requested": {
+          "configured_value": false,
+          "effective_value": false,
+          "override": false,
+          "parameter": "rerank_requested",
+          "precedence": "query argument; default False",
+          "source": "INVOCATION",
+          "source_layer": "INVOCATION",
+          "source_location": "app/knowledge/rag.py:RAG.query",
+          "status": "DEFAULT",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "retrieval_mode": {
+          "configured_value": null,
+          "effective_value": "hybrid",
+          "override": null,
+          "parameter": "retrieval_mode",
+          "precedence": "internal implementation constant",
+          "source": "RAG_INTERNAL",
+          "source_layer": "RAG_INTERNAL",
+          "source_location": "app/knowledge/rag.py:RAG.query",
+          "status": "EFFECTIVE",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "semantic_normalization": {
+          "configured_value": null,
+          "effective_value": "NOT_VERIFIED",
+          "override": null,
+          "parameter": "semantic_normalization",
+          "precedence": "internal implementation constant",
+          "source": "STORE_IMPLEMENTATION",
+          "source_layer": "STORE_IMPLEMENTATION",
+          "source_location": "app/knowledge/store.py:SQLiteVectorStore",
+          "status": "NOT_VERIFIED",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "semantic_weight": {
+          "configured_value": null,
+          "effective_value": 0.7,
+          "override": null,
+          "parameter": "semantic_weight",
+          "precedence": "internal implementation constant",
+          "source": "RAG_INTERNAL",
+          "source_layer": "RAG_INTERNAL",
+          "source_location": "app/knowledge/rag.py:RAG.query",
+          "status": "EFFECTIVE",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "top_k": {
+          "configured_value": 2,
+          "effective_value": 2,
+          "instance_value": 2,
+          "override": null,
+          "parameter": "top_k",
+          "precedence": "argument or instance value; KB_EXPLICIT > R1 > KB_DEFAULT",
+          "source": "R1_EXPLICIT",
+          "source_layer": "R1_EXPLICIT",
+          "source_location": "app/knowledge/rag.py:RAG.__init__ -> KnowledgeBaseConfig.retrieval_top_k",
+          "status": "INHERITED",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "resolved_relevance_gate": {
+          "parameter": "resolved_relevance_gate",
+          "source": "execution scores",
+          "source_location": "app/knowledge/rag.py:RAG._apply_relevance_gate",
+          "source_layer": "EXECUTION",
+          "configured_value": null,
+          "effective_value": 0.39,
+          "precedence": "max(absolute_gate, top_score * relative_threshold)",
+          "override": null,
+          "status": "EXECUTED",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        },
+        "consumer_post_filter": {
+          "parameter": "consumer_post_filter",
+          "source": "V1 consumer constant",
+          "source_location": "app/api/routes.py:chat",
+          "source_layer": "CONSUMER",
+          "configured_value": null,
+          "effective_value": 0.5,
+          "precedence": "after canonical RAG gate",
+          "override": null,
+          "status": "EXECUTED",
+          "consumer": "V1_CHAT",
+          "invocation_id": "retrieval_ae8540be0e394139"
+        }
+      },
+      "reranker_identity": {
+        "algorithm": "NOT_APPLICABLE",
+        "configured_label": null,
+        "enabled": false,
+        "model_identity": "NOT_APPLICABLE",
+        "requested": false,
+        "execution_status": "NOT_EXECUTED"
+      },
+      "retrieval_strategy": "canonical_hybrid_semantic_lexical_topk_rerank_gate",
+      "source_build_id": "sha256:46b7edc830944db3591dc9e6df6e306b84e192d4e311f1f750f207e42114d622",
+      "source_config": {
+        "fingerprint": "sha256:6d77bd788272457cc88afe867b0b17a664b71556fadbec744a2fe06635f3c19f",
+        "status": "R1_SNAPSHOT"
+      },
+      "thresholds": {
+        "absolute_relevance_gate": 0.3,
+        "relative_threshold": 0.5,
+        "score_space": "hybrid",
+        "resolved_relevance_gate": 0.39,
+        "consumer_post_filter": {
+          "after": 2,
+          "before": 2,
+          "precedence": "after canonical RAG gate",
+          "source_layer": "CONSUMER",
+          "source_location": "app/api/routes.py:chat",
+          "status": "EXECUTED",
+          "threshold": 0.5
+        }
+      },
+      "profile_id": "sha256:9626bf198a9306edb43c890d2584566e13552bf925560ea543afaa30ba6785e9",
+      "invocation_id": "retrieval_ae8540be0e394139",
+      "timestamp": "2026-10-07T10:10:55.118916+00:00",
+      "consumer": "V1_CHAT",
+      "correlation": {
+        "execution_id": "exe_4f6893b2d91c4dac",
+        "request_id": "r3-actual-fixture",
+        "session_id": "r3-fixture"
+      },
+      "execution_outcome": {
+        "before_gate_count": 2,
+        "gate_status": "EXECUTED",
+        "lexical_count": 2,
+        "rerank_enabled_consumed": false,
+        "reranker_algorithm_consumed": "simple_keyword_overlap",
+        "reranker_label_consumed": null,
+        "reranker_status": "NOT_EXECUTED",
+        "resolved_relevance_gate": 0.39,
+        "returned_count": 2,
+        "semantic_count": 2,
+        "stage": "result",
+        "status": "COMPLETED"
+      }
+    },
+    "evidence": [
+      "rag-profile"
+    ]
+  },
+  "worktree": {
+    "branch": "codex/fullroot-control-20261007",
+    "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+    "tracked": 33,
+    "untracked": 229,
+    "staged": 0,
+    "files": [
+      {
+        "path": ".env.example",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".graphifyignore",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "RELEASE_READINESS_REPORT.md",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "ROLLBACK_PLAN.md",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/api/routes.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/api/v2_routes.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/core/config.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/core/nusantara_config.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/core/runtime_identity.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/devcore/core.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/devcore/grounding.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/devcore/router.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/devcore/tools.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/evaluation/evaluator.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/hermes/agent.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/improvement/gate.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/improvement/release.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/knowledge/engine.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/knowledge/rag.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/knowledge/schemas.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/main.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/models/ollama.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/security/readiness.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/security/scanner.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/ui/index.html",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/v2/ROADMAP_STATUS.md",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "pyproject.toml",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "run_tests.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/release_check.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/run_eval.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_model_router_configuration.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_provider_identity.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/v2/test_devcore.py",
+        "state": " M",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "'",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDA_ACCEPTED_BOUNDARY_20261007_131120.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDA_MASTER_CONTRACT_CHECKPOINT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDA_POST_MDE09_001_CHECKPOINT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDA_R1_OFFICIAL_CLOSURE_20261007_143016.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDA_R2_IMPLEMENTATION_CHECKPOINT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDA_R2_PRE_AUTHORIZATION_20261007_143236.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE00_CHECKPOINT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE05_BASELINE_20261007.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE05_CHECKPOINT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE06_BASELINE_20261007.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE06_CHECKPOINT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE07_BASELINE_20261007.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE07_CHECKPOINT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE08_BASELINE_20261007.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE08_CHECKPOINT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE09_BASELINE_20261007.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE09_CHECKPOINT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/MDE_BASELINE_20261007T042435Z.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/PROJECT_STRUCTURE_AUDIT_20261007_110002/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/R1_CORRECTION_BACKUP_20261007_141448/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/R1_CORRECTION_BACKUP_20261007_142020/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/R1_LOCAL_001_CHECKPOINT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/R1_SOCKET_GUARD_BACKUP_20261007_142145/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/R1_TARGETED_ERROR_20261007.txt",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/R2_A10_AUTHORIZATION_CONTRACT_20261008_134113.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/checkpoints/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/commands/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/control_report.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/security-source/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/test-full.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/test-full.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": ".dev/validate-initial.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "_phase4_trust_baseline.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/api/control_plane.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/api/inspection_preview.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/api/runtime_verification.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/approval/runtime_authorization.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/core/control_plane_projection.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/core/runtime_attestation.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/core/runtime_build_provenance.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/core/runtime_correlation.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/devcore/inspection.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/evaluation/datasets/v1_id.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/evaluation/datasets/v1_recovery_oracle.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/mcp/stdio_server.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/security/local_operator.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "app/ui/review.html",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "control-plane/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/MDA_R1_LOCAL_001_PROPOSAL.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/MDE-05_RAG_PROFILE_DESIGN.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/MDE-06_EMBEDDING_INDEX_SAFETY_DESIGN.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/MDE-07_RUNTIME_ENFORCEMENT_DESIGN.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/MDE-08_CAPABILITY_GOVERNANCE_DESIGN.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/MDE-09_CLOSURE_AND_REMEDIATION_DESIGN.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/audit/NUSANTARA-V1-CONTRACT-COMPLIANCE-ADDENDUM-2026-10-06.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/commands/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/contracts/NUSANTARA-AGENT-ORCHESTRATION-CONTRACT-V1.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/contracts/NUSANTARA-CONTROL-PLANE-V1.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/contracts/NUSANTARA-INTELLIGENCE-MODEL-CONTRACT-V1.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/contracts/NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/contracts/NUSANTARA-RUNTIME-EXECUTION-CONTRACT-V1.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/contracts/NUSANTARA-TOOL-MCP-API-CONTRACT-V1.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "docs/reports/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "human_acceptance_inspection.txt",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/CONFIGURATION_BASELINE_20261006.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/CONFIGURATION_CLASSIFICATION_20261006.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/CONFIGURATION_DISCOVERY_20261006.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/DEVELOPER_CORE_ANALYSIS_20261006.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/DEVELOPER_CORE_BASELINE_20261006.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/DEVELOPER_CORE_ENGINE_IMPLEMENTATION_PROGRESS.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/DEVELOPER_CORE_ENGINE_IMPLEMENTATION_RESULT_20261006.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/DEVELOPER_CORE_REGRESSION_20261006.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/DEVELOPER_CORE_SECURITY_20261006.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/DEVELOPER_CORE_TARGETED_20261006.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/FULLROOT_BASELINE_20261007.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/FULLROOT_BOUNDARIES_20261007.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/FULLROOT_CONTROL_20261007.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/FULLROOT_EXECUTOR_FAILURE_20261007.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/FULLROOT_REGRESSION_FINAL_20261007.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/FULLROOT_ROUTER_20261007.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/FULLROOT_ROUTER_REGRESSION_20261007.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/MEMORY_RETENTION_2026-10-06.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-DEVELOPER-CORE-ENGINE-IMPLEMENTATION-2026-10-06.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-LEVEL-B-BEHAVIORAL-B2-B5-20261008-202418.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-LEVEL-B-BEHAVIORAL-IMPACT-B2-B5-20261008-202523.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-LEVEL-B-RESULT-20261008-202057.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-LEVEL-B-RESULT-20261008-202057.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-LEVEL-B-RESULT-20261008-202215.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-LEVEL-B-RESULT-20261008-202252.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-V1-CC01-OPTION-C-IMPLEMENTATION-2026-10-06.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-V1-CC01-RESPONSE-PROJECTION-PROPOSAL-2026-10-06.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-V1-CONTRACT-COMPLIANCE-2026-10-06.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-V1-FINAL-CLOSURE-REPORT-2026-10-06.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA-V1-RECOVERY-REPORT-2026-10-06.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA_CONFIGURATION_ARCHITECTURE_20261006.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA_CONFIGURATION_MAP_20261006.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA_CONFIGURATION_REGRESSION_20261006.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA_CONFIGURATION_VALIDATION_20261006.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/NUSANTARA_V1_VERIFICATION_2026-10-06.md",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CC01_IMPLEMENTATION_PROGRESS.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CC01_OPTION_C_IMPLEMENTATION.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CC01_REGRESSION.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CC01_RESPONSE_PROJECTION_PROPOSAL.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CC01_SECURITY.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CC01_TARGETED.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CC01_TARGETED_FIXED.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CHAT_VERIFY_2026-10-06.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CLOSURE_BUILD_ID.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CLOSURE_ENVIRONMENT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CLOSURE_FILESYSTEM.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CLOSURE_INTEGRITY.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CLOSURE_ORACLE_AUDIT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CLOSURE_SECURITY.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CLOSURE_TARGETED.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_COMPILE_VERIFY_2026-10-06.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CONTRACT_COMPLIANCE.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CONTRACT_COMPLIANCE_PROGRESS.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_CONTRACT_COMPLIANCE_SOURCE_EVIDENCE.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_FINAL_CLOSURE.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_FINAL_REGRESSION.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_GIT_VERIFY_2026-10-06.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_HEALTH_VERIFY_2026-10-06.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_LIVE_VERIFY_2026-10-06.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_BASELINE.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_CHANGES.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_ENVIRONMENT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_FILESYSTEM.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_IDENTITY_TESTS.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_INDOBERT_CLIENT.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_INDOBERT_FAILURE.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_INDOBERT_NATIVE.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_INDOBERT_NOWINDOW.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_INDOBERT_TARGETED.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_KNOWLEDGE_INVENTORY.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_MCP.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_ORACLE_SOURCE_PINS.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_PROGRESS.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_RAG.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_ROUTE_DIAG.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_RUNTIME.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_SECURITY.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_TEST_091744129784_STDERR_0.txt",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_TEST_STDERR_0.txt",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_TEST_STDERR_1.txt",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_TEST_STDERR_2.txt",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_WORKER_091744129784.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_WORKER_CAPTURE.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_WORKER_STDERR_0.txt",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RECOVERY_WORKER_STDERR_1.txt",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_RUNTIME_VERIFY_2026-10-06.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_SECURITY_SCAN_2026-10-06.json",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/V1_VERIFY_2026-10-06.xml",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/configuration-phase6-compat-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/configuration-phase6-targeted-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/configuration-phase7-memory-diagnosis-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/configuration-phase7-regression-final-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/configuration-phase7-regression-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/configuration-phase7-targeted-final-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/configuration-phase7-targeted-fixed-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/configuration-phase7-targeted-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/configuration/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/developer-core-backup-20261006-175153/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/developer-core-regression-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/developer-core-targeted-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/diagnose_v1_worker.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/fullroot-baseline-tmp-20261007/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/nusantara-phases/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/prepare_v1_closure.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-cc01-option-c-backup-20261006/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-cc01-regression-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-cc01-targeted-fixed-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-cc01-targeted-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-closure-backup-20261006/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-closure-targeted-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-final-closure-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-final-regression-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-rag-4kvfxegr/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-recovery-backup-20261006/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-recovery-candidate/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-recovery-identity-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "reports/v1-recovery-mcp-tmp/",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/classify_configuration_phase2.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/control-plane-final-check.ps1",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/implement_v2_hermes_runtime.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/implement_v2_hermes_runtime_safe.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/load_test.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/nusantara_master_phase_runner.ps1",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/staging_drill.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/verify_v1_recovery_rag.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/verify_v1_recovery_runtime.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "scripts/wire_v2_chat_hermes.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/evaluation/test_live_harness.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/inspection_preview_isolated_runner.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_approval_persistence.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_backup_restore.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_configuration_contract.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_configuration_integration.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_control_plane_attestation_binding.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_control_plane_readonly.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_developer_core_engine_contract.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_effective_rag_profile.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_indobert_timeout.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_inspection_preview_api.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_local_operator_identity.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_mcp_stdio.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_phase3_v1_metrics_integration.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_phase4_trust_contract.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_phase4_v1_chat_runtime.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_phase4_v1_trust_integration.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_provider_failure.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_research_persistence.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_review_branch.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_runtime_attestation.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_runtime_authorization.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_runtime_build_provenance.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_runtime_correlation.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_runtime_identity.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_runtime_verification.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_session_memory.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_source_fetcher.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_trace_retention.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_v1_operator_control.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_v1_response_projection.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/test_v1_stage_budget.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/v2/test_context_budget.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/v2/test_devcore_grounding_response.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      },
+      {
+        "path": "tests/v2/test_devcore_inspection.py",
+        "state": "??",
+        "ownership": "UNKNOWN"
+      }
+    ],
+    "status": "PARTIAL"
+  },
+  "protected_assets": [
+    {
+      "path": "data/knowledge/nusantara_knowledge.db",
+      "sha256": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+      "status": "UNCHANGED",
+      "evidence": [
+        "r2-runtime"
+      ]
+    },
+    {
+      "path": "data/knowledge/nusantara_knowledge.db-wal",
+      "status": "NOT_VERIFIED",
+      "evidence": [
+        "r2-runtime"
+      ]
+    },
+    {
+      "path": "data/knowledge/nusantara_knowledge.db-shm",
+      "status": "NOT_VERIFIED",
+      "evidence": [
+        "r2-runtime"
+      ]
+    }
+  ],
+  "warnings": [
+    "Git coverage PARTIAL: some inherited report directories are inaccessible",
+    "R3 RAG receipt is a fixture, not production retrieval attestation.",
+    "Runtime identity is historical; current live process/model is NOT_VERIFIED.",
+    "R3 artifacts are in temporary storage; missing evidence remains NOT_VERIFIED."
+  ],
+  "blockers": [
+    "R4: LOCKED",
+    "R5: LOCKED",
+    "MDE10: NOT_AUTHORIZED"
+  ],
+  "governance": {
+    "read_only": true,
+    "commit": "NOT_AUTHORIZED",
+    "push": "NOT_AUTHORIZED",
+    "acceptance": {
+      "R2": "APPROVED",
+      "R3": "NOT_VERIFIED"
+    },
+    "scope": "control-plane frontend; GET-only FastAPI projection; minimal app/main.py integration; isolated tests",
+    "rollback": "Isolated CPLANE-owned changes only; no global reset/restore",
+    "r3_integrity": {
+      "outside_scope": [],
+      "protected_mismatch": [],
+      "static_syntax": "6/6 PASS"
+    },
+    "evidence": [
+      "cplane-owner",
+      "r2-owner",
+      "r3-integrity"
+    ]
+  }
+}

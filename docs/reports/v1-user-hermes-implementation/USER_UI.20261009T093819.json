@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-10-09T09:38:19.061274+07:00",
+  "status": "PASS_SCOPED",
+  "observed_evidence": [
+    "Actual built root opens and submits V1 chat without model override",
+    "Answers/errors/in-flight state/history/citations visible",
+    "Mobile viewport clientWidth=scrollWidth=375; navigation works",
+    "Native provider grounded abstention displayed"
+  ],
+  "files_changed": [
+    "control-plane/src/assistant.tsx",
+    "control-plane/src/api.ts",
+    "control-plane/src/router.tsx",
+    "control-plane/src/ui.tsx",
+    "control-plane/src/styles.css",
+    "control-plane/vite.config.ts",
+    "control-plane/index.html",
+    "app/main.py",
+    "Dockerfile",
+    ".dockerignore"
+  ],
+  "reason": "Provide usable user chat at / with separate Console, using existing application and API",
+  "tests_run": [
+    "FRONTEND_REGRESSION.json",
+    "BROWSER_OBSERVATIONS.json",
+    "LOCAL_PROVIDER_BROWSER_OBSERVATIONS.20261009T093819.json",
+    "TypeScript --noEmit exit 0",
+    "Vite build exit 0 (--emptyOutDir false)"
+  ],
+  "limitations": [
+    "Transient component history; no new persistence",
+    "Dockerfile includes prebuilt bundle; Docker image build/deployment not run",
+    "Vite development proxy not independently browser-tested"
+  ],
+  "remaining_blockers": [
+    "Full native semantic-worker plus production RAG/store/model UI integration not verified",
+    "Production deployment, provisioned credentials/resources and launch-worker consistency unverified; no deployment authorized"
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "timestamp": "2026-10-08T21:29:38.771776+07:00",
+  "repository": "C:\\Users\\dmaza\\mcp-starter",
+  "branch": "codex/fullroot-control-20261007",
+  "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "changes": "Evidence and new draft Control Plane contract only; stopped at unresolved architectural decisions",
+  "files_changed": [
+    "docs/reports/v1-closure-20261008/V1_CLOSURE_REPORT.json"
+  ],
+  "source_changes": [],
+  "test_changes": [],
+  "configuration_changes": [],
+  "runtime_identity": {
+    "inspection": "Read-only Win32_Process discovery; not socket owner or active-build correlation",
+    "observed_backend_candidates": [
+      {
+        "pid": 37704,
+        "parent_pid": 20228,
+        "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+        "created_at": "2026-10-08T20:03:49.613978+07:00"
+      },
+      {
+        "pid": 33160,
+        "parent_pid": 37704,
+        "executable": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "created_at": "2026-10-08T20:03:49.631080+07:00"
+      }
+    ],
+    "launch_application": "app.main:app",
+    "launch_host": "127.0.0.1",
+    "launch_port": 8000,
+    "reload": false,
+    "active_source_build": "NOT_VERIFIED",
+    "runtime_profile": "NOT_VERIFIED",
+    "effective_provider_model": "NOT_VERIFIED",
+    "health_openapi_chat_requests_sent": 0
+  },
+  "live_integration_verified": false,
+  "unauthorized_changes": 0,
+  "change_audit": {
+    "existing_files_checked": 6686,
+    "modified_or_missing_existing_files": [],
+    "added_outside_evidence_directory": [
+      "docs/contracts/NUSANTARA-CONTROL-PLANE-V1.md"
+    ],
+    "unattributed_added": [],
+    "read_errors": [],
+    "source_test_configuration_changes": [],
+    "cache_preserved": true,
+    "historical_evidence_preserved": true
+  },
+  "limitations": [
+    "Pure isolated verification is not HTTP/runtime/official-source integration proof",
+    "No provider/model/worker, live DB, production restart, deployment or graph query executed",
+    "No V2 implementation or Hermes freeze performed"
+  ],
+  "scope": "All mandatory V1 acceptance gates and stop decision",
+  "results": {
+    "V1_STATUS": "HOLD",
+    "BLOCKERS": [
+      {
+        "id": "CC05",
+        "finding": "V1 memory stores user/assistant turns unconditionally; client-selected session defaults to web. Policy evaluates answer after the user write. No V1 consent/ownership/retention contract is implemented.",
+        "files": [
+          "app/core/gate_integration.py",
+          "app/api/routes.py",
+          "app/memory/engine.py"
+        ],
+        "decision_required": "V1 memory ownership and consent policy; keep legacy history or make the V1 route NO-MEMORY. Do not import V2 SessionMemory."
+      },
+      {
+        "id": "CC06-FILTER",
+        "finding": "KnowledgeEngine discards filter; canonical retrieval/store do not accept filters. Source-policy semantics and supported metadata/authority fields are not specified.",
+        "files": [
+          "app/knowledge/engine.py",
+          "app/knowledge/rag.py",
+          "app/knowledge/store.py"
+        ],
+        "decision_required": "Approved filter/authority schema and enforcement before candidate scoring/top-k."
+      },
+      {
+        "id": "CC06-ORACLE",
+        "finding": "Latest historical oracle audit records two REVIEW_REQUIRED official cases and one MISSING passport requirements case; fixtures do not establish official authority.",
+        "files": [
+          "reports/V1_CLOSURE_ORACLE_AUDIT.json",
+          "reports/V1_RECOVERY_PROGRESS.json"
+        ],
+        "decision_required": "Approved official snapshots with issuer, jurisdiction, validity and ingestion authorization; no invented oracle."
+      },
+      {
+        "id": "MODEL-CONTROL",
+        "finding": "Existing configuration owner is immutable and compose-once. Chat has per-request technical model override; there is no human profile registry or Control Plane selection owner consumed by chat.",
+        "files": [
+          "app/core/config.py",
+          "app/core/nusantara_config.py",
+          "app/api/routes.py",
+          "app/models/ollama.py",
+          "app/models/router.py",
+          "app/api/control_plane.py"
+        ],
+        "decision_required": "Profile to actual installed model mapping; whether selection is request/session/operator-wide; authorized owner lifecycle, scope and expiry without a second configuration truth."
+      },
+      {
+        "id": "ORCHESTRATION-CONTROL",
+        "finding": "Existing orchestration assembles supplied stage artifacts. Chat chooses its branches internally, without a user-selected orchestration field or source/answer/permission settings.",
+        "files": [
+          "app/orchestration/engine.py",
+          "app/hermes/agent.py",
+          "app/api/routes.py"
+        ],
+        "decision_required": "Approved semantics for direct/evidence modes, mandatory safety stages and treatment of missing evidence. Do not invent another engine."
+      },
+      {
+        "id": "UI-E2E",
+        "finding": "Existing UI is an evidence/acceptance console. API has no model/mode/source settings selection equivalent; Vite does not proxy /v1/chat. Mandatory end-to-end selection cases cannot pass.",
+        "files": [
+          "control-plane/src/human.tsx",
+          "control-plane/src/router.tsx",
+          "control-plane/src/api.ts",
+          "control-plane/vite.config.ts"
+        ],
+        "decision_required": "Depends on MODEL-CONTROL and ORCHESTRATION-CONTROL decisions before UI implementation."
+      },
+      {
+        "id": "SECURITY-ENV",
+        "finding": "Historical native symlink boundary test skipped for missing Windows privilege; current live enforcement and approval linkage not verified.",
+        "files": [
+          "reports/V1_RECOVERY_PROGRESS.json",
+          "app/policy/engine.py",
+          "app/security/auth.py"
+        ],
+        "decision_required": "Controlled supported test environment, without production restart/deployment."
+      },
+      {
+        "id": "DEPLOYMENT",
+        "finding": "No current-source startup/health/chat/container integration proof. Existing Docker compose declares a default database password; operational target and provisioned official/worker/model resources not established.",
+        "files": [
+          "Dockerfile",
+          "docker-compose.yml",
+          "app/main.py",
+          "reports/V1_RECOVERY_PROGRESS.json"
+        ],
+        "decision_required": "Approved target and explicit credentials/resources; no deployment or restart in this task."
+      }
+    ],
+    "gates": {
+      "CC01": "PASS_SCOPED",
+      "LC-DECIMAL-001": "D4_PASS_SCOPED",
+      "CC05": "REVIEW_REQUIRED",
+      "CC06_FILTER": "REVIEW_REQUIRED",
+      "CC06_OFFICIAL_ORACLE": "OPEN_REVIEW_REQUIRED",
+      "SECURITY": "PARTIAL_ENVIRONMENT_LIMITED",
+      "DEPLOYMENT_RUNTIME": "NOT_VERIFIED",
+      "CONTROL_PLANE": "PARTIAL",
+      "MODEL_SWITCHING": "PARTIAL",
+      "ORCHESTRATION": "FAIL",
+      "UI_API_RUNTIME": "FAIL",
+      "SELECTED_REGRESSION": "PASS",
+      "FULL_V1_REGRESSION": "NOT_VERIFIED"
+    },
+    "CONTROL_PLANE": "PARTIAL",
+    "MODEL_SWITCHING": "PARTIAL",
+    "ORCHESTRATION": "FAIL",
+    "UI_API_RUNTIME": "FAIL",
+    "REGRESSION": "PASS_SCOPED_ONLY",
+    "HERMES_FREEZE": "NOT_PERFORMED",
+    "implementation": "Stopped on unresolved architectural blockers as explicitly directed; evidence-only changes",
+    "acceptance_rule": "Mandatory missing gates keep V1 HOLD regardless of passing isolated tests",
+    "required_review": "Resolve model selection owner/profile mappings, memory policy, V1 mode semantics and source authority/filter contract; supply approved official snapshots and controlled runtime/environment proof"
+  },
+  "tests": {
+    "targeted": {
+      "passed": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": "targeted-v3-results.xml",
+      "guard_evidence": "targeted-v3-guards.json",
+      "guard_violations": []
+    },
+    "selected_regression": {
+      "passed": 115,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": "regression-v3-results.xml",
+      "guard_evidence": "regression-v3-guards.json",
+      "guard_violations": []
+    }
+  },
+  "decisions_required": [
+    "V1 memory ownership and consent policy; keep legacy history or make the V1 route NO-MEMORY. Do not import V2 SessionMemory.",
+    "Approved filter/authority schema and enforcement before candidate scoring/top-k.",
+    "Approved official snapshots with issuer, jurisdiction, validity and ingestion authorization; no invented oracle.",
+    "Profile to actual installed model mapping; whether selection is request/session/operator-wide; authorized owner lifecycle, scope and expiry without a second configuration truth.",
+    "Approved semantics for direct/evidence modes, mandatory safety stages and treatment of missing evidence. Do not invent another engine.",
+    "Depends on MODEL-CONTROL and ORCHESTRATION-CONTROL decisions before UI implementation.",
+    "Controlled supported test environment, without production restart/deployment.",
+    "Approved target and explicit credentials/resources; no deployment or restart in this task."
+  ],
+  "final_status": "HOLD"
+}

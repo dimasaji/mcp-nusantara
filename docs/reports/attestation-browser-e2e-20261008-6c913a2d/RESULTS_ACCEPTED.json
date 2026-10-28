@@ -1,0 +1,572 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\dmaza\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\dmaza\\mcp-starter\\control-plane\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "../docs/reports/attestation-browser-e2e-20261008-6c913a2d/playwright.mock.config.cjs"
+    ],
+    "configFile": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\playwright.mock.config.cjs",
+    "rootDir": "C:/Users/dmaza/mcp-starter/control-plane/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/dmaza/mcp-starter/docs/reports/attestation-browser-e2e-20261008-6c913a2d/browser-results-accepted",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/dmaza/mcp-starter/control-plane/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "attestation.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\RESULTS_ACCEPTED.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "attestation.spec.ts",
+      "file": "attestation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "five stages render, scroll and submit only explicit PENDING intention",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1896,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:34:56.780Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "rendering-metrics",
+                      "contentType": "application/json",
+                      "body": "eyJ2aWV3cG9ydFdpZHRoIjozOTAsImRvY3VtZW50V2lkdGgiOjYwMiwic2Nyb2xsWSI6MTE5MywiZG9jdW1lbnRIZWlnaHQiOjE5ODh9"
+                    },
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6MjAwLCJwb3N0cyI6W3sic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIn1dLCJibG9ja2VkIjpbXSwiZXhwZWN0ZWRCbG9ja2VkIjpbXSwicmVxdWVzdHMiOlsiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9vdmVydmlldyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvbWFpbi5jc3MiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanMiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJQT1NUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL2ludGVudGlvbiJdLCJlcnJvcnMiOltdLCJjb25zb2xlIjpbXSwiZXhwZWN0ZWRDb25zb2xlIjpbXSwibGl2ZSI6ZmFsc2V9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-14e8578c606a16262093",
+          "file": "attestation.spec.ts",
+          "line": 94,
+          "column": 1
+        },
+        {
+          "title": "direct /evidence cannot bypass review",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 434,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:34:59.042Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6MjAwLCJwb3N0cyI6W10sImJsb2NrZWQiOltdLCJleHBlY3RlZEJsb2NrZWQiOltdLCJyZXF1ZXN0cyI6WyJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL2V2aWRlbmNlIiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9tYWluLmNzcyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvbWFpbi5qcyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvdjEvY29udHJvbC1wbGFuZS9zbmFwc2hvdCJdLCJlcnJvcnMiOltdLCJjb25zb2xlIjpbXSwiZXhwZWN0ZWRDb25zb2xlIjpbXSwibGl2ZSI6ZmFsc2V9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-b751f16eb6fbc909edf4",
+          "file": "attestation.spec.ts",
+          "line": 107,
+          "column": 63
+        },
+        {
+          "title": "direct /test cannot bypass review",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 450,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:34:59.493Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6MjAwLCJwb3N0cyI6W10sImJsb2NrZWQiOltdLCJleHBlY3RlZEJsb2NrZWQiOltdLCJyZXF1ZXN0cyI6WyJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3Rlc3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uY3NzIiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9tYWluLmpzIiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90Il0sImVycm9ycyI6W10sImNvbnNvbGUiOltdLCJleHBlY3RlZENvbnNvbGUiOltdLCJsaXZlIjpmYWxzZX0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-f5839e95caedfc867cbb",
+          "file": "attestation.spec.ts",
+          "line": 107,
+          "column": 63
+        },
+        {
+          "title": "direct /review cannot bypass review",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 584,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:34:59.964Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6MjAwLCJwb3N0cyI6W10sImJsb2NrZWQiOltdLCJleHBlY3RlZEJsb2NrZWQiOltdLCJyZXF1ZXN0cyI6WyJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3JldmlldyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvbWFpbi5jc3MiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanMiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiXSwiZXJyb3JzIjpbXSwiY29uc29sZSI6W10sImV4cGVjdGVkQ29uc29sZSI6W10sImxpdmUiOmZhbHNlfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-39618c1233ba401b5823",
+          "file": "attestation.spec.ts",
+          "line": 107,
+          "column": 63
+        },
+        {
+          "title": "direct /decision cannot bypass review",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 482,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:35:00.566Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6MjAwLCJwb3N0cyI6W10sImJsb2NrZWQiOltdLCJleHBlY3RlZEJsb2NrZWQiOltdLCJyZXF1ZXN0cyI6WyJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL2RlY2lzaW9uIiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9tYWluLmNzcyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvbWFpbi5qcyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvdjEvY29udHJvbC1wbGFuZS9zbmFwc2hvdCJdLCJlcnJvcnMiOltdLCJjb25zb2xlIjpbXSwiZXhwZWN0ZWRDb25zb2xlIjpbXSwibGl2ZSI6ZmFsc2V9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-860476655ba4ccaf6fff",
+          "file": "attestation.spec.ts",
+          "line": 107,
+          "column": 63
+        },
+        {
+          "title": "API failure remains unavailable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 534,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:35:01.063Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJlcnJvciI6InN5bnRoZXRpYy11bmF2YWlsYWJsZSJ9LCJzbmFwc2hvdFN0YXR1cyI6NTAzLCJpbnRlbnRpb24iOnsicmV2aWV3X2lkIjoic3ludGhldGljLXJldmlldyIsInNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJldmlkZW5jZV92ZXJzaW9uIjoiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYSIsInN0YXRlIjoiUEVORElORyIsImV4cGlyZXNfYXQiOiIyMDI2LTEwLTA4VDAwOjAyOjAwWiJ9LCJpbnRlbnRpb25TdGF0dXMiOjIwMCwicG9zdHMiOltdLCJibG9ja2VkIjpbXSwiZXhwZWN0ZWRCbG9ja2VkIjpbXSwicmVxdWVzdHMiOlsiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9kZWNpc2lvbiIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvbWFpbi5jc3MiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanMiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiXSwiZXJyb3JzIjpbXSwiY29uc29sZSI6WyJGYWlsZWQgdG8gbG9hZCByZXNvdXJjZTogdGhlIHNlcnZlciByZXNwb25kZWQgd2l0aCBhIHN0YXR1cyBvZiA1MDMgKFNlcnZpY2UgVW5hdmFpbGFibGUpIl0sImV4cGVjdGVkQ29uc29sZSI6WyJGYWlsZWQgdG8gbG9hZCByZXNvdXJjZTogdGhlIHNlcnZlciByZXNwb25kZWQgd2l0aCBhIHN0YXR1cyBvZiA1MDMgKFNlcnZpY2UgVW5hdmFpbGFibGUpIl0sImxpdmUiOmZhbHNlfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-ed6fa9e8323fac9928e4",
+          "file": "attestation.spec.ts",
+          "line": 111,
+          "column": 56
+        },
+        {
+          "title": "malformed snapshot remains unavailable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 570,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:35:01.619Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJzdGF0dXMiOiJQQVNTIn0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6MjAwLCJwb3N0cyI6W10sImJsb2NrZWQiOltdLCJleHBlY3RlZEJsb2NrZWQiOltdLCJyZXF1ZXN0cyI6WyJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL2RlY2lzaW9uIiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9tYWluLmNzcyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvbWFpbi5qcyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvdjEvY29udHJvbC1wbGFuZS9zbmFwc2hvdCJdLCJlcnJvcnMiOltdLCJjb25zb2xlIjpbXSwiZXhwZWN0ZWRDb25zb2xlIjpbXSwibGl2ZSI6ZmFsc2V9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-48969611205095a7cd29",
+          "file": "attestation.spec.ts",
+          "line": 111,
+          "column": 56
+        },
+        {
+          "title": "API rejection intention fails closed without automatic retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1279,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:35:02.205Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6NDA5LCJwb3N0cyI6W3sic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIn1dLCJibG9ja2VkIjpbXSwiZXhwZWN0ZWRCbG9ja2VkIjpbXSwicmVxdWVzdHMiOlsiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9vdmVydmlldyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvbWFpbi5jc3MiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanMiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJQT1NUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL2ludGVudGlvbiJdLCJlcnJvcnMiOltdLCJjb25zb2xlIjpbIkZhaWxlZCB0byBsb2FkIHJlc291cmNlOiB0aGUgc2VydmVyIHJlc3BvbmRlZCB3aXRoIGEgc3RhdHVzIG9mIDQwOSAoQ29uZmxpY3QpIl0sImV4cGVjdGVkQ29uc29sZSI6WyJGYWlsZWQgdG8gbG9hZCByZXNvdXJjZTogdGhlIHNlcnZlciByZXNwb25kZWQgd2l0aCBhIHN0YXR1cyBvZiA0MDkgKENvbmZsaWN0KSJdLCJsaXZlIjpmYWxzZX0="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-edfc59029f3c6da3bafd",
+          "file": "attestation.spec.ts",
+          "line": 118,
+          "column": 75
+        },
+        {
+          "title": "invented authority intention fails closed without automatic retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1353,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:35:03.500Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJBUFBST1ZFRCIsImV4cGlyZXNfYXQiOiIyMDI2LTEwLTA4VDAwOjAyOjAwWiJ9LCJpbnRlbnRpb25TdGF0dXMiOjIwMCwicG9zdHMiOlt7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJldmlkZW5jZV92ZXJzaW9uIjoiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYSJ9XSwiYmxvY2tlZCI6W10sImV4cGVjdGVkQmxvY2tlZCI6W10sInJlcXVlc3RzIjpbIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvb3ZlcnZpZXciLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uY3NzIiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9tYWluLmpzIiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90IiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90IiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90IiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90IiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90IiwiUE9TVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvdjEvY29udHJvbC1wbGFuZS9pbnRlbnRpb24iXSwiZXJyb3JzIjpbXSwiY29uc29sZSI6W10sImV4cGVjdGVkQ29uc29sZSI6W10sImxpdmUiOmZhbHNlfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-558d58dce4fec91bdbc6",
+          "file": "attestation.spec.ts",
+          "line": 118,
+          "column": 75
+        },
+        {
+          "title": "wrong evidence intention fails closed without automatic retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1544,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:35:04.868Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6MjAwLCJwb3N0cyI6W3sic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIn1dLCJibG9ja2VkIjpbXSwiZXhwZWN0ZWRCbG9ja2VkIjpbXSwicmVxdWVzdHMiOlsiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9vdmVydmlldyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvbWFpbi5jc3MiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanMiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJQT1NUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL2ludGVudGlvbiJdLCJlcnJvcnMiOltdLCJjb25zb2xlIjpbXSwiZXhwZWN0ZWRDb25zb2xlIjpbXSwibGl2ZSI6ZmFsc2V9"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-3466271259551c2cc0d8",
+          "file": "attestation.spec.ts",
+          "line": 118,
+          "column": 75
+        },
+        {
+          "title": "material context change clears pending and relocks the session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1353,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:35:06.426Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImNjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2MiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtbmV3LWluc3RhbmNlIiwic291cmNlX3NuYXBzaG90Ijoic3ludGhldGljLXNvdXJjZSIsInNjb3BlZF9sb2FkZWRfY29kZSI6InN5bnRoZXRpYy1jb2RlIiwiY29uZmlndXJhdGlvbl9kaWdlc3QiOiJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiIiwiZW5kcG9pbnQiOnsib3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMToxMTQzNCIsImNvbm5lY3Rpb25fb3JpZ2luIjoiaHR0cDovLzEyNy4wLjAuMToxMTQzNCJ9LCJwcm9maWxlIjoiQVRURVNUQVRJT04iLCJhY3RpdmVfcHJvY2Vzc19idWlsZCI6Ik5PVF9ESVJFQ1RMWV9WRVJJRklFRCIsInJ1bnRpbWVfaWRlbnRpdHkiOiJOT1RfVkVSSUZJRUQifSwicmV2aWV3cyI6W10sInByb3ZpZGVyX3JlY2VpcHQiOm51bGx9LCJzbmFwc2hvdFN0YXR1cyI6MjAwLCJpbnRlbnRpb24iOnsicmV2aWV3X2lkIjoic3ludGhldGljLXJldmlldyIsInNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJldmlkZW5jZV92ZXJzaW9uIjoiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYSIsInN0YXRlIjoiUEVORElORyIsImV4cGlyZXNfYXQiOiIyMDI2LTEwLTA4VDAwOjAyOjAwWiJ9LCJpbnRlbnRpb25TdGF0dXMiOjIwMCwicG9zdHMiOlt7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJldmlkZW5jZV92ZXJzaW9uIjoiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYSJ9XSwiYmxvY2tlZCI6W10sImV4cGVjdGVkQmxvY2tlZCI6W10sInJlcXVlc3RzIjpbIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvb3ZlcnZpZXciLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uY3NzIiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9tYWluLmpzIiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90IiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90IiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90IiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90IiwiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC92MS9jb250cm9sLXBsYW5lL3NuYXBzaG90IiwiUE9TVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvdjEvY29udHJvbC1wbGFuZS9pbnRlbnRpb24iLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiXSwiZXJyb3JzIjpbXSwiY29uc29sZSI6W10sImV4cGVjdGVkQ29uc29sZSI6W10sImxpdmUiOmZhbHNlfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-6cbb1a1c7b005cbcecc4",
+          "file": "attestation.spec.ts",
+          "line": 130,
+          "column": 1
+        },
+        {
+          "title": "network boundary aborts an unlisted virtual-origin request",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 455,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:35:07.794Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6MjAwLCJwb3N0cyI6W10sImJsb2NrZWQiOlsiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC91bmxpc3RlZC1ib3VuZGFyeS10ZXN0Il0sImV4cGVjdGVkQmxvY2tlZCI6WyJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3VubGlzdGVkLWJvdW5kYXJ5LXRlc3QiXSwicmVxdWVzdHMiOlsiR0VUIGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9vdmVydmlldyIsIkdFVCBodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvbWFpbi5jc3MiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanMiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3YxL2NvbnRyb2wtcGxhbmUvc25hcHNob3QiLCJHRVQgaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL3VubGlzdGVkLWJvdW5kYXJ5LXRlc3QiXSwiZXJyb3JzIjpbXSwiY29uc29sZSI6WyJGYWlsZWQgdG8gbG9hZCByZXNvdXJjZTogbmV0OjpFUlJfQkxPQ0tFRF9CWV9DTElFTlQuSW5zcGVjdG9yIl0sImV4cGVjdGVkQ29uc29sZSI6WyJGYWlsZWQgdG8gbG9hZCByZXNvdXJjZTogbmV0OjpFUlJfQkxPQ0tFRF9CWV9DTElFTlQuSW5zcGVjdG9yIl0sImxpdmUiOmZhbHNlfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-e2b2f5079946e60d18f7",
+          "file": "attestation.spec.ts",
+          "line": 141,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-08T08:34:56.310Z",
+    "duration": 12428.831,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

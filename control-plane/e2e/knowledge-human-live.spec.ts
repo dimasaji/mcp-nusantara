@@ -1,0 +1,53 @@
+import {test,expect} from '@playwright/test';
+import {mkdirSync,writeFileSync} from 'node:fs';
+
+test.use({channel:'chromium',headless:true,viewport:{width:1360,height:1000},trace:'off',video:'off'});
+test('human operator finds the stored SOP and compares matching pages without technical clutter',async({page,request})=>{
+  test.skip(process.env.NUSANTARA_DOCLING_LIVE!=='1','Explicit live run only');
+  test.setTimeout(240000);page.setDefaultTimeout(30000);
+  const origin='http://127.0.0.1:5180',token=process.env.NUSANTARA_ADMIN_TOKEN!;
+  const id='DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b';
+  const base=`${origin}/v1/knowledge/pipeline/reviews/${id}`,headers={'X-Admin-Token':token};
+  const before=await(await request.get(base,{headers})).json();
+  let decisions=0,reprocess=0;
+  page.on('request',r=>{if(r.method()==='POST'){if(r.url().endsWith('/decision'))decisions++;if(r.url().endsWith('/process'))reprocess++;}});
+  await page.goto(origin+'/knowledge');
+  await page.getByLabel('Token operator',{exact:true}).fill(token);
+  await page.getByRole('button',{name:'Verifikasi akses',exact:true}).click();
+  await expect(page.getByText('Akses operator terverifikasi. Anda dapat mengunggah file.')).toBeVisible();
+  const task=page.getByRole('region',{name:'Dokumen yang diperiksa'});
+  await expect(task.getByRole('heading',{name:'PERMOHONAN DATA PRIBADI',exact:true})).toBeVisible();
+  const button=task.getByRole('button',{name:'Periksa isi',exact:true});
+  expect((await button.boundingBox())!.y).toBeLessThan(850);
+  for(const label of ['Tambahkan dokumen baru','Riwayat proses sebelumnya','Pengaturan dan informasi teknis']){
+    expect(await page.getByText(label,{exact:true}).evaluate(e=>e.closest('details')!.open)).toBe(false);
+  }
+  mkdirSync('../artifacts/knowledge-human',{recursive:true});const stamp=Date.now();
+  await page.screenshot({path:`../artifacts/knowledge-human/start-${stamp}.png`});
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+  await page.screenshot({path:`../artifacts/knowledge-human/mobile-${stamp}.png`});
+  await page.setViewportSize({width:1360,height:1000});
+  await button.click();
+  const panel=page.getByRole('region',{name:'Pemeriksaan SOP'});
+  await expect(panel.getByAltText('PDF asli SOP halaman 1',{exact:true})).toBeVisible();
+  await expect(panel.getByRole('table',{name:'Tabel SOP halaman 1',exact:true})).toBeVisible();
+  await expect(panel.getByRole('table',{name:'Tabel SOP halaman 2',exact:true})).toHaveCount(0);
+  await panel.getByRole('button',{name:'Halaman 2',exact:true}).click();
+  const image=panel.getByAltText('PDF asli SOP halaman 2',{exact:true});
+  await expect.poll(()=>image.evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBe(true);
+  await expect(panel.getByRole('table',{name:'Tabel SOP halaman 2',exact:true})).toBeVisible();
+  const column=panel.getByRole('table',{name:'Tabel SOP halaman 2',exact:true}).locator('th').nth(1);
+  expect((await column.boundingBox())!.width).toBeGreaterThan(200);
+  await expect(panel.getByRole('table',{name:'Tabel SOP halaman 1',exact:true})).toHaveCount(0);
+  await expect(panel.getByRole('button',{name:'Setujui untuk digunakan',exact:true})).toBeDisabled();
+  await panel.getByRole('button',{name:'Laporkan kesalahan',exact:true}).click();
+  await expect(panel.getByLabel('Catatan wajib',{exact:true})).toBeFocused();
+  await panel.getByRole('button',{name:'Batal',exact:true}).click();
+  await panel.getByRole('heading',{name:'1. Bandingkan isi dengan PDF',exact:true}).evaluate(e=>e.scrollIntoView({block:'start'}));
+  await page.screenshot({path:`../artifacts/knowledge-human/compare-${stamp}.png`});
+  const after=await(await request.get(base,{headers})).json();
+  expect(after.content_ok).toBe(before.content_ok);expect(after.approval).toEqual(before.approval);
+  expect(after.extraction.job_id).toBe(before.extraction.job_id);expect(decisions).toBe(0);expect(reprocess).toBe(0);
+  writeFileSync('../artifacts/knowledge-human/result.json',JSON.stringify({status:'PASS',document_id:id,pages:[1,2],decisions,reprocess,approval_unchanged:true,screenshots:[`start-${stamp}.png`,`mobile-${stamp}.png`,`compare-${stamp}.png`]},null,2));
+});

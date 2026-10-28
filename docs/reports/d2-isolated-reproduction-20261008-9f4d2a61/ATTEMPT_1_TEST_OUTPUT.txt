@@ -1,0 +1,31 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.15, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\dmaza\mcp-starter
+configfile: pyproject.toml
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 52 items
+
+test_d2_reproduction.py .....F                                           [ 11%]
+..\..\..\tests\v2\test_devcore_inspection.py ........................... [ 63%]
+                                                                         [ 63%]
+..\..\..\tests\v2\test_devcore.py ...s...........                        [ 92%]
+..\..\..\tests\v2\test_devcore_grounding_response.py ....                [100%]
+
+================================== FAILURES ===================================
+____________ test_d2_05_truncated_source_receives_unqualified_pass ____________
+test_d2_reproduction.py:136: in test_d2_05_truncated_source_receives_unqualified_pass
+    assert tool['truncated'] and tool['content'] == prefix
+E   AssertionError: assert (True and 'x = 1\r\n# h...\n# harmless ' == 'x = 1\n# har...ess padding\n'
+E     
+E     - x = 1
+E     + x = 1
+E     ?      +
+E     - # harmless padding
+E     + # harmless padding
+E     ?                   +...
+E     
+E     ...Full output truncated (20 lines hidden), use '-vv' to show)
+- generated xml file: C:\Users\dmaza\mcp-starter\docs\reports\d2-isolated-reproduction-20261008-9f4d2a61\BACKEND_RESULTS.xml -
+=========================== short test summary info ===========================
+FAILED test_d2_reproduction.py::test_d2_05_truncated_source_receives_unqualified_pass
+=================== 1 failed, 50 passed, 1 skipped in 1.32s ===================

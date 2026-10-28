@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-10-09T10:44:01.250168+07:00",
+  "resources": {
+    ".env": {
+      "exists": false,
+      "size": null,
+      "sha256": null
+    },
+    ".venv/Scripts/python.exe": {
+      "exists": true,
+      "size": 255200,
+      "sha256": "72b29481593c5da37c99248c82777fbfb56217ea7809b771bc760d0a9ecb179b"
+    },
+    ".venv/pyvenv.cfg": {
+      "exists": true,
+      "size": 309,
+      "sha256": "35df27ad5aa8d1a2fa7c6c11f6547ada37137e69bb892804c7871bd50d6a7464"
+    },
+    "nusantara-models/.venv/Scripts/python.exe": {
+      "exists": true,
+      "size": 255200,
+      "sha256": "72b29481593c5da37c99248c82777fbfb56217ea7809b771bc760d0a9ecb179b"
+    },
+    "nusantara-models/indobert_worker.py": {
+      "exists": true,
+      "size": 3715,
+      "sha256": "30e6a4b64a449855c4a69fb7fdba0e7e517a2dd2c89ecfee21247ec88e903570"
+    },
+    "config/rag_runtime.json": {
+      "exists": true,
+      "size": 823,
+      "sha256": "17dd875eae9afbf4e36f625b05762345231343e4db4ab0bbe3dc08e2d3341f66"
+    },
+    "control-plane/dist/index.html": {
+      "exists": true,
+      "size": 364,
+      "sha256": "5b44d0568002fb04ec69e19da7cac87f8ad7e0ef0adfbeb43b33397416952349"
+    },
+    "pyproject.toml": {
+      "exists": true,
+      "size": 2722,
+      "sha256": "b0284a11317a3a5688350659e21f32c5bb223aaca915df2009a8e0af9b9d201c"
+    },
+    "control-plane/package-lock.json": {
+      "exists": true,
+      "size": 120234,
+      "sha256": "bf7de0af474c140a08a0250fbe9487008e8fc6488d74398dbd4459e9c68fe715"
+    }
+  },
+  "frontend_hashes": {
+    "control-plane/dist/index.html": "5b44d0568002fb04ec69e19da7cac87f8ad7e0ef0adfbeb43b33397416952349",
+    "control-plane/dist/assets/graph-B9FwPnGA.js": "a49dd993640742e929b09fee55559f41773df120e1f5c7ab559daa6557d5439b",
+    "control-plane/dist/assets/graph-BnuhLJ6X.css": "1243b61a71923367ce620fb944427c80c9b03e863e18374fcf4f74d6d06f63fc",
+    "control-plane/dist/assets/graph-Bu38myt8.js": "933050f11adca296f174a67a88b1adb618ae541b5cbfbebd3e3b2d702d37bbc8",
+    "control-plane/dist/assets/graph-C-AkOWvf.js": "4edf07c2a27d2ad1c7558be929961c057679bf11ae171dc4158030779810ead1",
+    "control-plane/dist/assets/graph-DkN0KgaD.js": "bac305a65b43001fe6acbc3752bfeaf3c82a85e301838c5b4633a371e9167bb6",
+    "control-plane/dist/assets/index-BR5Rb2EH.js": "27c5ed065ebaf9b846d1045d10d67905ac4bd93b78de1fa62c5279d50335068b",
+    "control-plane/dist/assets/index-Brgxu5ax.css": "a2f1c6f4ae80a897a730b35c66e0bbc52d460cb4ad5995cf8acaca0f5de1beda",
+    "control-plane/dist/assets/index-CmsA6OFH.css": "9c6ae5ac91bf5bea9b3243fa05daba7700d3a1cf6ac06a9ea787a25a05d24b7d",
+    "control-plane/dist/assets/index-CZHEPTm8.js": "a72c655caccff4f1dff40be7b1a34754aadf8152768f8425dbe9a6a6b472f107",
+    "control-plane/dist/assets/index-D74LmSUk.js": "df4cf6d33a673d4c83e4eb32b0998850341582c1c17f4b9c9b59e89feb254870",
+    "control-plane/dist/assets/index-DWlaYDof.js": "6fb9ab9da2222cb7d001a9b31fde528bcc7e600eeeb88291e72f69b591a13e90"
+  },
+  "python_version": "3.13.15 (tags/v3.13.15:4061bc4, Aug  5 2026, 13:05:39) [MSC v.1944 64 bit (AMD64)]",
+  "python_executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+  "configuration_owner": "app/core/config.py Settings.compose_configuration -> app/core/nusantara_config.py: default -> optional explicitly supplied config_file -> DOTENV -> ENV -> EXPLICIT; composed once. Default paths resolved from working directory. config/rag_runtime.json existence does not prove it is passed as bootstrap config_file.",
+  "exact_effective_current_runtime_environment": "NOT_VERIFIED: inherited environment of PID33160 not captured; .env secret values neither printed nor copied",
+  "launch_syntax": "Set-Location -LiteralPath 'C:\\Users\\dmaza\\mcp-starter'\n& 'C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe' -B -m uvicorn app.main:app --app-dir 'C:\\Users\\dmaza\\mcp-starter' --host 127.0.0.1 --port 8000 --workers 1",
+  "launch_executed": false,
+  "health_command": "& 'C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe' -B scripts/healthcheck.py",
+  "health_semantics": "scripts/healthcheck.py only GET /health with 3s timeout; HTTP success alone does not prove native RAG/semantic worker or provider generation.",
+  "startup_side_effects": "app/api/routes.py module-level KnowledgeEngine; app/knowledge/store.py constructor creates directory, opens SQLite, PRAGMA journal_mode=WAL and CREATE TABLE/INDEX IF NOT EXISTS. Normal candidate startup not executed because DB/data changes are outside this request.",
+  "native_readiness": "File existence is not proof of worker/embedding model readiness. Historical native_candidate.py used semantic and retrieval fixtures with child-only overrides; not a normal boot recipe."
+}

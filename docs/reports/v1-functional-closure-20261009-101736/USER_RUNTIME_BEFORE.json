@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-10-09T10:18:57.8666722+07:00",
+  "socket_pid": 33160,
+  "process": {
+    "ProcessId": 33160,
+    "ParentProcessId": 37704,
+    "CreationDate": "2026-10-08T20:03:49.63108+07:00",
+    "ExecutablePath": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "CommandLine": "\"C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1"
+  },
+  "health": {
+    "status": "ok",
+    "version": "0.1.0",
+    "build_id": "sha256:b7455ef0823df00d73a576147c6331ed69f9b74c145de39281819c3cad78d27f"
+  },
+  "registered_paths": [
+    "/v1/health",
+    "/v1/health/detail",
+    "/v1/chat",
+    "/v1/problem/analyze",
+    "/v1/workflow/create",
+    "/v1/workflow/{workflow_id}",
+    "/v1/documents/ingest",
+    "/v1/knowledge/search",
+    "/v1/knowledge/documents",
+    "/v1/human/handoff",
+    "/v1/metrics",
+    "/v1/developer-core",
+    "/v2/dev/inspection-preview",
+    "/v2/health",
+    "/v2/chat",
+    "/v2/memory/sessions",
+    "/v2/memory/delete",
+    "/v2/metrics",
+    "/v2/approvals/pending",
+    "/v2/approvals/{approval_id}/decision",
+    "/v2/audit/verify",
+    "/v2/feedback",
+    "/v2/experience/analysis",
+    "/v2/research/proposals",
+    "/v2/discovery/candidates",
+    "/v2/dev",
+    "/v1/control-plane/snapshot",
+    "/v1/control-plane/human-acceptance",
+    "/v1/control-plane/human-acceptance/read",
+    "/v1/control-plane/intention",
+    "/health",
+    "/v1/runtime/attestation"
+  ]
+}

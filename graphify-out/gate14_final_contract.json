@@ -1,0 +1,54 @@
+{
+  "gate": "14-FINAL",
+  "name": "Nusantara Developer Core Engine Contract",
+  "version": "14.0-final",
+  "status": "PASS",
+  "capabilities": {
+    "self_analysis": true,
+    "impact_analysis": true,
+    "deterministic_change_query": true,
+    "runtime_static_consistency": true,
+    "graph_truth": true,
+    "evidence_traceability": true
+  },
+  "validation": {
+    "passed": 6,
+    "total": 6,
+    "checks": {
+      "graph_truth": true,
+      "self_analysis": true,
+      "impact_analysis": true,
+      "runtime_static_consistency": true,
+      "deterministic_change_query": true,
+      "traceability": true
+    }
+  },
+  "graph": {
+    "nodes": 2824,
+    "links": 5920
+  },
+  "last_change_query": {
+    "query": "impact KnowledgeEngine",
+    "target": {
+      "id": "app_knowledge_engine_knowledgeengine",
+      "label": "KnowledgeEngine",
+      "name": null,
+      "module": null,
+      "path": null,
+      "file": null
+    },
+    "impact_count": 20,
+    "deterministic": true,
+    "llm_used": false
+  },
+  "contract_rules": [
+    "Developer Core uses runtime and static truth.",
+    "Self-analysis is based on actual system structure.",
+    "Impact analysis preserves SOURCE -> TARGET direction.",
+    "Impact analysis uses approved dependency relations.",
+    "Change queries are deterministic.",
+    "Change queries do not require LLM inference.",
+    "Results are traceable to graph.json.",
+    "Runtime and static representations remain consistent."
+  ]
+}

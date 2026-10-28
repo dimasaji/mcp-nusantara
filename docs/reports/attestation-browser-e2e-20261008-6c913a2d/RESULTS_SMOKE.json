@@ -1,0 +1,129 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\dmaza\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\dmaza\\mcp-starter\\control-plane\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "../docs/reports/attestation-browser-e2e-20261008-6c913a2d/playwright.mock.config.cjs",
+      "--grep",
+      "five stages"
+    ],
+    "configFile": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\playwright.mock.config.cjs",
+    "rootDir": "C:/Users/dmaza/mcp-starter/control-plane/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/dmaza/mcp-starter/docs/reports/attestation-browser-e2e-20261008-6c913a2d/browser-results-smoke",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/dmaza/mcp-starter/control-plane/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "attestation.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\RESULTS_SMOKE.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "attestation.spec.ts",
+      "file": "attestation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "five stages render, scroll and submit only explicit PENDING intention",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1518,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:30:48.887Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6MjAwLCJwb3N0cyI6W3sic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIn1dLCJibG9ja2VkIjpbXSwiZXJyb3JzIjpbXSwiY29uc29sZSI6W10sImxpdmUiOmZhbHNlfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e33738f0440e497481af-14e8578c606a16262093",
+          "file": "attestation.spec.ts",
+          "line": 88,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-08T08:30:48.456Z",
+    "duration": 2290.489,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,45 @@
+--- a/app/api/runtime_verification.py
++++ b/app/api/runtime_verification.py
+@@ -38,6 +38,7 @@
+         self._lock = threading.Lock()
+         self._code_observer = None
+         self._code_hash = None
++        self._authority_functions = None
+ 
+     def bind_loaded_code(self, observer):
+         self._code_observer = observer
+@@ -49,13 +50,15 @@
+                 VerificationController._store, VerificationController.mark_response_sent,
+                 OneUseAuthorization.__init__, OneUseAuthorization._bound, OneUseAuthorization.grant,
+                 OneUseAuthorization.reserve, OneUseAuthorization.dispatch, OneUseAuthorization.finish,
++                OneUseAuthorization.abort,
+                 OneDispatchTransport.__init__, OneDispatchTransport.handle_async_request,
+                 OneDispatchTransport.aclose, ResponseObservationMiddleware.__init__,
+                 ResponseObservationMiddleware.__call__, receipt_dump, utc_now,
+                 EndpointBinding.from_configuration.__func__, capture_model_identity,
+                 ModelExecutionIdentity.with_response, OllamaProvider.__init__,
+                 OllamaProvider.generate, OllamaProvider._capture_identity, OllamaProvider._get_client,
+-                OllamaProvider._options, OllamaProvider._emit_identity, OllamaProvider.close)
++                OllamaProvider._options, OllamaProvider._emit_identity, OllamaProvider.close) + (
++                    self._authority_functions() if self._authority_functions is not None else ())
+ 
+     @property
+     def receipt(self):
+@@ -72,7 +75,7 @@
+                     and self._receipt.outcome == 'PROVIDER_RESPONSE_CORRELATED'):
+                 self._receipt = replace(self._receipt, application_response_sent=True)
+ 
+-    async def invoke(self, token):
++    async def invoke(self, token, *, isolated_transport=None):
+         if not self._code_observer or self._code_observer() != self._code_hash:
+             raise ValueError('SCOPED_CODE_NOT_BOUND')
+         self.authorization.reserve(token)  # atomic, before all awaits and client construction
+@@ -83,7 +86,7 @@
+         started = utc_now()
+         provider = None
+         try:
+-            transport = OneDispatchTransport(self.endpoint, self.authorization)
++            transport = OneDispatchTransport(self.endpoint, self.authorization, isolated_transport=isolated_transport)
+             client = httpx.AsyncClient(base_url=self.endpoint.origin, transport=transport,
+                 timeout=self.configuration.llm.connection_timeout_s,
+                 follow_redirects=False, trust_env=False)

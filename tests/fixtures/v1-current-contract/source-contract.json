@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "authorization": "User continuation contract 2026-10-15: preserve V1 changes, reconcile historical baseline tests against current intended behavior; user continuation 2026-10-22: P0 audience/knowledge guards and runtime fixture alignment",
+  "historical_reports": {
+    "docs/reports/r2-a8-remediation-20261008/PROFILE_BEFORE.json": "f8c4ebc4aaa5fe0e06b4939aaf36d312929057e4241e0006b06fe6855bd6cc71",
+    "docs/reports/r2-a7-runtime-attestation-20261008/main.py.before": "64b1137c743a4e9a92518a4a167d218974f2a7360097f50d96808c050856e13c",
+    "reports/CONFIGURATION_BASELINE_20261006.json": "8b6809bbca8d2e7f812e26f7686464732ae9018eb8b488bc3c0174686cc7eb2c",
+    "reports/configuration/CONFIGURATION_PROGRESS.json": "4a8e1dd9be2e84dded33f9990434f805f434658128233c84e2db7fe45b4b104f",
+    ".dev/checkpoints/r1-local-001-20261007/BASELINE.json": "172eea85a5cbadcd57c1af0f3cfc33cc8285067180a751965e2c20e51ce8500a"
+  },
+  "current_sources": {
+    "app/api/routes.py": "fabec5bc263597f4b6b0d6dd2d17100d23d966a1066b535c2fe6e78a7afa68b7",
+    "app/api/v2_routes.py": "f5f83de5795a03c968c95aa1ae86fcfe7245d189a85aa081a52405f676fe406f",
+    "app/core/config.py": "4b5d1ee6acb6d75c5b4806fa8d7f3e1b3ee5794c8936b811f9bc569f7f1290be",
+    "app/core/runtime_identity.py": "f60d05f67c6db97d021798665763023bed92d5540509ded19cb68fcea9bbdeb4",
+    "app/core/control_plane_projection.py": "d2e865ecd142f647d983eb1ed56851d32e6ccfb2c2d392397ead5a0a0a98a58f",
+    "app/developer_core/engine.py": "5f6bdc41cf7cd6960dcac84d5aea24a630952d54b6f323aa254c0d286c38e885",
+    "app/trust/engine.py": "3808ddb21c78f1fbf72581254c9097485f49c86c02dee4dbb54809e8b8aea735",
+    "app/policy/engine.py": "88587046801d0315a038d85d441030149ff97bcd9a16a9e937a99e755a0d2ffc"
+  },
+  "reasons": {
+    "runtime_sources": "Provider configuration, response projection, evidence and query-parity changes are authorized V1 implementation, not an unchanged R2-A8 patch.",
+    "main_handlers": "NORMAL redirects to configured frontend while preserving path/query; ATTESTATION retains legacy UI; evidence-only returns404. NORMAL lifecycle monitors knowledge watch and cancels it on shutdown.",
+    "trust": "Existing V1 canonical evidence score integration superseded the earlier frozen R1 source boundary; trust integration behavior remains tested.",
+    "ports": "User requested persistent NORMAL V1 ports: backend 8765/frontend 5179. Both configuration owners and startup scripts now agree; sealed ATTESTATION retains 8000.",
+    "p0_knowledge_boundary": "Authenticated knowledge endpoints, audience-specific history, redacted citations and UUID session defaults; independently covered by P0 and subprocess runtime HTTP fixtures.",
+    "operator_runtime": "Existing committed operator provider/model CAS, immutable bootstrap selection and bounded inference receipt freshness; covered by model-control and runtime identity tests. Historical reports remain pinned."
+  }
+}

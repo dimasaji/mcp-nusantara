@@ -1,0 +1,133 @@
+[
+  {
+    "database": "data\\knowledge\\nusantara_knowledge.db",
+    "tables": [
+      "documents",
+      "chunks"
+    ],
+    "document_columns": [
+      "document_id",
+      "title",
+      "source",
+      "content_type",
+      "chunks_count",
+      "size_bytes",
+      "metadata_json",
+      "created_at",
+      "updated_at"
+    ],
+    "documents": [
+      {
+        "document_id": "DOC-FC9058E1-1a08",
+        "title": "Test KTP",
+        "source": "KTP-el adalah dokumen identitas penduduk. Status pengajuan KTP-el dapat diperiksa melalui layanan administrasi kependudukan.",
+        "metadata_json": "{}"
+      },
+      {
+        "document_id": "API-TEST-001",
+        "title": "Test API KTP",
+        "source": "KTP-el merupakan dokumen identitas penduduk yang diterbitkan sesuai ketentuan administrasi kependudukan.",
+        "metadata_json": "{\"category\": \"ktp-el\", \"source\": \"api-test\"}"
+      },
+      {
+        "document_id": "BENCH-PASPOR-001",
+        "title": "Test Paspor",
+        "source": "Paspor adalah dokumen perjalanan yang digunakan oleh warga negara untuk melakukan perjalanan ke luar negeri. Pengajuan paspor dilakukan melalui prosedur pelayanan imigrasi yang berlaku.",
+        "metadata_json": "{\"benchmark\": \"true\", \"category\": \"paspor\"}"
+      },
+      {
+        "document_id": "BENCH-MASAK-001",
+        "title": "Test Resep Nasi Goreng",
+        "source": "Nasi goreng adalah makanan yang dibuat dari nasi yang digoreng bersama bumbu dan bahan tambahan. Bahan yang umum digunakan antara lain nasi, bawang, kecap, telur, dan minyak.",
+        "metadata_json": "{\"benchmark\": \"true\", \"category\": \"kuliner\"}"
+      },
+      {
+        "document_id": "BENCH-ALAMAT-001",
+        "title": "Test Perubahan Alamat",
+        "source": "Perubahan alamat penduduk merupakan proses administrasi kependudukan yang dilakukan sesuai ketentuan dan prosedur pelayanan administrasi kependudukan.",
+        "metadata_json": "{\"benchmark\": \"true\", \"category\": \"administrasi-kependudukan\"}"
+      }
+    ]
+  },
+  {
+    "database": "data\\knowledge\\production_knowledge.db",
+    "tables": [
+      "documents",
+      "chunks",
+      "chunks_fts",
+      "chunks_fts_data",
+      "chunks_fts_idx",
+      "chunks_fts_content",
+      "chunks_fts_docsize",
+      "chunks_fts_config",
+      "ingestion_log",
+      "sqlite_sequence",
+      "source_registry",
+      "chunk_embeddings",
+      "embedding_runs"
+    ],
+    "document_columns": [
+      "document_id",
+      "title",
+      "source_file",
+      "source_hash",
+      "source_type",
+      "domain",
+      "service",
+      "content_type",
+      "text_length",
+      "chunk_count",
+      "ingested_at",
+      "active",
+      "source_status",
+      "authority",
+      "verified"
+    ],
+    "documents": [
+      {
+        "document_id": "DOC-F5F5DC66112324C1",
+        "title": "TEST REQUIREMENT KTP EL",
+        "authority": "test"
+      },
+      {
+        "document_id": "DOC-DEAB51351A68FFFB",
+        "title": "ktp el official test",
+        "authority": "test"
+      },
+      {
+        "document_id": "DOC-8AEBCDBF09964B9B",
+        "title": "tng ktpel 001",
+        "authority": "official"
+      },
+      {
+        "document_id": "DOC-7D200FE47C6929A3",
+        "title": "tng ktpel 002",
+        "authority": "official"
+      },
+      {
+        "document_id": "DOC-F065256D89D89F9D",
+        "title": "tng ktpel 003",
+        "authority": "official"
+      },
+      {
+        "document_id": "DOC-2F7DC22F56AC05DB",
+        "title": "tng ktpel 004",
+        "authority": "official"
+      }
+    ],
+    "source_registry": [
+      {
+        "source_id": "SRC-B1D75D8554AF7D85",
+        "document_id": "DOC-F5F5DC66112324C1",
+        "source_status": "unknown",
+        "authority": null,
+        "source_url": null,
+        "effective_date": null,
+        "expiry_date": null,
+        "verification_note": "Auto-created during production KB hardening.",
+        "registered_at": "2026-10-01T11:46:44.992089+00:00",
+        "updated_at": "2026-10-01T11:46:44.992089+00:00"
+      }
+    ]
+  }
+]

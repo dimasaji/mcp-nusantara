@@ -1,0 +1,45 @@
+{
+  "status": "PASS_SCOPED_DOCUMENTATION_CHECKS",
+  "runtime_validation": "NOT_RUN_NOT_IMPLEMENTED",
+  "source_changes": false,
+  "protected_files_checked": 296,
+  "changed_files": [],
+  "discovery_count": 3371,
+  "classification_count": 3371,
+  "map_count": 3371,
+  "unique_ids": 3371,
+  "categories": {
+    "EMBEDDING": 47,
+    "FEATURE": 1,
+    "GOVERNANCE": 23,
+    "KNOWLEDGE": 22,
+    "LEGACY": 2732,
+    "LLM": 31,
+    "MODEL": 124,
+    "PATH": 120,
+    "RAG": 123,
+    "RUNTIME": 96,
+    "SYSTEM": 6,
+    "UNKNOWN": 46
+  },
+  "all_map_fields_present": true,
+  "historical_evidence_hashes_unchanged": true,
+  "known_conflicts_documented": [
+    "Settings local-hash/memory vs RAG IndoBERT/SQLite",
+    "V1 route direct Ollama selection ignores llm_provider",
+    "cwd vs project-root path semantics",
+    "governance/feature declarations do not prove enforcement"
+  ],
+  "implementation_authorized": false,
+  "proposed_source": [
+    "app/core/nusantara_config.py",
+    "tests/test_configuration_contract.py"
+  ],
+  "review_limits": [
+    "46 UNKNOWN candidates remain explicit",
+    "legacy/historical occurrences are not active-runtime proof",
+    "No new source or configuration loader tests executed",
+    "No provider-switching or deployment proof"
+  ],
+  "completed_at": "2026-10-06T11:15:37.965652+00:00"
+}

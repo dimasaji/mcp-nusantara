@@ -1,0 +1,173 @@
+﻿NUSANTARA V1
+MASTER PRODUCT REQUIREMENTS DOCUMENT
+Kode: NUSANTARA-V1-MASTER-PRD-001 | Versi: 1.0 Draft | Tanggal: 26 Oktober 2026
+Status dokumen: baseline kebutuhan berdasarkan riwayat diskusi; inventaris kode dan status PASS wajib diverifikasi melalui repository lokal. Tidak menyatakan bahwa fitur yang direncanakan sudah diimplementasikan.
+1. Ringkasan dan tujuan produk
+NUSANTARA adalah Universal AI Workspace berbasis web dengan chat AI, pemrosesan dokumen, Knowledge/RAG, Tools & Skills, workflow dan Human Control. Implementasi V1 diuji pada SOP Disdukcapil; arsitektur tetap universal lintas OPD. Sasaran utama saat ini: satu alur upload PDF sampai jawaban bersitasi berhasil end-to-end, tanpa rebuild arsitektur.
+2. Prinsip dan batasan
+• Operator-first: navigasi sederhana; detail R1–R21 berada di backend/evidence.
+• V1 ONLY: jangan mengembangkan fitur V2 atau studi kasus OPD lain.
+• Governance validasi substantif dokumen resmi terverifikasi; keamanan sistem dasar tetap universal.
+• Model lokal dan OpenRouter didukung; dokumen sensitif tidak otomatis dikirim ke provider eksternal.
+• Status PASS hanya berdasarkan evidence aktual, bukan rencana atau mockup.
+• Perbaiki modul yang ada terlebih dahulu; tidak mengganti backend dengan Open WebUI/Dify/n8n/Langflow.
+3. Pengguna dan kebutuhan
+Peran
+Kebutuhan
+Pengguna AI
+Chat alami bahasa Indonesia, upload dokumen, jawaban grounded, sitasi sumber
+Operator
+Pantau aktivitas, blocker, biaya dan persetujuan tanpa melihat detail engineering
+Developer / Codex
+Kontrak kerja jelas, tes relevan, evidence dan handover
+Administrator
+Konfigurasi model, knowledge, kesehatan sistem, backup/recovery dan kontrol akses
+4. Inventaris pengembangan sejak awal
+Kelompok
+Ruang lingkup
+Status berdasarkan diskusi
+Core Engine
+FastAPI, API, runtime, konfigurasi, database
+Fondasi ada; stabilitas E2E perlu bukti
+Chat & Models
+Ollama lokal, OpenRouter, model routing, chat UI
+Sebagian berfungsi; chat dokumen belum stabil
+Knowledge & RAG
+SQLiteVectorStore, IndoBERT 768-dim, ingestion, retrieval
+Ada SOP terindeks; persistensi dokumen baru bermasalah
+Document Intelligence
+Docling, ekstraksi PDF, pemeriksaan isi, approval
+Ekstraksi COMPLETE dilaporkan; review HTTP 500
+Control Plane
+Beranda, AI Workspace, Human Control, Pengaturan & Teknis
+Konsep disetujui; implementasi final belum diverifikasi
+Developer Core
+R1–R21, regression, evidence, PASS/FAIL/HOLD
+Pengujian historis ada; closure saat ini belum terbukti
+Tools & Skills
+Tool registry, skills dan workflow
+Parsial; kesiapan operasional perlu uji
+Hermes
+Integrasi Agent Workspace dan OpenRouter
+Rencana; belum boleh dinyatakan berfungsi
+Maintenance
+Backup, Update, Health, Recovery
+Disetujui sebagai gate pra-VPS; perlu uji restore
+Security
+Secrets, permissions, pentest, deployment
+Perlu verifikasi sebelum VPS/publik
+5. Persyaratan fungsional dan acceptance criteria
+ID
+Fitur
+Kriteria penerimaan
+FR-01
+Chat lokal
+3+ pertanyaan berurutan berhasil tanpa reset atau HTTP 500
+FR-02
+OpenRouter
+Provider dapat dipilih; respons dan pemakaian tercatat
+FR-03
+Upload PDF
+File diterima, validasi dan identitas dokumen konsisten
+FR-04
+Ekstraksi Docling
+Teks, halaman, versi konten dan sumber asli tersedia
+FR-05
+Review isi
+Operator dapat memeriksa dan menyetujui versi; tidak ada HTTP 500
+FR-06
+Persistensi
+Dokumen tetap tersedia setelah restart; transaksi aman
+FR-07
+Indexing/Retrieval
+Dokumen disetujui terindeks dan dapat ditemukan
+FR-08
+Chat SOP
+Jawaban persyaratan/prosedur/waktu sesuai PDF
+FR-09
+Sitasi
+Judul resmi SOP dan halaman sumber dapat dibuka
+FR-10
+Control Plane
+Status aktual backend tampil akurat tanpa mock status
+FR-11
+Human Control
+PASS/FAIL/HOLD tersimpan dan tercermin dalam state
+FR-12
+Evidence
+Run ID, hasil tes dan artefak dapat ditelusuri
+FR-13
+Biaya model
+Penggunaan OpenRouter tercatat dan limit bisa dikendalikan
+FR-14
+Recovery
+Backup diverifikasi; restore dan rollback diuji
+FR-15
+Security
+Token/secret aman; akses terlindungi dan audit dasar ada
+6. Alur utama E2E (prioritas P0)
+Upload PDF → ekstraksi Docling → review versi isi → approval operator → simpan dokumen → indexing → retrieval → chat SOP/chat utama → jawaban grounded dan sitasi → evidence dan status Control Plane.
+Gate P0: satu dokumen SOP “Permohonan Data Pribadi” dapat melalui seluruh tahapan; uji pertanyaan persyaratan, prosedur, waktu, biaya bila ada, dan pertanyaan di luar sumber. Tidak boleh mengarang data yang tidak tercantum.
+7. Insiden aktif per 26 Oktober 2026
+Pada halaman Knowledge, dokumen “PERMOHONAN DATA PRIBADI” dilaporkan berstatus ekstraksi COMPLETE, tetapi pemeriksaan isi gagal HTTP 500. Persetujuan belum dapat diselesaikan; penyimpanan/indexing belum terbukti; Chat SOP dan Chat Utama belum PASS. Identitas dokumen berbasis SHA-256 dan versi isi perlu tetap konsisten selama perbaikan.
+Prioritas debugging: trace request review → validasi token/otorisasi → backend exception → transaksi approval/persist → indexing → retrieval → UI state. Tidak mengubah IndoBERT atau mengganti arsitektur tanpa bukti akar masalah.
+8. Struktur UI target
+Menu utama
+Isi
+Beranda
+Apa yang dikerjakan; apa masalahnya; apa perlu disetujui; berapa biaya
+AI Workspace
+Chat AI, upload, percakapan dan hasil tugas
+Human Control
+Approval, keputusan PASS/FAIL/HOLD, blocker dan evidence ringkas
+Pengaturan & Teknis
+Knowledge/RAG, model, governance, health, maintenance dan R1–R21
+UX mengadopsi pola yang relevan dari Open WebUI, Dify, n8n dan Langflow sebagai inspirasi, bukan migrasi platform.
+9. Nonfunctional requirements
+• Reliability: alur normal tanpa HTTP 500; kegagalan mempunyai pesan dan trace.
+• Integrity: approval terikat pada versi konten; persistensi dan indexing konsisten.
+• Grounding: jawaban mengacu sumber; pertanyaan di luar sumber diakui.
+• Usability: operator nonteknis dapat menyelesaikan workflow.
+• Security: API key tidak bocor; data rahasia tidak keluar tanpa izin.
+• Observability: log, status, biaya dan evidence bisa ditelusuri.
+• Recoverability: backup/restore teruji sebelum deployment.
+10. Scope dan roadmap
+Tahap
+Target
+Gate
+P0
+Review HTTP 500, approval, simpan dan indexing PDF
+Satu SOP persisted dan searchable
+P1
+Chat SOP dan Chat Utama grounded, sitasi resmi
+Uji pertanyaan E2E PASS
+P2
+Sinkronisasi Control Plane dan Human Control
+Status/keputusan sesuai backend
+P3
+Runtime/model gateway, reliability dan biaya
+Tes integrasi relevan PASS
+P4
+Backup, restore, security dan kesiapan private VPS
+Evidence readiness lengkap
+Deferred: isolasi multi-user lengkap, Private AI lanjut, Developer Agent mandiri, hybrid self-learning, studi kasus OPD lain, V2 dan deployment publik.
+11. Definition of Done V1
+☐ Satu SOP diproses dari upload sampai jawaban bersitasi, konsisten setelah restart.
+☐ Review dan approval bekerja tanpa error; keputusan operator tersimpan.
+☐ Chat lokal dan OpenRouter berfungsi sesuai konfigurasi dan batas keamanan.
+☐ Control Plane menampilkan status nyata; evidence valid tersedia.
+☐ Backup/restore, security dasar, dan tes regresi relevan PASS.
+☐ Operator menyetujui handover; item belum lulus diberi HOLD/FAIL, bukan PASS.
+12. Verifikasi repository oleh Codex
+Lokasi target Windows: C:\Users\dmaza\mcp-starter. Codex diminta melakukan inventarisasi READ-ONLY terhadap struktur kode, routes/API, database/migrasi, UI, konfigurasi, tes, commit dan evidence. Petakan setiap FR menjadi IMPLEMENTED / PARTIAL / NOT FOUND / UNVERIFIED beserta file:line, bukti tes dan blocker. Jangan menandai PASS tanpa menjalankan tes relevan. Jangan memodifikasi kode pada tahap inventarisasi.
+Output audit: PRD versi berikutnya, matriks traceability FR→kode→tes→evidence, daftar gap prioritas P0–P4, serta keputusan operator PASS/FAIL/HOLD.
+13. Riwayat dan kontrol perubahan
+Versi
+Tanggal
+Perubahan
+1.0 Draft
+26-10-2026
+Baseline hasil diskusi; belum diverifikasi terhadap repository
+1.1 (rencana)
+Setelah audit read-only
+Status implementasi dan evidence dikonfirmasi

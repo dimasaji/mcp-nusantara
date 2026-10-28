@@ -1,0 +1,616 @@
+{
+  "engine": "Nusantara Runtime Class Truth",
+  "version": "1.0.0",
+  "source_of_truth": "C:\\Users\\dmaza\\mcp-starter",
+  "files": [
+    {
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\api\\routes.py",
+      "classes": [
+        "ChatRequest",
+        "ProblemAnalyzeRequest",
+        "WorkflowCreateRequest",
+        "DocumentIngestRequest",
+        "KnowledgeSearchRequest",
+        "HumanHandoffRequest",
+        "HealthResponse"
+      ],
+      "functions": [
+        "_model_dump",
+        "_extract_understanding_data",
+        "_extract_intent",
+        "_extract_entities",
+        "_extract_document_entities",
+        "_get_problem_value",
+        "_reconcile_problem_with_intent",
+        "_build_evidence_text",
+        "_deterministic_response",
+        "_build_system_prompt",
+        "_build_user_prompt",
+        "_apply_grounding_safety_gate",
+        "health_check",
+        "health_detail",
+        "chat",
+        "analyze_problem",
+        "create_workflow",
+        "get_workflow",
+        "ingest_document",
+        "search_knowledge",
+        "list_knowledge_documents",
+        "request_handoff",
+        "get_metrics",
+        "developer_core_status",
+        "_evidence_score"
+      ],
+      "imports": [
+        {
+          "type": "from",
+          "module": "__future__",
+          "name": "annotations",
+          "alias": null
+        },
+        {
+          "type": "import",
+          "module": "time",
+          "name": "time"
+        },
+        {
+          "type": "from",
+          "module": "datetime",
+          "name": "datetime",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "datetime",
+          "name": "timezone",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Any",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Dict",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "fastapi",
+          "name": "APIRouter",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "fastapi",
+          "name": "HTTPException",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "fastapi",
+          "name": "Request",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "pydantic",
+          "name": "BaseModel",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "pydantic",
+          "name": "Field",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.core.config",
+          "name": "settings",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.core.gate_integration",
+          "name": "GateIntegration",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.developer_core.graph_bridge",
+          "name": "GraphifyBridge",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.knowledge.engine",
+          "name": "KnowledgeEngine",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.knowledge.grounding",
+          "name": "EvidenceGroundingGuard",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.knowledge.schemas",
+          "name": "DocumentIngestRequest",
+          "alias": "RAGIngestRequest"
+        },
+        {
+          "type": "from",
+          "module": "app.models.ollama",
+          "name": "OllamaProvider",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.classifier",
+          "name": "ProblemClassifier",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.detector",
+          "name": "ProblemDetector",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.engine",
+          "name": "ProblemEngine",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.hermes.agent",
+          "name": "HermesAgent",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.language.engine",
+          "name": "LanguageEngine",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.workflow.engine",
+          "name": "WorkflowEngine",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.handoff.engine",
+          "name": "HandoffEngine",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.handoff.engine",
+          "name": "HandoffLevel",
+          "alias": null
+        }
+      ]
+    },
+    {
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\language\\engine.py",
+      "classes": [
+        "LanguageDetection",
+        "LanguageEngine"
+      ],
+      "functions": [
+        "create_language_engine",
+        "__init__",
+        "process",
+        "understand",
+        "analyze",
+        "run",
+        "_normalize",
+        "_extract_normalized_text",
+        "_detect_language",
+        "_parse_language_result",
+        "_classify_intent",
+        "_extract_intent_observability",
+        "_adapt_intent",
+        "_extract_entities",
+        "_adapt_entities",
+        "_canonical_entity_type",
+        "_build_structured",
+        "_build_component",
+        "_validate_input",
+        "_tokenize",
+        "_to_dict",
+        "_to_serializable",
+        "_safe_float",
+        "_safe_int",
+        "_domain_terms_detected"
+      ],
+      "imports": [
+        {
+          "type": "from",
+          "module": "__future__",
+          "name": "annotations",
+          "alias": null
+        },
+        {
+          "type": "import",
+          "module": "re",
+          "name": "re"
+        },
+        {
+          "type": "import",
+          "module": "time",
+          "name": "time"
+        },
+        {
+          "type": "from",
+          "module": "dataclasses",
+          "name": "dataclass",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Any",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Callable",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Mapping",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Sequence",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "normalizer",
+          "name": "TextNormalizer",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "intent",
+          "name": "IntentClassifier",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "semantic.fusion",
+          "name": "IntentFusion",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "semantic.semantic_intent",
+          "name": "SemanticIntentEngine",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "entity",
+          "name": "EntityExtractor",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "schemas",
+          "name": "NormalizeResult",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "schemas",
+          "name": "NormalizationResult",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "schemas",
+          "name": "LanguageDetectionResult",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "schemas",
+          "name": "IntentResult",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "schemas",
+          "name": "Entity",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "schemas",
+          "name": "EntityResult",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "schemas",
+          "name": "EntityType",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "schemas",
+          "name": "StructuredUnderstanding",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "schemas",
+          "name": "PipelineResult",
+          "alias": null
+        }
+      ]
+    },
+    {
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\problem\\engine.py",
+      "classes": [
+        "ProblemEngine"
+      ],
+      "functions": [
+        "generate_problem_id",
+        "process_problem",
+        "_compat_analyze",
+        "__init__",
+        "resolve",
+        "_infer_goal",
+        "_generate_goal_text",
+        "_generate_outcome",
+        "_generate_constraints",
+        "_generate_success_criteria",
+        "_build_missing",
+        "_generate_solutions",
+        "_select_solution",
+        "_build_constraints"
+      ],
+      "imports": [
+        {
+          "type": "import",
+          "module": "logging",
+          "name": "logging"
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Any",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Dict",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "List",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Optional",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Tuple",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.problem_schema",
+          "name": "ProblemStatement",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.problem_schema",
+          "name": "Goal",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.problem_schema",
+          "name": "ClarificationRequest",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.problem_schema",
+          "name": "RiskAssessment",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.problem_schema",
+          "name": "MissingInfo",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.problem_schema",
+          "name": "PossibleSolution",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.problem_schema",
+          "name": "ProblemResolution",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.problem_schema",
+          "name": "ProblemSchema",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.detector",
+          "name": "ProblemDetector",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.detector",
+          "name": "detect_problem",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.classifier",
+          "name": "ProblemClassifier",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.classifier",
+          "name": "classify_problem",
+          "alias": null
+        },
+        {
+          "type": "import",
+          "module": "uuid",
+          "name": "uuid"
+        },
+        {
+          "type": "from",
+          "module": "app.problem.schemas",
+          "name": "ProblemReport",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.problem.schemas",
+          "name": "ProblemSeverity",
+          "alias": null
+        }
+      ]
+    },
+    {
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\knowledge\\engine.py",
+      "classes": [
+        "KnowledgeEngine"
+      ],
+      "functions": [
+        "__init__",
+        "ingest_document",
+        "search_knowledge",
+        "search",
+        "list_documents"
+      ],
+      "imports": [
+        {
+          "type": "from",
+          "module": "__future__",
+          "name": "annotations",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Any",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Optional",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "rag",
+          "name": "RAG",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "rag",
+          "name": "create_rag",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "schemas",
+          "name": "DocumentIngestRequest",
+          "alias": null
+        }
+      ]
+    },
+    {
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\reasoning\\engine.py",
+      "classes": [
+        "ReasoningEngine"
+      ],
+      "functions": [
+        "_text",
+        "_score",
+        "_evidence_id",
+        "_build_facts",
+        "analyze"
+      ],
+      "imports": [
+        {
+          "type": "from",
+          "module": "__future__",
+          "name": "annotations",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "typing",
+          "name": "Any",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.reasoning.schemas",
+          "name": "Fact",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.reasoning.schemas",
+          "name": "Inference",
+          "alias": null
+        },
+        {
+          "type": "from",
+          "module": "app.reasoning.schemas",
+          "name": "ReasoningResult",
+          "alias": null
+        }
+      ]
+    }
+  ],
+  "chat_related_functions": [
+    "chat"
+  ]
+}

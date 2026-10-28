@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-10-09T09:38:19.061274+07:00",
+  "status": "PASS_SCOPED",
+  "observed_evidence": [
+    {
+      "backend": {
+        "passed": 248,
+        "failed": 0,
+        "skipped": 0,
+        "deselected": 1
+      },
+      "frontend": {
+        "passed": 67,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "TypeScript --noEmit and final Vite build exit 0",
+    "git diff --check exit 0",
+    "No tests deleted; previous failed run evidence preserved"
+  ],
+  "files_changed": [
+    "tests/test_v1_operator_control.py",
+    "tests/test_v1_response_projection.py",
+    "tests/test_effective_rag_profile.py",
+    "control-plane/tests/assistant.test.tsx",
+    "control-plane/e2e/control-plane.spec.ts"
+  ],
+  "reason": "Validate model/configuration/Hermes/projection/memory/grounding/filter/auth/UI regressions",
+  "tests_run": [
+    "regression-20261009-090953/results.xml",
+    "regression-20261009-090953/guards.json",
+    "targeted-20261009-093732/results.xml",
+    "FINAL_CHECKS.json",
+    "FRONTEND_REGRESSION.json"
+  ],
+  "limitations": [
+    "One nested subprocess assembly case DESELECTED because guard blocks arbitrary subprocess; not a PASS or SKIP",
+    "Earlier 243-pass/3-fail run involved harness cwd/subprocess guard and formerly ignored-filter expectation; retained and resolved",
+    "Initial frontend targeted run lacked required fixture paths; full correctly configured run 67 pass",
+    "Historical native Windows privilege SKIP not rerun or represented as current PASS",
+    "Full exhaustive V1/production suite not claimed"
+  ],
+  "remaining_blockers": [
+    "Native Windows symlink privilege/security operational enforcement not reverified"
+  ]
+}

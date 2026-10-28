@@ -1,0 +1,143 @@
+{
+  "phase": "MDE09_DISCOVERY_CROSS_PHASE_CLOSURE",
+  "status": "DONE_SCOPED_CLOSURE_WITH_HOLD",
+  "timestamp": "2026-10-07T04:47:46.078081+00:00",
+  "git_head": "c24aa1b0db391009af44682bf2f2eb091f4f0f75",
+  "branch": "codex/fullroot-control-20261007",
+  "baseline": ".dev/MDE09_BASELINE_20261007.json",
+  "previous_checkpoint": ".dev/MDE08_CHECKPOINT.json",
+  "authorization": "Human APPROVE MDE-09; invoked section22 discovery/closure audit only",
+  "changes": [
+    ".dev/MDE09_BASELINE_20261007.json",
+    "docs/reports/MDE09_COMPLETION_MATRIX_20261007.json",
+    "docs/reports/MDE09_DEPENDENCY_EVIDENCE_20261007.json",
+    "docs/reports/MDE09_CONSISTENCY_VERIFICATION_20261007.json",
+    "docs/reports/MDE09_INTEGRITY_20261007.json",
+    "docs/MDE-09_CLOSURE_AND_REMEDIATION_DESIGN.md",
+    "docs/reports/MDE09_FINAL_CLOSURE_REPORT_20261007.md",
+    ".dev/MDE09_CHECKPOINT.json"
+  ],
+  "tests": {
+    "new_pytest_runs": 0,
+    "verification": "docs/reports/MDE09_CONSISTENCY_VERIFICATION_20261007.json",
+    "historical_evidence_hash_entries_checked": 81,
+    "unexpected_mismatches": 0,
+    "intentionally_superseded_metadata": [
+      {
+        "phase": 2,
+        "path": ".dev/PROJECT_STATE.json",
+        "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+      },
+      {
+        "phase": 2,
+        "path": ".dev/TASKS.json",
+        "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+      },
+      {
+        "phase": 2,
+        "path": ".dev/DECISIONS.jsonl",
+        "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+      },
+      {
+        "phase": 3,
+        "path": ".dev/PROJECT_STATE.json",
+        "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+      },
+      {
+        "phase": 3,
+        "path": ".dev/TASKS.json",
+        "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+      },
+      {
+        "phase": 3,
+        "path": ".dev/DECISIONS.jsonl",
+        "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+      }
+    ],
+    "reused_test_count_rule": "Historical overlapping phase runs not summed as unique/new coverage"
+  },
+  "runtime_verification": {
+    "actual_model": null,
+    "identity_status": "NOT_VERIFIED",
+    "runtime_dependency_graph": "NOT_PROVEN",
+    "live_runtime_verification": "NOT_RUN_IN_MDE09",
+    "deployed_capability": "NOT_PROVEN",
+    "index_compatibility": "Production PARTIAL/canonical UNKNOWN"
+  },
+  "evidence_sha256": {
+    ".dev/MDE09_BASELINE_20261007.json": "211a7531f6524b1389aa3aeda4c5dea48fccaa5635b7af41955f3486e429aadd",
+    "docs/reports/MDE09_COMPLETION_MATRIX_20261007.json": "c7d5ea994ef3d17d69848154c3f198092421a1b150b01b49cc83ed8f16f498f7",
+    "docs/reports/MDE09_DEPENDENCY_EVIDENCE_20261007.json": "d0c81719aa49c617a72ea1c11444e976925240e56c2e8f5436138fc2636609ba",
+    "docs/reports/MDE09_CONSISTENCY_VERIFICATION_20261007.json": "7c36fa1565ec5fee6fab99e913f9dde362feed68db01c365bfadf7f3d5160fda",
+    "docs/reports/MDE09_INTEGRITY_20261007.json": "eb5aacd47fbf60937f302b6c6d8ae1fdb2a062942a187683905f17a5b3a8a9a3",
+    "docs/MDE-09_CLOSURE_AND_REMEDIATION_DESIGN.md": "36205f4c6b1ee189da60de3adeb959cad8b0ada0080a74d7e6d80afa1b232fc7",
+    "docs/reports/MDE09_FINAL_CLOSURE_REPORT_20261007.md": "2da68005929a9b3a3db375b002e3a9b7d974d804563840bb2b194d16dff7ef6c"
+  },
+  "protected_verification": {
+    "evidence": "docs/reports/MDE09_INTEGRITY_20261007.json",
+    "checked": 352,
+    "mismatches": []
+  },
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "source_security_data_changes": [],
+  "index_rebuilt": false,
+  "contract_discovery": {
+    "invoked": {
+      "path": "docs/commands/MDE-04 -09.md",
+      "section": 22,
+      "scope": "Final discovery, completion matrix and cross-phase consistency audit",
+      "sha256": "c29f10b29f4ed5c7eb2277a4bee444def67252fcdb0212c5595a8b5b10c87e9d"
+    },
+    "older": {
+      "path": "docs/commands/MDE_command1.md",
+      "sections": [
+        "XIII",
+        "XIV",
+        "XV"
+      ],
+      "scope": "MDE09 Runtime Dependency Graph and MDE10 Live Runtime Verification required for completion",
+      "sha256": "53322d93c2fae6819378aab55d214c67bd0e6429452923e87d1d178156c72f89"
+    },
+    "discovery": "No prior standalone MDE09 command/design/report/checkpoint found in scoped docs/.dev discovery before creating this phase artifacts",
+    "operating_scope": "Current explicit APPROVE MDE-09 permits invoked closure audit; does not resolve numbering conflict, waive runtime graph/live criteria, approve implementation, or advance MDE10",
+    "owner_decision_required": "Confirm authoritative numbering/closure mapping while retaining actual runtime graph and live verification acceptance requirements"
+  },
+  "limitations": [
+    "Configuration DoD NOT_COMPLETE; no live effective values verified",
+    "EffectiveConfiguration/composition design; default activation not proven",
+    "Provider health/identity/failover limitations",
+    "Actual model identity and mutable selection unverified",
+    "Effective RAGProfile not implemented; configured labels/consumer drift",
+    "Production PARTIAL 25/27 active chunks missing; canonical UNKNOWN",
+    "Identity mutation/metadata loss; listener health omits build_id",
+    "Capability readiness unproven; actor binding and legacy governance gaps",
+    "Final MDE09/MDE10 numbering unresolved; actual runtime graph/live verification mandatory and unfulfilled"
+  ],
+  "rollback": "Only newly created MDE09 audit artifacts if requested; preserve all pre-existing source/data/state/evidence",
+  "next_phase": null,
+  "next_action": "WAIT_FOR_OWNER_ROADMAP_DECISION_AND_EXPLICIT_REMEDIATION_OR_VERIFICATION_APPROVAL",
+  "approval_required": true,
+  "approval_source": {
+    "file": "docs/commands/MDE-04 -09.md",
+    "section": 34,
+    "quote": "STOP. GENERATE CHECKPOINT. WAIT FOR HUMAN APPROVAL."
+  },
+  "completed_steps": [
+    "MDE08 integrity",
+    "MDE09 golden baseline",
+    "official contract discovery",
+    "MDE01-08 immutable historical artifact verification",
+    "JUnit evidence schema/count checks",
+    "source build and cross-phase consistency",
+    "completion matrix",
+    "static/target dependency evidence",
+    "remediation handoff",
+    "risk/rollback/self-audit",
+    "report/checkpoint"
+  ],
+  "resume_instruction": "Verify protected/evidence hashes. Do not repeat completed MDE01-09 audits. Await owner numbering/scope decision and explicit scoped remediation/verification authorization; no automatic MDE10 or source/runtime/index changes.",
+  "audit_sequence": "MDE01-09_SCOPED_AUDITS_CHECKPOINTED",
+  "architecture_acceptance": "HOLD_NOT_READY",
+  "overall_status": "NOT_READY",
+  "overall_v1_acceptance": "FAIL/HOLD"
+}

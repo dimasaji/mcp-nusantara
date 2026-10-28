@@ -1,0 +1,5647 @@
+{
+  "engine": "Nusantara Precision Impact Analyzer",
+  "version": "2.0.0",
+  "source_graph": "C:\\Users\\dmaza\\mcp-starter\\graphify-out\\graph.json",
+  "graph_nodes": 2935,
+  "graph_edges": 6791,
+  "relevant_nodes": 526,
+  "filtered_nodes": 2409,
+  "results": [
+    {
+      "id": "app_api_routes",
+      "name": "routes.py",
+      "incoming": 2,
+      "outgoing": 22,
+      "connections": 24,
+      "impact": 24,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_productionhybridrag",
+      "name": "ProductionHybridRAG",
+      "incoming": 13,
+      "outgoing": 6,
+      "connections": 14,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_api_v2_routes",
+      "name": "v2_routes.py",
+      "incoming": 2,
+      "outgoing": 16,
+      "connections": 18,
+      "impact": 18,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_language_engine",
+      "name": "language/engine.py",
+      "incoming": 4,
+      "outgoing": 11,
+      "connections": 15,
+      "impact": 15,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_hermes_agent",
+      "name": "agent.py",
+      "incoming": 3,
+      "outgoing": 10,
+      "connections": 12,
+      "impact": 13,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_knowledge_rag",
+      "name": "rag.py",
+      "incoming": 3,
+      "outgoing": 10,
+      "connections": 13,
+      "impact": 13,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_core_hardening_init",
+      "name": "hardening/__init__.py",
+      "incoming": 3,
+      "outgoing": 10,
+      "connections": 8,
+      "impact": 13,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_devcore_core",
+      "name": "core.py",
+      "incoming": 3,
+      "outgoing": 9,
+      "connections": 11,
+      "impact": 12,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_models_init",
+      "name": "models/__init__.py",
+      "incoming": 0,
+      "outgoing": 12,
+      "connections": 6,
+      "impact": 12,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_devcore_init",
+      "name": "devcore/__init__.py",
+      "incoming": 1,
+      "outgoing": 10,
+      "connections": 6,
+      "impact": 11,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_language_engine_languageengine",
+      "name": "LanguageEngine",
+      "incoming": 7,
+      "outgoing": 3,
+      "connections": 9,
+      "impact": 10,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_knowledge_rag_rag",
+      "name": "RAG",
+      "incoming": 8,
+      "outgoing": 2,
+      "connections": 9,
+      "impact": 10,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_problem_init",
+      "name": "problem/__init__.py",
+      "incoming": 1,
+      "outgoing": 9,
+      "connections": 6,
+      "impact": 10,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_observability_init",
+      "name": "observability/__init__.py",
+      "incoming": 4,
+      "outgoing": 6,
+      "connections": 7,
+      "impact": 10,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_knowledge_schemas_knowledgebaseconfig",
+      "name": "KnowledgeBaseConfig",
+      "incoming": 10,
+      "outgoing": 0,
+      "connections": 8,
+      "impact": 10,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_problem_engine",
+      "name": "problem/engine.py",
+      "incoming": 5,
+      "outgoing": 4,
+      "connections": 8,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_retriever_retriever",
+      "name": "Retriever",
+      "incoming": 4,
+      "outgoing": 5,
+      "connections": 8,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_rag_store",
+      "name": "rag/store.py",
+      "incoming": 6,
+      "outgoing": 3,
+      "connections": 8,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_workflow_workflow_schema",
+      "name": "workflow_schema.py",
+      "incoming": 2,
+      "outgoing": 7,
+      "connections": 9,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_schemas",
+      "name": "knowledge/schemas.py",
+      "incoming": 6,
+      "outgoing": 3,
+      "connections": 9,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "developer_core_engine",
+      "name": "developer_core_engine.py",
+      "incoming": 0,
+      "outgoing": 9,
+      "connections": 9,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_observability_context",
+      "name": "context.py",
+      "incoming": 9,
+      "outgoing": 0,
+      "connections": 8,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "run_tests",
+      "name": "run_tests.py",
+      "incoming": 1,
+      "outgoing": 7,
+      "connections": 8,
+      "impact": 8,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_engine",
+      "name": "knowledge/engine.py",
+      "incoming": 4,
+      "outgoing": 4,
+      "connections": 8,
+      "impact": 8,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_retriever",
+      "name": "retriever.py",
+      "incoming": 1,
+      "outgoing": 7,
+      "connections": 8,
+      "impact": 8,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_rag_create_rag",
+      "name": "create_rag()",
+      "incoming": 4,
+      "outgoing": 4,
+      "connections": 6,
+      "impact": 8,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_workflow_engine_workflowengine",
+      "name": "WorkflowEngine",
+      "incoming": 5,
+      "outgoing": 2,
+      "connections": 7,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation",
+      "name": "evaluation/test_evaluation.py",
+      "incoming": 0,
+      "outgoing": 7,
+      "connections": 7,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_reasoning_engine",
+      "name": "reasoning/engine.py",
+      "incoming": 4,
+      "outgoing": 3,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_problem_engine_problemengine",
+      "name": "ProblemEngine",
+      "incoming": 7,
+      "outgoing": 0,
+      "connections": 7,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_reasoning_engine_reasoningengine",
+      "name": "ReasoningEngine",
+      "incoming": 7,
+      "outgoing": 0,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_problem_problem_schema",
+      "name": "problem_schema.py",
+      "incoming": 7,
+      "outgoing": 0,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_approval_queue",
+      "name": "queue.py",
+      "incoming": 5,
+      "outgoing": 2,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_governance_tools",
+      "name": "governance/tools.py",
+      "incoming": 4,
+      "outgoing": 3,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_handoff_engine_handoffengine",
+      "name": "HandoffEngine",
+      "incoming": 7,
+      "outgoing": 0,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_models_base",
+      "name": "models/base.py",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_research_knowledge_discovery",
+      "name": "knowledge_discovery.py",
+      "incoming": 1,
+      "outgoing": 5,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_v2_orchestrator",
+      "name": "orchestrator.py",
+      "incoming": 2,
+      "outgoing": 4,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_observability_logging",
+      "name": "logging.py",
+      "incoming": 5,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_retriever_create_retriever",
+      "name": "create_retriever()",
+      "incoming": 2,
+      "outgoing": 4,
+      "connections": 4,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_problem_classifier",
+      "name": "classifier.py",
+      "incoming": 5,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_language_engine_languagedetection",
+      "name": "LanguageDetection",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_language_schemas",
+      "name": "language/schemas.py",
+      "incoming": 5,
+      "outgoing": 1,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_approval_init",
+      "name": "approval/__init__.py",
+      "incoming": 2,
+      "outgoing": 4,
+      "connections": 4,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_trust_engine_trustengine",
+      "name": "TrustEngine",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_rag_store_as_retriever",
+      "name": "as_retriever()",
+      "incoming": 3,
+      "outgoing": 3,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_problem_detector",
+      "name": "detector.py",
+      "incoming": 5,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_models_ollama",
+      "name": "ollama.py",
+      "incoming": 5,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_v2_wiring",
+      "name": "wiring.py",
+      "incoming": 2,
+      "outgoing": 4,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_engine_knowledgeengine",
+      "name": "KnowledgeEngine",
+      "incoming": 4,
+      "outgoing": 2,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_devcore_workspace",
+      "name": "workspace.py",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_schemas_retrievalresult",
+      "name": "RetrievalResult",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_policy_policy_engine_policyengine",
+      "name": "PolicyEngine",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_models_mock",
+      "name": "mock.py",
+      "incoming": 4,
+      "outgoing": 2,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_approval_change_request",
+      "name": "change_request.py",
+      "incoming": 2,
+      "outgoing": 4,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_policy_policy_engine",
+      "name": "policy_engine.py",
+      "incoming": 2,
+      "outgoing": 3,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_experience_init",
+      "name": "experience/__init__.py",
+      "incoming": 1,
+      "outgoing": 4,
+      "connections": 3,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_workflow_engine",
+      "name": "workflow/engine.py",
+      "incoming": 1,
+      "outgoing": 4,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_devcore_router",
+      "name": "devcore/router.py",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_languageengine",
+      "name": "LanguageEngine",
+      "incoming": 3,
+      "outgoing": 2,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_handoff_engine",
+      "name": "handoff/engine.py",
+      "incoming": 1,
+      "outgoing": 4,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_context_engine",
+      "name": "context/engine.py",
+      "incoming": 1,
+      "outgoing": 4,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_language_semantic_semantic_intent",
+      "name": "semantic_intent.py",
+      "incoming": 2,
+      "outgoing": 3,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_rag_init",
+      "name": "rag/__init__.py",
+      "incoming": 0,
+      "outgoing": 5,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_language_semantic_semantic_intent_semanticintentengine",
+      "name": "SemanticIntentEngine",
+      "incoming": 5,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_observability_metrics",
+      "name": "metrics.py",
+      "incoming": 5,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_trust_engine",
+      "name": "trust/engine.py",
+      "incoming": 2,
+      "outgoing": 3,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_approval_audit_trail",
+      "name": "audit_trail.py",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_languagedetection",
+      "name": "LanguageDetection",
+      "incoming": 5,
+      "outgoing": 0,
+      "connections": 3,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_production_semantic_retriever_productionsemanticretriever",
+      "name": "ProductionSemanticRetriever",
+      "incoming": 5,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_rag_store_versionedknowledgestore",
+      "name": "VersionedKnowledgeStore",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_experience_feedback",
+      "name": "feedback.py",
+      "incoming": 3,
+      "outgoing": 2,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "developer_core_engine_get_production_rag",
+      "name": "get_production_rag()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_engine_languageengine_detect_language",
+      "name": "._detect_language()",
+      "incoming": 1,
+      "outgoing": 3,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_experience_events",
+      "name": "events.py",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag",
+      "name": "production_hybrid_rag.py",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_get_production_rag",
+      "name": "get_production_rag()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_languageengine_parse_language_result",
+      "name": "._parse_language_result()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_rag_store_versionedknowledgestore_retrieve",
+      "name": ".retrieve()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_get_production_rag",
+      "name": "get_production_rag()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_semantic_retriever",
+      "name": "production_semantic_retriever.py",
+      "incoming": 1,
+      "outgoing": 3,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_rag_store_retrievalresult",
+      "name": "RetrievalResult",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_get_production_rag",
+      "name": "get_production_rag()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_search_graph",
+      "name": "search_graph()",
+      "incoming": 3,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_devcore_grounding",
+      "name": "devcore/grounding.py",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_core_hardening_safe_execution",
+      "name": "safe_execution.py",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_productionhybridrag_get_retriever",
+      "name": "._get_retriever()",
+      "incoming": 3,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_main",
+      "name": "main.py",
+      "incoming": 0,
+      "outgoing": 4,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_engine_languageengine_parse_language_result",
+      "name": "._parse_language_result()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_engine_create_language_engine",
+      "name": "create_language_engine()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_policy_policy_engine_create_policy_engine",
+      "name": "create_policy_engine()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_research_improvement",
+      "name": "improvement.py",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_models_router",
+      "name": "models/router.py",
+      "incoming": 3,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_get_production_rag",
+      "name": "get_production_rag()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_trust_engine_create_trust_engine",
+      "name": "create_trust_engine()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_research_gap_detection",
+      "name": "gap_detection.py",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_search_graph",
+      "name": "search_graph()",
+      "incoming": 3,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_productionhybridrag_retrieve",
+      "name": ".retrieve()",
+      "incoming": 3,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_reasoning_schemas",
+      "name": "reasoning/schemas.py",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_context_schemas",
+      "name": "context/schemas.py",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_tools_base",
+      "name": "tools/base.py",
+      "incoming": 3,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_languageengine_detect_language",
+      "name": "._detect_language()",
+      "incoming": 1,
+      "outgoing": 3,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_semantic_fusion",
+      "name": "fusion.py",
+      "incoming": 1,
+      "outgoing": 3,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_evaluation_evaluator",
+      "name": "evaluation/evaluator.py",
+      "incoming": 3,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_graph_rag",
+      "name": "graph_rag()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_graph_rag",
+      "name": "graph_rag()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_graph_rag",
+      "name": "graph_rag()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_governance_init",
+      "name": "governance/__init__.py",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 2,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_devcore_tools",
+      "name": "devcore/tools.py",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_models_openai_compatible",
+      "name": "openai_compatible.py",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_retriever_retriever_retrieve_by_document",
+      "name": ".retrieve_by_document()",
+      "incoming": 3,
+      "outgoing": 0,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_build_graph_context",
+      "name": "build_graph_context()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_rag_context_api",
+      "name": "rag_context_api()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_search_production_knowledge",
+      "name": "search_production_knowledge()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_graph_rag",
+      "name": "graph_rag()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_reasoning_engine_create_reasoning_engine",
+      "name": "create_reasoning_engine()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 2,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_build_graph_context",
+      "name": "build_graph_context()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_research_experiments",
+      "name": "experiments.py",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_graph_rag",
+      "name": "graph_rag()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_graph_rag",
+      "name": "graph_rag()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_intent",
+      "name": "intent.py",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_build_graph_context",
+      "name": "build_graph_context()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_core_hardening_timeout",
+      "name": "timeout.py",
+      "incoming": 3,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_retriever_retriever_retrieve",
+      "name": ".retrieve()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_models_schemas",
+      "name": "models/schemas.py",
+      "incoming": 3,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_graph_rag",
+      "name": "graph_rag()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_productionhybridrag_retrieve_raw",
+      "name": "._retrieve_raw()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_build_graph_context",
+      "name": "build_graph_context()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_handoff_engine_create_handoff_engine",
+      "name": "create_handoff_engine()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 2,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_retriever_retriever_retrieve_all",
+      "name": ".retrieve_all()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_load_graph",
+      "name": "load_graph()",
+      "incoming": 3,
+      "outgoing": 0,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_core_hardening_circuit_breaker",
+      "name": "circuit_breaker.py",
+      "incoming": 3,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_evaluation_init",
+      "name": "evaluation/__init__.py",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 2,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_graph_rag",
+      "name": "graph_rag()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_improvement_gate",
+      "name": "gate.py",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "scripts_fix_rag_bom_and_canonical",
+      "name": "fix_rag_bom_and_canonical.py",
+      "incoming": 0,
+      "outgoing": 3,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_reasoning_init",
+      "name": "reasoning/__init__.py",
+      "incoming": 0,
+      "outgoing": 3,
+      "connections": 2,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_build_graph_context",
+      "name": "build_graph_context()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_entity",
+      "name": "entity.py",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_schemas_knowledgestore",
+      "name": "KnowledgeStore",
+      "incoming": 3,
+      "outgoing": 0,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_build_graph_context",
+      "name": "build_graph_context()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_build_graph_context",
+      "name": "build_graph_context()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_graph_rag",
+      "name": "graph_rag()",
+      "incoming": 1,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_build_graph_context",
+      "name": "build_graph_context()",
+      "incoming": 2,
+      "outgoing": 1,
+      "connections": 3,
+      "impact": 3,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_handoff_engine_get_default_handoff_engine",
+      "name": "get_default_handoff_engine()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_load_graph",
+      "name": "load_graph()",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_search_production_knowledge",
+      "name": "search_production_knowledge()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_schemas_languagedetectionresult",
+      "name": "LanguageDetectionResult",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_graph_summary",
+      "name": "graph_summary()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_workflowstate",
+      "name": "WorkflowState",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_engine_create_workflow_engine",
+      "name": "create_workflow_engine()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_workflowdefinition",
+      "name": "WorkflowDefinition",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_engine_workflowengine_create_workflow",
+      "name": ".create_workflow()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_load_graph",
+      "name": "load_graph()",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_store",
+      "name": "knowledge/store.py",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_graph_summary",
+      "name": "graph_summary()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_create_language_engine",
+      "name": "create_language_engine()",
+      "incoming": 0,
+      "outgoing": 2,
+      "connections": 1,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_normalizer",
+      "name": "normalizer.py",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_mcp_mcp",
+      "name": "mcp.py",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_routes_search_knowledge",
+      "name": "search_knowledge()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_semantic_indobert_client",
+      "name": "indobert_client.py",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_search_production_knowledge",
+      "name": "search_production_knowledge()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_graph_summary",
+      "name": "graph_summary()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_graph_summary",
+      "name": "graph_summary()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_load_graph",
+      "name": "load_graph()",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_load_graph",
+      "name": "load_graph()",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_productionhybridrag_retrieve_for_intent",
+      "name": ".retrieve_for_intent()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_routes_create_workflow",
+      "name": "create_workflow()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_context_context_builder",
+      "name": "context_builder.py",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_indobert_embedding",
+      "name": "indobert_embedding.py",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_workflowresumerequest",
+      "name": "WorkflowResumeRequest",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_search_production_knowledge",
+      "name": "search_production_knowledge()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_graph_search_api",
+      "name": "graph_search_api()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_graph_summary",
+      "name": "graph_summary()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_core_config",
+      "name": "config.py",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_improvement_release",
+      "name": "release.py",
+      "incoming": 0,
+      "outgoing": 2,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation_evaluate_rag_engine",
+      "name": "evaluate_rag_engine()",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_graph_summary",
+      "name": "graph_summary()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_core_hardening_validator",
+      "name": "validator.py",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation_evaluate_problem_engine",
+      "name": "evaluate_problem_engine()",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_mcp_schemas",
+      "name": "mcp/schemas.py",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_build_graph_context",
+      "name": "build_graph_context()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_mcp_session",
+      "name": "mcp/session.py",
+      "incoming": 0,
+      "outgoing": 2,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_hermes_init",
+      "name": "hermes/__init__.py",
+      "incoming": 0,
+      "outgoing": 2,
+      "connections": 1,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_search_production_knowledge",
+      "name": "search_production_knowledge()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_workflowsession",
+      "name": "WorkflowSession",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation_evaluate_language_engine",
+      "name": "evaluate_language_engine()",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation_evaluate_workflow_engine",
+      "name": "evaluate_workflow_engine()",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_context_engine_contextengine",
+      "name": "ContextEngine",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_graph_summary",
+      "name": "graph_summary()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "scripts_release_check",
+      "name": "release_check.py",
+      "incoming": 0,
+      "outgoing": 2,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_routes_workflowcreaterequest",
+      "name": "WorkflowCreateRequest",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_context_session",
+      "name": "context/session.py",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_graph_summary",
+      "name": "graph_summary()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_graph_summary",
+      "name": "graph_summary()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_core_hardening_retry",
+      "name": "retry.py",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_test_language_normalizer_engineintegrationtest_test_engine_does_not_corrupt_text",
+      "name": ".test_engine_does_not_corrupt_text()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_grounding",
+      "name": "knowledge/grounding.py",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_workflowresult",
+      "name": "WorkflowResult",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_trust_schemas",
+      "name": "trust/schemas.py",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_engine_workflow",
+      "name": "Workflow",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_productionhybridrag_retrieve_json",
+      "name": ".retrieve_json()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_devcore_backend",
+      "name": "backend.py",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_policy_schemas",
+      "name": "policy/schemas.py",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_routes_knowledgesearchrequest",
+      "name": "KnowledgeSearchRequest",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_graph_summary",
+      "name": "graph_summary()",
+      "incoming": 1,
+      "outgoing": 1,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_research_failure_analysis",
+      "name": "failure_analysis.py",
+      "incoming": 2,
+      "outgoing": 0,
+      "connections": 2,
+      "impact": 2,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_context_engine_rationale_20",
+      "name": "Context Engine - pipeline manajemen context. Combines SessionManager dan…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_security_scanner",
+      "name": "scanner.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_context_engine_rationale_1",
+      "name": "Context Engine - Pipeline context management.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "scripts_run_eval",
+      "name": "run_eval.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_research_experiments_rationale_1",
+      "name": "Phase 16 - experiment engine. Hasil eksperimen tidak pernah di-deploy otomatis.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_rag_context_api",
+      "name": "rag_context_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_rag_context_api",
+      "name": "rag_context_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_trust_engine_rationale_141",
+      "name": "Buat trust engine baru.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_rationale_149",
+      "name": "Mengambil evidence dari Production Hybrid RAG. Output dibuat menjadi dictionary…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_problem_engine_rationale_1",
+      "name": "Problem Engine - Orchestrasi deteksi, klasifikasi, resolusi masalah. Pipeline:…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_reasoning_engine_rationale_26",
+      "name": "Orchestrator utama reasoning. Input: Problem, Context, Knowledge (evidence).…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_devcore_facts",
+      "name": "facts.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_chunker",
+      "name": "chunker.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_engine_rationale_1",
+      "name": "Knowledge Engine facade used by the API and Hermes.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_handoff_engine_rationale_16",
+      "name": "Engine untuk manajemen human handoff.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_v2_init",
+      "name": "v2/__init__.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_rag_store_rationale_183",
+      "name": "Adapter ke V2Orchestrator(retrieve=...). Menyertakan sitasi & flag konflik.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_engine_knowledgeengine_search_knowledge",
+      "name": ".search_knowledge()",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_engine_rationale_92",
+      "name": "Internal language detection result.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_v2_wiring_rationale_1",
+      "name": "Adapter V1 -> V2: memakai PolicyEngine & TrustEngine V1 yang sudah ada (tanpa…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_rag_context_api",
+      "name": "rag_context_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_rag_context_api",
+      "name": "rag_context_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_rag_store_rationale_1",
+      "name": "Phase 7 - RAG: versi dokumen, metadata wajib, kontrol akses, deteksi konflik,…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_rationale_254",
+      "name": "Lazy import. This prevents importing IndoBERT until an actual retrieval…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_rag_context_api",
+      "name": "rag_context_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_governance_mcp_bridge",
+      "name": "mcp_bridge.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_routes_get_workflow",
+      "name": "get_workflow()",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_semantic_retriever_rationale_1",
+      "name": "Nusantara AI - Production Semantic Retriever Phase 19.2 Tujuan: - Production…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_rag_context_api",
+      "name": "rag_context_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_context_schemas_rationale_1",
+      "name": "Context Engine Schemas. Model context: session, history, intent, entities,…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_research_knowledge_discovery_knowledgecandidate",
+      "name": "KnowledgeCandidate",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_rationale_410",
+      "name": "Graph RAG v2. Menggunakan: - Graphify nodes - Graphify edges - semantic token…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_state",
+      "name": "state.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_rationale_761",
+      "name": "Membentuk context ringkas dari Graph RAG + Source RAG.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_graph_search_api",
+      "name": "graph_search_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_memory_memory",
+      "name": "memory.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_rationale_123",
+      "name": "Lazy loader untuk Production Hybrid RAG. Tidak membuat Production RAG wajib…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_models_mock_provider",
+      "name": "mock_provider.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_engine_rationale_101",
+      "name": "Main orchestrator for Nusantara Language Engine.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_rationale_410",
+      "name": "Graph RAG v2. Menggunakan: - Graphify nodes - Graphify edges - semantic token…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_rationale_1159",
+      "name": "Membentuk context ringkas dari Graph RAG + Source RAG.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_policy_policy_engine_rationale_41",
+      "name": "Engine untuk mengevaluasi kebijakan.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_rag_rationale_1",
+      "name": "RAG - Retrieval Augmented Generation orchestration. Pipeline: Document â†’…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_rationale_24",
+      "name": "Definisi workflow - blueprint dari state machine.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_rationale_579",
+      "name": "Membentuk context ringkas dari Graph RAG + Source RAG.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_retriever_rationale_157",
+      "name": "Retrieve semua evidence dari knowledge base.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation_rationale_60",
+      "name": "Test Phase 5 - Problem Engine.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_security_readiness",
+      "name": "readiness.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_graph_summary_api",
+      "name": "graph_summary_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_experience_feedback_rationale_1",
+      "name": "Phase 11 - feedback: FEEDBACK -> CLASSIFICATION -> VALIDATION -> STORAGE ->…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_reasoning_engine_rationale_1",
+      "name": "Reasoning Engine — Problem + Context + Knowledge → Plan → Execution →…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_retriever_rationale_38",
+      "name": "Retrieve evidence dari knowledge base.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_schemas_rationale_1",
+      "name": "Knowledge & RAG Engine Schemas. Evidence dari document, chunking, embedding,…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_graph_summary_api",
+      "name": "graph_summary_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_schemas_rationale_143",
+      "name": "Konfigurasi knowledge base.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_workflowvalidation",
+      "name": "WorkflowValidation",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_devcore_grounding_rationale_1",
+      "name": "Grounding gate (workflow #17, #20): tandai klaim jawaban yang TIDAK didukung…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_init",
+      "name": "language/__init__.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_policy_schemas_rationale_1",
+      "name": "Policy Engine Schemas - pakai dataclass agar tidak perlu pydantic.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_rationale_145",
+      "name": "Pencarian Graphify yang memprioritaskan symbol production dan mengurangi noise…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_rationale_1159",
+      "name": "Membentuk context ringkas dari Graph RAG + Source RAG.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_kb_productionknowledgebase",
+      "name": "ProductionKnowledgeBase",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_semantic_retriever_rationale_240",
+      "name": "Production retrieval layer for Phase 19.2. It does NOT replace legacy RAG.…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_official_knowledge_ingestion_rationale_1",
+      "name": "Nusantara AI Phase 19.4 - Official Knowledge Ingestion Foundation Purpose…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_reasoning_schemas_rationale_1",
+      "name": "Reasoning Engine Schemas - Goal, assumptions, plan, evidence, actions,…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_schemas_rationale_157",
+      "name": "Penyimpanan knowledge base.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_init_rationale_1",
+      "name": "Workflow Engine - State machine untuk alur kerja. State: START,…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_memory_memory_rationale_1",
+      "name": "Memory Engine - Short-term dan Long-term memory.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_v2_orchestrator_rationale_1",
+      "name": "V2 orchestrator: input -> policy -> memory -> understand -> retrieve ->…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_rationale_96",
+      "name": "Main orchestrator for Nusantara Language Engine.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_rationale_1",
+      "name": "Nusantara AI - Production Hybrid RAG Bridge Phase 19.3 Purpose ------- Bridge…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_trust_engine_rationale_1",
+      "name": "Trust Engine - Validasi evidence, relevansi, unsupported claims.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_load_graph",
+      "name": "load_graph()",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_rationale_60",
+      "name": "Instance workflow yang sedang berjalan.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_graph_search_api",
+      "name": "graph_search_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_rationale_145",
+      "name": "Graph RAG adapter untuk format graph.json Graphify. Format node Graphify: id…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_test_language_normalizer_engineintegrationtest",
+      "name": "EngineIntegrationTest",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_devcore_router_rationale_1",
+      "name": "Intent + generic file-reference extraction (workflow #7-#9). Tanpa hard-code…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_graph_search_api",
+      "name": "graph_search_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_kb",
+      "name": "production_kb.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_load_graph",
+      "name": "load_graph()",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_embedding_bridge",
+      "name": "production_embedding_bridge.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_graph_search_api",
+      "name": "graph_search_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_problem_engine_rationale_25",
+      "name": "Engine untuk memproses masalah manusia. Input: ProblemSchema (dengan raw_input,…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_rationale_1123",
+      "name": "Membentuk context ringkas dari Graph RAG + Source RAG.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_routes_list_knowledge_documents",
+      "name": "list_knowledge_documents()",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_rationale_410",
+      "name": "Graph RAG v2. Menggunakan: - Graphify nodes - Graphify edges - semantic token…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_rationale_145",
+      "name": "Graph RAG v2. Menggunakan: - Graphify nodes - Graphify edges - semantic token…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_rationale_1123",
+      "name": "Membentuk context ringkas dari Graph RAG + Source RAG.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_tools_schemas",
+      "name": "tools/schemas.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_engine_workflowengine_get_workflow",
+      "name": ".get_workflow()",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_entity_rationale_1",
+      "name": "Nusantara Language Engine - Entity Extraction. Rule-based entity extractor…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_rag_store_as_retriever_retrieve",
+      "name": "retrieve()",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_engine_workflowstate",
+      "name": "WorkflowState",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_rationale_149",
+      "name": "Mengambil evidence dari Production Hybrid RAG. Output dibuat menjadi dictionary…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_init",
+      "name": "workflow/__init__.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_graph_search_api",
+      "name": "graph_search_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_init",
+      "name": "knowledge/__init__.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_init_rationale_1",
+      "name": "MCP Starter - Language Engine. Pipeline NLP: raw input → normalization →…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_policy_policy_engine_rationale_1",
+      "name": "Policy Engine - Decision: ALLOW, REQUIRE_CONFIRMATION, REQUIRE_HUMAN, DENY.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_semantic_semantic_intent_rationale_12",
+      "name": "Semantic Intent Engine Nusantara AI. Pipeline: text ↓ IndoBERTClient ↓ 768D…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_policy_policy_engine_rationale_175",
+      "name": "Buat policy engine baru.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_problem_problem_schema_rationale_1",
+      "name": "Problem Engine Schemas. Human story → Situation → Problem → Goal → Constraints…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_rationale_118",
+      "name": "Request untuk resume workflow yang paused.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_approval_change_request_reviewworkflow",
+      "name": "ReviewWorkflow",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_rag_rationale_197",
+      "name": "RAG - Retrieval Augmented Generation orchestrator. Pipeline lengkap dari ingest…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_rag_context_api",
+      "name": "rag_context_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_rag_context_api",
+      "name": "rag_context_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_context_init_rationale_1",
+      "name": "Context Engine - Pipeline context management.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_trust_schemas_rationale_1",
+      "name": "Trust Engine Schemas - pakai dataclass agar tidak perlu pydantic.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_tools_date_time",
+      "name": "date_time.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_tools_base_rationale_1",
+      "name": "Tool Engine - Base tool interface and built-in tools.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation_rationale_116",
+      "name": "Test Phase 8 - Workflow Engine.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_problem_schemas",
+      "name": "problem/schemas.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_init_rationale_1",
+      "name": "Knowledge & RAG Engine - Retrieval Augmented Generation system. Pipeline:…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_graph_search_api",
+      "name": "graph_search_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_exceptions",
+      "name": "exceptions.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_rationale_105",
+      "name": "Hasil akhir workflow.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation_rationale_84",
+      "name": "Test Phase 6 - Knowledge/RAG Engine.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_rationale_123",
+      "name": "Lazy loader untuk Production Hybrid RAG. Tidak membuat Production RAG wajib…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_rationale_87",
+      "name": "Internal language detection result.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_rationale_123",
+      "name": "Lazy loader untuk Production Hybrid RAG. Tidak membuat Production RAG wajib…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_retriever_rationale_17",
+      "name": "Retriever untuk mengambil evidence dari knowledge base. Mudah di-extend untuk…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_handoff_schemas",
+      "name": "handoff/schemas.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_rationale_10",
+      "name": "State enum untuk workflow.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_parser",
+      "name": "parser.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_retriever_rationale_134",
+      "name": "Retrieve semua evidence dari dokumen tertentu.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_graph_summary_api",
+      "name": "graph_summary_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_graph_summary_api",
+      "name": "graph_summary_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_graph_summary_api",
+      "name": "graph_summary_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_tools_filesystem",
+      "name": "filesystem.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_v2_routes_rationale_1",
+      "name": "NUSANTARA AI V2 API (/v2). Endpoint /v1 tetap utuh (backward compatible).…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_retriever_rationale_1",
+      "name": "Retriever - Retrieve evidence dari knowledge base. Mendukung multiple retrieval…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_retriever_rationale_170",
+      "name": "Factory untuk membuat retriever.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_rationale_695",
+      "name": "Membentuk context ringkas dari Graph RAG + Source RAG.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_research_knowledge_discovery_rationale_1",
+      "name": "Phase 15 - knowledge discovery: GAP -> validasi sumber -> ekstraksi ->…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_research_improvement_proposalengine",
+      "name": "ProposalEngine",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_devcore_workspace_rationale_1",
+      "name": "Security gate (workflow #24): path harus di dalam workspace, bukan file…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_reranker",
+      "name": "reranker.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_trust_engine_rationale_14",
+      "name": "Engine untuk menilai kepercayaan terhadap claim berdasarkan evidence. JANGAN…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_tools_calculator",
+      "name": "calculator.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_rationale_145",
+      "name": "Graph RAG adapter untuk format graph.json Graphify. Format node Graphify: id…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_graph_search_api",
+      "name": "graph_search_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_rationale_123",
+      "name": "Lazy loader untuk Production Hybrid RAG. Tidak membuat Production RAG wajib…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_handoff_engine_rationale_1",
+      "name": "Human Handoff Engine - Escalation ke manusia.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_graph_search_api",
+      "name": "graph_search_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_load_graph",
+      "name": "load_graph()",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_rationale_162",
+      "name": "Phase 19.3 production bridge. It consumes ProductionSemanticRetriever and…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_workflowtransition",
+      "name": "WorkflowTransition",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_nevaluation_test_evaluation",
+      "name": "nevaluation/test_evaluation.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_rationale_410",
+      "name": "Graph RAG v2. Menggunakan: - Graphify nodes - Graphify edges - semantic token…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_engine_rationale_1",
+      "name": "Nusantara Core - Language Engine ================================ Canonical NLP…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_devcore_core_rationale_1",
+      "name": "Developer Core Engine: INTAKE -> INSPECT -> PLAN -> ACT(read-only) -> OBSERVE…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_models_ollama_provider",
+      "name": "ollama_provider.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation_rationale_39",
+      "name": "Test Phase 3 - Language Engine.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_reasoning_planner",
+      "name": "planner.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_tools_registry",
+      "name": "registry.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_official_knowledge_ingestion",
+      "name": "official_knowledge_ingestion.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_rationale_149",
+      "name": "Mengambil evidence dari Production Hybrid RAG. Output dibuat menjadi dictionary…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_graph_summary_api",
+      "name": "graph_summary_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_workflow_schema_rationale_1",
+      "name": "Workflow Engine Schemas - Definition dan state machine.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_schemas_rationale_2",
+      "name": "Canonical schemas untuk Nusantara Language Engine. File ini adalah single…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_state_workflowstate",
+      "name": "WorkflowState",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_graph_summary_api",
+      "name": "graph_summary_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_graph_summary_api",
+      "name": "graph_summary_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_semantic_retriever_retrievalevidence",
+      "name": "RetrievalEvidence",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_rag_context_api",
+      "name": "rag_context_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_load_graph",
+      "name": "load_graph()",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_graph_search_api",
+      "name": "graph_search_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_problem_init_rationale_1",
+      "name": "Problem Engine - Deteksi, klasifikasi, resolusi masalah manusia.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_reasoning_evaluator",
+      "name": "reasoning/evaluator.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_semantic_intent_prototypes",
+      "name": "intent_prototypes.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_load_graph",
+      "name": "load_graph()",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_graph_summary_api",
+      "name": "graph_summary_api()",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_routes_rationale_1",
+      "name": "Nusantara Core + Hermes API Gateway.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_rag_rationale_704",
+      "name": "Factory function untuk membuat RAG instance.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_context_init",
+      "name": "context/__init__.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_rationale_149",
+      "name": "Mengambil evidence dari Production Hybrid RAG. Output dibuat menjadi dictionary…",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "run_tests_rationale_1",
+      "name": "Nusantara Core + Hermes verification runner for Phases 0-18.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_embeddings",
+      "name": "embeddings.py",
+      "incoming": 1,
+      "outgoing": 0,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_workflow_schemas",
+      "name": "workflow/schemas.py",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_rationale_894",
+      "name": "Membentuk context ringkas dari Graph RAG + Source RAG.",
+      "incoming": 0,
+      "outgoing": 1,
+      "connections": 1,
+      "impact": 1,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_schemas_rationale_341",
+      "name": "Hasil akhir Language Engine.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_rag_rationale_414",
+      "name": "Query knowledge base menggunakan Hybrid Retrieval. Pipeline: Semantic…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_graph_dependency_api",
+      "name": "graph_dependency_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_graph_analysis_api",
+      "name": "graph_analysis_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_v2_test_v2_core_orchestrator_test_retrieval_failure_still_answers",
+      "name": ".test_retrieval_failure_still_answers()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_production_integration",
+      "name": "patch_production_integration.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_rag_rationale_240",
+      "name": "Ingest dokumen ke knowledge base. Pipeline: Parser â†’ Chunker â†’ Embedding…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_schemas_rationale_67",
+      "name": "Pack evidence dari retrieval.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_graph_impact_api",
+      "name": "graph_impact_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_run_graphify",
+      "name": "run_graphify()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_schemas_rationale_304",
+      "name": "Konfigurasi Language Engine pipeline.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_run_graphify",
+      "name": "run_graphify()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_run_graphify",
+      "name": "run_graphify()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_schemas_rationale_341",
+      "name": "Hasil akhir Language Engine.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "graph_viewer_server",
+      "name": "server.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_graph_node_api",
+      "name": "graph_node_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_graph_node_api",
+      "name": "graph_node_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_nevaluation_test_evaluation_evaluationrunner_test_phase6_knowledge",
+      "name": "._test_phase6_knowledge()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_improvement_init",
+      "name": "improvement/__init__.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_rationale_485",
+      "name": "Pencarian source code production. File app/ dan engine inti diberi prioritas.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_run_graphify",
+      "name": "run_graphify()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_indobert_embedding_rationale_9",
+      "name": "Adapter embedding untuk RAG. RAG hanya membutuhkan: text -> List[float]…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_graph_node_api",
+      "name": "graph_node_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_graph_impact_api",
+      "name": "graph_impact_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "service_nusantara_supervisor",
+      "name": "nusantara-supervisor.ps1",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_run_graphify",
+      "name": "run_graphify()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_v2_test_devcore_routes_rationale_1",
+      "name": "Uji routes.py LIVE (patched vs original) dengan STUB…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_schemas_rationale_52",
+      "name": "Satuan evidence dari retrieval.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_graph_analysis_api",
+      "name": "graph_analysis_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_schemas_rationale_234",
+      "name": "Hasil pemahaman terstruktur dari Language Engine. Ini menjadi output utama NLP…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_schemas_rationale_34",
+      "name": "Tipe entity yang dikenali Language Engine.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "restore_developer_core",
+      "name": "restore_developer_core.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_graph_analysis_api",
+      "name": "graph_analysis_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_graph_dependency_api",
+      "name": "graph_dependency_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_graph_impact_api",
+      "name": "graph_impact_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_graph_impact_api",
+      "name": "graph_impact_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_routes_rationale_753",
+      "name": "End-to-end local chat. Flow: User â†“ Language Engine â†“ Problem Engine â†“…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_governance_sandbox",
+      "name": "sandbox.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_graph_rag_v2",
+      "name": "patch_graph_rag_v2.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_types",
+      "name": "types.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_graph_node_api",
+      "name": "graph_node_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_rag_rationale_675",
+      "name": "Hapus dokumen dari knowledge base.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_graph_impact_api",
+      "name": "graph_impact_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_schemas_rationale_2",
+      "name": "Canonical schemas untuk Nusantara Language Engine. File ini adalah single…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_graph_dependency_api",
+      "name": "graph_dependency_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_v2_test_devcore_routes_load_routes",
+      "name": "load_routes()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_core_init",
+      "name": "core/__init__.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_entity_rationale_191",
+      "name": "Entity extractor untuk Nusantara Language Engine. Urutan ekstraksi: 1. Email 2.…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_graph_dependency_api",
+      "name": "graph_dependency_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_graphify_adapter",
+      "name": "patch_graphify_adapter.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_schemas_rationale_34",
+      "name": "Tipe entity yang dikenali Language Engine.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_graph_rag_safe",
+      "name": "patch_graph_rag_safe.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_grounding_rationale_178",
+      "name": "Validate an answer against retrieved evidence. intent_name is important for…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "nusantara_models_indobert_worker",
+      "name": "indobert_worker.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_graph_analysis_api",
+      "name": "graph_analysis_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_store_rationale_303",
+      "name": "Lexical Retrieval V2. Fitur: - lowercase - regex tokenization - stopword…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "scripts_production_indobert_hardening",
+      "name": "production_indobert_hardening.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "scripts_healthcheck_py_scripts_healthcheck",
+      "name": "healthcheck.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_run_graphify",
+      "name": "run_graphify()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_problem_problem_schema_rationale_101",
+      "name": "Schema utama untuk Problem Engine.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_semantic_init",
+      "name": "semantic/__init__.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_grounding_rationale_592",
+      "name": "Requirement claims require explicit requirement language in the evidence.…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "build_all",
+      "name": "build_all.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_graph_node_api",
+      "name": "graph_node_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_graph_dependency_api",
+      "name": "graph_dependency_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_v2_test_devcore_routes_testroutes",
+      "name": "TestRoutes",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_graph_node_api",
+      "name": "graph_node_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_rag_rationale_661",
+      "name": "List semua dokumen di knowledge base.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "scripts_production_healthcheck",
+      "name": "production_healthcheck.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_developer_core_quality",
+      "name": "patch_developer_core_quality.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_v2_routes_chat_retrieve",
+      "name": "retrieve()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_test_language_normalizer_normalizerregressiontest_test_workflow_cases",
+      "name": ".test_workflow_cases()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_schemas_rationale_234",
+      "name": "Hasil pemahaman terstruktur dari Language Engine. Ini menjadi output utama NLP…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_developer_core_quality_v2",
+      "name": "patch_developer_core_quality_v2.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "fix_developer_core_source",
+      "name": "fix_developer_core_source.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation_rationale_136",
+      "name": "Test Phase 12 - Tool Engine.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_parser",
+      "name": "patch_parser.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_v2_test_phases_7_21_testrag",
+      "name": "TestRAG",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "scripts_patch_rag_canonical",
+      "name": "patch_rag_canonical.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "fix_graph_reference",
+      "name": "fix_graph_reference.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_api_routes_rationale_330",
+      "name": "Menyatukan hasil Intent Engine dan Problem Engine. Intent dengan confidence…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "pkg_nusantara_ai",
+      "name": "nusantara-ai",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_tools_init",
+      "name": "tools/__init__.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_schemas_rationale_304",
+      "name": "Konfigurasi Language Engine pipeline.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "scripts_production_kb_hardening",
+      "name": "production_kb_hardening.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_reasoning_schemas_rationale_198",
+      "name": "Request untuk reasoning engine.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_graph_impact_api",
+      "name": "graph_impact_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_source_filter",
+      "name": "patch_source_filter.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_graph_dependency_api",
+      "name": "graph_dependency_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_research_init",
+      "name": "research/__init__.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_graph_dependency_api",
+      "name": "graph_dependency_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_graph_analysis_api",
+      "name": "graph_analysis_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_hermes_agent_rationale_12",
+      "name": "Orchestrator: language -> problem -> reasoning -> response artifact.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_nevaluation_test_evaluation_evaluationrunner_test_phase3_language",
+      "name": "._test_phase3_language()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_graph_node_api",
+      "name": "graph_node_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_reasoning_schemas_rationale_230",
+      "name": "Response dari reasoning engine.",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_graph_impact_api",
+      "name": "graph_impact_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_v2_test_devcore_rationale_1",
+      "name": "Tes Developer Core sesuai kontrak (workflow #16, #17, #18, #24).",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_graph_analysis_api",
+      "name": "graph_analysis_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_run_graphify",
+      "name": "run_graphify()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "create_pdf",
+      "name": "create_pdf.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_graph_analysis_api",
+      "name": "graph_analysis_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_rationale_1",
+      "name": "Nusantara Core - Language Engine ================================ Canonical NLP…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "scripts_test_e2e_grounding_ollama_rationale_1",
+      "name": "Nusantara AI - E2E Grounding + Ollama Test Tests: 1. Ollama health 2. Supported…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "graph_viewer",
+      "name": "graph-viewer.ps1",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_security_init",
+      "name": "security/__init__.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_schemas_languagedetectionresult",
+      "name": "LanguageDetectionResult",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_normalizer_safe",
+      "name": "normalizer_safe.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_graph_rag_production",
+      "name": "patch_graph_rag_production.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_graph_impact_api",
+      "name": "graph_impact_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836_run_graphify",
+      "name": "run_graphify()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_run_graphify",
+      "name": "run_graphify()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_grounding_rationale_21",
+      "name": "Validates whether an LLM response is sufficiently supported by retrieved…",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_problem_detector_problemdetector_detect_language",
+      "name": "._detect_language()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_graph_node_api",
+      "name": "graph_node_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_graph_dependency_api",
+      "name": "graph_dependency_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_core",
+      "name": "patch_core.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "patch_production_rag",
+      "name": "patch_production_rag.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "inspect_rag_endpoint",
+      "name": "inspect_rag_endpoint.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_graph_analysis_api",
+      "name": "graph_analysis_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_graph_analysis_api",
+      "name": "graph_analysis_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "service_nusantara_service",
+      "name": "nusantara-service.ps1",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "tests_nevaluation_test_evaluation_evaluationrunner_test_phase8_workflow",
+      "name": "._test_phase8_workflow()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "nusantara_models_indobert_bridge",
+      "name": "indobert_bridge.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_interfaces",
+      "name": "interfaces.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_graph_impact_api",
+      "name": "graph_impact_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_graph_node_api",
+      "name": "graph_node_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_init",
+      "name": "app/__init__.py",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_graph_dependency_api",
+      "name": "graph_dependency_api()",
+      "incoming": 0,
+      "outgoing": 0,
+      "connections": 0,
+      "impact": 0,
+      "impact_level": "LOW"
+    }
+  ],
+  "top_impact_nodes": [
+    {
+      "id": "app_api_routes",
+      "name": "routes.py",
+      "incoming": 2,
+      "outgoing": 22,
+      "connections": 24,
+      "impact": 24,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_productionhybridrag",
+      "name": "ProductionHybridRAG",
+      "incoming": 13,
+      "outgoing": 6,
+      "connections": 14,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_api_v2_routes",
+      "name": "v2_routes.py",
+      "incoming": 2,
+      "outgoing": 16,
+      "connections": 18,
+      "impact": 18,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_language_engine",
+      "name": "language/engine.py",
+      "incoming": 4,
+      "outgoing": 11,
+      "connections": 15,
+      "impact": 15,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_hermes_agent",
+      "name": "agent.py",
+      "incoming": 3,
+      "outgoing": 10,
+      "connections": 12,
+      "impact": 13,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_knowledge_rag",
+      "name": "rag.py",
+      "incoming": 3,
+      "outgoing": 10,
+      "connections": 13,
+      "impact": 13,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_core_hardening_init",
+      "name": "hardening/__init__.py",
+      "incoming": 3,
+      "outgoing": 10,
+      "connections": 8,
+      "impact": 13,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_devcore_core",
+      "name": "core.py",
+      "incoming": 3,
+      "outgoing": 9,
+      "connections": 11,
+      "impact": 12,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_models_init",
+      "name": "models/__init__.py",
+      "incoming": 0,
+      "outgoing": 12,
+      "connections": 6,
+      "impact": 12,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_devcore_init",
+      "name": "devcore/__init__.py",
+      "incoming": 1,
+      "outgoing": 10,
+      "connections": 6,
+      "impact": 11,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_language_engine_languageengine",
+      "name": "LanguageEngine",
+      "incoming": 7,
+      "outgoing": 3,
+      "connections": 9,
+      "impact": 10,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_knowledge_rag_rag",
+      "name": "RAG",
+      "incoming": 8,
+      "outgoing": 2,
+      "connections": 9,
+      "impact": 10,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_problem_init",
+      "name": "problem/__init__.py",
+      "incoming": 1,
+      "outgoing": 9,
+      "connections": 6,
+      "impact": 10,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_observability_init",
+      "name": "observability/__init__.py",
+      "incoming": 4,
+      "outgoing": 6,
+      "connections": 7,
+      "impact": 10,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_knowledge_schemas_knowledgebaseconfig",
+      "name": "KnowledgeBaseConfig",
+      "incoming": 10,
+      "outgoing": 0,
+      "connections": 8,
+      "impact": 10,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_problem_engine",
+      "name": "problem/engine.py",
+      "incoming": 5,
+      "outgoing": 4,
+      "connections": 8,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_retriever_retriever",
+      "name": "Retriever",
+      "incoming": 4,
+      "outgoing": 5,
+      "connections": 8,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_rag_store",
+      "name": "rag/store.py",
+      "incoming": 6,
+      "outgoing": 3,
+      "connections": 8,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_workflow_workflow_schema",
+      "name": "workflow_schema.py",
+      "incoming": 2,
+      "outgoing": 7,
+      "connections": 9,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_schemas",
+      "name": "knowledge/schemas.py",
+      "incoming": 6,
+      "outgoing": 3,
+      "connections": 9,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "developer_core_engine",
+      "name": "developer_core_engine.py",
+      "incoming": 0,
+      "outgoing": 9,
+      "connections": 9,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_observability_context",
+      "name": "context.py",
+      "incoming": 9,
+      "outgoing": 0,
+      "connections": 8,
+      "impact": 9,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "run_tests",
+      "name": "run_tests.py",
+      "incoming": 1,
+      "outgoing": 7,
+      "connections": 8,
+      "impact": 8,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_engine",
+      "name": "knowledge/engine.py",
+      "incoming": 4,
+      "outgoing": 4,
+      "connections": 8,
+      "impact": 8,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_retriever",
+      "name": "retriever.py",
+      "incoming": 1,
+      "outgoing": 7,
+      "connections": 8,
+      "impact": 8,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_rag_create_rag",
+      "name": "create_rag()",
+      "incoming": 4,
+      "outgoing": 4,
+      "connections": 6,
+      "impact": 8,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_workflow_engine_workflowengine",
+      "name": "WorkflowEngine",
+      "incoming": 5,
+      "outgoing": 2,
+      "connections": 7,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation",
+      "name": "evaluation/test_evaluation.py",
+      "incoming": 0,
+      "outgoing": 7,
+      "connections": 7,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_reasoning_engine",
+      "name": "reasoning/engine.py",
+      "incoming": 4,
+      "outgoing": 3,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_problem_engine_problemengine",
+      "name": "ProblemEngine",
+      "incoming": 7,
+      "outgoing": 0,
+      "connections": 7,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_reasoning_engine_reasoningengine",
+      "name": "ReasoningEngine",
+      "incoming": 7,
+      "outgoing": 0,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_problem_problem_schema",
+      "name": "problem_schema.py",
+      "incoming": 7,
+      "outgoing": 0,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_approval_queue",
+      "name": "queue.py",
+      "incoming": 5,
+      "outgoing": 2,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_governance_tools",
+      "name": "governance/tools.py",
+      "incoming": 4,
+      "outgoing": 3,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_handoff_engine_handoffengine",
+      "name": "HandoffEngine",
+      "incoming": 7,
+      "outgoing": 0,
+      "connections": 6,
+      "impact": 7,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_models_base",
+      "name": "models/base.py",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_research_knowledge_discovery",
+      "name": "knowledge_discovery.py",
+      "incoming": 1,
+      "outgoing": 5,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_v2_orchestrator",
+      "name": "orchestrator.py",
+      "incoming": 2,
+      "outgoing": 4,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_observability_logging",
+      "name": "logging.py",
+      "incoming": 5,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_retriever_create_retriever",
+      "name": "create_retriever()",
+      "incoming": 2,
+      "outgoing": 4,
+      "connections": 4,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_problem_classifier",
+      "name": "classifier.py",
+      "incoming": 5,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_language_engine_languagedetection",
+      "name": "LanguageDetection",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_language_schemas",
+      "name": "language/schemas.py",
+      "incoming": 5,
+      "outgoing": 1,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_approval_init",
+      "name": "approval/__init__.py",
+      "incoming": 2,
+      "outgoing": 4,
+      "connections": 4,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_trust_engine_trustengine",
+      "name": "TrustEngine",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_rag_store_as_retriever",
+      "name": "as_retriever()",
+      "incoming": 3,
+      "outgoing": 3,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_problem_detector",
+      "name": "detector.py",
+      "incoming": 5,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_models_ollama",
+      "name": "ollama.py",
+      "incoming": 5,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_v2_wiring",
+      "name": "wiring.py",
+      "incoming": 2,
+      "outgoing": 4,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_engine_knowledgeengine",
+      "name": "KnowledgeEngine",
+      "incoming": 4,
+      "outgoing": 2,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_devcore_workspace",
+      "name": "workspace.py",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_schemas_retrievalresult",
+      "name": "RetrievalResult",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_policy_policy_engine_policyengine",
+      "name": "PolicyEngine",
+      "incoming": 6,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_models_mock",
+      "name": "mock.py",
+      "incoming": 4,
+      "outgoing": 2,
+      "connections": 5,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_approval_change_request",
+      "name": "change_request.py",
+      "incoming": 2,
+      "outgoing": 4,
+      "connections": 6,
+      "impact": 6,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_policy_policy_engine",
+      "name": "policy_engine.py",
+      "incoming": 2,
+      "outgoing": 3,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_experience_init",
+      "name": "experience/__init__.py",
+      "incoming": 1,
+      "outgoing": 4,
+      "connections": 3,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_workflow_engine",
+      "name": "workflow/engine.py",
+      "incoming": 1,
+      "outgoing": 4,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_devcore_router",
+      "name": "devcore/router.py",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_languageengine",
+      "name": "LanguageEngine",
+      "incoming": 3,
+      "outgoing": 2,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_handoff_engine",
+      "name": "handoff/engine.py",
+      "incoming": 1,
+      "outgoing": 4,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_context_engine",
+      "name": "context/engine.py",
+      "incoming": 1,
+      "outgoing": 4,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_language_semantic_semantic_intent",
+      "name": "semantic_intent.py",
+      "incoming": 2,
+      "outgoing": 3,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_rag_init",
+      "name": "rag/__init__.py",
+      "incoming": 0,
+      "outgoing": 5,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_language_semantic_semantic_intent_semanticintentengine",
+      "name": "SemanticIntentEngine",
+      "incoming": 5,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_observability_metrics",
+      "name": "metrics.py",
+      "incoming": 5,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_trust_engine",
+      "name": "trust/engine.py",
+      "incoming": 2,
+      "outgoing": 3,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_approval_audit_trail",
+      "name": "audit_trail.py",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_languagedetection",
+      "name": "LanguageDetection",
+      "incoming": 5,
+      "outgoing": 0,
+      "connections": 3,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_knowledge_production_semantic_retriever_productionsemanticretriever",
+      "name": "ProductionSemanticRetriever",
+      "incoming": 5,
+      "outgoing": 0,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_rag_store_versionedknowledgestore",
+      "name": "VersionedKnowledgeStore",
+      "incoming": 4,
+      "outgoing": 1,
+      "connections": 5,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "app_experience_feedback",
+      "name": "feedback.py",
+      "incoming": 3,
+      "outgoing": 2,
+      "connections": 4,
+      "impact": 5,
+      "impact_level": "MEDIUM"
+    },
+    {
+      "id": "developer_core_engine_get_production_rag",
+      "name": "get_production_rag()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_engine_languageengine_detect_language",
+      "name": "._detect_language()",
+      "incoming": 1,
+      "outgoing": 3,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_experience_events",
+      "name": "events.py",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag",
+      "name": "production_hybrid_rag.py",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_get_production_rag",
+      "name": "get_production_rag()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_languageengine_parse_language_result",
+      "name": "._parse_language_result()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_rag_store_versionedknowledgestore_retrieve",
+      "name": ".retrieve()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_get_production_rag",
+      "name": "get_production_rag()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_semantic_retriever",
+      "name": "production_semantic_retriever.py",
+      "incoming": 1,
+      "outgoing": 3,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_rag_store_retrievalresult",
+      "name": "RetrievalResult",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501_get_production_rag",
+      "name": "get_production_rag()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_search_graph",
+      "name": "search_graph()",
+      "incoming": 3,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_devcore_grounding",
+      "name": "devcore/grounding.py",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_core_hardening_safe_execution",
+      "name": "safe_execution.py",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_productionhybridrag_get_retriever",
+      "name": "._get_retriever()",
+      "incoming": 3,
+      "outgoing": 1,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_main",
+      "name": "main.py",
+      "incoming": 0,
+      "outgoing": 4,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_engine_languageengine_parse_language_result",
+      "name": "._parse_language_result()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_language_engine_create_language_engine",
+      "name": "create_language_engine()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601_search_graph",
+      "name": "search_graph()",
+      "incoming": 4,
+      "outgoing": 0,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_policy_policy_engine_create_policy_engine",
+      "name": "create_policy_engine()",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 3,
+      "impact": 4,
+      "impact_level": "LOW"
+    },
+    {
+      "id": "app_research_improvement",
+      "name": "improvement.py",
+      "incoming": 2,
+      "outgoing": 2,
+      "connections": 4,
+      "impact": 4,
+      "impact_level": "LOW"
+    }
+  ]
+}

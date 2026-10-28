@@ -1,0 +1,110 @@
+{
+  "verification_type": "CONTROLLED_LIVE_PROVIDER_HARNESS",
+  "application_identity": "Nusantara R2 engineering evidence harness",
+  "runtime_identity": "NOT_VERIFIED",
+  "scoped_test_result": "PASS",
+  "dispatch_attempts": 1,
+  "http_client_requests": 1,
+  "retry_allowed": false,
+  "full_application_verified": false,
+  "process": {
+    "pid": 6728,
+    "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+    "working_directory": "C:\\Users\\dmaza\\mcp-starter"
+  },
+  "runtime_instance_id": "51d58f3ca7ea49da89f09be2c45b87ea",
+  "instance_captured_at": "2026-10-08T02:47:00.841532+00:00",
+  "build_id": "sha256:dcb61c742ce39f12458e08d4d0c9ce360bf453e0e9c5b7e08e2f37de0ae9f7cb",
+  "listener": {
+    "address": "127.0.0.1",
+    "port": 50715
+  },
+  "request_id": "r2-a5-92c16fd22fa94bc2ab94d5758f8fe27a",
+  "ownership": {
+    "timestamp_utc": "2026-10-08T02:47:40.0595367Z",
+    "harness_pid": 6728,
+    "harness_port": 50715,
+    "harness_name": "python.exe",
+    "harness_executable": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "harness_os_start_time_utc": "2026-10-08T02:46:59.5622940Z",
+    "harness_parent_pid": 39468,
+    "provider_pid": 18296,
+    "provider_name": "ollama.exe",
+    "provider_executable": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Ollama\\ollama.exe",
+    "provider_os_start_time_utc": "2026-09-30T10:01:18.8618660Z",
+    "provider_port": 11434,
+    "source": "Windows CIM Win32_Process and Get-NetTCPConnection",
+    "single_request_authorized": true,
+    "retry_allowed": false
+  },
+  "provider_payload": {
+    "model": "llama3.2:1b",
+    "stream": false,
+    "options": {
+      "num_ctx": 4096,
+      "num_predict": 8
+    }
+  },
+  "provider_http_status": 200,
+  "provider_response_sha256": "689ad03bfea7b38153d3b7be68503632e9e332b929c7fc69c1810acaf2ce9b69",
+  "provider_response": {
+    "model": "llama3.2:1b",
+    "done": true,
+    "created_at": "2026-10-08T02:47:44.5906043Z",
+    "done_reason": "length",
+    "eval_count": 8,
+    "prompt_eval_count": 33
+  },
+  "execution_receipt": {
+    "request_id": "r2-a5-92c16fd22fa94bc2ab94d5758f8fe27a",
+    "timestamp": "2026-10-08T02:47:40.582860+00:00",
+    "build_id": "sha256:dcb61c742ce39f12458e08d4d0c9ce360bf453e0e9c5b7e08e2f37de0ae9f7cb",
+    "process_id": 6728,
+    "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+    "provider_id": "ollama",
+    "configured_model": "llama3.2:1b",
+    "effective_model": "llama3.2:1b",
+    "configuration_source": "DEFAULT",
+    "configuration_fingerprint": "cce5004ee52a0b2045574b885ffcba4568ca916fe4fdfbef11f44811c2e60540",
+    "selected_model": "llama3.2:1b",
+    "requested_model": null,
+    "override_source": "CONFIGURATION",
+    "payload_model": "llama3.2:1b",
+    "invocation_id": "c9af458a1cff40c0a1149ff35e2d6f93",
+    "runtime_instance_id": "51d58f3ca7ea49da89f09be2c45b87ea",
+    "instance_captured_at": "2026-10-08T02:47:00.841532+00:00",
+    "working_directory": "C:\\Users\\dmaza\\mcp-starter",
+    "request_id_source": "REQUEST_CONTEXT",
+    "actual_model": "llama3.2:1b",
+    "identity_status": "RUNTIME_CONFIRMED",
+    "confirmation_source": "PROVIDER_RESPONSE",
+    "fallback_status": "NOT_ATTEMPTED"
+  },
+  "output_sha256": "ae50bfad87f63ccf03d3041000265d048cc15c814a1ea34097c50107c303d048",
+  "output_length": 23,
+  "harness_http_status": 200,
+  "request_id_returned": "r2-a5-92c16fd22fa94bc2ab94d5758f8fe27a",
+  "checks": {
+    "single_provider_request": true,
+    "http_success": true,
+    "http_request_correlation": true,
+    "contextual_id": true,
+    "distinct_invocation": true,
+    "runtime_instance_binding": true,
+    "process_binding": true,
+    "working_directory_binding": true,
+    "loaded_build_binding": true,
+    "provider_binding": true,
+    "model_binding": true,
+    "provider_completed": true,
+    "provider_confirmation": true,
+    "provider_http_success": true
+  },
+  "harness_stopped": true,
+  "source_after": {
+    "app\\core\\runtime_identity.py": "37ea9d6992f6ce0df7ccf47a8ab2315a7e5b546190b38f9e37a6aa6b63160e8e",
+    "app\\models\\ollama.py": "b964fbe2e6a72619191a090790e16caad6a40aeab0087a9c578dcae0c6aa5da8",
+    "tests\\test_provider_identity.py": "f4ddb479a0619f72170544bbee8a3c8207911bf9589bffb34f075bb855d1e4d0"
+  },
+  "source_unchanged": true
+}

@@ -1,0 +1,133 @@
+"""Opt-in, in-memory V1 wrapper. Never imported by the existing HTTP route.
+
+Hermes owns language/problem classification, policy, retrieval and grounding.
+The classify node declares that delegation instead of invoking those engines
+twice. No checkpoints, autonomous tools, retries, or cloud fallback.
+"""
+from __future__ import annotations
+
+import asyncio
+from typing import Any, Callable, TypedDict
+
+from app.core.nusantara_config import NusantaraConfig
+from app.hermes.agent import HermesAgent, V1CoreResult
+
+
+class V1WorkflowError(RuntimeError):
+    def __init__(self, code: str):
+        self.code = code
+        super().__init__(f"V1 workflow: {code}")
+
+
+class _State(TypedDict, total=False):
+    request: Any
+    capability: str
+    executions: int
+    core: V1CoreResult
+    public: dict
+
+
+class V1LangGraphWorkflow:
+    """Requires existing Hermes, its existing services and public projector.
+
+    Build this adapter only in an explicitly opted-in caller. Configuration
+    selects the sole allowed provider. The default snapshot denies the wrapper
+    and cloud. Services passed here remain the caller's existing V1 owners.
+    """
+
+    def __init__(self, *, configuration: NusantaraConfig, agent: HermesAgent,
+                 services: dict, project_response: Callable[..., dict]):
+        if not configuration.features.langgraph_workflow:
+            raise V1WorkflowError("DISABLED")
+        if not isinstance(agent, HermesAgent):
+            raise V1WorkflowError("EXISTING_HERMES_REQUIRED")
+        self.configuration, self.agent = configuration, agent
+        self.services, self.project_response = dict(services), project_response
+        self._binding()
+        try:
+            from langgraph.graph import END, START, StateGraph
+        except ImportError:
+            raise V1WorkflowError("LANGGRAPH_UNAVAILABLE") from None
+        graph = StateGraph(_State)
+        nodes = {"validate": self._validate, "classify": self._classify,
+                 "select": self._select, "execute": self._execute,
+                 "evidence": self._evidence, "project": self._project}
+        previous = START
+        for name, fn in nodes.items():
+            graph.add_node(name, fn)  # no retry_policy
+            graph.add_edge(previous, name)
+            previous = name
+        graph.add_edge(previous, END)
+        self._graph = graph.compile(checkpointer=None)
+
+    def _binding(self):
+        provider = self.agent.provider
+        if (provider.name != self.configuration.llm.provider or
+                provider.model != self.configuration.llm.model):
+            raise V1WorkflowError("PROVIDER_NOT_APPROVED")
+
+    def _validate(self, state):
+        request = state["request"]
+        user_input, session = getattr(request, "user_input", None), getattr(request, "session_id", None)
+        if (not isinstance(user_input, str) or not user_input.strip() or len(user_input) > 20000 or
+                not isinstance(session, str) or not 1 <= len(session) <= 128 or
+                getattr(request, "stream", False)):
+            raise V1WorkflowError("INVALID_INPUT")
+        model = getattr(request, "model", None)
+        if model is not None and model != self.configuration.llm.model:
+            raise V1WorkflowError("MODEL_CONFLICT")
+        return {"executions": 0}
+
+    def _classify(self, state):
+        # Intent classification happens exactly once, inside execute_v1.
+        return {"capability": "HERMES_V1_CHAT"}
+
+    def _select(self, state):
+        self._binding()
+        return {}
+
+    async def _execute(self, state):
+        self._binding()
+        if state["executions"] != 0:
+            raise V1WorkflowError("EXECUTION_LIMIT")
+        core = await self.agent.execute_v1(state["request"], **self.services)
+        return {"core": core, "executions": 1}
+
+    def _evidence(self, state):
+        # Existing Hermes has already applied trust/policy and grounding. Verify
+        # that contract rather than creating a second grounding implementation.
+        core = state["core"]
+        if not isinstance(core, V1CoreResult):
+            raise V1WorkflowError("INVALID_CORE_RESULT")
+        assessment = core.payload.get("grounding", {})
+        if (assessment.get("enabled") is not True or
+                type(assessment.get("grounded")) is not bool):
+            raise V1WorkflowError("GROUNDING_NOT_EVALUATED")
+        if not assessment["grounded"] and core.payload.get("provider_status") != "offline":
+            # Reject an ungrounded core result unless Hermes returned its safe
+            # abstention. Never promote unsupported generated text.
+            if core.payload.get("response") != (
+                    "Informasi tersebut belum tersedia secara cukup dalam knowledge base."):
+                raise V1WorkflowError("UNGROUNDED_RESULT")
+        return {}
+
+    def _project(self, state):
+        core = state["core"]
+        return {"public": self.project_response(core.payload, intent_name=core.intent_name)}
+
+    async def execute(self, request):
+        try:
+            # Disable optional LangSmith tracing without reading or changing
+            # environment secrets. No callback/checkpoint persistence is used.
+            from langsmith import tracing_context
+            with tracing_context(enabled=False):
+                async with asyncio.timeout(self.configuration.runtime.stage_timeout_s):
+                    state = await self._graph.ainvoke({"request": request},
+                        config={"recursion_limit": 8, "callbacks": []})
+            return state["public"]
+        except V1WorkflowError:
+            raise
+        except TimeoutError:
+            raise V1WorkflowError("TIMEOUT") from None
+        except Exception:
+            raise V1WorkflowError("EXECUTION_FAILED") from None

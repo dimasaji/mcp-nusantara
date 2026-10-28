@@ -1,0 +1,94 @@
+import {parseSnapshot,PendingIntentionSchema,type Snapshot,type Attestation,type PendingIntention} from './schemas';
+export type SnapshotResult={state:Snapshot;latencyMs:number;fetchedAt:string;source:string};
+export async function fetchSnapshot(signal?:AbortSignal):Promise<SnapshotResult>{
+  const start=performance.now();
+  const response=await fetch('/v1/control-plane/snapshot',{method:'GET',credentials:'omit',cache:'no-store',signal});
+  if(!response.ok)throw new Error(`Evidence API unavailable (${response.status}). No healthy state inferred.`);
+  const state=parseSnapshot(await response.json());
+  return {state,latencyMs:Math.round(performance.now()-start),fetchedAt:new Date().toISOString(),source:'/v1/control-plane/snapshot'};
+}
+export async function submitIntention(state:Attestation):Promise<PendingIntention>{
+  const response=await fetch('/v1/control-plane/intention',{method:'POST',credentials:'omit',cache:'no-store',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify({scope:state.scope,evidence_version:state.evidence_version})});
+  if(!response.ok)throw new Error(`Intention rejected (${response.status}). No authority granted. Do not retry automatically.`);
+  const result=PendingIntentionSchema.parse(await response.json());
+  if(result.scope!==state.scope||result.evidence_version!==state.evidence_version)throw new Error('Intention context mismatch. No authority inferred.');
+  return result;
+}
+
+
+export type HumanAcceptanceRecord = {
+  record_type: 'HUMAN_ACCEPTANCE_UI_ONLY_NO_AUTHORITY';
+  identity_status: 'NOT_VERIFIED';
+  decision: 'APPROVE' | 'REJECT' | 'HOLD';
+  reason: string;
+  notes: string;
+  fingerprint: string;
+  timestamp: string;
+};
+
+function parseHumanAcceptance(value: unknown): HumanAcceptanceRecord | null {
+  if (!value || typeof value !== 'object') return null;
+  const r = value as Record<string, unknown>;
+  if (
+    r.record_type !== 'HUMAN_ACCEPTANCE_UI_ONLY_NO_AUTHORITY' ||
+    r.identity_status !== 'NOT_VERIFIED' ||
+    !['APPROVE', 'REJECT', 'HOLD'].includes(String(r.decision)) ||
+    typeof r.reason !== 'string' ||
+    typeof r.notes !== 'string' ||
+    typeof r.fingerprint !== 'string' ||
+    typeof r.timestamp !== 'string'
+  ) throw new Error('Invalid human acceptance record; no authority inferred.');
+  return r as HumanAcceptanceRecord;
+}
+
+export async function saveHumanAcceptance(input: {
+  decision: 'APPROVE' | 'REJECT' | 'HOLD';
+  reason: string;
+  notes: string;
+  fingerprint: string;
+}): Promise<HumanAcceptanceRecord> {
+  const response = await fetch('/v1/control-plane/human-acceptance', {
+    method: 'POST',
+    credentials: 'omit',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  if (!response.ok) {
+    throw new Error(`Decision was not saved (${response.status}). No authority granted.`);
+  }
+  const record = parseHumanAcceptance(await response.json());
+  if (!record || record.fingerprint !== input.fingerprint ||
+      record.decision !== input.decision) {
+    throw new Error('Saved decision context mismatch.');
+  }
+  return record;
+}
+
+export async function fetchHumanAcceptance(
+  fingerprint: string,
+): Promise<HumanAcceptanceRecord | null> {
+  const response = await fetch('/v1/control-plane/human-acceptance/read', {
+    method: 'POST',
+    credentials: 'omit',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fingerprint }),
+  });
+  if (!response.ok) {
+    throw new Error(`Could not read saved decision (${response.status}).`);
+  }
+  const result = await response.json() as {
+    record: unknown;
+    identity_status: string;
+  };
+  if (result.identity_status !== 'NOT_VERIFIED') {
+    throw new Error('Identity status mismatch.');
+  }
+  const record = parseHumanAcceptance(result.record);
+  if (record && record.fingerprint !== fingerprint) {
+    throw new Error('Saved decision fingerprint mismatch.');
+  }
+  return record;
+}

@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-10-09T09:38:19.061274+07:00",
+  "status": "PASS_SCOPED",
+  "observed_evidence": [
+    "Existing public projector consumes V1CoreResult",
+    "Strict public/nested schema asserted; internal gates/reasoning/memory excluded",
+    "Frontend rejects invalid/private response with human error; provider failure is sanitized"
+  ],
+  "files_changed": [
+    "app/api/routes.py",
+    "app/hermes/agent.py",
+    "control-plane/src/api.ts",
+    "tests/test_v1_response_projection.py",
+    "control-plane/tests/assistant.test.tsx"
+  ],
+  "reason": "Preserve CC01 public contract across Hermes ownership change",
+  "tests_run": [
+    "regression-20261009-090953/results.xml",
+    "regression-20261009-090953/guards.json",
+    "targeted-20261009-093732/results.xml",
+    "FINAL_CHECKS.json",
+    "FRONTEND_REGRESSION.json"
+  ],
+  "limitations": [
+    "Current public contract only; no full production runtime promotion"
+  ],
+  "remaining_blockers": []
+}

@@ -1,0 +1,118 @@
+{
+  "timestamp": "2026-10-07T08:52:14.173139+00:00",
+  "scope": "Actual health_detail endpoint AST in isolated FastAPI harness with existing Settings/Ollama, then live ModelGateway generation in same process. No full production API startup.",
+  "process_id": 25156,
+  "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+  "build_id": "sha256:40661a1e1338f29d5f5ad9886bbf149b713e71bc18880fe3a4b99efbcc6b7e4e",
+  "root": "C:\\Users\\dmaza\\mcp-starter",
+  "production_api_verified": false,
+  "http_status": 200,
+  "health": {
+    "status": "ok",
+    "service": "Nusantara Core + Hermes",
+    "version": "0.1.0",
+    "llm": {
+      "status": "ok",
+      "model": "llama3.2:1b",
+      "available": true,
+      "latency_ms": 350
+    },
+    "identity": {
+      "service": {
+        "status": "ok"
+      },
+      "provider": {
+        "name": "ollama",
+        "status": "ok",
+        "verification_state": "HEALTH_PROBE_ONLY"
+      },
+      "model": {
+        "configured": "llama3.2:1b",
+        "effective": "llama3.2:1b",
+        "selected": "llama3.2:1b",
+        "payload": null,
+        "actual": null,
+        "source": "DEFAULT",
+        "override_source": "CONFIGURATION",
+        "verification_state": "NOT_VERIFIED"
+      },
+      "build": {
+        "id": "sha256:40661a1e1338f29d5f5ad9886bbf149b713e71bc18880fe3a4b99efbcc6b7e4e",
+        "verification_state": "SOURCE_SNAPSHOT"
+      },
+      "verification_state": "NOT_VERIFIED",
+      "confirmation_source": "MODEL_INVENTORY_ONLY"
+    },
+    "components": {
+      "api": "available",
+      "language_engine": "available",
+      "problem_engine": "available",
+      "knowledge_engine": "available",
+      "reasoning_engine": "available",
+      "workflow_engine": "available",
+      "policy_engine": "available",
+      "trust_engine": "available",
+      "memory": "available",
+      "tools": "available",
+      "mcp": "available",
+      "handoff": "available"
+    }
+  },
+  "execution_identity": {
+    "request_id": "ed5c7a34a3f149ca8b68c41720d4507d",
+    "timestamp": "2026-10-07T08:52:14.785954+00:00",
+    "build_id": "sha256:40661a1e1338f29d5f5ad9886bbf149b713e71bc18880fe3a4b99efbcc6b7e4e",
+    "process_id": 25156,
+    "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+    "provider_id": "ollama",
+    "configured_model": "llama3.2:1b",
+    "effective_model": "llama3.2:1b",
+    "configuration_source": "DEFAULT",
+    "configuration_fingerprint": "cce5004ee52a0b2045574b885ffcba4568ca916fe4fdfbef11f44811c2e60540",
+    "selected_model": "llama3.2:1b",
+    "requested_model": null,
+    "override_source": "CONFIGURATION",
+    "payload_model": "llama3.2:1b",
+    "actual_model": "llama3.2:1b",
+    "identity_status": "RUNTIME_CONFIRMED",
+    "confirmation_source": "PROVIDER_RESPONSE",
+    "fallback_status": "NOT_ATTEMPTED",
+    "selection_reason": "General task + local preference: ollama",
+    "selected_provider": "ollama",
+    "failover_status": "NOT_ATTEMPTED"
+  },
+  "response_content_sha256": "b814aabdde112d89d45105c3205482949a86d7bbc33040034db21f7a85c84c4a",
+  "checks": {
+    "http_health": true,
+    "health_not_execution": true,
+    "health_build": true,
+    "process": true,
+    "actual_model": true,
+    "provider_binding": true,
+    "private_fields_excluded": true
+  },
+  "status": "CONTROLLED_RUNTIME_PASS",
+  "database_hashes_before": {
+    "data/knowledge/nusantara_knowledge.db": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+    "data/knowledge/nusantara_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+    "data/knowledge/nusantara_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "data/knowledge/production_knowledge.db": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+    "data/knowledge/production_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+    "data/knowledge/production_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "data/knowledge/production_knowledge_backup_20261001_181113.db": "830ad12f8a4e09b62532976f15575db70b711b8035bdfbe5ee279044f3063c09",
+    "data/knowledge/production_knowledge_backup_20261002_143947.db": "f36043927b307ad035ea5c1f64a7d15cb3618294303806e9a8a4f11bc34a6aed",
+    "data/knowledge/production_knowledge_backup_20261002_144417.db": "0a7d27554772bbf8a808d16e64778a0db131fd1729d5c8d1f7be4d6634e0595e"
+  },
+  "database_hashes_after": {
+    "data/knowledge/nusantara_knowledge.db": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+    "data/knowledge/nusantara_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+    "data/knowledge/nusantara_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "data/knowledge/production_knowledge.db": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+    "data/knowledge/production_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+    "data/knowledge/production_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "data/knowledge/production_knowledge_backup_20261001_181113.db": "830ad12f8a4e09b62532976f15575db70b711b8035bdfbe5ee279044f3063c09",
+    "data/knowledge/production_knowledge_backup_20261002_143947.db": "f36043927b307ad035ea5c1f64a7d15cb3618294303806e9a8a4f11bc34a6aed",
+    "data/knowledge/production_knowledge_backup_20261002_144417.db": "0a7d27554772bbf8a808d16e64778a0db131fd1729d5c8d1f7be4d6634e0595e"
+  },
+  "database_sidecars_unchanged": true
+}

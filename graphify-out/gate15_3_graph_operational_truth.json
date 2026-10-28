@@ -1,0 +1,143 @@
+{
+  "gate": "15.3",
+  "name": "Graph Operational Truth",
+  "version": "15.3.0",
+  "timestamp": "2026-10-03T21:23:08.875629",
+  "status": "PASS",
+  "checks": {
+    "passed": 4,
+    "total": 4,
+    "results": {
+      "graph_structure": true,
+      "engine_representation": true,
+      "runtime_health": true,
+      "engine_runtime_truth": true
+    }
+  },
+  "graph": {
+    "nodes": 2824,
+    "links": 5920,
+    "schema": "nodes + links"
+  },
+  "engines": {
+    "language_engine": {
+      "module": "app.language.engine",
+      "class": "LanguageEngine",
+      "graph_matches": [
+        "app_language_engine_languageengine",
+        "app_language_engine_languageengine_adapt_entities",
+        "app_language_engine_languageengine_adapt_intent",
+        "app_language_engine_languageengine_analyze",
+        "app_language_engine_languageengine_build_component",
+        "app_language_engine_languageengine_build_structured",
+        "app_language_engine_languageengine_canonical_entity_type",
+        "app_language_engine_languageengine_classify_intent",
+        "app_language_engine_languageengine_detect_language",
+        "app_language_engine_languageengine_domain_terms_detected",
+        "app_language_engine_languageengine_extract_entities",
+        "app_language_engine_languageengine_extract_intent_observability",
+        "app_language_engine_languageengine_extract_normalized_text",
+        "app_language_engine_languageengine_init",
+        "app_language_engine_languageengine_normalize",
+        "app_language_engine_languageengine_parse_language_result",
+        "app_language_engine_languageengine_process",
+        "app_language_engine_languageengine_run",
+        "app_language_engine_languageengine_safe_float",
+        "app_language_engine_languageengine_safe_int"
+      ],
+      "match_count": 40,
+      "status": "PASS"
+    },
+    "problem_engine": {
+      "module": "app.problem.engine",
+      "class": "ProblemEngine",
+      "graph_matches": [
+        "app_problem_engine_problemengine",
+        "app_problem_engine_problemengine_build_constraints",
+        "app_problem_engine_problemengine_build_missing",
+        "app_problem_engine_problemengine_generate_constraints",
+        "app_problem_engine_problemengine_generate_goal_text",
+        "app_problem_engine_problemengine_generate_outcome",
+        "app_problem_engine_problemengine_generate_solutions",
+        "app_problem_engine_problemengine_generate_success_criteria",
+        "app_problem_engine_problemengine_infer_goal",
+        "app_problem_engine_problemengine_resolve",
+        "app_problem_engine_problemengine_select_solution",
+        "app_problem_engine_problemengine_init",
+        "app_developer_core_engine",
+        "app_handoff_engine",
+        "app_workflow_engine",
+        "app_trust_engine",
+        "app_policy_policy_engine",
+        "app_language_engine",
+        "app_action_engine",
+        "app_policy_engine"
+      ],
+      "match_count": 27,
+      "status": "PASS"
+    },
+    "knowledge_engine": {
+      "module": "app.knowledge.engine",
+      "class": "KnowledgeEngine",
+      "graph_matches": [
+        "app_knowledge_engine_knowledgeengine",
+        "app_knowledge_engine_knowledgeengine_init",
+        "app_knowledge_engine_knowledgeengine_ingest_document",
+        "app_knowledge_engine_knowledgeengine_list_documents",
+        "app_knowledge_engine_knowledgeengine_search",
+        "app_knowledge_engine_knowledgeengine_search_knowledge",
+        "app_developer_core_engine",
+        "app_handoff_engine",
+        "app_workflow_engine",
+        "app_trust_engine",
+        "app_policy_policy_engine",
+        "app_language_engine",
+        "app_action_engine",
+        "app_policy_engine",
+        "app_context_engine",
+        "app_skills_sop_semantic_engine",
+        "app_knowledge_engine",
+        "app_memory_engine",
+        "app_orchestration_engine",
+        "app_reasoning_engine"
+      ],
+      "match_count": 21,
+      "status": "PASS"
+    },
+    "reasoning_engine": {
+      "module": "app.reasoning.engine",
+      "class": "ReasoningEngine",
+      "graph_matches": [
+        "app_reasoning_engine_reasoningengine",
+        "app_reasoning_engine_reasoningengine_analyze",
+        "app_reasoning_engine_reasoningengine_build_facts",
+        "app_reasoning_engine_reasoningengine_evidence_id",
+        "app_reasoning_engine_reasoningengine_score",
+        "app_reasoning_engine_reasoningengine_text",
+        "app_developer_core_engine",
+        "app_handoff_engine",
+        "app_workflow_engine",
+        "app_trust_engine",
+        "app_policy_policy_engine",
+        "app_language_engine",
+        "app_action_engine",
+        "app_policy_engine",
+        "app_context_engine",
+        "app_skills_sop_semantic_engine",
+        "app_knowledge_engine",
+        "app_memory_engine",
+        "app_orchestration_engine",
+        "app_reasoning_engine"
+      ],
+      "match_count": 21,
+      "status": "PASS"
+    }
+  },
+  "contract": {
+    "graph_must_use_links": true,
+    "graph_must_contain_nodes": true,
+    "runtime_engines_must_have_graph_representation": true,
+    "runtime_health_must_be_pass": true,
+    "engine_runtime_truth_must_be_pass": true
+  }
+}

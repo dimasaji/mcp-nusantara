@@ -1,0 +1,112 @@
+NUSANTARA — PEKERJAAN SESUAI KONTRAK, 2026-10-06
+
+SCOPE DAN KONTRAK
+Satu phase: Phase 12 Evaluation. Risiko LOW: harness evaluasi dan test;
+tidak mengubah Core V1, security, policy, provider, API, database atau deployment.
+Kontrak: docs/contracts/NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md
+Bagian 6 (satu phase), 12 (risiko), 13 (evidence), 14 (definition of done).
+Architecture boundary: docs/contracts/NUSANTARA-ARCHITECTURE-CONTRACT-V1.md.
+Pengguna meminta melengkapi pekerjaan sesuai kontrak pada 2026-10-06.
+
+INSPECT / UNDERSTAND / MAP
+scripts/run_eval.py sebelumnya menggunakan empat jawaban mock; source itu
+bukan benchmark V1 nyata. app/evaluation/evaluator.py sebelumnya menilai
+percobaan terakhir saja, sehingga error percobaan sebelumnya dapat tertutup.
+V1 menerima user_input, session_id, stream di app/api/routes.py:56 dan
+mengembalikan response, evidence[].chunk/document_id pada akhir /v1/chat.
+Harness memakai evaluator yang sudah ada, bukan engine evaluasi kedua.
+
+BASELINE DAN REGRESSION
+Sebelum perubahan: 30 test (TestEvaluation + test_v2_core) PASS.
+Sesudah implementasi: 64 test (test_live_harness, test_phases_7_21,
+test_v2_core) PASS. Setelah tambahan metadata: 38 test terkait PASS.
+Verifikasi final: 64 test PASS; output lengkap disimpan di
+audit_reports/PHASE12_TESTS_2026-10-06.txt. git diff --check tidak menemukan
+whitespace error.
+Interpreter stdlib dipakai karena Python venv proyek tidak dapat dijalankan
+dari sandbox dan pytest tidak tersedia pada interpreter alternatif.
+Perintah reproduksi dengan Python normal:
+python -m unittest tests.evaluation.test_live_harness tests.v2.test_phases_7_21 tests.v2.test_v2_core
+Di interpreter embedded yang tidak menambahkan cwd ke sys.path:
+python -c "import sys; sys.path.insert(0,'.'); import unittest; s=unittest.defaultTestLoader.loadTestsFromNames(['tests.evaluation.test_live_harness','tests.v2.test_phases_7_21','tests.v2.test_v2_core']); r=unittest.TextTestRunner().run(s); sys.exit(not r.wasSuccessful())"
+
+IMPLEMENTASI
+- Default live V1; --mock wajib untuk jawaban sintetis.
+- Dataset V1 awal 12 skenario: bahasa, biaya, syarat, prosedur, durasi,
+  alamat, status, pertanyaan gabungan, layanan tak dikenal, dan injection.
+- Sesi baru untuk setiap percobaan; timeout dan batas ukuran response.
+- Response kosong, HTTP error, JSON/schema invalid dinilai gagal.
+- Semua percobaan tersimpan dan dinilai, termasuk error pertama.
+- Evidence hanya isi chunk; URL/judul bukan bukti klaim.
+- Model/provider/grounding metadata disimpan bila diberikan server.
+- Hash dataset dan setting wajib sama saat membandingkan baseline.
+- Baseline mock tidak dapat menjadi pembanding live; reference baseline
+  tidak dapat ditimpa oleh output perbandingan.
+- Auto accept selalu false; MEASURED tidak sama dengan gate PASS.
+
+SECURITY / INTEGRATION
+Test HTTP server lokal membuktikan bentuk request, pemetaan response,
+isolasi sesi, penolakan redirect, invalid payload, HTTP failure, serta
+deteksi regresi. Pesan error server tidak ditulis ke report; hanya tipe error.
+Tidak ada ingest ke trusted knowledge, approval, release, atau perubahan izin.
+
+PENGUKURAN LIVE
+GET http://127.0.0.1:8000/v1/health mengembalikan status ok, versi 0.1.0.
+Perintah pengukuran awal:
+python scripts/run_eval.py --repeats 2 --timeout 20 --output audit_reports/EVAL_V1_2026-10-06.json
+Hasil live dicatat pada file tersebut; kegagalan tidak mengubah status menjadi PASS.
+Hasil: FAIL, 1 TimeoutError pada greeting dari 24 request (12 kasus x 2).
+Reliability 0.9583, consistency 0.9583, relevance leksikal 0.0104,
+groundedness leksikal 0.0. Angka ini bukan estimasi akurasi faktual.
+23 response yang selesai memakai pesan bahwa informasi belum cukup pada KB.
+Tidak semua request tanpa evidence; kasus prosedur mengandung satu chunk.
+Correctness/retrieval/tool/cost tidak dinilai; tidak memiliki oracle/observasi.
+Policy_compliance 1.0 hanya berasal dari pengecekan dua prefix token pada satu
+skenario, bukan kelulusan kebijakan atau keamanan secara keseluruhan.
+Layanan yang sedang aktif belum dibuktikan identik dengan checkout saat ini.
+
+TRACE LANJUTAN
+audit_reports/PHASE12_LIVE_TRACE_2026-10-06.json mencatat satu panggilan
+sesudah metadata ditambahkan. Provider Ollama / llama3.2:1b; evidence kosong;
+grounding reason no_evidence. Model menghasilkan klaim angka biaya tanpa
+evidence dan guard memblokirnya, mengembalikan abstention yang aman.
+Ini menunjukkan unmet answer coverage dan perlindungan grounding yang bekerja
+pada kasus ini, bukan bukti guard harus dilonggarkan. Akar kekurangan evidence
+belum dibedakan antara isi KB, retrieval, atau filter relevansi.
+
+LANGKAH BERIKUTNYA DALAM PHASE 12
+1. Review dataset dan tentukan oracle/provenance per skenario; bedakan abstention
+   yang diwajibkan dari jawaban faktual yang seharusnya tersedia.
+2. Verifikasi identitas build aktif, isi knowledge yang tersedia, dan retrieval
+   per kasus secara read-only. Jangan ingest trusted knowledge otomatis.
+3. Tambahkan benchmark faktual yang direview dan dataset konflik/injection
+   evidence, baru tetapkan ambang kualitas. Koreksi Core/provider/grounding
+   memerlukan proposal impact dan approval sesuai kontrak.
+
+STATUS / BATAS
+HARNESS IMPLEMENTED AND TESTED; Phase 12 keseluruhan masih VERIFY / Sebagian.
+Scoring groundedness/relevance leksikal bukan verifikasi semantik fakta.
+Dataset awal belum oracle faktual lengkap dan belum korpus injection evidence,
+conflicting evidence atau benchmark load. Tool/policy/cost tidak diinferensikan
+dari response V1. Dataset harus diperluas dengan fakta dan provenance yang
+direview sebelum menetapkan ambang kelulusan kualitas.
+Tidak ada full-suite pytest lokal yang diklaim PASS pada sesi ini.
+
+GAP LAIN (TIDAK DIIMPLEMENTASIKAN PADA PHASE INI)
+Mengacu audit_reports/PHASE_GAP_AUDIT_2026-10-05.txt, perlu verifikasi ulang:
+memory governance/integrasi runtime; transport MCP nyata; UI feedback/approval;
+discovery sumber terkontrol; observability; load test; staging release/rollback.
+Ada perubahan Hermes/V2 yang telah ada sebelum sesi ini; tidak ditimpa.
+Snapshot status Git awal: app/api/v2_routes.py, app/hermes/agent.py,
+app/v2/orchestrator.py telah berubah dan adapter/scripts/context tests untracked.
+
+ROLLBACK
+Kembalikan hanya perubahan sesi ini pada app/evaluation/evaluator.py,
+scripts/run_eval.py, docs/v2/ROADMAP_STATUS.md serta file dataset/test baru.
+Pertahankan laporan sebagai evidence dan perubahan Hermes/V2 yang sudah ada.
+Tidak ada migrasi database atau rollback layanan yang diperlukan.
+
+GRAPH
+graphify update . selesai: 3989 nodes, 7910 edges, 277 communities.
+Update AST saja. Nama sebagian community disesuaikan otomatis oleh Graphify;
+update semantik dokumen tidak dijalankan.

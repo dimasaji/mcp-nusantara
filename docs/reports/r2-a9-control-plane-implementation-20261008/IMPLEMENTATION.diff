@@ -1,0 +1,676 @@
+--- before/app/api/control_plane.py
++++ after/app/api/control_plane.py
+@@ -1,6 +1,8 @@
+-"""Local-only, GET-only Control Plane projections on the existing FastAPI app."""
++"""Local Control Plane reads and ATTESTATION-only untrusted PENDING intentions."""
+ from urllib.parse import urlsplit
++import json
+ from fastapi import APIRouter, HTTPException, Request
++from app.approval.runtime_authorization import AuthorizationError, SCOPE
+ from app.core.control_plane_projection import project
+ 
+ router = APIRouter(prefix='/v1/control-plane', tags=['engineering-control-plane'])
+@@ -20,3 +22,43 @@
+             raise HTTPException(503, 'ATTESTATION_AUTHORIZATION_UNAVAILABLE')
+         return owner.evidence()  # Never execute legacy DB/WAL/SHM digest projection.
+     return project()
++
++
++@router.post('/intention')
++async def intention(request: Request):
++    """Local browser intention only; never an operator/authentication bridge."""
++    if getattr(request.app.state, 'runtime_profile', None) != 'ATTESTATION':
++        raise HTTPException(404, 'ATTESTATION_ONLY')
++    if (not request.client or request.client.host not in {'127.0.0.1', '::1'}
++            or request.headers.get('host') != '127.0.0.1:8000'
++            or request.headers.get('origin') not in {'http://127.0.0.1:5173', 'http://127.0.0.1:8000'}
++            or request.headers.get('content-type') != 'application/json'):
++        raise HTTPException(403, 'BROWSER_BOUNDARY_REJECTED')
++    raw = bytearray()
++    async for chunk in request.stream():
++        raw.extend(chunk)
++        if len(raw) > 512:
++            raise HTTPException(413, 'BOUNDED_INTENTION_REQUIRED')
++    try:
++        def unique_fields(pairs):
++            result = {}
++            for key, value in pairs:
++                if key in result:
++                    raise ValueError('duplicate')
++                result[key] = value
++            return result
++        body = json.loads(raw, object_pairs_hook=unique_fields)
++        if (not isinstance(body, dict) or set(body) != {'scope', 'evidence_version'}
++                or body['scope'] != SCOPE or not isinstance(body['evidence_version'], str)
++                or len(body['evidence_version']) != 64
++                or any(c not in '0123456789abcdef' for c in body['evidence_version'])):
++            raise ValueError('invalid')
++    except (ValueError, UnicodeError):
++        raise HTTPException(422, 'BOUNDED_INTENTION_REQUIRED') from None
++    owner = getattr(request.app.state, 'runtime_authorization', None)
++    if owner is None:
++        raise HTTPException(503, 'ATTESTATION_AUTHORIZATION_UNAVAILABLE')
++    try:
++        return owner.browser_intention(**body)
++    except AuthorizationError:
++        raise HTTPException(409, 'INTENTION_REJECTED_NO_AUTHORITY_GRANTED') from None
+--- before/app/approval/runtime_authorization.py
++++ after/app/approval/runtime_authorization.py
+@@ -93,6 +93,7 @@
+         self._isolated_transport = isolated_transport
+         self._lock = threading.RLock()
+         self._reviews = {}
++        self._browser_reviews = {}  # One bounded intention per exact evidence context.
+         self._proofs = set()
+         self._permit = None
+         self._armed_review = None
+@@ -133,6 +134,7 @@
+             material = self._material()
+             encoded = canonical(material)
+             return {'evidence_id': 'r2-a9-auth-process', 'evidence_type': 'SCOPED_IN_PROCESS',
++                'projection_contract': 'ATTESTATION_FOUNDATION_V1',
+                 'source': 'ATTESTATION authorization foundation', 'scope': SCOPE,
+                 'created_at': datetime.now(timezone.utc).isoformat(), 'status': 'NOT_VERIFIED',
+                 'evidence_version': hashlib.sha256(encoded.encode()).hexdigest(),
+@@ -142,13 +144,40 @@
+                             for r in self._reviews.values()],
+                 'provider_receipt': asdict(self._controller.receipt) if self._controller.receipt else None}
+ 
+-    def intention(self, *, scope=SCOPE, ttl=120):
++    def browser_intention(self, *, scope, evidence_version):
++        """Untrusted browser context: validate atomically, then PENDING only.
++
++        Duplicate submission cannot add queue/audit entries or extend expiry.
++        Expired/terminal context cannot be renewed from the browser.
++        """
++        with self._lock:
++            material = canonical(self._material())
++            version = hashlib.sha256(material.encode()).hexdigest()
++            if self._poisoned or scope != SCOPE or evidence_version != version:
++                raise AuthorizationError('BROWSER_CONTEXT_REJECTED')
++            existing = self._browser_reviews.get(version)
++            if existing is not None:
++                review = self._reviews[existing]
++                if (review.state != 'PENDING' or time.monotonic() >= review.deadline
++                        or datetime.now(timezone.utc) >= datetime.fromisoformat(review.binding.expires_at)):
++                    raise AuthorizationError('BROWSER_CONTEXT_CLOSED')
++                return {'review_id': review.review_id, 'scope': review.binding.scope,
++                    'evidence_version': version, 'state': 'PENDING', 'expires_at': review.binding.expires_at}
++            if len(self._browser_reviews) >= 32 or len(self._reviews) >= 32:
++                raise AuthorizationError('BROWSER_CAPACITY')
++            result = self.intention(scope=scope, expected_version=version)  # Still under lock.
++            self._browser_reviews[version] = result['review_id']
++            return result
++
++    def intention(self, *, scope=SCOPE, ttl=120, expected_version=None):
+         """Server-generated pending intention; never approval or arming."""
+         with self._lock:
+             if (self._poisoned or scope != SCOPE or isinstance(ttl, bool)
+                     or not 0 < ttl <= 120 or len(self._reviews) >= 32):
+                 raise AuthorizationError('INTENTION_REJECTED')
+             material = canonical(self._material())
++            if expected_version is not None and hashlib.sha256(material.encode()).hexdigest() != expected_version:
++                raise AuthorizationError('STALE_BROWSER_CONTEXT')
+             data = json.loads(material)
+             binding = Binding(scope, hashlib.sha256(material.encode()).hexdigest(), material,
+                 data['pid'], data['process_start'], data['runtime_instance'], data['source_snapshot'],
+@@ -303,13 +332,14 @@
+         return channel.serve_authenticated_once(handle)
+ 
+     def code_functions(self):
+-        from app.api.control_plane import snapshot
++        from app.api.control_plane import snapshot, intention
+         return (canonical, safe_string, audit_projection, RuntimeAuthorization.__init__,
+             RuntimeAuthorization._record, RuntimeAuthorization._material, RuntimeAuthorization.evidence,
++            RuntimeAuthorization.browser_intention,
+             RuntimeAuthorization.intention, RuntimeAuthorization._poison, RuntimeAuthorization._peer,
+             RuntimeAuthorization._actor_reference, RuntimeAuthorization._validate,
+             RuntimeAuthorization.handle_verified, RuntimeAuthorization.code_functions,
+-            RuntimeAuthorization._failure_event, RuntimeAuthorization.serve_operator_once, snapshot,
++            RuntimeAuthorization._failure_event, RuntimeAuthorization.serve_operator_once, snapshot, intention,
+             install_authorization_foundation, AuditTrail.__init__, AuditTrail._digest,
+             AuditTrail.record, AuditTrail.entries, AuditTrail.verify, ApprovalQueue.__init__,
+             ApprovalQueue._persist, ApprovalQueue.submit, ApprovalQueue.get, ApprovalQueue.decide,
+--- before/control-plane/src/schemas.ts
++++ after/control-plane/src/schemas.ts
+@@ -12,3 +12,33 @@
+ export const GovernanceStateSchema=z.object({read_only:z.literal(true),commit:status,push:status,acceptance:z.object({R2:status,R3:status}),scope:z.string(),rollback:z.string(),r3_integrity:z.record(z.string(),z.unknown()),evidence:refs});
+ export const SystemHealthSchema=z.object({schema_version:z.literal(1),timestamp:z.string(),status,system:z.string(),current_phase:z.string(),phases:z.array(PhaseStateSchema),contract:ContractStateSchema,gates:z.array(GateStateSchema),evidence:z.array(EvidenceReferenceSchema),verification:z.array(VerificationResultSchema),runtime:RuntimeIdentitySchema,rag:z.object({status,profile:RAGProfileSchema.nullable(),evidence:refs}),worktree:WorktreeStateSchema,protected_assets:z.array(z.object({path:z.string(),sha256:z.string().optional(),status,evidence:refs})),warnings:z.array(z.string()),blockers:z.array(z.string()),governance:GovernanceStateSchema});
+ export type PhaseState=z.infer<typeof PhaseStateSchema>; export type ContractState=z.infer<typeof ContractStateSchema>; export type GateState=z.infer<typeof GateStateSchema>; export type EvidenceReference=z.infer<typeof EvidenceReferenceSchema>; export type RuntimeIdentity=z.infer<typeof RuntimeIdentitySchema>; export type RAGProfile=z.infer<typeof RAGProfileSchema>; export type VerificationResult=z.infer<typeof VerificationResultSchema>; export type WorktreeState=z.infer<typeof WorktreeStateSchema>; export type GovernanceState=z.infer<typeof GovernanceStateSchema>; export type SystemHealth=z.infer<typeof SystemHealthSchema>;
++
++const digest=z.string().regex(/^[a-f0-9]{64}$/);
++export const AttestationSchema=z.object({
++  projection_contract:z.literal('ATTESTATION_FOUNDATION_V1'),
++  evidence_id:z.literal('r2-a9-auth-process'),evidence_type:z.literal('SCOPED_IN_PROCESS'),
++  source:z.string(),scope:z.literal('R2-A8:ATTESTATION:ONE_GENERATION'),created_at:z.string().datetime({offset:true}),
++  status:z.literal('NOT_VERIFIED'),evidence_version:digest,live_actions:z.literal('LOCKED'),
++  operator_policy:z.enum(['NOT_PROVISIONED','EXPLICIT_LOCAL_POLICY']),
++  binding:z.object({scope:z.literal('R2-A8:ATTESTATION:ONE_GENERATION'),target:z.literal('127.0.0.1:8000'),
++    pid:z.number().int().positive(),process_start:z.number().positive(),runtime_instance:z.string().min(1),
++    source_snapshot:z.string().min(1),scoped_loaded_code:z.string().min(1),configuration_digest:digest,
++    endpoint:z.object({origin:z.string(),connection_origin:z.string()}).strict(),profile:z.literal('ATTESTATION'),
++    active_process_build:z.literal('NOT_DIRECTLY_VERIFIED'),runtime_identity:z.literal('NOT_VERIFIED')}).strict(),
++  reviews:z.array(z.object({review_id:z.string(),state:z.enum(['PENDING','APPROVED','REJECTED','HOLD','ARMED','EXECUTING','COMPLETED','ABORTED']),expires_at:z.string().datetime({offset:true})}).strict()).max(32),
++  provider_receipt:z.object({request_id:z.string(),invocation_id:z.string().nullable(),runtime_instance_id:z.string(),pid:z.number(),
++    source_snapshot:z.string(),scoped_loaded_code:z.string(),provider_id:z.string(),
++    provider_endpoint:z.object({origin:z.string(),connection_origin:z.string()}).strict(),actual_model:z.string().nullable(),
++    started_at:z.string(),completed_at:z.string(),response_observed:z.boolean(),application_response_sent:z.boolean(),
++    dispatch_count:z.number(),outcome:z.string(),external_client_observed:z.boolean(),full_application_build_verified:z.literal(false)}).strict().nullable(),
++}).strict();
++export type Attestation=z.infer<typeof AttestationSchema>;
++export type Snapshot=SystemHealth|Attestation;
++export function isAttestation(value:Snapshot):value is Attestation {return 'projection_contract' in value;}
++export function parseSnapshot(value:unknown):Snapshot {
++  if(typeof value==='object'&&value!==null&&('projection_contract' in value||'evidence_type' in value))return AttestationSchema.parse(value);
++  return SystemHealthSchema.parse(value);
++}
++export const PendingIntentionSchema=z.object({review_id:z.string(),scope:z.literal('R2-A8:ATTESTATION:ONE_GENERATION'),
++  evidence_version:digest,state:z.literal('PENDING'),expires_at:z.string().datetime({offset:true})}).strict();
++export type PendingIntention=z.infer<typeof PendingIntentionSchema>;
+--- before/control-plane/src/api.ts
++++ after/control-plane/src/api.ts
+@@ -1,9 +1,17 @@
+-import {SystemHealthSchema,type SystemHealth} from './schemas';
+-export type SnapshotResult={state:SystemHealth;latencyMs:number;fetchedAt:string;source:string};
++import {parseSnapshot,PendingIntentionSchema,type Snapshot,type Attestation,type PendingIntention} from './schemas';
++export type SnapshotResult={state:Snapshot;latencyMs:number;fetchedAt:string;source:string};
+ export async function fetchSnapshot(signal?:AbortSignal):Promise<SnapshotResult>{
+   const start=performance.now();
+   const response=await fetch('/v1/control-plane/snapshot',{method:'GET',credentials:'omit',cache:'no-store',signal});
+   if(!response.ok)throw new Error(`Evidence API unavailable (${response.status}). No healthy state inferred.`);
+-  const state=SystemHealthSchema.parse(await response.json());
++  const state=parseSnapshot(await response.json());
+   return {state,latencyMs:Math.round(performance.now()-start),fetchedAt:new Date().toISOString(),source:'/v1/control-plane/snapshot'};
+ }
++export async function submitIntention(state:Attestation):Promise<PendingIntention>{
++  const response=await fetch('/v1/control-plane/intention',{method:'POST',credentials:'omit',cache:'no-store',
++    headers:{'Content-Type':'application/json'},body:JSON.stringify({scope:state.scope,evidence_version:state.evidence_version})});
++  if(!response.ok)throw new Error(`Intention rejected (${response.status}). No authority granted. Do not retry automatically.`);
++  const result=PendingIntentionSchema.parse(await response.json());
++  if(result.scope!==state.scope||result.evidence_version!==state.evidence_version)throw new Error('Intention context mismatch. No authority inferred.');
++  return result;
++}
+--- before/control-plane/src/acceptance.ts
++++ after/control-plane/src/acceptance.ts
+@@ -1,4 +1,19 @@
+-import type {SystemHealth} from './schemas';
++import type {SystemHealth,Attestation} from './schemas';
++
++export function attestationKey(s:Attestation):string {
++  // Binding version is not a receipt revision. Include material receipt/review changes.
++  return JSON.stringify({version:s.evidence_version,binding:s.binding,policy:s.operator_policy,
++    live:s.live_actions,reviews:s.reviews,receipt:s.provider_receipt});
++}
++export function attestationWorkflow(session:Session){
++  const system=session.systemReviewed, evidence=system&&session.evidenceReviewed;
++  const tested=evidence&&['runtime','separate','boundary'].every(id=>['PASS','FAIL','BLOCKED'].includes(session.results[id]));
++  const reviewed=tested&&session.reviewReviewed;
++  const available={System:true,Evidence:system,Test:evidence,Review:tested,Decision:reviewed};
++  const complete={System:system,Evidence:evidence,Test:tested,Review:reviewed,Decision:false};
++  const blockers=Object.fromEntries(stages.map(s=>[s,available[s]?[]:['Acknowledge the preceding evidence, observations and review.']])) as Record<Stage,string[]>;
++  return {available,complete,blockers};
++}
+ 
+ export const stages = ['System', 'Evidence', 'Test', 'Review', 'Decision'] as const;
+ export type Stage = typeof stages[number];
+--- before/control-plane/src/human.tsx
++++ after/control-plane/src/human.tsx
+@@ -1,15 +1,16 @@
+-import {createContext, useContext, useEffect, useState, type ReactNode, type Dispatch, type SetStateAction} from 'react';
++import {createContext, useContext, useEffect, useRef, useState, type ReactNode, type Dispatch, type SetStateAction} from 'react';
+ import {useQuery} from '@tanstack/react-query';
+ import {Link, useNavigate, useRouterState} from '@tanstack/react-router';
+-import {fetchSnapshot} from './api';
+-import type {SystemHealth} from './schemas';
++import {fetchSnapshot,submitIntention} from './api';
++import {isAttestation,type SystemHealth,type Snapshot,type Attestation,type PendingIntention} from './schemas';
+ import {canApprove, counts, emptySession, evidenceKey, gateEvidenceReady, humanCases, limitations, stagePath, stages, workflow,
+-  type Decision, type HumanResult, type Session, type Stage} from './acceptance';
++  attestationKey,attestationWorkflow,type Decision, type HumanResult, type Session, type Stage} from './acceptance';
+ 
+-const SessionContext=createContext<{session:Session;setSession:Dispatch<SetStateAction<Session>>}|null>(null);
++const SessionContext=createContext<{session:Session;setSession:Dispatch<SetStateAction<Session>>;attestation:boolean;setAttestation:Dispatch<SetStateAction<boolean>>}|null>(null);
+ export function HumanProvider({children}:{children:ReactNode}) {
+   const [session,setSession]=useState(emptySession);
+-  return <SessionContext.Provider value={{session,setSession}}>{children}</SessionContext.Provider>;
++  const [attestation,setAttestation]=useState(false);
++  return <SessionContext.Provider value={{session,setSession,attestation,setAttestation}}>{children}</SessionContext.Provider>;
+ }
+ function useSession(){const value=useContext(SessionContext);if(!value)throw new Error('HumanProvider required');return value;}
+ const symbol=(s:string)=>s==='PASS'||s==='CLOSED_PASS'||s==='UNCHANGED'||s==='APPROVE'||s==='AVAILABLE'?'✓':s==='FAIL'||s==='REJECT'?'✕':s==='BLOCKED'||s==='LOCKED'?'!':s==='UNKNOWN'?'?':s==='NOT_VERIFIED'||s==='NOT TESTED'?'○':s==='PENDING'||s==='HOLD'?'◷':'△';
+@@ -17,16 +18,16 @@
+   const label=status.replaceAll('_',' ');
+   return <span className={`human-status ${status==='PASS'||status==='UNCHANGED'||status==='AVAILABLE'||status==='APPROVE'?'positive':status==='FAIL'||status==='REJECT'?'negative':'caution'}`}>{symbol(status)} {label}</span>;
+ }
+-function stepStatus(s:Stage,active:Stage|undefined,session:Session) {
+-  const flow=workflow(session);
++function stepStatus(s:Stage,active:Stage|undefined,session:Session,attestation=false) {
++  const flow=attestation?attestationWorkflow(session):workflow(session);
+   return !flow.available[s]?'Locked':s===active?'Current':flow.complete[s]?'Completed':'Available';
+ }
+ export function HumanNavigation() {
+-  const {session}=useSession();const pathname=useRouterState({select:s=>s.location.pathname});
++  const {session,attestation}=useSession();const pathname=useRouterState({select:s=>s.location.pathname});
+   const active=stages.find(s=>stagePath[s]===pathname)||(pathname==='/system'||pathname==='/'?'System':undefined);
+-  return <nav aria-label="Acceptance steps">{stages.map((s,i)=>{const status=stepStatus(s,active,session);const label=s==='Test'?'Human Test':s;
++  return <nav aria-label="Acceptance steps">{stages.map((s,i)=>{const status=stepStatus(s,active,session,attestation);const label=s==='Test'?'Human Test':s;
+     const content=<><span className="step-number" aria-hidden="true">{String(i+1).padStart(2,'0')}</span><span>{label}<small className="step-state">{status}</small></span></>;
+-    return status==='Locked'?<button key={s} disabled title={`Complete preceding stages before ${label}. ${workflow(session).blockers[s].join(' ')}`} aria-label={`${label} Locked`}>{content}</button>:<Link key={s} aria-label={label} to={stagePath[s] as '/overview'} activeProps={{className:'active'}}>{content}</Link>;
++    return status==='Locked'?<button key={s} disabled title={`Complete preceding stages before ${label}. ${(attestation?attestationWorkflow(session):workflow(session)).blockers[s].join(' ')}`} aria-label={`${label} Locked`}>{content}</button>:<Link key={s} aria-label={label} to={stagePath[s] as '/overview'} activeProps={{className:'active'}}>{content}</Link>;
+   })}</nav>;
+ }
+ export function HumanProgress({stage,session}:{stage:Stage;session:Session}) {
+@@ -46,7 +47,49 @@
+     {q.isPending?<section className="panel" role="status"><h2>Reading evidence</h2><p>Please wait. No test or decision has been inferred.</p></section>:q.isError?<section className="panel error" role="alert"><h2>Evidence unavailable</h2><p>We cannot currently verify this information. System state is UNKNOWN. No healthy state has been inferred.</p><p>Check the evidence source, then retry. Human approval is unavailable while evidence cannot be read.</p><button onClick={()=>void q.refetch()}>Retry</button><details><summary>Technical Details</summary><code>{q.error.message}</code></details></section>:<><p className="snapshot-meta">Evidence read {new Date(q.data.fetchedAt).toLocaleTimeString()} · API response {q.data.latencyMs} ms</p><HumanContent stage={stage} state={q.data.state} busy={q.isFetching} inspectRuntime={()=>void navigate({to:'/runtime'})} navigate={s=>void navigate({to:stagePath[s] as '/overview'})}/></>}
+     <footer>Human review session · engineering evidence remains read-only. <span>Session results clear when this page is reloaded.</span></footer></>;
+ }
+-export function HumanContent({stage,state,navigate,inspectRuntime,busy=false}:{stage:Stage;state:SystemHealth;navigate:(s:Stage)=>void;inspectRuntime:()=>void;busy?:boolean}) {
++export function HumanContent(props:{stage:Stage;state:Snapshot;navigate:(s:Stage)=>void;inspectRuntime:()=>void;busy?:boolean}) {
++  const {setAttestation}=useSession();
++  const attestation=isAttestation(props.state);
++  useEffect(()=>setAttestation(attestation),[attestation,setAttestation]);
++  return isAttestation(props.state)?<AttestationContent {...props} state={props.state}/>:<NormalHumanContent {...props} state={props.state}/>;
++}
++export function AttestationIdentity({state}:{state:Attestation}){
++  return <section className="panel"><h2>ATTESTATION evidence</h2><dl>
++    <dt>Evidence type</dt><dd>{state.evidence_type}</dd><dt>Evidence version</dt><dd>{state.evidence_version}</dd>
++    <dt>Identity scope</dt><dd>SCOPED_LOADED_CODE — not FULL_APPLICATION_BUILD</dd>
++    <dt>Verification state</dt><dd>{state.status}</dd><dt>Runtime identity</dt><dd>{state.binding.runtime_identity}</dd>
++    <dt>Authorization state</dt><dd>Live actions: {state.live_actions}; operator: {state.operator_policy}</dd>
++    <dt>Target</dt><dd>{state.binding.target}</dd><dt>Process PID / start</dt><dd>{state.binding.pid} / {String(state.binding.process_start)} (Windows FILETIME numeric projection; browser precision may be limited)</dd>
++    <dt>Runtime instance</dt><dd>{state.binding.runtime_instance}</dd><dt>SOURCE_SNAPSHOT</dt><dd>{state.binding.source_snapshot}</dd>
++    <dt>SCOPED_LOADED_CODE</dt><dd>{state.binding.scoped_loaded_code}</dd><dt>ACTIVE_PROCESS_BUILD</dt><dd>{state.binding.active_process_build}</dd>
++    <dt>Source</dt><dd>{state.source}</dd><dt>Captured</dt><dd>{state.created_at}</dd>
++  </dl><p>SOURCE_SNAPSHOT != ACTIVE_PROCESS_BUILD. No provider health or live success is inferred.</p></section>;
++}
++function AttestationContent({stage,state,navigate,busy=false}:{stage:Stage;state:Attestation;navigate:(s:Stage)=>void;busy?:boolean}){
++  const {session,setSession}=useSession(),key=attestationKey(state);
++  const activeKey=useRef(key);activeKey.current=key;
++  const current=session.fingerprint===key?session:emptySession(key);
++  const [pending,setPending]=useState<PendingIntention|null>(null),[sending,setSending]=useState(false),[error,setError]=useState('');
++  const [submittedKey,setSubmittedKey]=useState<string|null>(null);
++  useEffect(()=>{if(session.fingerprint!==key){setSession(emptySession(key));setPending(null);setError('');}},[key,session.fingerprint,setSession]);
++  const flow=attestationWorkflow(current);
++  const update=(change:Partial<Session>)=>setSession({...current,...change,reviewReviewed:'results' in change?false:change.reviewReviewed??current.reviewReviewed});
++  const submit=async()=>{
++    if(sending||busy||submittedKey===key||!flow.available.Decision)return;
++    setSubmittedKey(key);setSending(true);setError('');
++    try{const result=await submitIntention(state);if(activeKey.current===key)setPending(result);}catch(e){if(activeKey.current===key)setError(e instanceof Error?e.message:'Intention unavailable. No authority granted.');}finally{setSending(false);}
++  };
++  if(!flow.available[stage])return <section className="panel" aria-label="Locked stage"><h2>{stage} — Locked</h2><p>Review the current ATTESTATION evidence and preceding observations first.</p><button onClick={()=>navigate('System')}>Go to System</button></section>;
++  return <><AttestationIdentity state={state}/><p>Automated Test Evidence ≠ Human Observation ≠ Authenticated Server Decision.</p>
++    <p>R2-A8: BLOCKED / NOT_VERIFIED. Runtime Identity: NOT_VERIFIED. ARM and EXECUTE are NOT_AUTHORIZED.</p>
++    {stage==='System'&&<section className="panel"><h2>System limitations</h2><p>This scoped projection does not prove full build identity. Native confirmation is unavailable in this integration.</p><label><input type="checkbox" checked={current.systemReviewed} onChange={e=>update({systemReviewed:e.target.checked,evidenceReviewed:false,reviewReviewed:false})}/> I have read the ATTESTATION scope and limitations.</label><button disabled={!current.systemReviewed||busy} onClick={()=>navigate('Evidence')}>Continue to Evidence</button></section>}
++    {stage==='Evidence'&&<section className="panel"><h2>Evidence boundary</h2><p>Automated results are not attached to this process snapshot; prior isolated PASS_SCOPED is not live evidence.</p><p>Provider receipt: {state.provider_receipt?'Observed scoped receipt; no live verification inferred.':'Unavailable — NOT_VERIFIED'}</p><label><input type="checkbox" checked={current.evidenceReviewed} onChange={e=>update({evidenceReviewed:e.target.checked,reviewReviewed:false})}/> I inspected the exact evidence version and identity scope.</label><button disabled={!current.evidenceReviewed||busy} onClick={()=>navigate('Test')}>Continue to Human Test</button></section>}
++    {stage==='Test'&&<section className="panel"><h2>Human observations only</h2>{humanCases.filter(c=>['runtime','separate','boundary'].includes(c.id)).map(c=><div key={c.id}><h3>{c.title}</h3><p>{c.expected}</p><p>{current.results[c.id]}</p><div role="group" aria-label={`Observation ${c.id}`}>{(['PASS','FAIL','BLOCKED'] as HumanResult[]).map(result=><button key={result} disabled={busy} onClick={()=>update({results:{...current.results,[c.id]:result}})}>{result}</button>)}</div></div>)}<button disabled={!flow.available.Review||busy} onClick={()=>navigate('Review')}>Continue to Review</button></section>}
++    {stage==='Review'&&<section className="panel"><h2>Review scoped evidence</h2><p>Human observations do not change server decisions or identity status. Failed or blocked observations remain visible.</p>{['runtime','separate','boundary'].map(id=><p key={id}>{id}: {current.results[id]}</p>)}<label><input type="checkbox" checked={current.reviewReviewed} onChange={e=>update({reviewReviewed:e.target.checked})}/> I reviewed these observations and the NOT_VERIFIED limitations.</label><button disabled={!current.reviewReviewed||busy} onClick={()=>navigate('Decision')}>Continue to Decision</button></section>}
++    {stage==='Decision'&&<section className="panel"><h2>Bounded browser intention</h2><p>This action creates PENDING only. It cannot APPROVE, authenticate an operator, ARM, EXECUTE or issue a permit.</p><button disabled={sending||busy||submittedKey===key} onClick={()=>void submit()}>Create PENDING intention</button>{error&&<p role="alert">{error}</p>}{pending&&<div role="status"><p>{pending.state} — untrusted intention; no authorization granted.</p><p>Review {pending.review_id}; evidence {pending.evidence_version}; scope {pending.scope}; server expiry {pending.expires_at}</p></div>}<h3>Server review states</h3>{state.reviews.map(r=><p key={r.review_id}>{r.review_id}: {r.state}; expires {r.expires_at}</p>)}<p>Native confirmation: not activated. No live IPC bridge is implemented.</p></section>}
++  </>;
++}
++function NormalHumanContent({stage,state,navigate,inspectRuntime,busy=false}:{stage:Stage;state:SystemHealth;navigate:(s:Stage)=>void;inspectRuntime:()=>void;busy?:boolean}) {
+   const {session,setSession}=useSession();const key=evidenceKey(state);
+   const [changed,setChanged]=useState(false);
+   useEffect(()=>{
+--- before/control-plane/src/ui.tsx
++++ after/control-plane/src/ui.tsx
+@@ -2,8 +2,8 @@
+ import {lazy,Suspense} from 'react';
+ import {Link,Outlet} from '@tanstack/react-router';
+ import {fetchSnapshot} from './api';
+-import type {SystemHealth} from './schemas';
+-import {HumanProvider,HumanNavigation} from './human';
++import {isAttestation,type SystemHealth,type Snapshot} from './schemas';
++import {HumanProvider,HumanNavigation,AttestationIdentity} from './human';
+ const EngineeringGraph=lazy(()=>import('./graph').then(module=>({default:module.EngineeringGraph})));
+ declare const __CPLANE_BUILD__:{version:string;gitCommit:string;timestamp:string;environment:string;sourceId:string};
+ export const navigation=['Overview','Roadmap','Architecture','Engineering','Governance','Verification','Runtime','Knowledge'] as const;
+@@ -12,8 +12,9 @@
+ export function Badge({status}:{status:string}){const tone=status==='PASS'||status==='CLOSED_PASS'||status==='UNCHANGED'?'good':status.includes('FAIL')||status==='ERROR'?'bad':'neutral';return <span className={`badge ${tone}`}>{status}</span>}
+ export function Shell(){return <HumanProvider><div className="shell"><aside><Link className="brand" to="/overview"><span className="mark">N</span><span>NUSANTARA<small>HUMAN ACCEPTANCE CONSOLE</small></span></Link><div className="mode">INSPECT · TEST · REVIEW · DECIDE</div><HumanNavigation/><details className="engineering-nav"><summary>Engineering views</summary><nav aria-label="Engineering views">{navigation.map(name=><Link key={name} to={(name==='Overview'?'/engineering-overview':`/${name.toLowerCase()}`) as '/overview'} activeProps={{className:'active'}}><span className="navdot"/>{name==='Overview'?'Engineering overview':name}</Link>)}</nav></details><div className="sidebar-foot">Read-only engineering evidence<br/>Human decisions remain yours<details><summary>Frontend build identity</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details></div></aside><main><Outlet/></main></div></HumanProvider>}
+ export function Evidence({state,ids}:{state:SystemHealth;ids:string[]}){return <details className="trace"><summary>Trace to evidence · {ids.length}</summary>{ids.map(id=>{const e=state.evidence.find(x=>x.id===id);return <div key={id}><strong>{id}</strong><Badge status={e?.status??'NOT_VERIFIED'}/><code>{e?.reference??'Source unavailable'}</code><small>SHA-256 {e?.sha256??'NOT_VERIFIED'}</small></div>})}</details>}
+-export function Page({name}:{name:PageName}){const q=useQuery({queryKey:snapshotKey,queryFn:({signal})=>fetchSnapshot(signal)});return <><header><div><div className="eyebrow">NUSANTARA CORE + HERMES / {name.toUpperCase()}</div><h1>{name}</h1></div><button onClick={()=>void q.refetch()} disabled={q.isFetching}>{q.isFetching?'Refreshing…':'↻ Refresh evidence'}</button></header>{q.isPending?<section className="panel" role="status">LOADING · Reading engineering evidence…</section>:q.isError?<section className="panel error" role="alert"><h2>ERROR · Evidence unavailable</h2><p>{q.error.message}</p><p>System health is UNKNOWN. Cached state is not promoted to PASS.</p></section>:<><div className="diagnostics"><Badge status={q.data.state.status}/><span>API {q.data.latencyMs} ms</span><span>Last refresh {new Date(q.data.fetchedAt).toLocaleTimeString()}</span><span>Source {q.data.source}</span><span>Evidence captured {q.data.state.timestamp}</span></div><Content name={name} state={q.data.state}/></>}<footer>Projection of engineering evidence · no mutation actions <details><summary>Frontend build identity</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details></footer></>}
+-export function Content({name,state}:{name:PageName;state:SystemHealth}){
++export function Page({name}:{name:PageName}){const q=useQuery({queryKey:snapshotKey,queryFn:({signal})=>fetchSnapshot(signal)});return <><header><div><div className="eyebrow">NUSANTARA CORE + HERMES / {name.toUpperCase()}</div><h1>{name}</h1></div><button onClick={()=>void q.refetch()} disabled={q.isFetching}>{q.isFetching?'Refreshing…':'↻ Refresh evidence'}</button></header>{q.isPending?<section className="panel" role="status">LOADING · Reading engineering evidence…</section>:q.isError?<section className="panel error" role="alert"><h2>ERROR · Evidence unavailable</h2><p>{q.error.message}</p><p>System health is UNKNOWN. Cached state is not promoted to PASS.</p></section>:<><div className="diagnostics"><Badge status={q.data.state.status}/><span>API {q.data.latencyMs} ms</span><span>Last refresh {new Date(q.data.fetchedAt).toLocaleTimeString()}</span><span>Source {q.data.source}</span><span>Evidence captured {isAttestation(q.data.state)?q.data.state.created_at:q.data.state.timestamp}</span></div><Content name={name} state={q.data.state}/></>}<footer>Projection of engineering evidence · no mutation actions <details><summary>Frontend build identity</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details></footer></>}
++export function Content({name,state}:{name:PageName;state:Snapshot}){
++  if(isAttestation(state))return <><AttestationIdentity state={state}/><p>{name}: scoped ATTESTATION evidence only. NORMAL historical gates, RAG and protected-file hashes are not included.</p></>;
+   const current=state.phases.find(p=>p.id===state.current_phase);
+   if(name==='Overview')return <><section className="hero"><div><div className="eyebrow">CURRENT ENGINEERING PHASE</div><h2>{current?.id??'UNKNOWN'} <span>— {current?.name??'NOT_VERIFIED'}</span></h2><Badge status={current?.status??'NOT_VERIFIED'}/><Evidence state={state} ids={current?.evidence??[]}/></div><div className="hero-side"><span>GOVERNING UI CONTRACT</span><strong>{state.contract.id}</strong><Badge status={state.contract.status}/><Evidence state={state} ids={state.contract.evidence}/></div></section><div className="phase-grid">{state.phases.map(p=><section className="panel" key={p.id}><span className="eyebrow">{p.kind}</span><h3>{p.id}</h3><p>{p.name}</p><Badge status={p.status}/><Evidence state={state} ids={p.evidence}/></section>)}</div><div className="grid-two"><section className="panel"><h2>Authorization boundary</h2>{state.blockers.map(b=><p key={b}>{b}</p>)}<p>Commit {state.governance.commit} · Push {state.governance.push}</p></section><section className="panel"><h2>Worktree</h2><div className="metrics"><Metric label="Tracked changes" value={state.worktree.tracked??'UNKNOWN'}/><Metric label="Untracked entries" value={state.worktree.untracked??'UNKNOWN'}/><Metric label="Staged changes" value={state.worktree.staged??'UNKNOWN'}/></div><p>Ownership remains UNKNOWN unless supported by evidence.</p></section></div><GateTable state={state}/><Warnings state={state}/></>;
+   if(name==='Roadmap'||name==='Architecture')return <><section className="panel"><h2>{name==='Roadmap'?'Phase dependencies':'Architecture & control layer'}</h2><p>Declared source structure; this graph does not attest a live runtime.</p><Suspense fallback={<p role="status">LOADING · Scoped graph…</p>}><EngineeringGraph state={state} architecture={name==='Architecture'}/></Suspense></section><Evidence state={state} ids={['r1','r2','r3','cplane-contract']}/></>;
+--- before/tests/test_control_plane_attestation_binding.py
++++ after/tests/test_control_plane_attestation_binding.py
+@@ -0,0 +1,230 @@
++"""PENDING-only integration: in-process ASGI, no socket/provider/IPC activation."""
++import asyncio
++from concurrent.futures import ThreadPoolExecutor
++from dataclasses import replace
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++
++from fastapi.testclient import TestClient
++import pytest
++
++from app.api.control_plane import router
++from app.approval.runtime_authorization import AuthorizationError, SCOPE
++from test_runtime_authorization import fixture, command
++
++
++@pytest.fixture
++def isolated(tmp_path, monkeypatch):
++    app, owner, controller, calls = fixture(tmp_path, live_locked=True)
++    app.include_router(router)
++    import app.api.control_plane as routes
++    monkeypatch.setattr(routes, 'project', lambda: (_ for _ in ()).throw(AssertionError('protected projection')))
++    return TestClient(app, base_url='http://127.0.0.1:8000', client=('127.0.0.1', 123)), owner, controller, calls
++
++
++def body(owner):
++    return {'scope': SCOPE, 'evidence_version': owner.evidence()['evidence_version']}
++
++
++def post(client, data, **kwargs):
++    return client.post('/v1/control-plane/intention', json=data,
++        headers={'Origin': 'http://127.0.0.1:5173'}, **kwargs)
++
++
++def test_pending_snapshot_and_duplicate_no_authority(isolated):
++    client, owner, controller, calls = isolated
++    state = client.get('/v1/control-plane/snapshot').json()
++    assert state['projection_contract'] == 'ATTESTATION_FOUNDATION_V1'
++    assert 'schema_version' not in state and 'gates' not in state
++    first = post(client, body(owner))
++    assert first.status_code == 200 and first.json()['state'] == 'PENDING'
++    audit_count = len(owner._audit.entries())
++    second = post(client, body(owner))
++    assert second.json() == first.json() and len(owner._audit.entries()) == audit_count
++    assert len(owner._reviews) == len(owner._queue._items) == 1
++    assert controller.authorization.state == 'DISARMED' and not calls and owner._permit is None
++    assert owner._policy is not None  # Isolated fixture only; not a listener or deployed policy.
++
++
++@pytest.mark.parametrize('change', [{'evidence_version': '0'*64}, {'scope': 'NORMAL'},
++    {'actor': 'operator'}, {'reviewer': 'trusted'}, {'pid': 1}, {'token': 'x'},
++    {'operation': 'ARM'}, {'operation': 'EXECUTE'}, {'model': 'x'}, {'ttl': 999}])
++def test_stale_or_asserted_fields_rejected_before_mutation(isolated, change):
++    client, owner, controller, calls = isolated
++    response = post(client, {**body(owner), **change})
++    assert response.status_code in (409, 422)
++    assert not owner._reviews and not owner._queue._items and not owner._audit.entries()
++    assert not owner._poisoned and controller.authorization.state == 'DISARMED' and not calls
++
++
++@pytest.mark.parametrize('origin', ['', 'null', 'http://localhost:5173', 'http://evil.example', 'http://127.0.0.1:5174'])
++def test_origin_rejected_before_mutation(isolated, origin):
++    client, owner, _, _ = isolated
++    response = client.post('/v1/control-plane/intention', json=body(owner), headers={'Origin': origin})
++    assert response.status_code == 403 and not owner._audit.entries()
++
++
++@pytest.mark.parametrize('raw', ['{"scope":"x","scope":"y"}', '[' , '[]', '"x"', 'x'*513])
++def test_bounded_json(isolated, raw):
++    client, owner, _, _ = isolated
++    response = client.post('/v1/control-plane/intention', content=raw,
++        headers={'Origin':'http://127.0.0.1:5173', 'Content-Type':'application/json'})
++    assert response.status_code in (413, 422) and not owner._audit.entries()
++
++
++def test_wrong_host_peer_normal_and_missing_owner(isolated):
++    client, owner, _, _ = isolated
++    response = client.post('/v1/control-plane/intention', json=body(owner), headers={
++        'Origin':'http://127.0.0.1:5173','Host':'127.0.0.1:5173'})
++    assert response.status_code == 403
++    remote = TestClient(client.app, base_url='http://127.0.0.1:8000', client=('192.0.2.1', 1))
++    assert post(remote, body(owner)).status_code == 403
++    client.app.state.runtime_profile = 'NORMAL'
++    assert post(client, body(owner)).status_code == 404
++    client.app.state.runtime_profile = 'ATTESTATION'
++    del client.app.state.runtime_authorization
++    assert post(client, body(owner)).status_code == 503
++    assert not owner._audit.entries()
++
++
++def test_concurrency_expiry_capacity_and_detached_projection(isolated):
++    _, owner, controller, calls = isolated
++    data = body(owner)
++    with ThreadPoolExecutor(max_workers=8) as pool:
++        results = list(pool.map(lambda _: owner.browser_intention(**data), range(20)))
++    assert all(r == results[0] for r in results) and len(owner._reviews) == 1
++    review = owner._reviews[results[0]['review_id']]
++    owner._reviews[review.review_id] = replace(review, deadline=0)
++    count = len(owner._audit.entries())
++    with pytest.raises(AuthorizationError):
++        owner.browser_intention(**data)
++    assert len(owner._audit.entries()) == count and not owner._poisoned
++    snapshot = owner.evidence()
++    snapshot['reviews'][0]['state'] = 'APPROVED'
++    assert owner.evidence()['reviews'][0]['state'] == 'PENDING'
++    assert controller.authorization.state == 'DISARMED' and not calls
++
++
++@pytest.mark.parametrize('operation', ['ARM', 'EXECUTE'])
++def test_browser_cannot_reach_arm_execute(isolated, operation):
++    client, owner, controller, calls = isolated
++    review = post(client, body(owner)).json()
++    with pytest.raises(AuthorizationError, match='NATIVE_OPERATOR_REQUIRED'):
++        asyncio.run(owner.handle_verified({'reviewer': 'browser'}, command(review, operation)))
++    assert client.post('/v1/control-plane/'+operation.lower()).status_code == 404
++    assert controller.authorization.state == 'DISARMED' and owner._permit is None and not calls
++
++
++def test_atomic_material_change_and_storage_failure(isolated, monkeypatch):
++    _, owner, controller, calls = isolated
++    data = body(owner)
++    original = owner._material
++    monkeypatch.setattr(owner, '_material', lambda: {**original(), 'pid': 999})
++    with pytest.raises(AuthorizationError):
++        owner.browser_intention(**data)
++    assert not owner._audit.entries() and not owner._reviews
++    monkeypatch.setattr(owner, '_material', original)
++    monkeypatch.setattr(owner._queue, 'submit', lambda *a, **k: (_ for _ in ()).throw(RuntimeError('fixture')))
++    with pytest.raises(AuthorizationError):
++        owner.browser_intention(**data)
++    assert owner._poisoned and owner._permit is None and not calls
++
++
++def test_binding_changes_between_validation_and_creation(isolated, monkeypatch):
++    _, owner, _, _ = isolated
++    data = body(owner)
++    original = owner._material
++    count = 0
++    def changing():
++        nonlocal count
++        count += 1
++        value = original()
++        return value if count == 1 else {**value, 'runtime_instance': 'changed'}
++    monkeypatch.setattr(owner, '_material', changing)
++    with pytest.raises(AuthorizationError, match='STALE_BROWSER_CONTEXT'):
++        owner.browser_intention(**data)
++    assert not owner._audit.entries() and not owner._queue._items and not owner._poisoned
++
++
++def test_capacity_rejects_without_poisoning(isolated):
++    _, owner, _, _ = isolated
++    data = body(owner)
++    owner._browser_reviews.update({str(i): 'irrelevant' for i in range(32)})
++    with pytest.raises(AuthorizationError, match='BROWSER_CAPACITY'):
++        owner.browser_intention(**data)
++    assert not owner._poisoned and not owner._audit.entries()
++
++
++@pytest.mark.parametrize('operation', ['ARM', 'EXECUTE'])
++def test_live_lock_even_after_trusted_peer_validation(isolated, monkeypatch, operation):
++    _, owner, controller, calls = isolated
++    review = owner.browser_intention(**body(owner))
++    # Unit seam only: test the post-native-validation live lock, no pipe/listener/proof minted.
++    from app.security.local_operator import Windows
++    monkeypatch.setattr(owner, '_peer', lambda proof: Windows().current_actor())
++    with pytest.raises(AuthorizationError, match='TRANSITION_FAILED_CLOSED'):
++        asyncio.run(owner.handle_verified(object(), command(review, operation)))
++    assert owner._poisoned and owner._permit is None and controller.authorization.dispatch_count == 0 and not calls
++
++
++def test_guarded_application_composition_no_network_or_protected_state(tmp_path):
++    root = Path(__file__).parents[1]
++    script = r'''
++import builtins, io, json, socket, sqlite3, sys, importlib.abc
++class Boundary(importlib.abc.MetaPathFinder):
++    def find_spec(self, fullname, path=None, target=None):
++        if fullname.startswith(('app.knowledge','app.rag','app.language')) or fullname in ('app.api.routes','app.api.v2_routes'):
++            raise AssertionError('protected import')
++sys.meta_path.insert(0, Boundary())
++def forbidden(*a, **k): raise AssertionError('forbidden operation')
++sqlite3.connect = forbidden
++original_connect = socket.socket.connect
++def no_application_connect(sock, address):
++    # Windows asyncio uses stdlib socketpair internally; this is not application HTTP.
++    if sys._getframe(1).f_code is socket._fallback_socketpair.__code__:
++        return original_connect(sock, address)
++    return forbidden()
++socket.socket.connect = no_application_connect
++def guard(original):
++    def opened(file, mode='r', *a, **k):
++        name = str(file).lower().replace('\\','/')
++        assert not name.endswith(('.db','.db-wal','.db-shm')) and '/data/knowledge/' not in name
++        assert not any(flag in mode for flag in ('w','a','x','+'))
++        return original(file, mode, *a, **k)
++    return opened
++builtins.open, io.open = guard(builtins.open), guard(io.open)
++import httpx
++httpx.HTTPTransport.handle_request = forbidden
++httpx.AsyncHTTPTransport.handle_async_request = forbidden
++from app.security.local_operator import LocalOperatorChannel
++LocalOperatorChannel.__enter__ = forbidden
++from app.models.ollama import OllamaProvider
++OllamaProvider.health_check = forbidden
++OllamaProvider.list_models = forbidden
++from app.main import app
++import app.api.control_plane as routes
++routes.project = forbidden
++from fastapi.testclient import TestClient
++owner = app.state.runtime_authorization
++with TestClient(app,base_url='http://127.0.0.1:8000',client=('127.0.0.1',1)) as client:
++    state = client.get('/v1/control-plane/snapshot').json()
++    response = client.post('/v1/control-plane/intention',json={'scope':state['scope'],'evidence_version':state['evidence_version']},headers={'Origin':'http://127.0.0.1:5173'})
++    assert response.status_code == 200 and response.json()['state'] == 'PENDING'
++assert owner._policy is None and owner._isolated_transport is None and owner._audit.path is None
++assert app.state.runtime_verification.authorization.state == 'DISARMED'
++assert app.state.runtime_verification.authorization.dispatch_count == 0
++assert owner._permit is None and owner.evidence()['live_actions'] == 'LOCKED'
++print(json.dumps({'isolated_in_process':True,'live_http':False,'dispatch_count':0,'state':'PENDING','live_actions':'LOCKED',
++    'snapshot':state,'intention':response.json()}))
++'''
++    env = {**os.environ,'PYTHONPATH':str(root),'PYTHONDONTWRITEBYTECODE':'1',
++        'NUSANTARA_RUNTIME_PROFILE':'ATTESTATION','NUSANTARA_CONTROL_PLANE_READ_ONLY':'0','PORT':'8000'}
++    env.pop('NUSANTARA_RUNTIME_PORT', None)
++    result = json.loads(subprocess.check_output([sys.executable,'-B','-c',script],cwd=tmp_path,env=env,text=True))
++    assert result['dispatch_count'] == 0 and result['live_http'] is False
++    evidence_path = os.environ.get('R2_CPLANE_ISOLATED_EVIDENCE')
++    if evidence_path:
++        Path(evidence_path).write_text(json.dumps(result, indent=2), encoding='utf-8')
+--- before/control-plane/tests/attestation.test.tsx
++++ after/control-plane/tests/attestation.test.tsx
+@@ -0,0 +1,102 @@
++import {render,screen,fireEvent,within,waitFor} from '@testing-library/react';
++import {describe,it,expect,vi,afterEach} from 'vitest';
++import {useState} from 'react';
++import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
++import {createRouter,createMemoryHistory,RouterProvider} from '@tanstack/react-router';
++import fs from 'node:fs';
++import {AttestationSchema,SystemHealthSchema,parseSnapshot,isAttestation,type Attestation} from '../src/schemas';
++import {fetchSnapshot,submitIntention} from '../src/api';
++import {attestationKey,type Stage} from '../src/acceptance';
++import {HumanContent,HumanProvider} from '../src/human';
++import {Content} from '../src/ui';
++import {router as existingRouter} from '../src/router';
++
++const fixture=():Attestation=>AttestationSchema.parse({projection_contract:'ATTESTATION_FOUNDATION_V1',evidence_id:'r2-a9-auth-process',
++  evidence_type:'SCOPED_IN_PROCESS',source:'SYNTHETIC ISOLATED TEST',scope:'R2-A8:ATTESTATION:ONE_GENERATION',
++  created_at:'2026-10-08T00:00:00Z',status:'NOT_VERIFIED',evidence_version:'a'.repeat(64),live_actions:'LOCKED',operator_policy:'NOT_PROVISIONED',
++  binding:{scope:'R2-A8:ATTESTATION:ONE_GENERATION',target:'127.0.0.1:8000',pid:123,process_start:134000000000000000,
++    runtime_instance:'fixture-instance',source_snapshot:'fixture-source',scoped_loaded_code:'fixture-loaded',configuration_digest:'b'.repeat(64),
++    endpoint:{origin:'http://127.0.0.1:11434',connection_origin:'http://127.0.0.1:11434'},profile:'ATTESTATION',
++    active_process_build:'NOT_DIRECTLY_VERIFIED',runtime_identity:'NOT_VERIFIED'},reviews:[],provider_receipt:null});
++const pending=(s:Attestation)=>({review_id:'fixture-review',scope:s.scope,evidence_version:s.evidence_version,state:'PENDING',expires_at:'2026-10-08T00:02:00Z'});
++function Harness({state=fixture(),initial='System'}:{state?:Attestation;initial?:Stage}){
++  const [stage,setStage]=useState<Stage>(initial);
++  return <HumanProvider><button onClick={()=>setStage('Decision')}>Go Decision</button><HumanContent stage={stage} state={state} navigate={setStage} inspectRuntime={()=>{}}/></HumanProvider>;
++}
++function review(){
++  fireEvent.click(screen.getByLabelText('I have read the ATTESTATION scope and limitations.'));
++  fireEvent.click(screen.getByRole('button',{name:'Continue to Evidence'}));
++  fireEvent.click(screen.getByLabelText('I inspected the exact evidence version and identity scope.'));
++  fireEvent.click(screen.getByRole('button',{name:'Continue to Human Test'}));
++  for(const id of ['runtime','separate','boundary'])fireEvent.click(within(screen.getByRole('group',{name:`Observation ${id}`})).getByRole('button',{name:'PASS'}));
++  fireEvent.click(screen.getByRole('button',{name:'Continue to Review'}));
++  fireEvent.click(screen.getByLabelText('I reviewed these observations and the NOT_VERIFIED limitations.'));
++  fireEvent.click(screen.getByRole('button',{name:'Continue to Decision'}));
++}
++afterEach(()=>vi.unstubAllGlobals());
++describe('separate scoped ATTESTATION integration',()=>{
++  it('accepts actual guarded in-process backend projection and intention',()=>{
++    const evidence=JSON.parse(fs.readFileSync(process.env.R2_CPLANE_ISOLATED_EVIDENCE!,'utf8'));
++    expect(evidence.live_http).toBe(false);expect(evidence.dispatch_count).toBe(0);
++    expect(AttestationSchema.parse(evidence.snapshot).status).toBe('NOT_VERIFIED');
++    expect(evidence.intention.state).toBe('PENDING');
++  });
++  it('accepts ATTESTATION and preserves NORMAL without masquerading',()=>{
++    const s=fixture();expect(isAttestation(parseSnapshot(s))).toBe(true);expect(()=>SystemHealthSchema.parse(s)).toThrow();
++    const normal=JSON.parse(fs.readFileSync(process.env.CPLANE_SNAPSHOT_FILE!,'utf8'));
++    expect(isAttestation(parseSnapshot(normal))).toBe(false);expect(()=>AttestationSchema.parse(normal)).toThrow();
++    expect(()=>parseSnapshot({...normal,projection_contract:'UNKNOWN'})).toThrow();
++    expect(()=>parseSnapshot({...s,schema_version:1})).toThrow();
++  });
++  it.each(['PASS','READY','AUTHORIZED','ACTIVE','VERIFIED'])('rejects invented status %s',status=>expect(()=>parseSnapshot({...fixture(),status})).toThrow());
++  it('uses the typed snapshot fetch and fixed intention body only',async()=>{
++    const s=fixture(),fetch=vi.fn().mockResolvedValueOnce({ok:true,json:async()=>s}).mockResolvedValueOnce({ok:true,json:async()=>pending(s)});
++    vi.stubGlobal('fetch',fetch);expect(isAttestation((await fetchSnapshot()).state)).toBe(true);
++    expect((await submitIntention(s)).state).toBe('PENDING');
++    const options=fetch.mock.calls[1][1];expect(JSON.parse(options.body)).toEqual({scope:s.scope,evidence_version:s.evidence_version});
++    expect(options.method).toBe('POST');expect(options.credentials).toBe('omit');
++  });
++  it('rejects authorization responses, stale binding and failure without retry',async()=>{
++    const s=fixture();const fetch=vi.fn().mockResolvedValue({ok:true,json:async()=>({...pending(s),state:'APPROVED'})});vi.stubGlobal('fetch',fetch);
++    await expect(submitIntention(s)).rejects.toThrow();expect(fetch).toHaveBeenCalledTimes(1);
++    fetch.mockResolvedValue({ok:true,json:async()=>({...pending(s),evidence_version:'c'.repeat(64)})});await expect(submitIntention(s)).rejects.toThrow('context mismatch');
++    fetch.mockResolvedValue({ok:false,status:409});await expect(submitIntention(s)).rejects.toThrow('No authority granted');
++  });
++  it('invalidates material changes but not capture time',()=>{
++    const s=fixture();expect(attestationKey({...s,created_at:'2026-10-08T00:01:00Z'})).toBe(attestationKey(s));
++    expect(attestationKey({...s,evidence_version:'c'.repeat(64)})).not.toBe(attestationKey(s));
++    expect(attestationKey({...s,reviews:[{review_id:'x',state:'PENDING',expires_at:'2026-10-08T00:02:00Z'}]})).not.toBe(attestationKey(s));
++  });
++  it('renders scoped evidence in every engineering view without historical gates',()=>{
++    render(<Content name="Runtime" state={fixture()}/>);expect(screen.getAllByText('NOT_VERIFIED').length).toBeGreaterThan(0);
++    expect(screen.getByText('NOT_DIRECTLY_VERIFIED')).toBeInTheDocument();expect(screen.getByText('SCOPED_IN_PROCESS')).toBeInTheDocument();
++    expect(screen.queryByText('R3.1')).not.toBeInTheDocument();expect(screen.queryByText('PASS')).not.toBeInTheDocument();
++  });
++  it('blocks bypass, separates observations and only submits on an explicit click',async()=>{
++    const s=fixture(),fetch=vi.fn().mockResolvedValue({ok:true,json:async()=>pending(s)});vi.stubGlobal('fetch',fetch);
++    render(<Harness state={s}/>);expect(fetch).not.toHaveBeenCalled();review();expect(fetch).not.toHaveBeenCalled();
++    expect(screen.queryByRole('button',{name:'APPROVE'})).not.toBeInTheDocument();
++    fireEvent.click(screen.getByRole('button',{name:'Create PENDING intention'}));
++    await waitFor(()=>expect(screen.getByRole('status')).toHaveTextContent('PENDING — untrusted intention'));
++    expect(screen.getByRole('button',{name:'Create PENDING intention'})).toBeDisabled();expect(fetch).toHaveBeenCalledTimes(1);
++    expect(screen.getAllByText('NOT_VERIFIED').length).toBeGreaterThan(0);
++  });
++  it('uses the existing router, snapshot API and scoped navigation end to end in jsdom',async()=>{
++    const s=fixture(),fetch=vi.fn().mockResolvedValue({ok:true,json:async()=>s});vi.stubGlobal('fetch',fetch);
++    const router=createRouter({routeTree:existingRouter.routeTree,history:createMemoryHistory({initialEntries:['/overview']})});
++    render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><RouterProvider router={router}/></QueryClientProvider>);
++    await waitFor(()=>expect(screen.getByText('SCOPED_IN_PROCESS')).toBeInTheDocument());
++    fireEvent.click(screen.getByLabelText('I have read the ATTESTATION scope and limitations.'));
++    fireEvent.click(screen.getByRole('button',{name:'Continue to Evidence'}));
++    await waitFor(()=>expect(screen.getByText('Evidence boundary')).toBeInTheDocument());
++    expect(router.state.location.pathname).toBe('/evidence');
++    const locked=screen.getByRole('button',{name:'Human Test Locked'});
++    expect(locked.title).not.toContain('R3');expect(fetch.mock.calls.every(call=>call[1].method==='GET')).toBe(true);
++  });
++  it('clears reviewed context on drift',()=>{
++    const s=fixture();const {rerender}=render(<Harness state={s}/>);review();
++    rerender(<Harness state={{...s,evidence_version:'c'.repeat(64)}}/>);
++    expect(screen.getByRole('region',{name:'Locked stage'})).toBeInTheDocument();
++  });
++  it('rejects opening Decision without observations',()=>{render(<Harness initial="Decision"/>);expect(screen.getByRole('region',{name:'Locked stage'})).toBeInTheDocument();});
++});

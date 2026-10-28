@@ -1,0 +1,226 @@
+{
+  "verification_type": "ISOLATED_APPLICATION_BOOT",
+  "existing_live_service_verified": false,
+  "applications": [
+    {
+      "attestation": {
+        "application": {
+          "service_name": "Nusantara Core + Hermes API",
+          "service_version": "0.1.0",
+          "application_entrypoint": "app.main:app"
+        },
+        "process": {
+          "process_id": 16980,
+          "parent_process_id": 42016,
+          "process_start_time": "2026-10-08T03:17:15.490386+00:00",
+          "working_directory": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\r2-a7-runtime-attestation-20261008\\final-tmp\\test_new_processes_have_distin0",
+          "executable_path": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "interpreter_path": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+          "os_metadata_source": "WINDOWS_CURRENT_PROCESS_API",
+          "observed_process_id": 16980,
+          "valid_for_current_process": true
+        },
+        "runtime_instance_id": "f3394e095195476d976a9de8b07789b7",
+        "instance_captured_at": "2026-10-08T03:17:15.956511+00:00",
+        "build": {
+          "loaded_code_hash": "sha256:54c58f18658389afe9752da19927708d8f3de093dd02273a70a8618e7df00e4c",
+          "current_registered_code_hash": "sha256:54c58f18658389afe9752da19927708d8f3de093dd02273a70a8618e7df00e4c",
+          "loaded_code_binding": "MATCH",
+          "coverage": "REGISTERED_PYTHON_HANDLERS_HTTP_DISPATCH_AND_IDENTITY_FUNCTIONS",
+          "limitations": "Non-transitive code objects; excludes globals, closures, assets and provider dependencies",
+          "source_build_hash": "sha256:b2f80058709d5066f87fa4e060d0a244d569c65b4348f5418c2d85920b742463",
+          "source_build_evidence": "IMPORT_TIME_SOURCE_SNAPSHOT_ONLY",
+          "full_application_build_verified": false,
+          "loaded_code_manifest": [
+            {
+              "symbol": "identity:app.core.runtime_attestation._loaded_code_manifest",
+              "code_sha256": "92c5d8c356795eeb28411ce5f2b59d2eae49366aaab44af1de70228725393eb6"
+            },
+            {
+              "symbol": "identity:app.core.runtime_attestation._manifest_hash",
+              "code_sha256": "4137d15e9ac6fbdd7a7cefac431292a2791d9cc05f4b97bcf1c404349b02a947"
+            },
+            {
+              "symbol": "identity:app.core.runtime_attestation._process_identity",
+              "code_sha256": "8fa0047440386455c2986779d8ec82d5f0a27942503f53446016e37203068c3b"
+            },
+            {
+              "symbol": "identity:app.core.runtime_attestation.install_runtime_attestation",
+              "code_sha256": "525b43564481fffcdacba64100cfa25c71689a63505c00d12715aeeb1753d2f8"
+            },
+            {
+              "symbol": "identity:app.core.runtime_identity.current_runtime_instance",
+              "code_sha256": "e3b352c591a11ea606aab32e147a34fa68cfde5ea78bb75e7935bb0ef47745b8"
+            },
+            {
+              "symbol": "middleware:app.main.request_id_middleware",
+              "code_sha256": "092893c1fd8d9267aa208e8f0d4eca18fa09cd2afbe6f75e0ab1c333a0d5e77a"
+            },
+            {
+              "symbol": "route:GET,HEAD:/docs/oauth2-redirect:fastapi.applications.FastAPI.setup.<locals>.swagger_ui_redirect",
+              "code_sha256": "6f9a760a8c6428a8c93a7e4f31abee2ba30701d3477533c9ffe9052918833b29"
+            },
+            {
+              "symbol": "route:GET,HEAD:/docs:fastapi.applications.FastAPI.setup.<locals>.swagger_ui_html",
+              "code_sha256": "81b517a331769f35d07ec5d8ff827fe109138b425ee4c6e1a60d57a7c6379be7"
+            },
+            {
+              "symbol": "route:GET,HEAD:/openapi.json:fastapi.applications.FastAPI.setup.<locals>.openapi",
+              "code_sha256": "9010f8c3aa0438cffd2398a3d751451265b57d15cff157613919cab8311c3568"
+            },
+            {
+              "symbol": "route:GET,HEAD:/redoc:fastapi.applications.FastAPI.setup.<locals>.redoc_html",
+              "code_sha256": "8341da8feddb2a6d315a559e3bc748e832eed4f697d22b6e6e53e2cd26a71cf9"
+            },
+            {
+              "symbol": "route:GET:/:app.main.dashboard",
+              "code_sha256": "fd4c240b77b74b831891a3394bcd08cd341d3878ff37be4a5a989e8909be0890"
+            },
+            {
+              "symbol": "route:GET:/health:app.main.health_check",
+              "code_sha256": "1f9fb1cab585e349ccdb99c543ba8a623dbce5914217bb819341670484f94820"
+            },
+            {
+              "symbol": "route:GET:/ui:app.main.dashboard",
+              "code_sha256": "fd4c240b77b74b831891a3394bcd08cd341d3878ff37be4a5a989e8909be0890"
+            },
+            {
+              "symbol": "route:GET:/v1/runtime/attestation:app.core.runtime_attestation.install_runtime_attestation.<locals>.runtime_attestation",
+              "code_sha256": "6af567fb3e7d25e83a5a32db1e33aab222daeffa40bc9859d6808fe97ee7847b"
+            }
+          ]
+        },
+        "provider_invocation": null,
+        "provider_observation": "NOT_OBSERVED",
+        "correlation_readiness": {
+          "runtime_instance_id": "f3394e095195476d976a9de8b07789b7",
+          "process_id": 16980,
+          "source_build_hash": "sha256:b2f80058709d5066f87fa4e060d0a244d569c65b4348f5418c2d85920b742463",
+          "required_external_receipt_fields": [
+            "runtime_instance_id",
+            "process_id",
+            "build_id",
+            "request_id",
+            "invocation_id",
+            "provider_id",
+            "actual_model",
+            "timestamp",
+            "identity_status"
+          ],
+          "provider_receipt_exposed": false
+        },
+        "runtime_identity": "NOT_VERIFIED"
+      }
+    },
+    {
+      "attestation": {
+        "application": {
+          "service_name": "Nusantara Core + Hermes API",
+          "service_version": "0.1.0",
+          "application_entrypoint": "app.main:app"
+        },
+        "process": {
+          "process_id": 26208,
+          "parent_process_id": 41832,
+          "process_start_time": "2026-10-08T03:17:16.072790+00:00",
+          "working_directory": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\r2-a7-runtime-attestation-20261008\\final-tmp\\test_new_processes_have_distin0",
+          "executable_path": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "interpreter_path": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+          "os_metadata_source": "WINDOWS_CURRENT_PROCESS_API",
+          "observed_process_id": 26208,
+          "valid_for_current_process": true
+        },
+        "runtime_instance_id": "7af9c933357f4c2faebf2071155d729b",
+        "instance_captured_at": "2026-10-08T03:17:16.593669+00:00",
+        "build": {
+          "loaded_code_hash": "sha256:54c58f18658389afe9752da19927708d8f3de093dd02273a70a8618e7df00e4c",
+          "current_registered_code_hash": "sha256:54c58f18658389afe9752da19927708d8f3de093dd02273a70a8618e7df00e4c",
+          "loaded_code_binding": "MATCH",
+          "coverage": "REGISTERED_PYTHON_HANDLERS_HTTP_DISPATCH_AND_IDENTITY_FUNCTIONS",
+          "limitations": "Non-transitive code objects; excludes globals, closures, assets and provider dependencies",
+          "source_build_hash": "sha256:b2f80058709d5066f87fa4e060d0a244d569c65b4348f5418c2d85920b742463",
+          "source_build_evidence": "IMPORT_TIME_SOURCE_SNAPSHOT_ONLY",
+          "full_application_build_verified": false,
+          "loaded_code_manifest": [
+            {
+              "symbol": "identity:app.core.runtime_attestation._loaded_code_manifest",
+              "code_sha256": "92c5d8c356795eeb28411ce5f2b59d2eae49366aaab44af1de70228725393eb6"
+            },
+            {
+              "symbol": "identity:app.core.runtime_attestation._manifest_hash",
+              "code_sha256": "4137d15e9ac6fbdd7a7cefac431292a2791d9cc05f4b97bcf1c404349b02a947"
+            },
+            {
+              "symbol": "identity:app.core.runtime_attestation._process_identity",
+              "code_sha256": "8fa0047440386455c2986779d8ec82d5f0a27942503f53446016e37203068c3b"
+            },
+            {
+              "symbol": "identity:app.core.runtime_attestation.install_runtime_attestation",
+              "code_sha256": "525b43564481fffcdacba64100cfa25c71689a63505c00d12715aeeb1753d2f8"
+            },
+            {
+              "symbol": "identity:app.core.runtime_identity.current_runtime_instance",
+              "code_sha256": "e3b352c591a11ea606aab32e147a34fa68cfde5ea78bb75e7935bb0ef47745b8"
+            },
+            {
+              "symbol": "middleware:app.main.request_id_middleware",
+              "code_sha256": "092893c1fd8d9267aa208e8f0d4eca18fa09cd2afbe6f75e0ab1c333a0d5e77a"
+            },
+            {
+              "symbol": "route:GET,HEAD:/docs/oauth2-redirect:fastapi.applications.FastAPI.setup.<locals>.swagger_ui_redirect",
+              "code_sha256": "6f9a760a8c6428a8c93a7e4f31abee2ba30701d3477533c9ffe9052918833b29"
+            },
+            {
+              "symbol": "route:GET,HEAD:/docs:fastapi.applications.FastAPI.setup.<locals>.swagger_ui_html",
+              "code_sha256": "81b517a331769f35d07ec5d8ff827fe109138b425ee4c6e1a60d57a7c6379be7"
+            },
+            {
+              "symbol": "route:GET,HEAD:/openapi.json:fastapi.applications.FastAPI.setup.<locals>.openapi",
+              "code_sha256": "9010f8c3aa0438cffd2398a3d751451265b57d15cff157613919cab8311c3568"
+            },
+            {
+              "symbol": "route:GET,HEAD:/redoc:fastapi.applications.FastAPI.setup.<locals>.redoc_html",
+              "code_sha256": "8341da8feddb2a6d315a559e3bc748e832eed4f697d22b6e6e53e2cd26a71cf9"
+            },
+            {
+              "symbol": "route:GET:/:app.main.dashboard",
+              "code_sha256": "fd4c240b77b74b831891a3394bcd08cd341d3878ff37be4a5a989e8909be0890"
+            },
+            {
+              "symbol": "route:GET:/health:app.main.health_check",
+              "code_sha256": "1f9fb1cab585e349ccdb99c543ba8a623dbce5914217bb819341670484f94820"
+            },
+            {
+              "symbol": "route:GET:/ui:app.main.dashboard",
+              "code_sha256": "fd4c240b77b74b831891a3394bcd08cd341d3878ff37be4a5a989e8909be0890"
+            },
+            {
+              "symbol": "route:GET:/v1/runtime/attestation:app.core.runtime_attestation.install_runtime_attestation.<locals>.runtime_attestation",
+              "code_sha256": "6af567fb3e7d25e83a5a32db1e33aab222daeffa40bc9859d6808fe97ee7847b"
+            }
+          ]
+        },
+        "provider_invocation": null,
+        "provider_observation": "NOT_OBSERVED",
+        "correlation_readiness": {
+          "runtime_instance_id": "7af9c933357f4c2faebf2071155d729b",
+          "process_id": 26208,
+          "source_build_hash": "sha256:b2f80058709d5066f87fa4e060d0a244d569c65b4348f5418c2d85920b742463",
+          "required_external_receipt_fields": [
+            "runtime_instance_id",
+            "process_id",
+            "build_id",
+            "request_id",
+            "invocation_id",
+            "provider_id",
+            "actual_model",
+            "timestamp",
+            "identity_status"
+          ],
+          "provider_receipt_exposed": false
+        },
+        "runtime_identity": "NOT_VERIFIED"
+      }
+    }
+  ]
+}

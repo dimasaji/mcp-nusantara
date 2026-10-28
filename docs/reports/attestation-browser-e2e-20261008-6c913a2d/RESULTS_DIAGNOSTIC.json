@@ -1,0 +1,163 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\dmaza\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\dmaza\\mcp-starter\\control-plane\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "../docs/reports/attestation-browser-e2e-20261008-6c913a2d/playwright.mock.config.cjs",
+      "--grep",
+      "five stages"
+    ],
+    "configFile": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\playwright.mock.config.cjs",
+    "rootDir": "C:/Users/dmaza/mcp-starter/control-plane/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/dmaza/mcp-starter/docs/reports/attestation-browser-e2e-20261008-6c913a2d/browser-results-diagnostic",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/dmaza/mcp-starter/control-plane/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "attestation.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\RESULTS_DIAGNOSTIC.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "attestation.spec.ts",
+      "file": "attestation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "five stages render, scroll and submit only explicit PENDING intention",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5732,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Continue to Evidence', exact: true })\nExpected: disabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('button', { name: 'Continue to Evidence', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Continue to Evidence', exact: true })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Continue to Evidence', exact: true })\nExpected: disabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('button', { name: 'Continue to Evidence', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Continue to Evidence', exact: true })\u001b[22m\n\n    at review (C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts:70:83)\n    at C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts:89:54",
+                    "location": {
+                      "file": "C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts",
+                      "column": 83,
+                      "line": 70
+                    },
+                    "snippet": "  68 | async function review(page:Page,mock:Mock){\n  69 |   await page.goto('/overview');await noAuthority(page);\n> 70 |   await expect(page.getByRole('button',{name:'Continue to Evidence',exact:true})).toBeDisabled();\n     |                                                                                   ^\n  71 |   await page.getByLabel('I have read the ATTESTATION scope and limitations.').check();\n  72 |   await page.getByRole('button',{name:'Continue to Evidence',exact:true}).click();\n  73 |   await expect(page).toHaveURL(origin+'/evidence');await noAuthority(page);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts",
+                        "column": 83,
+                        "line": 70
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Continue to Evidence', exact: true })\nExpected: disabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('button', { name: 'Continue to Evidence', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Continue to Evidence', exact: true })\u001b[22m\n\n\n  68 | async function review(page:Page,mock:Mock){\n  69 |   await page.goto('/overview');await noAuthority(page);\n> 70 |   await expect(page.getByRole('button',{name:'Continue to Evidence',exact:true})).toBeDisabled();\n     |                                                                                   ^\n  71 |   await page.getByLabel('I have read the ATTESTATION scope and limitations.').check();\n  72 |   await page.getByRole('button',{name:'Continue to Evidence',exact:true}).click();\n  73 |   await expect(page).toHaveURL(origin+'/evidence');await noAuthority(page);\n    at review (C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts:70:83)\n    at C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts:89:54"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:30:14.206Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJzbmFwc2hvdCI6eyJwcm9qZWN0aW9uX2NvbnRyYWN0IjoiQVRURVNUQVRJT05fRk9VTkRBVElPTl9WMSIsImV2aWRlbmNlX2lkIjoicjItYTktYXV0aC1wcm9jZXNzIiwiZXZpZGVuY2VfdHlwZSI6IlNDT1BFRF9JTl9QUk9DRVNTIiwic291cmNlIjoiU1lOVEhFVElDIEJST1dTRVIgVEVTVCDigJQgTk9UIExJVkUgRVZJREVOQ0UiLCJzY29wZSI6IlIyLUE4OkFUVEVTVEFUSU9OOk9ORV9HRU5FUkFUSU9OIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMDhUMDA6MDA6MDBaIiwic3RhdHVzIjoiTk9UX1ZFUklGSUVEIiwiZXZpZGVuY2VfdmVyc2lvbiI6ImFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJsaXZlX2FjdGlvbnMiOiJMT0NLRUQiLCJvcGVyYXRvcl9wb2xpY3kiOiJOT1RfUFJPVklTSU9ORUQiLCJiaW5kaW5nIjp7InNjb3BlIjoiUjItQTg6QVRURVNUQVRJT046T05FX0dFTkVSQVRJT04iLCJ0YXJnZXQiOiIxMjcuMC4wLjE6ODAwMCIsInBpZCI6MTIzLCJwcm9jZXNzX3N0YXJ0IjoxMzQwMDAwMDAwMDAwMDAwMDAsInJ1bnRpbWVfaW5zdGFuY2UiOiJzeW50aGV0aWMtaW5zdGFuY2UiLCJzb3VyY2Vfc25hcHNob3QiOiJzeW50aGV0aWMtc291cmNlIiwic2NvcGVkX2xvYWRlZF9jb2RlIjoic3ludGhldGljLWNvZGUiLCJjb25maWd1cmF0aW9uX2RpZ2VzdCI6ImJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiLCJlbmRwb2ludCI6eyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0IiwiY29ubmVjdGlvbl9vcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjExNDM0In0sInByb2ZpbGUiOiJBVFRFU1RBVElPTiIsImFjdGl2ZV9wcm9jZXNzX2J1aWxkIjoiTk9UX0RJUkVDVExZX1ZFUklGSUVEIiwicnVudGltZV9pZGVudGl0eSI6Ik5PVF9WRVJJRklFRCJ9LCJyZXZpZXdzIjpbXSwicHJvdmlkZXJfcmVjZWlwdCI6bnVsbH0sInNuYXBzaG90U3RhdHVzIjoyMDAsImludGVudGlvbiI6eyJyZXZpZXdfaWQiOiJzeW50aGV0aWMtcmV2aWV3Iiwic2NvcGUiOiJSMi1BODpBVFRFU1RBVElPTjpPTkVfR0VORVJBVElPTiIsImV2aWRlbmNlX3ZlcnNpb24iOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhIiwic3RhdGUiOiJQRU5ESU5HIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDhUMDA6MDI6MDBaIn0sImludGVudGlvblN0YXR1cyI6MjAwLCJwb3N0cyI6W10sImJsb2NrZWQiOltdLCJlcnJvcnMiOltdLCJjb25zb2xlIjpbIlJlZmVyZW5jZUVycm9yOiBfX0NQTEFORV9CVUlMRF9fIGlzIG5vdCBkZWZpbmVkXG4gICAgYXQgU2hlbGwgKGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9tYWluLmpzOjUzMzgxOjk0KVxuICAgIGF0IHJlbmRlcldpdGhIb29rcyAoaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanM6NDQyODoyNylcbiAgICBhdCB1cGRhdGVGdW5jdGlvbkNvbXBvbmVudCAoaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanM6NjA2NjoyMilcbiAgICBhdCBiZWdpbldvcmsgKGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9tYWluLmpzOjY3NzU6MjApXG4gICAgYXQgcGVyZm9ybVVuaXRPZldvcmsgKGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9tYWluLmpzOjEwMjUwOjIwKVxuICAgIGF0IHdvcmtMb29wU3luYyAoaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanM6MTAxNDg6NDMpXG4gICAgYXQgcmVuZGVyUm9vdFN5bmMgKGh0dHA6Ly9hdHRlc3RhdGlvbi1lMmUuaW52YWxpZC9tYWluLmpzOjEwMTMyOjEzKVxuICAgIGF0IHBlcmZvcm1Xb3JrT25Sb290IChodHRwOi8vYXR0ZXN0YXRpb24tZTJlLmludmFsaWQvbWFpbi5qczo5ODEyOjQ2KVxuICAgIGF0IHBlcmZvcm1TeW5jV29ya09uUm9vdCAoaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanM6MTA4NjU6OSlcbiAgICBhdCBmbHVzaFN5bmNXb3JrQWNyb3NzUm9vdHNfaW1wbCAoaHR0cDovL2F0dGVzdGF0aW9uLWUyZS5pbnZhbGlkL21haW4uanM6MTA3NzM6MTU1KSJdLCJsaXZlIjpmYWxzZX0="
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\browser-results-diagnostic\\attestation-five-stages-re-0a584--explicit-PENDING-intention\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\browser-results-diagnostic\\attestation-five-stages-re-0a584--explicit-PENDING-intention\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts",
+                    "column": 83,
+                    "line": 70
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e33738f0440e497481af-14e8578c606a16262093",
+          "file": "attestation.spec.ts",
+          "line": 88,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-08T08:30:13.767Z",
+    "duration": 6592.8099999999995,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

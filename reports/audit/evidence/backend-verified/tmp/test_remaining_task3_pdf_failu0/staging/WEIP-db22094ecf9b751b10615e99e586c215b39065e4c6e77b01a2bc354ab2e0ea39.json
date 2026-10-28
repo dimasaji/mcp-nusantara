@@ -1,0 +1,75 @@
+{
+  "document_id": "WEIP-db22094ecf9b751b10615e99e586c215b39065e4c6e77b01a2bc354ab2e0ea39",
+  "source_id": "fixture",
+  "original_url": "https://example.org/allowed/doc",
+  "final_url": "https://example.org/allowed/doc",
+  "redirects": [],
+  "retrieved_at": "2026-10-27T03:48:10.195028+00:00",
+  "content_type": "application/pdf",
+  "content_hash": "c5c2e8be6ad0825a56ded1f1a153ceaf11dc060ab44b120a94406a08207babc2",
+  "version": "sha256:c5c2e8be6ad0825a56ded1f1a153ceaf11dc060ab44b120a94406a08207babc2",
+  "version_conflict": false,
+  "metadata": {
+    "title": "Fixture",
+    "publisher": "Fixture Publisher",
+    "agency": "Fixture Agency",
+    "domain": "example.org",
+    "jurisdiction": "FIXTURE_ONLY",
+    "service": "fixture-service",
+    "publication_date": null,
+    "effective_date": null,
+    "expiry_date": null,
+    "risk": "HIGH",
+    "source_verification_status": "UNVERIFIED",
+    "source_verification_reference": null,
+    "source_assurance": "OWNER_DECLARED_NOT_INDEPENDENTLY_AUTHENTICATED",
+    "registry_fingerprint": "362c69469cc111aef2edee8719e9f54a11baca49a5286ed46a5c64ba8cc00898",
+    "validation_status": "PARSED_REVIEW_PENDING",
+    "chunk_reference": "FULL_PARSED_DOCUMENT"
+  },
+  "text": "Syarat KTP-el: pemohon berusia 17 tahun dan membawa Kartu Keluarga.",
+  "status": "REVIEW_REQUIRED",
+  "audit": [
+    {
+      "at": "2026-10-27T03:48:10.199567+00:00",
+      "from": "DISCOVERED",
+      "to": "FETCHED",
+      "reason": "FETCH_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "",
+      "content_hash": "c5c2e8be6ad0825a56ded1f1a153ceaf11dc060ab44b120a94406a08207babc2",
+      "event_hash": "f29de5fdc7724a118be6abffef1e6b3bafd12ea5d866136fca709c64e5698e7c"
+    },
+    {
+      "at": "2026-10-27T03:48:10.208480+00:00",
+      "from": "FETCHED",
+      "to": "PARSED",
+      "reason": "PARSE_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "f29de5fdc7724a118be6abffef1e6b3bafd12ea5d866136fca709c64e5698e7c",
+      "content_hash": "c5c2e8be6ad0825a56ded1f1a153ceaf11dc060ab44b120a94406a08207babc2",
+      "event_hash": "084846d94d57a6430e0db4d630c7d1da23d27bd216edf55f9821bee92f29eca3"
+    },
+    {
+      "at": "2026-10-27T03:48:10.236258+00:00",
+      "from": "PARSED",
+      "to": "VALIDATION_PENDING",
+      "reason": "PROVENANCE_REVIEW",
+      "actor": "pipeline",
+      "previous_hash": "084846d94d57a6430e0db4d630c7d1da23d27bd216edf55f9821bee92f29eca3",
+      "content_hash": "c5c2e8be6ad0825a56ded1f1a153ceaf11dc060ab44b120a94406a08207babc2",
+      "event_hash": "cff4205f8273f8333b807aa71a5f9e88cc7c799cee69e3719230d291350dbbe6"
+    },
+    {
+      "at": "2026-10-27T03:48:10.253797+00:00",
+      "from": "VALIDATION_PENDING",
+      "to": "REVIEW_REQUIRED",
+      "reason": "OWNER_DOCUMENT_REVIEW",
+      "actor": "pipeline",
+      "previous_hash": "cff4205f8273f8333b807aa71a5f9e88cc7c799cee69e3719230d291350dbbe6",
+      "content_hash": "c5c2e8be6ad0825a56ded1f1a153ceaf11dc060ab44b120a94406a08207babc2",
+      "event_hash": "0f326f3babb4680147b0b1d892b45e7b3b8963d44e1cd3f1a2a0e37d56ce4769"
+    }
+  ],
+  "parsed_hash": "48838be0d6a69cacaa21846040d868a991afc605254335e90508d680adab7a92"
+}

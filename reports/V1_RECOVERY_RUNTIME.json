@@ -1,0 +1,44 @@
+{
+  "mode": "isolated_native_local_candidate",
+  "base_url": "http://127.0.0.1:56084",
+  "expected_build_id": "sha256:fbfc961502a9c2eaf9b4872008473cced3d3a44581834c889cc57cc41e27a315",
+  "server_pid": 32280,
+  "server_stopped": true,
+  "records": [
+    {
+      "check": "startup_health_identity",
+      "status": "PASS",
+      "build_id": "sha256:fbfc961502a9c2eaf9b4872008473cced3d3a44581834c889cc57cc41e27a315"
+    },
+    {
+      "check": "knowledge",
+      "status": "PASS",
+      "document_id": "BENCH-PASPOR-001"
+    },
+    {
+      "check": "chat_trust",
+      "status": "PASS",
+      "trust": {
+        "supports_claim": true,
+        "confidence": 0.619,
+        "risk_level": "low",
+        "requires_human": false,
+        "evidence_count": 2,
+        "evidence_available": true
+      },
+      "grounding": {
+        "enabled": true,
+        "grounded": false,
+        "reason": "possible_unsupported_content",
+        "unsupported_sentences": [
+          "Status pengajuan KTP-el dapat diperiksa melalui layanan administrasi kependudukan."
+        ]
+      },
+      "answer": "Informasi tersebut belum tersedia secara cukup dalam knowledge base."
+    }
+  ],
+  "production_deployment": "NOT_RUN",
+  "container_deployment": "NOT_RUN",
+  "limitations": "Local candidate execution; no production target or container build inferred",
+  "status": "PASS_LOCAL"
+}

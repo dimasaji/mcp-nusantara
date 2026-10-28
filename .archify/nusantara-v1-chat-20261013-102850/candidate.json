@@ -1,0 +1,270 @@
+{
+    "components":  [
+                       {
+                           "id":  "request",
+                           "label":  "Permintaan Chat",
+                           "size":  [
+                                        150,
+                                        64
+                                    ],
+                           "pos":  [
+                                       30,
+                                       250
+                                   ],
+                           "type":  "external",
+                           "sublabel":  "Input pengguna"
+                       },
+                       {
+                           "id":  "api",
+                           "label":  "FastAPI",
+                           "size":  [
+                                        150,
+                                        64
+                                    ],
+                           "pos":  [
+                                       250,
+                                       250
+                                   ],
+                           "type":  "backend",
+                           "sources":  [
+                                           {
+                                               "line":  34,
+                                               "path":  "app/main.py"
+                                           }
+                                       ],
+                           "sublabel":  "API router"
+                       },
+                       {
+                           "id":  "provider",
+                           "label":  "Ollama Provider",
+                           "size":  [
+                                        175,
+                                        68
+                                    ],
+                           "pos":  [
+                                       500,
+                                       80
+                                   ],
+                           "type":  "backend",
+                           "sources":  [
+                                           {
+                                               "line":  802,
+                                               "path":  "app/api/routes.py"
+                                           }
+                                       ],
+                           "sublabel":  "Model lokal + health check"
+                       },
+                       {
+                           "id":  "hermes",
+                           "label":  "Hermes Core",
+                           "size":  [
+                                        175,
+                                        68
+                                    ],
+                           "pos":  [
+                                       500,
+                                       250
+                                   ],
+                           "type":  "backend",
+                           "sources":  [
+                                           {
+                                               "line":  927,
+                                               "path":  "app/api/routes.py"
+                                           }
+                                       ],
+                           "sublabel":  "Agent dengan provider"
+                       },
+                       {
+                           "id":  "language",
+                           "label":  "Language Engine",
+                           "size":  [
+                                        165,
+                                        68
+                                    ],
+                           "pos":  [
+                                       740,
+                                       80
+                                   ],
+                           "type":  "backend",
+                           "sources":  [
+                                           {
+                                               "line":  936,
+                                               "path":  "app/api/routes.py"
+                                           }
+                                       ],
+                           "sublabel":  "Memproses input"
+                       },
+                       {
+                           "id":  "problem",
+                           "label":  "Problem Engine",
+                           "size":  [
+                                        165,
+                                        68
+                                    ],
+                           "pos":  [
+                                       740,
+                                       250
+                                   ],
+                           "type":  "backend",
+                           "sources":  [
+                                           {
+                                               "line":  944,
+                                               "path":  "app/api/routes.py"
+                                           }
+                                       ],
+                           "sublabel":  "Analisis masalah"
+                       },
+                       {
+                           "id":  "knowledge",
+                           "label":  "Knowledge Engine",
+                           "size":  [
+                                        165,
+                                        68
+                                    ],
+                           "pos":  [
+                                       740,
+                                       430
+                                   ],
+                           "type":  "database",
+                           "sources":  [
+                                           {
+                                               "line":  953,
+                                               "path":  "app/api/routes.py"
+                                           }
+                                       ],
+                           "sublabel":  "Pencarian evidence"
+                       },
+                       {
+                           "id":  "filter",
+                           "label":  "Evidence Filter",
+                           "size":  [
+                                        165,
+                                        68
+                                    ],
+                           "pos":  [
+                                       1020,
+                                       430
+                                   ],
+                           "type":  "security",
+                           "sources":  [
+                                           {
+                                               "line":  990,
+                                               "path":  "app/api/routes.py"
+                                           }
+                                       ],
+                           "sublabel":  "Skor minimum 0.50"
+                       },
+                       {
+                           "id":  "grounding",
+                           "label":  "Grounding Guard",
+                           "size":  [
+                                        185,
+                                        68
+                                    ],
+                           "pos":  [
+                                       1020,
+                                       250
+                                   ],
+                           "type":  "security",
+                           "sources":  [
+                                           {
+                                               "line":  20,
+                                               "path":  "app/knowledge/grounding.py"
+                                           }
+                                       ],
+                           "sublabel":  "Validasi jawaban berbasis evidence"
+                       }
+                   ],
+    "cards":  [
+                  {
+                      "title":  "Alur utama",
+                      "dot":  "cyan",
+                      "items":  [
+                                    "Permintaan masuk ke API router",
+                                    "Provider Ollama diperiksa sebelum pemrosesan",
+                                    "Hermes menggunakan Language Engine dan Problem Engine"
+                                ]
+                  },
+                  {
+                      "title":  "Pengetahuan",
+                      "dot":  "emerald",
+                      "items":  [
+                                    "Knowledge Engine mencari evidence",
+                                    "Evidence dengan skor di bawah 0.50 dibuang pada gate ini"
+                                ]
+                  },
+                  {
+                      "title":  "Batas bukti",
+                      "dot":  "rose",
+                      "items":  [
+                                    "Diagram bersumber dari commit HEAD yang tercatat",
+                                    "Jalur respons akhir tidak disimpulkan dari potongan source ini",
+                                    "OpenRouter tidak ditampilkan sebagai provider aktif"
+                                ]
+                  }
+              ],
+    "schema_version":  1,
+    "meta":  {
+                 "output":  ".archify/nusantara-v1-chat-20261013-102850/nusantara-v1-chat.html",
+                 "title":  "Nusantara V1 Ã¢â‚¬â€ Jalur Chat",
+                 "quality_profile":  "showcase",
+                 "repository":  {
+                                    "revision":  "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+                                    "url":  "https://github.com/dimasaji/mcp-nusantara.git",
+                                    "link_mode":  "web"
+                                }
+             },
+    "connections":  [
+                        {
+                            "id":  "request-api",
+                            "label":  "Chat request",
+                            "to":  "api",
+                            "from":  "request",
+                            "variant":  "emphasis"
+                        },
+                        {
+                            "label":  "Inisialisasi + health",
+                            "from":  "api",
+                            "to":  "provider",
+                            "id":  "api-provider"
+                        },
+                        {
+                            "label":  "Membuat agent",
+                            "from":  "api",
+                            "to":  "hermes",
+                            "id":  "api-hermes"
+                        },
+                        {
+                            "label":  "Proses bahasa",
+                            "from":  "hermes",
+                            "to":  "language",
+                            "id":  "hermes-language"
+                        },
+                        {
+                            "label":  "Analisis",
+                            "from":  "hermes",
+                            "to":  "problem",
+                            "id":  "hermes-problem"
+                        },
+                        {
+                            "label":  "Cari evidence",
+                            "from":  "api",
+                            "to":  "knowledge",
+                            "id":  "api-knowledge"
+                        },
+                        {
+                            "label":  "Saring skor \u003e= 0.50",
+                            "from":  "knowledge",
+                            "to":  "filter",
+                            "id":  "knowledge-filter"
+                        },
+                        {
+                            "id":  "filter-grounding",
+                            "label":  "Evidence untuk validasi",
+                            "to":  "grounding",
+                            "from":  "filter",
+                            "variant":  "security"
+                        }
+                    ],
+    "diagram_type":  "architecture"
+}

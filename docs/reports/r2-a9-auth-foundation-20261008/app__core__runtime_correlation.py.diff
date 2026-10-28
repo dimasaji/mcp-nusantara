@@ -1,0 +1,41 @@
+--- a/app/core/runtime_correlation.py
++++ b/app/core/runtime_correlation.py
+@@ -114,6 +114,10 @@
+         with self._lock:
+             if self._state != 'RESERVED' or self._dispatches or not self._bound():
+                 raise ValueError('SECOND_DISPATCH_REJECTED')
++            if time.monotonic() >= self._deadline:
++                self._state = 'TERMINAL'
++                self._token_digest = None
++                raise ValueError('GRANT_EXPIRED_BEFORE_DISPATCH')
+             self._dispatches = 1
+             self._state = 'DISPATCHED'
+ 
+@@ -121,6 +125,12 @@
+         with self._lock:
+             if self._state in ('RESERVED', 'DISPATCHED'):
+                 self._state = 'TERMINAL'
++
++    def abort(self):
++        """Terminal revocation, including ARMED; cannot undo a prior dispatch."""
++        with self._lock:
++            self._state = 'TERMINAL'
++            self._token_digest = None
+ 
+     @property
+     def dispatch_count(self):
+@@ -134,10 +144,12 @@
+ 
+ 
+ class OneDispatchTransport(httpx.AsyncBaseTransport):
+-    def __init__(self, endpoint: EndpointBinding, authorization: OneUseAuthorization):
++    def __init__(self, endpoint: EndpointBinding, authorization: OneUseAuthorization, *, isolated_transport=None):
+         self.endpoint = endpoint
+         self.authorization = authorization
+-        self._transport = httpx.AsyncHTTPTransport(retries=0, trust_env=False)
++        if isolated_transport is not None and type(isolated_transport) is not httpx.MockTransport:
++            raise ValueError('ISOLATED_MOCK_TRANSPORT_REQUIRED')
++        self._transport = isolated_transport if isolated_transport is not None else httpx.AsyncHTTPTransport(retries=0, trust_env=False)
+ 
+     async def handle_async_request(self, request):
+         expected = httpx.URL(self.endpoint.origin + '/api/generate')

@@ -1,0 +1,48 @@
+{
+  "status": "COMPLETE",
+  "result": "PASS_SCOPED",
+  "phases_completed_this_turn": [
+    5,
+    6
+  ],
+  "source_build_id": "sha256:f444e3ce1c2b689da1df4b704fd34105307ace98597d1834c223eac1716f8fa6",
+  "existing_protected_checked": 296,
+  "existing_protected_changed": [],
+  "new_source": [
+    "app/core/nusantara_config.py",
+    "tests/test_configuration_contract.py"
+  ],
+  "existing_source_edits": [],
+  "initial_targeted": {
+    "passed": 50,
+    "seconds": 0.42
+  },
+  "final_compatibility": {
+    "passed": 116,
+    "configuration_cases": 52,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 11.06
+  },
+  "static_scan": "PASS_SCOPED_ZERO_FINDINGS",
+  "runtime_integration": "NOT_DONE",
+  "full_regression": "NOT_RUN_PHASE9_OUTSIDE_CURRENT_SCOPE",
+  "overall_v1_acceptance": "FAIL/HOLD",
+  "graphify": {
+    "mode": "AST_ONLY",
+    "nodes": 5359,
+    "edges": 9376,
+    "communities": 913,
+    "html": "aggregated"
+  },
+  "evidence_sha256": {
+    "reports/configuration/CONFIGURATION_PHASE6_TARGETED_20261006.xml": "03a2ba4d066ac6bb4f270a61e9e825a2f23beab31bc78579cf388b2aae69024b",
+    "reports/configuration/CONFIGURATION_PHASE6_COMPAT_20261006.xml": "448cd3498d0dc7afea29c2c6396150e81d6260f0777e369e41726da17b621dcb",
+    "reports/configuration/CONFIGURATION_PHASE6_SECURITY_20261006.json": "4d02154967dd40216ab1cc34b1725ce8f4b414b4c37ff9e7ff77798c4025c8ef",
+    "reports/configuration/CONFIGURATION_PHASE5_6_IMPLEMENTATION_20261006.md": "d0f3572191b60d61124ef26f7f0be6fde171901cbc66703b06442419f8f466b4",
+    "reports/configuration/phase-05-source/SOURCE_CONTRACT_20261006.json": "ea0a9143cbe4062c77602c1d8041a541b0d49838ed6531f28270fe370f18f4fb",
+    "app/core/nusantara_config.py": "3d18304750d9b43e6cf33a19f5f1d73ea5b05bf2b22d9686deecd6fd4371911d",
+    "tests/test_configuration_contract.py": "bc4478e0100bab03d2dc8580cbf6a8e29176b7fdbc690795a745a732551d7123"
+  },
+  "completed_at": "2026-10-06T11:26:06.701137+00:00"
+}

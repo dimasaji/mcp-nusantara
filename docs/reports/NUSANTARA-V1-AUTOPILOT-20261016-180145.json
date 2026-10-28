@@ -1,0 +1,83 @@
+﻿{
+    "timestamp":  "2026-10-16T18:01:45.5408573+07:00",
+    "root":  "C:\\Users\\dmaza\\mcp-starter",
+    "checks":  [
+                   {
+                       "name":  "Windows account",
+                       "status":  "INFO",
+                       "detail":  "DESKTOP-GJHS3LR\\dmaza"
+                   },
+                   {
+                       "name":  "Port 8000",
+                       "status":  "PASS",
+                       "detail":  "LISTEN; PID=12820"
+                   },
+                   {
+                       "name":  "Port 5180",
+                       "status":  "PASS",
+                       "detail":  "LISTEN; PID=23212"
+                   },
+                   {
+                       "name":  "Port 8765",
+                       "status":  "PASS",
+                       "detail":  "LISTEN; PID=3904"
+                   },
+                   {
+                       "name":  "Backend OpenAPI",
+                       "status":  "PASS",
+                       "detail":  "HTTP 200"
+                   },
+                   {
+                       "name":  "Frontend",
+                       "status":  "PASS",
+                       "detail":  "HTTP 200"
+                   },
+                   {
+                       "name":  "Hermes executable",
+                       "status":  "PASS",
+                       "detail":  "Found under current Windows user LOCALAPPDATA"
+                   },
+                   {
+                       "name":  "Admin token configured",
+                       "status":  "PASS",
+                       "detail":  "Token present; value not logged"
+                   },
+                   {
+                       "name":  "Hermes GET",
+                       "status":  "PASS",
+                       "detail":  "HTTP 200; status=UNAVAILABLE"
+                   },
+                   {
+                       "name":  "Hermes live handshake",
+                       "status":  "HOLD",
+                       "detail":  "HTTP 200; status=UNAVAILABLE; reason=HERMES_INSTALL_STATE_NOT_WRITABLE"
+                   },
+                   {
+                       "name":  "File control-plane\\src\\hermes-connection.tsx",
+                       "status":  "PASS",
+                       "detail":  "Exists"
+                   },
+                   {
+                       "name":  "File app\\developer_core\\hermes_acp_connection.py",
+                       "status":  "PASS",
+                       "detail":  "Exists"
+                   },
+                   {
+                       "name":  "File control-plane\\vite.config.ts",
+                       "status":  "PASS",
+                       "detail":  "Exists"
+                   },
+                   {
+                       "name":  "ACP targeted pytest",
+                       "status":  "PASS",
+                       "detail":  "Tests passed"
+                   },
+                   {
+                       "name":  "Frontend build",
+                       "status":  "HOLD",
+                       "detail":  "Exit code 1"
+                   }
+               ],
+    "summary":  "HOLD",
+    "note":  "Checks are observations, not evidence of full E2E readiness."
+}

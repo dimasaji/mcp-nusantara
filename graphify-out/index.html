@@ -1,0 +1,2602 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nusantara Developer Core - Graph Analyzer</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Segoe UI, Arial, sans-serif;
+    background: #0b1020;
+    color: #e5e7eb;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app {
+    display: grid;
+    grid-template-columns: 250px 1fr 360px;
+    grid-template-rows: 62px 1fr;
+    width: 100%;
+    height: 100%;
+}
+
+.topbar {
+    grid-column: 1 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    background: #111827;
+    border-bottom: 1px solid #263247;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: #2563eb;
+    font-weight: 800;
+}
+
+.title {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.subtitle {
+    color: #94a3b8;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.topstats {
+    display: flex;
+    gap: 8px;
+}
+
+.stat {
+    min-width: 88px;
+    padding: 7px 10px;
+    border: 1px solid #263247;
+    border-radius: 8px;
+    background: #0f172a;
+    text-align: center;
+}
+
+.stat-value {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.stat-label {
+    color: #64748b;
+    font-size: 9px;
+    text-transform: uppercase;
+}
+
+.sidebar {
+    background: #0f172a;
+    border-right: 1px solid #263247;
+    padding: 14px;
+    overflow-y: auto;
+}
+
+.nav-title {
+    color: #64748b;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 8px 8px;
+}
+
+.nav button {
+    width: 100%;
+    padding: 10px 11px;
+    margin-bottom: 5px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: #cbd5e1;
+    text-align: left;
+}
+
+.nav button:hover,
+.nav button.active {
+    background: #172554;
+    border-color: #1d4ed8;
+    color: #fff;
+}
+
+.search {
+    width: 100%;
+    padding: 9px 10px;
+    margin-bottom: 10px;
+    border-radius: 7px;
+    border: 1px solid #334155;
+    background: #020617;
+    color: #e5e7eb;
+    outline: none;
+}
+
+.main {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at center, #111c35 0%, #0b1020 55%);
+}
+
+.view {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+.view.active {
+    display: block;
+}
+
+.dashboard {
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.card {
+    background: #111827;
+    border: 1px solid #263247;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.card-title {
+    color: #94a3b8;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.card-value {
+    margin-top: 7px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.section {
+    margin-top: 18px;
+    background: #111827;
+    border: 1px solid #263247;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.section-header {
+    padding: 12px 14px;
+    border-bottom: 1px solid #263247;
+    font-weight: 700;
+}
+
+.section-body {
+    padding: 14px;
+}
+
+.bar-row {
+    margin-bottom: 10px;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.bar {
+    height: 7px;
+    background: #1e293b;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.bar > div {
+    height: 100%;
+    background: #3b82f6;
+}
+
+.table-wrap {
+    overflow: auto;
+    height: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+th,
+td {
+    padding: 9px 10px;
+    border-bottom: 1px solid #1e293b;
+    text-align: left;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    background: #111827;
+    color: #94a3b8;
+    z-index: 2;
+}
+
+tr:hover {
+    background: #172033;
+}
+
+.node-row {
+    cursor: pointer;
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 7px;
+    border-radius: 99px;
+    background: #1e293b;
+    color: #cbd5e1;
+    font-size: 10px;
+}
+
+.badge.api {
+    background: #172554;
+    color: #93c5fd;
+}
+
+.badge.knowledge {
+    background: #164e63;
+    color: #67e8f9;
+}
+
+.badge.llm {
+    background: #3b0764;
+    color: #d8b4fe;
+}
+
+.badge.workflow {
+    background: #422006;
+    color: #fcd34d;
+}
+
+.badge.core {
+    background: #1e293b;
+}
+
+.graph-toolbar {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    z-index: 10;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tool {
+    border: 1px solid #334155;
+    border-radius: 7px;
+    background: #111827;
+    color: #cbd5e1;
+    padding: 7px 10px;
+}
+
+.tool:hover {
+    background: #1e293b;
+}
+
+#graphCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.details {
+    background: #0f172a;
+    border-left: 1px solid #263247;
+    overflow-y: auto;
+    padding: 14px;
+}
+
+.detail-empty {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    color: #64748b;
+}
+
+.detail-title {
+    font-size: 16px;
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.detail-path {
+    color: #64748b;
+    font-size: 11px;
+    margin-top: 5px;
+    word-break: break-all;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-top: 14px;
+}
+
+.detail-box {
+    padding: 9px;
+    background: #111827;
+    border: 1px solid #263247;
+    border-radius: 7px;
+}
+
+.detail-box-label {
+    color: #64748b;
+    font-size: 9px;
+    text-transform: uppercase;
+}
+
+.detail-box-value {
+    margin-top: 4px;
+    font-weight: 700;
+}
+
+.list {
+    margin-top: 14px;
+}
+
+.list-title {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 7px;
+    color: #94a3b8;
+}
+
+.list-item {
+    padding: 8px;
+    margin-bottom: 5px;
+    background: #111827;
+    border: 1px solid #263247;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.list-item:hover {
+    border-color: #3b82f6;
+}
+
+.list-name {
+    font-size: 11px;
+    word-break: break-word;
+}
+
+.list-meta {
+    margin-top: 3px;
+    color: #64748b;
+    font-size: 9px;
+}
+
+.graph-legend {
+    position: absolute;
+    left: 15px;
+    bottom: 15px;
+    z-index: 5;
+    padding: 9px;
+    background: rgba(15, 23, 42, .92);
+    border: 1px solid #334155;
+    border-radius: 8px;
+    font-size: 10px;
+}
+
+.legend-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 3px 0;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.status {
+    position: fixed;
+    right: 15px;
+    bottom: 15px;
+    padding: 7px 10px;
+    border-radius: 7px;
+    background: #111827;
+    border: 1px solid #263247;
+    color: #94a3b8;
+    font-size: 10px;
+    z-index: 100;
+}
+
+@media(max-width:1100px) {
+    .app {
+        grid-template-columns: 210px 1fr;
+    }
+
+    .details {
+        display: none;
+    }
+
+    .topbar {
+        grid-column: 1 / 3;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="topbar">
+
+    <div class="brand">
+        <div class="logo">N</div>
+        <div>
+            <div class="title">Nusantara Developer Core</div>
+            <div class="subtitle">Graph Analyzer • Local Knowledge Architecture</div>
+        </div>
+    </div>
+
+    <div class="topstats">
+        <div class="stat">
+            <div id="topNodes" class="stat-value">-</div>
+            <div class="stat-label">Nodes</div>
+        </div>
+
+        <div class="stat">
+            <div id="topEdges" class="stat-value">-</div>
+            <div class="stat-label">Edges</div>
+        </div>
+
+        <div class="stat">
+            <div id="topInvalid" class="stat-value">-</div>
+            <div class="stat-label">Invalid</div>
+        </div>
+    </div>
+
+</header>
+
+<aside class="sidebar">
+
+    <input
+        id="globalSearch"
+        class="search"
+        placeholder="Search node..."
+    >
+
+    <div class="nav-title">Analyzer</div>
+
+    <div class="nav">
+
+        <button
+            class="active"
+            data-view="dashboard"
+        >
+            Dashboard
+        </button>
+
+        <button data-view="architecture">
+            Architecture
+        </button>
+
+        <button data-view="dependency">
+            Dependency
+        </button>
+
+        <button data-view="workflow">
+            Workflow
+        </button>
+
+        <button data-view="impact">
+            Impact
+        </button>
+
+        <button data-view="candidates">
+            Candidates
+        </button>
+
+        <button data-view="engines">
+            Engine Summary
+        </button>
+
+        <button data-view="graph">
+            Graphify
+        </button>
+
+    </div>
+
+</aside>
+
+<main class="main">
+
+    <section
+        id="dashboard"
+        class="view active"
+    >
+        <div class="dashboard">
+
+            <h2>Developer Core Overview</h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="card-title">
+                        Graph Nodes
+                    </div>
+                    <div
+                        id="cardNodes"
+                        class="card-value"
+                    >
+                        -
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        Graph Edges
+                    </div>
+                    <div
+                        id="cardEdges"
+                        class="card-value"
+                    >
+                        -
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        Engines
+                    </div>
+                    <div
+                        id="cardEngines"
+                        class="card-value"
+                    >
+                        -
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        Invalid Edges
+                    </div>
+                    <div
+                        id="cardInvalid"
+                        class="card-value"
+                    >
+                        -
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <div class="section-header">
+                    Architecture
+                </div>
+
+                <div
+                    id="architectureBars"
+                    class="section-body"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <div class="section-header">
+                    Engine Distribution
+                </div>
+
+                <div
+                    id="engineBars"
+                    class="section-body"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+            <div class="section">
+
+                <div class="section-header">
+                    Top Connected Components
+                </div>
+
+                <div
+                    id="topNodes"
+                    class="section-body"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section
+        id="architecture"
+        class="view"
+    >
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Engine</th>
+                        <th>Role</th>
+                        <th>Degree</th>
+                    </tr>
+                </thead>
+
+                <tbody id="architectureTable"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section
+        id="dependency"
+        class="view"
+    >
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Incoming</th>
+                        <th>Outgoing</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody id="dependencyTable"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section
+        id="workflow"
+        class="view"
+    >
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Entry Point</th>
+                        <th>Engine</th>
+                        <th>Role</th>
+                        <th>Outgoing</th>
+                    </tr>
+                </thead>
+
+                <tbody id="workflowTable"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section
+        id="impact"
+        class="view"
+    >
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Node</th>
+                        <th>Engine</th>
+                        <th>Degree</th>
+                        <th>Downstream</th>
+                        <th>Upstream</th>
+                    </tr>
+                </thead>
+
+                <tbody id="impactTable"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section
+        id="candidates"
+        class="view"
+    >
+        <div class="dashboard">
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="card-title">
+                        API Candidates
+                    </div>
+                    <div
+                        id="candidateApi"
+                        class="card-value"
+                    >
+                        -
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        Knowledge
+                    </div>
+                    <div
+                        id="candidateKnowledge"
+                        class="card-value"
+                    >
+                        -
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        Workflow
+                    </div>
+                    <div
+                        id="candidateWorkflow"
+                        class="card-value"
+                    >
+                        -
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        LLM
+                    </div>
+                    <div
+                        id="candidateLLM"
+                        class="card-value"
+                    >
+                        -
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    Candidate Nodes
+                </div>
+
+                <div
+                    id="candidateList"
+                    class="section-body"
+                >
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section
+        id="engines"
+        class="view"
+    >
+        <div class="dashboard">
+
+            <div class="section">
+
+                <div class="section-header">
+                    Engine Relationships
+                </div>
+
+                <div
+                    id="engineRelationships"
+                    class="section-body"
+                >
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section
+        id="graph"
+        class="view"
+    >
+
+        <div class="graph-toolbar">
+
+            <button
+                id="zoomIn"
+                class="tool"
+            >
+                +
+            </button>
+
+            <button
+                id="zoomOut"
+                class="tool"
+            >
+                −
+            </button>
+
+            <button
+                id="resetGraph"
+                class="tool"
+            >
+                Reset
+            </button>
+
+            <button
+                id="fitGraph"
+                class="tool"
+            >
+                Fit
+            </button>
+
+            <button
+                id="labelsToggle"
+                class="tool"
+            >
+                Labels
+            </button>
+
+        </div>
+
+        <canvas id="graphCanvas"></canvas>
+
+        <div class="graph-legend">
+
+            <div class="legend-row">
+                <span
+                    class="dot"
+                    style="background:#3b82f6"
+                ></span>
+                API
+            </div>
+
+            <div class="legend-row">
+                <span
+                    class="dot"
+                    style="background:#06b6d4"
+                ></span>
+                Knowledge
+            </div>
+
+            <div class="legend-row">
+                <span
+                    class="dot"
+                    style="background:#a855f7"
+                ></span>
+                LLM
+            </div>
+
+            <div class="legend-row">
+                <span
+                    class="dot"
+                    style="background:#f59e0b"
+                ></span>
+                Workflow
+            </div>
+
+            <div class="legend-row">
+                <span
+                    class="dot"
+                    style="background:#64748b"
+                ></span>
+                Core
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<aside class="details">
+
+    <div
+        id="detailEmpty"
+        class="detail-empty"
+    >
+        <div>
+            <strong>Select a node</strong>
+            <br>
+            <br>
+            Klik node pada Graphify
+            atau tabel analyzer.
+        </div>
+    </div>
+
+    <div
+        id="detailContent"
+        style="display:none"
+    >
+
+        <div
+            id="detailTitle"
+            class="detail-title"
+        ></div>
+
+        <div
+            id="detailPath"
+            class="detail-path"
+        ></div>
+
+        <div
+            id="detailGrid"
+            class="detail-grid"
+        ></div>
+
+        <div class="list">
+
+            <div class="list-title">
+                Incoming Dependencies
+            </div>
+
+            <div id="incomingList"></div>
+
+        </div>
+
+        <div class="list">
+
+            <div class="list-title">
+                Outgoing Dependencies
+            </div>
+
+            <div id="outgoingList"></div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+</div>
+
+<div
+    id="status"
+    class="status"
+>
+    Loading analyzer...
+</div>
+
+<script>
+
+const state = {
+    graph: null,
+    architecture: null,
+    dependency: null,
+    workflow: null,
+    impact: null,
+    candidates: null,
+    engines: null,
+    report: null,
+
+    nodes: [],
+    edges: [],
+
+    nodeMap: new Map(),
+
+    selected: null,
+
+    labels: false,
+
+    zoom: 0.55,
+    panX: 0,
+    panY: 0,
+
+    dragging: false,
+    dragNode: null,
+    lastX: 0,
+    lastY: 0
+};
+
+const canvas =
+    document.getElementById("graphCanvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+async function loadJSON(file) {
+
+    const response =
+        await fetch(file);
+
+    if (!response.ok) {
+        throw new Error(
+            "Tidak dapat membaca " + file
+        );
+    }
+
+    return response.json();
+}
+
+async function loadData() {
+
+    state.graph =
+        await loadJSON("graph.json");
+
+    state.architecture =
+        await loadJSON("architecture.json");
+
+    state.dependency =
+        await loadJSON("dependency.json");
+
+    state.workflow =
+        await loadJSON("workflow.json");
+
+    state.impact =
+        await loadJSON("impact.json");
+
+    state.candidates =
+        await loadJSON("candidates.json");
+
+    state.engines =
+        await loadJSON("engine_summary.json");
+
+    state.report =
+        await loadJSON("graph_report.json");
+
+    state.nodes =
+        state.graph.nodes || [];
+
+    state.edges =
+        state.graph.edges || [];
+
+    for (const node of state.nodes) {
+
+        state.nodeMap.set(
+            String(node.id),
+            node
+        );
+
+    }
+
+    updateHeader();
+    renderDashboard();
+    renderArchitecture();
+    renderDependency();
+    renderWorkflow();
+    renderImpact();
+    renderCandidates();
+    renderEngines();
+
+    initGraph();
+
+    status(
+        "Analyzer loaded • " +
+        state.nodes.length +
+        " nodes • " +
+        state.edges.length +
+        " edges"
+    );
+}
+
+function updateHeader() {
+
+    const stats =
+        state.report.statistics;
+
+    document.getElementById(
+        "topNodes"
+    ).textContent =
+        stats.nodes.toLocaleString();
+
+    document.getElementById(
+        "topEdges"
+    ).textContent =
+        stats.edges.toLocaleString();
+
+    document.getElementById(
+        "topInvalid"
+    ).textContent =
+        stats.invalid_edges.toLocaleString();
+
+    document.getElementById(
+        "cardNodes"
+    ).textContent =
+        stats.nodes.toLocaleString();
+
+    document.getElementById(
+        "cardEdges"
+    ).textContent =
+        stats.edges.toLocaleString();
+
+    document.getElementById(
+        "cardInvalid"
+    ).textContent =
+        stats.invalid_edges.toLocaleString();
+
+    document.getElementById(
+        "cardEngines"
+    ).textContent =
+        Object.keys(
+            state.engines.engines || {}
+        ).length;
+}
+
+function renderBars(
+    target,
+    values
+) {
+
+    const root =
+        document.getElementById(target);
+
+    root.innerHTML = "";
+
+    const entries =
+        Object.entries(values || {});
+
+    if (!entries.length) {
+
+        root.textContent =
+            "Tidak ada data.";
+
+        return;
+    }
+
+    const max =
+        Math.max(
+            ...entries.map(
+                x => x[1]
+            )
+        );
+
+    for (
+        const [name, value]
+        of entries
+    ) {
+
+        const row =
+            document.createElement("div");
+
+        row.className =
+            "bar-row";
+
+        const label =
+            document.createElement("div");
+
+        label.className =
+            "bar-label";
+
+        label.innerHTML =
+            "<span>" +
+            escapeHtml(name) +
+            "</span>" +
+            "<span>" +
+            value.toLocaleString() +
+            "</span>";
+
+        const bar =
+            document.createElement("div");
+
+        bar.className =
+            "bar";
+
+        const fill =
+            document.createElement("div");
+
+        fill.style.width =
+            (
+                max
+                ? value / max * 100
+                : 0
+            ) + "%";
+
+        bar.appendChild(fill);
+
+        row.appendChild(label);
+        row.appendChild(bar);
+
+        root.appendChild(row);
+    }
+}
+
+function renderDashboard() {
+
+    renderBars(
+        "architectureBars",
+        state.architecture.node_types
+    );
+
+    renderBars(
+        "engineBars",
+        state.engines.engines
+    );
+
+    const root =
+        document.getElementById(
+            "topNodes"
+        );
+
+    root.innerHTML = "";
+
+    const top =
+        state.report.top_hubs || [];
+
+    for (
+        const node
+        of top.slice(0, 15)
+    ) {
+
+        const item =
+            document.createElement(
+                "div"
+            );
+
+        item.className =
+            "list-item";
+
+        item.innerHTML =
+            "<div class='list-name'>" +
+            escapeHtml(
+                node.name
+            ) +
+            "</div>" +
+            "<div class='list-meta'>" +
+            escapeHtml(
+                node.engine
+            ) +
+            " • degree " +
+            node.degree +
+            "</div>";
+
+        item.onclick =
+            () => selectNode(node.id);
+
+        root.appendChild(item);
+    }
+}
+
+function renderArchitecture() {
+
+    const body =
+        document.getElementById(
+            "architectureTable"
+        );
+
+    body.innerHTML = "";
+
+    const nodes =
+        state.architecture.nodes || [];
+
+    for (
+        const node
+        of nodes.slice(0, 1000)
+    ) {
+
+        const tr =
+            document.createElement("tr");
+
+        tr.className =
+            "node-row";
+
+        tr.innerHTML =
+            "<td>" +
+            escapeHtml(node.name) +
+            "</td>" +
+            "<td>" +
+            escapeHtml(node.detected_type) +
+            "</td>" +
+            "<td>" +
+            badge(node.engine) +
+            "</td>" +
+            "<td>" +
+            escapeHtml(node.role) +
+            "</td>" +
+            "<td>" +
+            node.degree +
+            "</td>";
+
+        tr.onclick =
+            () => selectNode(node.id);
+
+        body.appendChild(tr);
+    }
+}
+
+function renderDependency() {
+
+    const body =
+        document.getElementById(
+            "dependencyTable"
+        );
+
+    body.innerHTML = "";
+
+    const nodes =
+        state.dependency.nodes || [];
+
+    const sorted =
+        [...nodes].sort(
+            (a, b) =>
+                b.degree - a.degree
+        );
+
+    for (
+        const node
+        of sorted.slice(0, 1000)
+    ) {
+
+        const tr =
+            document.createElement("tr");
+
+        tr.className =
+            "node-row";
+
+        tr.innerHTML =
+            "<td>" +
+            escapeHtml(node.name) +
+            "</td>" +
+            "<td>" +
+            node.in_degree +
+            "</td>" +
+            "<td>" +
+            node.out_degree +
+            "</td>" +
+            "<td>" +
+            node.degree +
+            "</td>";
+
+        tr.onclick =
+            () => selectNode(node.id);
+
+        body.appendChild(tr);
+    }
+}
+
+function renderWorkflow() {
+
+    const body =
+        document.getElementById(
+            "workflowTable"
+        );
+
+    body.innerHTML = "";
+
+    const entries =
+        state.workflow.entry_points || [];
+
+    for (
+        const node
+        of entries
+    ) {
+
+        const tr =
+            document.createElement("tr");
+
+        tr.className =
+            "node-row";
+
+        tr.innerHTML =
+            "<td>" +
+            escapeHtml(node.name) +
+            "</td>" +
+            "<td>" +
+            badge(node.engine) +
+            "</td>" +
+            "<td>" +
+            escapeHtml(node.role) +
+            "</td>" +
+            "<td>" +
+            (
+                node.next_nodes
+                ? node.next_nodes.length
+                : 0
+            ) +
+            "</td>";
+
+        tr.onclick =
+            () => selectNode(node.id);
+
+        body.appendChild(tr);
+    }
+}
+
+function renderImpact() {
+
+    const body =
+        document.getElementById(
+            "impactTable"
+        );
+
+    body.innerHTML = "";
+
+    const hubs =
+        state.impact.top_hubs || [];
+
+    for (
+        const node
+        of hubs
+    ) {
+
+        const tr =
+            document.createElement("tr");
+
+        tr.className =
+            "node-row";
+
+        tr.innerHTML =
+            "<td>" +
+            escapeHtml(node.name) +
+            "</td>" +
+            "<td>" +
+            badge(node.engine) +
+            "</td>" +
+            "<td>" +
+            node.degree +
+            "</td>" +
+            "<td>" +
+            node.downstream_count +
+            "</td>" +
+            "<td>" +
+            node.upstream_count +
+            "</td>";
+
+        tr.onclick =
+            () => selectNode(node.id);
+
+        body.appendChild(tr);
+    }
+}
+
+function renderCandidates() {
+
+    const c =
+        state.candidates;
+
+    document.getElementById(
+        "candidateApi"
+    ).textContent =
+        (c.api || []).length;
+
+    document.getElementById(
+        "candidateKnowledge"
+    ).textContent =
+        (c.knowledge || []).length;
+
+    document.getElementById(
+        "candidateWorkflow"
+    ).textContent =
+        (c.workflow || []).length;
+
+    document.getElementById(
+        "candidateLLM"
+    ).textContent =
+        (c.llm || []).length;
+
+    const root =
+        document.getElementById(
+            "candidateList"
+        );
+
+    root.innerHTML = "";
+
+    for (
+        const group
+        of [
+            ["API", c.api],
+            ["Knowledge", c.knowledge],
+            ["Workflow", c.workflow],
+            ["LLM", c.llm]
+        ]
+    ) {
+
+        const [name, items] =
+            group;
+
+        if (!items || !items.length)
+            continue;
+
+        const title =
+            document.createElement(
+                "div"
+            );
+
+        title.style.margin =
+            "12px 0 6px";
+
+        title.style.fontWeight =
+            "700";
+
+        title.textContent =
+            name;
+
+        root.appendChild(title);
+
+        for (
+            const node
+            of items.slice(0, 50)
+        ) {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+            item.className =
+                "list-item";
+
+            item.innerHTML =
+                "<div class='list-name'>" +
+                escapeHtml(node.name) +
+                "</div>" +
+                "<div class='list-meta'>" +
+                escapeHtml(
+                    node.path || ""
+                ) +
+                "</div>";
+
+            item.onclick =
+                () => selectNode(node.id);
+
+            root.appendChild(item);
+        }
+    }
+}
+
+function renderEngines() {
+
+    const root =
+        document.getElementById(
+            "engineRelationships"
+        );
+
+    root.innerHTML = "";
+
+    const relationships =
+        state.engines.relationships || {};
+
+    const entries =
+        Object.entries(
+            relationships
+        ).sort(
+            (a, b) =>
+                b[1] - a[1]
+        );
+
+    for (
+        const [name, count]
+        of entries
+    ) {
+
+        const item =
+            document.createElement(
+                "div"
+            );
+
+        item.className =
+            "list-item";
+
+        item.innerHTML =
+            "<div class='list-name'>" +
+            escapeHtml(name) +
+            "</div>" +
+            "<div class='list-meta'>" +
+            count.toLocaleString() +
+            " relationships" +
+            "</div>";
+
+        root.appendChild(item);
+    }
+}
+
+function selectNode(id) {
+
+    const node =
+        state.nodeMap.get(
+            String(id)
+        );
+
+    if (!node)
+        return;
+
+    state.selected =
+        String(id);
+
+    document.getElementById(
+        "detailEmpty"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "detailContent"
+    ).style.display =
+        "block";
+
+    document.getElementById(
+        "detailTitle"
+    ).textContent =
+        node.name ||
+        node.label ||
+        node.id;
+
+    document.getElementById(
+        "detailPath"
+    ).textContent =
+        node.path || "";
+
+    const grid =
+        document.getElementById(
+            "detailGrid"
+        );
+
+    grid.innerHTML =
+        box("Type", node.type) +
+        box(
+            "Engine",
+            node.engine ||
+            "Core"
+        ) +
+        box(
+            "Role",
+            node.role ||
+            ""
+        ) +
+        box(
+            "Degree",
+            node.degree ||
+            0
+        );
+
+    renderRelationList(
+        "incomingList",
+        findIncoming(node.id)
+    );
+
+    renderRelationList(
+        "outgoingList",
+        findOutgoing(node.id)
+    );
+
+    drawGraph();
+}
+
+function findIncoming(id) {
+
+    const result = [];
+
+    for (
+        const edge
+        of state.edges
+    ) {
+
+        if (
+            String(edge.target)
+            === String(id)
+        ) {
+
+            const node =
+                state.nodeMap.get(
+                    String(edge.source)
+                );
+
+            if (node)
+                result.push(node);
+
+        }
+    }
+
+    return result;
+}
+
+function findOutgoing(id) {
+
+    const result = [];
+
+    for (
+        const edge
+        of state.edges
+    ) {
+
+        if (
+            String(edge.source)
+            === String(id)
+        ) {
+
+            const node =
+                state.nodeMap.get(
+                    String(edge.target)
+                );
+
+            if (node)
+                result.push(node);
+
+        }
+    }
+
+    return result;
+}
+
+function renderRelationList(
+    target,
+    nodes
+) {
+
+    const root =
+        document.getElementById(
+            target
+        );
+
+    root.innerHTML = "";
+
+    for (
+        const node
+        of nodes.slice(0, 50)
+    ) {
+
+        const item =
+            document.createElement(
+                "div"
+            );
+
+        item.className =
+            "list-item";
+
+        item.innerHTML =
+            "<div class='list-name'>" +
+            escapeHtml(node.name) +
+            "</div>" +
+            "<div class='list-meta'>" +
+            escapeHtml(
+                node.engine ||
+                ""
+            ) +
+            "</div>";
+
+        item.onclick =
+            () => selectNode(node.id);
+
+        root.appendChild(item);
+    }
+
+    if (!nodes.length) {
+
+        root.innerHTML =
+            "<div style='color:#64748b;font-size:11px'>" +
+            "Tidak ada relationship." +
+            "</div>";
+
+    }
+}
+
+function box(
+    label,
+    value
+) {
+
+    return `
+        <div class="detail-box">
+            <div class="detail-box-label">
+                ${escapeHtml(label)}
+            </div>
+            <div class="detail-box-value">
+                ${escapeHtml(String(value ?? ""))}
+            </div>
+        </div>
+    `;
+}
+
+function badge(engine) {
+
+    const cls =
+        String(
+            engine || ""
+        ).toLowerCase();
+
+    return `
+        <span class="badge ${cls}">
+            ${escapeHtml(engine || "Core")}
+        </span>
+    `;
+}
+
+function escapeHtml(value) {
+
+    return String(
+        value ?? ""
+    )
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function status(message) {
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        message;
+}
+
+function switchView(view) {
+
+    document
+        .querySelectorAll(".view")
+        .forEach(
+            el =>
+                el.classList.remove(
+                    "active"
+                )
+        );
+
+    document
+        .getElementById(view)
+        .classList.add(
+            "active"
+        );
+
+    document
+        .querySelectorAll(
+            ".nav button"
+        )
+        .forEach(
+            button =>
+                button.classList.toggle(
+                    "active",
+                    button.dataset.view
+                    === view
+                )
+        );
+
+    if (view === "graph") {
+
+        resizeCanvas();
+
+        drawGraph();
+
+    }
+}
+
+document
+    .querySelectorAll(
+        ".nav button"
+    )
+    .forEach(
+        button => {
+
+            button.onclick =
+                () =>
+                    switchView(
+                        button.dataset.view
+                    );
+
+        }
+    );
+
+document.getElementById(
+    "globalSearch"
+).addEventListener(
+    "input",
+    event => {
+
+        const query =
+            event.target.value
+                .toLowerCase()
+                .trim();
+
+        if (!query)
+            return;
+
+        const found =
+            state.nodes.find(
+                node =>
+                    String(
+                        node.name ||
+                        node.label ||
+                        ""
+                    )
+                    .toLowerCase()
+                    .includes(query)
+            );
+
+        if (found) {
+
+            switchView("graph");
+
+            selectNode(found.id);
+
+        }
+
+    }
+);
+
+let graphNodes = [];
+
+function initGraph() {
+
+    resizeCanvas();
+
+    createGraphLayout();
+
+    drawGraph();
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            resizeCanvas();
+
+            drawGraph();
+
+        }
+    );
+}
+
+function resizeCanvas() {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    canvas.width =
+        rect.width *
+        devicePixelRatio;
+
+    canvas.height =
+        rect.height *
+        devicePixelRatio;
+
+    ctx.setTransform(
+        devicePixelRatio,
+        0,
+        0,
+        devicePixelRatio,
+        0,
+        0
+    );
+}
+
+function createGraphLayout() {
+
+    const groups = {};
+
+    for (
+        const node
+        of state.nodes
+    ) {
+
+        const type =
+            node.type ||
+            "Other";
+
+        if (!groups[type])
+            groups[type] = [];
+
+        groups[type].push(node);
+
+    }
+
+    const groupNames =
+        Object.keys(groups);
+
+    graphNodes = [];
+
+    const width =
+        canvas.clientWidth;
+
+    const height =
+        canvas.clientHeight;
+
+    groupNames.forEach(
+        (groupName, gi) => {
+
+            const items =
+                groups[groupName];
+
+            const cols =
+                Math.max(
+                    1,
+                    Math.ceil(
+                        Math.sqrt(
+                            Math.min(
+                                items.length,
+                                100
+                            )
+                        )
+                    )
+                );
+
+            const visible =
+                items.slice(
+                    0,
+                    250
+                );
+
+            visible.forEach(
+                (node, i) => {
+
+                    const col =
+                        i % cols;
+
+                    const row =
+                        Math.floor(
+                            i / cols
+                        );
+
+                    const areaW =
+                        width /
+                        groupNames.length;
+
+                    const baseX =
+                        areaW *
+                        gi +
+                        areaW / 2;
+
+                    const offsetX =
+                        (
+                            col -
+                            (cols - 1) / 2
+                        ) * 24;
+
+                    const offsetY =
+                        (
+                            row -
+                            Math.floor(
+                                visible.length /
+                                cols /
+                                2
+                            )
+                        ) * 22;
+
+                    graphNodes.push({
+                        id: String(node.id),
+                        x:
+                            baseX +
+                            offsetX,
+                        y:
+                            height / 2 +
+                            offsetY,
+                        node
+                    });
+
+                }
+            );
+
+        }
+    );
+}
+
+function nodeColor(node) {
+
+    const engine =
+        String(
+            node.engine ||
+            ""
+        ).toLowerCase();
+
+    if (engine === "api")
+        return "#3b82f6";
+
+    if (engine === "knowledge")
+        return "#06b6d4";
+
+    if (engine === "llm")
+        return "#a855f7";
+
+    if (engine === "workflow")
+        return "#f59e0b";
+
+    return "#64748b";
+}
+
+function drawGraph() {
+
+    if (!canvas.width)
+        return;
+
+    const width =
+        canvas.clientWidth;
+
+    const height =
+        canvas.clientHeight;
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+    ctx.save();
+
+    ctx.translate(
+        width / 2 +
+        state.panX,
+        height / 2 +
+        state.panY
+    );
+
+    ctx.scale(
+        state.zoom,
+        state.zoom
+    );
+
+    ctx.translate(
+        -width / 2,
+        -height / 2
+    );
+
+    const visibleMap =
+        new Map();
+
+    for (
+        const item
+        of graphNodes
+    ) {
+
+        visibleMap.set(
+            item.id,
+            item
+        );
+
+    }
+
+    ctx.lineWidth =
+        0.6;
+
+    for (
+        const edge
+        of state.edges
+    ) {
+
+        const source =
+            visibleMap.get(
+                String(
+                    edge.source
+                )
+            );
+
+        const target =
+            visibleMap.get(
+                String(
+                    edge.target
+                )
+            );
+
+        if (!source || !target)
+            continue;
+
+        let alpha = 0.13;
+
+        if (
+            state.selected &&
+            (
+                String(
+                    edge.source
+                ) ===
+                state.selected ||
+                String(
+                    edge.target
+                ) ===
+                state.selected
+            )
+        ) {
+            alpha = 0.9;
+        }
+
+        ctx.strokeStyle =
+            "rgba(148,163,184," +
+            alpha +
+            ")";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            source.x,
+            source.y
+        );
+
+        ctx.lineTo(
+            target.x,
+            target.y
+        );
+
+        ctx.stroke();
+
+    }
+
+    for (
+        const item
+        of graphNodes
+    ) {
+
+        const node =
+            item.node;
+
+        const selected =
+            String(node.id) ===
+            state.selected;
+
+        const radius =
+            selected
+            ? 7
+            : 3.2;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            item.x,
+            item.y,
+            radius,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            nodeColor(node);
+
+        ctx.fill();
+
+        if (selected) {
+
+            ctx.strokeStyle =
+                "#ffffff";
+
+            ctx.lineWidth =
+                2;
+
+            ctx.stroke();
+
+        }
+
+        if (
+            state.labels &&
+            (
+                selected ||
+                state.zoom > 1
+            )
+        ) {
+
+            ctx.fillStyle =
+                "#cbd5e1";
+
+            ctx.font =
+                "10px Segoe UI";
+
+            ctx.fillText(
+                String(
+                    node.name ||
+                    node.label ||
+                    node.id
+                ).slice(0, 45),
+                item.x + 8,
+                item.y + 3
+            );
+
+        }
+
+    }
+
+    ctx.restore();
+}
+
+function findGraphNode(
+    x,
+    y
+) {
+
+    const width =
+        canvas.clientWidth;
+
+    const height =
+        canvas.clientHeight;
+
+    const gx =
+        (
+            x -
+            width / 2 -
+            state.panX
+        ) /
+        state.zoom +
+        width / 2;
+
+    const gy =
+        (
+            y -
+            height / 2 -
+            state.panY
+        ) /
+        state.zoom +
+        height / 2;
+
+    let closest =
+        null;
+
+    let distance =
+        Infinity;
+
+    for (
+        const item
+        of graphNodes
+    ) {
+
+        const dx =
+            item.x - gx;
+
+        const dy =
+            item.y - gy;
+
+        const d =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+        if (
+            d < distance &&
+            d < 14
+        ) {
+
+            distance = d;
+            closest = item;
+
+        }
+
+    }
+
+    return closest;
+}
+
+canvas.addEventListener(
+    "mousedown",
+    event => {
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        const x =
+            event.clientX -
+            rect.left;
+
+        const y =
+            event.clientY -
+            rect.top;
+
+        const node =
+            findGraphNode(
+                x,
+                y
+            );
+
+        if (node) {
+
+            state.dragNode =
+                node;
+
+            selectNode(
+                node.id
+            );
+
+        } else {
+
+            state.dragging =
+                true;
+
+        }
+
+        state.lastX =
+            event.clientX;
+
+        state.lastY =
+            event.clientY;
+
+    }
+);
+
+canvas.addEventListener(
+    "mousemove",
+    event => {
+
+        const dx =
+            event.clientX -
+            state.lastX;
+
+        const dy =
+            event.clientY -
+            state.lastY;
+
+        if (state.dragNode) {
+
+            state.dragNode.x +=
+                dx /
+                state.zoom;
+
+            state.dragNode.y +=
+                dy /
+                state.zoom;
+
+            drawGraph();
+
+        }
+        else if (
+            state.dragging
+        ) {
+
+            state.panX += dx;
+            state.panY += dy;
+
+            drawGraph();
+
+        }
+
+        state.lastX =
+            event.clientX;
+
+        state.lastY =
+            event.clientY;
+
+    }
+);
+
+window.addEventListener(
+    "mouseup",
+    () => {
+
+        state.dragging =
+            false;
+
+        state.dragNode =
+            null;
+
+    }
+);
+
+canvas.addEventListener(
+    "wheel",
+    event => {
+
+        event.preventDefault();
+
+        state.zoom *=
+            event.deltaY < 0
+            ? 1.12
+            : 0.89;
+
+        state.zoom =
+            Math.max(
+                0.1,
+                Math.min(
+                    5,
+                    state.zoom
+                )
+            );
+
+        drawGraph();
+
+    },
+    {
+        passive: false
+    }
+);
+
+document.getElementById(
+    "zoomIn"
+).onclick = () => {
+
+    state.zoom *= 1.2;
+
+    drawGraph();
+
+};
+
+document.getElementById(
+    "zoomOut"
+).onclick = () => {
+
+    state.zoom *= 0.83;
+
+    drawGraph();
+
+};
+
+document.getElementById(
+    "resetGraph"
+).onclick = () => {
+
+    state.zoom = 0.55;
+    state.panX = 0;
+    state.panY = 0;
+
+    createGraphLayout();
+    drawGraph();
+
+};
+
+document.getElementById(
+    "fitGraph"
+).onclick = () => {
+
+    state.zoom = 0.55;
+    state.panX = 0;
+    state.panY = 0;
+
+    drawGraph();
+
+};
+
+document.getElementById(
+    "labelsToggle"
+).onclick = () => {
+
+    state.labels =
+        !state.labels;
+
+    drawGraph();
+
+};
+
+loadData()
+.catch(
+    error => {
+
+        console.error(error);
+
+        status(
+            "ERROR: " +
+            error.message
+        );
+
+        alert(
+            "Gagal memuat analyzer:\\n\\n" +
+            error.message
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>

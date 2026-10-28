@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-10-09T09:38:19.061274+07:00",
+  "status": "PARTIAL",
+  "observed_evidence": [
+    "Nonempty/invalid filter rejected before canonical retrieval; HTTP 422",
+    "Empty/default canonical query and effective profile regression pass",
+    "Existing RAG/store unchanged; official fixtures not promoted to oracle",
+    "Native provider browser uses clearly non-official retrieval fixture"
+  ],
+  "files_changed": [
+    "app/knowledge/engine.py",
+    "app/api/routes.py",
+    "tests/test_effective_rag_profile.py",
+    "tests/test_v1_operator_control.py"
+  ],
+  "reason": "Prevent silently ignored filters without inventing unapproved authority semantics",
+  "tests_run": [
+    "regression-20261009-090953/results.xml",
+    "regression-20261009-090953/guards.json",
+    "targeted-20261009-093732/results.xml",
+    "FINAL_CHECKS.json"
+  ],
+  "limitations": [
+    "No functional nonempty filtering schema implemented",
+    "Historical official oracle findings not closed by fixtures"
+  ],
+  "remaining_blockers": [
+    "CC06 official oracle: two REVIEW_REQUIRED cases, one MISSING passport case; issuer/jurisdiction/validity/ingest authorization needed",
+    "Approved filter grammar/authority metadata absent; nonempty filter safely rejected, not implemented",
+    "Full native semantic-worker plus production RAG/store/model UI integration not verified"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "gate": "15",
+  "name": "Nusantara Operational Intelligence",
+  "version": "15.0.0-final",
+  "timestamp": "2026-10-05T14:24:39.143995",
+  "status": "PASS",
+  "checks": {
+    "passed": 5,
+    "total": 5,
+    "results": {
+      "gate14_final": true,
+      "gate15_1_runtime_health": true,
+      "gate15_2_engine_runtime": true,
+      "gate15_3_graph_operational": true,
+      "gate15_4_operational_synthesis": true
+    }
+  },
+  "foundation": {
+    "gate14": "PASS",
+    "runtime_health": "PASS",
+    "engine_runtime": "PASS",
+    "graph_operational": "PASS",
+    "operational_synthesis": "PASS"
+  },
+  "system": {
+    "status": "healthy",
+    "graph_nodes": 2824,
+    "graph_links": 5920,
+    "llm": {
+      "status": "ok",
+      "available": true,
+      "model": "llama3.2:1b",
+      "latency_ms": 298
+    }
+  },
+  "capabilities": {
+    "runtime_health_truth": true,
+    "engine_runtime_truth": true,
+    "graph_operational_truth": true,
+    "operational_synthesis": true,
+    "developer_core": true,
+    "self_analysis": true,
+    "impact_analysis": true,
+    "deterministic_change_query": true,
+    "llm_required_for_validation": false
+  },
+  "contract": {
+    "gate14_must_remain_pass": true,
+    "all_gate15_layers_must_pass": true,
+    "operational_truth_must_be_deterministic": true,
+    "validation_must_not_require_llm": true,
+    "graph_schema": "nodes + links",
+    "runtime_status_must_be_traceable": true
+  }
+}

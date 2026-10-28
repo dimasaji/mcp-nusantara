@@ -1,0 +1,103 @@
+{
+  "status": "COMPLETE",
+  "result": "PASS_SCOPED",
+  "phases": [
+    "A_AUDIT",
+    "B_DESIGN",
+    "C_IMPLEMENTATION",
+    "D_TEST",
+    "E_VALIDATION"
+  ],
+  "source_build_id": "sha256:e62526b3563f12fd419f5b00ee1c027cee2918e7633117606fd0f1d3ed78c2ca",
+  "overall_v1_acceptance": "FAIL/HOLD",
+  "baseline_passed": 10,
+  "targeted_passed": 32,
+  "regression": {
+    "passed": 289,
+    "subtests_passed": 28,
+    "skipped": 1,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 108.72,
+    "evidence": "reports/DEVELOPER_CORE_REGRESSION_20261006.xml"
+  },
+  "regression_runs": 1,
+  "scope_integrity": {
+    "protected_checked": 358,
+    "unchanged": 357,
+    "changed": [
+      "app/developer_core/engine.py"
+    ],
+    "backup_matches_baseline": true,
+    "all_existing_methods_preserved": true
+  },
+  "graphify": {
+    "mode": "AST_ONLY",
+    "nodes": 5071,
+    "edges": 9266,
+    "communities": 729,
+    "html": "AGGREGATED_COMMUNITY_VIEW",
+    "warnings": [
+      "temporary report directories inaccessible",
+      "PDF extraction unavailable",
+      "community labels partly from hubs"
+    ]
+  },
+  "execution_enabled": false,
+  "production_changes": "NONE",
+  "security_scan": "PASS_SCOPED_ZERO_FINDINGS",
+  "snapshot_evidence": "reports/DEVELOPER_CORE_ANALYSIS_20261006.json",
+  "limits": [
+    "static snapshot not filesystem race sandbox",
+    "existing graph relationships are not runtime proof",
+    "bounded summaries may be partial",
+    "timestamp represents graph mtime, not request time"
+  ],
+  "evidence_sha256": {
+    "reports/DEVELOPER_CORE_BASELINE_20261006.xml": "301fdd5ac59b7a8e68069f155eb1169c693d48e822860ed661daf74c43e27b1d",
+    "reports/DEVELOPER_CORE_TARGETED_20261006.xml": "982f3309c73655d0bfc9d4bb4aafb5c16f02d9380bf6cc8f1c840b92e0d5feea",
+    "reports/DEVELOPER_CORE_REGRESSION_20261006.xml": "7a9bfa2d614cadfe8802ff1e6d7a581d4ba6a4676db6ae3d27387261ebebdf5a",
+    "reports/DEVELOPER_CORE_SECURITY_20261006.json": "07bdd669e4e9532bf231b92e29aeb945f8d51158f052d2293cf5e28d6f886f3d",
+    "reports/DEVELOPER_CORE_ANALYSIS_20261006.json": "367762459d4df4aec87cd20f33ce59b8c8e992595878b78b6fd4809857ee2e33",
+    "reports/NUSANTARA-DEVELOPER-CORE-ENGINE-IMPLEMENTATION-2026-10-06.md": "480cbc5815c8d13202319c45d7fedfc5d37f640f4436d2a6094ded531367879c"
+  },
+  "junit": {
+    "DEVELOPER_CORE_BASELINE_20261006.xml": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "10",
+        "time": "0.537",
+        "timestamp": "2026-10-06T17:51:17.925377+07:00",
+        "hostname": "DESKTOP-GJHS3LR"
+      }
+    ],
+    "DEVELOPER_CORE_TARGETED_20261006.xml": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "32",
+        "time": "12.527",
+        "timestamp": "2026-10-06T17:54:27.969874+07:00",
+        "hostname": "DESKTOP-GJHS3LR"
+      }
+    ],
+    "DEVELOPER_CORE_REGRESSION_20261006.xml": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "1",
+        "tests": "318",
+        "time": "108.552",
+        "timestamp": "2026-10-06T17:55:42.032332+07:00",
+        "hostname": "DESKTOP-GJHS3LR"
+      }
+    ]
+  },
+  "completed_at": "2026-10-06T10:59:48.679114+00:00"
+}

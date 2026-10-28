@@ -1,0 +1,5362 @@
+{
+  "gate": "14.6.1",
+  "engine": "Developer Core Directional Impact Intelligence",
+  "version": "14.6.1",
+  "timestamp": "2026-10-03T20:08:42.252808",
+  "source_of_truth": "C:\\Users\\dmaza\\mcp-starter",
+  "graph": {
+    "nodes": 2768,
+    "links": 6079
+  },
+  "impact_policy": {
+    "directional": true,
+    "max_depth": 3,
+    "allowed_relations": [
+      "calls",
+      "depends_on",
+      "imports",
+      "imports_from",
+      "indirect_call",
+      "inherits",
+      "re_exports",
+      "uses"
+    ],
+    "ignored_relations": [
+      "contains",
+      "method",
+      "references",
+      "rationale_for"
+    ]
+  },
+  "runtime": {
+    "modules": 7,
+    "targets": 7
+  },
+  "impact_analysis": {
+    "affected_relationships": 519,
+    "by_module": {
+      "app.api.routes": 76,
+      "app.language.engine": 106,
+      "app.problem.engine": 106,
+      "app.knowledge.engine": 106,
+      "app.reasoning.engine": 106,
+      "app.developer_core.graph_bridge": 6,
+      "app.core.gate_integration": 13
+    }
+  },
+  "targets": [
+    {
+      "module": "app.api.routes",
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\api\\routes.py",
+      "filename": "routes.py",
+      "nodes": [
+        "app_api_routes",
+        "app_api_v2_routes",
+        "tests_v2_test_devcore_routes",
+        "tests_v2_test_devcore_routes_rationale_1"
+      ]
+    },
+    {
+      "module": "app.language.engine",
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\language\\engine.py",
+      "filename": "engine.py",
+      "nodes": [
+        "app_action_engine",
+        "app_context_engine",
+        "app_developer_core_engine",
+        "app_handoff_engine",
+        "app_knowledge_engine",
+        "app_language_engine",
+        "app_memory_engine",
+        "app_orchestration_engine",
+        "app_policy_engine",
+        "app_policy_policy_engine",
+        "app_problem_engine",
+        "app_reasoning_engine",
+        "app_skills_sop_semantic_engine",
+        "app_trust_engine",
+        "app_workflow_engine",
+        "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script"
+      ]
+    },
+    {
+      "module": "app.problem.engine",
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\problem\\engine.py",
+      "filename": "engine.py",
+      "nodes": [
+        "app_action_engine",
+        "app_context_engine",
+        "app_developer_core_engine",
+        "app_handoff_engine",
+        "app_knowledge_engine",
+        "app_language_engine",
+        "app_memory_engine",
+        "app_orchestration_engine",
+        "app_policy_engine",
+        "app_policy_policy_engine",
+        "app_problem_engine",
+        "app_reasoning_engine",
+        "app_skills_sop_semantic_engine",
+        "app_trust_engine",
+        "app_workflow_engine",
+        "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script"
+      ]
+    },
+    {
+      "module": "app.knowledge.engine",
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\knowledge\\engine.py",
+      "filename": "engine.py",
+      "nodes": [
+        "app_action_engine",
+        "app_context_engine",
+        "app_developer_core_engine",
+        "app_handoff_engine",
+        "app_knowledge_engine",
+        "app_language_engine",
+        "app_memory_engine",
+        "app_orchestration_engine",
+        "app_policy_engine",
+        "app_policy_policy_engine",
+        "app_problem_engine",
+        "app_reasoning_engine",
+        "app_skills_sop_semantic_engine",
+        "app_trust_engine",
+        "app_workflow_engine",
+        "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script"
+      ]
+    },
+    {
+      "module": "app.reasoning.engine",
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\reasoning\\engine.py",
+      "filename": "engine.py",
+      "nodes": [
+        "app_action_engine",
+        "app_context_engine",
+        "app_developer_core_engine",
+        "app_handoff_engine",
+        "app_knowledge_engine",
+        "app_language_engine",
+        "app_memory_engine",
+        "app_orchestration_engine",
+        "app_policy_engine",
+        "app_policy_policy_engine",
+        "app_problem_engine",
+        "app_reasoning_engine",
+        "app_skills_sop_semantic_engine",
+        "app_trust_engine",
+        "app_workflow_engine",
+        "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script"
+      ]
+    },
+    {
+      "module": "app.developer_core.graph_bridge",
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\developer_core\\graph_bridge.py",
+      "filename": "graph_bridge.py",
+      "nodes": [
+        "app_developer_core_graph_bridge"
+      ]
+    },
+    {
+      "module": "app.core.gate_integration",
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\core\\gate_integration.py",
+      "filename": "gate_integration.py",
+      "nodes": [
+        "app_core_gate_integration",
+        "tests_test_gate_integration"
+      ]
+    }
+  ],
+  "impact": [
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "time",
+      "affected_label": "time",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "datetime",
+      "affected_label": "datetime",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "fastapi",
+      "affected_label": "FastAPI",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "pydantic",
+      "affected_label": "pydantic",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_core_config",
+      "affected_label": "config.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_core_gate_integration",
+      "affected_label": "gate_integration.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_developer_core_graph_bridge",
+      "affected_label": "graph_bridge.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_knowledge_engine",
+      "affected_label": "knowledge/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_knowledge_grounding",
+      "affected_label": "knowledge/grounding.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_knowledge_schemas",
+      "affected_label": "knowledge/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_models_ollama",
+      "affected_label": "ollama.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_problem_classifier",
+      "affected_label": "classifier.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_problem_detector",
+      "affected_label": "detector.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_problem_engine",
+      "affected_label": "problem/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_hermes_agent",
+      "affected_label": "agent.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_language_engine",
+      "affected_label": "language/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_workflow_engine",
+      "affected_label": "workflow/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_core_gate_integration_gateintegration",
+      "affected_label": "GateIntegration",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_developer_core_graph_bridge_graphifybridge",
+      "affected_label": "GraphifyBridge",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_knowledge_engine_knowledgeengine",
+      "affected_label": "KnowledgeEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_knowledge_grounding_evidencegroundingguard",
+      "affected_label": "EvidenceGroundingGuard",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_knowledge_schemas_documentingestrequest",
+      "affected_label": "DocumentIngestRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_models_ollama_ollamaprovider",
+      "affected_label": "OllamaProvider",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_problem_classifier_problemclassifier",
+      "affected_label": "ProblemClassifier",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_problem_detector_problemdetector",
+      "affected_label": "ProblemDetector",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_problem_engine_problemengine",
+      "affected_label": "ProblemEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_hermes_agent_hermesagent",
+      "affected_label": "HermesAgent",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_language_engine_languageengine",
+      "affected_label": "LanguageEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_workflow_engine_workflowengine",
+      "affected_label": "WorkflowEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_routes",
+      "affected_node": "app_handoff_engine_handoffengine",
+      "affected_label": "HandoffEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "hmac",
+      "affected_label": "hmac",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "os",
+      "affected_label": "os",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "fastapi",
+      "affected_label": "FastAPI",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "pydantic",
+      "affected_label": "pydantic",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_approval_init",
+      "affected_label": "approval/__init__.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_core_config",
+      "affected_label": "config.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_devcore_init",
+      "affected_label": "devcore/__init__.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_experience_init",
+      "affected_label": "experience/__init__.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_research_failure_analysis",
+      "affected_label": "failure_analysis.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_research_gap_detection",
+      "affected_label": "gap_detection.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_knowledge_engine",
+      "affected_label": "knowledge/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_language_engine",
+      "affected_label": "language/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_models_ollama",
+      "affected_label": "ollama.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_observability_init",
+      "affected_label": "observability/__init__.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_v2_init",
+      "affected_label": "v2/__init__.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_v2_orchestrator",
+      "affected_label": "orchestrator.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_v2_wiring",
+      "affected_label": "wiring.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_approval_queue_approvalerror",
+      "affected_label": "ApprovalError",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_approval_queue_approvalqueue",
+      "affected_label": "ApprovalQueue",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_approval_audit_trail_audittrail",
+      "affected_label": "AuditTrail",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_devcore_core_devcore",
+      "affected_label": "DevCore",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_experience_events_eventrecorder",
+      "affected_label": "EventRecorder",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_experience_feedback_feedbackrejected",
+      "affected_label": "FeedbackRejected",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_experience_feedback_feedbackstore",
+      "affected_label": "FeedbackStore",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_research_failure_analysis_analyze",
+      "affected_label": "analyze()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_research_gap_detection_detect_gaps",
+      "affected_label": "detect_gaps()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_knowledge_engine_knowledgeengine",
+      "affected_label": "KnowledgeEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_language_engine_languageengine",
+      "affected_label": "LanguageEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_models_ollama_ollamaprovider",
+      "affected_label": "OllamaProvider",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_v2_orchestrator_v2orchestrator",
+      "affected_label": "V2Orchestrator",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_v2_wiring_v1_policy_check",
+      "affected_label": "v1_policy_check()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_v2_wiring_v1_trust_check",
+      "affected_label": "v1_trust_check()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "app_api_v2_routes",
+      "affected_node": "app_observability_metrics",
+      "affected_label": "metrics.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "tests_v2_test_devcore_routes",
+      "affected_node": "asyncio",
+      "affected_label": "asyncio",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "tests_v2_test_devcore_routes",
+      "affected_node": "importlib_util",
+      "affected_label": "importlib_util",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "tests_v2_test_devcore_routes",
+      "affected_node": "sys",
+      "affected_label": "sys",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "tests_v2_test_devcore_routes",
+      "affected_node": "tempfile",
+      "affected_label": "tempfile",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "tests_v2_test_devcore_routes",
+      "affected_node": "types",
+      "affected_label": "types",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "tests_v2_test_devcore_routes",
+      "affected_node": "unittest",
+      "affected_label": "unittest",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "tests_v2_test_devcore_routes",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "tests_v2_test_devcore_routes",
+      "affected_node": "tests_v2_test_devcore_integration",
+      "affected_label": "test_devcore_integration.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "tests_v2_test_devcore_routes",
+      "affected_node": "tests_v2_test_devcore_integration_naiveregistry",
+      "affected_label": "NaiveRegistry",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.api.routes",
+      "source_file": "routes.py",
+      "source_node": "tests_v2_test_devcore_routes",
+      "affected_node": "tests_v2_test_devcore_integration_stub_modules",
+      "affected_label": "stub_modules()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas",
+      "affected_label": "context/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_session",
+      "affected_label": "context/session.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_context_builder",
+      "affected_label": "context_builder.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextstate",
+      "affected_label": "ContextState",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextupdate",
+      "affected_label": "ContextUpdate",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextmetadata",
+      "affected_label": "ContextMetadata",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextwindowconfig",
+      "affected_label": "ContextWindowConfig",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_sessionisolationconfig",
+      "affected_label": "SessionIsolationConfig",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_historyentry",
+      "affected_label": "HistoryEntry",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_missinginformationrequest",
+      "affected_label": "MissingInformationRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_missinginformationresponse",
+      "affected_label": "MissingInformationResponse",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_session_sessionmanager",
+      "affected_label": "SessionManager",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_context_builder_contextbuilder",
+      "affected_label": "ContextBuilder",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "json",
+      "affected_label": "json",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "uuid",
+      "affected_label": "uuid",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "datetime",
+      "affected_label": "datetime",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas",
+      "affected_label": "handoff/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handofflevel",
+      "affected_label": "HandoffLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handoffrequest",
+      "affected_label": "HandoffRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handoffstatus",
+      "affected_label": "HandoffStatus",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag",
+      "affected_label": "rag.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag_rag",
+      "affected_label": "RAG",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag_create_rag",
+      "affected_label": "create_rag()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_schemas_documentingestrequest",
+      "affected_label": "DocumentIngestRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "re",
+      "affected_label": "re",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "time",
+      "affected_label": "time",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_normalizer",
+      "affected_label": "normalizer.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_intent",
+      "affected_label": "intent.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_fusion",
+      "affected_label": "fusion.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_semantic_intent",
+      "affected_label": "semantic_intent.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_entity",
+      "affected_label": "entity.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas",
+      "affected_label": "language/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_normalizer_textnormalizer",
+      "affected_label": "TextNormalizer",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_intent_intentclassifier",
+      "affected_label": "IntentClassifier",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_fusion_intentfusion",
+      "affected_label": "IntentFusion",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_semantic_intent_semanticintentengine",
+      "affected_label": "SemanticIntentEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_entity_entityextractor",
+      "affected_label": "EntityExtractor",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_normalizationresult",
+      "affected_label": "NormalizationResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_languagedetectionresult",
+      "affected_label": "LanguageDetectionResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_intentresult",
+      "affected_label": "IntentResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entity",
+      "affected_label": "Entity",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entityresult",
+      "affected_label": "EntityResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entitytype",
+      "affected_label": "EntityType",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_structuredunderstanding",
+      "affected_label": "StructuredUnderstanding",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_pipelineresult",
+      "affected_label": "PipelineResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_memory_engine",
+      "affected_node": "collections",
+      "affected_label": "collections",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_memory_engine",
+      "affected_node": "datetime",
+      "affected_label": "datetime",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas",
+      "affected_label": "policy/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_policyevaluation",
+      "affected_label": "PolicyEvaluation",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_policydecision",
+      "affected_label": "PolicyDecision",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_risklevel",
+      "affected_label": "RiskLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "logging",
+      "affected_label": "logging",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema",
+      "affected_label": "problem_schema.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector",
+      "affected_label": "detector.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier",
+      "affected_label": "classifier.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_engine_compat_analyze",
+      "affected_label": "_compat_analyze()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "indirect_call"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemstatement",
+      "affected_label": "ProblemStatement",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_goal",
+      "affected_label": "Goal",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_clarificationrequest",
+      "affected_label": "ClarificationRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_riskassessment",
+      "affected_label": "RiskAssessment",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_missinginfo",
+      "affected_label": "MissingInfo",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_possiblesolution",
+      "affected_label": "PossibleSolution",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemresolution",
+      "affected_label": "ProblemResolution",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemschema",
+      "affected_label": "ProblemSchema",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector_problemdetector",
+      "affected_label": "ProblemDetector",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector_detect_problem",
+      "affected_label": "detect_problem()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier_problemclassifier",
+      "affected_label": "ProblemClassifier",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier_classify_problem",
+      "affected_label": "classify_problem()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_schemas_problemreport",
+      "affected_label": "ProblemReport",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_schemas_problemseverity",
+      "affected_label": "ProblemSeverity",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas",
+      "affected_label": "reasoning/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_fact",
+      "affected_label": "Fact",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_inference",
+      "affected_label": "Inference",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_reasoningresult",
+      "affected_label": "ReasoningResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "json",
+      "affected_label": "json",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "re",
+      "affected_label": "re",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "time",
+      "affected_label": "time",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "requests",
+      "affected_label": "requests",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas",
+      "affected_label": "trust/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas_trustassessment",
+      "affected_label": "TrustAssessment",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas_risklevel",
+      "affected_label": "RiskLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "app_workflow_engine_py_enum",
+      "affected_label": "Enum",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.language.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "uuid",
+      "affected_label": "uuid",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas",
+      "affected_label": "context/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_session",
+      "affected_label": "context/session.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_context_builder",
+      "affected_label": "context_builder.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextstate",
+      "affected_label": "ContextState",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextupdate",
+      "affected_label": "ContextUpdate",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextmetadata",
+      "affected_label": "ContextMetadata",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextwindowconfig",
+      "affected_label": "ContextWindowConfig",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_sessionisolationconfig",
+      "affected_label": "SessionIsolationConfig",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_historyentry",
+      "affected_label": "HistoryEntry",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_missinginformationrequest",
+      "affected_label": "MissingInformationRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_missinginformationresponse",
+      "affected_label": "MissingInformationResponse",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_session_sessionmanager",
+      "affected_label": "SessionManager",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_context_builder_contextbuilder",
+      "affected_label": "ContextBuilder",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "json",
+      "affected_label": "json",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "uuid",
+      "affected_label": "uuid",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "datetime",
+      "affected_label": "datetime",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas",
+      "affected_label": "handoff/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handofflevel",
+      "affected_label": "HandoffLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handoffrequest",
+      "affected_label": "HandoffRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handoffstatus",
+      "affected_label": "HandoffStatus",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag",
+      "affected_label": "rag.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag_rag",
+      "affected_label": "RAG",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag_create_rag",
+      "affected_label": "create_rag()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_schemas_documentingestrequest",
+      "affected_label": "DocumentIngestRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "re",
+      "affected_label": "re",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "time",
+      "affected_label": "time",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_normalizer",
+      "affected_label": "normalizer.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_intent",
+      "affected_label": "intent.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_fusion",
+      "affected_label": "fusion.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_semantic_intent",
+      "affected_label": "semantic_intent.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_entity",
+      "affected_label": "entity.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas",
+      "affected_label": "language/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_normalizer_textnormalizer",
+      "affected_label": "TextNormalizer",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_intent_intentclassifier",
+      "affected_label": "IntentClassifier",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_fusion_intentfusion",
+      "affected_label": "IntentFusion",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_semantic_intent_semanticintentengine",
+      "affected_label": "SemanticIntentEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_entity_entityextractor",
+      "affected_label": "EntityExtractor",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_normalizationresult",
+      "affected_label": "NormalizationResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_languagedetectionresult",
+      "affected_label": "LanguageDetectionResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_intentresult",
+      "affected_label": "IntentResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entity",
+      "affected_label": "Entity",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entityresult",
+      "affected_label": "EntityResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entitytype",
+      "affected_label": "EntityType",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_structuredunderstanding",
+      "affected_label": "StructuredUnderstanding",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_pipelineresult",
+      "affected_label": "PipelineResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_memory_engine",
+      "affected_node": "collections",
+      "affected_label": "collections",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_memory_engine",
+      "affected_node": "datetime",
+      "affected_label": "datetime",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas",
+      "affected_label": "policy/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_policyevaluation",
+      "affected_label": "PolicyEvaluation",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_policydecision",
+      "affected_label": "PolicyDecision",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_risklevel",
+      "affected_label": "RiskLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "logging",
+      "affected_label": "logging",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema",
+      "affected_label": "problem_schema.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector",
+      "affected_label": "detector.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier",
+      "affected_label": "classifier.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_engine_compat_analyze",
+      "affected_label": "_compat_analyze()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "indirect_call"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemstatement",
+      "affected_label": "ProblemStatement",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_goal",
+      "affected_label": "Goal",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_clarificationrequest",
+      "affected_label": "ClarificationRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_riskassessment",
+      "affected_label": "RiskAssessment",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_missinginfo",
+      "affected_label": "MissingInfo",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_possiblesolution",
+      "affected_label": "PossibleSolution",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemresolution",
+      "affected_label": "ProblemResolution",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemschema",
+      "affected_label": "ProblemSchema",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector_problemdetector",
+      "affected_label": "ProblemDetector",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector_detect_problem",
+      "affected_label": "detect_problem()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier_problemclassifier",
+      "affected_label": "ProblemClassifier",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier_classify_problem",
+      "affected_label": "classify_problem()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_schemas_problemreport",
+      "affected_label": "ProblemReport",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_schemas_problemseverity",
+      "affected_label": "ProblemSeverity",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas",
+      "affected_label": "reasoning/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_fact",
+      "affected_label": "Fact",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_inference",
+      "affected_label": "Inference",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_reasoningresult",
+      "affected_label": "ReasoningResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "json",
+      "affected_label": "json",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "re",
+      "affected_label": "re",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "time",
+      "affected_label": "time",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "requests",
+      "affected_label": "requests",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas",
+      "affected_label": "trust/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas_trustassessment",
+      "affected_label": "TrustAssessment",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas_risklevel",
+      "affected_label": "RiskLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "app_workflow_engine_py_enum",
+      "affected_label": "Enum",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.problem.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "uuid",
+      "affected_label": "uuid",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas",
+      "affected_label": "context/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_session",
+      "affected_label": "context/session.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_context_builder",
+      "affected_label": "context_builder.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextstate",
+      "affected_label": "ContextState",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextupdate",
+      "affected_label": "ContextUpdate",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextmetadata",
+      "affected_label": "ContextMetadata",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextwindowconfig",
+      "affected_label": "ContextWindowConfig",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_sessionisolationconfig",
+      "affected_label": "SessionIsolationConfig",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_historyentry",
+      "affected_label": "HistoryEntry",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_missinginformationrequest",
+      "affected_label": "MissingInformationRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_missinginformationresponse",
+      "affected_label": "MissingInformationResponse",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_session_sessionmanager",
+      "affected_label": "SessionManager",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_context_builder_contextbuilder",
+      "affected_label": "ContextBuilder",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "json",
+      "affected_label": "json",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "uuid",
+      "affected_label": "uuid",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "datetime",
+      "affected_label": "datetime",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas",
+      "affected_label": "handoff/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handofflevel",
+      "affected_label": "HandoffLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handoffrequest",
+      "affected_label": "HandoffRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handoffstatus",
+      "affected_label": "HandoffStatus",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag",
+      "affected_label": "rag.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag_rag",
+      "affected_label": "RAG",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag_create_rag",
+      "affected_label": "create_rag()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_schemas_documentingestrequest",
+      "affected_label": "DocumentIngestRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "re",
+      "affected_label": "re",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "time",
+      "affected_label": "time",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_normalizer",
+      "affected_label": "normalizer.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_intent",
+      "affected_label": "intent.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_fusion",
+      "affected_label": "fusion.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_semantic_intent",
+      "affected_label": "semantic_intent.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_entity",
+      "affected_label": "entity.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas",
+      "affected_label": "language/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_normalizer_textnormalizer",
+      "affected_label": "TextNormalizer",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_intent_intentclassifier",
+      "affected_label": "IntentClassifier",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_fusion_intentfusion",
+      "affected_label": "IntentFusion",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_semantic_intent_semanticintentengine",
+      "affected_label": "SemanticIntentEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_entity_entityextractor",
+      "affected_label": "EntityExtractor",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_normalizationresult",
+      "affected_label": "NormalizationResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_languagedetectionresult",
+      "affected_label": "LanguageDetectionResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_intentresult",
+      "affected_label": "IntentResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entity",
+      "affected_label": "Entity",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entityresult",
+      "affected_label": "EntityResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entitytype",
+      "affected_label": "EntityType",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_structuredunderstanding",
+      "affected_label": "StructuredUnderstanding",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_pipelineresult",
+      "affected_label": "PipelineResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_memory_engine",
+      "affected_node": "collections",
+      "affected_label": "collections",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_memory_engine",
+      "affected_node": "datetime",
+      "affected_label": "datetime",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas",
+      "affected_label": "policy/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_policyevaluation",
+      "affected_label": "PolicyEvaluation",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_policydecision",
+      "affected_label": "PolicyDecision",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_risklevel",
+      "affected_label": "RiskLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "logging",
+      "affected_label": "logging",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema",
+      "affected_label": "problem_schema.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector",
+      "affected_label": "detector.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier",
+      "affected_label": "classifier.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_engine_compat_analyze",
+      "affected_label": "_compat_analyze()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "indirect_call"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemstatement",
+      "affected_label": "ProblemStatement",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_goal",
+      "affected_label": "Goal",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_clarificationrequest",
+      "affected_label": "ClarificationRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_riskassessment",
+      "affected_label": "RiskAssessment",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_missinginfo",
+      "affected_label": "MissingInfo",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_possiblesolution",
+      "affected_label": "PossibleSolution",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemresolution",
+      "affected_label": "ProblemResolution",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemschema",
+      "affected_label": "ProblemSchema",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector_problemdetector",
+      "affected_label": "ProblemDetector",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector_detect_problem",
+      "affected_label": "detect_problem()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier_problemclassifier",
+      "affected_label": "ProblemClassifier",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier_classify_problem",
+      "affected_label": "classify_problem()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_schemas_problemreport",
+      "affected_label": "ProblemReport",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_schemas_problemseverity",
+      "affected_label": "ProblemSeverity",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas",
+      "affected_label": "reasoning/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_fact",
+      "affected_label": "Fact",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_inference",
+      "affected_label": "Inference",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_reasoningresult",
+      "affected_label": "ReasoningResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "json",
+      "affected_label": "json",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "re",
+      "affected_label": "re",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "time",
+      "affected_label": "time",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "requests",
+      "affected_label": "requests",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas",
+      "affected_label": "trust/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas_trustassessment",
+      "affected_label": "TrustAssessment",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas_risklevel",
+      "affected_label": "RiskLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "app_workflow_engine_py_enum",
+      "affected_label": "Enum",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.knowledge.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "uuid",
+      "affected_label": "uuid",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas",
+      "affected_label": "context/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_session",
+      "affected_label": "context/session.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_context_builder",
+      "affected_label": "context_builder.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextstate",
+      "affected_label": "ContextState",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextupdate",
+      "affected_label": "ContextUpdate",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextmetadata",
+      "affected_label": "ContextMetadata",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_contextwindowconfig",
+      "affected_label": "ContextWindowConfig",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_sessionisolationconfig",
+      "affected_label": "SessionIsolationConfig",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_historyentry",
+      "affected_label": "HistoryEntry",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_missinginformationrequest",
+      "affected_label": "MissingInformationRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_schemas_missinginformationresponse",
+      "affected_label": "MissingInformationResponse",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_session_sessionmanager",
+      "affected_label": "SessionManager",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_context_engine",
+      "affected_node": "app_context_context_builder_contextbuilder",
+      "affected_label": "ContextBuilder",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "json",
+      "affected_label": "json",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_developer_core_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "uuid",
+      "affected_label": "uuid",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "datetime",
+      "affected_label": "datetime",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas",
+      "affected_label": "handoff/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handofflevel",
+      "affected_label": "HandoffLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handoffrequest",
+      "affected_label": "HandoffRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_handoff_engine",
+      "affected_node": "app_handoff_schemas_handoffstatus",
+      "affected_label": "HandoffStatus",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag",
+      "affected_label": "rag.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag_rag",
+      "affected_label": "RAG",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_rag_create_rag",
+      "affected_label": "create_rag()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_knowledge_engine",
+      "affected_node": "app_knowledge_schemas_documentingestrequest",
+      "affected_label": "DocumentIngestRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "re",
+      "affected_label": "re",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "time",
+      "affected_label": "time",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_normalizer",
+      "affected_label": "normalizer.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_intent",
+      "affected_label": "intent.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_fusion",
+      "affected_label": "fusion.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_semantic_intent",
+      "affected_label": "semantic_intent.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_entity",
+      "affected_label": "entity.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas",
+      "affected_label": "language/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_normalizer_textnormalizer",
+      "affected_label": "TextNormalizer",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_intent_intentclassifier",
+      "affected_label": "IntentClassifier",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_fusion_intentfusion",
+      "affected_label": "IntentFusion",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_semantic_semantic_intent_semanticintentengine",
+      "affected_label": "SemanticIntentEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_entity_entityextractor",
+      "affected_label": "EntityExtractor",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_normalizationresult",
+      "affected_label": "NormalizationResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_languagedetectionresult",
+      "affected_label": "LanguageDetectionResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_intentresult",
+      "affected_label": "IntentResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entity",
+      "affected_label": "Entity",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entityresult",
+      "affected_label": "EntityResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_entitytype",
+      "affected_label": "EntityType",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_structuredunderstanding",
+      "affected_label": "StructuredUnderstanding",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_language_engine",
+      "affected_node": "app_language_schemas_pipelineresult",
+      "affected_label": "PipelineResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_memory_engine",
+      "affected_node": "collections",
+      "affected_label": "collections",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_memory_engine",
+      "affected_node": "datetime",
+      "affected_label": "datetime",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas",
+      "affected_label": "policy/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_policyevaluation",
+      "affected_label": "PolicyEvaluation",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_policydecision",
+      "affected_label": "PolicyDecision",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_policy_policy_engine",
+      "affected_node": "app_policy_schemas_risklevel",
+      "affected_label": "RiskLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "logging",
+      "affected_label": "logging",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema",
+      "affected_label": "problem_schema.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector",
+      "affected_label": "detector.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier",
+      "affected_label": "classifier.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_engine_compat_analyze",
+      "affected_label": "_compat_analyze()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "indirect_call"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemstatement",
+      "affected_label": "ProblemStatement",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_goal",
+      "affected_label": "Goal",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_clarificationrequest",
+      "affected_label": "ClarificationRequest",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_riskassessment",
+      "affected_label": "RiskAssessment",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_missinginfo",
+      "affected_label": "MissingInfo",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_possiblesolution",
+      "affected_label": "PossibleSolution",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemresolution",
+      "affected_label": "ProblemResolution",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_problem_schema_problemschema",
+      "affected_label": "ProblemSchema",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector_problemdetector",
+      "affected_label": "ProblemDetector",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_detector_detect_problem",
+      "affected_label": "detect_problem()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier_problemclassifier",
+      "affected_label": "ProblemClassifier",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_classifier_classify_problem",
+      "affected_label": "classify_problem()",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_schemas_problemreport",
+      "affected_label": "ProblemReport",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_problem_engine",
+      "affected_node": "app_problem_schemas_problemseverity",
+      "affected_label": "ProblemSeverity",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas",
+      "affected_label": "reasoning/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_fact",
+      "affected_label": "Fact",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_inference",
+      "affected_label": "Inference",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_reasoning_engine",
+      "affected_node": "app_reasoning_schemas_reasoningresult",
+      "affected_label": "ReasoningResult",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "json",
+      "affected_label": "json",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "re",
+      "affected_label": "re",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "time",
+      "affected_label": "time",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_skills_sop_semantic_engine",
+      "affected_node": "requests",
+      "affected_label": "requests",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "enum",
+      "affected_label": "enum",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas",
+      "affected_label": "trust/schemas.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas_trustassessment",
+      "affected_label": "TrustAssessment",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_trust_engine",
+      "affected_node": "app_trust_schemas_risklevel",
+      "affected_label": "RiskLevel",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "dataclasses",
+      "affected_label": "dataclasses",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "app_workflow_engine_py_enum",
+      "affected_label": "Enum",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.reasoning.engine",
+      "source_file": "engine.py",
+      "source_node": "app_workflow_engine",
+      "affected_node": "uuid",
+      "affected_label": "uuid",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.developer_core.graph_bridge",
+      "source_file": "graph_bridge.py",
+      "source_node": "app_developer_core_graph_bridge",
+      "affected_node": "pathlib",
+      "affected_label": "pathlib",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.developer_core.graph_bridge",
+      "source_file": "graph_bridge.py",
+      "source_node": "app_developer_core_graph_bridge",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.developer_core.graph_bridge",
+      "source_file": "graph_bridge.py",
+      "source_node": "app_developer_core_graph_bridge",
+      "affected_node": "app_developer_core_engine",
+      "affected_label": "developer_core/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.developer_core.graph_bridge",
+      "source_file": "graph_bridge.py",
+      "source_node": "app_developer_core_graph_bridge",
+      "affected_node": "app_developer_core_runtime",
+      "affected_label": "runtime.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.developer_core.graph_bridge",
+      "source_file": "graph_bridge.py",
+      "source_node": "app_developer_core_graph_bridge",
+      "affected_node": "app_developer_core_engine_developercoreengine",
+      "affected_label": "DeveloperCoreEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.developer_core.graph_bridge",
+      "source_file": "graph_bridge.py",
+      "source_node": "app_developer_core_graph_bridge",
+      "affected_node": "app_developer_core_runtime_developerruntime",
+      "affected_label": "DeveloperRuntime",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "typing",
+      "affected_label": "typing",
+      "affected_type": "external",
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "app_action_engine",
+      "affected_label": "action/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "app_memory_engine",
+      "affected_label": "memory/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "app_orchestration_engine",
+      "affected_label": "orchestration/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "app_policy_engine",
+      "affected_label": "policy/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "app_reasoning_engine",
+      "affected_label": "reasoning/engine.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "app_action_engine_actionengine",
+      "affected_label": "ActionEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "app_memory_engine_memoryengine",
+      "affected_label": "MemoryEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "app_orchestration_engine_orchestrationengine",
+      "affected_label": "OrchestrationEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "app_policy_engine_policyengine",
+      "affected_label": "PolicyEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "app_core_gate_integration",
+      "affected_node": "app_reasoning_engine_reasoningengine",
+      "affected_label": "ReasoningEngine",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "tests_test_gate_integration",
+      "affected_node": "app_core_gate_integration",
+      "affected_label": "gate_integration.py",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports_from"
+    },
+    {
+      "source_module": "app.core.gate_integration",
+      "source_file": "gate_integration.py",
+      "source_node": "tests_test_gate_integration",
+      "affected_node": "app_core_gate_integration_gateintegration",
+      "affected_label": "GateIntegration",
+      "affected_type": null,
+      "depth": 1,
+      "relation": "imports"
+    }
+  ],
+  "status": "PASS"
+}

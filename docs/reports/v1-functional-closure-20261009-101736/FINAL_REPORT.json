@@ -1,0 +1,69 @@
+{
+  "timestamp": "2026-10-09T10:29:21.262559+07:00",
+  "status": "BLOCKED",
+  "scope": "Safe functional fixes implemented and verified on controlled candidate; remaining acceptance gates open",
+  "implemented_and_verified": [
+    "Whole-input greeting route",
+    "Restored existing New Chat client action",
+    "Model missing-endpoint error mapping",
+    "Tests and controlled browser/HTTP integration"
+  ],
+  "implemented_not_fully_verified": [
+    "Full native semantic/RAG integration",
+    "Operational/security enforcement",
+    "Operator global cross-process behavior"
+  ],
+  "failed": [
+    "Initial greeting reproduction: five failures, resolved by patch; retained evidence"
+  ],
+  "blocked": [
+    "User-runtime 404 service alignment requires explicit restart authorization",
+    "Memory governance",
+    "Official oracle and filter metadata decisions",
+    "Deployment/worker/Windows security target"
+  ],
+  "not_implemented": [
+    "Durable personal chat persistence",
+    "Model prompt consumption of conversation memory"
+  ],
+  "not_in_scope": [
+    "V2",
+    "Deployment/commit/push/migration",
+    "Restart or reconfigure user runtime"
+  ],
+  "files_changed": [
+    "app/hermes/agent.py",
+    "control-plane/src/api.ts",
+    "control-plane/src/assistant.tsx",
+    "tests/test_v1_operator_control.py",
+    "control-plane/tests/assistant.test.tsx"
+  ],
+  "evidence": [
+    "BASELINE.json",
+    "CAPABILITY_MATRIX.json",
+    "IMPLEMENTATION_REPORT.json",
+    "REGRESSION.json",
+    "RUNTIME_EVIDENCE.json",
+    "CHANGE_AUDIT.json",
+    "REMAINING_GATES.json"
+  ],
+  "source_fingerprint": "sha256:9916a16a8411c1d892157fad11e3bfdf4200efe4e20a259ec23dd9de74b90fcd",
+  "tests": {
+    "backend": {
+      "evidence": "regression-20261009-102112/results.xml",
+      "pass": 257,
+      "fail": 0,
+      "skip": 0,
+      "deselected": 1
+    },
+    "frontend": {
+      "evidence": "FRONTEND_REGRESSION.json",
+      "pass": 10,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "v1_acceptance": "HOLD",
+  "v2": "DEFERRED",
+  "user_runtime_untouched": true
+}

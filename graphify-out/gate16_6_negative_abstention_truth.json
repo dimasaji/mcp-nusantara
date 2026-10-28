@@ -1,0 +1,96 @@
+{
+  "gate": "16.6",
+  "name": "Negative / Abstention Truth",
+  "status": "PASS",
+  "static_contract": {
+    "grounding": {
+      "exists": true,
+      "matches": 9,
+      "patterns_found": [
+        "no evidence",
+        "insufficient",
+        "grounded",
+        "evidence",
+        "source",
+        "tidak ditemukan",
+        "tidak ada informasi",
+        "tidak tersedia",
+        "bukti"
+      ],
+      "status": "PASS"
+    },
+    "rag": {
+      "exists": true,
+      "matches": 3,
+      "patterns_found": [
+        "evidence",
+        "source",
+        "tidak tersedia"
+      ],
+      "status": "PASS"
+    },
+    "knowledge_engine": {
+      "exists": true,
+      "matches": 2,
+      "patterns_found": [
+        "evidence",
+        "source"
+      ],
+      "status": "PASS"
+    },
+    "routes": {
+      "exists": true,
+      "matches": 7,
+      "patterns_found": [
+        "not found",
+        "grounded",
+        "evidence",
+        "source",
+        "confidence",
+        "unknown",
+        "tidak tersedia"
+      ],
+      "status": "PASS"
+    }
+  },
+  "negative_test_files": [
+    {
+      "file": "tests\\test_gate_integration.py",
+      "patterns": [
+        "unknown"
+      ]
+    },
+    {
+      "file": "tests\\nevaluation\\evaluation_legacy.py",
+      "patterns": [
+        "no evidence"
+      ]
+    },
+    {
+      "file": "tests\\v2\\test_devcore.py",
+      "patterns": [
+        "hallucination",
+        "grounding"
+      ]
+    },
+    {
+      "file": "tests\\v2\\test_phases_7_21.py",
+      "patterns": [
+        "negative",
+        "ungrounded"
+      ]
+    },
+    {
+      "file": "tests\\v2\\test_v2_core.py",
+      "patterns": [
+        "unknown"
+      ]
+    }
+  ],
+  "contract": {
+    "grounding_contract_required": true,
+    "abstention_signal_required": true,
+    "negative_tests_required": true,
+    "llm_required": false
+  }
+}

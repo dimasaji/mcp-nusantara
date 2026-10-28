@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "verified_at_utc": "2026-10-07T09:07:40.528803+00:00",
+  "activity": "Existing evidence availability/hash inspection only; implementation and tests not rerun",
+  "repository": {
+    "root": "C:/Users/dmaza/mcp-starter",
+    "branch": "codex/fullroot-control-20261007",
+    "head": "c24aa1b0db391009af44682bf2f2eb091f4f0f75"
+  },
+  "protected_count_checked": 350,
+  "source_scope_checked": 9,
+  "evidence_entries_checked": 42,
+  "known_partial_metadata_changes": [
+    ".dev/checkpoints/r2-20261007/CLOSURE.json",
+    ".dev/checkpoints/r2-20261007/GATE_REQUEST.json"
+  ],
+  "known_partial_changes_match_hold_snapshot": true,
+  "test_results_from_existing_xml": {
+    ".dev/checkpoints/r2-20261007/health-gate/focused-regression.xml": {
+      "tests": 93,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "c4953d116839700c8902dadf9927c979a532a090ca14cb5c26e19154c25fcfb0"
+    },
+    ".dev/checkpoints/r2-20261007/health-gate/r1-after.xml": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "032e8688539811227248b7d5d01a88a36fe0d7425031df7838c451ef390137cd"
+    },
+    ".dev/checkpoints/r2-20261007/health-gate/api-after.xml": {
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "005289fcd71f4ca32096decdec6d6566942158eb812f59a80958667ac3b46294"
+    }
+  },
+  "gates": {
+    "R2.1": "PASS",
+    "R2.2": "PASS",
+    "R2.3": "PASS",
+    "R2.4": "PASS",
+    "R2.5": "PASS",
+    "R2.6": "PASS",
+    "R2.7": "PASS",
+    "R2.8": "NOT_APPLICABLE",
+    "R2.9": "PASS",
+    "R2.10": "PASS"
+  },
+  "runtime_evidence": "Existing controlled runtime receipt and checks PASS; no new runtime execution",
+  "database_verification": "Existing read-only integrity evidence valid; current DB/WAL/SHM hashes match protected baseline; no database opened or written",
+  "owner_acceptance_original_sha256": "a04b53d59d820b102792899538c8bba3778427675099bec704de0fa872593501",
+  "accepted_report_sha256": "e5f00283552552ffbe3535340172ed50e7a51ede60d926562b21b554d39a9cc3",
+  "errors": []
+}

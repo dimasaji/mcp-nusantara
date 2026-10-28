@@ -1,0 +1,217 @@
+=== BACKEND TESTS ===
+    with pytest.raises(ValueError):
+        await controller.invoke(token)
+    assert len(calls) == 1 and controller.authorization.state == 'TERMINAL'
+    assert controller.receipt.outcome == 'FAILED_OR_CANCELLED'
+
+
+def test_existing_public_v1_v2_configuration_and_control_plane_sources_untouched():
+    root = Path(__file__).parents[1]
+    evidence = json.loads((root/'docs/reports/r2-a8-remediation-20261008/PROFILE_BEFORE.json').read_text(encoding='utf-8-sig'))
+    protected = {'app/api/routes.py', 'app/api/v2_routes.py', 'app/core/config.py',
+                 'app/core/runtime_identity.py', 'app/core/control_plane_projection.py'}
+    for item in evidence['files']:
+        if item['path'] in protected:
+            assert hashlib.sha256((root/item['path']).read_bytes()).hexdigest() == item['sha256']
+
+
+def test_attestation_real_app_boot_request_response_shutdown_avoid_protected_state(tmp_path):
+    root = Path(__file__).parents[1]
+    script = r'''
+import builtins, io, json, os, sqlite3, sys, importlib.abc
+from pathlib import Path
+class ProtectedImports(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname.startswith(('app.knowledge', 'app.rag', 'app.language')) or fullname in ('app.api.routes','app.api.v2_routes'):
+            raise AssertionError('protected runtime owner imported')
+sys.meta_path.insert(0, ProtectedImports())
+def forbidden(*args, **kwargs):
+    raise AssertionError('protected runtime operation')
+sqlite3.connect = forbidden
+original_open, original_io_open = builtins.open, io.open
+def guarded_open(original):
+    def open_file(file, mode='r', *args, **kwargs):
+        if not isinstance(file, int):
+            name = str(file).lower().replace('\\','/')
+            assert not name.endswith(('.db','.db-wal','.db-shm')) and '/data/knowledge/' not in name
+        assert not any(flag in mode for flag in ('w','a','x','+'))
+        return original(file, mode, *args, **kwargs)
+    return open_file
+builtins.open, io.open = guarded_open(original_open), guarded_open(original_io_open)
+import httpx
+calls = []
+def respond(request):
+    calls.append(request)
+    return httpx.Response(200, json={'model':'fixture-model','done':True,'response':'SENSITIVE_FIXTURE_RESPONSE'})
+httpx.AsyncHTTPTransport = lambda **kw: httpx.MockTransport(respond)
+from app.models.ollama import OllamaProvider
+OllamaProvider.health_check = forbidden
+OllamaProvider.list_models = forbidden
+from app.main import app
+from fastapi.testclient import TestClient
+controller = app.state.runtime_verification
+assert app.state.effective_configuration.runtime.profile == 'ATTESTATION'
+assert controller.authorization.state == 'DISARMED'
+token = controller.authorization.grant()
+with TestClient(app, base_url='http://127.0.0.1:8000', client=('127.0.0.1',1)) as client:
+    import app.api.control_plane as control_plane
+    control_plane.project = forbidden
+    assert client.get('/v1/control-plane/snapshot').json()['live_actions'] == 'LOCKED'
+    response = client.post('/v1/runtime/verification', json={'probe':'runtime-correlation'},
+        headers={'Authorization':'Bearer '+token, 'X-Request-ID':'untrusted-client-id'})
+    assert response.status_code == 200
+    receipt = response.json()['receipt']
+    assert receipt['request_id'] == response.headers['x-request-id'] != 'untrusted-client-id'
+    observation = client.get('/v1/runtime/attestation').json()['attestation']
+    assert observation['provider_invocation']['application_response_sent']
+    for path in ('/v1/chat','/v2/chat','/v2/dev'):
+        assert client.post(path).status_code == 404
+assert len(calls) == 1
+encoded = json.dumps(observation)
+assert token not in encoded and 'SENSITIVE_FIXTURE_RESPONSE' not in encoded
+assert not any(name.startswith(('app.knowledge','app.rag','app.language')) for name in sys.modules)
+assert app.state.runtime_authorization._audit.path is None
+assert app.state.runtime_authorization._policy is None
+assert app.state.runtime_authorization._isolated_transport is None
+assert app.state.runtime_authorization.evidence()['live_actions'] == 'LOCKED'
+assert {name for name in sys.modules if name.startswith('app.approval')} <= {
+    'app.approval','app.approval.audit_trail','app.approval.queue','app.approval.runtime_authorization'}
+print(json.dumps({'verification_type':'ISOLATED_GUARDED_ASGI_WITH_MOCK_HTTP','live_runtime_verified':False,
+    'profile':'ATTESTATION','dispatch_count':len(calls),'observation':observation,
+    'foundation':app.state.runtime_authorization.evidence()}))
+'''
+    env = {**os.environ, 'PYTHONPATH': str(root), 'PYTHONDONTWRITEBYTECODE': '1',
+        'NUSANTARA_RUNTIME_PROFILE': 'ATTESTATION', 'NUSANTARA_CONTROL_PLANE_READ_ONLY': '0',
+        'LLM_MODEL': 'fixture-model', 'LLM_BASE_URL': 'http://localhost:11434'}
+    # Remove inherited aliases that could conflict with the explicitly isolated fixture snapshot.
+    env.pop('NUSANTARA_LLM_MODEL', None)
+    env.pop('NUSANTARA_RUNTIME_PORT', None)
+    env['PORT'] = '8000'
+    result = json.loads(subprocess.check_output([sys.executable, '-B', '-c', script],
+                       cwd=tmp_path, env=env, text=True))
+    assert result['dispatch_count'] == 1 and result['live_runtime_verified'] is False
+    evidence = os.environ.get('R2_PROFILE_TEST_EVIDENCE')
+    if evidence:
+        Path(evidence).write_text(json.dumps(result, indent=2), encoding='utf-8')
+=== HUMAN ACCEPTANCE LOCATIONS ===
+
+  control-plane\src\human.tsx:13:  return <SessionContext.Provider 
+value={{session,setSession,attestation,setAttestation}}>{children}</SessionContext.Provider>;
+  control-plane\src\human.tsx:14:}
+> control-plane\src\human.tsx:15:function useSession(){const value=useContext(SessionContext);if(!value)throw new 
+Error('HumanProvider required');return value;}
+  control-plane\src\human.tsx:16:const symbol=(s:string)=>s==='PASS'||s==='CLOSED_PASS'||s==='UNCHANGED'||s==='APPROVE'
+||s==='AVAILABLE'?'?':s==='FAIL'||s==='REJECT'?'?':s==='BLOCKED'||s==='LOCKED'?'!':s==='UNKNOWN'?'?':s==='NOT_VERIFIED'
+||s==='NOT TESTED'?'?':s==='PENDING'||s==='HOLD'?'?':'?';
+  control-plane\src\human.tsx:17:export function HumanStatus({status}:{status:string}) {
+  control-plane\src\human.tsx:18:  const label=status.replaceAll('_',' ');
+  control-plane\src\human.tsx:19:  return <span className={`human-status ${status==='PASS'||status==='UNCHANGED'||statu
+s==='AVAILABLE'||status==='APPROVE'?'positive':status==='FAIL'||status==='REJECT'?'negative':'caution'}`}>{symbol(statu
+s)} {label}</span>;
+  control-plane\src\human.tsx:20:}
+  control-plane\src\human.tsx:24:}
+  control-plane\src\human.tsx:25:export function HumanNavigation() {
+> control-plane\src\human.tsx:26:  const {session,attestation}=useSession();const 
+pathname=useRouterState({select:s=>s.location.pathname});
+  control-plane\src\human.tsx:27:  const 
+active=stages.find(s=>stagePath[s]===pathname)||(pathname==='/system'||pathname==='/'?'System':undefined);
+  control-plane\src\human.tsx:28:  return <nav aria-label="Acceptance steps">{stages.map((s,i)=>{const 
+status=stepStatus(s,active,session,attestation);const label=s==='Test'?'Human Test':s;
+  control-plane\src\human.tsx:29:    const content=<><span className="step-number" 
+aria-hidden="true">{String(i+1).padStart(2,'0')}</span><span>{label}<small 
+className="step-state">{status}</small></span></>;
+  control-plane\src\human.tsx:30:    return status==='Locked'?<button key={s} disabled title={`Complete preceding 
+stages before ${label}. ${(attestation?attestationWorkflow(session):workflow(session)).blockers[s].join(' ')}`} 
+aria-label={`${label} Locked`}>{content}</button>:<Link key={s} aria-label={label} to={stagePath[s] as '/overview'} 
+activeProps={{className:'active'}}>{content}</Link>;
+  control-plane\src\human.tsx:31:  })}</nav>;
+  control-plane\src\human.tsx:49:}
+  control-plane\src\human.tsx:50:export function 
+HumanContent(props:{stage:Stage;state:Snapshot;navigate:(s:Stage)=>void;inspectRuntime:()=>void;busy?:boolean}) {
+> control-plane\src\human.tsx:51:  const {setAttestation}=useSession();
+  control-plane\src\human.tsx:52:  const attestation=isAttestation(props.state);
+  control-plane\src\human.tsx:53:  useEffect(()=>setAttestation(attestation),[attestation,setAttestation]);
+  control-plane\src\human.tsx:54:  return isAttestation(props.state)?<AttestationContent {...props} 
+state={props.state}/>:<NormalHumanContent {...props} state={props.state}/>;
+  control-plane\src\human.tsx:55:}
+  control-plane\src\human.tsx:56:export function AttestationIdentity({state}:{state:Attestation}){
+  control-plane\src\human.tsx:67:}
+  control-plane\src\human.tsx:68:function AttestationContent({stage,state,navigate,busy=false}:{stage:Stage;state:Attes
+tation;navigate:(s:Stage)=>void;busy?:boolean}){
+> control-plane\src\human.tsx:69:  const {session,setSession}=useSession(),key=attestationKey(state);
+  control-plane\src\human.tsx:70:  const activeKey=useRef(key);activeKey.current=key;
+  control-plane\src\human.tsx:71:  const current=session.fingerprint===key?session:emptySession(key);
+  control-plane\src\human.tsx:72:  const [pending,setPending]=useState<PendingIntention|null>(null),[sending,setSending
+]=useState(false),[error,setError]=useState('');
+  control-plane\src\human.tsx:73:  const [submittedKey,setSubmittedKey]=useState<string|null>(null);
+  control-plane\src\human.tsx:74:  useEffect(()=>{if(session.fingerprint!==key){setSession(emptySession(key));setPendin
+g(null);setError('');}},[key,session.fingerprint,setSession]);
+  control-plane\src\human.tsx:90:  </>;
+  control-plane\src\human.tsx:91:}
+> control-plane\src\human.tsx:92:function NormalHumanContent({stage,state,navigate,inspectRuntime,busy=false}:{stage:St
+age;state:SystemHealth;navigate:(s:Stage)=>void;inspectRuntime:()=>void;busy?:boolean}) {
+> control-plane\src\human.tsx:93:  const {session,setSession}=useSession();const key=evidenceKey(state);
+  control-plane\src\human.tsx:94:  const [changed,setChanged]=useState(false);
+  control-plane\src\human.tsx:95:  useEffect(()=>{
+  control-plane\src\human.tsx:96:    
+if(session.fingerprint!==key){if(session.fingerprint!==null)setChanged(true);setSession(emptySession(key));}
+  control-plane\src\human.tsx:97:  },[key,session.fingerprint,setSession]);
+  control-plane\src\human.tsx:98:  const current=session.fingerprint===key?session:emptySession(key);
+  control-plane\src\human.tsx:136:  </ul></section>;
+  control-plane\src\human.tsx:137:}
+> control-plane\src\human.tsx:138:function DecisionPanel({state,session,ready,busy,update,navigate}:{state:SystemHealth
+;session:Session;ready:boolean;busy:boolean;update:(change:Partial<Session>)=>void;navigate:(s:Stage)=>void}) {
+  control-plane\src\human.tsx:139:  const [confirmed,setConfirmed]=useState(false);const 
+[choice,setChoice]=useState<Decision|null>(null);
+  control-plane\src\human.tsx:140:  const [reason,setReason]=useState('');const [notes,setNotes]=useState('');
+  control-plane\src\human.tsx:141:  
+useEffect(()=>{setConfirmed(false);setChoice(null);setReason('');setNotes('');},[session.fingerprint]);
+  control-plane\src\human.tsx:142:  const reasons=choice==='REJECT'?['Evidence insufficient','Human test 
+failed','Runtime not verified','Unexpected behavior','Other']:['Need additional evidence','Need additional test','Need 
+runtime verification','Need engineering review','Other'];
+> control-plane\src\human.tsx:143:  const save=()=>{
+  control-plane\src\human.tsx:144:    if(!choice||busy||(choice==='APPROVE'&&(!ready||!confirmed))||(choice!=='APPROVE'
+&&(!reason||(reason==='Other'&&!notes.trim()))))return;
+  control-plane\src\human.tsx:145:    update({receipt:{decision:choice,reason:choice==='APPROVE'?'Evidence and 
+limitations reviewed':reason,notes:notes.trim(),timestamp:new 
+Date().toISOString(),fingerprint:evidenceKey(state)}});setChoice(null);setConfirmed(false);
+  control-plane\src\human.tsx:146:  };
+  control-plane\src\human.tsx:147:  return <><section className="human-intro"><div className="eyebrow">05 / MAKE AN 
+EXPLICIT HUMAN DECISION</div><h2>Decide within this review scope.</h2><p>UI acceptance only. R2 Authorization is not 
+changed or approved by this console.</p></section><section className="panel"><h2>Final human 
+decision</h2><p>Engineering evidence, human test results and known limitations must be considered 
+together.</p><p>Runtime identity: <HumanStatus status={state.runtime.current_status}/></p>{!ready&&<p 
+className="review-notice">NOT READY FOR APPROVAL. Complete the prerequisites or choose REJECT / HOLD with a 
+reason.</p>}<ApprovalChecklist state={state} session={session} busy={busy} navigate={navigate}/><label 
+className="check"><input type="checkbox" checked={confirmed} disabled={!ready||busy} 
+onChange={e=>{setConfirmed(e.target.checked);setChoice(null);}}/> I confirm that I have reviewed the 
+evidence.</label><div className="decision-buttons"><button disabled={!ready||!confirmed||busy} 
+onClick={()=>setChoice('APPROVE')}>APPROVE</button><button disabled={busy} 
+onClick={()=>{setChoice('REJECT');setReason('');setNotes('');}}>REJECT</button><button disabled={busy} 
+onClick={()=>{setChoice('HOLD');setReason('');setNotes('');}}>HOLD</button></div><button className="secondary" 
+onClick={()=>navigate('Review')}>Return to Review</button></section><KnownLimitations state={state}/>
+  control-plane\src\human.tsx:148:    {choice&&<section className="panel confirmation" role="region" 
+aria-label={choice==='APPROVE'?'Confirm approval':`${choice} review`}><h2>{choice==='APPROVE'?'Confirm UI 
+acceptance':choice==='REJECT'?'Rejection':'Hold review'}</h2><p>{choice==='APPROVE'?'You are about to record APPROVE 
+for this UI review session. This does not approve R2 Authorization.':'Record why you chose this decision. No 
+engineering state will change.'}</p><p>Engineering evidence: {state.gates.filter(g=>g.status==='PASS').length} 
+recorded PASS. Known limitations: {limitations(state).length}. Runtime: {state.runtime.current_status.replaceAll('_',' 
+')}.</p>{choice!=='APPROVE'&&<><fieldset><legend>Reason (required)</legend>{reasons.map(r=><label className="check" 
+key={r}><input type="radio" name="decision-reason" value={r} checked={reason===r} 
+onChange={()=>setReason(r)}/>{r}</label>)}</fieldset><label className="notes">Notes 
+{reason==='Other'?'(required)':'(optional)'}<textarea value={notes} onChange={e=>setNotes(e.target.value)} 
+maxLength={2000}/></label></>}<p>This is an explicit human review decision with the stated limitations.</p><div 
+className="decision-buttons"><button className="secondary" onClick={()=>setChoice(null)}>CANCEL</button><button 
+disabled={busy||(choice==='APPROVE'?(!ready||!confirmed):(!reason||(reason==='Other'&&!notes.trim())))} 
+onClick={save}>{choice==='APPROVE'?'CONFIRM APPROVAL':choice==='REJECT'?'Confirm Rejection':'Save 
+HOLD'}</button></div></section>}
+> control-plane\src\human.tsx:149:    {session.receipt&&<section className="panel receipt" role="status"><h2>Human 
+decision recorded in this session</h2><HumanStatus status={session.receipt.decision}/><p>Reason: 
+{session.receipt.reason}</p>{session.receipt.notes&&<p>Notes: 
+{session.receipt.notes}</p>}<p>{session.receipt.timestamp}</p><p>No backend authorization or engineering status was 
+changed. Reloading clears this session; a material evidence change invalidates it.</p></section>}
+  control-plane\src\human.tsx:150:  </>;
+  control-plane\src\human.tsx:151:}
+
+
+

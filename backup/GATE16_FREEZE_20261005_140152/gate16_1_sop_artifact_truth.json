@@ -1,0 +1,34 @@
+{
+  "gate": "16.1",
+  "name": "SOP Artifact Truth",
+  "version": "16.1.0",
+  "timestamp": "2026-10-05T13:49:51.223460",
+  "status": "PASS",
+  "checks": {
+    "passed": 6,
+    "total": 6,
+    "results": {
+      "original_pdf": true,
+      "parsed_artifacts": true,
+      "semantic_master": true,
+      "semantic_output": true,
+      "engine_output": true,
+      "quality_gates": true
+    }
+  },
+  "artifacts": {
+    "original_pdf": 6,
+    "parsed_json": 9,
+    "semantic_master_json": 5,
+    "semantic_output_json": 6,
+    "engine_output_json": 50,
+    "quality_gate_json": 6
+  },
+  "contract": {
+    "pdf_source_must_exist": true,
+    "parsed_representation_must_exist": true,
+    "semantic_representation_must_exist": true,
+    "engine_output_must_exist": true,
+    "quality_gate_must_exist": true
+  }
+}

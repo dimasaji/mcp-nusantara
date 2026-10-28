@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "scope": "Frozen local knowledge recovery; fixture scores do not establish production correctness",
+  "acceptance": "Official source cases require human source/version review before release",
+  "cases": [
+    {
+      "id": "ktp-definition-local", "question": "Apa itu KTP-el?",
+      "expected_document": "DOC-FC9058E1-1a08",
+      "expected_answer": "KTP-el adalah dokumen identitas penduduk.",
+      "required_evidence": ["KTP-el adalah dokumen identitas penduduk."],
+      "domain": "KTP", "risk": "low", "oracle_status": "PROJECT_FIXTURE",
+      "source": "data/knowledge/nusantara_knowledge.db", "intent": "general_information",
+      "negative_documents": ["BENCH-PASPOR-001", "BENCH-MASAK-001"]
+    },
+    {
+      "id": "paspor-definition-local", "question": "Apa itu paspor?",
+      "expected_document": "BENCH-PASPOR-001",
+      "expected_answer": "Paspor adalah dokumen perjalanan yang digunakan oleh warga negara untuk melakukan perjalanan ke luar negeri.",
+      "required_evidence": ["Paspor adalah dokumen perjalanan"],
+      "domain": "Paspor", "risk": "low", "oracle_status": "PROJECT_FIXTURE",
+      "source": "data/knowledge/nusantara_knowledge.db", "intent": "general_information",
+      "negative_documents": ["DOC-FC9058E1-1a08", "API-TEST-001", "BENCH-MASAK-001"]
+    },
+    {
+      "id": "nasi-goreng-local", "question": "Apa bahan nasi goreng?",
+      "expected_document": "BENCH-MASAK-001",
+      "expected_answer": "Bahan yang umum digunakan antara lain nasi, bawang, kecap, telur, dan minyak.",
+      "required_evidence": ["nasi, bawang, kecap, telur, dan minyak"],
+      "domain": "Nasi Goreng", "risk": "low", "oracle_status": "PROJECT_FIXTURE",
+      "source": "data/knowledge/nusantara_knowledge.db", "intent": "general_information",
+      "negative_documents": ["DOC-FC9058E1-1a08", "API-TEST-001", "BENCH-PASPOR-001"]
+    },
+    {
+      "id": "tangerang-ktp-pemula-snapshot", "question": "Apa persyaratan perekaman KTP-el pemula menurut Dukcapil Nyaba Kelurahan Desember 2025?",
+      "expected_document": "DOC-8AEBCDBF09964B9B",
+      "expected_answer": "Persyaratan perekaman KTP-el pemula - Fotocopy kartu keluarga - Fotocopy akta kelahiran",
+      "required_evidence": ["Persyaratan perekaman KTP-el pemula - Fotocopy kartu keluarga - Fotocopy akta kelahiran"],
+      "domain": "Tangerang SOP", "risk": "high", "oracle_status": "REVIEW_REQUIRED",
+      "source": "data/knowledge/official_sources/ktp_el/tng-ktpel-001.md",
+      "source_location": "L418", "intent": "ask_document_requirements",
+      "negative_documents": ["BENCH-PASPOR-001", "BENCH-MASAK-001"],
+      "runtime_knowledge_status": "MISSING_FROM_V1_DEFAULT_DATABASE"
+    },
+    {
+      "id": "tangerang-sop-data-pribadi-snapshot", "question": "Apa nomor SOP Permohonan Data Pribadi pada dokumen Tangerang yang tersedia?",
+      "expected_document": null, "expected_answer": "PIAK-03",
+      "required_evidence": ["Nomor SOP PIAK-03"],
+      "domain": "Tangerang SOP", "risk": "high", "oracle_status": "REVIEW_REQUIRED",
+      "source": "data/knowledge/sop/extracted/PERMOHONAN_DATA_PRIBADI.md",
+      "intent": "general_information", "negative_documents": [],
+      "runtime_knowledge_status": "MISSING_FROM_V1_DEFAULT_DATABASE"
+    },
+    {
+      "id": "paspor-requirements-missing", "question": "Apa syarat paspor yang berlaku di wilayah layanan Nusantara?",
+      "expected_document": null, "expected_answer": null, "required_evidence": [],
+      "domain": "Paspor", "risk": "high", "oracle_status": "MISSING",
+      "source": null, "intent": "ask_document_requirements", "negative_documents": ["DOC-FC9058E1-1a08", "API-TEST-001"],
+      "missing_reason": "Only a passport definition fixture exists; approved official requirements and service region are absent"
+    },
+    {
+      "id": "unknown-service-negative", "question": "Apa syarat layanan dokumen fiktif ZYX-998?",
+      "expected_document": null,
+      "expected_answer": null, "required_evidence": [],
+      "domain": "Negative retrieval", "risk": "high", "oracle_status": "NEGATIVE_CASE",
+      "source": null, "intent": "ask_document_requirements",
+      "negative_documents": ["DOC-FC9058E1-1a08", "API-TEST-001", "BENCH-PASPOR-001", "BENCH-MASAK-001", "BENCH-ALAMAT-001"],
+      "expected_behavior": "clarify_or_refuse_without_fabricated_requirements"
+    }
+  ]
+}

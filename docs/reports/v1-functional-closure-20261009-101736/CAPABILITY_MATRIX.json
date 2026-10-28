@@ -1,0 +1,132 @@
+{
+  "timestamp": "2026-10-09T10:29:21.262559+07:00",
+  "capabilities": [
+    {
+      "feature": "Standalone greetings",
+      "ui_entry": "/",
+      "api_endpoint": "POST /v1/chat",
+      "backend_owner": "Existing Hermes.execute_v1/local_rule",
+      "actual_execution_status": "PASS",
+      "test_evidence": "48 backend targeted; 4 actual HTTP greetings; GREETING_BROWSER.jpg",
+      "remaining_defect_or_blocker": "User runtime old build not promoted"
+    },
+    {
+      "feature": "Substantive and mixed questions",
+      "ui_entry": "/",
+      "api_endpoint": "POST /v1/chat",
+      "backend_owner": "Hermes -> Knowledge -> Ollama -> grounding -> public projector",
+      "actual_execution_status": "PASS",
+      "test_evidence": "257 regression; real browser mixed-question receipt",
+      "remaining_defect_or_blocker": "Insufficient official evidence correctly abstains; native semantic/RAG not verified"
+    },
+    {
+      "feature": "+ New Chat",
+      "ui_entry": "/",
+      "api_endpoint": "No new API; next chat uses new session_id",
+      "backend_owner": "Existing client session state; legacy MemoryEngine unchanged",
+      "actual_execution_status": "PASS",
+      "test_evidence": "Frontend new-chat regression and browser reset",
+      "remaining_defect_or_blocker": "Client reset does not delete server history or establish authenticated isolation"
+    },
+    {
+      "feature": "Submission/response/loading/error/retry",
+      "ui_entry": "/",
+      "api_endpoint": "POST /v1/chat",
+      "backend_owner": "UserChat / Hermes",
+      "actual_execution_status": "PASS",
+      "test_evidence": "10 frontend tests; browser loading and response; existing retry test",
+      "remaining_defect_or_blocker": ""
+    },
+    {
+      "feature": "Long/multiline rendering and follow-up session continuity",
+      "ui_entry": "/",
+      "api_endpoint": "POST /v1/chat",
+      "backend_owner": "UserChat transient history / existing session ID",
+      "actual_execution_status": "PASS",
+      "test_evidence": "Frontend complete repeated multiline answer and same-session follow-up tests; backend substantive follow-up tests",
+      "remaining_defect_or_blocker": "Provider token limits still apply; semantic conversation recall not implemented"
+    },
+    {
+      "feature": "Conversation recall from memory in model prompt",
+      "ui_entry": "/",
+      "api_endpoint": "POST /v1/chat",
+      "backend_owner": "Existing MemoryEngine; prompt helper does not consume stored context",
+      "actual_execution_status": "NOT_IMPLEMENTED",
+      "test_evidence": "Static Hermes.run context=None / _build_user_prompt; bounded regression",
+      "remaining_defect_or_blocker": "Enabling memory read semantics requires CC05 governance decision; no unapproved prompt-memory injection"
+    },
+    {
+      "feature": "Durable personal chat history",
+      "ui_entry": "/",
+      "api_endpoint": "No personal-history persistence API",
+      "backend_owner": "Existing MemoryEngine process-local deque",
+      "actual_execution_status": "NOT_IMPLEMENTED",
+      "test_evidence": "Static memory/context inspection; UI transient state disclaimer",
+      "remaining_defect_or_blocker": "No new persistence/consent/retention/user isolation guarantees"
+    },
+    {
+      "feature": "Legacy memory write/read interface",
+      "ui_entry": "/",
+      "api_endpoint": "No public memory read endpoint claimed",
+      "backend_owner": "GateIntegration.memory",
+      "actual_execution_status": "PASS",
+      "test_evidence": "Baseline unchanged memory/gate hashes; write preservation tests",
+      "remaining_defect_or_blocker": "CC05 client-selected sessions, write-before-answer-policy, ownership/retention remain open"
+    },
+    {
+      "feature": "Model status/inventory on current candidate",
+      "ui_entry": "/console",
+      "api_endpoint": "GET /v1/control-plane/model-status; GET /v1/control-plane/models",
+      "backend_owner": "Existing Settings owner + Ollama adapter",
+      "actual_execution_status": "PASS",
+      "test_evidence": "Native Console browser inventory, candidate diagnostics, backend authorization tests",
+      "remaining_defect_or_blocker": "Full readiness remains NOT_VERIFIED; single-process scope retained"
+    },
+    {
+      "feature": "Model status/inventory on user runtime",
+      "ui_entry": "/console",
+      "api_endpoint": "Same endpoints expected",
+      "backend_owner": "User PID33160, port8000 old source registration",
+      "actual_execution_status": "BLOCKED",
+      "test_evidence": "USER_RUNTIME_BEFORE.json OpenAPI/health; CLEANUP.json",
+      "remaining_defect_or_blocker": "User runtime does not register endpoints; replacing/restarting requires explicit authorization"
+    },
+    {
+      "feature": "Operator selection",
+      "ui_entry": "/console",
+      "api_endpoint": "POST /v1/control-plane/model-selection",
+      "backend_owner": "Existing atomic Settings owner",
+      "actual_execution_status": "PASS",
+      "test_evidence": "257 backend regression covers selection/CAS/auth/failure; prior unchanged-source-owner evidence",
+      "remaining_defect_or_blocker": "Current process only; no two-real-model switch or weight proof"
+    },
+    {
+      "feature": "Knowledge query/ranking/evidence/grounding",
+      "ui_entry": "/; /knowledge",
+      "api_endpoint": "POST /v1/knowledge/search; POST /v1/chat",
+      "backend_owner": "Existing KnowledgeEngine/RAG/store/grounding",
+      "actual_execution_status": "PASS",
+      "test_evidence": "Relevant canonical RAG profile/ranking tests with injected stores/embedding; actual facade fixture/browser abstention",
+      "remaining_defect_or_blocker": "Native semantic/store/production query not verified; relevance is not official authority"
+    },
+    {
+      "feature": "Nonempty filter enforcement",
+      "ui_entry": "/knowledge",
+      "api_endpoint": "POST /v1/knowledge/search",
+      "backend_owner": "Existing KnowledgeEngine",
+      "actual_execution_status": "PASS",
+      "test_evidence": "HTTP 422 and facade regression reject unsupported filter before retrieval",
+      "remaining_defect_or_blocker": "Approved filter grammar/metadata schema missing; no functional nonempty filtering invented"
+    },
+    {
+      "feature": "Public schema/correlation/security",
+      "ui_entry": "/; /console",
+      "api_endpoint": "Existing /v1 endpoints",
+      "backend_owner": "Existing projector/admin/local boundary",
+      "actual_execution_status": "PASS",
+      "test_evidence": "48 targeted + 257 regression + strict native HTTP schema + provider request ID",
+      "remaining_defect_or_blocker": "Operational Windows security/policy enforcement gates remain open"
+    }
+  ],
+  "status_definition": "PASS covers the stated scope/evidence only; native dependencies and runtime promotion separately blocked"
+}

@@ -1,0 +1,11 @@
+# Attributable diff review
+
+Seven existing source files changed; two new test files. Exact list in IMPLEMENTATION_MAP.md and SOURCE_COMPARISON.json. IMPLEMENTATION.diff is built against SHA-verified before snapshots; these include the inherited untracked authorization foundation that the old monitored manifest omitted. SOURCE_BEFORE_COMPLETE.json covers 378 existing files; 371 remain unchanged and zero unexpected monitored changes were found.
+
+Backend changes add a real named ATTESTATION projection discriminator, a browser-context wrapper, optional exact-version guard before existing intention creation, and a strict local PENDING-only route. New helper/route is included in scoped code coverage. The old snapshot function body, NORMAL project semantics, native actor validation, decision/arm/execute logic, transport classes, audit/queue classes and app.main composition were not changed.
+
+Frontend changes add a separate schema and variant-aware API/view handling, shared stage navigation with an ATTESTATION prerequisite branch, and scoped evidence presentation. Existing NORMAL schema/content and browser acceptance logic remain intact behind the NORMAL variant. Existing router, styling, dependency/configuration files and production endpoints/provider code were not edited. The adapter identity is not a fabricated historical schema_version.
+
+Isolated fixtures and report helpers are documentation/test artifacts, not authoritative runtime records. Derived graph update is AST-only: 9642 nodes, 16783 edges, 1672 communities, aggregated HTML. Five inherited report directories emitted access warnings, limiting enumeration; no permissions were repaired. Community labels may be stale; no LLM labeling or API was requested.
+
+Git read-only check of owned paths returned exit 0. Most owned integration files are inherited untracked paths, so Git alone cannot establish their complete diff: the before-snapshot diff is the authoritative task-owned comparison. HEAD/branch unchanged; staged paths remain empty. No reset, cleanup, revert, staging or commit was performed. No protected-file/database hash was taken. This review does not establish full repository or active-process build identity.

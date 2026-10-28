@@ -1,0 +1,163 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\dmaza\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "C:\\Users\\dmaza\\mcp-starter\\control-plane\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "../docs/reports/attestation-browser-e2e-20261008-6c913a2d/playwright.mock.config.cjs",
+      "--grep",
+      "five stages"
+    ],
+    "configFile": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\playwright.mock.config.cjs",
+    "rootDir": "C:/Users/dmaza/mcp-starter/control-plane/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/dmaza/mcp-starter/docs/reports/attestation-browser-e2e-20261008-6c913a2d/browser-results-installed",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/dmaza/mcp-starter/control-plane/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "attestation.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\RESULTS_INSTALLED.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "attestation.spec.ts",
+      "file": "attestation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "five stages render, scroll and submit only explicit PENDING intention",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5935,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Continue to Evidence', exact: true })\nExpected: disabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('button', { name: 'Continue to Evidence', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Continue to Evidence', exact: true })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Continue to Evidence', exact: true })\nExpected: disabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('button', { name: 'Continue to Evidence', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Continue to Evidence', exact: true })\u001b[22m\n\n    at review (C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts:69:83)\n    at C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts:88:54",
+                    "location": {
+                      "file": "C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts",
+                      "column": 83,
+                      "line": 69
+                    },
+                    "snippet": "  67 | async function review(page:Page,mock:Mock){\n  68 |   await page.goto('/overview');await noAuthority(page);\n> 69 |   await expect(page.getByRole('button',{name:'Continue to Evidence',exact:true})).toBeDisabled();\n     |                                                                                   ^\n  70 |   await page.getByLabel('I have read the ATTESTATION scope and limitations.').check();\n  71 |   await page.getByRole('button',{name:'Continue to Evidence',exact:true}).click();\n  72 |   await expect(page).toHaveURL(origin+'/evidence');await noAuthority(page);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts",
+                        "column": 83,
+                        "line": 69
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeDisabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Continue to Evidence', exact: true })\nExpected: disabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeDisabled\" getByRole('button', { name: 'Continue to Evidence', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Continue to Evidence', exact: true })\u001b[22m\n\n\n  67 | async function review(page:Page,mock:Mock){\n  68 |   await page.goto('/overview');await noAuthority(page);\n> 69 |   await expect(page.getByRole('button',{name:'Continue to Evidence',exact:true})).toBeDisabled();\n     |                                                                                   ^\n  70 |   await page.getByLabel('I have read the ATTESTATION scope and limitations.').check();\n  71 |   await page.getByRole('button',{name:'Continue to Evidence',exact:true}).click();\n  72 |   await expect(page).toHaveURL(origin+'/evidence');await noAuthority(page);\n    at review (C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts:69:83)\n    at C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts:88:54"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T08:29:23.727Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "mock-network-evidence",
+                      "contentType": "application/json",
+                      "body": "eyJwb3N0cyI6W10sImJsb2NrZWQiOltdLCJlcnJvcnMiOltdLCJsaXZlIjpmYWxzZX0="
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\browser-results-installed\\attestation-five-stages-re-0a584--explicit-PENDING-intention\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\attestation-browser-e2e-20261008-6c913a2d\\browser-results-installed\\attestation-five-stages-re-0a584--explicit-PENDING-intention\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\dmaza\\mcp-starter\\control-plane\\e2e\\attestation.spec.ts",
+                    "column": 83,
+                    "line": 69
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e33738f0440e497481af-14e8578c606a16262093",
+          "file": "attestation.spec.ts",
+          "line": 87,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-08T08:29:23.374Z",
+    "duration": 7004.594,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "status": "HOLD_ACCEPTANCE_METADATA_SYNC",
+  "timestamp": "2026-10-07T09:05:58.310112+00:00",
+  "cause": "UnicodeDecodeError in reportpath.read_text() using Windows cp1252 instead of explicit UTF-8",
+  "human_acceptance": "APPROVED; persisted in FINAL_OWNER_ACCEPTANCE.json",
+  "completed_before_error": [
+    "pre-final-acceptance snapshots captured",
+    "FINAL_OWNER_ACCEPTANCE.json written",
+    "CLOSURE.json updated to CLOSED_PASS",
+    "GATE_REQUEST.json updated to CLOSED_PASS"
+  ],
+  "not_completed": [
+    "UTF-8 report update",
+    "main implementation checkpoint update",
+    "final evidence-map refresh"
+  ],
+  "source_hash_mismatch": [],
+  "protected_hash_mismatch": [],
+  "metadata_evidence_changed": [
+    ".dev/checkpoints/r2-20261007/CLOSURE.json",
+    ".dev/checkpoints/r2-20261007/GATE_REQUEST.json"
+  ],
+  "preserved_file_sha256": {
+    ".dev/checkpoints/r2-20261007/FINAL_OWNER_ACCEPTANCE.json": "a04b53d59d820b102792899538c8bba3778427675099bec704de0fa872593501",
+    ".dev/checkpoints/r2-20261007/CLOSURE.json": "bf779a30924b2e32d2e11c570f34508f49f3dfd14fbbb30c5176ca5c2b33bf4d",
+    ".dev/checkpoints/r2-20261007/GATE_REQUEST.json": "cfa95a5ee534dbdc91bb849c6e0756beae1651e4da3c9d993847c7ac16f4bd8c",
+    ".dev/MDA_R2_IMPLEMENTATION_CHECKPOINT.json": "dccb0f9b9387c3212f61e949998ccfba1f7a80564de509b4ad0754ac4c3cd426",
+    "docs/reports/MDA_R2_CLOSURE_20261007.md": "e5f00283552552ffbe3535340172ed50e7a51ede60d926562b21b554d39a9cc3"
+  },
+  "next_action": "STOP; owner decision to resume acceptance-only metadata synchronization with explicit UTF-8, reusing existing acceptance and snapshots. No source/test/DB edits. No repeated implementation or tests.",
+  "R3_authorized": false
+}

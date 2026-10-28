@@ -1,0 +1,102 @@
+{
+  "checkpoint": "MDA_MASTER_CONTRACT_CHECKPOINT",
+  "timestamp": "2026-10-07T06:21:08.7723733Z",
+  "repository": "C:\\Users\\dmaza\\mcp-starter",
+  "branch": "codex/fullroot-control-20261007",
+  "head": "c24aa1b0db391009af44682bf2f2eb091f4f0f75",
+  "contract_1": {
+    "path": "docs/commands/MDA-CHATGPT-DEVELOPER-001.md",
+    "sha256": "71a3404dc16daf7f6decfa164e8b258da61945b9b1279e060fbeaeea390bac60"
+  },
+  "contract_2": {
+    "path": "docs/commands/MDA-MASTER-R1-MDE10-001.md",
+    "sha256": "73390e2f349e1b10a79c7ea2a37ece124f35d7a964e0e9dc419bbcc742f4dc32"
+  },
+  "protected_database": {
+    "path": "data\\knowledge\\nusantara_knowledge.db",
+    "exists": true,
+    "sha256": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+    "wal_present": false,
+    "shm_present": false
+  },
+  "prior_evidence": {
+    "mde09_checkpoint": true,
+    "mda_post_mde09_checkpoint": true,
+    "r1_proposal": true
+  },
+  "r1_exact_scope": {
+    "files": [
+      {
+        "File": "tests/test_configuration_contract.py",
+        "Status": "MATCH",
+        "Expected": "bc4478e0100bab03d2dc8580cbf6a8e29176b7fdbc690795a745a732551d7123",
+        "Actual": "bc4478e0100bab03d2dc8580cbf6a8e29176b7fdbc690795a745a732551d7123"
+      },
+      {
+        "File": "app/api/v2_routes.py",
+        "Status": "MATCH",
+        "Expected": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7",
+        "Actual": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7"
+      },
+      {
+        "File": "app/main.py",
+        "Status": "MATCH",
+        "Expected": "40debcba1d369cc25838ae7ac46cb145a845d0e7170f3a25c016fb867e24743c",
+        "Actual": "40debcba1d369cc25838ae7ac46cb145a845d0e7170f3a25c016fb867e24743c"
+      },
+      {
+        "File": "app/core/config.py",
+        "Status": "MATCH",
+        "Expected": "996bfaed79b989576ec31dd10f9d94f5bc419466dc67e4da5c54f7666e3af5b6",
+        "Actual": "996bfaed79b989576ec31dd10f9d94f5bc419466dc67e4da5c54f7666e3af5b6"
+      },
+      {
+        "File": "app/knowledge/engine.py",
+        "Status": "MATCH",
+        "Expected": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b",
+        "Actual": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b"
+      },
+      {
+        "File": "app/api/routes.py",
+        "Status": "MATCH",
+        "Expected": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4",
+        "Actual": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4"
+      },
+      {
+        "File": "tests/test_configuration_integration.py",
+        "Status": "MATCH",
+        "Expected": "2becf4883d6eccc9cd364c64a7b9be1638f5a8cd04136d8d4229e8399f2d680b",
+        "Actual": "2becf4883d6eccc9cd364c64a7b9be1638f5a8cd04136d8d4229e8399f2d680b"
+      },
+      {
+        "File": "tests/test_model_router_configuration.py",
+        "Status": "MATCH",
+        "Expected": "b0ce4e26bec018425b8965fefb616c2bb5f001cc7b7990d9c94064c744397f61",
+        "Actual": "b0ce4e26bec018425b8965fefb616c2bb5f001cc7b7990d9c94064c744397f61"
+      },
+      {
+        "File": "app/core/nusantara_config.py",
+        "Status": "MATCH",
+        "Expected": "3d18304750d9b43e6cf33a19f5f1d73ea5b05bf2b22d9686deecd6fd4371911d",
+        "Actual": "3d18304750d9b43e6cf33a19f5f1d73ea5b05bf2b22d9686deecd6fd4371911d"
+      },
+      {
+        "File": "app/models/ollama.py",
+        "Status": "MATCH",
+        "Expected": "73f4f268d655ee425b25b0a4b399bd4c503c773d1a7d5949831e2fbb34ad904b",
+        "Actual": "73f4f268d655ee425b25b0a4b399bd4c503c773d1a7d5949831e2fbb34ad904b"
+      }
+    ],
+    "match": 10,
+    "mismatch_or_missing": 0
+  },
+  "authorization": {
+    "r1": "NOT_AUTHORIZED",
+    "database_write": "FALSE",
+    "source_reset": "FALSE",
+    "cleanup": "FALSE",
+    "production": "FALSE"
+  },
+  "status": "READY_FOR_R1_AUTHORIZATION",
+  "next_action": "WAIT_FOR_EXPLICIT_HUMAN_R1_APPROVAL"
+}

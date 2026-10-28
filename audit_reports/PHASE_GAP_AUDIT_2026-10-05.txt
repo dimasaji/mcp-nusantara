@@ -1,0 +1,82 @@
+NUSANTARA — GAP PHASE DAN URUTAN PENGEMBANGAN
+Tanggal: 2026-10-05
+
+KESIMPULAN
+Perbaikan audit dan keberhasilan Docker tidak berarti seluruh blueprint selesai.
+Ada modul dasar yang sudah dibuat tetapi belum diintegrasikan, fitur antarmuka
+yang belum tersedia, dan kemampuan operasional yang baru berupa rancangan.
+Nomor phase berikut mengacu pada docs/v2/ROADMAP_STATUS.md (V2 Phase 0–21).
+PROGRESS_REPORT.md menggunakan penomoran V1 Phase 0–18 yang berbeda.
+
+GAP YANG DIVERIFIKASI LANGSUNG PADA SOURCE
+
+1. Phase 6 — Memory: integrasi chat V2 belum selesai.
+   app/v2/orchestrator.py menyediakan memory_read dan memory_write, tetapi
+   app/api/v2_routes.py tidak memasukkan kedua callback tersebut saat membuat
+   orchestrator. Ini bukan bukti bahwa semua memory V1 tidak tersedia.
+   Kriteria selesai: percakapan tersimpan dan terbaca kembali per sesi, sesi lain
+   tetap terpisah, persistensi setelah restart terbukti, serta aturan retensi
+   dan penghapusan memory tersedia dan diuji.
+
+2. Phase 8 — MCP: transport/integrasi eksternal belum selesai.
+   app/mcp/mcp.py menyediakan registry dan pemanggilan handler Python langsung.
+   app/governance/mcp_bridge.py memvalidasi manifest dan handler yang disuplai.
+   Tampilan MCP di app/ui/index.html baru drawer informasi.
+   Kriteria selesai: satu client/server MCP nyata berhasil melakukan discovery
+   dan pemanggilan tool melalui transport, terhubung ke governance, dan kegagalan
+   atau penolakan izin ditangani dengan benar.
+
+3. Phase 11 dan 18 — Feedback dan human approval: UI belum selesai.
+   Backend /v2/feedback dan /v2/approvals/* sudah ada. Roadmap mencatat UI sebagai
+   pekerjaan tersisa; pemeriksaan UI belum menemukan alur review/feedback itu.
+   Kriteria selesai: pengguna bisa mengirim feedback; admin dapat membaca antrean,
+   menyetujui/menolak dengan alasan; keputusan benar-benar diterapkan dan diaudit.
+
+4. Phase 12 — Evaluation: benchmark jawaban nyata belum selesai.
+   scripts/run_eval.py secara eksplisit memakai system() MOCK dan dataset smoke.
+   Keberhasilan unit test bukan pengukuran kualitas jawaban Nusantara nyata.
+   Kriteria selesai: harness memanggil API nyata dengan dataset representatif,
+   menyimpan baseline, menilai jawaban dan bukti, serta mendeteksi regresi.
+
+5. Phase 15 — Knowledge discovery: pengambilan sumber belum selesai.
+   app/research/knowledge_discovery.py menerima raw_content dari pemanggil;
+   validasi sumber, review, dan promosi sudah tersedia sebagai modul dasar.
+   Kriteria selesai: fetch sumber yang diizinkan dengan batas ukuran/waktu dan
+   perlindungan akses jaringan internal; provenance tercatat; promosi memakai
+   approval dan hasilnya bisa dicari melalui RAG.
+
+6. Phase 21 — Release dan rollback: eksekusi operasional belum selesai.
+   app/improvement/release.py menyatakan tidak melakukan deploy; rollback()
+   mengubah registry dan mengembalikan daftar instruksi, bukan memulihkan layanan.
+   Kriteria selesai: prosedur rilis staging yang dapat dijalankan, backup yang
+   dapat dipulihkan, pemeriksaan kesehatan, dan latihan rollback terbukti.
+
+PEKERJAAN LAIN YANG MASIH DICATAT ROADMAP
+Phase 2: integrasi hardening ke jalur layanan.
+Phase 3: trace, token usage, retensi log, dashboard observability.
+Phase 4–5: trust per sumber dan tata kelola izin.
+Phase 9–10: isolasi tool dan analytics pengalaman.
+Phase 13–14: korelasi kegagalan dan kalibrasi confidence.
+Phase 16: dataset eksperimen dan penjadwalan.
+Phase 19: workflow pengembangan yang benar-benar mengeksekusi perubahan Git.
+Phase 20: benchmark/load test dan penyelarasan release_check dengan bukti terbaru.
+Daftar ini berasal dari roadmap; setiap butir perlu pemeriksaan implementasi
+tersendiri sebelum diputuskan detail pengerjaannya. Tidak semuanya berarti
+modul sama sekali belum dibuat.
+
+URUTAN YANG DISARANKAN
+1. Satukan definisi selesai dan penomoran roadmap; koreksi klaim kelengkapan.
+2. Buat benchmark API nyata (Phase 12) sebagai ukuran sebelum fitur berkembang.
+3. Integrasikan memory ke chat V2 (Phase 6).
+4. Selesaikan satu alur MCP nyata dengan governance (Phase 8–9).
+5. Selesaikan UI feedback dan approval (Phase 11/18).
+6. Tambahkan discovery sumber yang terkontrol (Phase 15).
+7. Tuntaskan observability, load test, staging release, dan rollback (Phase 3/20/21).
+Setiap tahap harus memiliki demonstrasi end-to-end, uji perilaku penting,
+dan status roadmap yang diperbarui; keberadaan file saja tidak cukup.
+
+BATAS AUDIT SEBELUMNYA
+Laporan AUDIT_NUSANTARA_2026-10-05.txt dan bukti Docker membuktikan perbaikan
+temuan yang diuji pada bagian aplikasi yang sudah tersedia. Status PASS tersebut
+bukan sertifikasi kelengkapan seluruh phase atau kesiapan produksi menyeluruh.
+Audit gap ini tidak mengimplementasikan fitur baru dan tidak melakukan deploy.

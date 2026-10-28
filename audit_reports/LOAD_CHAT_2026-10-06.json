@@ -1,0 +1,24 @@
+{
+  "captured_at": "2026-10-06T03:00:09.776869+00:00",
+  "base_url": "http://127.0.0.1:8002",
+  "scope": "chat",
+  "requests": 2,
+  "concurrency": 1,
+  "failures": 2,
+  "elapsed_s": 11.42,
+  "p50_ms": 5776.38,
+  "p95_ms": 5776.38,
+  "records": [
+    {
+      "ok": false,
+      "latency_ms": 5776.38,
+      "error_type": "HTTPError"
+    },
+    {
+      "ok": false,
+      "latency_ms": 5623.39,
+      "error_type": "HTTPError"
+    }
+  ],
+  "limitations": "Measurement only; no production SLA or answer quality inferred."
+}

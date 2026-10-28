@@ -1,0 +1,297 @@
+{
+  "status": 200,
+  "body": {
+    "developer_core": {
+      "runtime": {
+        "version": "14.1.0-runtime",
+        "timestamp": "2026-10-06T08:57:34.212496+00:00",
+        "session_id": "verify-v1-runtime-20261006",
+        "provider_status": "ollama",
+        "latency_ms": 5407,
+        "grounded": false
+      },
+      "request": {
+        "input_length": 4,
+        "has_input": true
+      },
+      "gates": {
+        "8": {
+          "name": "Reasoning Engine",
+          "status": "insufficient_evidence",
+          "confidence": 0.0
+        },
+        "9": {
+          "name": "Decision / Policy Engine",
+          "status": "block",
+          "allowed": false,
+          "risk": "medium"
+        },
+        "10": {
+          "name": "Memory / Context Engine",
+          "status": "active"
+        },
+        "11": {
+          "name": "Tool / Action Engine",
+          "status": "observed"
+        },
+        "12": {
+          "name": "Existing Tools",
+          "status": "preserved"
+        },
+        "13": {
+          "name": "Workflow / Orchestration",
+          "status": "observed"
+        },
+        "14": {
+          "name": "Developer Core / Graph",
+          "status": "active"
+        }
+      },
+      "orchestration": {
+        "session_id": "verify-v1-runtime-20261006",
+        "user_input": "Halo",
+        "stages": [
+          "language",
+          "problem",
+          "reasoning",
+          "policy",
+          "memory"
+        ],
+        "data": {
+          "language": {
+            "intent": "greeting",
+            "confidence": 0.76
+          },
+          "problem": {
+            "has_problem": true,
+            "severity": "medium",
+            "situation": "Halo",
+            "goal": "Menyelesaikan kebutuhan pengguna",
+            "identified_problems": [
+              "general_inquiry"
+            ],
+            "missing_information": [],
+            "needs_clarification": false,
+            "constraints": [],
+            "metadata": {}
+          },
+          "reasoning": {
+            "status": "insufficient_evidence",
+            "facts": [],
+            "inferences": [],
+            "confidence": 0.0,
+            "explanation": "No evidence available.",
+            "blocked_reason": "no_evidence"
+          },
+          "policy": {
+            "decision": "block",
+            "allowed": false,
+            "reason": "Reasoning is not grounded.",
+            "risk": "medium"
+          },
+          "memory": [
+            {
+              "session_id": "verify-v1-runtime-20261006",
+              "role": "user",
+              "content": "Halo",
+              "timestamp": "2026-10-06T08:57:30.284052+00:00",
+              "metadata": {}
+            }
+          ]
+        }
+      },
+      "observability": {
+        "reasoning_status": "insufficient_evidence",
+        "reasoning_confidence": 0.0,
+        "policy_decision": "block",
+        "memory_items": 1
+      }
+    },
+    "session_id": "verify-v1-runtime-20261006",
+    "response": "Informasi tersebut belum tersedia secara cukup dalam knowledge base.",
+    "gate_pipeline": {
+      "version": "8-13.1.0",
+      "status": "processed",
+      "reasoning": {
+        "status": "insufficient_evidence",
+        "facts": [],
+        "inferences": [],
+        "confidence": 0.0,
+        "explanation": "No evidence available.",
+        "blocked_reason": "no_evidence"
+      },
+      "policy": {
+        "decision": "block",
+        "allowed": false,
+        "reason": "Reasoning is not grounded.",
+        "risk": "medium"
+      },
+      "memory": [
+        {
+          "session_id": "verify-v1-runtime-20261006",
+          "role": "user",
+          "content": "Halo",
+          "timestamp": "2026-10-06T08:57:30.284052+00:00",
+          "metadata": {}
+        }
+      ],
+      "orchestration": {
+        "session_id": "verify-v1-runtime-20261006",
+        "user_input": "Halo",
+        "stages": [
+          "language",
+          "problem",
+          "reasoning",
+          "policy",
+          "memory"
+        ],
+        "data": {
+          "language": {
+            "intent": "greeting",
+            "confidence": 0.76
+          },
+          "problem": {
+            "has_problem": true,
+            "severity": "medium",
+            "situation": "Halo",
+            "goal": "Menyelesaikan kebutuhan pengguna",
+            "identified_problems": [
+              "general_inquiry"
+            ],
+            "missing_information": [],
+            "needs_clarification": false,
+            "constraints": [],
+            "metadata": {}
+          },
+          "reasoning": {
+            "status": "insufficient_evidence",
+            "facts": [],
+            "inferences": [],
+            "confidence": 0.0,
+            "explanation": "No evidence available.",
+            "blocked_reason": "no_evidence"
+          },
+          "policy": {
+            "decision": "block",
+            "allowed": false,
+            "reason": "Reasoning is not grounded.",
+            "risk": "medium"
+          },
+          "memory": [
+            {
+              "session_id": "verify-v1-runtime-20261006",
+              "role": "user",
+              "content": "Halo",
+              "timestamp": "2026-10-06T08:57:30.284052+00:00",
+              "metadata": {}
+            }
+          ]
+        }
+      },
+      "action": {
+        "status": "not_executed",
+        "reason": "No side-effect action requested."
+      }
+    },
+    "model": "llama3.2:1b",
+    "provider_status": "ollama",
+    "latency_ms": 5407,
+    "grounding": {
+      "enabled": true,
+      "grounded": false,
+      "reason": "no_evidence",
+      "unsupported_sentences": [
+        "Halo!"
+      ]
+    },
+    "understanding": {
+      "input": "Halo",
+      "output": {
+        "text": "halo",
+        "language": {
+          "language": "unknown",
+          "confidence": 0.0,
+          "is_mixed": false,
+          "languages": {}
+        },
+        "intent": {
+          "intent": "greeting",
+          "confidence": 0.76,
+          "category": null,
+          "parent_intent": null
+        },
+        "entities": {
+          "entities": [],
+          "confidence": 0.0,
+          "raw_matches": [],
+          "doc_id": null,
+          "text": "halo"
+        },
+        "metadata": {
+          "engine": "nusantara-language-engine",
+          "version": "1.5.0-intent-observability",
+          "domain_terms_detected": [],
+          "raw_text": "Halo",
+          "normalization": {
+            "original": "Halo",
+            "normalized": "halo",
+            "changes": []
+          },
+          "confidence_source": "lexical_heuristic",
+          "intent_observability": {
+            "engine": "intent-fusion",
+            "decision": "agreement",
+            "rule": {
+              "intent": "greeting",
+              "confidence": 0.6
+            },
+            "semantic": {
+              "intent": "greeting",
+              "confidence": 1.0,
+              "top_candidates": [
+                {
+                  "intent": "greeting",
+                  "similarity": 1.0,
+                  "average_similarity": 0.803148
+                },
+                {
+                  "intent": "confirm_action",
+                  "similarity": 0.771788,
+                  "average_similarity": 0.674673
+                },
+                {
+                  "intent": "cancel_or_stop",
+                  "similarity": 0.714059,
+                  "average_similarity": 0.643816
+                }
+              ]
+            }
+          }
+        }
+      },
+      "steps": [
+        "normalization",
+        "language_detection",
+        "intent_classification",
+        "entity_extraction",
+        "structured_understanding"
+      ],
+      "duration_ms": 769
+    },
+    "problem": {
+      "has_problem": true,
+      "severity": "medium",
+      "situation": "Halo",
+      "goal": "Menyelesaikan kebutuhan pengguna",
+      "identified_problems": [
+        "general_inquiry"
+      ],
+      "missing_information": [],
+      "needs_clarification": false,
+      "constraints": [],
+      "metadata": {}
+    },
+    "evidence": [],
+    "timestamp": "2026-10-06T08:57:34.212593+00:00"
+  }
+}

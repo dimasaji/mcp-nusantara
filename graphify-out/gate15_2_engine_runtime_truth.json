@@ -1,0 +1,54 @@
+{
+  "gate": "15.2",
+  "name": "Engine Runtime Truth",
+  "version": "15.2.0",
+  "timestamp": "2026-10-03T21:22:29.591395",
+  "status": "PASS",
+  "checks": {
+    "engine_count": 4,
+    "passed": 4,
+    "all_loaded": true
+  },
+  "engines": {
+    "language_engine": {
+      "module": "app.language.engine",
+      "class": "LanguageEngine",
+      "module_loaded": true,
+      "class_found": true,
+      "file": "E:\\nusantara\\mcp-starter\\app\\language\\engine.py",
+      "status": "PASS"
+    },
+    "problem_engine": {
+      "module": "app.problem.engine",
+      "class": "ProblemEngine",
+      "module_loaded": true,
+      "class_found": true,
+      "file": "E:\\nusantara\\mcp-starter\\app\\problem\\engine.py",
+      "status": "PASS"
+    },
+    "knowledge_engine": {
+      "module": "app.knowledge.engine",
+      "class": "KnowledgeEngine",
+      "module_loaded": true,
+      "class_found": true,
+      "file": "E:\\nusantara\\mcp-starter\\app\\knowledge\\engine.py",
+      "status": "PASS"
+    },
+    "reasoning_engine": {
+      "module": "app.reasoning.engine",
+      "class": "ReasoningEngine",
+      "module_loaded": true,
+      "class_found": true,
+      "file": "E:\\nusantara\\mcp-starter\\app\\reasoning\\engine.py",
+      "status": "PASS"
+    }
+  },
+  "contract": {
+    "language_engine": "app.language.engine.LanguageEngine",
+    "problem_engine": "app.problem.engine.ProblemEngine",
+    "knowledge_engine": "app.knowledge.engine.KnowledgeEngine",
+    "reasoning_engine": "app.reasoning.engine.ReasoningEngine",
+    "must_load_from_source": true,
+    "must_resolve_class": true
+  }
+}

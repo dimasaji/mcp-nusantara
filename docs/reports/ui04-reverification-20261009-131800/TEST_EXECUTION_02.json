@@ -1,0 +1,26 @@
+{
+  "command": [
+    "C:/Users/dmaza/AppData/Local/hermes/node/node.exe",
+    "C:/Users/dmaza/AppData/Local/hermes/node/node_modules/npm/bin/npm-cli.js",
+    "--prefix",
+    "control-plane",
+    "test",
+    "--",
+    "--run",
+    "tests/assistant.test.tsx",
+    "--configLoader",
+    "runner",
+    "--no-cache",
+    "--pool=threads",
+    "--maxWorkers=1",
+    "--minWorkers=1",
+    "--reporter=default",
+    "--reporter=json",
+    "--outputFile=C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\ui04-reverification-20261009-131800\\TEST_RESULTS.json"
+  ],
+  "working_directory": "C:\\Users\\dmaza\\mcp-starter",
+  "exit_code": 0,
+  "stdout": "\n> nusantara-engineering-control-plane@0.1.0 test\n> vitest run --run tests/assistant.test.tsx --configLoader runner --no-cache --pool=threads --maxWorkers=1 --minWorkers=1 --reporter=default --reporter=json --outputFile=C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\ui04-reverification-20261009-131800\\TEST_RESULTS.json\n\n\n RUN  v3.2.7 C:/Users/dmaza/mcp-starter/control-plane\n\n ✓ tests/assistant.test.tsx (17 tests) 455ms\n\n Test Files  1 passed (1)\n      Tests  17 passed (17)\n   Start at  13:20:38\n   Duration  2.29s (transform 104ms, setup 316ms, collect 207ms, tests 455ms, environment 1.05s, prepare 94ms)\n\nJSON report written to C:/Users/dmaza/mcp-starter/docs/reports/ui04-reverification-20261009-131800/TEST_RESULTS.json\n",
+  "stderr": "npm notice\nnpm notice New major version of npm available! 10.9.9 -> 12.2.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0\nnpm notice To update run: npm install -g npm@12.2.0\nnpm notice\n",
+  "transient_test_environment": "Installed Node PATH; report-local npm cache and child-only guards. No global configuration or dependencies changed."
+}

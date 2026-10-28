@@ -1,0 +1,16 @@
+{
+  "contract_id": "NUS-V1-MDE-WORK-CONTRACT-001",
+  "phase": "0 inventory for phase3, no phase3 PASS",
+  "timestamp": "2026-10-09T11:11:18.605105+07:00",
+  "source_path": [
+    "router.tsx UserChat -> assistant.tsx send -> api.ts sendUserChat -> POST /v1/chat",
+    "routes.chat -> Settings.configuration_snapshot -> OllamaProvider(snapshot)",
+    "routes.chat -> HermesAgent.execute_v1 with shared LanguageEngine, KnowledgeEngine, GateIntegration, TrustEngine, EvidenceGroundingGuard",
+    "Hermes execute_v1 -> provider.health_check -> language/run_sync -> ProblemEngine/classifier -> knowledge retrieval -> trust/gates -> deterministic/evidence/provider response branches -> grounding -> remember_response",
+    "provider branch -> system/user prompt -> OllamaProvider.generate -> Ollama HTTP client",
+    "routes.chat -> _project_v1_chat_response -> record_v1_execution -> public body"
+  ],
+  "memory": "GateIntegration remembers user before answer policy; bounded MemoryEngine keyed by client session. execute_v1 passes context=None to language; generated user prompt builds user/intent/entities/problem/evidence, not validated prompt-memory recall.",
+  "diagram_mermaid": "flowchart LR\n U[UserChat] --> A[sendUserChat]\n A --> R[POST /v1/chat]\n R --> C[Settings snapshot]\n R --> H[Hermes execute_v1]\n H --> L[Language/Problem]\n H --> K[Knowledge retrieval]\n H --> T[Trust/Gates/Grounding]\n H --> P[Provider branch]\n H --> M[Legacy memory]\n H --> O[Public projection]",
+  "limits": "Static calls and historical scoped tests. No startup/provider execution or new assertion of native runtime call closure."
+}

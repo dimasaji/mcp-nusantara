@@ -1,0 +1,83 @@
+{
+  "engine": "Nusantara Runtime Truth",
+  "version": "1.0.0",
+  "python": "3.13.15 (tags/v3.13.15:4061bc4, Aug  5 2026, 13:05:39) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+  "root": "C:\\Users\\dmaza\\mcp-starter",
+  "results": [
+    {
+      "label": "routes",
+      "module": "app.api.routes",
+      "imported": true,
+      "file": "E:\\nusantara\\mcp-starter\\app\\api\\routes.py",
+      "classes": [
+        "ChatRequest",
+        "DocumentIngestRequest",
+        "HealthResponse",
+        "HumanHandoffRequest",
+        "KnowledgeSearchRequest",
+        "ProblemAnalyzeRequest",
+        "WorkflowCreateRequest"
+      ]
+    },
+    {
+      "label": "core",
+      "module": "app.core",
+      "imported": true,
+      "file": "E:\\nusantara\\mcp-starter\\app\\core\\__init__.py",
+      "classes": []
+    },
+    {
+      "label": "agent",
+      "module": "app.agent",
+      "imported": false,
+      "file": null,
+      "classes": [],
+      "error": "ModuleNotFoundError: No module named 'app.agent'"
+    },
+    {
+      "label": "language",
+      "module": "app.language.engine",
+      "imported": true,
+      "file": "E:\\nusantara\\mcp-starter\\app\\language\\engine.py",
+      "classes": [
+        "LanguageEngine"
+      ]
+    },
+    {
+      "label": "problem",
+      "module": "app.problem.engine",
+      "imported": true,
+      "file": "E:\\nusantara\\mcp-starter\\app\\problem\\engine.py",
+      "classes": [
+        "ProblemEngine"
+      ]
+    },
+    {
+      "label": "rag",
+      "module": "app.rag",
+      "imported": false,
+      "file": null,
+      "classes": [],
+      "error": "ModuleNotFoundError: No module named 'app.rag'"
+    },
+    {
+      "label": "knowledge",
+      "module": "app.knowledge.engine",
+      "imported": true,
+      "file": "E:\\nusantara\\mcp-starter\\app\\knowledge\\engine.py",
+      "classes": [
+        "KnowledgeEngine"
+      ]
+    },
+    {
+      "label": "reasoning",
+      "module": "app.reasoning.engine",
+      "imported": true,
+      "file": "E:\\nusantara\\mcp-starter\\app\\reasoning\\engine.py",
+      "classes": [
+        "ReasoningEngine"
+      ]
+    }
+  ]
+}

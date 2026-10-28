@@ -1,0 +1,68 @@
+- complementary:
+  - link "N NUSANTARA HUMAN ACCEPTANCE CONSOLE":
+    - /url: /overview
+    - generic: "N"
+    - text: NUSANTARA
+    - generic: HUMAN ACCEPTANCE CONSOLE
+  - generic: INSPECT · TEST · REVIEW · DECIDE
+  - navigation "Runtime control":
+    - link "Asisten AI":
+      - /url: /
+    - link "Kendali runtime":
+      - /url: /console
+  - navigation "Acceptance steps":
+    - link "System":
+      - /url: /overview
+      - generic: "01"
+      - text: System
+      - generic: Available
+    - button "Evidence Locked" [disabled]:
+      - generic: "02"
+      - text: Evidence
+      - generic: Locked
+    - button "Human Test Locked" [disabled]:
+      - generic: "03"
+      - text: Human Test
+      - generic: Locked
+    - button "Review Locked" [disabled]:
+      - generic: "04"
+      - text: Review
+      - generic: Locked
+    - button "Decision Locked" [disabled]:
+      - generic: "05"
+      - text: Decision
+      - generic: Locked
+  - generic "Engineering views"
+  - text: Read-only engineering evidence
+  - text: Human decisions remain yours
+  - generic "Frontend build identity"
+- main:
+  - paragraph: KENDALI OPERATOR
+  - heading "Developer Console" [level=1]
+  - link "Kembali ke percakapan":
+    - /url: /
+  - heading "Model runtime V1" [level=2]
+  - paragraph:
+    - text: "Status:"
+    - strong: NOT_VERIFIED
+  - paragraph: "Model aktif: fixture-b · Provider: ollama"
+  - paragraph: Pilihan berlaku pada proses ini saja. Konsistensi antarworker belum dibuktikan. Pilihan kembali ke bootstrap setelah proses berhenti.
+  - text: Token operator
+  - textbox "Token operator": <redacted>
+  - button "Muat model tersedia"
+  - button "Perbarui status"
+  - alert: Akses ditolak. Periksa token operator.
+  - heading "Diagnostik dan batas verifikasi" [level=2]
+  - paragraph: "Knowledge/RAG dan official oracle: REVIEW_REQUIRED / NOT_VERIFIED."
+  - paragraph: "Policy dan approval eksekusi: REVIEW_REQUIRED."
+  - paragraph: "Memory: LEGACY_BEHAVIOR_PRESERVED_TEMPORARILY · CC-05 tetap terbuka."
+  - generic "Request terakhir dan identitas source"
+  - paragraph:
+    - link "Evidence dan acceptance":
+      - /url: /overview
+    - text: ·
+    - link "Regression evidence":
+      - /url: /verification
+    - text: ·
+    - link "Knowledge diagnostics":
+      - /url: /knowledge

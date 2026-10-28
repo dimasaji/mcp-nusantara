@@ -1,0 +1,46 @@
+{
+  "http_status": 200,
+  "headers": {
+    "date": "Fri, 09 Oct 2026 02:45:59 GMT",
+    "server": "uvicorn",
+    "content-length": "804",
+    "content-type": "application/json",
+    "vary": "Origin",
+    "x-request-id": "final_source_20261009_094140",
+    "connection": "close"
+  },
+  "body": {
+    "provider": "ollama",
+    "model": "llama3.2:1b",
+    "revision": 2,
+    "selected_at": "2026-10-09T02:45:52.216834+00:00",
+    "selection_source": "OPERATOR",
+    "consistency_scope": "CURRENT_PROCESS_ONLY",
+    "process_id": 37244,
+    "availability": "NOT_VERIFIED",
+    "status": "NOT_VERIFIED",
+    "selection_enabled": true,
+    "last_request": {
+      "revision": 2,
+      "model": "llama3.2:1b",
+      "provider_status": "ollama",
+      "grounded": false,
+      "stages": [
+        "HERMES_RUN",
+        "KNOWLEDGE",
+        "TRUST",
+        "GATES",
+        "GROUNDING",
+        "PUBLIC_PROJECTION"
+      ],
+      "timestamp": "2026-10-09T02:45:59.960545+00:00"
+    },
+    "source_build_id": "sha256:1eb90d87ab86172af5c57858a8f8ff86c9a9d827b32a927cdc6ab9f77c8b498e",
+    "memory": "LEGACY_BEHAVIOR_PRESERVED_TEMPORARILY",
+    "memory_governance": "REVIEW_REQUIRED",
+    "knowledge": "NOT_VERIFIED",
+    "official_oracle": "REVIEW_REQUIRED",
+    "approval": "REVIEW_REQUIRED",
+    "execution_mode": "V1_DEFAULT"
+  }
+}

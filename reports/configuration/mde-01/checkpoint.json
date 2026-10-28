@@ -1,0 +1,83 @@
+{
+  "stage": "MDE-01_CONFIGURATION_INTELLIGENCE",
+  "status": "PASS_SCOPED_STATIC_AWAITING_COMPOSITION_APPROVAL",
+  "completed_at": "2026-10-06T12:36:56.358666+00:00",
+  "command_path": "docs/commands/NUSANTARA MASTER DEVELOPER ENGINE.md",
+  "command_sha256": "3a59ccfbcdcea62f4f7cbfb54199b2045bff48fdab60bda3d62e312f6dc75c4f",
+  "requested_path": "docs/NUSANTARA MASTER DEVELOPER ENGINE.md",
+  "path_resolution": "Requested path missing; exact filename found under docs/commands",
+  "mode": "READ_ONLY_SOURCE",
+  "source_build_id": "sha256:487ace8eb2a8ba4d8c979fdc7728cefe7802eb0b3f8f01d3f6462d9c83e9492a",
+  "authoritative_baseline": "Phase0-10 and CA01 checkpoints reused, not repeated",
+  "summary": {
+    "central_fields": 75,
+    "snapshot_fields": 56,
+    "settings_fields": 19,
+    "auxiliary_schema_candidates": 7,
+    "auxiliary_field_candidates": 37,
+    "historical_occurrences": 3371,
+    "direct_sites": 39,
+    "direct_fields": 27,
+    "transitive_paths": 2,
+    "forwarding_edges": 3,
+    "dynamic_reflection_candidates": 68,
+    "hardcoded_behavior_groups": 6,
+    "legacy_central_declarations": 24,
+    "historical_legacy_occurrences": 2732,
+    "central_fields_without_direct_access": 48,
+    "effective_candidates": 80,
+    "verified_effective_live": 0,
+    "behavior_test_supported_opt_in_fields": 14,
+    "migration_candidates": 15
+  },
+  "verification": {
+    "output_json_schema_and_counts": "PASS_SCOPED_STRUCTURAL",
+    "source_hashes": "MATCH",
+    "historical_evidence_hashes": "MATCH",
+    "protected_baseline_file_count": 296,
+    "unexpected_drift": 0,
+    "secret_reference_values_excluded": true,
+    "app_ast_files": 192,
+    "parse_errors": 0,
+    "new_test_runs": 0,
+    "regression_evidence_reused": {
+      "passed": 353,
+      "subtests_passed": 28,
+      "skipped": 1,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "source_changes": false,
+  "test_changes": false,
+  "runtime_activation": false,
+  "provider_calls": false,
+  "worker_execution": false,
+  "database_connection": false,
+  "architecture_dod": "NOT_COMPLETE",
+  "developer_core": "PASS_SCOPED",
+  "overall_v1_acceptance": "FAIL/HOLD",
+  "output_evidence": [
+    "reports/configuration/mde-01/CONFIGURATION_INTELLIGENCE_20261006.json",
+    "reports/configuration/mde-01/CONFIGURATION_CONSUMER_MAP_20261006.json",
+    "reports/configuration/mde-01/CONFIGURATION_EFFECTIVE_CANDIDATES_20261006.json",
+    "reports/configuration/mde-01/CONFIGURATION_MIGRATION_CANDIDATES_20261006.json",
+    "reports/configuration/mde-01/MDE01_CONFIGURATION_INTELLIGENCE_20261006.md"
+  ],
+  "output_sha256": {
+    "reports/configuration/mde-01/CONFIGURATION_INTELLIGENCE_20261006.json": "5c8b97fe11344ef7d300ac8a220e4fc808682a9dc9f169c37ec62586e0dfd398",
+    "reports/configuration/mde-01/CONFIGURATION_CONSUMER_MAP_20261006.json": "21160d70696142c41b1548918a44b87f19982913aa15609a98fc95a999e67b06",
+    "reports/configuration/mde-01/CONFIGURATION_EFFECTIVE_CANDIDATES_20261006.json": "58a7fc202f9713f0e99756306c0de6bebf86db05ec8aab2eabb2d751ed70d8d4",
+    "reports/configuration/mde-01/CONFIGURATION_MIGRATION_CANDIDATES_20261006.json": "6ca7311d8e0a9895dd31b995411d01cd4a666937111646b9264c49c0ea764987",
+    "reports/configuration/mde-01/MDE01_CONFIGURATION_INTELLIGENCE_20261006.md": "3fb97e541d2638bb0d2ac86658949b44cdc828f9afb2f8253d685e40ccf9996a"
+  },
+  "next_phase": "COMPOSITION_ROOT_DESIGN_AND_IMPACT",
+  "approval_required": true,
+  "approval_requirement_source": {
+    "file": "docs/commands/NUSANTARA MASTER DEVELOPER ENGINE.md",
+    "section": 20,
+    "quote": "Menunggu approval sebelum masuk ke Composition Root."
+  },
+  "resume_instruction": "Read this checkpoint and verify output hashes; do not repeat MDE01. Await explicit approval for Composition Root design/impact before proceeding.",
+  "token_limit_instruction": "Stop and checkpoint on token exhaustion; current MDE01 fully completed."
+}

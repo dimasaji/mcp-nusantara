@@ -1,0 +1,113 @@
+{
+  "contract": "NUS-MDE-UI-ROUTE-001",
+  "status": "IMPLEMENTED_VERIFIED_SCOPED_SOURCE",
+  "files": [
+    "control-plane/src/router.tsx",
+    "control-plane/src/ui.tsx",
+    "control-plane/tests/ui-routing.test.tsx"
+  ],
+  "results": [
+    {
+      "evidence": "TARGETED_TEST_RESULTS_FINAL.json",
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "exit": 0
+    },
+    {
+      "evidence": "REGRESSION_TEST_RESULTS.json",
+      "passed": 52,
+      "failed": 2,
+      "skipped": 0,
+      "exit": 1
+    },
+    {
+      "evidence": "REGRESSION_TEST_RESULTS_FINAL.json",
+      "passed": 54,
+      "failed": 0,
+      "skipped": 0,
+      "exit": 0
+    },
+    {
+      "evidence": "FINAL_SOURCE_TARGETED.json",
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "exit": 0
+    }
+  ],
+  "commands": [
+    "node node_modules/vitest/vitest.mjs run tests/ui-routing.test.tsx tests/assistant.test.tsx --cache=false --pool=threads --maxWorkers=1 --minWorkers=1 --reporter=default --reporter=json --outputFile.json=../docs/reports/ui-route-20261009T205450/FINAL_SOURCE_TARGETED.json",
+    "node node_modules/vitest/vitest.mjs run tests/ui-routing.test.tsx tests/assistant.test.tsx tests/human.test.tsx tests/attestation.test.tsx --cache=false --pool=threads --maxWorkers=1 --minWorkers=1 --reporter=default --reporter=json --outputFile.json=../docs/reports/ui-route-20261009T205450/REGRESSION_TEST_RESULTS_FINAL.json",
+    "node node_modules/typescript/bin/tsc --noEmit --incremental false"
+  ],
+  "command_context": {
+    "cwd": "control-plane",
+    "node": "C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+    "NODE_OPTIONS": "--require=C:/users/dmaza/mcp-starter/control-plane/tests/inspection-preview-network-guard.cjs",
+    "regression_fixtures": [
+      "docs/reports/r2-a9-control-plane-implementation-20261008/SYNTHETIC_NORMAL.json",
+      "docs/reports/r2-a9-control-plane-implementation-20261008/COMPOSITION_EVIDENCE.json"
+    ]
+  },
+  "startup_attempts": [
+    {
+      "exit": 1,
+      "reason": "sandbox denied config read; no tests executed"
+    },
+    {
+      "exit": 1,
+      "reason": "default fork workers blocked by guard; no tests executed",
+      "evidence": "TARGETED_TEST_RESULTS.json"
+    }
+  ],
+  "known_initial_failures": [
+    "REGRESSION_TEST_RESULTS.json: missing historical fixture environment and mock cleanup erased API mock implementation; fixed only new test cleanup and process-local fixture variables",
+    "Typecheck exit 2: new test accessed union options.path without narrowing; fixed new test with path-in-options guard"
+  ],
+  "warnings": [
+    "Existing attestation test emits jsdom window.scrollTo warning; assertions pass; that existing test was not changed"
+  ],
+  "verification": {
+    "typecheck_exit": 0,
+    "assets": [
+      {
+        "url": "/assets/index-DWlaYDof.js",
+        "exists": true
+      },
+      {
+        "url": "/assets/index-CmsA6OFH.css",
+        "exists": true
+      }
+    ],
+    "preserved_existing_files": [
+      {
+        "path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\router.tsx",
+        "before": "342777FDA6AC6938EA4DC3D96DA0710716327B1C8427D5CB8A44DBBA5078E19F",
+        "after": "DBF1DBD0AC225A175F9A8BC70EB758CB0FB21FE8E77AB016DE5D7E5FC418C534"
+      },
+      {
+        "path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\ui.tsx",
+        "before": "D09E853056FBD49CBD5B87AF7F1B08AD2359DAA06F49788C408DA95CC2674DB2",
+        "after": "AF5B7CA77A2B28E1E9B8AEB459608948AADCA0674E6F9A316C0A3C2FF3D40F56"
+      }
+    ],
+    "build": "NOT_RUN",
+    "live_browser": "NOT_RUN_THIS_TASK",
+    "live_chat": "NOT_RUN",
+    "runtime_operations": 0,
+    "dependencies_changed": false,
+    "database_access": false,
+    "api_or_v2_changed": false,
+    "test_cache": "DISABLED"
+  },
+  "runtime_limit": "No explicit reload/restart/activation performed. A pre-existing Vite watcher may react to authorized source edits automatically; this was not measured. Port-8000 compiled bundle remains unchanged.",
+  "rollback": "Reverse only APPLIED_CHANGES.patch hunks after checking later edits; preserve baseline user changes. Remove the new test only if it remains exclusively this task content.",
+  "v1": "HOLD",
+  "v2": "DEFERRED",
+  "hashes": {
+    "control-plane/src/router.tsx": "dbf1dbd0ac225a175f9a8bc70eb758cb0fb21fe8e77ab016de5d7e5fc418c534",
+    "control-plane/src/ui.tsx": "af5b7ca77a2b28e1e9b8aeb459608948aadca0674e6f9a316c0a3c2ff3d40f56",
+    "control-plane/tests/ui-routing.test.tsx": "29757aeb2e64f03061c7335b91767564eb16ec33e8a2f4426b4f0d4b7125c488"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "V1": "FAIL / HOLD",
+  "V2": "DEFERRED",
+  "reason": "No-cache-mutation requirement is not satisfied by the observed test-cache metadata; no baseline cache hash was captured.",
+  "status": "PARTIAL / REVIEW_REQUIRED",
+  "finding": {
+    "attribution": "Timestamp correlation and test-tool cache path; exact before/after bytes and writer identity NOT_VERIFIED",
+    "observation": "Vitest results cache has last-write timestamp coincident with final UI test execution.",
+    "modified_at": "2026-10-09T20:09:25.0504528+07:00",
+    "path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\node_modules\\.vite\\vitest\\da39a3ee5e6b4b0d3255bfef95601890afd80709\\results.json",
+    "action": "STOP; cache not deleted, reverted, restored or modified by remediation",
+    "required_decision": "Owner review of test-tool cache side effect. Any further tests must explicitly disable cache, without altering existing cache.",
+    "requirement": "Attached command safety rule 6 prohibits cache mutations.",
+    "sha256": "D9E1709182094EC0CA66CB858D4AF51652D3F68A09759323F162364C533C8D3B",
+    "id": "HCU-CACHE-01"
+  },
+  "implementation_report": "RESULTS.json",
+  "active_database_access": false,
+  "runtime_operations": 0,
+  "ui_source_result": "IMPLEMENTED; targeted UI results 49 PASS, 0 FAIL; TypeScript exit 0",
+  "integration": "NOT_AUTHORIZED",
+  "historical_reports_preserved": true
+}

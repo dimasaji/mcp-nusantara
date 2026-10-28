@@ -1,0 +1,39 @@
+{
+  "phase": "after-mutex-fix",
+  "configured_provider": "ollama",
+  "configured_model": "llama3.2:1b",
+  "credential_present": true,
+  "observations": [
+    {
+      "name": "backend_health",
+      "url": "http://127.0.0.1:8000/health",
+      "at_utc": "2026-10-27T08:08:23.821809+00:00",
+      "http_status": 200
+    },
+    {
+      "name": "frontend_health",
+      "url": "http://127.0.0.1:5180/health",
+      "at_utc": "2026-10-27T08:08:23.880076+00:00",
+      "http_status": 200
+    },
+    {
+      "name": "ollama",
+      "url": "http://127.0.0.1:11434/api/version",
+      "at_utc": "2026-10-27T08:08:26.918558+00:00",
+      "http_status": 200
+    },
+    {
+      "name": "review",
+      "url": "http://127.0.0.1:5180/v1/knowledge/pipeline/reviews/DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+      "at_utc": "2026-10-27T08:08:26.934127+00:00",
+      "http_status": 200,
+      "document_id": "DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+      "version_id": "2c79e2bf120c90c8dcb9bc568e9c8067e2ac587a16fd901bbf6f5b1b83a0f09c",
+      "source_sha256": "d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+      "review_status": "Menunggu pemeriksaan isi",
+      "extraction_status": "COMPLETE",
+      "trials": 0,
+      "events": 0
+    }
+  ]
+}

@@ -1,0 +1,1275 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Nusantara V1 - Developer Core</title>
+
+<style>
+:root{
+ --bg:#08111f;
+ --panel:#101c2e;
+ --panel2:#14243a;
+ --line:#263a55;
+ --text:#edf4ff;
+ --muted:#8ea1ba;
+ --cyan:#4fd1e5;
+ --green:#42d392;
+ --yellow:#f5c451;
+ --red:#ff647c;
+}
+
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ background:
+ radial-gradient(circle at 80% 0%,#183556 0,#08111f 42%);
+ color:var(--text);
+ font-family:Segoe UI,Arial,sans-serif;
+}
+
+.app{
+ display:grid;
+ grid-template-columns:240px 1fr;
+ min-height:100vh;
+}
+
+.sidebar{
+ background:rgba(7,14,26,.95);
+ border-right:1px solid var(--line);
+ padding:20px 15px;
+}
+
+.logo{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ margin-bottom:30px;
+}
+
+.logo-box{
+ width:42px;
+ height:42px;
+ border:1px solid #3e708b;
+ border-radius:12px;
+ display:grid;
+ place-items:center;
+ color:var(--cyan);
+ font-size:22px;
+ font-weight:bold;
+ background:#10263a;
+}
+
+.logo-title{
+ font-weight:bold;
+}
+
+.logo-sub{
+ font-size:11px;
+ color:var(--muted);
+ margin-top:2px;
+}
+
+.nav{
+ display:grid;
+ gap:6px;
+}
+
+.nav button{
+ border:0;
+ background:transparent;
+ color:#aebbd0;
+ padding:11px 12px;
+ text-align:left;
+ border-radius:8px;
+ cursor:pointer;
+ font-size:13px;
+}
+
+.nav button:hover,
+.nav button.active{
+ background:#17283f;
+ color:white;
+}
+
+.sidebar-footer{
+ margin-top:35px;
+ font-size:10px;
+ color:#65768f;
+ line-height:1.7;
+}
+
+main{
+ padding:25px;
+ max-width:1600px;
+ width:100%;
+ margin:auto;
+}
+
+.header{
+ display:flex;
+ justify-content:space-between;
+ align-items:flex-start;
+ margin-bottom:22px;
+}
+
+.eyebrow{
+ color:var(--cyan);
+ font-size:11px;
+ letter-spacing:2px;
+ text-transform:uppercase;
+}
+
+h1{
+ margin:3px 0;
+ font-size:28px;
+}
+
+.subtitle{
+ color:var(--muted);
+}
+
+.actions{
+ display:flex;
+ gap:8px;
+}
+
+.btn{
+ border:1px solid var(--line);
+ background:#111e31;
+ color:white;
+ padding:9px 13px;
+ border-radius:8px;
+ cursor:pointer;
+}
+
+.btn:hover{
+ border-color:var(--cyan);
+}
+
+.page{
+ display:none;
+}
+
+.page.active{
+ display:block;
+}
+
+.grid{
+ display:grid;
+ gap:14px;
+}
+
+.kpi-grid{
+ grid-template-columns:repeat(5,1fr);
+}
+
+.three{
+ grid-template-columns:1.4fr 1fr 1fr;
+}
+
+.two{
+ grid-template-columns:1fr 1fr;
+}
+
+.card{
+ background:linear-gradient(
+  180deg,
+  rgba(20,36,58,.96),
+  rgba(13,25,42,.96)
+ );
+ border:1px solid var(--line);
+ border-radius:13px;
+ padding:17px;
+ margin-bottom:14px;
+}
+
+.card-title{
+ color:var(--muted);
+ font-size:11px;
+ text-transform:uppercase;
+ letter-spacing:1px;
+}
+
+.big{
+ font-size:26px;
+ font-weight:bold;
+ margin:5px 0;
+}
+
+.small{
+ color:var(--muted);
+ font-size:12px;
+}
+
+.status{
+ display:inline-flex;
+ align-items:center;
+ gap:7px;
+ font-size:12px;
+}
+
+.dot{
+ width:8px;
+ height:8px;
+ background:var(--green);
+ border-radius:50%;
+ box-shadow:0 0 12px var(--green);
+}
+
+.dot.red{
+ background:var(--red);
+ box-shadow:0 0 12px var(--red);
+}
+
+.pipeline{
+ display:flex;
+ flex-wrap:wrap;
+ gap:7px;
+ align-items:center;
+ margin-top:15px;
+}
+
+.node{
+ padding:9px 11px;
+ border:1px solid #314863;
+ background:#0d192b;
+ border-radius:8px;
+ font-size:11px;
+}
+
+.arrow{
+ color:#607693;
+}
+
+.gates{
+ margin-top:14px;
+ display:grid;
+ gap:10px;
+}
+
+.gate{
+ display:grid;
+ grid-template-columns:55px 1fr 70px;
+ gap:10px;
+ align-items:center;
+}
+
+.bar{
+ height:7px;
+ background:#223149;
+ border-radius:10px;
+ overflow:hidden;
+}
+
+.fill{
+ height:100%;
+ background:linear-gradient(
+  90deg,
+  #42d392,
+  #4fd1e5
+ );
+}
+
+.pass{
+ color:var(--green);
+ font-size:11px;
+ font-weight:bold;
+}
+
+.next{
+ color:var(--yellow);
+ font-size:11px;
+ font-weight:bold;
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+ margin-top:10px;
+}
+
+th,td{
+ padding:10px 7px;
+ border-bottom:1px solid var(--line);
+ text-align:left;
+ font-size:12px;
+}
+
+th{
+ color:var(--muted);
+ font-weight:normal;
+}
+
+.badge{
+ display:inline-block;
+ padding:3px 8px;
+ border-radius:20px;
+ background:#153526;
+ color:#71e1a7;
+ font-size:10px;
+ font-weight:bold;
+}
+
+.badge-next{
+ background:#3c3216;
+ color:#f5c451;
+}
+
+.log{
+ height:300px;
+ overflow:auto;
+ background:#060d17;
+ border:1px solid var(--line);
+ border-radius:9px;
+ padding:13px;
+ font-family:Consolas,monospace;
+ font-size:12px;
+ line-height:1.8;
+ color:#a9bad0;
+}
+
+.footer{
+ text-align:right;
+ color:#60728b;
+ font-size:10px;
+ margin-top:15px;
+}
+
+@media(max-width:1100px){
+ .kpi-grid{
+  grid-template-columns:repeat(2,1fr);
+ }
+ .three,.two{
+  grid-template-columns:1fr;
+ }
+}
+
+@media(max-width:750px){
+ .app{
+  grid-template-columns:1fr;
+ }
+ .sidebar{
+  border-right:0;
+  border-bottom:1px solid var(--line);
+ }
+ .header{
+  display:block;
+ }
+ .actions{
+  margin-top:15px;
+ }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<div class="logo-box">
+N
+</div>
+
+<div>
+<div class="logo-title">NUSANTARA V1</div>
+<div class="logo-sub">Developer Core</div>
+</div>
+
+</div>
+
+<div class="nav">
+
+<button class="active" onclick="showPage('overview',this)">
+◈ Overview
+</button>
+
+<button onclick="showPage('gates',this)">
+✓ Gate Control
+</button>
+
+<button onclick="showPage('engines',this)">
+⚙ Engine Map
+</button>
+
+<button onclick="showPage('research',this)">
+⌁ Research Engine
+</button>
+
+<button onclick="showPage('graph',this)">
+◎ Graph Intelligence
+</button>
+
+<button onclick="showPage('runtime',this)">
+▣ Runtime
+</button>
+
+</div>
+
+<div class="sidebar-footer">
+
+LOCAL DASHBOARD<br>
+READ-ONLY OBSERVABILITY<br><br>
+
+Gate 16 Execution Boundary<br>
+Broad Write : OFF<br>
+Shell : OFF<br>
+Human Approval : REQUIRED
+
+</div>
+
+</aside>
+
+
+<main>
+
+<div class="header">
+
+<div>
+
+<div class="eyebrow">
+Nusantara Core + Hermes
+</div>
+
+<h1>
+Developer Core Dashboard
+</h1>
+
+<div class="subtitle">
+Local system observability • Gate 14–17
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="btn" onclick="refreshSystem()">
+↻ Refresh
+</button>
+
+<button class="btn"
+onclick="window.open('http://127.0.0.1:8000/docs','_blank')">
+API Docs
+</button>
+
+</div>
+
+</div>
+
+
+<!-- OVERVIEW -->
+
+<section id="overview" class="page active">
+
+<div class="grid kpi-grid">
+
+<div class="card">
+
+<div class="card-title">
+API
+</div>
+
+<div class="big" id="apiStatus">
+CHECKING
+</div>
+
+<div class="status">
+<span class="dot" id="apiDot"></span>
+127.0.0.1:8000
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Graph Nodes
+</div>
+
+<div class="big">
+2,824
+</div>
+
+<div class="small">
+Runtime Graph baseline
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Graph Links
+</div>
+
+<div class="big">
+5,920
+</div>
+
+<div class="small">
+Developer Core connectivity
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Local LLM
+</div>
+
+<div class="big">
+llama3.2:1b
+</div>
+
+<div class="small">
+Ollama
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Execution
+</div>
+
+<div class="big">
+CONTROLLED
+</div>
+
+<div class="status">
+<span class="dot"></span>
+Gate 16
+</div>
+
+</div>
+
+</div>
+
+
+<div class="grid three">
+
+<div class="card">
+
+<div class="card-title">
+System Architecture
+</div>
+
+<div class="pipeline">
+
+<span class="node">Language</span>
+<span class="arrow">→</span>
+
+<span class="node">Problem</span>
+<span class="arrow">→</span>
+
+<span class="node">Knowledge</span>
+<span class="arrow">→</span>
+
+<span class="node">Reasoning</span>
+<span class="arrow">→</span>
+
+<span class="node">Trust</span>
+
+</div>
+
+<div class="pipeline">
+
+<span class="node">Memory</span>
+<span class="arrow">→</span>
+
+<span class="node">Policy</span>
+<span class="arrow">→</span>
+
+<span class="node">Action</span>
+<span class="arrow">→</span>
+
+<span class="node">Orchestration</span>
+<span class="arrow">→</span>
+
+<span class="node">Developer Core</span>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Gate 17 Research
+</div>
+
+<div class="big">
+17.6
+</div>
+
+<div class="small">
+Experiment Evaluation
+</div>
+
+<div class="gates">
+
+<div class="bar">
+<div class="fill" style="width:67%"></div>
+</div>
+
+</div>
+
+<div class="small">
+Next: Gate 17.7 Risk & Benefit
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Latest Validation
+</div>
+
+<div class="big">
+13 / 13
+</div>
+
+<div class="status">
+<span class="dot"></span>
+Gate 17.6 PASS
+</div>
+
+<div class="small">
+Deterministic evaluation
+</div>
+
+</div>
+
+</div>
+
+
+<div class="grid three">
+
+<div class="card">
+
+<div class="card-title">
+Gate Progress
+</div>
+
+<div class="gates">
+
+<div class="gate">
+
+<b>14</b>
+
+<div class="bar">
+<div class="fill" style="width:100%"></div>
+</div>
+
+<span class="pass">
+PASS
+</span>
+
+</div>
+
+
+<div class="gate">
+
+<b>15</b>
+
+<div class="bar">
+<div class="fill" style="width:100%"></div>
+</div>
+
+<span class="pass">
+PASS
+</span>
+
+</div>
+
+
+<div class="gate">
+
+<b>16</b>
+
+<div class="bar">
+<div class="fill" style="width:100%"></div>
+</div>
+
+<span class="pass">
+PASS
+</span>
+
+</div>
+
+
+<div class="gate">
+
+<b>17</b>
+
+<div class="bar">
+<div class="fill" style="width:67%"></div>
+</div>
+
+<span class="pass">
+17.6
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Safety Boundary
+</div>
+
+<table>
+
+<tr>
+<td>Broad Write</td>
+<td>OFF</td>
+</tr>
+
+<tr>
+<td>Shell Execution</td>
+<td>OFF</td>
+</tr>
+
+<tr>
+<td>Human Approval</td>
+<td>REQUIRED</td>
+</tr>
+
+<tr>
+<td>Rollback</td>
+<td>ENABLED</td>
+</tr>
+
+</table>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Current State
+</div>
+
+<div class="big">
+STABLE
+</div>
+
+<div class="small">
+Gate 14–16 locked baseline
+</div>
+
+<div class="small">
+Gate 17 research phase
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- GATES -->
+
+<section id="gates" class="page">
+
+<div class="card">
+
+<div class="card-title">
+Gate Control
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Gate</th>
+<th>Engine</th>
+<th>Status</th>
+<th>Boundary</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>14</td>
+<td>Developer Core</td>
+<td><span class="badge">PASS</span></td>
+<td>Read-only Graph Intelligence</td>
+</tr>
+
+<tr>
+<td>15</td>
+<td>Change Planning</td>
+<td><span class="badge">PASS</span></td>
+<td>Human Approval</td>
+</tr>
+
+<tr>
+<td>16</td>
+<td>Controlled Execution</td>
+<td><span class="badge">PASS</span></td>
+<td>Approved Target Only</td>
+</tr>
+
+<tr>
+<td>17.1</td>
+<td>Gap Detection</td>
+<td><span class="badge">PASS</span></td>
+<td>Research Only</td>
+</tr>
+
+<tr>
+<td>17.2</td>
+<td>Evidence Collection</td>
+<td><span class="badge">PASS</span></td>
+<td>Research Only</td>
+</tr>
+
+<tr>
+<td>17.3</td>
+<td>Root Cause</td>
+<td><span class="badge">PASS</span></td>
+<td>Research Only</td>
+</tr>
+
+<tr>
+<td>17.4</td>
+<td>Proposal</td>
+<td><span class="badge">PASS</span></td>
+<td>Approval Required</td>
+</tr>
+
+<tr>
+<td>17.5</td>
+<td>Experiment</td>
+<td><span class="badge">PASS</span></td>
+<td>Controlled</td>
+</tr>
+
+<tr>
+<td>17.6</td>
+<td>Evaluation</td>
+<td><span class="badge">PASS</span></td>
+<td>Deterministic</td>
+</tr>
+
+<tr>
+<td>17.7</td>
+<td>Risk & Benefit</td>
+<td><span class="badge badge-next">NEXT</span></td>
+<td>Analysis Only</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- ENGINES -->
+
+<section id="engines" class="page">
+
+<div class="card">
+
+<div class="card-title">
+Nusantara Engine Map
+</div>
+
+<table>
+
+<tr>
+<td>Language Engine</td>
+<td>Intent / Semantic</td>
+<td><span class="badge">ACTIVE</span></td>
+</tr>
+
+<tr>
+<td>Problem Engine</td>
+<td>Problem Classification</td>
+<td><span class="badge">ACTIVE</span></td>
+</tr>
+
+<tr>
+<td>Knowledge Engine</td>
+<td>Hybrid RAG / Evidence</td>
+<td><span class="badge">ACTIVE</span></td>
+</tr>
+
+<tr>
+<td>Reasoning Engine</td>
+<td>Structured Reasoning</td>
+<td><span class="badge">ACTIVE</span></td>
+</tr>
+
+<tr>
+<td>Trust Engine</td>
+<td>Grounding / Evidence</td>
+<td><span class="badge">ACTIVE</span></td>
+</tr>
+
+<tr>
+<td>Memory Engine</td>
+<td>Context / Memory</td>
+<td><span class="badge">ACTIVE</span></td>
+</tr>
+
+<tr>
+<td>Policy Engine</td>
+<td>Governance</td>
+<td><span class="badge">ACTIVE</span></td>
+</tr>
+
+<tr>
+<td>Action Engine</td>
+<td>Controlled Tools</td>
+<td><span class="badge">CONTROLLED</span></td>
+</tr>
+
+<tr>
+<td>Developer Core</td>
+<td>Inspect / Plan / Verify</td>
+<td><span class="badge">ACTIVE</span></td>
+</tr>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- RESEARCH -->
+
+<section id="research" class="page">
+
+<div class="card">
+
+<div class="card-title">
+Research / Improvement Pipeline
+</div>
+
+<div class="pipeline">
+
+<span class="node">17.1 Gap ✓</span>
+
+<span class="arrow">→</span>
+
+<span class="node">17.2 Evidence ✓</span>
+
+<span class="arrow">→</span>
+
+<span class="node">17.3 RCA ✓</span>
+
+<span class="arrow">→</span>
+
+<span class="node">17.4 Proposal ✓</span>
+
+<span class="arrow">→</span>
+
+<span class="node">17.5 Experiment ✓</span>
+
+<span class="arrow">→</span>
+
+<span class="node">17.6 Evaluation ✓</span>
+
+<span class="arrow">→</span>
+
+<span class="node">17.7 NEXT</span>
+
+</div>
+
+</div>
+
+
+<div class="grid two">
+
+<div class="card">
+
+<div class="card-title">
+Experiment Evaluation
+</div>
+
+<table>
+
+<tr>
+<td>IMPROVEMENT</td>
+<td><span class="badge">ELIGIBLE</span></td>
+</tr>
+
+<tr>
+<td>NO_CHANGE</td>
+<td>NOT ELIGIBLE</td>
+</tr>
+
+<tr>
+<td>REGRESSION</td>
+<td>NOT ELIGIBLE</td>
+</tr>
+
+<tr>
+<td>INCONCLUSIVE</td>
+<td>NOT ELIGIBLE</td>
+</tr>
+
+</table>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Next Stage
+</div>
+
+<div class="big">
+17.7
+</div>
+
+<div class="small">
+Risk & Benefit Analysis
+</div>
+
+<br>
+
+<div class="small">
+Tidak melakukan perubahan production.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- GRAPH -->
+
+<section id="graph" class="page">
+
+<div class="grid three">
+
+<div class="card">
+
+<div class="card-title">
+Graph Nodes
+</div>
+
+<div class="big">
+2,824
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+Graph Links
+</div>
+
+<div class="big">
+5,920
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+Runtime Mapping
+</div>
+
+<div class="big">
+PASS
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Graph Intelligence
+</div>
+
+<p class="small">
+
+Graphify merupakan sumber visualisasi arsitektur.
+Dashboard ini berfungsi sebagai control plane ringkas
+untuk status Developer Core.
+
+</p>
+
+<button class="btn"
+onclick="window.open('http://127.0.0.1:8080/','_blank')">
+
+Open Graphify Root
+
+</button>
+
+</div>
+
+</section>
+
+
+<!-- RUNTIME -->
+
+<section id="runtime" class="page">
+
+<div class="card">
+
+<div class="card-title">
+Runtime Event Log
+</div>
+
+<div class="log" id="runtimeLog">
+
+[SYSTEM] Nusantara V1 Dashboard loaded
+
+[GRAPH] 2824 nodes / 5920 links
+
+[GATE14] PASS
+
+[GATE15] PASS
+
+[GATE16] PASS
+
+[EXECUTION] CONTROLLED ONLY
+
+[GATE17.1] PASS
+
+[GATE17.2] PASS
+
+[GATE17.3] PASS
+
+[GATE17.4] PASS
+
+[GATE17.5] PASS
+
+[GATE17.6] PASS — 13/13
+
+[RESEARCH] Gate 17.7 is next
+
+[BOUNDARY] Broad write OFF
+
+[BOUNDARY] Shell execution OFF
+
+[BOUNDARY] Human approval REQUIRED
+
+</div>
+
+</div>
+
+</section>
+
+
+<div class="footer">
+
+Nusantara V1 • Developer Core • Local Observability UI
+
+</div>
+
+</main>
+
+</div>
+
+
+<script>
+
+function showPage(id,button){
+
+ document
+ .querySelectorAll(".page")
+ .forEach(x=>x.classList.remove("active"));
+
+ document
+ .getElementById(id)
+ .classList.add("active");
+
+ document
+ .querySelectorAll(".nav button")
+ .forEach(x=>x.classList.remove("active"));
+
+ button.classList.add("active");
+
+}
+
+
+async function refreshSystem(){
+
+ const status=document.getElementById("apiStatus");
+ const dot=document.getElementById("apiDot");
+
+ status.innerText="CHECKING";
+
+ try{
+
+   const response=
+     await fetch(
+       "http://127.0.0.1:8000/v1/health",
+       {cache:"no-store"}
+     );
+
+   if(response.ok){
+
+     status.innerText="ONLINE";
+     dot.classList.remove("red");
+
+   }else{
+
+     status.innerText="ERROR";
+     dot.classList.add("red");
+
+   }
+
+ }catch(error){
+
+   status.innerText="OFFLINE";
+   dot.classList.add("red");
+
+ }
+
+}
+
+
+refreshSystem();
+
+setInterval(
+ refreshSystem,
+ 10000
+);
+
+</script>
+
+</body>
+</html>

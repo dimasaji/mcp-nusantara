@@ -1,0 +1,103 @@
+{
+  "changed_existing_files": [
+    "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\acceptance.test.ts",
+    "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\attestation.test.tsx",
+    "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\human.test.tsx",
+    "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\inspection-preview.test.tsx",
+    "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\ui.test.tsx",
+    "C:\\users\\dmaza\\mcp-starter\\control-plane\\.gitignore",
+    "C:\\users\\dmaza\\mcp-starter\\control-plane\\vitest.config.ts"
+  ],
+  "unchanged_setup": "tests/setup.ts retains @testing-library/jest-dom/vitest",
+  "preservation": {
+    "graph_operations": 0,
+    "frontend_application_source_unchanged": true,
+    "backend_changes": false,
+    "active_bundle_unchanged": true,
+    "v2_changes": false,
+    "database_access": false,
+    "runtime_operations": 0,
+    "dependencies_unchanged": true
+  },
+  "rollback": [
+    "Reverse only fixture-reader imports/calls in the five modified tests.",
+    "Restore previous vitest config root/setup/cache settings and remove this task gitignore entry if desired.",
+    "Remove the two new helper/test files only after ensuring no later edits depend on them. Do not restore whole files or reset Git."
+  ],
+  "new_files": [
+    "control-plane/tests/snapshot-file.ts",
+    "control-plane/tests/snapshot-file.test.ts"
+  ],
+  "build": {
+    "output": "docs/reports/cplane-test-repair-20261009T212343/build",
+    "active_dist_unchanged": true,
+    "assets": [
+      {
+        "exists": true,
+        "url": "/assets/index-CRk3xzwm.js"
+      },
+      {
+        "exists": true,
+        "url": "/assets/index-BOLWnGKB.css"
+      }
+    ],
+    "exit": 0
+  },
+  "status": "LOCAL_TEST_AND_ISOLATED_BUILD_VERIFIED",
+  "launcher": "Existing C:/Users/dmaza/AppData/Local/hermes/node/node.exe and node_modules/npm/bin/npm-cli.js",
+  "not_run": [
+    "Live browser/chat/API integration",
+    "E2E service-starting tests",
+    "Deployment or runtime promotion"
+  ],
+  "local_snapshot": {
+    "ignored_by_git": true,
+    "after_sha256": "D01906E4E178AA2967620AABA26EF52A1E4B19F71A81B0B825FB1C23A0AEDE1E",
+    "classification": "LOCAL_TEST_INPUT_ONLY; not production evidence",
+    "before_sha256": "D01906E4E178AA2967620AABA26EF52A1E4B19F71A81B0B825FB1C23A0AEDE1E"
+  },
+  "commands": [
+    "npm test -- --pool=threads --maxWorkers=1 --minWorkers=1 --reporter=default --reporter=json --outputFile.json=../docs/reports/cplane-test-repair-20261009T212343/ALL_UNIT.json",
+    "npm run build -- --outDir ../docs/reports/cplane-test-repair-20261009T212343/build"
+  ],
+  "v1": "HOLD",
+  "v2": "DEFERRED",
+  "tests": {
+    "root_directory_ui": {
+      "pass": 4,
+      "skip": 0,
+      "exit": 0,
+      "fail": 0
+    },
+    "targeted": {
+      "pass": 15,
+      "skip": 0,
+      "exit": 0,
+      "fail": 0
+    },
+    "all_unit": {
+      "pass": 104,
+      "skip": 0,
+      "exit": 0,
+      "fail": 0
+    }
+  },
+  "root_cause": [
+    "Snapshot environment variable absent caused undefined filesystem path; baseline 1 PASS / 3 FAIL. Matcher already worked.",
+    "Vitest root/setup were relative to invocation directory; repository-root invocation found no tests."
+  ],
+  "warnings": [
+    "Existing attestation test calls jsdom window.scrollTo; assertions pass.",
+    "Rollup strips two third-party zod comment annotations; chunks over 500 kB warning.",
+    "Output intentionally outside Vite root is not emptied."
+  ],
+  "initial_failures": [
+    "Pre-fix missing snapshot: 1 PASS / 3 FAIL; pre-fix repo-root: no tests found, exit 1.",
+    "TARGETED.json: new helper used import.meta.url under jsdom; mock lacked default export. Both repaired before TARGETED_FINAL.json."
+  ],
+  "command_environment": {
+    "NODE_OPTIONS": "--require=C:/users/dmaza/mcp-starter/docs/reports/cplane-test-repair-20261009T212343/npm-guard.cjs",
+    "CPLANE_SNAPSHOT_FILE": "C:/users/dmaza/mcp-starter/control-plane/.cplane-snapshot.local.json",
+    "R2_CPLANE_ISOLATED_EVIDENCE": "C:/users/dmaza/mcp-starter/docs/reports/r2-a9-control-plane-implementation-20261008/COMPOSITION_EVIDENCE.json"
+  }
+}

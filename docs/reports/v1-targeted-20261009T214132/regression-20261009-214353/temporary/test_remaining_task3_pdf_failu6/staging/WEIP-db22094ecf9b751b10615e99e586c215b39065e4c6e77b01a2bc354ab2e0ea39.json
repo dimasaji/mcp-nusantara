@@ -1,0 +1,54 @@
+{
+  "document_id": "WEIP-db22094ecf9b751b10615e99e586c215b39065e4c6e77b01a2bc354ab2e0ea39",
+  "source_id": "fixture",
+  "original_url": "https://example.org/allowed/doc",
+  "final_url": "https://example.org/allowed/doc",
+  "redirects": [],
+  "retrieved_at": "2026-10-09T14:43:59.277155+00:00",
+  "content_type": "application/pdf",
+  "content_hash": "c5c2e8be6ad0825a56ded1f1a153ceaf11dc060ab44b120a94406a08207babc2",
+  "version": "sha256:c5c2e8be6ad0825a56ded1f1a153ceaf11dc060ab44b120a94406a08207babc2",
+  "version_conflict": false,
+  "metadata": {
+    "title": "Fixture",
+    "publisher": "Fixture Publisher",
+    "agency": "Fixture Agency",
+    "domain": "example.org",
+    "jurisdiction": "FIXTURE_ONLY",
+    "service": "fixture-service",
+    "publication_date": null,
+    "effective_date": null,
+    "expiry_date": null,
+    "risk": "HIGH",
+    "source_verification_status": "UNVERIFIED",
+    "source_verification_reference": null,
+    "source_assurance": "OWNER_DECLARED_NOT_INDEPENDENTLY_AUTHENTICATED",
+    "registry_fingerprint": "362c69469cc111aef2edee8719e9f54a11baca49a5286ed46a5c64ba8cc00898",
+    "validation_status": "PENDING",
+    "chunk_reference": "FULL_PARSED_DOCUMENT"
+  },
+  "text": null,
+  "status": "QUARANTINED",
+  "audit": [
+    {
+      "at": "2026-10-09T14:43:59.281712+00:00",
+      "from": "DISCOVERED",
+      "to": "FETCHED",
+      "reason": "FETCH_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "",
+      "content_hash": "c5c2e8be6ad0825a56ded1f1a153ceaf11dc060ab44b120a94406a08207babc2",
+      "event_hash": "0549b42e89bce160eee91cadaee90530a8d78d2b4fcc3be7e0b9eedf6df8ebb3"
+    },
+    {
+      "at": "2026-10-09T14:43:59.285985+00:00",
+      "from": "FETCHED",
+      "to": "QUARANTINED",
+      "reason": "PARSE_UNSAFE_OR_UNAVAILABLE",
+      "actor": "pipeline",
+      "previous_hash": "0549b42e89bce160eee91cadaee90530a8d78d2b4fcc3be7e0b9eedf6df8ebb3",
+      "content_hash": "c5c2e8be6ad0825a56ded1f1a153ceaf11dc060ab44b120a94406a08207babc2",
+      "event_hash": "a846f0f0d8c3d0864272a75b70de2e50366f2c22bbeadd1ac9891fc76cda23c4"
+    }
+  ]
+}

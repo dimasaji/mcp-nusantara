@@ -1,0 +1,73 @@
+{
+  "dispatch_attempts": 1,
+  "retry_allowed": false,
+  "scope": "Owned harness/evidence files only",
+  "timestamp_utc": "2026-10-08T02:49:24.2117305Z",
+  "evidence_sha256": [
+    {
+      "sha256": "2bf4119463169d852b6d283eafb9e826efb83a7c8783a0f0205a4a1a19a47550",
+      "file": "CONSOLE_EVIDENCE.json"
+    },
+    {
+      "sha256": "3caab6f11cec31b78ea2cc3d821cad6571e833a07b5abbf28b71813467124a39",
+      "file": "EXECUTION_STARTED.json"
+    },
+    {
+      "sha256": "69985974cf7e3155831ff644925aa3ed4e7a0de585ed65df9e1d08616ac459f5",
+      "file": "EXECUTION.log"
+    },
+    {
+      "sha256": "0d6cd938f20bcd73fbf6d06ad0d4d92030ae59159a45e0975b8bba1658402c23",
+      "file": "INTEGRITY.json"
+    },
+    {
+      "sha256": "7c49bf960044453520fcdfdd680f57b41b757c4ae96fc1fb5ecb92f1b6d89c8e",
+      "file": "LIVE_RECEIPT.json"
+    },
+    {
+      "sha256": "52bb3691be9a59b7c2044ab95f5228a0bfd4b0040b1197eb0f6852008c4e72b7",
+      "file": "OWNERSHIP_GO.json"
+    },
+    {
+      "sha256": "3943f0c2123560f6c3df355dd68a5d762a28253fb2844be1a2f95f94c672066c",
+      "file": "READY.json"
+    },
+    {
+      "sha256": "7be30fbbf164bb9578352b88036487feff3f68e8aac037515514ee4ed225b95f",
+      "file": "REPORT.md"
+    },
+    {
+      "sha256": "7b198a2abefe202dc84395adb4ede7ec143e97bcee3ac856d64b3000e9d074d0",
+      "file": "REQUEST_ATTEMPT.json"
+    },
+    {
+      "sha256": "251033740cbde91c865b10945c1f77e54de4269812ff1ef0192305d6b6e94468",
+      "file": "SOURCE_PREFLIGHT.json"
+    },
+    {
+      "sha256": "fbd3e7018608f050c270c030ed58fc035be59c9b6e26ed0b775ab315935cd321",
+      "file": "verify_live_identity.py"
+    }
+  ],
+  "scoped_test_result": "PASS",
+  "runtime_identity": "NOT_VERIFIED",
+  "integrity_checks": [
+    {
+      "matches": true,
+      "file": "verify_live_identity.py"
+    },
+    {
+      "matches": true,
+      "file": "SOURCE_PREFLIGHT.json"
+    },
+    {
+      "matches": true,
+      "file": "LIVE_RECEIPT.json"
+    },
+    {
+      "matches": true,
+      "file": "CONSOLE_EVIDENCE.json"
+    }
+  ],
+  "execution_stopped": true
+}

@@ -1,0 +1,79 @@
+{
+  "timestamp": "2026-10-08T21:29:38.771776+07:00",
+  "repository": "C:\\Users\\dmaza\\mcp-starter",
+  "branch": "codex/fullroot-control-20261007",
+  "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "changes": "Evidence and new draft Control Plane contract only; stopped at unresolved architectural decisions",
+  "files_changed": [
+    "docs/reports/v1-closure-20261008/UI_E2E.json"
+  ],
+  "source_changes": [],
+  "test_changes": [],
+  "configuration_changes": [],
+  "runtime_identity": {
+    "inspection": "Read-only Win32_Process discovery; not socket owner or active-build correlation",
+    "observed_backend_candidates": [
+      {
+        "pid": 37704,
+        "parent_pid": 20228,
+        "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+        "created_at": "2026-10-08T20:03:49.613978+07:00"
+      },
+      {
+        "pid": 33160,
+        "parent_pid": 37704,
+        "executable": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "created_at": "2026-10-08T20:03:49.631080+07:00"
+      }
+    ],
+    "launch_application": "app.main:app",
+    "launch_host": "127.0.0.1",
+    "launch_port": 8000,
+    "reload": false,
+    "active_source_build": "NOT_VERIFIED",
+    "runtime_profile": "NOT_VERIFIED",
+    "effective_provider_model": "NOT_VERIFIED",
+    "health_openapi_chat_requests_sent": 0
+  },
+  "live_integration_verified": false,
+  "unauthorized_changes": 0,
+  "change_audit": {
+    "existing_files_checked": 6686,
+    "modified_or_missing_existing_files": [],
+    "added_outside_evidence_directory": [
+      "docs/contracts/NUSANTARA-CONTROL-PLANE-V1.md"
+    ],
+    "unattributed_added": [],
+    "read_errors": [],
+    "source_test_configuration_changes": [],
+    "cache_preserved": true,
+    "historical_evidence_preserved": true
+  },
+  "limitations": [
+    "Pure isolated verification is not HTTP/runtime/official-source integration proof",
+    "No provider/model/worker, live DB, production restart, deployment or graph query executed",
+    "No V2 implementation or Hermes freeze performed"
+  ],
+  "scope": "Mandatory UI → API → runtime → Hermes cases",
+  "results": {
+    "cases": {
+      "Cepat effective model": "NOT_RUN_UNSUPPORTED_CONTROL",
+      "Pintar effective model": "NOT_RUN_UNSUPPORTED_CONTROL",
+      "orchestration consumed by chat": "NOT_RUN_UNSUPPORTED_CONTROL",
+      "source policy consumed by runtime": "NOT_RUN_UNSUPPORTED_CONTROL",
+      "risky permission approval enforced": "NOT_RUN_UNSUPPORTED_CONTROL"
+    },
+    "existing_ui": "Evidence and acceptance workflow; no functioning model/source/orchestration settings control",
+    "vite": "Existing proxy covers control-plane, health, preview; not assistant /v1/chat",
+    "cosmetic_controls_added": false,
+    "new_live_chat_requests": 0,
+    "mandatory_acceptance": "NOT_SATISFIED"
+  },
+  "tests": {
+    "executed": false
+  },
+  "decisions_required": [
+    "Depends on MODEL-CONTROL and ORCHESTRATION-CONTROL decisions before UI implementation."
+  ],
+  "final_status": "FAIL_REVIEW_REQUIRED"
+}

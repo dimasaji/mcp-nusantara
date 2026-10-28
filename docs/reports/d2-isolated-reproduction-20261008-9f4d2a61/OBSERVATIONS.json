@@ -1,0 +1,126 @@
+[
+  {
+    "finding": "D2-01",
+    "observed": {
+      "verification": {
+        "status": "passed",
+        "violations": []
+      },
+      "answer": "Analisis `app/example.py`:\nTidak ada retry, tetapi script menyimpan response ke file."
+    },
+    "control": "Positive unsupported storage claim is rejected without the negation clause.",
+    "limitation": "Synthetic callback only; no provider or real model invoked."
+  },
+  {
+    "finding": "D2-02-read",
+    "observed": {
+      "requested": "app/example.py",
+      "tool_result": {
+        "success": true,
+        "tool": "read_file",
+        "path": "C:/Users/dmaza/mcp-starter/docs/reports/d2-isolated-reproduction-20261008-9f4d2a61/backend-tmp/test_d2_02_backend_read_result0/outside.py",
+        "content": "synthetic_foreign_content = 42\n",
+        "truncated": false,
+        "error": null,
+        "lines": 1
+      },
+      "verification": {
+        "status": "fallback_static_facts",
+        "violations": []
+      }
+    },
+    "control": "An explicitly requested outside path is blocked before backend invocation.",
+    "limitation": "Injected backend fabricates content; no outside file was read; live adapter not verified."
+  },
+  {
+    "finding": "D2-02-find",
+    "observed": {
+      "success": true,
+      "tool": "find_file",
+      "matches": [
+        "C:/Users/dmaza/mcp-starter/docs/reports/d2-isolated-reproduction-20261008-9f4d2a61/backend-tmp/test_d2_02_backend_find_outsid0/outside.py"
+      ],
+      "error": null,
+      "query": "outside.py"
+    },
+    "control": "Subsequent read of the returned outside path is blocked.",
+    "limitation": "Synthetic adapter; result sanitation reproduced without live registry integration."
+  },
+  {
+    "finding": "D2-03",
+    "observed": {
+      "success": true,
+      "tool": "find_file",
+      "query": "visible.py",
+      "matches": [
+        "secrets/visible.py"
+      ],
+      "truncated": false,
+      "error": null
+    },
+    "control": {
+      "read": {
+        "success": false,
+        "tool": "read_file",
+        "error": "DIBLOKIR: path diblokir oleh kebijakan keamanan",
+        "path": "secrets/visible.py"
+      },
+      "root_listing": {
+        "success": true,
+        "tool": "list_directory",
+        "path": ".",
+        "entries": [
+          {
+            "name": "app",
+            "type": "dir"
+          }
+        ],
+        "truncated": false,
+        "error": null
+      }
+    },
+    "limitation": "Only synthetic filename metadata; no actual secret or credential file accessed."
+  },
+  {
+    "finding": "D2-04",
+    "observed": {
+      "result": {
+        "success": true,
+        "tool": "find_file",
+        "query": "hidden.py",
+        "matches": [],
+        "truncated": false,
+        "error": null
+      },
+      "denied_scandir_calls": [
+        "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\d2-isolated-reproduction-20261008-9f4d2a61\\backend-tmp\\test_d2_04_denied_walk_silentl0\\workspace\\restricted"
+      ]
+    },
+    "control": {
+      "success": true,
+      "tool": "find_file",
+      "query": "hidden.py",
+      "matches": [
+        "restricted/hidden.py"
+      ],
+      "truncated": false,
+      "error": null
+    },
+    "limitation": "PermissionError injected at real os.walk/scandir boundary; Windows ACLs untouched."
+  },
+  {
+    "finding": "D2-05",
+    "observed": {
+      "truncated": true,
+      "verification": {
+        "status": "passed",
+        "violations": []
+      },
+      "answer": "Analisis `app/example.py`:\nTidak ada print().",
+      "read_bytes": 158,
+      "total_bytes": 192
+    },
+    "control": "Full fixture read contains print(); partial prefix does not.",
+    "limitation": "Synthetic callback; absence claim also intersects the negation gap D2-01."
+  }
+]

@@ -1,0 +1,10 @@
+import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+import {createHash} from 'node:crypto';
+import {readFileSync, readdirSync} from 'node:fs';
+import {join} from 'node:path';
+import {execFileSync} from 'node:child_process';
+function sources(dir: string): string[] {return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?sources(join(dir,e.name)):[join(dir,e.name)]).sort();}
+function commit(){try{return execFileSync('C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/git/cmd/git.exe',['rev-parse','HEAD'],{cwd:'..',encoding:'utf8'}).trim();}catch{return 'NOT_VERIFIED';}}
+export default defineConfig(({mode})=>({plugins:[react()], server:{host:'127.0.0.1',port:5173,strictPort:true,proxy:{'/v1/control-plane':{target:'http://127.0.0.1:8000',changeOrigin:true},'/health':{target:'http://127.0.0.1:8000',changeOrigin:true}}},preview:{host:'127.0.0.1'},
+  define:{__CPLANE_BUILD__:JSON.stringify({version:'0.1.0',gitCommit:commit(),timestamp:new Date().toISOString(),environment:mode,sourceId:createHash('sha256').update(sources('src').map(f=>f+'\0'+readFileSync(f,'utf8')).join('\0')).digest('hex')})}}));

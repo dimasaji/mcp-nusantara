@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="1.747" timestamp="2026-10-27T09:35:13.222136+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="" name="tests.test_v1_chat_rag_regression" time="0.000"><error message="collection failure">tests\test_v1_chat_rag_regression.py:29: in &lt;module&gt;
+    from app.main import app
+app\main.py:23: in &lt;module&gt;
+    from app.api.routes import router as api_router
+app\api\routes.py:52: in &lt;module&gt;
+    _knowledge = KnowledgeEngine(nusantara_config=_configuration)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app\knowledge\engine.py:35: in __init__
+    create_rag(nusantara_config=nusantara_config) if nusantara_config is not None else create_rag())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app\knowledge\rag.py:931: in create_rag
+    return RAG(config=config, vector_store=vector_store, nusantara_config=nusantara_config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app\knowledge\rag.py:241: in __init__
+    SQLiteVectorStore(str(nusantara_config.knowledge.database))
+app\knowledge\store.py:48: in __init__
+    self._initialize()
+app\knowledge\store.py:90: in _initialize
+    with self._connect() as conn:
+         ^^^^^^^^^^^^^^^
+app\knowledge\store.py:54: in _connect
+    conn = sqlite3.connect(str(self.db_path))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reports\audit\evidence\run_guarded_tests.py:51: in audit
+    deny(event, 'database_outside_audit_run')
+reports\audit\evidence\run_guarded_tests.py:34: in deny
+    raise PermissionError('AUDIT_GUARD_BLOCKED: ' + event + ': ' + reason)
+E   PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run</error></testcase></testsuite></testsuites>

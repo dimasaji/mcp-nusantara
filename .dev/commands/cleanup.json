@@ -1,0 +1,5697 @@
+{
+  "status": "DRY_RUN_ONLY",
+  "deleted": [],
+  "moved": [],
+  "exact_duplicate_groups": [
+    [
+      "app/__init__.py",
+      "app_backup_before_openrouter/__init__.py"
+    ],
+    [
+      "app/exceptions.py",
+      "app_backup_before_openrouter/exceptions.py"
+    ],
+    [
+      "app/interfaces.py",
+      "app_backup_before_openrouter/interfaces.py"
+    ],
+    [
+      "app/types.py",
+      "app_backup_before_openrouter/types.py"
+    ],
+    [
+      "app/action/__init__.py",
+      "app/improvement/__init__.py",
+      "app/language/normalizer_safe.py",
+      "app/language/semantic/__init__.py",
+      "app/memory/__init__.py",
+      "app/orchestration/__init__.py",
+      "app/policy/__init__.py",
+      "app/reasoning/__init__.py",
+      "app/research/__init__.py",
+      "app/security/__init__.py",
+      "app/tools/__init__.py"
+    ],
+    [
+      "app/context/__init__.py",
+      "app_backup_before_openrouter/context/__init__.py"
+    ],
+    [
+      "app/context/context_builder.py",
+      "app_backup_before_openrouter/context/context_builder.py"
+    ],
+    [
+      "app/context/engine.py",
+      "app_backup_before_openrouter/context/engine.py"
+    ],
+    [
+      "app/context/schemas.py",
+      "app_backup_before_openrouter/context/schemas.py"
+    ],
+    [
+      "app/context/session.py",
+      "app_backup_before_openrouter/context/session.py"
+    ],
+    [
+      "app/core/__init__.py",
+      "app_backup_before_openrouter/core/__init__.py"
+    ],
+    [
+      "app/developer_core/approval_controller.py",
+      "backup/GATE17_3_PASS_20261005_141834/approval_controller.py",
+      "backup/GATE17_3_PASS_20261005_141915/approval_controller.py"
+    ],
+    [
+      "app/developer_core/change_plan.py",
+      "backup/GATE17_3_PASS_20261005_141834/change_plan.py",
+      "backup/GATE17_3_PASS_20261005_141915/change_plan.py"
+    ],
+    [
+      "app/developer_core/change_plan_approval.py",
+      "backup/GATE17_3_PASS_20261005_141834/change_plan_approval.py",
+      "backup/GATE17_3_PASS_20261005_141915/change_plan_approval.py"
+    ],
+    [
+      "app/developer_core/change_plan_validator.py",
+      "backup/GATE17_3_PASS_20261005_141834/change_plan_validator.py",
+      "backup/GATE17_3_PASS_20261005_141915/change_plan_validator.py"
+    ],
+    [
+      "app/developer_core/controlled_patch_executor.py",
+      "backup/GATE17_4_PASS_20261005_142343/controlled_patch_executor.py"
+    ],
+    [
+      "app/developer_core/controlled_write.py",
+      "backup/GATE17_4_PASS_20261005_142343/controlled_write.py"
+    ],
+    [
+      "app/developer_core/execution_approval.py",
+      "backup/GATE17_4_PASS_20261005_142343/execution_approval.py"
+    ],
+    [
+      "app/developer_core/execution_boundary.py",
+      "backup/GATE17_4_PASS_20261005_142343/execution_boundary.py"
+    ],
+    [
+      "app/developer_core/execution_plan.py",
+      "backup/GATE17_4_PASS_20261005_142343/execution_plan.py"
+    ],
+    [
+      "app/developer_core/write_policy.py",
+      "backup/GATE17_4_PASS_20261005_142343/write_policy.py"
+    ],
+    [
+      "app/handoff/schemas.py",
+      "app_backup_before_openrouter/handoff/schemas.py"
+    ],
+    [
+      "app/hermes/__init__.py",
+      "app_backup_before_openrouter/hermes/__init__.py"
+    ],
+    [
+      "app/knowledge/__init__.py",
+      "app_backup_before_openrouter/knowledge/__init__.py"
+    ],
+    [
+      "app/knowledge/chunker.py",
+      "app_backup_before_openrouter/knowledge/chunker.py"
+    ],
+    [
+      "app/knowledge/production_kb.before_authority_patch.py",
+      "app/knowledge/production_kb.before_metadata_authority_patch.py"
+    ],
+    [
+      "app/knowledge/reranker.py",
+      "app_backup_before_openrouter/knowledge/reranker.py"
+    ],
+    [
+      "app/language/__init__.py",
+      "app_backup_before_openrouter/language/__init__.py"
+    ],
+    [
+      "app/language/schemas.py",
+      "backup_indobert_20261001_091633/schemas.py"
+    ],
+    [
+      "app/mcp/mcp.py",
+      "app_backup_before_openrouter/mcp/mcp.py"
+    ],
+    [
+      "app/mcp/schemas.py",
+      "app_backup_before_openrouter/mcp/schemas.py"
+    ],
+    [
+      "app/mcp/session.py",
+      "app_backup_before_openrouter/mcp/session.py"
+    ],
+    [
+      "app/models/__init__.py",
+      "app_backup_before_openrouter/models/__init__.py"
+    ],
+    [
+      "app/models/base.py",
+      "app_backup_before_openrouter/models/base.py"
+    ],
+    [
+      "app/models/mock.py",
+      "app_backup_before_openrouter/models/mock.py"
+    ],
+    [
+      "app/models/mock_provider.py",
+      "app_backup_before_openrouter/models/mock_provider.py"
+    ],
+    [
+      "app/models/ollama_provider.py",
+      "app_backup_before_openrouter/models/ollama_provider.py"
+    ],
+    [
+      "app/models/openai_compatible.py",
+      "app_backup_before_openrouter/models/openai_compatible.py"
+    ],
+    [
+      "app/models/schemas.py",
+      "app_backup_before_openrouter/models/schemas.py"
+    ],
+    [
+      "app/policy/schemas.py",
+      "app_backup_before_openrouter/policy/schemas.py"
+    ],
+    [
+      "app/problem/__init__.py",
+      "app_backup_before_openrouter/problem/__init__.py"
+    ],
+    [
+      "app/problem/classifier.py",
+      "app_backup_before_openrouter/problem/classifier.py"
+    ],
+    [
+      "app/problem/detector.py",
+      "app_backup_before_openrouter/problem/detector.py"
+    ],
+    [
+      "app/problem/engine.py",
+      "app_backup_before_openrouter/problem/engine.py"
+    ],
+    [
+      "app/problem/problem_schema.py",
+      "app_backup_before_openrouter/problem/problem_schema.py"
+    ],
+    [
+      "app/problem/schemas.py",
+      "app_backup_before_openrouter/problem/schemas.py"
+    ],
+    [
+      "app/reasoning/evaluator.py",
+      "app_backup_before_openrouter/reasoning/evaluator.py"
+    ],
+    [
+      "app/reasoning/planner.py",
+      "app_backup_before_openrouter/reasoning/planner.py"
+    ],
+    [
+      "app/tools/base.py",
+      "app_backup_before_openrouter/tools/base.py"
+    ],
+    [
+      "app/tools/calculator.py",
+      "app_backup_before_openrouter/tools/calculator.py"
+    ],
+    [
+      "app/tools/date_time.py",
+      "app_backup_before_openrouter/tools/date_time.py"
+    ],
+    [
+      "app/tools/schemas.py",
+      "app_backup_before_openrouter/tools/schemas.py"
+    ],
+    [
+      "app/trust/engine.py",
+      "backup/phase4_v1_trust_20261006_153022/engine.py"
+    ],
+    [
+      "app/trust/schemas.py",
+      "app_backup_before_openrouter/trust/schemas.py",
+      "backup/phase4_trust_20261006_151054/schemas.py",
+      "backup/phase4_trust_20261006_151118/schemas.py",
+      "backup/phase4_v1_trust_20261006_153022/schemas.py"
+    ],
+    [
+      "app/workflow/__init__.py",
+      "app_backup_before_openrouter/workflow/__init__.py"
+    ],
+    [
+      "app/workflow/engine.py",
+      "app_backup_before_openrouter/workflow/engine.py"
+    ],
+    [
+      "app/workflow/schemas.py",
+      "app_backup_before_openrouter/workflow/schemas.py"
+    ],
+    [
+      "app/workflow/state.py",
+      "app_backup_before_openrouter/workflow/state.py"
+    ],
+    [
+      "app/workflow/workflow_schema.py",
+      "app_backup_before_openrouter/workflow/workflow_schema.py"
+    ],
+    [
+      "app_backup_before_openrouter/models/ollama.py",
+      "backup/master_hardening_20261001_175243/app/models/ollama.py"
+    ],
+    [
+      "app_backup_before_openrouter/trust/engine.py",
+      "backup/phase4_trust_20261006_151054/engine.py",
+      "backup/phase4_trust_20261006_151118/engine.py"
+    ],
+    [
+      "archive/devcore_snapshots/developer_core_engine.before_chat_debug.py",
+      "archive/devcore_snapshots/developer_core_engine.before_master_routing_fix.py",
+      "archive/devcore_snapshots/developer_core_engine.before_query_domain_fix.py",
+      "archive/devcore_snapshots/developer_core_engine.before_query_domain_fix2.py"
+    ],
+    [
+      "archive/devcore_snapshots/developer_core_engine.before_chat_domain_fix.py",
+      "archive/devcore_snapshots/developer_core_engine.before_query_domain_FINAL.py"
+    ],
+    [
+      "archive/devcore_snapshots/developer_core_engine.before_domain_routing_20261002_161418.py",
+      "archive/devcore_snapshots/developer_core_engine.before_master_20261002_162403.py",
+      "archive/devcore_snapshots/developer_core_engine_BEFORE_ROUTING_PATCH.py"
+    ],
+    [
+      "archive/devcore_snapshots/developer_core_engine.before_graph_rag_production_20261002_142501.py",
+      "archive/devcore_snapshots/developer_core_engine.before_safe_graph_rag_20261002_142601.py"
+    ],
+    [
+      "archive/devcore_snapshots/developer_core_engine.before_grounded_chat.py",
+      "archive/devcore_snapshots/developer_core_engine.before_hard_grounding_gate.py",
+      "archive/devcore_snapshots/developer_core_engine.before_service_routing.py"
+    ],
+    [
+      "archive/devcore_snapshots/developer_core_engine.before_prod_integration_20261002_142101.py",
+      "archive/devcore_snapshots/developer_core_engine.before_source_cleanup_20261002_142345.py"
+    ],
+    [
+      "backup/GATE14_2_RUNTIME_GRAPH_PASS_20261005_140903/validate_gate14_runtime_graph.py",
+      "backup/GATE17_3_PASS_20261005_141834/validate_gate14_runtime_graph.py",
+      "backup/GATE17_3_PASS_20261005_141915/validate_gate14_runtime_graph.py",
+      "backup/GATE17_5_PASS_20261005_142513/validate_gate14_runtime_graph.py",
+      "scripts/validate_gate14_runtime_graph.py"
+    ],
+    [
+      "backup/GATE17_3_PASS_20261005_141834/engine.py",
+      "backup/GATE17_3_PASS_20261005_141915/engine.py"
+    ],
+    [
+      "backup/GATE17_4_PASS_20261005_142343/validate_gate17_4.py",
+      "scripts/validate_gate17_4.py"
+    ],
+    [
+      "backup/GATE17_5_PASS_20261005_142513/validate_gate16_regression.py",
+      "scripts/validate_gate16_regression.py"
+    ],
+    [
+      "backup/api_contract_final_20261001_180325/test_api_contract.py",
+      "backup/api_contract_fix_20261001_180209/test_api_contract.py",
+      "backup/generation_hardening_20261001_175544/test_api_contract.py"
+    ],
+    [
+      "backup/api_contract_fix_20261001_180209/routes.py",
+      "backup/final_hardening_20261001_175929/routes.py",
+      "backup/generation_hardening_20261001_175544/routes.py",
+      "backup/master_hardening_20261001_175243/app/api/routes.py",
+      "backup/routes_grounding_intent_20261001_173500/routes.py"
+    ],
+    [
+      "backup/generation_hardening_20261001_175544/grounding.py",
+      "backup/master_hardening_20261001_175243/app/knowledge/grounding.py"
+    ],
+    [
+      "backup/grounding_final_20261001_173358/grounding.py",
+      "backup/grounding_requirement_fix_20261001_173205/grounding.py"
+    ],
+    [
+      "backup/phase3_v1_fix_20261006_144548/routes.py",
+      "backup/phase3_v1_safe_20261006_144438/routes.py"
+    ],
+    [
+      "backup/phase4_trust_20261006_151054/test_phase4_trust_contract.py",
+      "backup/phase4_trust_20261006_151118/test_phase4_trust_contract.py",
+      "tests/test_phase4_trust_contract.py"
+    ],
+    [
+      "scripts/nusantara_master_engine.v2.0.0.backup.py",
+      "scripts/nusantara_master_engine.v2.0.0.py"
+    ]
+  ],
+  "candidates": [
+    {
+      "path": "'",
+      "bytes": 0,
+      "suffix": "",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".dockerignore",
+      "bytes": 98,
+      "suffix": "",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 2373,
+      "suffix": "",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".graphifyignore",
+      "bytes": 737,
+      "suffix": "",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 781,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "ARCHITECTURE_CURRENT.md",
+      "bytes": 942,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "BUILD-NUSANTARA-GATE8-16.ps1",
+      "bytes": 25293,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 1608,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "CLAUDE.md",
+      "bytes": 781,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "CLAUDE_CONTRACT.MD",
+      "bytes": 3930,
+      "suffix": ".MD",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "Dockerfile",
+      "bytes": 1020,
+      "suffix": "",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "GATE7_MASTER.ps1",
+      "bytes": 2131,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "INSTALL_GROUNDING_SAFETY.ps1",
+      "bytes": 42407,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "NUSANTARA MASTER DEVELOPER.md",
+      "bytes": 17415,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "NUSANTARA-MASTER-AUDIT-V2.ps1",
+      "bytes": 23682,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "NUSANTARA-MASTER-AUDIT.ps1",
+      "bytes": 31025,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "PROGRESS_REPORT.md",
+      "bytes": 8306,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "PROJECT_BASELINE.md",
+      "bytes": 2535,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3031,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "RELEASE_NOTES.md",
+      "bytes": 115,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "RELEASE_READINESS_REPORT.md",
+      "bytes": 2084,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "RISK_REGISTER.md",
+      "bytes": 1751,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "ROLLBACK_PLAN.md",
+      "bytes": 1471,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "_phase4_trust_baseline.py",
+      "bytes": 701,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "398d0f3ae6cb7cd2f7989c7f60128b2f2c2592baa94f39f6806196dd52ad5df3",
+      "syntax": "PASS"
+    },
+    {
+      "path": "audit_engine.txt",
+      "bytes": 32178,
+      "suffix": ".txt",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "audit_gate7_deep.ps1",
+      "bytes": 6438,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "audit_gate7_rag.ps1",
+      "bytes": 6649,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "audit_grounding.py",
+      "bytes": 1376,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "88d078e4cd149e23b235335438041d9a8cab4e70d06aa5ed146b27a9ca24c537",
+      "syntax": "PASS"
+    },
+    {
+      "path": "audit_v1_phases_7_21.py",
+      "bytes": 6770,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a3a64e8c79fb53255222ee1f9a798517cdcc64b4960073850d51da5f712e6df3",
+      "syntax": "PASS"
+    },
+    {
+      "path": "build_all.py",
+      "bytes": 150674,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e0478de30a986450c2a4b8694686d67c47fc463257061492634a69ce86c4114a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "build_all.py.backup_20261001_192207",
+      "bytes": 150669,
+      "suffix": ".backup_20261001_192207",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "developer.py",
+      "bytes": 12760,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "1b151904b162f90bc5d8c6a90cbe0cc09bc3ddd612913b7de4514e5834a7f2d5",
+      "syntax": "PASS"
+    },
+    {
+      "path": "developer_core_engine_SOURCE_BACKUP.txt",
+      "bytes": 49445,
+      "suffix": ".txt",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docker-compose.audit.yml",
+      "bytes": 389,
+      "suffix": ".yml",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docker-compose.yml",
+      "bytes": 816,
+      "suffix": ".yml",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "engine_source.txt",
+      "bytes": 33467,
+      "suffix": ".txt",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "fix_developer_core_source.py",
+      "bytes": 4853,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "192b50f47175bb733edf5fe35d0adcbcaf8f265ceebb6e0680d2f728100c9e49",
+      "syntax": "PASS"
+    },
+    {
+      "path": "fix_graph_reference.py",
+      "bytes": 531,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "193f29cf41a2eaa25a61cd8a2238d39ddd974b258be3f7381762211d648cdfbc",
+      "syntax": "PASS"
+    },
+    {
+      "path": "graph-viewer.ps1",
+      "bytes": 16729,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "master_engine_ai.py",
+      "bytes": 20665,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a6beee69ec64849ca725d25a0faaf533b9bff0e36bd900a43636e614d29b86e7",
+      "syntax": "PASS"
+    },
+    {
+      "path": "nusantara_master_engine.py",
+      "bytes": 62744,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "7909db2163b179c526e3083be76304dd545b3f9cae60d7d71534cfec8a8308d5",
+      "syntax": "PASS"
+    },
+    {
+      "path": "nusantara_master_engine_BACKUP_20261002_164634.py",
+      "bytes": 47515,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "db86315dbda4c09cc78415d4d8d69f86132a823ebe4ae57bc9d7130b4eaa55c0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "nusantara_master_pdf_sop_engine.py",
+      "bytes": 47218,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "6a50c94ed57c44b4cb85c1e99ba03730cfba0b71f65803a70c4dccd8256fdac5",
+      "syntax": "PASS"
+    },
+    {
+      "path": "nusantara_sop_semantic_engine_v2.py",
+      "bytes": 24348,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ba87082ad5b609f1451f9f71d148fcb4ef785a5ff984b0bdd26c97c31f262267",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_core.py",
+      "bytes": 461,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "bca57396cc882ac77027fef646c5f6c6e45df6f8d0024bc8318f9ec6d6ecacad",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_developer_core_quality.py",
+      "bytes": 12014,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8e517eda471d7d2a36a2c44a4198d8854f00cb27e4a70aff5f670f24a7e7c989",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_developer_core_quality_v2.py",
+      "bytes": 9895,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "601e4ed035d8cf71f300f822558fdb35dc37d617084dad70199cc8d4384933d4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_graph_rag_production.py",
+      "bytes": 2694,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "cae1381da2dbb1961de09c84cb0065a8ee8d53c6c00031d6aa76e795ad873433",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_graph_rag_safe.py",
+      "bytes": 3517,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f6b1dbebcbd256e97b2291eb0f02d6c2a2a66a8a85f4320c5473c4599e2a03d7",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_graph_rag_v2.py",
+      "bytes": 7985,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8b48036a765df388dea608ccc150f04c267ac067f52d07afce526c5431dad8d2",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_graphify_adapter.py",
+      "bytes": 8460,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "96f4eb66b81ed643a3521a227ae1a780925a4ca3bf15ccbe52fb8fdba380682f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_master_integration.py",
+      "bytes": 24372,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f17b38a17af71deb44d3350632b63b036927290d013106b4c4ffa9c0988f5399",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_parser.py",
+      "bytes": 1011,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e4d8d2e526bc261e5933477ccf08e1cbdedf4f2652ffdc6f1b86958e014f934d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_production_integration.py",
+      "bytes": 6895,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "bcba76374fb7a35a23747ed1ad61b38f84b0bfa7e531f8e07c135e17f91c7c5b",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_production_rag.py",
+      "bytes": 13313,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "821a76fed63067cae133ee3d3a709e6c6d78d9948f386d183672088717c817bf",
+      "syntax": "PASS"
+    },
+    {
+      "path": "patch_source_filter.py",
+      "bytes": 3222,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "bddf54053ca22a585c80506a33f9c21fc1ee49849384841f7d6d834dcc72a08a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "phase2_bug_p2_001.ps1",
+      "bytes": 5930,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 2722,
+      "suffix": ".toml",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "restore_developer_core.py",
+      "bytes": 1018,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "063679f005d8df9f6ee03ad446bc9d56dbf9010470f6273a1dcd00e662adaaa7",
+      "syntax": "PASS"
+    },
+    {
+      "path": "routes_current_backup.txt",
+      "bytes": 31286,
+      "suffix": ".txt",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "run_tests.py",
+      "bytes": 5055,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e54f1b47cebe54fc24494d3bbd5dbbd13d292bb97bc9a2c020ffcc7336edaec0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "setup_nusantara_local_ai.ps1",
+      "bytes": 15631,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "sop_cv_table_detector.py",
+      "bytes": 11983,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ba5198eb7a884a7c6b7e90dccf647afdee617f6a88c64cf3d13ecde68237c767",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_governance_ocr_engine.py",
+      "bytes": 19541,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "895faf0967662a22740566f339c511a669644b36cd2d5622a753deab319845b0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_ingestion_engine.py",
+      "bytes": 6126,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "6b093fbd266330a4a8b8c24eaefd3971afe0aebd79556545fc38f251ae146fb0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_ocr_layout_engine.py",
+      "bytes": 5785,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "36f93ad269a2d7859b764b88fddf6532ea59ed24c2f868cb5c52f93e268932de",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_parser_engine.py",
+      "bytes": 7001,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e4a443104780395b72788117234132b122680b153c2de174fb31d18189d30c90",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_parser_v2.py",
+      "bytes": 10757,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "47901b1b200133fe423c33048a370d7773640cf95e66782052e4724011650f7e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_parser_v3.py",
+      "bytes": 11492,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c682310f8712e72cc42062261bfd5d2104ac9b88f03a57db4e1fa8a1a3db740d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_parser_v4.py",
+      "bytes": 15063,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "71fdc5b12df815782fc671dfcaed19027e483136f8954c750b8bd49c7e495b0f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_parser_v5.py",
+      "bytes": 15440,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "79d31df4eca4ad04da67e4f86ec8c389337fb9c3b5acee285dd046c1139d8a20",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_pdf_geometry_inspector.py",
+      "bytes": 5737,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "76fed90c390122702ba972e2523060b979b598fd47dd449c913f17facb1c1225",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_table_reconstruction_engine.py",
+      "bytes": 16299,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "eac1987217c72b33b99347ab54e7a889bf034d66658f8679ebe334c9cc838b4c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_table_reconstruction_engine_v2.py",
+      "bytes": 24777,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "7d521ba0941d16c1b0360cdb78eceeee994364b56900a063c5fb28b6e995e3d7",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_table_reconstruction_engine_v3.py",
+      "bytes": 20165,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "61350488ff88cce6a62ca3d06ae59cba552c08a9b3f7accb12a4f561dee5db0b",
+      "syntax": "PASS"
+    },
+    {
+      "path": "sop_visual_evidence_inspector.py",
+      "bytes": 10694,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "9225a148f0ed013832157c802e7e989e0eb812a10155444e1ae5d5bd1c09f99d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "test-chat.json",
+      "bytes": 118,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "test-general.json",
+      "bytes": 123,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "test-grounding.json",
+      "bytes": 125,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "test-requirements.json",
+      "bytes": 139,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "test-status.json",
+      "bytes": 135,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/developer-core/SKILL.md",
+      "bytes": 1240,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/.graphify_version",
+      "bytes": 6,
+      "suffix": "",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/SKILL.md",
+      "bytes": 41726,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/SKILL.md.bak",
+      "bytes": 44117,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/references/add-watch.md",
+      "bytes": 2704,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/references/exports.md",
+      "bytes": 3362,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/references/extraction-spec.md",
+      "bytes": 7960,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/references/github-and-merge.md",
+      "bytes": 2177,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/references/hooks.md",
+      "bytes": 1267,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/references/query.md",
+      "bytes": 13456,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/references/transcribe.md",
+      "bytes": 3173,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/graphify/references/update.md",
+      "bytes": 10425,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".agents/skills/markitdown/SKILL.md",
+      "bytes": 1359,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/CLAUDE.md",
+      "bytes": 226,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/settings.json",
+      "bytes": 492,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/developer-core/SKILL.md",
+      "bytes": 1246,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/.graphify_version",
+      "bytes": 6,
+      "suffix": "",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/SKILL.md",
+      "bytes": 41732,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/SKILL.md.bak",
+      "bytes": 44117,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/references/add-watch.md",
+      "bytes": 2704,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/references/exports.md",
+      "bytes": 3362,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/references/extraction-spec.md",
+      "bytes": 7960,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/references/github-and-merge.md",
+      "bytes": 2177,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/references/hooks.md",
+      "bytes": 1267,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/references/query.md",
+      "bytes": 13456,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/references/transcribe.md",
+      "bytes": 3173,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/graphify/references/update.md",
+      "bytes": 10425,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".claude/skills/markitdown/SKILL.md",
+      "bytes": 1365,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".codex/hooks.json",
+      "bytes": 468,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": ".nusantara/PROJECT_CONTEXT.md",
+      "bytes": 1823,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "app_backup_before_openrouter/__init__.py",
+      "bytes": 43,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "53ce00f1087a90c7c40dc9ec4709b65e810442dac455f6b0d3451792ce7424f5",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/exceptions.py",
+      "bytes": 4505,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "0249901e6e94298c70dce074b3223c03eb3d6c01148e0114f8cffa8453e75afa",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/interfaces.py",
+      "bytes": 119,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c1c28d948cbf09900170c85817187061ddde1c01d4082d3ce5974f4a0ae6bdcb",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/main.py",
+      "bytes": 1165,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "bd443f72e249a8fd2f4d926b9aa41232679fa74e19cf20a4957061d2954d2fae",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/types.py",
+      "bytes": 162,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "7cc54aeaeecfc50458ab4b0d440694e4d5921e3d0dfe18c3da1e66cdc1d36f30",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/api/routes.py",
+      "bytes": 9702,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a666b168dc4385ad8258923f8886f1a68ff8350fc68ba22bddd8bf5c15e1814e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/context/__init__.py",
+      "bytes": 54,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "29d971d4090b704cfb873ad71939a0992db3250420946f321a5af44b37fed90e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/context/context_builder.py",
+      "bytes": 11145,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "289b7d4481d06b171870c4f083c3dd531740ba654d63b3895282558fec07125e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/context/engine.py",
+      "bytes": 6132,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a394630d26ff4991b2ce920e33bfb9592a85d2df2687f771977e40449141f4c3",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/context/schemas.py",
+      "bytes": 6018,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c30f07771e3924061b7059eb2326bc126b71f3b2ec567dd1a81ba489b4d5616c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/context/session.py",
+      "bytes": 8715,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e1410432414391f37509dd41810b1b70a18a88a5787dbeb2b718e4234a26c111",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/context/session.py.tmp",
+      "bytes": 0,
+      "suffix": ".tmp",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "app_backup_before_openrouter/core/__init__.py",
+      "bytes": 53,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f6de62f75f03b083cea70d67096a1abab29ccb59f838d60edc14a31ba969eb0b",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/core/config.py",
+      "bytes": 984,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "1705c1d63b383659b6550ee9003dbbf3ee7f91c7ee4476f28b75c3987ac02d68",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/handoff/engine.py",
+      "bytes": 5960,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "dbda57ec3d5b3d926a3742bec5274deafa917b906af9fdd53a0340e4f4bf9cef",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/handoff/schemas.py",
+      "bytes": 1692,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "da4cd6965a66ab6ea6d727e2b67e355a7723ef1ddec29044e80a0400c8aa00c7",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/hermes/__init__.py",
+      "bytes": 55,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4cc31c14341c079a3994857b3eee5c35efde8baa41ee8442638955dd1f7d6233",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/hermes/agent.py",
+      "bytes": 1482,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "97d6d47fac1dcbf93ccc4e6e310e95603e442b70e939136c7c29fde54e1eaf99",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/knowledge/__init__.py",
+      "bytes": 198,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "343f3546833e475534853713628af80ef2be407640a1a196326c3162a36c55e4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/knowledge/chunker.py",
+      "bytes": 813,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e90abaa822497c9348d06a5cc486bc4dc7b25bdfb0bfac358af95f202aadb564",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/knowledge/embeddings.py",
+      "bytes": 6791,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "b0c68f583e8fb21700f007db2adbb5f9a97d1b885709c62280b1c8c5f68653a0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/knowledge/engine.py",
+      "bytes": 1395,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4ebdd708b92b20a67ba6072667d5c71bff3092864877c0625b2d91e88bbdfdfe",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/knowledge/parser.py",
+      "bytes": 356,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ed2beb34ccf96497ce4709806ec22b8d86475238ad70ca0f9bbb618af5435cc6",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/knowledge/rag.py",
+      "bytes": 18032,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "740715e7640c3effea9da663efe90618211e6a5dc1e8eafd268b9b872d85e0f1",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/knowledge/reranker.py",
+      "bytes": 5904,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "527dd1746cc5b33e35edd89fe8a66122eaab48818fdd57761653baa6fe57566c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/knowledge/retriever.py",
+      "bytes": 5742,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "32031f0a188e8ce24a79299b9634a0dfdfd00b6fb0e65de65250c726bab1c15f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/knowledge/schemas.py",
+      "bytes": 8936,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c1ae5f368d187274e480ef19eb4b98b41a86c1d665374b2feec3f457ca8c13c9",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/language/__init__.py",
+      "bytes": 156,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5e34b2b867e8cebdd61fbdf44c43e74034fefad480f7c48f8fec33a7ea6feaf7",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/language/engine.py",
+      "bytes": 6343,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "6f93d23ec539549159fec4e1b48d38af309b56c7e76c003b1dbda42c0391e719",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/language/entity.py",
+      "bytes": 4744,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "50353be2c4df1de38bc6da67468c43b725d17c5c215416c3bf75e1147b436d2d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/language/intent.py",
+      "bytes": 10451,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "2b849579b00421cd7c0faa8f95c6dca39b64f636abbe68e5d6b123ce5d7bc748",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/language/normalizer.py",
+      "bytes": 5876,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a35c37026a6a03fbb5e8f7e9ae1de40304e878010f0a548bf97040daa7af40f3",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/language/schemas.py",
+      "bytes": 2819,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "51822296c40c5a2e8dcff16ab48a27311faf1bf2b0cbc8548f072b18149b3a54",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/mcp/mcp.py",
+      "bytes": 5586,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "1c16486f63bd02bb71c0eb7ee9555488b6e019674b9b532a5237a6a1b1f06c8f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/mcp/schemas.py",
+      "bytes": 1707,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "52e9aea369048106ba6cf2418daf27627cd5f1d7ff7846814876c8e7c706141f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/mcp/session.py",
+      "bytes": 1304,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f49b0653f7df4ea09fafdc42d47036969a098842a8d6fe09e7d94455b6b434f2",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/memory/memory.py",
+      "bytes": 5115,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8ba38a3e4e148aabc377254a915a29f51632cb85379877024ad6109cabd7dd60",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/models/__init__.py",
+      "bytes": 735,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c180df9077dddb256ca6dcecc41294305bda4a12e83125ad3ab3f0a0bdc97486",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/models/base.py",
+      "bytes": 3765,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "009297b09ddb3a56b4c038473d1839aa2f431409f7c9951a1cb94a40c2041892",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/models/mock.py",
+      "bytes": 3820,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c6b7154b7f08e864219d46570d63bffd776f49adcef6085501afc75da61d609d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/models/mock_provider.py",
+      "bytes": 114,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "b7e91be9b884e9f856fea1e4647afe2342815a9adffbb0e44af6b94b909584f8",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/models/ollama.py",
+      "bytes": 6347,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e4ef2e170a335ec85748234ffbeae09c75117a3fdd87df68b757debed834cd4c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/models/ollama_provider.py",
+      "bytes": 74,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "7a3bedc89a03847993510c465f725f521f0dc962635a0039938ffed83a09d5dc",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/models/openai_compatible.py",
+      "bytes": 8785,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "2832989348208b0d3706660d3dfe30d04590e83c11ab6f1662cc18806e23981a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/models/router.py",
+      "bytes": 5575,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c5f9ab1b2c91167cde0a6fb31bee7fe5d8885589fbc17ec59c3fd150798b2e3e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/models/schemas.py",
+      "bytes": 4070,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a6d26a8be922361c99ac7608df07a4ed8b350fd5ce7b5c9f93ee09d2e6e863e3",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/models/schemas_compat.tmp",
+      "bytes": 0,
+      "suffix": ".tmp",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "app_backup_before_openrouter/policy/policy_engine.py",
+      "bytes": 6478,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "84f666053a7e7caa23c14e41026a46d73886e34335038f381a1c139ea2bc5f3b",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/policy/schemas.py",
+      "bytes": 1118,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "05f23305a5f07ad3ec1bf3e51176227a59a0414df7555a66a937295bf4d04ca9",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/problem/__init__.py",
+      "bytes": 969,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "82d1f2b202a637c81bcc52915346b5bc7aac6cde7814d3cb303605d27adca567",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/problem/classifier.py",
+      "bytes": 6030,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8add6e6854880497ae0d94f96b163d916407112ba12583d73195509fb411ef6c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/problem/detector.py",
+      "bytes": 25401,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "9648c616b9e32d2c752ef5be22295c00e9d193959ecae58066c289574f43a215",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/problem/engine.py",
+      "bytes": 24206,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "b787322d0ce02aa4079817b7c5c617bdbe7cb872e5b9001ffceb5a3fae19ed70",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/problem/problem_schema.py",
+      "bytes": 5695,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "53946a13d51559cf23029e4ba7ad7eca8cd5bc6ef6053c0abbb019f527d6334e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/problem/schemas.py",
+      "bytes": 702,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "680989f4e3b0dc61aa47ba82f6b73c31281c11d96f35e4d48a99ddeb9b8a424a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/reasoning/__init__.py",
+      "bytes": 36,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d79d7f03377ce4f0a8dda788d03540ecd5cbefae6f84f9cbdb09d41fcc20641a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/reasoning/engine.py",
+      "bytes": 14189,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "70f365ec1582375a9bfabf6a6716edef8bfca1e6830cca02a6dfe40562fd0f6b",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/reasoning/evaluator.py",
+      "bytes": 3091,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "7be934ef4c139576bb9d7e21fa2961dc172d8667c55e5732da30dfc4b5a4c6ee",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/reasoning/planner.py",
+      "bytes": 4957,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "464f0e015f81d560e72275365926c2f03bdf7479fbfce61a373967ed2a4577d0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/reasoning/schemas.py",
+      "bytes": 8274,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "dbc740f195c9f8c3350c31e2df35e8aaadd3c2379740be04fe2a48194891f8c3",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/tools/base.py",
+      "bytes": 10820,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "98ff09d721fefeae9753aca004fd38b18f45726693bba0c6ddf27debff76f64b",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/tools/calculator.py",
+      "bytes": 52,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4f6d5b91c10e97ed4f8467a7791e06f0397eb9758ccea67f29df01c4f05122b7",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/tools/date_time.py",
+      "bytes": 102,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "adf8926f958ed21dd9b9ae35a33eedf7cad62b2e7502b2e3d85969efead9f658",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/tools/schemas.py",
+      "bytes": 945,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "0d3b06c575ed0574604595347135f1919f92bc859509b6f8c55a5df70de70ed1",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/trust/engine.py",
+      "bytes": 4975,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c32a288e97461a5ced316bbe5f898fcb09e2a11c4edf9ec69abf7762b19c460a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/trust/schemas.py",
+      "bytes": 795,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f1a9db5d7c50b6dc9cac4652e37cf49a884734e39568d8fda5faa2f51d828d41",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/ui/index.html",
+      "bytes": 7388,
+      "suffix": ".html",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "app_backup_before_openrouter/workflow/__init__.py",
+      "bytes": 187,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e7d90e29a93c0a7e095ea68e3661a4c81f154d26e7d571ce4c6a4ad59756b9fd",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/workflow/engine.py",
+      "bytes": 1844,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "2ee85e38db2c5441dbaa0016d4613db9e205de5ce4e8cf1801730c82ef48e718",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/workflow/schemas.py",
+      "bytes": 68,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5ec62195a850ed715811b3f342a884a3855f75d75e29dc547ac96d13923d5a6c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/workflow/state.py",
+      "bytes": 865,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a637fea46df8d0f28f129880cb47e317d4cecc99cc64a1093bca6333c1550195",
+      "syntax": "PASS"
+    },
+    {
+      "path": "app_backup_before_openrouter/workflow/workflow_schema.py",
+      "bytes": 6242,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "daa60a953b871aba5cda72fdd353ec2c52b52692583de65ca08acd4cd13d315f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_chat_debug.py",
+      "bytes": 38011,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "91bca1546df84c1ffd361816607d631c9864f670091d11ffcc3acfedf858b1bb",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_chat_domain_fix.py",
+      "bytes": 39721,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d2ff91be3c9f604be3da04d614bbda9efefa92798cb0d8b7fabe360cb0dbf7e0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_domain_routing_20261002_161418.py",
+      "bytes": 49443,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e5fbace63e1a1e209354164289c521cd2e370a802b7ef8fe784aeeaeff747e71",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_gate_fix.py",
+      "bytes": 37692,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "571442fffb39d17a59bc9ae30df977bbb6cf8fec26a914c2caaeca75ff3cec59",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_graph_adapter_20261002_132323.py",
+      "bytes": 24826,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f8529daaf3542d16b4519200a0bcc1ededdaec56f777f4000d4746089f969b49",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_graph_rag_production_20261002_142501.py",
+      "bytes": 38039,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4921f831a781dfacc8061e2778545fb2d84fe7fec6b120bf22748d902aba8e5f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_graph_rag_v2_20261002_132824.py",
+      "bytes": 28503,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e8207dc61a2e7d1f7d662fc640c998bf19f48248d93c33cc81d0af8188d31c3c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_grounded_chat.py",
+      "bytes": 32952,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "9d8b63df456d8740f91caf2447326deb07ec6ff358b5504477ef6d05f16694af",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_hard_grounding_gate.py",
+      "bytes": 32952,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "9d8b63df456d8740f91caf2447326deb07ec6ff358b5504477ef6d05f16694af",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_master_20261002_162403.py",
+      "bytes": 49443,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e5fbace63e1a1e209354164289c521cd2e370a802b7ef8fe784aeeaeff747e71",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_master_routing_fix.py",
+      "bytes": 38011,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "91bca1546df84c1ffd361816607d631c9864f670091d11ffcc3acfedf858b1bb",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_prod_integration_20261002_142101.py",
+      "bytes": 38623,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "0290592a77011c00fc54a282d557d4f981599c0078c50dbabe54fdded25ae397",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_production_adapter.py",
+      "bytes": 40015,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d065b594902100939ae5d37d101ddd1ed80d5c1718ef0bc0b6e0325cac5b1803",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_production_rag_20261002_141904.py",
+      "bytes": 31616,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ab0cddc76af9270f7500582475682d96ed80782e687fcf0bb425d214407611fb",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_quality_20261002_131836.py",
+      "bytes": 20945,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "be5eb27a487c0c78e1b4120f55b9e29cbf74e11539733948d69456d37a970379",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_query_domain_FINAL.py",
+      "bytes": 39721,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d2ff91be3c9f604be3da04d614bbda9efefa92798cb0d8b7fabe360cb0dbf7e0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_query_domain_fix.py",
+      "bytes": 38011,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "91bca1546df84c1ffd361816607d631c9864f670091d11ffcc3acfedf858b1bb",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_query_domain_fix2.py",
+      "bytes": 38011,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "91bca1546df84c1ffd361816607d631c9864f670091d11ffcc3acfedf858b1bb",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_query_expansion.py",
+      "bytes": 52310,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "65bcbe62ea74c3719d0e1dc53fff5871f2ce4977cce429fae1038f6d9fd02dc4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_safe_graph_rag_20261002_142601.py",
+      "bytes": 38039,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4921f831a781dfacc8061e2778545fb2d84fe7fec6b120bf22748d902aba8e5f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_service_routing.py",
+      "bytes": 32952,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "9d8b63df456d8740f91caf2447326deb07ec6ff358b5504477ef6d05f16694af",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_source_cleanup_20261002_142345.py",
+      "bytes": 38623,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "0290592a77011c00fc54a282d557d4f981599c0078c50dbabe54fdded25ae397",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.before_source_filter_20261002_132632.py",
+      "bytes": 27308,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "90698a69e0b31966319e8b0923db05a68bfc8eb0fb90236b47191d2c58fbc0de",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine.py",
+      "bytes": 48579,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4d35bb392cf38b57cddb9c74759455d83541220282cd6bfad083aab602ea5d3c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "archive/devcore_snapshots/developer_core_engine_BEFORE_ROUTING_PATCH.py",
+      "bytes": 49443,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e5fbace63e1a1e209354164289c521cd2e370a802b7ef8fe784aeeaeff747e71",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/grounding_general_fix_20261001_174215",
+      "bytes": 20341,
+      "suffix": "",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE14_2_RUNTIME_GRAPH_PASS_20261005_140903/gate14_runtime_graph_truth.json",
+      "bytes": 5427,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE14_2_RUNTIME_GRAPH_PASS_20261005_140903/validate_gate14_runtime_graph.py",
+      "bytes": 3514,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "57eec66742a8abb21dfa56e11954d1c9a8f856fb5014387491f82f110a031110",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE14_2_RUNTIME_GRAPH_PASS_20261005_140903/validate_gate14_runtime_graph.py.bak_before_engine_target",
+      "bytes": 3490,
+      "suffix": ".bak_before_engine_target",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE14_2_RUNTIME_GRAPH_PASS_20261005_140903/validate_gate14_runtime_graph.py.bak_before_links_fix",
+      "bytes": 3492,
+      "suffix": ".bak_before_links_fix",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE16_FREEZE_20261005_140152/MANIFEST_SHA256.csv",
+      "bytes": 1646,
+      "suffix": ".csv",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE16_FREEZE_20261005_140152/gate14_3_runtime_graph_connectivity.json",
+      "bytes": 6876,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE16_FREEZE_20261005_140152/gate16_1_sop_artifact_truth.json",
+      "bytes": 837,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE16_FREEZE_20261005_140152/gate16_2_sop_pipeline_integrity.json",
+      "bytes": 1715,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE16_FREEZE_20261005_140152/gate16_3_sop_rag_bridge_truth.json",
+      "bytes": 2410,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE16_FREEZE_20261005_140152/gate16_4_sop_retrieval_truth.json",
+      "bytes": 8452,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE16_FREEZE_20261005_140152/gate16_5_evidence_grounding_truth.json",
+      "bytes": 8422,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE16_FREEZE_20261005_140152/gate16_6_negative_abstention_truth.json",
+      "bytes": 1943,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE16_FREEZE_20261005_140152/gate16_7_1_grounded_answer_contract.json",
+      "bytes": 1051,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE16_FREEZE_20261005_140152/gate16_7_pdf_to_answer_e2e.json",
+      "bytes": 23914,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141834/approval_controller.py",
+      "bytes": 7997,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8de27a727c1acd0551f3846e0612ced6decb66d74fcf56b1a280ee0b748daf24",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141834/change_plan.py",
+      "bytes": 5940,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "34c8cece6d600b774f57c1485910e208d7dad7da46729a4412d330bc353c3a21",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141834/change_plan_approval.py",
+      "bytes": 4826,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5dcfa17a5371a83ba2fdf34c1ce5f278f9bf0000f59fa3bb84bd8cf3cd7ca8c9",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141834/change_plan_validator.py",
+      "bytes": 7929,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "afb53c67184634749a730eba31e19c7d2cc052441da77865dba7eb2fed9b9bb4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141834/engine.py",
+      "bytes": 7094,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "6915a0f3c3f13a994771212079d4c27a54a1c2acbb5ec23ebd4e2aee3ac90a58",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141834/validate_gate14_runtime_graph.py",
+      "bytes": 3514,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "57eec66742a8abb21dfa56e11954d1c9a8f856fb5014387491f82f110a031110",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141915/approval_controller.py",
+      "bytes": 7997,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8de27a727c1acd0551f3846e0612ced6decb66d74fcf56b1a280ee0b748daf24",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141915/change_plan.py",
+      "bytes": 5940,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "34c8cece6d600b774f57c1485910e208d7dad7da46729a4412d330bc353c3a21",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141915/change_plan_approval.py",
+      "bytes": 4826,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5dcfa17a5371a83ba2fdf34c1ce5f278f9bf0000f59fa3bb84bd8cf3cd7ca8c9",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141915/change_plan_validator.py",
+      "bytes": 7929,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "afb53c67184634749a730eba31e19c7d2cc052441da77865dba7eb2fed9b9bb4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141915/engine.py",
+      "bytes": 7094,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "6915a0f3c3f13a994771212079d4c27a54a1c2acbb5ec23ebd4e2aee3ac90a58",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_3_PASS_20261005_141915/validate_gate14_runtime_graph.py",
+      "bytes": 3514,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "57eec66742a8abb21dfa56e11954d1c9a8f856fb5014387491f82f110a031110",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_4_PASS_20261005_142343/controlled_patch_executor.py",
+      "bytes": 6093,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "948bf75a400c16ef7e40d7b763e619e9c2f51c41bc584f5783c4e7a3f3b0bfa1",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_4_PASS_20261005_142343/controlled_write.py",
+      "bytes": 6481,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "27a7c49b7826a7575b9c07e05dd4d3986036d9f2266da6a4e9ac3ea11eac2f9e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_4_PASS_20261005_142343/execution_approval.py",
+      "bytes": 8251,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "df5e15c449570f00c689db5da9eb3b05b6f8a7ad1f387bb69e57bc1067dbdd2f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_4_PASS_20261005_142343/execution_boundary.py",
+      "bytes": 7839,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "0797587505a6a9b33bb3d4744389a08119175516beea54a992f5ba7b6e5f11a5",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_4_PASS_20261005_142343/execution_plan.py",
+      "bytes": 5463,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "633dda806c84b13d6a5db1acb6d12c74617a807aa7616726e19e75fd26c3e51f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_4_PASS_20261005_142343/validate_gate17_4.py",
+      "bytes": 6751,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "b23f6149b4f9bdf22b173bd9821e3f3aa112f56ab98b8c5678ebd53d0828bf81",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_4_PASS_20261005_142343/write_policy.py",
+      "bytes": 1910,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "b225b180af6c0eb5f34eb97ad928d11a3e0a5597a08a9234dc8ecaa512357880",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_5_PASS_20261005_142513/gate14_runtime_graph_truth.json",
+      "bytes": 5427,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/GATE17_5_PASS_20261005_142513/validate_gate14_runtime_graph.py",
+      "bytes": 3514,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "57eec66742a8abb21dfa56e11954d1c9a8f856fb5014387491f82f110a031110",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/GATE17_5_PASS_20261005_142513/validate_gate16_regression.py",
+      "bytes": 7593,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4963393d95ea32a4ff5b8037b002460b8f09015fbcce417d92019b900547d909",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/api_contract_final_20261001_180325/test_api_contract.py",
+      "bytes": 2969,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f3ee7af9f70d149b73e35a0b007ce2842b4cd4718207eebba2bf3f7c98cf21af",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/api_contract_fix_20261001_180209/routes.py",
+      "bytes": 36268,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5595ea150275457318476d8a6392d5a028347eaadf52bda5b116e9e294642e56",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/api_contract_fix_20261001_180209/test_api_contract.py",
+      "bytes": 2969,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f3ee7af9f70d149b73e35a0b007ce2842b4cd4718207eebba2bf3f7c98cf21af",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/final_hardening_20261001_175929/routes.py",
+      "bytes": 36268,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5595ea150275457318476d8a6392d5a028347eaadf52bda5b116e9e294642e56",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/final_hardening_20261001_175929/test_api_contract.py",
+      "bytes": 3122,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "eafb91e02faa487dd6e29b2c1050b9a1b3740454826cf0883967fba65589cea4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/generation_hardening_20261001_175544/grounding.py",
+      "bytes": 20341,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "0e24221937b424867eb6938f97c600c9a3209825c7b9b8abe27b0fb6802b076a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/generation_hardening_20261001_175544/routes.py",
+      "bytes": 36268,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5595ea150275457318476d8a6392d5a028347eaadf52bda5b116e9e294642e56",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/generation_hardening_20261001_175544/test_api_contract.py",
+      "bytes": 2969,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f3ee7af9f70d149b73e35a0b007ce2842b4cd4718207eebba2bf3f7c98cf21af",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/grounding_final_20261001_173358/grounding.py",
+      "bytes": 25481,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8bb10045cda0c678a13b403c2f9679125cec37014df26f2b4cc8bb22daacb204",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/grounding_requirement_fix_20261001_173205/grounding.py",
+      "bytes": 25481,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8bb10045cda0c678a13b403c2f9679125cec37014df26f2b4cc8bb22daacb204",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+      "bytes": 34484,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "3f35dca7008ba0df91a10e347ab7d607a69c34f9b1602fba6b50aa54dcc9480a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/grounding_safety_20261001_172504/app/knowledge/grounding.py",
+      "bytes": 8880,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a2fbf5f49f029afe78c76d3a9fb10ef89bfad64146fce696603cd2b21038aa92",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/grounding_safety_20261001_172504/scripts/test_e2e_grounding_ollama.py",
+      "bytes": 9211,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5da3e842f5cf1f4e9f282f5568c51101d8d8057942d2169d918a4761f43e9c44",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/master_hardening_20261001_175243/app/api/routes.py",
+      "bytes": 36268,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5595ea150275457318476d8a6392d5a028347eaadf52bda5b116e9e294642e56",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/master_hardening_20261001_175243/app/knowledge/grounding.py",
+      "bytes": 20341,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "0e24221937b424867eb6938f97c600c9a3209825c7b9b8abe27b0fb6802b076a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/master_hardening_20261001_175243/app/knowledge/rag.py",
+      "bytes": 24499,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "b7cbc06883be29c6ea9e02a5bef34c7e6c5dfdbf26b1e5280f038408ed7d8aef",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/master_hardening_20261001_175243/app/models/ollama.py",
+      "bytes": 6347,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e4ef2e170a335ec85748234ffbeae09c75117a3fdd87df68b757debed834cd4c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase19_5/routes.py.20261001_192648.bak",
+      "bytes": 36268,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/phase19_5/routes.py.20261002_092317.bak",
+      "bytes": 36268,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/phase19_5/routes.py.20261002_092503.bak",
+      "bytes": 36268,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/phase3_v1_20261006_144255/main.py",
+      "bytes": 1823,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "72ea1ed14a91744651246dc923a6fa7750cf79e475d2a77b99a1fe7d452c6aea",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase3_v1_20261006_144255/routes.py",
+      "bytes": 42368,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ec46d5d4a17f872ae30f5d750138d5c883f10b37b8e36e789fd393cf0cd1684e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase3_v1_fix_20261006_144548/main.py",
+      "bytes": 2063,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "bd64eac0d3bfec880cf84d3609a4fe67bd8cc2293a465419997686669cff2a28",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase3_v1_fix_20261006_144548/routes.py",
+      "bytes": 42598,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "1edffd2baffce8ee79a36f4360895385c8ed40ba6e7bb8d8c9d8dd89e7e22a5a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase3_v1_safe_20261006_144438/main.py",
+      "bytes": 2052,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "279ea58522b16ebc87f16dcaf9e7232c01d71804de73dbfe83afcff2af33e072",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase3_v1_safe_20261006_144438/routes.py",
+      "bytes": 42598,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "1edffd2baffce8ee79a36f4360895385c8ed40ba6e7bb8d8c9d8dd89e7e22a5a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase4_trust_20261006_151054/engine.py",
+      "bytes": 4975,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c32a288e97461a5ced316bbe5f898fcb09e2a11c4edf9ec69abf7762b19c460a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase4_trust_20261006_151054/schemas.py",
+      "bytes": 795,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f1a9db5d7c50b6dc9cac4652e37cf49a884734e39568d8fda5faa2f51d828d41",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase4_trust_20261006_151054/test_phase4_trust_contract.py",
+      "bytes": 5578,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "666d0669b43098bd131bd916a5518b0ae2b8b3e6974e7ed24ca36b76bd536e1d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase4_trust_20261006_151118/engine.py",
+      "bytes": 4975,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c32a288e97461a5ced316bbe5f898fcb09e2a11c4edf9ec69abf7762b19c460a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase4_trust_20261006_151118/schemas.py",
+      "bytes": 795,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f1a9db5d7c50b6dc9cac4652e37cf49a884734e39568d8fda5faa2f51d828d41",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase4_trust_20261006_151118/test_phase4_trust_contract.py",
+      "bytes": 5578,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "666d0669b43098bd131bd916a5518b0ae2b8b3e6974e7ed24ca36b76bd536e1d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase4_v1_trust_20261006_153022/engine.py",
+      "bytes": 5194,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c0a962ef941cb6c1afecb32891e7b34eb44a166c0fa964c23683a03f495a8274",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase4_v1_trust_20261006_153022/routes.py",
+      "bytes": 42708,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d591f0cf21d09f48feab645d86b35c5c2d5cc878157e0cc28105bc8c2657e2eb",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase4_v1_trust_20261006_153022/schemas.py",
+      "bytes": 795,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f1a9db5d7c50b6dc9cac4652e37cf49a884734e39568d8fda5faa2f51d828d41",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+      "bytes": 42816,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "febaad809b22065d953e3d1bd3cfdc312ea8ec0a6027e0a8f12c32cc1d6a34d7",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/rag_cache_20261005_123417/production_embedding_bridge.py.bak",
+      "bytes": 19859,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "backup/routes_grounding_intent_20261001_173449/routes.py",
+      "bytes": 36213,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "39f211d908934db70cca88e40f5e39ad5b3ab30c9c3774fbdd7a416b22146ae4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup/routes_grounding_intent_20261001_173500/routes.py",
+      "bytes": 36268,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5595ea150275457318476d8a6392d5a028347eaadf52bda5b116e9e294642e56",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup_indobert_20261001_091633/engine.py",
+      "bytes": 32176,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4d678b0327527b4b6f2e2636263b5dc3310f743be758c90cec7ba7629cd0c9e6",
+      "syntax": "PASS"
+    },
+    {
+      "path": "backup_indobert_20261001_091633/schemas.py",
+      "bytes": 8343,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a697e97702335e9c63623460590b0b7f11bcb3ef811b41c6cbc86f5079bac4c4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "config/rag_runtime.json",
+      "bytes": 823,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/DEVELOPER_CORE_OPERATIONALIZATION.md",
+      "bytes": 863,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/PRODUCTION_KNOWLEDGE_BASE.md",
+      "bytes": 1196,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/architecture-decisions.md",
+      "bytes": 4380,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 9145,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/development-principles.md",
+      "bytes": 4794,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/final-audit.md",
+      "bytes": 1588,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/local-verification.md",
+      "bytes": 1294,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/phase-status.md",
+      "bytes": 1780,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/roadmap.md",
+      "bytes": 9129,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/architecture/TARGET_ARCHITECTURE.md",
+      "bytes": 1687,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/BASELINE.md",
+      "bytes": 9655,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/GATES.md",
+      "bytes": 23944,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/MARKITDOWN_AUDIT.md",
+      "bytes": 8727,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/MASTER_ENGINEERING_AUDIT.md",
+      "bytes": 17516,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/MASTER_ENGINE_REPORT.json",
+      "bytes": 7137,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/MASTER_ENGINE_REPORT.md",
+      "bytes": 2390,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/MASTER_ENGINE_STATE.json",
+      "bytes": 338,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/MASTER_ENGINE_V3_REPORT.md",
+      "bytes": 548,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/NUSANTARA-V1-CONTRACT-COMPLIANCE-ADDENDUM-2026-10-06.md",
+      "bytes": 8639,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/NUSANTARA_AUDIT_PHASE_0_21.md",
+      "bytes": 8624,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/NUSANTARA_DEEP_AUDIT_PHASE_0_21.md",
+      "bytes": 6884,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/RAG_SCHEMA_AUDIT.md",
+      "bytes": 4971,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/SECURITY_TRACE.md",
+      "bytes": 7064,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/V2_CAPABILITY_AUDIT.md",
+      "bytes": 2295,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/V2_GAPS.json",
+      "bytes": 190,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/V2_IMPLEMENTATION_MATRIX.json",
+      "bytes": 19814,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/V2_ROADMAP.json",
+      "bytes": 967,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/backups/agent.py.20261005_182418.bak",
+      "bytes": 1737,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/backups/agent.py.20261005_182607.bak",
+      "bytes": 2667,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/backups/hermes_adapter.py.20261005_183028.bak",
+      "bytes": 1268,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/backups/orchestrator.py.20261005_182838.bak",
+      "bytes": 9129,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/backups/orchestrator.py.20261005_182936.bak",
+      "bytes": 9129,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/backups/v2_routes.py.20261005_183118.bak",
+      "bytes": 6982,
+      "suffix": ".bak",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V100/result.json",
+      "bytes": 470,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V100/result.md",
+      "bytes": 248,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V101/result.json",
+      "bytes": 398,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V101/result.md",
+      "bytes": 186,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V102/result.json",
+      "bytes": 378,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V102/result.md",
+      "bytes": 174,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V103/result.json",
+      "bytes": 386,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V103/result.md",
+      "bytes": 182,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V104/result.json",
+      "bytes": 367,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V104/result.md",
+      "bytes": 163,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V105/result.json",
+      "bytes": 373,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V105/result.md",
+      "bytes": 169,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V106/result.json",
+      "bytes": 401,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V106/result.md",
+      "bytes": 197,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V107/result.json",
+      "bytes": 406,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V107/result.md",
+      "bytes": 194,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V108/result.json",
+      "bytes": 367,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V108/result.md",
+      "bytes": 163,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V109/result.json",
+      "bytes": 375,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V109/result.md",
+      "bytes": 171,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V110/result.json",
+      "bytes": 382,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V110/result.md",
+      "bytes": 178,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V111/result.json",
+      "bytes": 369,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V111/result.md",
+      "bytes": 165,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V112/result.json",
+      "bytes": 362,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V112/result.md",
+      "bytes": 158,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V113/result.json",
+      "bytes": 376,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V113/result.md",
+      "bytes": 172,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V114/result.json",
+      "bytes": 371,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V114/result.md",
+      "bytes": 167,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V115/result.json",
+      "bytes": 400,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V115/result.md",
+      "bytes": 188,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V116/result.json",
+      "bytes": 365,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V116/result.md",
+      "bytes": 161,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V117/result.json",
+      "bytes": 415,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V117/result.md",
+      "bytes": 211,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V118/result.json",
+      "bytes": 382,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V118/result.md",
+      "bytes": 178,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V200/result.json",
+      "bytes": 448,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V200/result.md",
+      "bytes": 186,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V201/result.json",
+      "bytes": 373,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V201/result.md",
+      "bytes": 169,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V202/result.json",
+      "bytes": 404,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V202/result.md",
+      "bytes": 192,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V203/result.json",
+      "bytes": 413,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V203/result.md",
+      "bytes": 201,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V204/result.json",
+      "bytes": 382,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V204/result.md",
+      "bytes": 178,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V205/result.json",
+      "bytes": 375,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V205/result.md",
+      "bytes": 171,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V206/result.json",
+      "bytes": 369,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V206/result.md",
+      "bytes": 165,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V207/result.json",
+      "bytes": 401,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V207/result.md",
+      "bytes": 189,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V208/result.json",
+      "bytes": 370,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V208/result.md",
+      "bytes": 166,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V209/result.json",
+      "bytes": 373,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V209/result.md",
+      "bytes": 169,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V210/result.json",
+      "bytes": 374,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V210/result.md",
+      "bytes": 170,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V211/result.json",
+      "bytes": 360,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V211/result.md",
+      "bytes": 156,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V212/result.json",
+      "bytes": 369,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V212/result.md",
+      "bytes": 165,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V213/result.json",
+      "bytes": 367,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V213/result.md",
+      "bytes": 163,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V214/result.json",
+      "bytes": 360,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V214/result.md",
+      "bytes": 156,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V215/result.json",
+      "bytes": 420,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V215/result.md",
+      "bytes": 216,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V216/result.json",
+      "bytes": 364,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V216/result.md",
+      "bytes": 160,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V217/result.json",
+      "bytes": 382,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V217/result.md",
+      "bytes": 178,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V218/result.json",
+      "bytes": 373,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V218/result.md",
+      "bytes": 169,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V219/result.json",
+      "bytes": 377,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V219/result.md",
+      "bytes": 173,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V220/result.json",
+      "bytes": 420,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V220/result.md",
+      "bytes": 208,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V221/result.json",
+      "bytes": 387,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/evidence/V221/result.md",
+      "bytes": 183,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/master_engine/evidence/v2/00/result.json",
+      "bytes": 9322,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/audit/master_engine/evidence/v2/00/result.md",
+      "bytes": 1471,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/commands/HUMAN_MACHINE_CONTRACT_ID.md",
+      "bytes": 15801,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/commands/MASTER DEVELOPER FULL-ROOT EXECUTION CONTRACT.md",
+      "bytes": 28033,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/commands/MDE_command1.md",
+      "bytes": 18558,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/commands/NUSANTARA DEVELOPER CORE ENGINE — IMPLEMENTATION CONTRACT.md",
+      "bytes": 5798,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/commands/NUSANTARA MASTER DEVELOPER ENGINE.md",
+      "bytes": 12874,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/commands/NUSANTARA V1 RECOVERY MASTER.md",
+      "bytes": 14398,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/commands/NUSANTARA-CONFIGURATION-ARCHITECT.md",
+      "bytes": 15226,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/commands/NUSANTARA-V1-CC01-RESPONSE-PROJECTION-PROPOSAL.md",
+      "bytes": 14381,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/commands/NUSANTARA-V1-CONTRACT-COMPLIANCE.md",
+      "bytes": 9565,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/commands/NUSANTARA-V1-OPEN-GATES-CLOSURE.md",
+      "bytes": 6519,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/contracts/NUSANTARA-AGENT-ORCHESTRATION-CONTRACT-V1.md",
+      "bytes": 2604,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/contracts/NUSANTARA-ARCHITECTURE-CONTRACT-V1.md",
+      "bytes": 7994,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/contracts/NUSANTARA-INTELLIGENCE-MODEL-CONTRACT-V1.md",
+      "bytes": 2231,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/contracts/NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md",
+      "bytes": 2374,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/contracts/NUSANTARA-RUNTIME-EXECUTION-CONTRACT-V1.md",
+      "bytes": 2306,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/contracts/NUSANTARA-TOOL-MCP-API-CONTRACT-V1.md",
+      "bytes": 2309,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md",
+      "bytes": 2573,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/contracts/NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md",
+      "bytes": 11513,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/markitdown/test_ktp.md",
+      "bytes": 235,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/v2/DEVCORE_COMPLIANCE.md",
+      "bytes": 3405,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "docs/v2/ROADMAP_STATUS.md",
+      "bytes": 5249,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "graph-viewer/graph.json",
+      "bytes": 2577954,
+      "suffix": ".json",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "graph-viewer/index.html",
+      "bytes": 722,
+      "suffix": ".html",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "graph-viewer/server.py",
+      "bytes": 577,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ea9402e5d3d0f55d4ee07ae2ae291dc51a34c4130e40ebb6e169feb48b523cca",
+      "syntax": "PASS"
+    },
+    {
+      "path": "integration/README.md",
+      "bytes": 3234,
+      "suffix": ".md",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "integration/agent_live_original.py",
+      "bytes": 2758,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "aeef6222fa92710313cc31cf7e40ea62c5afa586ae93313799f9e576b149169a",
+      "syntax": "PASS"
+    },
+    {
+      "path": "integration/agent_with_devcore.py",
+      "bytes": 4243,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d181c8ac0a1b960f408a54c539ed718812cefc332c21d3622efedaf117b7fa30",
+      "syntax": "PASS"
+    },
+    {
+      "path": "integration/hermes_agent_devcore.patch",
+      "bytes": 2249,
+      "suffix": ".patch",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "integration/routes_devcore.patch",
+      "bytes": 3346,
+      "suffix": ".patch",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "integration/routes_live_original.py",
+      "bytes": 9594,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "776de9e4be09b902922fa533b6b6f325162a2d5b525a1e092dda2d96f927710d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "integration/routes_with_devcore.py",
+      "bytes": 10279,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "HISTORICAL_OR_EXPERIMENTAL_REQUIRES_REFERENCE_REVIEW",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5a9c7c3e9091679e118d4e0f9dd1899e786cc14b423a001ac99b18a68e7560d0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "legacy_v1_artifacts/schemas_compat.tmp",
+      "bytes": 0,
+      "suffix": ".tmp",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "legacy_v1_artifacts/session.py.tmp",
+      "bytes": 0,
+      "suffix": ".tmp",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/NUSANTARA-PHASE1-GATE.ps1",
+      "bytes": 12504,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/add_developer_core_endpoint.py",
+      "bytes": 679,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "43f60f8ae8f6a6c8f5a2d0078d474f8d130ec259b0cfb2559d079cbf7ba822ea",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/audit_all_phases.ps1",
+      "bytes": 14014,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/audit_deep.ps1",
+      "bytes": 14171,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/baseline_rag_cache.py",
+      "bytes": 2921,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ea9e28ff47837e80ad1d0aeec4e1ec431631056e465ba1f88cd479237d78cb9d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/build_gate14.py",
+      "bytes": 12657,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8bafe39ea0d8120e0abf8917b8295cea0196203039a8d236ec236dc7e5692e06",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/build_gate14_mapper.py",
+      "bytes": 18275,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "1a6ed1de21cb373ead61f3cf7078310b1db4a18894c45a928a287b1154ce913f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/classify_configuration_phase2.py",
+      "bytes": 2799,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "7b26fe0f1621325a89df81b87636c5da8ca1a5d5c8e17911ca731cc195241a3c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/cleanup_nusantara_git.ps1",
+      "bytes": 3078,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/commit_nusantara_master.ps1",
+      "bytes": 2821,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/developer_core_change_intelligence.py",
+      "bytes": 4154,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "0073de3fabf55d4d69c5e228c3f2ffa0ebc4d7163f16addfc299bc0f8da44014",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/developer_core_change_query.py",
+      "bytes": 7813,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f7f679fabe6e85f3a9623d2feeaefc6f7483590e9acd701bc1b1c449319a2366",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/developer_core_directional_impact.py",
+      "bytes": 5009,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a1a3612b5441a7643ee456ffb5eed3c10b2ffc67699c78dcb3d534cea18a29bd",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/developer_core_self_analysis.py",
+      "bytes": 2890,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "3ffc9752e02663b4e72d7899095bcea538269592cde54846b443fc7cef9090fa",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/direct_guard_test.py",
+      "bytes": 1695,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "81b33c2a657586b3e3365cf4be1b927ee036a0195f6c2abef0063ed10f6c6a0e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/finalize_nusantara_git.ps1",
+      "bytes": 2822,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/fix_gate10_memory.py",
+      "bytes": 1081,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "885464a503cf15129284231294eae21534f07d8ec640c7cfcdfd3221977fcbe4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/fix_grounding_procedure_v4.py",
+      "bytes": 3835,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "17ef8e19a9826991ee00ed8400fa410ab4fda54419522cae72b730eaed54d23f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/fix_hermes_agent.py",
+      "bytes": 3294,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "72b741245ff5763c55dcb884d795106f74af3b1dd4b66588e8f02548bafe53fc",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/fix_hermes_reasoning_api.py",
+      "bytes": 3843,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "24ead2e0d26c1fa80e0da8f59a438476ad09d05a57c1acef832e92fa9d772432",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/fix_ollama_validator.ps1",
+      "bytes": 420,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/fix_rag_bom_and_canonical.py",
+      "bytes": 7317,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "33849a9dd0f211c003c4aaed8189f79ad8a24516703c4619ffa9d0d0499e0db6",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/fix_routes_memory_final.py",
+      "bytes": 1561,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "cdccd430065980a64872a9c01b57ffdafc4bc7d55c87e724fab177c00979ba7e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/fix_routes_memory_final2.py",
+      "bytes": 1946,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "504ff3f5b767c10e7129a2db65927a0bcc81e97449339bf23ff2ff01d19fcaae",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/fix_validate_gate14.py",
+      "bytes": 774,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d84d78d947b7b25773da46dff98770e0d5835bbc42b8d4ffb8b3e2488fb214de",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/healthcheck.py",
+      "bytes": 88,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f2d989d2031c098022bf861993afc840f098c73c761cf07972903820d3ab8aac",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/healthcheck.sh",
+      "bytes": 40,
+      "suffix": ".sh",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime.py",
+      "bytes": 20159,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "02242af4dd764c921b7d318870f11fed3f0850c6122b3877940d8e06bed7d117",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "bytes": 11642,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "aefd4c0cb58c6ddf79005b0f7002a92099236c452c8d73ff668a53a9b5c4f959",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/install_rag_cache.ps1",
+      "bytes": 4534,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/integrate_gate14_runtime.py",
+      "bytes": 2013,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "29f239fac444c52b58b6dec7cd60bf16c13e9a9722d5e862c884c742f8094095",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/load_test.py",
+      "bytes": 3208,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f5b69143fbd8a482eea6d9d3d23df0f10478669627773a90f623647b943314ce",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/nusantara_claude_workflow.ps1",
+      "bytes": 3365,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/nusantara_dependency_truth.py",
+      "bytes": 4293,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "62fc22c9af350094664d7be820ec520d8b1843ba749f077f123d53c3e577cf01",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/nusantara_developer_core.py",
+      "bytes": 2766,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d307ad9b2f3290b252c439b49f31482bf5718a4a2400150cf4fabf9aefad6fcc",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.py",
+      "bytes": 74974,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "542677cde8f9c10745656697da42e1145b8b575735f56fdbe361351f0a6dd204",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v2.0.0.backup.py",
+      "bytes": 33477,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f36ba05ee9b58d7e2536afe11eae95ef2fb3e86e24d8a8b93548a9a9cef81cf0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v2.0.0.py",
+      "bytes": 33477,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f36ba05ee9b58d7e2536afe11eae95ef2fb3e86e24d8a8b93548a9a9cef81cf0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v3.0.0.pre-v2-audit.py",
+      "bytes": 58987,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "7d59d7fd329c688505738c0f46397d36ac6acf457d3c0dad96bd2b15d804cfb5",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/nusantara_master_phase_runner.ps1",
+      "bytes": 6957,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/nusantara_runtime_architecture.py",
+      "bytes": 4489,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "57140311d2718e5d0ae4cccc53ad1f3464c3ea8c9c78244d8a081109e9632038",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_e2e_deterministic.py",
+      "bytes": 2475,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e25333b739aad9c3b543aaaa9c59f6acdb770d7e0f0d58fd6354bc0b98182488",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_e2e_prompt.py",
+      "bytes": 1420,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f9c9d5b8b35a1ee3d642dc58a44abfaa23e1cf4fe42469a48410d53b7491e5f4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_gate8_13_routes.py",
+      "bytes": 3570,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "7fea5ef3ce7e45d91f50baa24b7ca6b6a8b3aa4818227674e85c724a8e14ee3e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_grounding_abstention.py",
+      "bytes": 4431,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a07c39b1abc42862e8d003b7431500bc9cedf66845871adde54ccf8067b6b025",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_grounding_procedure.py",
+      "bytes": 3886,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "0cd4d73f14409111b2f35b3c99dadbb6db2ceb925c6bef2299509c57cb673c92",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_grounding_procedure_v2.py",
+      "bytes": 2268,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "57de28dec22dd804ab99fb9694a9800838c8132e1b048c1a06fea34b76c3f269",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_grounding_procedure_v3.py",
+      "bytes": 2065,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "6a667b6449b4d52606add2456a44813376ce7ab33d93e9f750c231035d9b9185",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_hermes_adapter_callable.py",
+      "bytes": 1407,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ef477817faf91cf801db34ff41a52c887f78c3967ca841ca775c014506982b31",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_rag_canonical.py",
+      "bytes": 6068,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "94b689af83c717316cb25ab70cd6bdf467b5e71b0d4bf212570fb0ac9a8dfb9b",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_reasoning_gate8.ps1",
+      "bytes": 2251,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/patch_v2_audit.py",
+      "bytes": 15296,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "154f8c76460b8bccc9fe44a129743591a7e80c06ff7c52e04d82131323d53f61",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "bytes": 8816,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e65aa65f052a42888a4d29a80d5b715df48a41c030d8f22587ba4b3fb8afd697",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/precision_impact.py",
+      "bytes": 2530,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5a4388cb7d2050b917870392747174273a577cb118420231e348b7b24fc3c5f1",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/precision_impact_chain.py",
+      "bytes": 4092,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "998540a1444aace6f2042bab8a3d709604265373ddff3ea67bd379f98750e2a3",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/precision_impact_v2.py",
+      "bytes": 3882,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "2f8c1bf9a03b60a70913d30649e1e0b8fb960130dcb4c8fa11e739a0446b0e12",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/production_healthcheck.py",
+      "bytes": 1551,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8b66d0fa03d1acbca4c93fed88bbf6cffbba3c7d93d1fc78ecc18256ea890171",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/production_indobert_hardening.py",
+      "bytes": 889,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "209b751f38fc0d3df81bac99f0c861ca7b43b5b4a22a2eeef2437001a81b4efb",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/production_kb_hardening.py",
+      "bytes": 794,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ea9d97285e7c7bad483817d6dbdc12bea8bcfb722199ae2d7787b730b633a8f3",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/release_check.py",
+      "bytes": 7386,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "6194f1b7e6883d93f1ba77219302624b32e6b76cd234c552b641c8c223890a96",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/repair_gate10_memory.py",
+      "bytes": 2121,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "1b2a60424ac207375c17ebfbd6ff046ea733b4fab067fad962c7726661a8b446",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/repair_gate10_memory_v2.py",
+      "bytes": 3727,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "03251fd39898b7e11589b01873059f301a4029ff66910443393b616889078663",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/repair_gate14_runtime.py",
+      "bytes": 7386,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a18d78c9855468f3a110d8dce9adb2d75f3308d2a13b25074e76c730bd639335",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/restart-nusantara.bat",
+      "bytes": 108,
+      "suffix": ".bat",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/restore_e2e_final.py",
+      "bytes": 6160,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "9d5c52a1cbc4d09691ddec5c6b95ea21cc0e48bc4f3d6e0e6eb02ce336db73d7",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/restore_e2e_runner.py",
+      "bytes": 2258,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8c66a99e6b0d43cdfce878b1e4483d02d3a75e1119c5f61b112d96f80274a234",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/run_eval.py",
+      "bytes": 7833,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "2adb8768441587e852c2948d20def4946fa6e8985cf985aa6c5fcdbe162dc677",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/run_nusantara_validation.ps1",
+      "bytes": 1200,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/runtime_class_truth.py",
+      "bytes": 3370,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "124a42bbbb9f42f5dcd3b6447b084db595986cf279edefeb8f669f5490bd934d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/runtime_e2e_lite.py",
+      "bytes": 1715,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d2bcfe54141f9a135b535323e77586a9fe5bb5db118c3c660fb767c03da254cb",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/runtime_e2e_truth.py",
+      "bytes": 3340,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f5a8657224aa6ffecd5b01a55fcdb5e19191757a86c853d158ef7d91292ab5f7",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/runtime_object_truth.py",
+      "bytes": 2664,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "393e89e48c706f4f4eb05ee65ad2d3f1519b4b5276ccac23a41159ee8cc07f75",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/runtime_truth.py",
+      "bytes": 1963,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a92c6e7fc82d6c5ad51044fb5d5107e0efe01add7dc8fb31ff24daae76b6980d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/runtime_truth_c.py",
+      "bytes": 2724,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ecb45f73d5082566a3ca0082d1a626feb40a1226c6ca65d40dbd4c16209bb4c8",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/staging_drill.py",
+      "bytes": 4181,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "1b32e3293fc2447f49ecfc7421344bc2f7d601f6a1c208630eb36163a19dea07",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/start-nusantara.bat",
+      "bytes": 1825,
+      "suffix": ".bat",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/start.sh",
+      "bytes": 129,
+      "suffix": ".sh",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/start_windows.ps1",
+      "bytes": 424,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/status-nusantara.bat",
+      "bytes": 669,
+      "suffix": ".bat",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/stop-nusantara.bat",
+      "bytes": 607,
+      "suffix": ".bat",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/test.sh",
+      "bytes": 66,
+      "suffix": ".sh",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/test_api_contract.py",
+      "bytes": 3299,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "56280db0b4815857149d188966c7a310c3005fa5981a94fc64e8ac98b344cac6",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/test_chat_regression.py",
+      "bytes": 2517,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "1d6ca3f1197565939aba0b54682bad10242b7314bd3ea6f921275797385303b9",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/test_e2e_grounding_ollama.py",
+      "bytes": 6040,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "317cef056dd0c15cc038a365dfbcaf2ca518186638c74e42b8bf35186d2097b6",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/test_e2e_nusantara.py",
+      "bytes": 5002,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "6ef71e96c40ede3697e0f5efd3baf036dd06550f122f5295ca09c91b19896cad",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/test_grounding_hermes.py",
+      "bytes": 4719,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8af93efafa2d00f9e6fb1616a9be4ec8e0e67790bc18257d4a225d50b9a130cf",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/test_grounding_ollama_api.py",
+      "bytes": 5411,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a65daf89ba51f1d3d5af1fe85d5b9d9d150abb5eaf28d30f667123970389eb58",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/test_knowledge_grounding.py",
+      "bytes": 4213,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "ffb6477a95876e1fcd2ed7c83fd3ad886a7c82103e1d1f668a5fd94423504f94",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "bytes": 6562,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5f3ab114cc0ba10f0e4fd1ac685061550e1460b71cebc6e94194b43ace6ec889",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate12_final.py",
+      "bytes": 4567,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "bb2f20c4e6f8891474fdaef7af2536c1f886b358edf0ebba990cf7feb1f64da9",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate14.py",
+      "bytes": 1926,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "918887cc43fe43b1c0bc35aee05533270d585158ae0cf224424af824ae93acc4",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate14_3_runtime_graph.py",
+      "bytes": 1737,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e963228b95e517742394083905969733c822fbc0489d574ea7122c61696f0e61",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate14_5_self_analysis.py",
+      "bytes": 2766,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "63f007d44bfbc5b7f225273e9b5c71c03bd1bb3ac367d6478f58c0faf4a18e52",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate14_6_2.py",
+      "bytes": 2616,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "00632472f2f34997ea686b905b3b029f3777a0f31eb2a1e1ca4fe6c388156494",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate14_7_runtime_static.py",
+      "bytes": 2798,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "725ecd9290305a12ed16f1951ba2136732fe353869451c3d40054b5e9738dcd9",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate14_final.py",
+      "bytes": 5013,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "12d7940a448381ea08d24df37eef155c62d414f3c0a2c81da87dc9074c79901f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate14_mapper.py",
+      "bytes": 2499,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "dc1ea1384bbd33df70d46d18a6b024afb96e5d3282cb2d1000ce5af82798bb05",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate14_runtime_graph.py",
+      "bytes": 3514,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "57eec66742a8abb21dfa56e11954d1c9a8f856fb5014387491f82f110a031110",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate14_runtime_graph.py.bak_before_engine_target",
+      "bytes": 3490,
+      "suffix": ".bak_before_engine_target",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/validate_gate14_runtime_graph.py.bak_before_links_fix",
+      "bytes": 3492,
+      "suffix": ".bak_before_links_fix",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/validate_gate15_1_runtime_health.py",
+      "bytes": 3168,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "973a290bb141b90b354d7babd3de63dc15b04e1eedd842cdf88e73bba8a77129",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate15_2_engine_runtime.py",
+      "bytes": 2570,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "7b9f868963ea4eb019138453461b7c9231c2df70388440c4492a5ba3d9532ed2",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate15_3_graph_operational.py",
+      "bytes": 3681,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "65599e560478109c2a7d58ae9dd9950d5a3e43932fbc8028344a9a1caf9a77bf",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate15_4_operational_truth.py",
+      "bytes": 4938,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "b75bd831e3e8da1d5ecaace4907dc22a45544ff73bc33c8e4de614e6784fe715",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate15_5_change_plan_schema.py",
+      "bytes": 2216,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "093675f217cc3e18dc94f13da3943c43e3a4460fc22eccadc92caf8e902dac64",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate15_6_change_plan_validator.py",
+      "bytes": 2678,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c1696e6d6c8228d2cb5a04ac70e31a05143123aef0a54fe6e3ad6784cf74b8e0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate15_7_approval_wiring.py",
+      "bytes": 3229,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "37250a0c8b09b04da67bcecf20ab160f28e0bf91129ef1cdccd50face335a9d9",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate15_change_planning_final.py",
+      "bytes": 4219,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "26748e5990153682cb64033941443e200bd9b23fedf27444358a19b73c9601c1",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate15_final.py",
+      "bytes": 3452,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d5acff5166781f8da857edd7c158d23164bf3647ecb2966fac796e2fe73a7930",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate15_operational_final.py",
+      "bytes": 5760,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "76795831431921a1be4146e5699bb63038c9bbd269a7370d7099d9e1d65084ad",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_1_sop_artifact.py",
+      "bytes": 2452,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "dc63860908f3421b113015cf8631ea5af181418fed94a947e1ae9635cce9233c",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_2_sop_pipeline.py",
+      "bytes": 3493,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "b231393d4c5f280b3e417382f8c73593c82e49b8e860bf2db804db7d0887451d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "bytes": 3984,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "6123fd9b55edc9880012cea769882db5bd2a0c536c575884032faa44ae1e684f",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_4_sop_retrieval.py",
+      "bytes": 3870,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "aa03c464800658b40dfa758c449f6cc0c0634e6687c0d731129464bee7887497",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_5_evidence_grounding.py",
+      "bytes": 6614,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "98ccfd503e9e225b17b41ecdda68a3aa5485764508e3ef7ba259533fd4e619d5",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_6_negative_abstention.py",
+      "bytes": 2906,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "de855db85b52c9bed1ff699beb4b07ff313c519b13b714b63506c31d452c1034",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_7_1_grounded_answer.py",
+      "bytes": 3194,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d0e8d7dace20ba1f0b13b84610b686aaacb6e0fbce2c362c81b648aa88909e7d",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_7_pdf_to_answer.py",
+      "bytes": 4464,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "3addbbf7ad82bb1d9c70b1dae4b4314f00546b14d142f58d5bbb1d7cb58a0ad3",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_approval.py",
+      "bytes": 6497,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a739a1f0cacc191e0df2aa4618eb57013414feec43fd35c77142290d59ea5ea2",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_audit.py",
+      "bytes": 11822,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "28ab0648798c57be2f946df9befc5997e9e2848e9e1781930296c541ddba41b1",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_boundary.py",
+      "bytes": 9250,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "59f10643e2e6da79bb3332cde9b1450f0bf3fcbc1ea716e002a025e71c543760",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_final.py",
+      "bytes": 9837,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "e7b0fcb9a3c8f31a08a295309bc2bab06545d4ed5ecfda9eac3d561163ad1723",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_graph.py",
+      "bytes": 9843,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "f56e8e1f71d0381d513988863b36e0062d14ad848d637363ee6d71fa3219e1cc",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_patch.py",
+      "bytes": 5576,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d330d349ed9429df538a359493ec135f8655c09183a8587fd6d7de872ab19033",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_regression.py",
+      "bytes": 7593,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4963393d95ea32a4ff5b8037b002460b8f09015fbcce417d92019b900547d909",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_snapshot.py",
+      "bytes": 7335,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "db815f739b5f46752f5583ff3c56f7ecf39c27c55fedb0686e7d9d3c3f084489",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate16_validation.py",
+      "bytes": 8166,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "949ff693ef8c16224d00dd2efbd7184ba515b262dd7aeec98e85eaf15f48d633",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate17_4.py",
+      "bytes": 6751,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "b23f6149b4f9bdf22b173bd9821e3f3aa112f56ab98b8c5678ebd53d0828bf81",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate17_evaluation.py",
+      "bytes": 7167,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "500bad87042e9268b328bac4ae224ac97d7d170f6569a120636e7334a75ddb95",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate17_evidence.py",
+      "bytes": 6636,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "c8613545b59fbea73475be624a0703e18ab2685c8c7cf2b5c1a95e83b663e950",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate17_experiment.py",
+      "bytes": 7391,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "427ce81f6c74b4278c9645fc5e172909cb9f5ea70a84dbc77b1095b120b94cc0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate17_final.py",
+      "bytes": 2930,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "818ac408f3228a89118033d8164a4a7d5518dfcb1a310607fda80a9af7ea40ca",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate17_gap.py",
+      "bytes": 6528,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4fe07becbed9e51479a2ea1cdb074b5e658f81f1d82dce73abc17930d4f2f551",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate17_proposal.py",
+      "bytes": 13624,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "48694a0a7ae969f72586195da1f9506a00754985314021f9ce371ff1947ef26e",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gate17_root_cause.py",
+      "bytes": 11063,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a85a35efbe4890ad18c892ee1621f81217722f97aa1b0d9f49d337b6545595c2",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_gates_8_16.py",
+      "bytes": 5935,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "d8a49dc2e8293ad5ac2817a476ed9d302febb32b53be905ff8a48d808bd4c4b0",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/validate_nusantara_master.ps1",
+      "bytes": 9746,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "scripts/verify_audit_runtime.py",
+      "bytes": 8431,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "5b55227af1abd3e752169bf6700322331da2a91b36fe3c8bbd44ee3372fd2b29",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/verify_docker_runtime.py",
+      "bytes": 5260,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "8b96aa925d53d0fb27b44837bf7a02c1274e9ad6850ef555ee877389cc910ea8",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/verify_v1_recovery_rag.py",
+      "bytes": 5173,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "a029818f6277f63869ae3541995f051faad15c146fd09f2d1c0e64543d64dc5b",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/verify_v1_recovery_runtime.py",
+      "bytes": 4490,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "4ad94f26f58bbd8b37b4ca49a4243463df604364c2e8c443d7b551ff58261e42",
+      "syntax": "PASS"
+    },
+    {
+      "path": "scripts/wire_v2_chat_hermes.py",
+      "bytes": 4476,
+      "suffix": ".py",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED",
+      "sha256": "cd2e82a8ece222266473c625a65bfcb60c632247d4d00345d33ed33602306c78",
+      "syntax": "PASS"
+    },
+    {
+      "path": "service/RESTART-NUSANTARA.bat",
+      "bytes": 148,
+      "suffix": ".bat",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "service/START-NUSANTARA.bat",
+      "bytes": 146,
+      "suffix": ".bat",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "service/STATUS-NUSANTARA.bat",
+      "bytes": 147,
+      "suffix": ".bat",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "service/STOP-NUSANTARA.bat",
+      "bytes": 145,
+      "suffix": ".bat",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "service/install-nusantara-task.ps1",
+      "bytes": 1605,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "service/nusantara-service.ps1",
+      "bytes": 4301,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "service/nusantara-supervisor.ps1",
+      "bytes": 2344,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "service/start-nusantara-service.bat",
+      "bytes": 455,
+      "suffix": ".bat",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "service/stop-nusantara-service.bat",
+      "bytes": 525,
+      "suffix": ".bat",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    },
+    {
+      "path": "tools/markitdown/convert.ps1",
+      "bytes": 1167,
+      "suffix": ".ps1",
+      "classification": "UNKNOWN",
+      "authority": "NOT_PROVEN",
+      "recoverable_cleanup": "NOT_APPROVED"
+    }
+  ],
+  "decision": "KEEP until imports/config/dynamic references and Git recoverability reviewed"
+}

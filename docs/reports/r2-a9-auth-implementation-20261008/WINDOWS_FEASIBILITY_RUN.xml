@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="0.241" timestamp="2026-10-08T11:44:30.836594+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="tests.test_local_operator_identity" name="test_actual_windows_peer_session_and_server_binding" time="0.088"><failure message="AssertionError: assert (40784 == 32356)&#10; +  where 40784 = Actor(sid='S-1-5-21-2160282116-2306599989-3400837087-1003', logon_id='00000000:00072890', session=1, pid=40784, process_start=134359082708807227, interactive=True).pid&#10; +  and   32356 = &lt;Popen: returncode: None args: ['C:\\Users\\dmaza\\mcp-starter\\.venv\\Scrip...&gt;.pid">tests\test_local_operator_identity.py:46: in test_actual_windows_peer_session_and_server_binding
+    channel.serve_once(handle)
+app\security\local_operator.py:252: in serve_once
+    reply = handler(actor, body)
+            ^^^^^^^^^^^^^^^^^^^^
+tests\test_local_operator_identity.py:33: in handle
+    assert actor.pid == child.pid and actor.pid != os.getpid()
+E   AssertionError: assert (40784 == 32356)
+E    +  where 40784 = Actor(sid='S-1-5-21-2160282116-2306599989-3400837087-1003', logon_id='00000000:00072890', session=1, pid=40784, process_start=134359082708807227, interactive=True).pid
+E    +  and   32356 = &lt;Popen: returncode: None args: ['C:\\Users\\dmaza\\mcp-starter\\.venv\\Scrip...&gt;.pid</failure></testcase><testcase classname="tests.test_local_operator_identity" name="test_local_only_names_and_explicit_policy" time="0.001" /><testcase classname="tests.test_local_operator_identity" name="test_pipe_first_instance_cannot_be_replaced" time="0.001" /></testsuite></testsuites>

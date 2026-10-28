@@ -1,0 +1,28 @@
+diff --git a/app/memory/engine.py b/app/memory/engine.py
+index 7c7da01..4012bb3 100644
+--- a/app/memory/engine.py
++++ b/app/memory/engine.py
+@@ -38,6 +38,8 @@ class MemoryEngine:
+         session_id: str,
+         limit: int = 8,
+     ):
++        if limit == 0:
++            return []
+         return list(self.sessions.get(session_id, []))[-limit:]
+ 
+     def clear(self, session_id: str):
+diff --git a/docs/reports/v1-targeted-20261009T214132/effective-rag-profile.before b/tests/test_effective_rag_profile.py
+index 200215e..dbfc7dc 100644
+--- a/docs/reports/v1-targeted-20261009T214132/effective-rag-profile.before
++++ b/tests/test_effective_rag_profile.py
+@@ -266,7 +266,9 @@ def test_actual_v1_chat_retrieval_and_filter_block(tmp_path):
+     fixture = ast.AsyncFunctionDef(name='fixture', args=ast.arguments(posonlyargs=[], args=[], kwonlyargs=[], kw_defaults=[], defaults=[]),
+                                    body=body, decorator_list=[])
+     ns = {'capture_retrieval': capture_retrieval, '_knowledge': KnowledgeEngine(rag=make_rag(tmp_path, store=FakeStore((.8,.55), (0,0)))),
+-          'request': SimpleNamespace(user_input='alpha')}
++          'request': SimpleNamespace(user_input='alpha'),
++          # This fixture exercises evidence retrieval, not conversation/repeat.
++          'conversation': False, 'repeated_text': None}
+     async def run_sync(fn, *args, **kwargs):
+         return await asyncio.to_thread(fn, *args, **kwargs)
+     ns['_run_sync_v1'] = run_sync

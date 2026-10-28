@@ -1,0 +1,42 @@
+
+ RUN  v3.2.7 C:/Users/dmaza/mcp-starter/control-plane
+
+ ✓ tests/human.test.tsx (19 tests) 2285ms
+stderr | tests/attestation.test.tsx > separate scoped ATTESTATION integration > uses the existing router, snapshot API and scoped navigation end to end in jsdom
+Error: Not implemented: window.scrollTo
+    at module.exports (C:\Users\dmaza\mcp-starter\control-plane\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at C:\Users\dmaza\mcp-starter\control-plane\node_modules\jsdom\lib\jsdom\browser\Window.js:960:7
+    at Object.fn (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/scroll-restoration.ts:361:13)
+    at RouterCore.emit (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/router.ts:1444:20)
+    at file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1908:16
+    at Router.batch (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/store/src/atom.ts:73:5)
+    at file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1901:12
+    at runClientTransaction (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1860:3)
+    at loadClientRoute (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:2053:3)
+    at RouterCore.load (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/router.ts:2433:5) undefined
+
+stderr | tests/attestation.test.tsx > separate scoped ATTESTATION integration > uses the existing router, snapshot API and scoped navigation end to end in jsdom
+Error: Not implemented: window.scrollTo
+    at module.exports (C:\Users\dmaza\mcp-starter\control-plane\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at C:\Users\dmaza\mcp-starter\control-plane\node_modules\jsdom\lib\jsdom\browser\Window.js:960:7
+    at Object.fn (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/scroll-restoration.ts:361:13)
+    at RouterCore.emit (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/router.ts:1444:20)
+    at file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1908:16
+    at Router.batch (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/store/src/atom.ts:73:5)
+    at file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1901:12
+    at runClientTransaction (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1860:3)
+    at loadClientRoute (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:2053:3)
+    at RouterCore.load (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/router.ts:2433:5) undefined
+
+ ✓ tests/attestation.test.tsx (15 tests) 361ms
+ ✓ tests/inspection-preview.test.tsx (11 tests) 198ms
+ ✓ tests/acceptance.test.ts (11 tests) 14ms
+ ✓ tests/ui.test.tsx (4 tests) 65ms
+ ✓ tests/api.test.ts (3 tests) 8ms
+
+ Test Files  6 passed (6)
+      Tests  63 passed (63)
+   Start at  19:42:09
+   Duration  9.60s (transform 212ms, setup 990ms, collect 1.35s, tests 2.93s, environment 3.26s, prepare 406ms)
+
+JUNIT report written to C:/Users/dmaza/mcp-starter/docs/reports/normal-inspection-preview-20261008-01a11b73/FRONTEND_RESULTS.xml

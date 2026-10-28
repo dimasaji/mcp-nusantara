@@ -1,0 +1,17 @@
+{
+  "evidence_class": "PROCESS_OBSERVED",
+  "observation_source": "Get-NetTCPConnection and Win32_Process",
+  "observed_at_utc": "2026-10-08T07:35:01.7560958Z",
+  "listener": "127.0.0.1:8000",
+  "pid": 33040,
+  "parent_pid": 1268,
+  "name": "python.exe",
+  "executable_path": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+  "command_line": "\"C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1 ",
+  "process_start_time": "2026-10-08T13:30:22.561656+07:00",
+  "working_directory": null,
+  "runtime_instance_id": null,
+  "loaded_profile": "NOT_OBSERVED",
+  "active_process_build": "NOT_DIRECTLY_VERIFIED",
+  "limitations": "Command line identifies launcher and intended entrypoint, not loaded modules, effective profile or serving handler identity. Working directory unavailable through Win32_Process. No HTTP request performed."
+}

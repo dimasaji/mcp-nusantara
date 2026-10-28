@@ -1,0 +1,27 @@
+{
+  "gate": "14.6.2",
+  "engine": "Developer Core Impact Truth Validator",
+  "source": "C:\\Users\\dmaza\\mcp-starter\\graphify-out\\gate14_6_directional_impact.json",
+  "checks": {
+    "passed": 6,
+    "total": 6
+  },
+  "validation": {
+    "directional": true,
+    "allowed_relations_only": true,
+    "no_self_impact": true,
+    "valid_depth": true,
+    "runtime_targets_present": true,
+    "runtime_source_present": true
+  },
+  "statistics": {
+    "targets": 7,
+    "impact_records": 519,
+    "relations": {
+      "imports": 291,
+      "imports_from": 224,
+      "indirect_call": 4
+    }
+  },
+  "status": "PASS"
+}

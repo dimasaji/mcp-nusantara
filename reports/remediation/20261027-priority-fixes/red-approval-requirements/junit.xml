@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="7.049" timestamp="2026-10-28T11:01:04.021467+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="tests.test_knowledge_pipeline_api" name="test_review_source_access_notes_and_server_approval_gate" time="5.354"><failure message="KeyError: 'approval_requirements'">tests\test_knowledge_pipeline_api.py:119: in test_review_source_access_notes_and_server_approval_gate
+    requirements = {item['key']: item['satisfied'] for item in reloaded.json()['approval_requirements']}
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'approval_requirements'</failure></testcase></testsuite></testsuites>

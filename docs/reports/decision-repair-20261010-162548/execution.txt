@@ -1,0 +1,95 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261010162548
+Username: DESKTOP-GJHS3LR\dmaza
+RunAs User: DESKTOP-GJHS3LR\dmaza
+Configuration Name: 
+Machine: DESKTOP-GJHS3LR (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+Process ID: 36316
+PSVersion: 5.1.26100.9444
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9444
+BuildVersion: 10.0.26100.9444
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS C:\Users\dmaza\mcp-starter> Write-Host "`n=== PRECHECK ===" -ForegroundColor Cyan
+
+=== PRECHECK ===
+PS C:\Users\dmaza\mcp-starter> Write-Host "Output: $Out"
+Output: C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162548
+PS C:\Users\dmaza\mcp-starter> if (!(Test-Path $Py)) {
+    Write-Host "BLOCKED: Python venv not found: $Py" -ForegroundColor Red
+} elseif (!(Test-Path $Runner)) {
+    Write-Host "BLOCKED: isolated test runner not found: $Runner" -ForegroundColor Red
+} else {
+    Write-Host "`n=== RUN CURRENT EVIDENCE TESTS ===" -ForegroundColor Cyan
+    Write-Host "Start: $(Get-Date -Format o)"
+    & $Py -B $Runner $TestOut
+    $TestExit = $LASTEXITCODE
+    Write-Host "Runner exit code: $TestExit"
+    Write-Host "End: $(Get-Date -Format o)"
+
+    [pscustomobject]@{
+        timestamp = (Get-Date).ToString('o')
+        command = "$Py -B $Runner $TestOut"
+        exit_code = $TestExit
+        output_directory = $TestOut
+    } | ConvertTo-Json -Depth 5 |
+        Set-Content (Join-Path $Out 'execution-summary.json') -Encoding utf8
+}
+
+=== RUN CURRENT EVIDENCE TESTS ===
+Start: 2026-10-10T16:25:48.6573635+07:00
+
+Runner exit code: 1
+End: 2026-10-10T16:25:48.7200855+07:00
+PS C:\Users\dmaza\mcp-starter> Write-Host "`n=== CURRENT SOURCE HASHES ===" -ForegroundColor Cyan
+
+=== CURRENT SOURCE HASHES ===
+PS C:\Users\dmaza\mcp-starter> $Files = @(
+  'app\api\control_plane.py',
+  'app\core\evidence_registry.py',
+  'app\security\auth.py',
+  'control-plane\evidence-requirements.json',
+  'control-plane\src\api.ts',
+  'control-plane\src\human.tsx',
+  'control-plane\tests\acceptance.test.ts',
+  'control-plane\tests\human.test.tsx',
+  'control-plane\vitest.config.ts',
+  'tests\pytest-evidence.ini',
+  'tests\run_evidence_tests_isolated.py',
+  'tests\test_evidence_decision_api.py',
+  'tests\test_evidence_registry.py'
+)
+PS C:\Users\dmaza\mcp-starter> $HashRows = foreach ($File in $Files) {
+    $Path = Join-Path $Root $File
+    if (Test-Path $Path) {
+        $H = Get-FileHash -LiteralPath $Path -Algorithm SHA256
+        [pscustomobject]@{
+            file = $File
+            sha256 = $H.Hash.ToLowerInvariant()
+        }
+    }
+}
+PS C:\Users\dmaza\mcp-starter> $HashRows | ConvertTo-Json -Depth 4 |
+    Set-Content (Join-Path $Out 'source-hashes-current.json') -Encoding utf8
+PS C:\Users\dmaza\mcp-starter> Write-Host "`n=== RESULT FILES ===" -ForegroundColor Cyan
+
+=== RESULT FILES ===
+PS C:\Users\dmaza\mcp-starter> if (Test-Path $TestOut) {
+    Get-ChildItem $TestOut -File -Recurse |
+        Select-Object FullName, Length, LastWriteTime |
+        Format-Table -AutoSize
+} else {
+    Write-Host "Runner output directory was not created." -ForegroundColor Yellow
+}
+Runner output directory was not created.
+PS C:\Users\dmaza\mcp-starter> Stop-Transcript | Out-Null
+**********************
+Windows PowerShell transcript end
+End time: 20261010162548
+**********************

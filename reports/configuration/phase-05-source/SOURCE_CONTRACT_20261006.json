@@ -1,0 +1,27 @@
+{
+  "phase": 5,
+  "status": "COMPLETE_SOURCE_CONTRACT",
+  "precedence": [
+    "DEFAULT",
+    "FILE",
+    "ENV",
+    "EXPLICIT"
+  ],
+  "json_max_bytes": 1048576,
+  "json_max_depth": 12,
+  "profile": "current_v1_rag",
+  "env_default": "empty mapping; caller must opt into providing os.environ",
+  "dotenv_autoload": false,
+  "alias_case": "case-insensitive; duplicate alias rejected",
+  "alias_mapping": "enumerated immutable map in isolated module; legacy Settings names map to legacy declarations for unwired fields",
+  "secret_values": "not loaded; credential aliases forbidden; auth_env_ref is variable identifier only",
+  "profiles": "current_v1_rag only; production profile not activated",
+  "integration": "NONE; immutable snapshot only",
+  "source_scope": [
+    "app/core/nusantara_config.py",
+    "tests/test_configuration_contract.py"
+  ],
+  "backup": "Both paths absent; no existing source edited; protected hashes retained",
+  "authorization": "User explicitly authorized Phase 5\u20136",
+  "completed_at": "2026-10-06T11:18:38.659336+00:00"
+}

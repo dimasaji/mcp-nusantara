@@ -1,0 +1,143 @@
+{
+  "phase": "R1-LOCAL-001",
+  "timestamp": "2026-10-07T06:30:37.124470+00:00",
+  "status": "BLOCKED_VALIDATION_FAILURE",
+  "implementation": "PARTIAL_PRESERVED",
+  "acceptance": "NOT_VERIFIED",
+  "authorization": "Exact R1 controlled development approval; no R2/MDE10 authorization",
+  "scope": [
+    "app/api/routes.py",
+    "app/api/v2_routes.py",
+    "app/core/config.py",
+    "app/core/nusantara_config.py",
+    "app/knowledge/engine.py",
+    "app/main.py",
+    "app/models/ollama.py",
+    "tests/test_configuration_contract.py",
+    "tests/test_configuration_integration.py",
+    "tests/test_model_router_configuration.py"
+  ],
+  "before_after": [
+    {
+      "path": "tests/test_configuration_contract.py",
+      "before_sha256": "bc4478e0100bab03d2dc8580cbf6a8e29176b7fdbc690795a745a732551d7123",
+      "after_sha256": "ac62afedd9a406da4da1f3982c2525f6898fbd969b876ac0e4979ea0c1aeb842",
+      "backup_sha256": "bc4478e0100bab03d2dc8580cbf6a8e29176b7fdbc690795a745a732551d7123",
+      "backup_matches_before": true,
+      "changed": true
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "before_sha256": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7",
+      "after_sha256": "668fd8422ff90c0e365c6fb5a3d468e2e02121dd3e9819bd0a6281609bf9bac8",
+      "backup_sha256": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7",
+      "backup_matches_before": true,
+      "changed": true
+    },
+    {
+      "path": "app/main.py",
+      "before_sha256": "40debcba1d369cc25838ae7ac46cb145a845d0e7170f3a25c016fb867e24743c",
+      "after_sha256": "020aa9b079e989c24341308a415081ead69e1da35bfa812dc9ed4e4012d6d6a1",
+      "backup_sha256": "40debcba1d369cc25838ae7ac46cb145a845d0e7170f3a25c016fb867e24743c",
+      "backup_matches_before": true,
+      "changed": true
+    },
+    {
+      "path": "app/core/config.py",
+      "before_sha256": "996bfaed79b989576ec31dd10f9d94f5bc419466dc67e4da5c54f7666e3af5b6",
+      "after_sha256": "5f928d799bf24126adeff3c14630182efc4c472454bb9651a167ec7083299f71",
+      "backup_sha256": "996bfaed79b989576ec31dd10f9d94f5bc419466dc67e4da5c54f7666e3af5b6",
+      "backup_matches_before": true,
+      "changed": true
+    },
+    {
+      "path": "app/knowledge/engine.py",
+      "before_sha256": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b",
+      "after_sha256": "e69de06d5b304475082a035407bd5faadc5a8c7078c4f2faec73082b7bd60c83",
+      "backup_sha256": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b",
+      "backup_matches_before": true,
+      "changed": true
+    },
+    {
+      "path": "app/api/routes.py",
+      "before_sha256": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4",
+      "after_sha256": "336ca3c55e85b33e604f8494e4ceb89221dc0d8c79a0e98db550634bd59e1b51",
+      "backup_sha256": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4",
+      "backup_matches_before": true,
+      "changed": true
+    },
+    {
+      "path": "tests/test_configuration_integration.py",
+      "before_sha256": "2becf4883d6eccc9cd364c64a7b9be1638f5a8cd04136d8d4229e8399f2d680b",
+      "after_sha256": "d6ec528ae6f143dc918babecda92013415a5580a9c75ee9161e4b0532cbb3493",
+      "backup_sha256": "2becf4883d6eccc9cd364c64a7b9be1638f5a8cd04136d8d4229e8399f2d680b",
+      "backup_matches_before": true,
+      "changed": true
+    },
+    {
+      "path": "tests/test_model_router_configuration.py",
+      "before_sha256": "b0ce4e26bec018425b8965fefb616c2bb5f001cc7b7990d9c94064c744397f61",
+      "after_sha256": "11a1029ee001bbbb9ed88d3c1b160e79a44aa03c03a78096fed52f826593685a",
+      "backup_sha256": "b0ce4e26bec018425b8965fefb616c2bb5f001cc7b7990d9c94064c744397f61",
+      "backup_matches_before": true,
+      "changed": true
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "before_sha256": "3d18304750d9b43e6cf33a19f5f1d73ea5b05bf2b22d9686deecd6fd4371911d",
+      "after_sha256": "e9975ad02120cbe5d1acec67c0b92b4b32ecb895cddd17a950c48fe944107840",
+      "backup_sha256": "3d18304750d9b43e6cf33a19f5f1d73ea5b05bf2b22d9686deecd6fd4371911d",
+      "backup_matches_before": true,
+      "changed": true
+    },
+    {
+      "path": "app/models/ollama.py",
+      "before_sha256": "73f4f268d655ee425b25b0a4b399bd4c503c773d1a7d5949831e2fbb34ad904b",
+      "after_sha256": "a066e2930aa2d30be82e2b54a1a159a2406f75090c85121dec615af043126892",
+      "backup_sha256": "73f4f268d655ee425b25b0a4b399bd4c503c773d1a7d5949831e2fbb34ad904b",
+      "backup_matches_before": true,
+      "changed": true
+    }
+  ],
+  "evidence_sha256": {
+    ".dev/checkpoints/r1-local-001-20261007/BASELINE.json": "172eea85a5cbadcd57c1af0f3cfc33cc8285067180a751965e2c20e51ce8500a",
+    ".dev/checkpoints/r1-local-001-20261007/before.xml": "0df1c2b3bfd372a73b8721c0199dae6a5dfe9e58993e2de9192a3f2e9c004b25",
+    ".dev/checkpoints/r1-local-001-20261007/after.xml": "0ae010925a8d39e793fededd30d22f602ff32729d0de6bd0ec1e206aa93ae447",
+    ".dev/checkpoints/r1-local-001-20261007/IMPLEMENTATION.diff": "a73df53ee3a5f0894e56017368c5225162b01b008571fc1e9c07578c7ea3086a",
+    ".dev/checkpoints/r1-local-001-20261007/VERIFICATION.json": "df5d510fa0e7a2a49ea246ce610f390555bd22db33ee6039a10efae415cf9047",
+    ".dev/checkpoints/r1-local-001-20261007/REPORT.md": "aa0c8c0b7da8bff02e5b1dfa199512027de1346c291139a632fde3897ea19441"
+  },
+  "tests": {
+    "baseline_passed": 77,
+    "post_passed": 80,
+    "post_failed": 2,
+    "public_regression": "NOT_RUN_ASSEMBLY_IMPORT_FAILURE"
+  },
+  "protected_state": {
+    "unchanged_out_of_scope": 347,
+    "unexpected_differences": [],
+    "known_missing_sidecars": [
+      "data/knowledge/nusantara_knowledge.db-shm",
+      "data/knowledge/nusantara_knowledge.db-wal"
+    ],
+    "sidecars_recreated": false,
+    "protected_baseline_rewritten": false
+  },
+  "rollback": {
+    "status": "NOT_PERFORMED",
+    "source_backups": ".dev\\checkpoints\\r1-local-001-20261007",
+    "boundary": "Only owned patches after checking after-hashes; preserve inherited changes"
+  },
+  "graphify": "STALE_UPDATE_NOT_RUN_DUE_STOP",
+  "risks_and_gaps": [
+    "API assembly/public regression unverified",
+    "Governance regression pending",
+    "Graph update pending",
+    "Live configuration/runtime/model/index identity not verified",
+    "Historical sidecar safe rebaseline CONDITIONAL, not performed"
+  ],
+  "actual_model": null,
+  "identity_status": "NOT_VERIFIED",
+  "next_action": "WAIT_FOR_OWNER_DECISION_ON_TWO_TEST_FIXTURE_CORRECTIONS_AND_R1_REVALIDATION",
+  "resume_instruction": "Do not repeat 77-test baseline or reapply implementation. Verify these after-hashes first; keep failure evidence. Only after explicit decision correct approved integration test fixtures and continue outstanding R1 validation. Do not start R2."
+}

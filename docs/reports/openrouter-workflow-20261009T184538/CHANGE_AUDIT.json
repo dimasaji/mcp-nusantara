@@ -1,0 +1,102 @@
+{
+  "timestamp_utc": "2026-10-09T12:02:58.941682+00:00",
+  "files": [
+    {
+      "path": "app/api/routes.py",
+      "before_sha256": "f5e44750e42775a0d0d94ec2c57ad23636633e8ca2e26193f4270eba368e05d6",
+      "after_sha256": "845b8846fabb491b7f43d11d5fad4d8c9694f61e1b1576deeb7188b22bea8402",
+      "kind": "MODIFIED"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "before_sha256": "667df5909d0b9957816ce99e60933fa2484544cf4d28242cc0bdc18ff4fe3f88",
+      "after_sha256": "41223ef95c963e2c243dd30dc176e4fd05cb1c566c58577d1ca623e9979c09ae",
+      "kind": "MODIFIED"
+    },
+    {
+      "path": "app/hermes/agent.py",
+      "before_sha256": "2b119c94e8bfb001c2450e9450a4703c2aa74c9e75d878835a7d72eee9b7a767",
+      "after_sha256": "5a4e24af50205beaafba6ba6e65d18fa8215d7754a2adbc233998d4be0580072",
+      "kind": "MODIFIED"
+    },
+    {
+      "path": "app/models/base.py",
+      "before_sha256": "ebce1420ea29cc2604fa552bc855568755b5190fe53ca1c090fb20179599136e",
+      "after_sha256": "2dc96b087ae8239d3238894878782fefc7b0cfbc045f5058680f5bb833601f6c",
+      "kind": "MODIFIED"
+    },
+    {
+      "path": "pyproject.toml",
+      "before_sha256": "b0284a11317a3a5688350659e21f32c5bb223aaca915df2009a8e0af9b9d201c",
+      "after_sha256": "219df746c70a6d08a005fac894b98a15862d4830d9087b8276564d28167b6595",
+      "kind": "MODIFIED"
+    },
+    {
+      "path": "tests/test_provider_identity.py",
+      "before_sha256": "f4ddb479a0619f72170544bbee8a3c8207911bf9589bffb34f075bb855d1e4d0",
+      "after_sha256": "3b03d33d8dcae71cad9816c13fcd30bcca2dc7f925a0eabb66f6e886fa2c1258",
+      "kind": "MODIFIED"
+    },
+    {
+      "path": "app/models/openrouter.py",
+      "after_sha256": "a7897460a7cf1261187655ab36ea70a6c9ac53942bfd893e61d31e00ed2318bc",
+      "kind": "CREATED"
+    },
+    {
+      "path": "app/workflow/v1_langgraph.py",
+      "after_sha256": "ae587482c4812f7237a0aa7ae5ea74d2e46c7e30e6408439a8eee4763a898388",
+      "kind": "CREATED"
+    },
+    {
+      "path": "tests/test_openrouter_provider.py",
+      "after_sha256": "460a7f6742f54a8fe2f1340c2fe9332a88751950bf1ad9e37cca9bc62fab764b",
+      "kind": "CREATED"
+    },
+    {
+      "path": "tests/test_v1_langgraph.py",
+      "after_sha256": "329d7f7e4d7dfb22d96ce775e1cf1d75c91e8385593fda437d93332a776f7878",
+      "kind": "CREATED"
+    },
+    {
+      "path": "docs/OPENROUTER_LANGGRAPH.md",
+      "after_sha256": "6a221c57ad6ea9602d91a26262dcafba3dc28eb89f943a2e7c589c7271a7d607",
+      "kind": "CREATED"
+    }
+  ],
+  "fingerprint": "sha256:11ced101d161a692fc7bcce289465e2d83b6462b6f9d282a79b3d056a4b1909f",
+  "fingerprint_scope": [
+    [
+      "app/api/routes.py",
+      "845b8846fabb491b7f43d11d5fad4d8c9694f61e1b1576deeb7188b22bea8402"
+    ],
+    [
+      "app/core/nusantara_config.py",
+      "41223ef95c963e2c243dd30dc176e4fd05cb1c566c58577d1ca623e9979c09ae"
+    ],
+    [
+      "app/hermes/agent.py",
+      "5a4e24af50205beaafba6ba6e65d18fa8215d7754a2adbc233998d4be0580072"
+    ],
+    [
+      "app/models/base.py",
+      "2dc96b087ae8239d3238894878782fefc7b0cfbc045f5058680f5bb833601f6c"
+    ],
+    [
+      "app/models/openrouter.py",
+      "a7897460a7cf1261187655ab36ea70a6c9ac53942bfd893e61d31e00ed2318bc"
+    ],
+    [
+      "app/workflow/v1_langgraph.py",
+      "ae587482c4812f7237a0aa7ae5ea74d2e46c7e30e6408439a8eee4763a898388"
+    ],
+    [
+      "pyproject.toml",
+      "219df746c70a6d08a005fac894b98a15862d4830d9087b8276564d28167b6595"
+    ]
+  ],
+  "note": "Scoped source bytes, not full code closure or user-runtime identity.",
+  "preservation": "Existing baseline files retained; scoped patch computed against pre-task snapshots, not HEAD.",
+  "active_database_and_sidecars": "NOT_ACCESSED_OR_MODIFIED_BY_TASK",
+  "runtime_operations": "NONE",
+  "v2_changes": "NONE"
+}

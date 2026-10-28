@@ -1,0 +1,10 @@
+x = 1
+# harmless padding
+# harmless padding
+# harmless padding
+# harmless padding
+# harmless padding
+# harmless padding
+# harmless padding
+# harmless padding
+print("synthetic later behavior")

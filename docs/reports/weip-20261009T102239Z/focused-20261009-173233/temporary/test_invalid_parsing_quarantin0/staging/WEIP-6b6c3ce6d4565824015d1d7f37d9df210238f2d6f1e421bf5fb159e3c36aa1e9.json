@@ -1,0 +1,53 @@
+{
+  "document_id": "WEIP-6b6c3ce6d4565824015d1d7f37d9df210238f2d6f1e421bf5fb159e3c36aa1e9",
+  "source_id": "fixture",
+  "original_url": "https://example.org/allowed/doc",
+  "final_url": "https://example.org/allowed/doc",
+  "redirects": [],
+  "retrieved_at": "2026-10-09T10:32:33.623585+00:00",
+  "content_type": "application/json",
+  "content_hash": "40b5cafe045b9c9e31a1c3fdcfbc89f934906ff06a6276b55c2a0e517be21655",
+  "version": "sha256:40b5cafe045b9c9e31a1c3fdcfbc89f934906ff06a6276b55c2a0e517be21655",
+  "version_conflict": false,
+  "metadata": {
+    "title": "Fixture",
+    "publisher": "Fixture Publisher",
+    "agency": "Fixture Agency",
+    "domain": "example.org",
+    "jurisdiction": "FIXTURE_ONLY",
+    "service": "fixture-service",
+    "publication_date": null,
+    "effective_date": null,
+    "expiry_date": null,
+    "risk": "HIGH",
+    "source_verification_status": "UNVERIFIED",
+    "source_verification_reference": null,
+    "registry_fingerprint": "b62f459276e0e7d7599fde40d39c74773d761182bd015b40441c866f2f503501",
+    "validation_status": "PENDING",
+    "chunk_reference": "FULL_PARSED_DOCUMENT"
+  },
+  "text": null,
+  "status": "QUARANTINED",
+  "audit": [
+    {
+      "at": "2026-10-09T10:32:33.625460+00:00",
+      "from": "DISCOVERED",
+      "to": "FETCHED",
+      "reason": "FETCH_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "",
+      "content_hash": "40b5cafe045b9c9e31a1c3fdcfbc89f934906ff06a6276b55c2a0e517be21655",
+      "event_hash": "ee1d11ec76fbe1a95471e6089480e70ff2f844485b3e25490e8a07b2a9d9fa73"
+    },
+    {
+      "at": "2026-10-09T10:32:33.627356+00:00",
+      "from": "FETCHED",
+      "to": "QUARANTINED",
+      "reason": "PARSE_UNSAFE_OR_UNAVAILABLE",
+      "actor": "pipeline",
+      "previous_hash": "ee1d11ec76fbe1a95471e6089480e70ff2f844485b3e25490e8a07b2a9d9fa73",
+      "content_hash": "40b5cafe045b9c9e31a1c3fdcfbc89f934906ff06a6276b55c2a0e517be21655",
+      "event_hash": "b202d596ed50cad5078521603a4f5795d0b0cf4f6101a1e256c96e37bfa44962"
+    }
+  ]
+}

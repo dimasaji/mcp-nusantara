@@ -1,0 +1,11 @@
+Command: .\.venv\Scripts\python.exe -B -c "import faulthandler,socket; faulthandler.dump_traceback_later(5); print('before',flush=True); a,b=socket.socketpair(); print('socketpair-ok',flush=True); a.close(); b.close()"
+Environment: PYTHONFAULTHANDLER=1
+Captured output:
+Failed to find real location of C:\Users\dmaza\AppData\Local\Programs\Python\Python313\python.exe
+before
+Timeout (0:00:05)!
+Current thread (most recent call first):
+  File "C:\Users\dmaza\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 295 in accept
+  File "C:\Users\dmaza\AppData\Local\Programs\Python\Python313\Lib\socket.py", line 627 in _fallback_socketpair
+  File "<string>", line 1 in <module>
+Termination: manually interrupted after traceback; exit code 1. No network service was contacted and no pytest result was produced.

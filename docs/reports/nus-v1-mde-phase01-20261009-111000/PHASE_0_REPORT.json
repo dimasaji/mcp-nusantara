@@ -1,0 +1,57 @@
+{
+  "contract_id": "NUS-V1-MDE-WORK-CONTRACT-001",
+  "timestamp": "2026-10-09T11:13:09.613935+07:00",
+  "repository": "C:\\Users\\dmaza\\mcp-starter",
+  "branch": "codex/fullroot-control-20261007",
+  "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "source_fingerprint": "sha256:9916a16a8411c1d892157fad11e3bfdf4200efe4e20a259ec23dd9de74b90fcd",
+  "initial_condition": "Existing user changes retained; V1HOLD/V2DEFERRED; active PID33160 source snapshot b7455 vs disk9916",
+  "final_condition": "No source/config/data patch or process replacement. New evidence only.",
+  "tests_this_run": {
+    "behavioral": "NOT_RUN",
+    "static_ast": "No syntax parse errors in inspected V1 module inventory; static evidence only",
+    "runtime": "Safe GET health/OpenAPI/root/Console/model routes/attestation observations only; no POST chat/provider/model-selection",
+    "reason_not_running_behavioral": "This first execution audits target/source/runtime and prepares review. Current tests use mocked/fixture paths and cannot close native, server session ownership or memory-policy gates. No new application import/startup or conversation memory writes authorized."
+  },
+  "historical_tests": "REGRESSION.json 2026-10-09T10:29:21+07 targeted48/backend257/frontend10 with fixture/guard limits; not rerun and not Phase1 PASS",
+  "changes": {
+    "modified": [],
+    "removed": [],
+    "added": []
+  },
+  "verification_limits": [
+    "Full loaded closure, native RAG/worker and real model execution not newly verified",
+    "Pre-existing inaccessible temp directories preserved as audit limits",
+    "Graph query not run because cache changes prohibited",
+    "No approved official oracle/filter or V1 memory policy invented"
+  ],
+  "approvals_required": [
+    "Reviewed scoped source changes",
+    "User/session/memory policy decisions",
+    "Native/provider/memory-mutating tests and operational effects",
+    "Runtime replacement/deployment/rollback after verified prerequisites"
+  ],
+  "phase": 0,
+  "status": "PARTIAL",
+  "results": {
+    "baseline": "Captured HEAD/branch/Git status/source fingerprint",
+    "module_inventory": 206,
+    "source_route_declarations": 23,
+    "test_files": 63,
+    "frontend_modules": 21,
+    "contracts": 9,
+    "source_call_graph": "HERMES_CALL_GRAPH.json",
+    "configuration_resources_dependencies": "RESOURCE_INVENTORY.json",
+    "historical_acceptance_reports": "HISTORICAL_EVIDENCE_REFERENCES.json"
+  },
+  "open": "Inventory available; native construction/execution, full loaded/dependency closure and runtime alignment remain NOT_VERIFIED/BLOCKED. No phase completion claimed from static names alone.",
+  "evidence": [
+    "BASELINE.json",
+    "ARCHITECTURE_INVENTORY.json",
+    "RESOURCE_INVENTORY.json",
+    "HERMES_CALL_GRAPH.json",
+    "RUNTIME_OBSERVATIONS.json",
+    "HISTORICAL_EVIDENCE_REFERENCES.json",
+    "CHANGE_AUDIT.json"
+  ]
+}

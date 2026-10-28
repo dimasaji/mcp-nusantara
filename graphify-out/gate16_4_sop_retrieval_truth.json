@@ -1,0 +1,164 @@
+{
+  "gate": "16.4",
+  "name": "SOP Retrieval Truth",
+  "status": "PASS",
+  "timestamp": "2026-10-05T13:49:51.396014",
+  "database": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\production_knowledge.db",
+  "tables": [
+    "documents",
+    "chunks",
+    "chunks_fts",
+    "chunks_fts_data",
+    "chunks_fts_idx",
+    "chunks_fts_content",
+    "chunks_fts_docsize",
+    "chunks_fts_config",
+    "ingestion_log",
+    "sqlite_sequence",
+    "source_registry",
+    "chunk_embeddings",
+    "embedding_runs"
+  ],
+  "candidate_tables": [
+    "documents",
+    "chunks",
+    "chunks_fts",
+    "chunks_fts_data",
+    "chunks_fts_idx",
+    "chunks_fts_content",
+    "chunks_fts_docsize",
+    "chunks_fts_config",
+    "chunk_embeddings",
+    "embedding_runs"
+  ],
+  "queries": [
+    {
+      "query": "KTP-el",
+      "hit_count": 20,
+      "hits": [
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 1,
+          "preview": "============================================================\nNUSANTARA AI - TEST KNOWLEDGE FIXTURE\n============================================================\nIMPORTANT:\nDokumen ini adalah DATA PENGUJIAN ENGINE.\nDokumen ini BUKAN sumber resmi persyaratan pelayanan.\nJangan gunakan isi file ini sebag"
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 3,
+          "preview": "# KTP-el ? Knowledge Resmi untuk Pengujian Engine\nDOCUMENT_ID: KTP-EL-OFFICIAL-TEST-001\nTITLE: Informasi KTP-el\nSERVICE: ktp_el\nCONTENT_TYPE: requirements\nSOURCE_STATUS: official\nAUTHORITY: official\nSOURCE_TYPE: government\nSOURCE_NAME: Pemerintah\nVERIFIED: true\nCatatan:\nDokumen ini adalah sumber res"
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 4,
+          "preview": "---\nDOCUMENT_ID: TNG-KTPEL-001\nTITLE: Perekaman KTP-el Pemula - Dukcapil Nyaba Kelurahan\nSERVICE: ktp_el\nCONTENT_TYPE: requirements\nSOURCE_STATUS: official\nAUTHORITY: official\nSOURCE_TYPE: government\nSOURCE_NAME: tangerangkota.go.id\nSOURCE_URL: https://disdukcapil.tangerangkota.go.id/berita/dukcapil"
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 6,
+          "preview": "->\n-->\n-->\n-->\n-->\n\\\nHome\nBerita\nDUKCAPIL NYABA KELURAHAN DESEMBER 2025\n03 Dec 2025 09:04\n-->\n-->\n-->\n-->\n-->\n-->\n-->\nfeatured_image) ?>\" />\nfeatured_image) ?>\" />\n-->\nfeatured_image) ?>\" alt=\"featured_image\" style=\"max-height: 500px; width:100%;\"> -->\n-->\nDUKCAPIL NYABA KELURAHAN\nMelayani : Akta Ke"
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 7,
+          "preview": "y buku nikah/akta perkawinan/akta cerai jika perubahan status perkawinan - Foto copy surat keterangan kerja jika perubahan jenis pekerjaan - Foto copy ijazah jika perubahan pendidikan - Foto copy surat keterangan pemuka agama jika perubahan agama Persyaratan perekaman KTP-el pemula - Fotocopy kartu "
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 8,
+          "preview": "omor Pengaduan Pelayanan\nNomor Pengaduan Layanan Dokumen Kependudukan dan Pencatatan Sipil Kota Tangerang &#8230; -->\n03 Dec 2025 09:04 Masa berlaku KTP elektronik&#8230;\nUntuk KTP-El yang kalian punya&#8230;&#8230; -->\n03 Dec 2025 09:04 Pelayanan Kependudukan pada peringatan&#8230;\nDinas Kependuduk"
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 10,
+          "preview": "---\nDOCUMENT_ID: TNG-KTPEL-002\nTITLE: Warga Kota Tangerang Bisa Buat KTP-el Dimana Saja Lewat Sobat Dukcapil\nSERVICE: ktp_el\nCONTENT_TYPE: requirements_and_service\nSOURCE_STATUS: official\nAUTHORITY: official\nSOURCE_TYPE: government\nSOURCE_NAME: tangerangkota.go.id\nSOURCE_URL: https://www.tangerangko"
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 11,
+          "preview": "aja-lewat-sobat-dukcapil\n## Isi Sumber\nWarga Kota Tangerang Bisa Buat KTP-el Dimana Saja Lewat Sobat Dukcapil\nJumat, 02 Oktober 2026\nTangerang, o C\ntangerangkota .go.id\nWebsite Resmi Pemerintah Kota Tangerang\nHome\nPimpinan\nPendidikan\nKesehatan\nPembangunan\nEkonomi\nWisata & Kuliner\nKewilayahan\nSerba S"
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 12,
+          "preview": "kat Kota Tangerang kini tak perlu khawatir dalam mengurus dokumen KTP-el. Pasalnya, masyarakat dapat mengurus KTP-el dimana saja lewat online yakni Sobat Dukcapil Kota Tangerang.\n&ldquo;Sobat Dukcapil hadir sejak 2021 dan telah memudahkan ratusan ribu orang dalam kepengurusan administrasi kependuduk"
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 13,
+          "preview": "rtakan Kartu Keluarga, serta Akta Kelahiran/Ijazah terakhir. Sedangkan bagi permohonan cetak ulang KTP-el karena rusak/hilang, dapat menyertakan kartu keluarga, surat keterangan kehilangan dari kantor kepolisian (untuk yg KTP-nya hilang), dan bagi yang rusak cukup kartu keluarga dan KTP yang rusak.\n"
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "dokumen identitas penduduk",
+      "hit_count": 0,
+      "hits": [],
+      "status": "FAIL"
+    },
+    {
+      "query": "akta kematian",
+      "hit_count": 6,
+      "hits": [
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 13,
+          "preview": "rtakan Kartu Keluarga, serta Akta Kelahiran/Ijazah terakhir. Sedangkan bagi permohonan cetak ulang KTP-el karena rusak/hilang, dapat menyertakan kartu keluarga, surat keterangan kehilangan dari kantor kepolisian (untuk yg KTP-nya hilang), dan bagi yang rusak cukup kartu keluarga dan KTP yang rusak.\n"
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 14,
+          "preview": "ota Tangerang (SKDWNI), Kartu Keluarga, Akta Kelahiran, Akta Kematian, Akta Perkawinan, Akta Pengesahan Anak, hingga Akta Pengangkatan Anak. (dsw)\nBaca Juga:\nBaca Juga:\nTangerang Kota\nBerita Serupa\nBelajar Tak Hanya di Kelas, TK Islam Gunung Jati Kota Tangerang Kenalkan Jual-Beli Lewat Gunjata Kids "
+        },
+        {
+          "table": "chunks",
+          "column": "text",
+          "rowid": 26,
+          "preview": "(SKPWNI) Surat Keterangan Pindah Warga Negara Asing (SKPWNA) Surat Keterangan Tinggal Tetap (SKTT) Warga Negara Asing (WNA) Surat Keterangan Pindah Luar Negeri (SKPLN) Fotocopy KTP-el yang sudah dilegalisir Surat Keterangan Datang Warga Negara Indonesia (SKDWNI) Surat Keterangan Datang Warga Negara "
+        },
+        {
+          "table": "chunks_fts",
+          "column": "text",
+          "rowid": 13,
+          "preview": "rtakan Kartu Keluarga, serta Akta Kelahiran/Ijazah terakhir. Sedangkan bagi permohonan cetak ulang KTP-el karena rusak/hilang, dapat menyertakan kartu keluarga, surat keterangan kehilangan dari kantor kepolisian (untuk yg KTP-nya hilang), dan bagi yang rusak cukup kartu keluarga dan KTP yang rusak.\n"
+        },
+        {
+          "table": "chunks_fts",
+          "column": "text",
+          "rowid": 14,
+          "preview": "ota Tangerang (SKDWNI), Kartu Keluarga, Akta Kelahiran, Akta Kematian, Akta Perkawinan, Akta Pengesahan Anak, hingga Akta Pengangkatan Anak. (dsw)\nBaca Juga:\nBaca Juga:\nTangerang Kota\nBerita Serupa\nBelajar Tak Hanya di Kelas, TK Islam Gunung Jati Kota Tangerang Kenalkan Jual-Beli Lewat Gunjata Kids "
+        },
+        {
+          "table": "chunks_fts",
+          "column": "text",
+          "rowid": 26,
+          "preview": "(SKPWNI) Surat Keterangan Pindah Warga Negara Asing (SKPWNA) Surat Keterangan Tinggal Tetap (SKTT) Warga Negara Asing (WNA) Surat Keterangan Pindah Luar Negeri (SKPLN) Fotocopy KTP-el yang sudah dilegalisir Surat Keterangan Datang Warga Negara Indonesia (SKDWNI) Surat Keterangan Datang Warga Negara "
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "informasi data penduduk",
+      "hit_count": 0,
+      "hits": [],
+      "status": "FAIL"
+    }
+  ],
+  "contract": {
+    "database_required": true,
+    "retrieval_hits_required": true,
+    "minimum_passing_queries": 2,
+    "llm_required": false
+  }
+}

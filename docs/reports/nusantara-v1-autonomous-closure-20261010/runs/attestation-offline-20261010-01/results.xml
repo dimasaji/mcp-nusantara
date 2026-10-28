@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="2.384" timestamp="2026-10-10T16:25:19.982594+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="test_runtime_attestation" name="test_duplicate_endpoint_registration_is_rejected" time="0.004" /><testcase classname="test_runtime_attestation" name="test_main_change_only_installs_attestation_and_preserves_existing_handlers" time="0.004"><failure message="assert ['AsyncFuncti...=False))])])'] == ['AsyncFuncti...=False))])])']&#10;  &#10;  At index 3 diff: &quot;AsyncFunctionDef(name='dashboard', args=arguments(), body=[If(test=Name(id='_READ_ONLY_EVIDENCE', ctx=Load()), body=[ImportFrom(module='fastapi', names=[alias(name='HTTPException')], level=0), Raise(exc=Call(func=Name(id='HTTPException', ctx=Load()), args=[Constant(value=404), Constant(value='Legacy runtime UI is unavailable in evidence-only mode')]))]), Return(value=Call(func=Name(id='FileResponse', ctx=Load()), args=[Name(id='UI_FILE', ctx=Load())]))], decorator_list=[Call(func=Attribute(value=Name(id='app', ctx=Load()), attr='get', ctx=Load()), args...&#10;  &#10;  ...Full output truncated (2 lines hidden), use '-vv' to show">def test_main_change_only_installs_attestation_and_preserves_existing_handlers():
+        root = Path(__file__).parents[1]
+        before = ast.parse((root/'docs/reports/r2-a7-runtime-attestation-20261008/main.py.before').read_text(encoding='utf-8-sig'))
+        after = ast.parse((root/'app/main.py').read_text(encoding='utf-8-sig'))
+    
+        def original_nodes(module):
+            # Authorized composition/profile changes; original handler semantics stay intact.
+            functions = [node for node in module.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))]
+            for node in functions:
+                if node.name == 'request_id_middleware':
+                    for statement in node.body:
+                        if (isinstance(statement, ast.Assign) and isinstance(statement.value, ast.IfExp)
+                                and any(isinstance(target, ast.Name) and target.id == 'incoming'
+                                        for target in statement.targets)):
+                            statement.value = statement.value.orelse
+            return [ast.dump(node) for node in functions]
+    
+&gt;       assert original_nodes(before) == original_nodes(after)
+E       assert ['AsyncFuncti...=False))])])'] == ['AsyncFuncti...=False))])])']
+E         
+E         At index 3 diff: "AsyncFunctionDef(name='dashboard', args=arguments(), body=[If(test=Name(id='_READ_ONLY_EVIDENCE', ctx=Load()), body=[ImportFrom(module='fastapi', names=[alias(name='HTTPException')], level=0), Raise(exc=Call(func=Name(id='HTTPException', ctx=Load()), args=[Constant(value=404), Constant(value='Legacy runtime UI is unavailable in evidence-only mode')]))]), Return(value=Call(func=Name(id='FileResponse', ctx=Load()), args=[Name(id='UI_FILE', ctx=Load())]))], decorator_list=[Call(func=Attribute(value=Name(id='app', ctx=Load()), attr='get', ctx=Load()), args...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_runtime_attestation.py:200: AssertionError</failure></testcase></testsuite></testsuites>

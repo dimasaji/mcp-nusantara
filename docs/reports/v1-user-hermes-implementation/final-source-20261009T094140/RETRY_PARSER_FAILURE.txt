@@ -1,0 +1,5 @@
+The first retry command was rejected by PowerShell before Python executed:
+ParserError: Unexpected token ':' in expression or statement.
+The command attempted code.replace on a quoted Python dict literal using incompatible PowerShell escaping.
+No source/test/configuration changes and no HTTP request occurred from this failed command.
+A standalone evidence-only retry_request.py then executed the existing request contract successfully.

@@ -1,0 +1,36 @@
+{
+  "stage": "POST_PHASE10_CA01_STATIC_TRIAGE",
+  "status": "PASS_SCOPED_STATIC",
+  "completed_at": "2026-10-06T12:15:18.821470+00:00",
+  "authorization": "User: Lanjutkan; continue Phase10 backlog within existing scope",
+  "ca01_overall_status": "PARTIAL",
+  "unknown_triage_reviewed": 46,
+  "unknown_triage_unreviewed": 0,
+  "inventory_runtime_completeness_proven": false,
+  "consumer_audit": {
+    "app_files": 192,
+    "parse_errors": 0,
+    "settings_access_nodes": 16,
+    "snapshot_parameter_access_nodes": 42,
+    "env_calls": 8
+  },
+  "source_build_id": "sha256:487ace8eb2a8ba4d8c979fdc7728cefe7802eb0b3f8f01d3f6462d9c83e9492a",
+  "protected_files_checked": 296,
+  "unexpected_source_drift": 0,
+  "source_changes": false,
+  "test_changes": false,
+  "new_suite_runs": 0,
+  "evidence": [
+    "reports/configuration/closure-ca01/UNKNOWN_TRIAGE_20261006.json",
+    "reports/configuration/closure-ca01/CONSUMER_LINKS_20261006.json",
+    "reports/configuration/CONFIGURATION_CA01_DISCOVERY_CLOSURE_20261006.md"
+  ],
+  "evidence_sha256": {
+    "reports/configuration/closure-ca01/UNKNOWN_TRIAGE_20261006.json": "a53dd04890a6abd8364689a06562f8b6ecdb42449ebb750e19311277e5309ce2",
+    "reports/configuration/closure-ca01/CONSUMER_LINKS_20261006.json": "a4f18b544e33a0a44df534c8f5b1bdc496bb0ee8f50cb255d2165940aff88970",
+    "reports/configuration/CONFIGURATION_CA01_DISCOVERY_CLOSURE_20261006.md": "fc742f4f7b300f1dcbf5a4e8e861778c0270ad72f96677c45c4b269584e481ce"
+  },
+  "architecture_dod": "NOT_COMPLETE",
+  "overall_v1_acceptance": "FAIL/HOLD",
+  "next_step": "Prepare concrete composition-root/precedence and consumed-field design from new consumer evidence; no production/API/CC01/security-policy/schema change without authorized scope."
+}

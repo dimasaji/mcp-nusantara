@@ -1,0 +1,25 @@
+{
+  "contract": "NUS-MDE-LC-20261008-DECIMAL-COMMA",
+  "verified_at": "2026-10-08T20:54:36.174703+07:00",
+  "status": "BASELINE_ATTRIBUTED_PRE_EXISTING",
+  "pre_patch_timestamp": "2026-10-08T20:51:17.7393722+07:00",
+  "post_patch_audit_timestamp": "2026-10-08T20:53:00.378516+07:00",
+  "patch_order_evidence": "Existing tool history: CURRENT_BEFORE and BASELINE_CHECK were generated and returned before apply_patch; pre-patch source hashes match preserved .before snapshots.",
+  "baseline_changes": [
+    "graphify-out/cache/last_query_stamp"
+  ],
+  "cache_hash_parent": "683CB775C254121B39CF9B0FA0BECB4D2361FC0EA9A5B5495F24E99D4E43E8DA",
+  "cache_hash_pre_patch": "BD057F60EFDAC1EC6764289F8573CC356B8179215904756EE65BEE6E382D1423",
+  "cache_hash_post_patch": "BD057F60EFDAC1EC6764289F8573CC356B8179215904756EE65BEE6E382D1423",
+  "cache_attribution": "Earlier graph query cache side effect, pre-existing relative to the LC-DECIMAL-001 patch; not attributed to source/test patch.",
+  "causal_patch_changes": [
+    "app/devcore/grounding.py",
+    "tests/v2/test_devcore_grounding_response.py"
+  ],
+  "backups_match_pre_patch": true,
+  "unauthorized_source_changes": 0,
+  "unauthorized_test_changes": 0,
+  "unexpected_changes_since_stop": [],
+  "scope_limitation": "Recorded 3493-file inventory and existing history; no whole-filesystem attribution claim",
+  "c4_authorized_by_user_condition": true
+}

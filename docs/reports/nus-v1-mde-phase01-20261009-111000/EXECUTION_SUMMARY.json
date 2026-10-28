@@ -1,0 +1,103 @@
+{
+  "contract_id": "NUS-V1-MDE-WORK-CONTRACT-001",
+  "timestamp": "2026-10-09T11:13:09.621404+07:00",
+  "status": "REVIEW_REQUIRED",
+  "phase0": "PARTIAL",
+  "phase1": "BLOCKED",
+  "v1_acceptance": "HOLD",
+  "v2": "DEFERRED",
+  "runtime_pid_unchanged": true,
+  "scoped_preservation": "PASS_SCOPED",
+  "repository": "C:\\Users\\dmaza\\mcp-starter",
+  "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "source_fingerprint": "sha256:9916a16a8411c1d892157fad11e3bfdf4200efe4e20a259ec23dd9de74b90fcd",
+  "runtime_import_source_snapshot": "sha256:b7455ef0823df00d73a576147c6331ed69f9b74c145de39281819c3cad78d27f",
+  "runtime_identity_limit": "Non-transitive code objects; excludes globals, closures, assets and provider dependencies",
+  "actual_route_methods": {
+    "/v1/chat": {
+      "method": "POST",
+      "registered_in_active_openapi": true
+    },
+    "/v1/control-plane/model-status": {
+      "method": "GET",
+      "registered_in_active_openapi": false
+    },
+    "/v1/control-plane/models": {
+      "method": "GET",
+      "registered_in_active_openapi": false
+    },
+    "/v1/control-plane/model-selection": {
+      "method": "POST",
+      "registered_in_active_openapi": false
+    }
+  },
+  "new_tests": "NOT_RUN; timestamped GET observations and static AST checks only. No historical pass presented as fresh.",
+  "commands_executed": [
+    "& 'C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe' -B 'docs/reports/nus-v1-mde-phase01-20261009-111000/audit_phase01.py'",
+    "& 'C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe' -B 'docs/reports/nus-v1-mde-phase01-20261009-111000/finalize.py'",
+    "git.exe --no-optional-locks rev-parse HEAD; branch --show-current; status --short (before/after)",
+    "Get-CimInstance Win32_Process -Filter ProcessId=33160; safe identity fields/expected-launch match only",
+    "Get-NetTCPConnection -LocalPort8000 -State Listen"
+  ],
+  "source_reads": "Source/test/contract paths, symbols and hashes retained in ARCHITECTURE_INVENTORY.json; complete GET list retained in RUNTIME_OBSERVATIONS.json; executable audit logic retained in audit_phase01.py.",
+  "evidence_references": [
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\ARCHITECTURE_INVENTORY.json",
+      "sha256": "5d85962ba5c08f9435084d3f72b4da4bf4ad64e186056e16a083d6c9f46619e2"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\BASELINE.json",
+      "sha256": "700e45242ac8756c56d3690d73fd6bb20844bc8ea0e9da2fe134e71e01e13931"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\CHANGE_AUDIT.json",
+      "sha256": "03f61f95bd22bf27008e4b971688fe433dae5742bf4e5c0a53caf8998b4ff7a4"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\CONSOLE_USER_MATRIX.json",
+      "sha256": "99d6f1828f79cc18a9146fc5959cac5bc512dc8e5c1e515d1900034fe47a860e"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\CONTRACT_REFERENCE.json",
+      "sha256": "b51ba0d6f808e7547aaaffc756c0c25a8183e39eebd0516408274186d0236eee"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\HERMES_CALL_GRAPH.json",
+      "sha256": "f7e94dc4fa62659c4934967aa691bdcdf86f9bb9571c24472f1b0cb4ef24bfac"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\HISTORICAL_EVIDENCE_REFERENCES.json",
+      "sha256": "ded05a62cdcd15c14b19e9d9a776a6d910d5d9188502800e9681ba1d86364fd6"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\PHASE_0_REPORT.json",
+      "sha256": "cf13e5f0819273de8e38b7bb59e1b6571cd40d5b5005f7ecc9dc5697a8243e52"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\PHASE_1_REPORT.json",
+      "sha256": "857a0b3aa3a8abfe257790dd9fad540e2955cf8542fa6db4ff5abb41b75de655"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\PROCESS_AFTER.json",
+      "sha256": "073c738c4858ae2fc90730bec57ed3c01d56eae47cc8c3ba19094fed202749c1"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\PROCESS_BEFORE.json",
+      "sha256": "5424face7d19df98037e45f43fb54c69e5d1354ced6c08ec9b8b2b91772d1b1a"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\RESOURCE_INVENTORY.json",
+      "sha256": "e14782dfa416a284864d099f5a41a6d10759d8fca2e610bd788474a9aaea639c"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\RUNTIME_OBSERVATIONS.json",
+      "sha256": "85be3500314ad80b1237c665956e3f8226a0caf52e50eaf338e11ff231bc1e03"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-v1-mde-phase01-20261009-111000\\SOURCE_CHANGE_REVIEW_PROPOSAL.json",
+      "sha256": "a88cfd827bf739678aea70418b5a944939885280a3a990d5a8ea61a3a56825ff"
+    }
+  ],
+  "next_action": "Review Phase0/1 findings and scoped source-change proposal; obtain explicit authorization before patching. Resolve V1 identity/memory decisions separately. No process replacement until rollback prerequisites and separate approval.",
+  "stopped": true
+}
