@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import {useMemo,useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {Link} from '@tanstack/react-router';
 import {OperatorConsole} from './assistant';
@@ -14,18 +14,21 @@ const settingsSections=[
 const operationPages=[['/dashboard','Ringkasan'],['/tasks','Aktivitas'],['/blockers','Masalah'],['/approvals','Persetujuan'],['/costs','Biaya'],['/settings/workspace','Workspace lanjutan']] as const;
 
 export function SettingsNavigation({pathname}:{pathname:string}){
+  const [technicalOpen,setTechnicalOpen]=useState(false);
   const operations=operationPages.some(([to])=>to===pathname)||['/review','/decision','/review-execute'].includes(pathname);
   const section=pathname==='/settings'?'':operations?'Control Plane':pathname==='/settings/models'||pathname==='/console'?'Model & koneksi':pathname==='/knowledge'?'Dokumen':'Teknis';
   return <div className="settings-navigation">
     <p className="settings-breadcrumb"><Link to="/settings">Pengaturan</Link>{section&&<> / {section}</>}</p>
-    {pathname!=='/settings'&&<nav aria-label="Bagian pengaturan">{settingsSections.map(({to,label})=><Link key={to} to={to} className={section===label?'active':undefined} aria-current={section===label?'page':undefined}>{label}</Link>)}</nav>}
+    {pathname!=='/settings'&&<nav aria-label="Bagian pengaturan">{settingsSections.filter(s=>s.to!=='/technical').map(({to,label})=><Link key={to} to={to} className={section===label?'active':undefined} aria-current={section===label?'page':undefined}>{label}</Link>)}</nav>}
     {operations&&<nav aria-label="Control Plane">{operationPages.map(([to,label])=><Link key={to} to={to} activeProps={{className:'active'}}>{label}</Link>)}</nav>}
+    <button type="button" aria-expanded={technicalOpen} onClick={()=>setTechnicalOpen(value=>!value)}>Detail teknis</button>{technicalOpen&&<nav aria-label="Navigasi teknis"><Link to="/technical">Teknis</Link><Link to="/system">Pemeriksaan sistem</Link><Link to="/evidence">Bukti pengujian</Link></nav>}
   </div>;
 }
 
 export function SettingsPage(){
   return <><header><div><h1>Pengaturan</h1><p>Kelola model, dokumen, dan sistem di satu tempat.</p></div></header>
-    <nav className="settings-grid" aria-label="Pengaturan NUSANTARA">{settingsSections.map(({to,label,description})=><Link key={to} to={to}><strong>{label}</strong><span>{description}</span><span aria-hidden="true">Buka →</span></Link>)}</nav>
+    <nav className="settings-grid" aria-label="Pengaturan NUSANTARA">{settingsSections.filter(s=>s.to!=='/technical').map(({to,label,description})=><Link key={to} to={to}><strong>{label}</strong><span>{description}</span><span aria-hidden="true">Buka →</span></Link>)}</nav>
+    <details className="panel"><summary>Detail teknis</summary><p>Bukti pengujian dan rincian engineering tersedia untuk penelusuran.</p><Link to="/technical">Buka detail sistem</Link></details>
   </>;
 }
 
@@ -53,3 +56,4 @@ export function RuntimeSettingsPage(){
     <section className="panel"><h2>Maintenance &amp; Recovery</h2><p>Periksa health backend dan koneksi model sebelum melakukan pemulihan. Jika API gagal, periksa status layanan lokal melalui skrip existing <code>scripts/Status-NusantaraV1.ps1</code>.</p><p>Backup, update, dan restore belum tersedia melalui API Control Plane. Penjadwalan pemulihan dan kesiapan VPS belum diverifikasi.</p></section>
     <section className="panel"><h2>Evidence teknis dan governance</h2><Link to="/technical">Buka evidence teknis existing</Link><p><Link to="/approvals">Human Control</Link></p></section></>;
 }
+

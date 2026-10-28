@@ -7,7 +7,14 @@ export function AppSidebar({children,onNewChat,pending=false,settingsActive=fals
     <nav aria-label="Navigasi utama">
       {onNewChat?<button type="button" disabled={pending} onClick={onNewChat}>+ New Chat</button>:<Link to="/">Kembali ke chat</Link>}
     </nav>
+    <nav aria-label="Navigasi operator">
+      <Link to="/dashboard">Beranda</Link>
+      <Link to="/knowledge">Dokumen</Link>
+      <Link to="/approvals">Persetujuan</Link>
+      <Link to="/tasks">Riwayat aktivitas</Link>
+    </nav>
     {children&&<div className="sidebar-history">{children}</div>}
     <Link className={`settings-entry${settingsActive?' active':''}`} to="/settings" aria-current={settingsActive?'page':undefined} activeProps={{className:'settings-entry active'}}>Pengaturan</Link>
   </aside>;
 }
+
