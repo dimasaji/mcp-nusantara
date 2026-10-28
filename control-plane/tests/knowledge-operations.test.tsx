@@ -22,6 +22,19 @@ function renderPage(token='operator-test'){
 beforeEach(()=>{vi.stubGlobal('scrollTo',vi.fn());});
 afterEach(()=>vi.unstubAllGlobals());
 describe('general knowledge operations',()=>{
+  it('opens chat with the selected document and clears an earlier trial version',async()=>{
+    sessionStorage.clear();
+    sessionStorage.setItem('nusantara-chat-sop-version-pending','b'.repeat(64));
+    vi.stubGlobal('fetch',vi.fn(async()=>({ok:true,status:200,json:async()=>({...status,documents:[{
+      document_id:'approved-pdf',title:'PDF layanan',review_status:'Aktif',updated_at:''}]})})));
+    renderPage();
+    await screen.findByRole('heading',{name:'PDF layanan',level:2});
+    fireEvent.click(screen.getByText('Tambahkan dokumen baru'));
+    fireEvent.click(screen.getByRole('link',{name:'Buka Chat'}));
+    expect(sessionStorage.getItem('nusantara-chat-document-pending')).toBe('approved-pdf');
+    expect(sessionStorage.getItem('nusantara-chat-sop-version-pending')).toBeNull();
+    sessionStorage.clear();
+  });
   it('puts the stored SOP task first and keeps optional operations collapsed',async()=>{
     vi.stubGlobal('fetch',vi.fn(async()=>({ok:true,status:200,json:async()=>({...status,documents:[{
       document_id:'official-pdf',title:'PERMOHONAN DATA PRIBADI',status:'READY',chunks_count:4,

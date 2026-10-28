@@ -196,7 +196,7 @@ export function KnowledgeOperationsPage(){
       <p id="knowledge-upload-help">{!token.trim()?'Verifikasi akses operator di halaman ini untuk mengaktifkan upload.':!query.isSuccess?'Upload menunggu akses backend terverifikasi.':!selected?'Pilih dokumen dari perangkat Anda.':'Siap diunggah melalui browser dan diproses otomatis.'}</p>
       {message&&<p role={uploadFailed?'alert':'status'}>{message}</p>}{existingFile?.authKey===authKey&&<Link to="/" onClick={()=>{sessionStorage.setItem('nusantara-chat-document-pending',existingFile.documentId);sessionStorage.removeItem('nusantara-chat-sop-version-pending');}}>Tanyakan dokumen tersimpan</Link>}
       {uploadFailed&&<button disabled={busy||!selected||!token.trim()} onClick={()=>void submit()}>Coba Lagi</button>}
-        {ready>0&&query.isSuccess&&<Link to="/">Buka Chat</Link>}
+        {ready>0&&query.isSuccess&&<Link to="/" onClick={()=>{if(currentDocument)sessionStorage.setItem('nusantara-chat-document-pending',currentDocument.document_id);sessionStorage.removeItem('nusantara-chat-sop-version-pending');}}>Buka Chat</Link>}
     </section>
     </details>
     <details className="panel sop-optional"><summary>Riwayat proses sebelumnya</summary><p>Ini catatan proses lama, bukan daftar pekerjaan yang harus diulang.</p>

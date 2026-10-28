@@ -136,7 +136,7 @@ export function SOPReviewPanel({documentId,token}:{documentId:string;token:strin
       </section>
       <button disabled={busy||!review.can_approve||review.status==='Aktif'} onClick={()=>void act(()=>decide('approve'))}>Setujui untuk digunakan</button>
       {!review.can_approve&&<p>Persetujuan menunggu pemeriksaan isi, penilaian seluruh jawaban, lima jenis percobaan terbaru yang dinilai sesuai, dan penyelesaian masalah terbuka. Jawaban lama yang salah tetap tercatat; lakukan percobaan pengganti lalu catat penyelesaiannya.</p>}
-      {review.status==='Aktif'&&<><p>Persetujuan versi ini tersimpan.</p><Link to="/" onClick={()=>sessionStorage.setItem('nusantara-chat-document-pending',documentId)}>Buka chat</Link></>}
+      {review.status==='Aktif'&&<><p>Persetujuan versi ini tersimpan.</p><Link to="/" onClick={()=>{sessionStorage.setItem('nusantara-chat-document-pending',documentId);sessionStorage.removeItem('nusantara-chat-sop-version-pending');}}>Buka chat</Link></>}
       </div>
     </>}
     <details><summary>Riwayat pemeriksaan versi ini</summary>{review.events.length?review.events.map(e=><p key={e.event_id}>{e.created_at} · {e.kind} · {e.principal} · {e.note}</p>):<p>Belum ada keputusan operator.</p>}</details>

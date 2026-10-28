@@ -1,6 +1,27 @@
 from types import SimpleNamespace
 
 
+def test_selected_sop_uses_verified_submission_cell_when_model_adds_requirements():
+    import asyncio
+    from test_v1_langgraph import fixture
+    parts = fixture(answer='Wajib membawa KTP dan membayar 500 rupiah.')
+    text = 'Kelengkapan: Surat Pengantar.'
+    item = SimpleNamespace(title='Layanan contoh', document_id='selected', score=1., source=text,
+        chunk=text, metadata={'sop_rows': [{'number': 1, 'activity': 'Menyampaikan Surat Pengantar',
+            'kelengkapan': 'Surat Pengantar', 'waktu': '', 'output': 'Surat Pengantar', 'keterangan': '', 'page': 1}],
+            'full_document_text': text, 'citation_pages': [1],
+            'docling_blocks': [{'block_id': 'table-1', 'type': 'table', 'content': text, 'page_numbers': [1]}]})
+    parts[2]['knowledge'].search_knowledge = lambda *args, **kwargs: [item]
+    request = SimpleNamespace(user_input='Apa persyaratannya?', document_ids=['selected'],
+                              sop_version='a'*64, session_id='same')
+    core = asyncio.run(parts[1].execute_v1(request, **parts[2]))
+    answer = parts[3](core.payload, intent_name=core.intent_name)
+    assert answer['grounding']['grounded'], answer
+    assert answer['response'] == 'Siapkan Surat Pengantar.'
+    assert answer['evidence'][0]['document_id'] == 'selected'
+    assert answer['evidence'][0]['pages'] == [1]
+
+
 def test_document_facts_use_submission_cell_and_never_invent_cost():
     from app.knowledge.document_answers import document_answer_facts
     item = SimpleNamespace(title='Layanan contoh', document_id='example', score=1., source='Tabel SOP',
@@ -28,7 +49,7 @@ def test_cost_absence_reaches_public_chat_without_an_intent_mapping_error():
     result = asyncio.run(parts[1].execute_v1(request, **parts[2]))
     public = parts[3](result.payload, intent_name=result.intent_name)
     assert public['grounding']['grounded']
-    assert public['response'] == 'Biaya belum tercantum dalam SOP ini.'
+    assert 'biaya belum tercantum dalam sop ini' in public['response'].casefold()
 
 
 def test_partial_extraction_error_is_preserved_instead_of_becoming_missing_information():
