@@ -699,7 +699,7 @@ class HermesAgent:
             model_status='local_rule';model_used=provider.model
             latency_ms=int((time.perf_counter()-started)*1000)
 
-        elif service_facts:
+        elif service_facts and not pilot_chat:
             # Source selection and factual scope are fixed before language generation.
             # The existing model may phrase those facts; it cannot supply missing facts.
             facts=service_facts
@@ -1069,7 +1069,8 @@ class HermesAgent:
 
         if pilot_chat and grounding_result is not None and grounding_result.grounded:
             from app.knowledge.sop_review import sop_wording_supported
-            if not sop_wording_supported(response_text, evidence[0].source):
+            if not sop_wording_supported(response_text, evidence[0].source,
+                    full_source=getattr(evidence[0], 'metadata', {}).get('full_document_text')):
                 grounding_result = GroundingResult(response_text, False, 'sop_wording_not_supported', [response_text])
             from app.knowledge.document_citations import citations_supported
             source_blocks = getattr(evidence[0], 'metadata', {}).get('docling_blocks', [])

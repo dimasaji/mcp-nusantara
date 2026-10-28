@@ -63,13 +63,13 @@ def upload(client, payload, filename='Petunjuk layanan.pdf'):
         'Content-Type': 'application/octet-stream', 'X-Document-Name': quote(filename)})
 
 
-def test_review_source_access_notes_and_server_approval_gate(client):
+def test_review_source_access_notes_and_server_approval_gate(client, monkeypatch):
     raw = pdf_bytes()
     doc = upload(client, raw).json()['document_id']
     url = '/v1/knowledge/pipeline/reviews/' + doc
     assert client.get(url).status_code == 403
     detail = client.get(url, headers=AUTH).json()
-    assert detail['status'] == 'Menunggu pemeriksaan isi'
+    assert detail['status'] == 'Menunggu ekstraksi'
     assert 'Surat Permohonan' in detail['text']
     assert client.get(url + '/source', headers=AUTH).content == raw
     assert client.get(url + '/source').status_code == 403
@@ -80,6 +80,50 @@ def test_review_source_access_notes_and_server_approval_gate(client):
     assert response.status_code == 200
     assert client.get(url, headers=AUTH).json()['problems'][0]['note'] == 'Teks perlu diperiksa'
     assert client.post(url + '/decision', headers=AUTH, json={'version_id': 'a'*64, 'action': 'content_ok'}).status_code == 409
+    assert client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'content_ok'}).status_code == 409
+    import json
+    import time
+    from types import SimpleNamespace
+    def worker(args, **kwargs):
+        text = 'Persyaratan layanan: Surat Permohonan. Waktu layanan adalah 3 Hari Kerja.'
+        Path(args[-1]).write_text(json.dumps({'status':'COMPLETE','warnings':[],
+            'page_count':1,'markdown':text,'docling_json':{'fixture':True},
+            'blocks':[{'block_id':'#/texts/0','type':'text','content':text,'page_numbers':[1]}]}),encoding='utf-8')
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr('app.knowledge.worker_process.run_worker',worker)
+    assert client.post(url+'/process',headers=AUTH,json={'version_id':version}).status_code==200
+    deadline=time.monotonic()+10
+    while time.monotonic()<deadline:
+        poll=client.get(url,headers=AUTH)
+        assert poll.status_code==200, poll.text
+        extracted=poll.json()
+        if extracted['extraction']['status'] not in {'QUEUED','PROCESSING'}:
+            break
+        time.sleep(.01)
+    assert extracted['extraction']['status']=='COMPLETE'
+    assert extracted['version_id']!=version
+    assert client.post(url+'/decision',headers=AUTH,json={'version_id':version,'action':'content_ok'}).status_code==409
+    version=extracted['version_id']
+    # Match the live operator schema extension; content checks must not use a
+    # positional INSERT that assumes the original seven-column table.
+    engine = client.app.dependency_overrides[get_knowledge_engine]()
+    with engine._pipeline_db() as conn:
+        conn.execute('ALTER TABLE sop_review_events ADD COLUMN trial_id TEXT')
+    saved = client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'content_ok'})
+    assert saved.status_code == 200, saved.text
+    assert saved.json()['content_ok'] is True
+    reloaded = client.get(url, headers=AUTH)
+    assert reloaded.status_code == 200
+    assert reloaded.json()['content_ok'] is True
+    assert reloaded.json()['events'][-1]['kind'] == 'content_ok'
+    requirements = {item['key']: item['satisfied'] for item in reloaded.json()['approval_requirements']}
+    assert requirements['source_available'] is True
+    assert requirements['extraction_complete'] is True
+    assert requirements['content_checked'] is True
+    assert requirements['case:missing'] is False
+    assert requirements['all_trials_reviewed'] is False
+    assert requirements['no_open_problems'] is True
+    assert reloaded.json()['can_approve'] is False
 
 
 def test_pdf_upload_processing_history_and_duplicate(client, tmp_path):

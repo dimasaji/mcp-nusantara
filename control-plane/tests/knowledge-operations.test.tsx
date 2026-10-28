@@ -22,12 +22,26 @@ function renderPage(token='operator-test'){
 beforeEach(()=>{vi.stubGlobal('scrollTo',vi.fn());});
 afterEach(()=>vi.unstubAllGlobals());
 describe('general knowledge operations',()=>{
+  it('puts the stored SOP task first and keeps optional operations collapsed',async()=>{
+    vi.stubGlobal('fetch',vi.fn(async()=>({ok:true,status:200,json:async()=>({...status,documents:[{
+      document_id:'official-pdf',title:'PERMOHONAN DATA PRIBADI',status:'READY',chunks_count:4,
+      source_verification:'NOT_VERIFIED',updated_at:'',review_status:'Menunggu pemeriksaan isi'}]})})));
+    renderPage();
+    const task=await screen.findByRole('region',{name:'Dokumen yang diperiksa'});
+    expect(within(task).getByRole('heading',{name:'PERMOHONAN DATA PRIBADI'})).toBeVisible();
+    expect(within(task).getByRole('button',{name:'Periksa isi'})).toBeVisible();
+    expect(screen.getByText('Dokumen sudah tersimpan. Anda tidak perlu mengunggah ulang.')).toBeVisible();
+    for(const name of ['Tambahkan dokumen baru','Riwayat proses sebelumnya','Pengaturan dan informasi teknis']){
+      expect(screen.getByText(name).closest('details')).not.toHaveAttribute('open');
+    }
+  });
   it('uses an existing matching file without uploading it again, including a renamed copy',async()=>{
     vi.stubGlobal('crypto',webcrypto);
     const fetch=vi.fn(async()=>({ok:true,status:200,json:async()=>({...status,documents:[{
       document_id:'existing-doc',title:'Dokumen tersedia',status:'READY',chunks_count:1,
       source_verification:'NOT_VERIFIED',updated_at:'',source_sha256:'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'}]})}));
     vi.stubGlobal('fetch',fetch);renderPage();
+    fireEvent.click(await screen.findByText('Tambahkan dokumen baru'));
     const file=new File(['abc'],'nama-lain.txt');
     Object.defineProperty(file,'arrayBuffer',{value:async()=>new TextEncoder().encode('abc').buffer});
     fireEvent.change(await screen.findByLabelText('Pilih dokumen'),{target:{files:[file]}});
@@ -43,6 +57,7 @@ describe('general knowledge operations',()=>{
     const runs=[{...duplicate,run_id:'dup2'},{...duplicate,run_id:'dup1'},status.runs[1],status.runs[0]];
     vi.stubGlobal('fetch',vi.fn(async()=>({ok:true,status:200,json:async()=>({...status,runs})})));
     renderPage();
+    fireEvent.click(await screen.findByText('Riwayat proses sebelumnya'));
     const history=await screen.findByRole('region',{name:'History knowledge'});
     await waitFor(()=>expect(within(history).getAllByText('SOP contoh.txt')).toHaveLength(1));
     expect(within(history).getByText(/2 percobaan identik/)).toBeInTheDocument();
@@ -59,6 +74,7 @@ describe('general knowledge operations',()=>{
         {ok:false,status:403,json:async()=>({detail:'ADMIN_TOKEN_INVALID'})};
     });vi.stubGlobal('fetch',fetch);
     renderPage('');
+    fireEvent.click(await screen.findByText('Tambahkan dokumen baru'));
     const picker=await screen.findByLabelText('Pilih dokumen');expect(picker).toBeEnabled();
     const file=new File(['Source for browser upload regression.'],'chosen.txt',{type:'text/plain'});
     Object.defineProperty(file,'arrayBuffer',{value:async()=>new ArrayBuffer(40)});
@@ -81,6 +97,7 @@ describe('general knowledge operations',()=>{
     vi.stubGlobal('fetch',vi.fn(async(_input:RequestInfo|URL,init?:RequestInit)=>({ok:true,status:200,
       json:async()=>init?.method==='POST'?{...status.runs[0],status:++attempts===1?'FAILED':'READY',reason:attempts===1?'INDEXING_FAILED':null}:status})));
     renderPage();
+    fireEvent.click(await screen.findByText('Tambahkan dokumen baru'));
     const input=await screen.findByLabelText('Pilih dokumen');
     const file=new File(['document content'],'manual.txt',{type:'text/plain'});
     Object.defineProperty(file,'arrayBuffer',{value:async()=>new ArrayBuffer(16)});
@@ -94,7 +111,9 @@ describe('general knowledge operations',()=>{
   it('shows real pipeline summary, failure reason and source authority boundary',async()=>{
     vi.stubGlobal('fetch',vi.fn(async()=>({ok:true,status:200,json:async()=>status})));
     renderPage();
-    expect(await screen.findByRole('heading',{name:'Dokumen — Pemeriksaan SOP'})).toBeInTheDocument();
+    expect(await screen.findByRole('heading',{name:'Pemeriksaan SOP'})).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Pengaturan dan informasi teknis'));
+    fireEvent.click(screen.getByText('Riwayat proses sebelumnya'));
     expect(await screen.findByText('1 dokumen lulus pipeline')).toBeInTheDocument();
     expect(await screen.findByText('2 dokumen ada di index Chat')).toBeInTheDocument();
     expect(screen.getByText('scan.pdf')).toBeInTheDocument();
@@ -109,6 +128,7 @@ describe('general knowledge operations',()=>{
       json:async()=>init?.method==='POST'?{enabled:true,folder:'data/knowledge/inbox',updated_at:'2026-10-15T00:01:00Z'}:status}));
     vi.stubGlobal('fetch',fetch);
     renderPage();
+    fireEvent.click(await screen.findByText('Pengaturan dan informasi teknis'));
     fireEvent.click(await screen.findByRole('button',{name:'Aktifkan pemantauan'}));
     await waitFor(()=>expect(fetch).toHaveBeenCalledWith('/v1/knowledge/pipeline/watch?enabled=true',expect.objectContaining({method:'POST'})));
   });

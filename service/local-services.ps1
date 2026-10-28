@@ -149,7 +149,33 @@ function Invoke-WithLifecycleLock([scriptblock]$Action) {
         # An existing supervisor may deny FullControl but permit the rights
         # needed to acquire/release this exact same lock. Never use a new name.
         $rights = [System.Security.AccessControl.MutexRights]::Synchronize -bor [System.Security.AccessControl.MutexRights]::Modify
-        $mutex = [Threading.Mutex]::OpenExisting('Global\NUSANTARA-V1-Lifecycle', $rights)
+        # Select a compatible OpenExisting overload explicitly. PowerShell's
+        # static overload binder can confuse MutexRights with
+        # NamedWaitHandleOptions. Newer .NET runtimes expose only the
+        # one-argument overload; the runtime still enforces the mutex ACL and
+        # requires enough access to wait on and release the handle.
+        $mutexType = [Threading.Mutex]
+        $rightsType = [System.Security.AccessControl.MutexRights]
+        $openExistingWithRights = $null
+        $openExistingMinimal = $null
+        foreach ($candidate in $mutexType.GetMethods([Reflection.BindingFlags]'Public,Static')) {
+            if ($candidate.Name -ne 'OpenExisting') { continue }
+            $parameters = $candidate.GetParameters()
+            if (
+                $parameters.Count -eq 2 -and
+                $parameters[0].ParameterType -eq [string] -and
+                $parameters[1].ParameterType -eq $rightsType
+            ) {
+                $openExistingWithRights = $candidate
+            } elseif ($parameters.Count -eq 1 -and $parameters[0].ParameterType -eq [string]) {
+                $openExistingMinimal = $candidate
+            }
+        }
+        if ($null -ne $openExistingWithRights) {
+            $mutex = $openExistingWithRights.Invoke($null, [object[]]@('Global\NUSANTARA-V1-Lifecycle', $rights))
+        } elseif ($null -ne $openExistingMinimal) {
+            $mutex = $openExistingMinimal.Invoke($null, [object[]]@('Global\NUSANTARA-V1-Lifecycle'))
+        } else { throw 'No minimal-rights Mutex.OpenExisting overload is available.' }
     }
     $locked = $false
     try {

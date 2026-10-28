@@ -153,12 +153,36 @@
     .brand-sub {
       margin-top: 3px;
       color: var(--muted2);
-      font-size: 10px;
-      letter-spacing: .3px;
-    }
+      font-function openKnowledge() {
 
-    .nav-title {
-      margin: 4px 9px 7px;
+    openDrawer(
+      "Knowledge Base",
+      `
+        <div class="field">
+          <label>
+            Cari SOP
+          </label>
+          <input
+            id="knowledgeQuery"
+            placeholder="Contoh: apa persyaratan permohonan data pribadi?">
+        </div>
+
+        <button class="btn primary"
+                onclick="searchKnowledge()">
+          Cari
+        </button>
+
+        <div id="knowledgeResults"
+             style="margin-top:15px">
+        </div>
+      `
+    );
+
+  }
+
+  async function ingestKnowledge() {  }
+
+  async function ingestKnowledge() {px 7px;
 
       color: var(--muted2);
 
@@ -3065,17 +3089,16 @@
           "/v1/knowledge/search",
           {
             method: "POST",
-
+            headers: { "X-Admin-Token": "R4H4Si4.", "Content-Type": "application/json" }
             body:
               JSON.stringify({
-
                 query:
                   query,
-
                 top_k:
                   5
-
               })
+          }
+        );
 
           }
         );

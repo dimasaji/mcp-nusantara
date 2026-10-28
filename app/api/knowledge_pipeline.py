@@ -41,18 +41,32 @@ def create_knowledge_pipeline_router(run_sync):
         require_admin(x_admin_token)
         try:
             review = SOPReview(knowledge)
-            review.enroll(document_id)
-            detail = review.detail(document_id)
             from app.knowledge.document_tools import DocumentTools, DocumentReadError
             tools = DocumentTools(knowledge, operator=True)
-            detail['extraction'] = tools.status(document_id, detail['version_id'])
-            try:
-                extracted = tools.inspect(document_id, detail['version_id'])
-                detail['extracted_blocks'] = extracted['blocks']
-                detail['extraction']['warnings'] = extracted['warnings']
-            except DocumentReadError:
-                detail['extracted_blocks'] = []
-            return detail
+            for _ in range(3):
+                detail = review.detail(document_id)
+                try:
+                    status = tools.status(document_id, detail['version_id'])
+                    try:
+                        extracted = tools.inspect(document_id, detail['version_id'])
+                    except DocumentReadError as exc:
+                        if str(exc).startswith(('DOCUMENT_VERSION_CHANGED', 'DOCUMENT_VERSION_NOT_FOUND')):
+                            continue
+                        extracted = None
+                except DocumentReadError as exc:
+                    if str(exc).startswith(('DOCUMENT_VERSION_CHANGED', 'DOCUMENT_VERSION_NOT_FOUND')):
+                        continue
+                    raise
+                current = review.detail(document_id)
+                if (current['version_id'] != detail['version_id']
+                        or current['extraction_job_id'] != status.get('job_id')):
+                    continue
+                current['extraction'] = status
+                current['extracted_blocks'] = extracted['blocks'] if extracted else []
+                if extracted:
+                    current['extraction']['warnings'] = extracted.get('warnings', [])
+                return current
+            raise ValueError('Hasil pembacaan berubah. Muat ulang pemeriksaan versi terbaru.')
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from None
 

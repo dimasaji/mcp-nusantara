@@ -51,11 +51,12 @@ class MemoryEngine:
             store.save(self._key(session_id),{'turns':self._chat_turns.get(session_id,[]),
                 'context':list(self.sessions.get(session_id,[]))},metadata={'purpose':'V1 Chat History'})
 
-    def record_chat(self, session_id, question, *, answer=None, error=None):
+    def record_chat(self, session_id, question, *, answer=None, error=None, source_versions=None):
         with self.lock:
             self._restore(session_id)
             self._chat_turns[session_id]=(self._chat_turns[session_id]+[{
                 'question':question,'answer':answer,'error':error,
+                **({'source_versions': dict(source_versions)} if source_versions is not None else {}),
                 'status':'FAILED' if error else 'SUCCEEDED',
                 'timestamp':datetime.now(timezone.utc).isoformat()}])[-self.max_items:]
             self._save(session_id)
@@ -80,7 +81,8 @@ class MemoryEngine:
                 if existing.get('question') != question or existing.get('document_ids', []) != (document_ids or []):
                     return {'state': 'CONFLICT'}
                 if existing.get('status') == 'SUCCEEDED':
-                    return {'state': 'SUCCEEDED', 'answer': existing.get('answer')}
+                    return {'state': 'SUCCEEDED', 'answer': existing.get('answer'),
+                            **({'source_versions': existing['source_versions']} if 'source_versions' in existing else {})}
                 if existing.get('status') == 'FAILED':
                     return {'state': 'FAILED', 'error': existing.get('error')}
                 if existing.get('status') == 'UNKNOWN':
@@ -111,7 +113,7 @@ class MemoryEngine:
             self._save(session_id)
             return {'state': 'NEW'}
 
-    def finish_chat(self, session_id, request_id, *, answer=None, error=None):
+    def finish_chat(self, session_id, request_id, *, answer=None, error=None, source_versions=None):
         """Persist one terminal result against its reserved logical chat turn."""
         with self.lock:
             self._restore(session_id)
@@ -124,6 +126,8 @@ class MemoryEngine:
                 'status': 'SUCCEEDED' if error is None else 'FAILED',
                 'updated_at': datetime.now(timezone.utc).isoformat(),
             })
+            if source_versions is not None:
+                turn['source_versions'] = dict(source_versions)
             terminal = [item for item in turns if item.get('status') != 'PROCESSING']
             processing = [item for item in turns if item.get('status') == 'PROCESSING']
             self._chat_turns[session_id] = (processing + terminal[-self.max_items:])

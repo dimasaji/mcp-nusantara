@@ -5,6 +5,7 @@ import {fetchSnapshot,fetchEvidencePackage,fetchExecutionContext,fetchExecutionH
   fetchKnowledgePipelineStatus,uploadKnowledgeDocument,setKnowledgeWatch,retryKnowledgeDocument} from './api';
 import {useAdminAuth} from './auth';
 import {SOPReviewPanel} from './sop-review';
+import './sop-workspace.css';
 
 function explainUploadFailure(reason:string|null|undefined){
   if(!reason)return 'Periksa file, koneksi backend, dan izin operator.';
@@ -163,28 +164,31 @@ export function KnowledgeOperationsPage(){
   const ready=query.data?.pipeline_ready_documents??runs.filter(r=>r.status==='READY').length;
   const failed=runs.filter(r=>r.status==='FAILED').length;
   const canUpload=!!token.trim()&&query.isSuccess&&!busy;
-  return <>
-    <header><div><div className="eyebrow">NUSANTARA - KNOWLEDGE</div><h1>Dokumen — Pemeriksaan SOP</h1><p>Buka dokumen tersimpan, periksa isinya, dan uji jawaban sebelum menyetujui versi SOP.</p></div><button onClick={()=>void query.refetch()} disabled={!token.trim()||query.isFetching}>Muat ulang</button></header>
-    <section className="panel" aria-label="Akses upload"><h2>Akses operator</h2>
-      <p>Pilih file dari drive mana pun melalui browser. Untuk mengunggah dan membaca History, masukkan token operator yang sudah diberikan administrator di bawah ini.</p>
+  const documents=query.data?.documents??[];
+  const currentDocument=documents.find(doc=>doc.document_id===reviewDocument)??documents.find(doc=>doc.review_status)??documents[0];
+  return <div className="knowledge-workspace">
+    <header><div><div className="eyebrow">DOKUMEN SOP</div><h1>Pemeriksaan SOP</h1><p>Periksa sumber, coba jawaban, lalu tentukan apakah SOP dapat digunakan.</p></div><button onClick={()=>void query.refetch()} disabled={!token.trim()||query.isFetching}>Muat ulang</button></header>
+    <section className="panel" aria-label="Akses upload"><details open={!query.isSuccess}><summary>Akses operator</summary>
+      <p>Masukkan token operator untuk membuka dokumen tersimpan. Setelah refresh, verifikasi kembali.</p>
       <form onSubmit={e=>{e.preventDefault();setMessage('');if(tokenDraft.trim()===token)void query.refetch();else setToken(tokenDraft.trim());}}>
         <label htmlFor="knowledge-operator-token">Token operator</label>
         <input id="knowledge-operator-token" type="password" autoComplete="off" value={tokenDraft} disabled={busy} onChange={e=>setTokenDraft(e.target.value)}/>
         <button type="submit" disabled={busy||query.isFetching||!tokenDraft.trim()}>Verifikasi akses</button>
         {token&&<button type="button" disabled={busy} onClick={()=>{setToken('');setTokenDraft('');}}>Keluar</button>}
       </form>
-      <p role="status">{!token.trim()?'Belum masuk. File dapat dipilih; upload menunggu verifikasi token.':query.isFetching?'Memeriksa akses operator…':query.isSuccess?'Akses operator terverifikasi. Anda dapat mengunggah file.':'Akses belum terverifikasi. Periksa token dan coba Verifikasi akses lagi.'}</p>
-      <p>Token hanya disimpan dalam memori halaman. Setelah refresh, verifikasi kembali di sini; file dan History yang sudah tersimpan tetap berada di server.</p>
-    </section>
-    <section className="panel" aria-label="Ringkasan pipeline"><h2>Ringkasan proses</h2>
-      {!token.trim()?<p>Token operator diperlukan untuk operasi dan History knowledge. Chat dan status umum tetap dapat dibaca tanpa keputusan.</p>
-      :query.isPending?<p role="status">Memuat status pipeline...</p>:query.isError?<p role="alert">Status tidak tersedia: {query.error.message}</p>:<>
-        <div className="diagnostics"><span>{ready} dokumen lulus pipeline</span><span>{query.data.documents_indexed} dokumen ada di index Chat</span><span>{failed} dokumen gagal</span><span>Diperiksa {new Date(query.data.checked_at).toLocaleString('id-ID')}</span></div>
-        <p>Sumber data: store knowledge Chat yang sama.</p>
-        <p>Siap di index berarti ekstraksi, deduplikasi, dan indexing teknis berhasil. Ini tidak mengesahkan otoritas atau menetapkan dokumen sebagai revisi resmi yang berlaku.</p>
-      </>}
-    </section>
+      </details><p role="status">{!token.trim()?'Belum masuk. File dapat dipilih; upload menunggu verifikasi token.':query.isFetching?'Memeriksa akses operator…':query.isSuccess?'Akses operator terverifikasi. Anda dapat mengunggah file.':'Akses belum terverifikasi. Periksa token dan coba Verifikasi akses lagi.'}</p>
 
+    </section>
+    <ol className="sop-steps" aria-label="Alur pemeriksaan"><li><strong>1. Pilih dokumen</strong><span>Gunakan file yang sudah tersimpan</span></li><li><strong>2. Periksa dan coba</strong><span>Cocokkan isi dan jawaban dengan PDF</span></li><li><strong>3. Putuskan</strong><span>Setujui atau catat masalahnya</span></li></ol>
+    {!token.trim()?<section className="panel"><h2>Mulai dengan akses operator</h2><p>Dokumen yang sudah diunggah akan muncul setelah akses terverifikasi. Tidak perlu mengunggah ulang.</p></section>:query.isPending?<p role="status">Memuat dokumen tersimpan...</p>:query.isError?<p role="alert">Dokumen belum dapat dibuka: {query.error.message}</p>:currentDocument?<>
+      <section className="panel sop-current-document" aria-label="Dokumen yang diperiksa">
+        <div><p className="eyebrow">DOKUMEN TERPILIH</p><h2>{currentDocument.title}</h2><p>Dokumen sudah tersimpan. Anda tidak perlu mengunggah ulang.</p><p>Status pemeriksaan: <strong>{currentDocument.review_status??'Belum diperiksa'}</strong></p></div>
+        <button className="primary" onClick={()=>setReviewDocument(currentDocument.document_id)}>Periksa isi</button>
+      </section>
+      {reviewDocument&&<SOPReviewPanel key={`${reviewDocument}-${authKey}`} documentId={reviewDocument} token={token}/>}
+      <details className="panel"><summary>Pilih dokumen lain ({documents.length})</summary><p>Pilih berdasarkan judul dan file sumbernya. Versi atau salinan tetap disimpan terpisah.</p><div className="sop-document-list">{documents.map(doc=><article key={doc.document_id}><div><h3>{doc.title}</h3><small>{doc.review_status??'Belum diperiksa'} · {new Date(doc.updated_at).toLocaleDateString('id-ID')}</small><details><summary>Identitas dokumen</summary><p>{doc.document_id}</p></details></div><button onClick={()=>setReviewDocument(doc.document_id)} disabled={doc.document_id===reviewDocument}>Pilih dokumen</button></article>)}</div></details>
+    </>:<section className="panel"><h2>Belum ada dokumen</h2><p>Buka Tambahkan dokumen baru di bawah untuk memasukkan SOP pertama.</p></section>}
+    <details className="panel sop-optional"><summary>Tambahkan dokumen baru</summary><p>Gunakan hanya untuk dokumen yang belum tersedia atau revisi dengan isi berbeda.</p>
     <section className="panel" aria-label="Tambahkan dokumen"><h2>Tambahkan dokumen</h2><p>Didukung: PDF, DOCX, TXT, Markdown, HTML. Setelah dikirim, file asli disimpan utuh dan dokumen diproses dengan index Chat. File sumber tidak diubah.</p>
       <label>Pilih dokumen <input ref={fileInput} type="file" accept=".pdf,.docx,.txt,.md,.html,.htm" disabled={busy} onChange={e=>{setSelected(e.target.files?.[0]??null);setExistingFile(null);setMessage('');setUploadFailed(false);}}/></label>
       {selected&&<p>File dipilih: <strong>{selected.name}</strong> · {(selected.size/1024).toLocaleString('id-ID',{maximumFractionDigits:1})} KB</p>}
@@ -194,9 +198,20 @@ export function KnowledgeOperationsPage(){
       {uploadFailed&&<button disabled={busy||!selected||!token.trim()} onClick={()=>void submit()}>Coba Lagi</button>}
         {ready>0&&query.isSuccess&&<Link to="/">Buka Chat</Link>}
     </section>
-    <section className="panel" aria-label="Pemantauan folder"><h2>Pemantauan folder</h2>{query.data?<><p>Folder inbox: <code>{query.data.watch.folder}</code></p><p>Status: {query.data.watch.enabled?'AKTIF':'NONAKTIF'}. File baru diproses otomatis saat backend berjalan.</p><button disabled={!token.trim()||busy} onClick={()=>void watch(!query.data.watch.enabled)}>{query.data.watch.enabled?'Hentikan pemantauan':'Aktifkan pemantauan'}</button></>:<p>Folder tersedia setelah status pipeline berhasil dibaca.</p>}</section>
-    <section className="panel" aria-label="Dokumen terindeks"><h2>Dokumen terindeks</h2>{query.data?.documents?.length?query.data.documents.map(doc=><article key={doc.document_id}><h3>{doc.title}</h3><p>{doc.status} · {doc.chunks_count} chunk · Verifikasi sumber: {doc.source_verification}</p><p>{doc.verification_reason??'Kesesuaian sumber belum diperiksa.'}</p><p>Diperbarui: {doc.updated_at}</p>{doc.document_id===query.data?.documents?.find(d=>d.title==='PERMOHONAN DATA PRIBADI')?.document_id?<><p>Status pemeriksaan: {doc.review_status??'Menunggu pemeriksaan isi'}</p>{doc.review_status==='Aktif'?<Link to="/" onClick={()=>sessionStorage.setItem('nusantara-chat-document-pending',doc.document_id)}>Buka chat</Link>:<button onClick={()=>setReviewDocument(doc.document_id)}>{{'File sumber belum ditemukan':'Lihat masalah','Menunggu pemeriksaan isi':'Periksa isi','Isi sudah diperiksa':'Coba chat','Ada masalah':'Lihat catatan masalah','Siap disetujui':'Setujui untuk digunakan','Aktif':'Buka chat'}[doc.review_status??'Menunggu pemeriksaan isi']??'Periksa isi'}</button>}</>:<Link to="/" onClick={()=>sessionStorage.setItem('nusantara-chat-document-pending',doc.document_id)}>Tanyakan dokumen ini</Link>}</article>):<p>Inventaris dokumen belum tersedia. Verifikasi akses lalu muat ulang.</p>}</section>
-    {reviewDocument&&!!token.trim()&&query.isSuccess&&<SOPReviewPanel key={`${reviewDocument}-${authKey}`} documentId={reviewDocument} token={token}/>}
+    </details>
+    <details className="panel sop-optional"><summary>Riwayat proses sebelumnya</summary><p>Ini catatan proses lama, bukan daftar pekerjaan yang harus diulang.</p>
     <section className="panel" aria-label="History knowledge"><h2>History proses</h2>{runs.length>summarizedRuns.length&&<><p>Pengulangan file identik diringkas. Catatan asli tetap tersimpan; kegagalan tetap ditampilkan.</p><button onClick={()=>setShowAllRuns(value=>!value)}>{showAllRuns?'Ringkas pengulangan':`Tampilkan semua catatan (${runs.length})`}</button></>}{!token.trim()?<p>History memerlukan autentikasi operator, tanpa keputusan PASS.</p>:query.isPending?<p role="status">Memuat History...</p>:query.isError?<p role="alert">History gagal dimuat: {query.error.message}</p>:runs.length===0?<p>Belum ada dokumen yang diproses.</p>:<div className="table-scroll"><table><thead><tr><th>Waktu</th><th>Dokumen</th><th>Hasil</th><th>Alasan/status sumber</th><th>Detail</th></tr></thead><tbody>{visibleRuns.map(run=><tr key={run.run_id}><td>{new Date(run.created_at).toLocaleString('id-ID')}</td><td>{run.filename}</td><td>{run.status}{!showAllRuns&&(duplicateCounts.get(run.run_id)??0)>1&&<small> · {duplicateCounts.get(run.run_id)} percobaan identik</small>}</td><td>{run.status==='FAILED'?explainUploadFailure(run.reason):run.reason??'Berhasil dibaca dan disimpan ke Chat; otoritas/revisi belum disahkan.'}</td><td>{run.status==='FAILED'&&run.source_path&&<button disabled={busy} onClick={()=>void retryRun(run.run_id)}>Coba Lagi</button>}<details><summary>Detail</summary><p>ID run: <code>{run.run_id}</code></p><p>SHA-256: <code>{run.source_sha256}</code></p>{run.source_path&&<p>File tersimpan: <code>{run.source_path}</code></p>}{run.document_id&&<p>Dokumen index: <code>{run.document_id}</code></p>}</details></td></tr>)}</tbody></table></div>}</section>
-  </>;
+    </details>
+    <details className="panel sop-optional"><summary>Pengaturan dan informasi teknis</summary>
+    <section className="panel" aria-label="Ringkasan pipeline"><h2>Ringkasan proses</h2>
+      {!token.trim()?<p>Token operator diperlukan untuk operasi dan History knowledge. Chat dan status umum tetap dapat dibaca tanpa keputusan.</p>
+      :query.isPending?<p role="status">Memuat status pipeline...</p>:query.isError?<p role="alert">Status tidak tersedia: {query.error.message}</p>:<>
+        <div className="diagnostics"><span>{ready} dokumen lulus pipeline</span><span>{query.data.documents_indexed} dokumen ada di index Chat</span><span>{failed} dokumen gagal</span><span>Diperiksa {new Date(query.data.checked_at).toLocaleString('id-ID')}</span></div>
+        <p>Sumber data: store knowledge Chat yang sama.</p>
+        <p>Siap di index berarti ekstraksi, deduplikasi, dan indexing teknis berhasil. Ini tidak mengesahkan otoritas atau menetapkan dokumen sebagai revisi resmi yang berlaku.</p>
+      </>}
+    </section>
+    <section className="panel" aria-label="Pemantauan folder"><h2>Pemantauan folder</h2>{query.data?<><p>Folder inbox: <code>{query.data.watch.folder}</code></p><p>Status: {query.data.watch.enabled?'AKTIF':'NONAKTIF'}. File baru diproses otomatis saat backend berjalan.</p><button disabled={!token.trim()||busy} onClick={()=>void watch(!query.data.watch.enabled)}>{query.data.watch.enabled?'Hentikan pemantauan':'Aktifkan pemantauan'}</button></>:<p>Folder tersedia setelah status pipeline berhasil dibaca.</p>}</section>
+    </details>
+  </div>;
 }

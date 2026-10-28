@@ -49,7 +49,12 @@ class KnowledgeEngine:
         )
         return self.rag.ingest_document(request)
 
-    def search_knowledge(self, query: str, top_k: int | None = None, filter: Optional[dict] = None):
+    @property
+    def retrieval_top_k(self):
+        return self.configuration.rag.top_k if self.configuration else self.rag._config.retrieval_top_k
+
+    @staticmethod
+    def document_scope(filter):
         scope = None
         if filter is not None and filter != {}:
             if set(filter) != {'document_ids'} or not isinstance(filter['document_ids'], list):
@@ -57,6 +62,10 @@ class KnowledgeEngine:
             scope = filter['document_ids']
             if not scope or len(scope) > 20 or any(not isinstance(x, str) or not x for x in scope):
                 raise ValueError('KNOWLEDGE_DOCUMENT_SCOPE_INVALID')
+        return scope
+
+    def search_knowledge(self, query: str, top_k: int | None = None, filter: Optional[dict] = None):
+        scope = self.document_scope(filter)
         result = self.rag.query(query_text=query, top_k=top_k,
                                 **({'document_ids': scope} if scope is not None else {}))
         for evidence in result.evidence_pack.evidence:

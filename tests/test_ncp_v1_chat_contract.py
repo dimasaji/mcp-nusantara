@@ -1,5 +1,6 @@
 """NCP-V1-CHAT-001: public response and provider input, no real inference."""
 import asyncio
+import pytest
 from types import SimpleNamespace
 from test_v1_langgraph import fixture
 from app.memory.engine import MemoryEngine
@@ -16,6 +17,31 @@ def test_sop_trial_status_question_uses_model_instead_of_dumping_full_source():
     result = execute(parts, 'Berapa waktu menurut SOP ini?', document_ids=['fixture-ktp'], sop_version='a'*64)
     assert parts[4].calls == 1
     assert result['provider_status'] == 'ollama'
+
+
+def test_sop_trial_model_receives_extracted_document_text_not_only_fact_quote():
+    from test_v1_service_dialogue import setup, SOURCE
+    parts = setup(answer='Pemohon menyampaikan Surat Permohonan.')
+    item = parts[2]['knowledge'].search_knowledge('fixture')[0]
+    item.metadata = {
+        'sop_rows': [{'number': 1, 'activity': 'Menyampaikan Surat Permohonan',
+                      'kelengkapan': 'Surat Permohonan', 'keterangan': '', 'page': 1}],
+        'full_document_text': SOURCE,
+    }
+    observed = []
+    original = parts[4].generate
+    async def capture(request):
+        observed.append(request)
+        return await original(request)
+    parts[4].generate = capture
+    result = execute(parts, 'Apa persyaratan permohonan data pribadi?',
+                     document_ids=['service-private'], sop_version='a'*64)
+    assert result['provider_status'] == 'ollama'
+    assert len(observed) == 1
+    # Context includes the actual stored extraction, including the procedure
+    # and duration, instead of only the deterministic fact quote.
+    assert SOURCE in observed[0]['prompt']
+    assert '3 Hari Kerja' in observed[0]['prompt']
 
 
 def test_sop_prompt_preserves_all_source_words_or_refuses_before_generation():
@@ -35,6 +61,67 @@ def test_pilot_does_not_accept_a_new_channel_merely_from_topic_overlap():
     assert not sop_wording_supported('Pemohon harus mengisi formulir dan memverifikasi database.', source)
     assert sop_wording_supported('Pemohon menyampaikan Surat Permohonan.', source)
     assert sop_wording_supported('Nomor WhatsApp belum ditemukan dalam SOP ini.', source)
+
+
+@pytest.mark.parametrize('answer', [
+    'Nomor WhatsApp petugas belum ditemukan dalam SOP ini.',
+    'SOP ini tidak menyebutkan nomor WhatsApp petugas.',
+])
+def test_sop_trial_accepts_missing_contact_without_losing_model_and_citations(answer):
+    parts = fixture(answer=answer)
+    source = 'Pemohon menyampaikan Surat Permohonan. Pelayanan selesai 3 Hari Kerja.'
+    item = SimpleNamespace(document_id='selected', title='Layanan contoh', source=source,
+                           chunk=source, score=1., metadata={'citation_pages': [1, 2],
+                                                           'full_document_text': source})
+    parts[2]['knowledge'].search_knowledge = lambda *args, **kwargs: [item]
+    result = execute(parts, 'Apakah SOP ini menyebutkan nomor WhatsApp petugas?',
+                     document_ids=['selected'], sop_version='a'*64)
+    assert parts[4].calls == 1
+    assert result['provider_status'] == 'ollama'
+    assert result['grounding']['grounded'], result
+    assert result['response'] == parts[4].answer
+    assert result['evidence'][0]['document_id'] == 'selected'
+    assert result['evidence'][0]['pages'] == [1, 2]
+
+
+@pytest.mark.parametrize('answer', [
+    'Nomor WhatsApp belum ditemukan, hubungi 08123456789.',
+    'Nomor WhatsApp belum ditemukan, tetapi wajib membawa KTP.',
+    'Nomor WhatsApp belum ditemukan, silakan unggah formulir online.',
+    'Nomor WhatsApp belum ditemukan, tetapi layanan gratis.',
+    'Nomor WhatsApp belum ditemukan dan layanan gratis.',
+    'Layanan gratis dan nomor WhatsApp belum ditemukan dalam SOP ini.',
+    'Layanan gratis sedangkan nomor WhatsApp belum ditemukan dalam SOP ini.',
+    'Layanan gratis meskipun nomor WhatsApp belum ditemukan dalam SOP ini.',
+    'Pelayanan online tersedia sementara nomor WhatsApp belum ditemukan dalam SOP ini.',
+])
+def test_sop_trial_missing_contact_does_not_authorize_extra_claims(answer):
+    parts = fixture(answer=answer)
+    source = 'Pemohon menyampaikan Surat Permohonan. Pelayanan selesai 3 Hari Kerja.'
+    parts[2]['knowledge'].search_knowledge = lambda *args, **kwargs: [SimpleNamespace(
+        document_id='selected', title='Layanan contoh', source=source,
+        chunk=source, score=1., metadata={'citation_pages': [1, 2]})]
+    result = execute(parts, 'Apakah SOP ini menyebutkan nomor WhatsApp petugas?',
+                     document_ids=['selected'], sop_version='a'*64)
+    assert not result['grounding']['grounded']
+    assert result['response'] != answer
+
+
+@pytest.mark.parametrize('full_text', [None, 'Kontak petugas: WA 08123456789.',
+                                      'Hubungi petugas melalui telepon.'])
+def test_sop_trial_cannot_claim_missing_contact_without_full_source_proof(full_text):
+    parts = fixture(answer='SOP ini tidak menyebutkan nomor WhatsApp petugas.')
+    source = 'Pemohon menyampaikan Surat Permohonan. Pelayanan selesai 3 Hari Kerja.'
+    metadata = {'citation_pages': [1]}
+    if full_text is not None:
+        metadata['full_document_text'] = source + '\n' + full_text
+    parts[2]['knowledge'].search_knowledge = lambda *args, **kwargs: [SimpleNamespace(
+        document_id='selected', title='Layanan contoh', source=source,
+        chunk=source, score=1., metadata=metadata)]
+    result = execute(parts, 'Apakah SOP ini menyebutkan nomor WhatsApp petugas?',
+                     document_ids=['selected'], sop_version='a'*64)
+    assert not result['grounding']['grounded']
+    assert result['response'] != parts[4].answer
 
 
 def test_general_definition_does_not_require_knowledge():
