@@ -1,0 +1,96 @@
+[
+  {
+    "file": "data\\service-v1\\backend-20261027-163235-990.err.log",
+    "bytes": 15470,
+    "encoding": "utf-8",
+    "launcher_missing_executable": false,
+    "access_denied": false,
+    "frames": [
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\.venv\\Lib\\site-packages\\starlette\\_exception_handler.py",
+        "53",
+        "wrapped_app"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\.venv\\Lib\\site-packages\\starlette\\_exception_handler.py",
+        "42",
+        "wrapped_app"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\.venv\\Lib\\site-packages\\fastapi\\routing.py",
+        "144",
+        "app"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\.venv\\Lib\\site-packages\\fastapi\\routing.py",
+        "706",
+        "app"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\.venv\\Lib\\site-packages\\fastapi\\routing.py",
+        "354",
+        "run_endpoint_function"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\.venv\\Lib\\site-packages\\starlette\\concurrency.py",
+        "34",
+        "run_in_threadpool"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\.venv\\Lib\\site-packages\\anyio\\to_thread.py",
+        "65",
+        "run_sync"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\.venv\\Lib\\site-packages\\anyio\\_backends\\_asyncio.py",
+        "2706",
+        "run_sync_in_worker_thread"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\.venv\\Lib\\site-packages\\anyio\\_backends\\_asyncio.py",
+        "1100",
+        "run"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\app\\api\\knowledge_pipeline.py",
+        "114",
+        "review_decision"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\app\\knowledge\\sop_review.py",
+        "211",
+        "decide"
+      ],
+      [
+        "C:\\Users\\dmaza\\mcp-starter\\app\\knowledge\\sop_review.py",
+        "188",
+        "_event"
+      ]
+    ],
+    "exception_types": [
+      "sqlite3.OperationalError",
+      "sqlite3.OperationalError"
+    ],
+    "missing_modules_or_names": []
+  },
+  {
+    "file": "data\\service-v1\\backend-20261027-142814-788.err.log",
+    "bytes": 0,
+    "encoding": "utf-8",
+    "launcher_missing_executable": false,
+    "access_denied": false,
+    "frames": [],
+    "exception_types": [],
+    "missing_modules_or_names": []
+  },
+  {
+    "file": "data\\service-v1\\backend-20261027-142530-613.err.log",
+    "bytes": 0,
+    "encoding": "utf-8",
+    "launcher_missing_executable": false,
+    "access_denied": false,
+    "frames": [],
+    "exception_types": [],
+    "missing_modules_or_names": []
+  }
+]

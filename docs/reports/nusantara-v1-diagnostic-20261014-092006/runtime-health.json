@@ -1,0 +1,51 @@
+﻿{
+    "status":  "ok",
+    "service":  "Nusantara Core + Hermes",
+    "version":  "0.1.0",
+    "llm":  {
+                "status":  "ok",
+                "model":  "llama3.2:1b",
+                "available":  true,
+                "latency_ms":  31
+            },
+    "identity":  {
+                     "service":  {
+                                     "status":  "ok"
+                                 },
+                     "provider":  {
+                                      "name":  "ollama",
+                                      "status":  "ok",
+                                      "verification_state":  "HEALTH_PROBE_ONLY"
+                                  },
+                     "model":  {
+                                   "configured":  "llama3.2:1b",
+                                   "effective":  "llama3.2:1b",
+                                   "selected":  "llama3.2:1b",
+                                   "payload":  null,
+                                   "actual":  null,
+                                   "source":  "DOTENV",
+                                   "override_source":  "CONFIGURATION",
+                                   "verification_state":  "NOT_VERIFIED"
+                               },
+                     "build":  {
+                                   "id":  "sha256:e99dc5bd7c5b9ef59e78030f24108fc488b81d494f06aae2bfedcd999045fe67",
+                                   "verification_state":  "SOURCE_SNAPSHOT"
+                               },
+                     "verification_state":  "NOT_VERIFIED",
+                     "confirmation_source":  "MODEL_INVENTORY_ONLY"
+                 },
+    "components":  {
+                       "api":  "available",
+                       "language_engine":  "available",
+                       "problem_engine":  "available",
+                       "knowledge_engine":  "available",
+                       "reasoning_engine":  "available",
+                       "workflow_engine":  "available",
+                       "policy_engine":  "available",
+                       "trust_engine":  "available",
+                       "memory":  "available",
+                       "tools":  "available",
+                       "mcp":  "available",
+                       "handoff":  "available"
+                   }
+}

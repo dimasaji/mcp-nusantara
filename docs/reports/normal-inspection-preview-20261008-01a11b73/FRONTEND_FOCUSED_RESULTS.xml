@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="11" failures="0" errors="0" time="0.2006341">
+    <testsuite name="tests/inspection-preview.test.tsx" timestamp="2026-10-08T12:38:44.606Z" hostname="DESKTOP-GJHS3LR" tests="11" failures="0" errors="0" skipped="0" time="0.2006341">
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; sends one bounded request without redirects or token persistence" time="0.0078582">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; exposes HTTP 403 without retry" time="0.001165">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; exposes HTTP 422 without retry" time="0.000381">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; exposes HTTP 503 without retry" time="0.000413">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; makes no request without token or bounded goal" time="0.0005928">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; rejects wrong goal and unverifiable/authority-bearing responses" time="0.0019676">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; uses an exact preview-only proxy" time="0.0105712">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="separate inspection panel &gt; requests only on explicit click, clears token and displays bounded evidence" time="0.0990906">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="separate inspection panel &gt; displays refusal without successful preview or retained credentials" time="0.0230741">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="separate inspection panel &gt; cancels pending request when the panel closes" time="0.0073339">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="separate inspection panel &gt; does not acknowledge System or alter engineering evidence after success" time="0.0470067">
+        </testcase>
+    </testsuite>
+</testsuites>

@@ -1,0 +1,35 @@
+{
+  "contract_id": "NUS-V1-MDE-WORK-CONTRACT-001",
+  "timestamp": "2026-10-09T11:13:09.613457+07:00",
+  "status": "REVIEW_REQUIRED_NO_PATCH_CREATED",
+  "source_change_authorized": false,
+  "smallest_candidate_scope": {
+    "finding": "UI04: unresolved chat fetch has no browser deadline, retains pending and disables Send/New Chat indefinitely",
+    "files": [
+      "C:\\Users\\dmaza\\mcp-starter\\control-plane\\src\\api.ts",
+      "C:\\Users\\dmaza\\mcp-starter\\control-plane\\tests\\assistant.test.tsx"
+    ],
+    "symbols": [
+      "runtimeFetch/sendUserChat",
+      "V1 user and operator surfaces tests"
+    ],
+    "consumers": "UserChat send -> sendUserChat; shared runtimeFetch also transports model status/inventory/selection. Proposed timeout must be explicitly scoped to chat or reviewed for each consumer; do not cancel/retry a model selection implicitly.",
+    "reviewable_behavior": "Bound waiting for a chat HTTP request, release loading on deadline, keep original question and session for operator-approved manual retry, display an honest timeout error, clear timer on success/error. Abort of browser fetch does not prove backend/provider cancellation or undo a memory write; no automatic replay.",
+    "decision_needed": "Approve source scope and desired chat wait deadline/error semantics. Do not invent global configuration owner or promise server cancellation.",
+    "acceptance_tests": [
+      "Existing success/New Chat/same-session/multiline/error behavior remains",
+      "Mock never-resolving fetch respects abort/deadline and releases pending",
+      "Timeout preserves question/session, does not automatically retry or create server-memory delete request",
+      "Successful completion cancels timer; ordinary failure preserved",
+      "Model-control request behavior unchanged unless separately reviewed"
+    ],
+    "rollback": "Local source diff limited to two files; record their current hashes, preserve prior user changes, and undo only newly authorized hunks if later approved. This is not runtime rollback and must not activate on port8000."
+  },
+  "other_required_decisions": [
+    "V1 user authentication/session owner binding and CC05 consent/read-write/retention/deletion policy before backend memory changes",
+    "Durable history/prompt-memory lifecycle semantics and authorization before implementation",
+    "Prior build complete rollback/config/data proof and explicit replacement authorization before runtime alignment"
+  ],
+  "runtime_source_changes_required_for_404": "None established; active process is stale vs candidate. No duplicate routes or alternate config owner proposed.",
+  "stop_rule": "Contract section9 step6 requires reviewed results and source-change authorization; runtime/data/provider/deployment approval not granted."
+}

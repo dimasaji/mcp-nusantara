@@ -1,0 +1,530 @@
+{
+  "verification_type": "ISOLATED_GUARDED_ASGI_WITH_MOCK_HTTP",
+  "live_runtime_verified": false,
+  "profile": "ATTESTATION",
+  "dispatch_count": 1,
+  "observation": {
+    "application": {
+      "service_name": "Nusantara Core + Hermes API",
+      "service_version": "0.1.0",
+      "application_entrypoint": "app.main:app"
+    },
+    "process": {
+      "process_id": 16436,
+      "parent_process_id": 1276,
+      "process_start_time": "2026-10-08T05:13:09.035375+00:00",
+      "working_directory": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\r2-a9-auth-foundation-20261008\\final-pass-tmp\\test_attestation_real_app_boot0",
+      "executable_path": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "interpreter_path": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+      "os_metadata_source": "WINDOWS_CURRENT_PROCESS_API",
+      "observed_process_id": 16436,
+      "valid_for_current_process": true
+    },
+    "runtime_instance_id": "ca49a165937c4dc08578e0604167fe4f",
+    "instance_captured_at": "2026-10-08T05:13:09.549999+00:00",
+    "build": {
+      "loaded_code_hash": "sha256:66fff6e1d16c299f2b4e1baf7a7b7dd58f4febb9132e88dfdbceac2fae76b691",
+      "current_registered_code_hash": "sha256:66fff6e1d16c299f2b4e1baf7a7b7dd58f4febb9132e88dfdbceac2fae76b691",
+      "loaded_code_binding": "MATCH",
+      "coverage": "REGISTERED_PYTHON_HANDLERS_HTTP_DISPATCH_AND_IDENTITY_FUNCTIONS",
+      "limitations": "Non-transitive code objects; excludes globals, closures, assets and provider dependencies",
+      "source_build_hash": "sha256:e6f2dbdd105c3fccfd19ea2178786ae43335daa3b235bc0da59172770ad72a0d",
+      "source_build_evidence": "IMPORT_TIME_SOURCE_SNAPSHOT_ONLY",
+      "full_application_build_verified": false,
+      "loaded_code_manifest": [
+        {
+          "symbol": "diagnostic:app.api.control_plane.snapshot",
+          "code_sha256": "c6081d48f542aa967fd7bd9758510646aaecfae17d3846a9b18b7e6fd16c1d61"
+        },
+        {
+          "symbol": "diagnostic:app.api.runtime_verification.VerificationController.__init__",
+          "code_sha256": "09ce6707b6a9eaac33b060f73fae5658e8fe43d6186fbb7b95245c5f552add13"
+        },
+        {
+          "symbol": "diagnostic:app.api.runtime_verification.VerificationController._store",
+          "code_sha256": "8e97a49babff737b59770d2efeb739fd4b0c8f60a97d98f82947be8160b18c53"
+        },
+        {
+          "symbol": "diagnostic:app.api.runtime_verification.VerificationController.bind_loaded_code",
+          "code_sha256": "1a5d134cccfd6ae71aeeb5aa0b6fe24e5ed944fd763f8d818b06b5c5309c149f"
+        },
+        {
+          "symbol": "diagnostic:app.api.runtime_verification.VerificationController.code_functions",
+          "code_sha256": "ec777811e440943f37c4230113e0dadc7d38cad8049de3fa822ed79010efd352"
+        },
+        {
+          "symbol": "diagnostic:app.api.runtime_verification.VerificationController.invoke",
+          "code_sha256": "2abc2ffb9214a17f0689fb382b40084d5fe4a37e3dc393e7d0cf3308a04f44c6"
+        },
+        {
+          "symbol": "diagnostic:app.api.runtime_verification.VerificationController.mark_response_sent",
+          "code_sha256": "ba521280d4277513f8b60a617f0f511ecaa4119655fcdfa30d8dbb71bf2e7294"
+        },
+        {
+          "symbol": "diagnostic:app.approval.audit_trail.AuditTrail.__init__",
+          "code_sha256": "9822b70a55a2e79214d3fee510282edf0ab7e056291f6e2c8b2be14ed7dd4d2c"
+        },
+        {
+          "symbol": "diagnostic:app.approval.audit_trail.AuditTrail._digest",
+          "code_sha256": "595439a9b504ef1f11b61d2e723a09efc23c88ef3da86a9da31a27531104162e"
+        },
+        {
+          "symbol": "diagnostic:app.approval.audit_trail.AuditTrail.entries",
+          "code_sha256": "c932eb191669f2bf423a5cf662861621860b0e283da89d84f7476f4da4c0c12b"
+        },
+        {
+          "symbol": "diagnostic:app.approval.audit_trail.AuditTrail.record",
+          "code_sha256": "a4b96a5302386a9c130bc40e99f0b78a59c247cc7461f59708adf386f60d3436"
+        },
+        {
+          "symbol": "diagnostic:app.approval.audit_trail.AuditTrail.verify",
+          "code_sha256": "e119f04f346929857e4c197faacfda4b1567266029b6ecd1c5d80c1f20be7a79"
+        },
+        {
+          "symbol": "diagnostic:app.approval.queue.ApprovalQueue.__init__",
+          "code_sha256": "cdf5ea9ab4b553370401085bd64381bc4b861ff0725eee2002c810617194fb50"
+        },
+        {
+          "symbol": "diagnostic:app.approval.queue.ApprovalQueue._persist",
+          "code_sha256": "c11d197e9832bf9a7dd8d381410001ba885a18c0af6570af85044fca0ff93885"
+        },
+        {
+          "symbol": "diagnostic:app.approval.queue.ApprovalQueue.consume",
+          "code_sha256": "dcc033fcaebe211c84aa179bb63092709cea7fbea168752a3f455d636444403b"
+        },
+        {
+          "symbol": "diagnostic:app.approval.queue.ApprovalQueue.decide",
+          "code_sha256": "a325e2f13f5b8014878db7829666bf62767c6d911ebe73549749fb15314aa586"
+        },
+        {
+          "symbol": "diagnostic:app.approval.queue.ApprovalQueue.get",
+          "code_sha256": "9ba018608de05d0a23df995de540ac03d90f0b864e08460af7e251d5943b50cf"
+        },
+        {
+          "symbol": "diagnostic:app.approval.queue.ApprovalQueue.submit",
+          "code_sha256": "9fe4c3b02def6954b4c384533805b13017ea8ed435ef562282930ecf916056c5"
+        },
+        {
+          "symbol": "diagnostic:app.approval.queue.payload_hash",
+          "code_sha256": "87d1772accc0dcd00f6916e58a25e9afc5128f0df52b76413764cf9fae7b0869"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization.__init__",
+          "code_sha256": "06ceb050877faa568e50b31f38171a474558e10b8b054264230308950cec0fbf"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization._actor_reference",
+          "code_sha256": "ba5599aacdd2ff34aba8f4e058dc6cd87ca971378949836d12f003f28eb2a1da"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization._failure_event",
+          "code_sha256": "d53ffb597ede26c9ad06c622a90a42fadbb629568e99cbb9471e7ae17561c628"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization._material",
+          "code_sha256": "a6fb6281d6d3459ed1685032ef298a6fde0a8b2b51238c3617b16026c2ec48ca"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization._peer",
+          "code_sha256": "fdc4fcb8d99c0f9cbd5871d56ba21026cbd22a310dd59a7998991de2826301c5"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization._poison",
+          "code_sha256": "05a07bb6afc2b6148cf70a712022157c782310aefb1e7f9978be88b8bb8f7dcd"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization._record",
+          "code_sha256": "66929ede430a26214cf227d133711ca6afc4a5a7ad450787b8714d7dfde31916"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization._validate",
+          "code_sha256": "db2d349559d93b29b7ae77d4ac4bde4bb31c57af6dae7785b1857b2f83bfcaa5"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization.code_functions",
+          "code_sha256": "daae21c171ceb96cf0635316f1d46e7e079e3feeaa14f009cbd9f50d35f8d780"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization.evidence",
+          "code_sha256": "a71f52e5271ba6bf3924c1c95b05be69275c2cc8d7e082a55c2cecbc52b6894f"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization.handle_verified",
+          "code_sha256": "1813c4d32030eb2db19e8b557e8e303e9fde234facd4e4aefc495e64d1dad40c"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization.intention",
+          "code_sha256": "9b93f3b0a917304528232077db8e74cba951a561d2c2fb3cfb1cb15096e14210"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.RuntimeAuthorization.serve_operator_once",
+          "code_sha256": "5d336aba9b0dd9092cdf633077b5f2ffcdf16e3d1d1ea129a5a835210ac750b3"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.audit_projection",
+          "code_sha256": "cb7e3fd101a1c6651edf540b7a3e122dffc96fd72df0ea7a3479cb1acf3b4bf7"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.canonical",
+          "code_sha256": "16009901f4a7bc9fc87162d0f994713e405e53ca371bbc35fdb962e794fa9570"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.install_authorization_foundation",
+          "code_sha256": "1e20ebcc4b42ab6f0de1a888425bd59e2406174176514544ba47d67e18cf1aa3"
+        },
+        {
+          "symbol": "diagnostic:app.approval.runtime_authorization.safe_string",
+          "code_sha256": "43f3965dcc838f966b5e76aabaf415663ecb550b3290673835129ca7667f5e9b"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.EndpointBinding.from_configuration",
+          "code_sha256": "d5f2daa7e22946f4ce30dd4809ab0ed50f5a4079ddc8521509d489e056bfe86c"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.OneDispatchTransport.__init__",
+          "code_sha256": "5325c8851f86d2342372c7d1cb4fbc00c750503b9af19f15078f2dd6ee4454f2"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.OneDispatchTransport.aclose",
+          "code_sha256": "7d4c01ac37a2b373abcad0d3807db4034af9da878fa0a2e6fd9bcc6f97177eba"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.OneDispatchTransport.handle_async_request",
+          "code_sha256": "dbba97e6a74305bafd21ec527ed65370d5bc7c99b86135e7388cb690cbe77434"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.OneUseAuthorization.__init__",
+          "code_sha256": "3891f86032b8ee0b3027c11d25c68418c27153c837d5255567a561e6218b863f"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.OneUseAuthorization._bound",
+          "code_sha256": "d09356f6ece8011abd57345ac47dbe3d01ef198921a7cdccde4bd03334d8bcc4"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.OneUseAuthorization.abort",
+          "code_sha256": "374bbd49135ca477dcf4f808b205e575ca8951bf9ed777426d2cbfccc7749192"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.OneUseAuthorization.dispatch",
+          "code_sha256": "08124635f6a57dd05773f28eab334580da7a15522d09325f6e27d4d77c45b5d4"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.OneUseAuthorization.finish",
+          "code_sha256": "4ab218efc0d8ae654e5ab3640e1e5bfbcf9d35cb1f9fed62e53cf067221acd58"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.OneUseAuthorization.grant",
+          "code_sha256": "c5ceef5d5182a26ff46615d6f17229e3996c6bf2ffa8f029b28bfdb84c47333f"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.OneUseAuthorization.reserve",
+          "code_sha256": "2d380085c28f289deb691c1455f9ab5c32c5d10b2a63c97f8e9c1ccac8fe21fb"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.ResponseObservationMiddleware.__call__",
+          "code_sha256": "338520eae9daa147317afc783ada207a5fc50cc690016d5ded2ce51baed4b8f5"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.ResponseObservationMiddleware.__init__",
+          "code_sha256": "819de844be8acc71297278de0a7275fabbaf92992ecb15915509156ba9f43055"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.receipt_dump",
+          "code_sha256": "cc22576f0f025dad0b55bfad599d33ca766bbab80b0da9d5dd16fbe539a2a2ed"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_correlation.utc_now",
+          "code_sha256": "cf8a38a1a9043493d554cd2d33c230202551d5382c8c54409ba69d3c23771a09"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_identity.ModelExecutionIdentity.with_response",
+          "code_sha256": "68d78f83c1b0329205a7062d815db64ef9d9e5dd348e37dc3ca98dc728f6dab5"
+        },
+        {
+          "symbol": "diagnostic:app.core.runtime_identity.capture_model_identity",
+          "code_sha256": "2ba550e3734c2af4b213df089786fa29b0b2a2171f197ac2952c4ceac65e4482"
+        },
+        {
+          "symbol": "diagnostic:app.models.ollama.OllamaProvider.__init__",
+          "code_sha256": "19c3d1898d7bd22d28380ed0bd0e46aa3bbcc13a0030b997039fac65f18bc357"
+        },
+        {
+          "symbol": "diagnostic:app.models.ollama.OllamaProvider._capture_identity",
+          "code_sha256": "39f2d50f6fe4340b35cff0636e9d051fa3f4d3b68cd58a913cab86cc982ac7d1"
+        },
+        {
+          "symbol": "diagnostic:app.models.ollama.OllamaProvider._emit_identity",
+          "code_sha256": "78db74a4a81927e5c88b623bdb470ef1335c1cb9e36e520047d5b9fd51c9cc47"
+        },
+        {
+          "symbol": "diagnostic:app.models.ollama.OllamaProvider._get_client",
+          "code_sha256": "1f8473846a501f1c2f41c2268febd621aab41df959b1a5b6eb83e6bb95879aa9"
+        },
+        {
+          "symbol": "diagnostic:app.models.ollama.OllamaProvider._options",
+          "code_sha256": "0662a2b2d65e31a12c003fd3abbde99d581a3fd292a3428e83f378fc6f1c0f2a"
+        },
+        {
+          "symbol": "diagnostic:app.models.ollama.OllamaProvider.close",
+          "code_sha256": "ec49d9ac6e16597c5a997d434548586e18fbb3a782c90c6732e2f1cae7733551"
+        },
+        {
+          "symbol": "diagnostic:app.models.ollama.OllamaProvider.generate",
+          "code_sha256": "7cfc73ab1fd95d9d7df045ce30ffebb4de58749260d934e4074b833eb5898ebc"
+        },
+        {
+          "symbol": "diagnostic:app.observability.logging.redact",
+          "code_sha256": "15ad60036c26ee4c1cd2b03e9fb84d7323f6e813aa95f1a0f0812b56477703dc"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.LocalOperatorChannel.__enter__",
+          "code_sha256": "9648d04f37d605f24c054aabe794292a4f49f5296be06ad270815390fb7140cc"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.LocalOperatorChannel.__exit__",
+          "code_sha256": "0a2fac75b047ae5ea8c48438c6f137cad293138c05c17b64b4a6fb89e76dd9e8"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.LocalOperatorChannel.__init__",
+          "code_sha256": "a101e357b4b5dcc9f33bcd8edc09dc161fd5367f141084398bfa4991e1e99683"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.LocalOperatorChannel._challenge",
+          "code_sha256": "64d3391070b5f0a54ed197171c2c2a16e9d08a91f934499cf7dff90da5b2e718"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.LocalOperatorChannel._consume",
+          "code_sha256": "5fbfebf4da2f15e939ba616772d0474e3dffa5dea731ae5c43bead886ee1f7b0"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.LocalOperatorChannel.peer",
+          "code_sha256": "d1ac633d156ef1c71d51e11d5ec85f6f86f55f80e3757896b6e5ace25f60d623"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.LocalOperatorChannel.serve_authenticated_once",
+          "code_sha256": "3638901eeb4d532fc085563a547a4065c3bf6cd28a95145e43f629ca12542bf8"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.LocalOperatorChannel.serve_once",
+          "code_sha256": "34ffdc0fada3552c8018d83906c9a1368d8ce74a64f3074f34f1ed48c10fe702"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.OperatorPolicy.permits",
+          "code_sha256": "5515f3d65cbd7f3ca86b922d1d64f43b1e47e44c168fa84b6cf8be3dde056efa"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.VerifiedPeer.__init__",
+          "code_sha256": "e39abc35777e1c39cbef89dfff0142aaee69ca627f7f72de27f81112129feede"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.VerifiedPeer.__setattr__",
+          "code_sha256": "74597fce2361367d12ec78ef55c0b4fb8ba19835a411f0eff66914a99f0c3916"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.VerifiedPeer.validate",
+          "code_sha256": "76fa3070400a979e3c5db32040ed3a101f0d59bdd3553ee5633cf10adc15bbaf"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.__init__",
+          "code_sha256": "63c143ca7bd407b8000c9d83f934f1d89a943ab76f4eed6a9469b140347eba33"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.actor",
+          "code_sha256": "da68d3b47c862bb3275a74e6a4d1e899cf41b991125653a113e4d6abf9c32297"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.check",
+          "code_sha256": "10ee23ea87a2bba8bc36247206410b631cf47f06d385d8fe9f92c25d2bdf7a8a"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.current_actor",
+          "code_sha256": "051f4fd1eb58be5aed3c07545cafc3a90915084995e6bd61c33a5be57097ef08"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.information",
+          "code_sha256": "e3cdfc59cc85c534703a8c921dc56c5e462e08d7454e359063ed99a2c251faed"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.process_actor",
+          "code_sha256": "c236c30d20d49f551199b7ba8f5317a70982b5d8f435d20b8f62a20d3ff23548"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.process_identity",
+          "code_sha256": "522a1d44273c400a530d39ebe6961f3865aaa435e6ee282c07ec6b77888b6c39"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.process_start",
+          "code_sha256": "3ba0d4e5d513eb4014066ec68ae779f5b51a0d7381e5e8013efec75d0fc7ab25"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.read",
+          "code_sha256": "281df5e9a1a2edf2e80bd5eba0a799259dd30366513363cdab82b6c5b077d360"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.sid_text",
+          "code_sha256": "bef93a18bb1515c58e249f3d6dd61fc12e1cb394db029aa520482cccc045754e"
+        },
+        {
+          "symbol": "diagnostic:app.security.local_operator.Windows.write",
+          "code_sha256": "db7043a6cbda598a7314c048c2bca44de424b9535cc132e8e2d7eac603c8748d"
+        },
+        {
+          "symbol": "identity:app.core.runtime_attestation._code_fingerprint",
+          "code_sha256": "28bf1073f9a7af683c20b81552f56b21e28fc4c595be15e7f7bb188923700abe"
+        },
+        {
+          "symbol": "identity:app.core.runtime_attestation._loaded_code_manifest",
+          "code_sha256": "fdf3b25288718e990d91f4b2614e547e5b3678763dff3a71c115de2c72df0641"
+        },
+        {
+          "symbol": "identity:app.core.runtime_attestation._manifest_hash",
+          "code_sha256": "1672f198af7c650fbf52e7782d453ec409e149bd5d3ca2ad017b392092455bf4"
+        },
+        {
+          "symbol": "identity:app.core.runtime_attestation._process_identity",
+          "code_sha256": "9fe5a45cad5eb7d56028a3cf09e8e1f18c9c4258336c9bf531041e3e1c814962"
+        },
+        {
+          "symbol": "identity:app.core.runtime_attestation.install_runtime_attestation",
+          "code_sha256": "f6a266da4e850f0892c4ee8b9e6e1a8e9b0253a98bfbbaa9f1327cc58123cd6d"
+        },
+        {
+          "symbol": "identity:app.core.runtime_identity.current_runtime_instance",
+          "code_sha256": "8f10362c24e7f8b1486c10b1b5b19bb5ef21fb34113dae083ce5b4043f7eaaea"
+        },
+        {
+          "symbol": "middleware:app.main.request_id_middleware",
+          "code_sha256": "1fd5429342b7f4cb57eb260e16f846c32392c6ab6126ba19196ea3ed6dae8925"
+        },
+        {
+          "symbol": "route:GET,HEAD:/docs/oauth2-redirect:fastapi.applications.FastAPI.setup.<locals>.swagger_ui_redirect",
+          "code_sha256": "60a5aa46a876be11928ca46de87b360cb56f5657e8f3b0c14f27213f938dd5a2"
+        },
+        {
+          "symbol": "route:GET,HEAD:/docs:fastapi.applications.FastAPI.setup.<locals>.swagger_ui_html",
+          "code_sha256": "f5b96a3f603528c95b27c4119429e129badef19f05cd7add0a883009cdfa8b11"
+        },
+        {
+          "symbol": "route:GET,HEAD:/openapi.json:fastapi.applications.FastAPI.setup.<locals>.openapi",
+          "code_sha256": "1f284d0b1440c449c7ffece35a9f5d99344b6925dc965af6b17205378521345e"
+        },
+        {
+          "symbol": "route:GET,HEAD:/redoc:fastapi.applications.FastAPI.setup.<locals>.redoc_html",
+          "code_sha256": "c0ad85adb0888d8307cc853a504975a82f7de65f78d9cbdf56829a93c66d15eb"
+        },
+        {
+          "symbol": "route:GET:/:app.main.dashboard",
+          "code_sha256": "82e2768ce38c64ff0166e66465281891273eb252dfa2e4a42c5ea604de420bd5"
+        },
+        {
+          "symbol": "route:GET:/health:app.main.health_check",
+          "code_sha256": "52464558561bb9ee1c717e2248dc19276e6f62a3856a8a800fcba14bd7b3f8ad"
+        },
+        {
+          "symbol": "route:GET:/ui:app.main.dashboard",
+          "code_sha256": "82e2768ce38c64ff0166e66465281891273eb252dfa2e4a42c5ea604de420bd5"
+        },
+        {
+          "symbol": "route:GET:/v1/runtime/attestation:app.core.runtime_attestation.install_runtime_attestation.<locals>.runtime_attestation",
+          "code_sha256": "db02b6e11e16087ac876a888cbb0322acd274e459a64f2b0e2e4f714f62f6410"
+        },
+        {
+          "symbol": "route:POST:/v1/runtime/verification:app.api.runtime_verification.install_runtime_verification.<locals>.verification",
+          "code_sha256": "080ed085669dcd31a569e509aec625f9ae5ebfbbb26a9834089d8a2e2ad684e8"
+        }
+      ]
+    },
+    "provider_invocation": {
+      "request_id": "req_43b83c02c92a464d",
+      "invocation_id": "700596f3b94b4b7bb2333234a8980962",
+      "runtime_instance_id": "ca49a165937c4dc08578e0604167fe4f",
+      "pid": 16436,
+      "source_snapshot": "sha256:e6f2dbdd105c3fccfd19ea2178786ae43335daa3b235bc0da59172770ad72a0d",
+      "scoped_loaded_code": "sha256:66fff6e1d16c299f2b4e1baf7a7b7dd58f4febb9132e88dfdbceac2fae76b691",
+      "provider_id": "ollama",
+      "provider_endpoint": {
+        "origin": "http://localhost:11434",
+        "connection_origin": "http://127.0.0.1:11434"
+      },
+      "actual_model": "fixture-model",
+      "started_at": "2026-10-08T05:13:09.617514+00:00",
+      "completed_at": "2026-10-08T05:13:09.620599+00:00",
+      "response_observed": true,
+      "application_response_sent": true,
+      "dispatch_count": 1,
+      "outcome": "PROVIDER_RESPONSE_CORRELATED",
+      "external_client_observed": false,
+      "full_application_build_verified": false
+    },
+    "provider_observation": "PROVIDER_RESPONSE_CORRELATED",
+    "correlation_readiness": {
+      "runtime_instance_id": "ca49a165937c4dc08578e0604167fe4f",
+      "process_id": 16436,
+      "source_build_hash": "sha256:e6f2dbdd105c3fccfd19ea2178786ae43335daa3b235bc0da59172770ad72a0d",
+      "required_external_receipt_fields": [
+        "runtime_instance_id",
+        "process_id",
+        "build_id",
+        "request_id",
+        "invocation_id",
+        "provider_id",
+        "actual_model",
+        "timestamp",
+        "identity_status"
+      ],
+      "provider_receipt_exposed": true
+    },
+    "runtime_identity": "NOT_VERIFIED"
+  },
+  "foundation": {
+    "evidence_id": "r2-a9-auth-process",
+    "evidence_type": "SCOPED_IN_PROCESS",
+    "source": "ATTESTATION authorization foundation",
+    "scope": "R2-A8:ATTESTATION:ONE_GENERATION",
+    "created_at": "2026-10-08T05:13:09.635380+00:00",
+    "status": "NOT_VERIFIED",
+    "evidence_version": "5b828a0839c9e46e0b42a2a80fc7ce89e81ead2dabfc794e5afb7971583af6ad",
+    "binding": {
+      "active_process_build": "NOT_DIRECTLY_VERIFIED",
+      "configuration_digest": "2627eae3262d4dec07848f90982a7f056cdb59bcce90c95ed34c19763e209fe0",
+      "endpoint": {
+        "connection_origin": "http://127.0.0.1:11434",
+        "origin": "http://localhost:11434"
+      },
+      "pid": 16436,
+      "process_start": 134359099890353753,
+      "profile": "ATTESTATION",
+      "runtime_identity": "NOT_VERIFIED",
+      "runtime_instance": "ca49a165937c4dc08578e0604167fe4f",
+      "scope": "R2-A8:ATTESTATION:ONE_GENERATION",
+      "scoped_loaded_code": "sha256:66fff6e1d16c299f2b4e1baf7a7b7dd58f4febb9132e88dfdbceac2fae76b691",
+      "source_snapshot": "sha256:e6f2dbdd105c3fccfd19ea2178786ae43335daa3b235bc0da59172770ad72a0d",
+      "target": "127.0.0.1:8000"
+    },
+    "live_actions": "LOCKED",
+    "operator_policy": "NOT_PROVISIONED",
+    "reviews": [],
+    "provider_receipt": {
+      "request_id": "req_43b83c02c92a464d",
+      "invocation_id": "700596f3b94b4b7bb2333234a8980962",
+      "runtime_instance_id": "ca49a165937c4dc08578e0604167fe4f",
+      "pid": 16436,
+      "source_snapshot": "sha256:e6f2dbdd105c3fccfd19ea2178786ae43335daa3b235bc0da59172770ad72a0d",
+      "scoped_loaded_code": "sha256:66fff6e1d16c299f2b4e1baf7a7b7dd58f4febb9132e88dfdbceac2fae76b691",
+      "provider_id": "ollama",
+      "provider_endpoint": {
+        "origin": "http://localhost:11434",
+        "connection_origin": "http://127.0.0.1:11434"
+      },
+      "actual_model": "fixture-model",
+      "started_at": "2026-10-08T05:13:09.617514+00:00",
+      "completed_at": "2026-10-08T05:13:09.620599+00:00",
+      "response_observed": true,
+      "application_response_sent": true,
+      "dispatch_count": 1,
+      "outcome": "PROVIDER_RESPONSE_CORRELATED",
+      "external_client_observed": false,
+      "full_application_build_verified": false
+    }
+  }
+}

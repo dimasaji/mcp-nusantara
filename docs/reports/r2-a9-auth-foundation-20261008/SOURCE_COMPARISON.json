@@ -1,0 +1,56 @@
+{
+  "checked_existing_files": 377,
+  "changed_existing_files": [
+    {
+      "path": "app\\api\\control_plane.py",
+      "sha256": "43967040a7f2fa5b31a9c06e575a7f9c1058e4a354072725c08fe07edcaee2fa"
+    },
+    {
+      "path": "app\\api\\runtime_verification.py",
+      "sha256": "905cc82b18da237f6347d9623f637cdb58b6d24cd4f3f0c2cd8fc1d8350b48b0"
+    },
+    {
+      "path": "app\\core\\runtime_correlation.py",
+      "sha256": "7e568e24cb9d4b112def995fe8de4655f77755880ffb30238e22298a206bd4f8"
+    },
+    {
+      "path": "app\\main.py",
+      "sha256": "5f8fdab5147ccfab05e792fada680a65d3d3a7afc70197fcca2aaf0e3e011458"
+    },
+    {
+      "path": "app\\security\\local_operator.py",
+      "sha256": "f64214af7dece61a6e721cfc4de26007dfb0d67d7cc8269f05a41eced3f8821e"
+    },
+    {
+      "path": "tests\\test_runtime_verification.py",
+      "sha256": "de78c4dc1836735745823adb346bb681e327e30322251f8a0977b83a86d65a5b"
+    }
+  ],
+  "created_files": [
+    {
+      "path": "app/approval/runtime_authorization.py",
+      "sha256": "621ba73a3d4313df4ba6ca9b8b5cf07c89c270007560e2940f612ac58cedd293"
+    },
+    {
+      "path": "tests/test_runtime_authorization.py",
+      "sha256": "f31fffbf94e6b51b95856d9a51c4f29e2da48bc06817b53b502bfcbfd531d261"
+    }
+  ],
+  "unexpected_changes": 0,
+  "result": "PASS_SCOPED",
+  "scope": "isolated ATTESTATION authorization foundation",
+  "tests_passed": 119,
+  "tests_failed": 0,
+  "tests_errors": 0,
+  "tests_skipped": 0,
+  "live_http_requests": 0,
+  "service_restart": false,
+  "service_loading": false,
+  "live_arming": false,
+  "live_permit_issuance": false,
+  "live_generation": 0,
+  "control_plane_ui_integration": false,
+  "r2_a8": "BLOCKED / NOT_VERIFIED",
+  "runtime_identity": "NOT_VERIFIED",
+  "active_process_build": "NOT_DIRECTLY_VERIFIED"
+}

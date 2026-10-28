@@ -1,0 +1,961 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="50" failures="2" errors="0" time="2.9236425">
+    <testsuite name="tests/acceptance.test.ts" timestamp="2026-10-08T05:53:22.701Z" hostname="DESKTOP-GJHS3LR" tests="11" failures="0" errors="0" skipped="0" time="0.0217717">
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; never copies engineering PASS to human tests" time="0.0111682">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; requires complete human PASS, acknowledgements and inspected sources" time="0.0014497">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; does not approve incomplete or hash-unverified gate evidence" time="0.0016446">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; ignores refresh timestamps but detects material evidence drift" time="0.0017048">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; keeps runtime and protected-file limitations visible" time="0.0010331">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; unlocks exactly one next stage after each completion" time="0.0011112">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Evidence cannot bypass upstream prerequisites even with stale downstream flags" time="0.0007342">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Test cannot bypass upstream prerequisites even with stale downstream flags" time="0.0005526">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Review cannot bypass upstream prerequisites even with stale downstream flags" time="0.0003023">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Decision cannot bypass upstream prerequisites even with stale downstream flags" time="0.0002607">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; invalid and missing results do not count as explicit human completion" time="0.0005026">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/api.test.ts" timestamp="2026-10-08T05:53:22.706Z" hostname="DESKTOP-GJHS3LR" tests="3" failures="0" errors="0" skipped="0" time="0.0102643">
+        <testcase classname="tests/api.test.ts" name="typed read-only API &gt; rejects malformed evidence before rendering" time="0.0062505">
+        </testcase>
+        <testcase classname="tests/api.test.ts" name="typed read-only API &gt; exposes failure instead of healthy dashboard" time="0.0007189">
+        </testcase>
+        <testcase classname="tests/api.test.ts" name="typed read-only API &gt; uses one allowlisted GET without credentials" time="0.002282">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/attestation.test.tsx" timestamp="2026-10-08T05:53:22.707Z" hostname="DESKTOP-GJHS3LR" tests="13" failures="0" errors="0" skipped="0" time="0.3317581">
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; accepts ATTESTATION and preserves NORMAL without masquerading" time="0.0225349">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status PASS" time="0.0009303">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status READY" time="0.0017859">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status AUTHORIZED" time="0.0009232">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status ACTIVE" time="0.0007824">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status VERIFIED" time="0.0005927">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; uses the typed snapshot fetch and fixed intention body only" time="0.0043582">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects authorization responses, stale binding and failure without retry" time="0.0014693">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; invalidates material changes but not capture time" time="0.0006777">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; renders scoped evidence in every engineering view without historical gates" time="0.0338649">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; blocks bypass, separates observations and only submits on an explicit click" time="0.1907756">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; clears reviewed context on drift" time="0.0684977">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects opening Decision without observations" time="0.0032093">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/human.test.tsx" timestamp="2026-10-08T05:53:22.710Z" hostname="DESKTOP-GJHS3LR" tests="19" failures="0" errors="0" skipped="0" time="2.4502328">
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; opening a PASS gate alone does not fabricate human inspection" time="0.1969328">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; accepts explicit System checklist clicks during background refresh without skipping the transition guard" time="0.0421101">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; provides an explicit alternate System acknowledgement without assigning human PASS" time="0.0831642">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; counts source inspection during unchanged background refresh while acknowledgement waits" time="0.2160777">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Evidence entry without System acknowledgement" time="0.0144541">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Test entry without System acknowledgement" time="0.0100635">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Review entry without System acknowledgement" time="0.0082921">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Decision entry without System acknowledgement" time="0.0088548">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; locks shortcuts and displays evidence-derived runtime without promotion" time="0.0181798">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; requires all 14 inspected sources and separate acknowledgement before Test" time="0.1760441">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; missing source cannot be counted as inspected" time="0.0636378">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; seven explicit results do not unlock Review; FAIL/BLOCKED do not become PASS" time="0.1736216">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; requires Review acknowledgement even when all tests PASS" time="0.2993371">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; preserves unchecked approval and explicit second confirmation" time="0.2166">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; REJECT follows completed review and requires a reason" time="0.1451641">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; HOLD follows completed review and requires a reason" time="0.1430333">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; invalidates Review and Decision when a human result changes" time="0.1856955">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; relocks all downstream stages when System acknowledgement is withdrawn" time="0.2809795">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; preserves unchanged refresh and locks everything after material evidence drift" time="0.166482">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/ui.test.tsx" timestamp="2026-10-08T05:53:22.714Z" hostname="DESKTOP-GJHS3LR" tests="4" failures="2" errors="0" skipped="0" time="0.1096156">
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; renders source-derived phase state" time="0.0816933">
+            <failure message="Found multiple elements with the text: R4
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m&lt;h2&gt;[39m
+  [0mR4[0m
+  [0m [0m
+  [36m&lt;span&gt;[39m
+    [0m— [0m
+    [0mSynthetic proposal[0m
+  [36m&lt;/span&gt;[39m
+[36m&lt;/h2&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;h3&gt;[39m
+  [0mR4[0m
+[36m&lt;/h3&gt;[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;section[39m
+      [33mclass[39m=[32m&quot;hero&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;div&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mCURRENT ENGINEERING PHASE[0m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;h2&gt;[39m
+          [0mR4[0m
+          [0m [0m
+          [36m&lt;span&gt;[39m
+            [0m— [0m
+            [0mSynthetic proposal[0m
+          [36m&lt;/span&gt;[39m
+        [36m&lt;/h2&gt;[39m
+        [36m&lt;span[39m
+          [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+        [36m&gt;[39m
+          [0mNOT_VERIFIED[0m
+        [36m&lt;/span&gt;[39m
+        [36m&lt;details[39m
+          [33mclass[39m=[32m&quot;trace&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;summary&gt;[39m
+            [0mTrace to evidence · [0m
+            [0m1[0m
+          [36m&lt;/summary&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;strong&gt;[39m
+              [0mr3[0m
+            [36m&lt;/strong&gt;[39m
+            [36m&lt;span[39m
+              [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+            [36m&gt;[39m
+              [0mVERIFIED_ARTIFACT[0m
+            [36m&lt;/span&gt;[39m
+            [36m&lt;code&gt;[39m
+              [0msynthetic fixture only[0m
+            [36m&lt;/code&gt;[39m
+            [36m&lt;small&gt;[39m
+              [0mSHA-256 [0m
+              [0m0000000000000000000000000000000000000000000000000000000000000000[0m
+            [36m&lt;/small&gt;[39m
+          [36m&lt;/div&gt;[39m
+        [36m&lt;/details&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;hero-side&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;span&gt;[39m
+          [0mGOVERNING UI CONTRACT[0m
+        [36m&lt;/span&gt;[39m
+        [36m&lt;strong&gt;[39m
+          [0msynthetic[0m
+        [36m&lt;/strong&gt;[39m
+        [36m&lt;span[39m
+          [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+        [36m&gt;[39m
+          [0mNOT_VERIFIED[0m
+        [36m&lt;/span&gt;[39m
+        [36m&lt;details[39m
+          [33mclass[39m=[32m&quot;trace&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;summary&gt;[39m
+            [0mTrace to evidence · [0m
+            [0m1[0m
+          [36m&lt;/summary&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;strong&gt;[39m
+              [0mr3[0m
+            [36m&lt;/strong&gt;[39m
+            [36m&lt;span[39m
+              [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+            [36m&gt;[39m
+              [0mVERIFIED_ARTIFACT[0m
+            [36m&lt;/span&gt;[39m
+            [36m&lt;code&gt;[39m
+              [0msynthetic fixture only[0m
+            [36m&lt;/code&gt;[39m
+            [36m&lt;small&gt;[39m
+              [0mSHA-256 [0m
+              [0m0000000000000000000000000000000000000000000000000000000000000000[0m
+            [36m&lt;/small&gt;[39m
+          [36m&lt;/div&gt;[39m
+        [36m&lt;/details&gt;[39m
+      [36m&lt;/div&gt;[39m
+    [36m&lt;/section&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;phase-grid&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;section[39m
+        [33mclass[39m=[32m&quot;panel&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;span[39m
+          [33mclass[39m=[32m&quot;eyebrow&quot;[39m
+        [36m&gt;[39m
+          [0mPROPOSED[0m
+        [36m&lt;/span&gt;[39m
+        [36m&lt;h3&gt;[39m
+          [0mR4[0m
+        [36m&lt;/h3&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mSynthetic proposal[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;span[39m
+          [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+        [36m&gt;[39m
+          [0mNOT_VERIFIED[0m
+        [36m&lt;/span&gt;[39m
+        [36m&lt;details[39m
+          [33mclass[39m=[32m&quot;trace&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;summary&gt;[39m
+            [0mTrace to evidence · [0m
+            [0m1[0m
+          [36m&lt;/summary&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;strong&gt;[39m
+              [0mr3[0m
+            [36m&lt;/strong&gt;[39m
+            [36m&lt;span[39m
+              [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+            [36m&gt;[39m
+              [0mVERIFIED_ARTIFACT[0m
+            [36m&lt;/span&gt;[39m
+            [36m&lt;code&gt;[39m
+              [0msynthetic fixture only[0m
+            [36m&lt;/code&gt;[39m
+            [36m&lt;small&gt;[39m
+              [0mSHA-256 [0m
+              [0m0000000000000000000000000000000000000000000000000000000000000000[0m
+            [36m&lt;/small&gt;[39m
+          [36m&lt;/div&gt;[39m
+        [36m&lt;/details&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;grid-two&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;section[39m
+        [33mclass[39m=[32m&quot;panel&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;h2&gt;[39m
+          [0mAuthorization boundary[0m
+        [36m&lt;/h2&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mNOT_VERIFIED[0m
+        [36m&lt;/p&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mCommit [0m
+          [0mNOT_AUTHORIZED[0m
+          [0m · Push [0m
+          [0mNOT_AUTHORIZED[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+      [36m&lt;section[39m
+        [33mclass[39m=[32m&quot;panel&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;h2&gt;[39m
+          [0mWorktree[0m
+        [36m&lt;/h2&gt;[39m
+        [36m&lt;div[39m
+          [33mclass[39m=[32m&quot;metrics&quot;[39m
+        [36m&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;strong&gt;[39m
+              [0mUNKNOWN[0m
+            [36m&lt;/strong&gt;[39m
+            [36m&lt;small&gt;[39m
+              [0mTracked changes[0m
+            [36m&lt;/small&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;strong&gt;[39m
+              [0mUNKNOWN[0m
+            [36m&lt;/strong&gt;[39m
+            [36m&lt;small&gt;[39m
+              [0mUntracked entries[0m
+            [36m&lt;/small&gt;[39m
+          [36m&lt;/div&gt;[39m
+          [36m&lt;div&gt;[39m
+            [36m&lt;strong&gt;[39m
+              [0mUNKNOWN[0m
+            [36m&lt;/strong&gt;[39m
+            [36m&lt;small&gt;[39m
+              [0mStaged changes[0m
+            [36m&lt;/small&gt;[39m
+          [36m&lt;/div&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;p&gt;[39m
+          [0mOwnership remains UNKNOWN unless supported by evidence.[0m
+        [36m&lt;/p&gt;[39m
+      [36m&lt;/section&gt;[39m
+    [36m&lt;/div&gt;[39m
+    [36m&lt;section[39m
+      [33mclass[39m=[32m&quot;panel&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;h2&gt;[39m
+        [0mRecorded gates[0m
+      [36m&lt;/h2&gt;[39m
+      [36m&lt;table&gt;[39m
+        [36m&lt;thead&gt;[39m
+          [36m&lt;tr&gt;[39m
+            [36m&lt;th&gt;[39m
+              [0mGate[0m
+            [36m&lt;/th&gt;[39m
+            [36m&lt;th&gt;[39m
+              [0mStatus[0m
+            [36m&lt;/th&gt;[39m
+            [36m&lt;th&gt;[39m
+              [0mEvidence[0m
+            [36m&lt;/th&gt;[39m
+          [36m&lt;/tr&gt;[39m
+        [36m&lt;/thead&gt;[39m
+        [36m&lt;tbody&gt;[39m
+          [36m&lt;tr&gt;[39m
+            [36m&lt;td&gt;[39m
+              [0mR3.1[0m
+            [36m&lt;/td&gt;[39m
+            [36m&lt;td&gt;[39m
+              [36m&lt;span[39m
+                [33mclass[39m=[32m&quot;badge good&quot;[39m
+              [36m&gt;[39m
+                [0mPASS[0m
+              [36m&lt;/span&gt;[39m
+            [36m&lt;/td&gt;[39m
+            [36m&lt;td&gt;[39m
+              [36m&lt;details[39m
+                [33mc..." type="TestingLibraryElementError">
+TestingLibraryElementError: Found multiple elements with the text: R4
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+&lt;h2&gt;
+  R4
+   
+  &lt;span&gt;
+    — 
+    Synthetic proposal
+  &lt;/span&gt;
+&lt;/h2&gt;
+
+Ignored nodes: comments, script, style
+&lt;h3&gt;
+  R4
+&lt;/h3&gt;
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;section
+      class=&quot;hero&quot;
+    &gt;
+      &lt;div&gt;
+        &lt;div
+          class=&quot;eyebrow&quot;
+        &gt;
+          CURRENT ENGINEERING PHASE
+        &lt;/div&gt;
+        &lt;h2&gt;
+          R4
+           
+          &lt;span&gt;
+            — 
+            Synthetic proposal
+          &lt;/span&gt;
+        &lt;/h2&gt;
+        &lt;span
+          class=&quot;badge neutral&quot;
+        &gt;
+          NOT_VERIFIED
+        &lt;/span&gt;
+        &lt;details
+          class=&quot;trace&quot;
+        &gt;
+          &lt;summary&gt;
+            Trace to evidence · 
+            1
+          &lt;/summary&gt;
+          &lt;div&gt;
+            &lt;strong&gt;
+              r3
+            &lt;/strong&gt;
+            &lt;span
+              class=&quot;badge neutral&quot;
+            &gt;
+              VERIFIED_ARTIFACT
+            &lt;/span&gt;
+            &lt;code&gt;
+              synthetic fixture only
+            &lt;/code&gt;
+            &lt;small&gt;
+              SHA-256 
+              0000000000000000000000000000000000000000000000000000000000000000
+            &lt;/small&gt;
+          &lt;/div&gt;
+        &lt;/details&gt;
+      &lt;/div&gt;
+      &lt;div
+        class=&quot;hero-side&quot;
+      &gt;
+        &lt;span&gt;
+          GOVERNING UI CONTRACT
+        &lt;/span&gt;
+        &lt;strong&gt;
+          synthetic
+        &lt;/strong&gt;
+        &lt;span
+          class=&quot;badge neutral&quot;
+        &gt;
+          NOT_VERIFIED
+        &lt;/span&gt;
+        &lt;details
+          class=&quot;trace&quot;
+        &gt;
+          &lt;summary&gt;
+            Trace to evidence · 
+            1
+          &lt;/summary&gt;
+          &lt;div&gt;
+            &lt;strong&gt;
+              r3
+            &lt;/strong&gt;
+            &lt;span
+              class=&quot;badge neutral&quot;
+            &gt;
+              VERIFIED_ARTIFACT
+            &lt;/span&gt;
+            &lt;code&gt;
+              synthetic fixture only
+            &lt;/code&gt;
+            &lt;small&gt;
+              SHA-256 
+              0000000000000000000000000000000000000000000000000000000000000000
+            &lt;/small&gt;
+          &lt;/div&gt;
+        &lt;/details&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+    &lt;div
+      class=&quot;phase-grid&quot;
+    &gt;
+      &lt;section
+        class=&quot;panel&quot;
+      &gt;
+        &lt;span
+          class=&quot;eyebrow&quot;
+        &gt;
+          PROPOSED
+        &lt;/span&gt;
+        &lt;h3&gt;
+          R4
+        &lt;/h3&gt;
+        &lt;p&gt;
+          Synthetic proposal
+        &lt;/p&gt;
+        &lt;span
+          class=&quot;badge neutral&quot;
+        &gt;
+          NOT_VERIFIED
+        &lt;/span&gt;
+        &lt;details
+          class=&quot;trace&quot;
+        &gt;
+          &lt;summary&gt;
+            Trace to evidence · 
+            1
+          &lt;/summary&gt;
+          &lt;div&gt;
+            &lt;strong&gt;
+              r3
+            &lt;/strong&gt;
+            &lt;span
+              class=&quot;badge neutral&quot;
+            &gt;
+              VERIFIED_ARTIFACT
+            &lt;/span&gt;
+            &lt;code&gt;
+              synthetic fixture only
+            &lt;/code&gt;
+            &lt;small&gt;
+              SHA-256 
+              0000000000000000000000000000000000000000000000000000000000000000
+            &lt;/small&gt;
+          &lt;/div&gt;
+        &lt;/details&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+    &lt;div
+      class=&quot;grid-two&quot;
+    &gt;
+      &lt;section
+        class=&quot;panel&quot;
+      &gt;
+        &lt;h2&gt;
+          Authorization boundary
+        &lt;/h2&gt;
+        &lt;p&gt;
+          NOT_VERIFIED
+        &lt;/p&gt;
+        &lt;p&gt;
+          Commit 
+          NOT_AUTHORIZED
+           · Push 
+          NOT_AUTHORIZED
+        &lt;/p&gt;
+      &lt;/section&gt;
+      &lt;section
+        class=&quot;panel&quot;
+      &gt;
+        &lt;h2&gt;
+          Worktree
+        &lt;/h2&gt;
+        &lt;div
+          class=&quot;metrics&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;strong&gt;
+              UNKNOWN
+            &lt;/strong&gt;
+            &lt;small&gt;
+              Tracked changes
+            &lt;/small&gt;
+          &lt;/div&gt;
+          &lt;div&gt;
+            &lt;strong&gt;
+              UNKNOWN
+            &lt;/strong&gt;
+            &lt;small&gt;
+              Untracked entries
+            &lt;/small&gt;
+          &lt;/div&gt;
+          &lt;div&gt;
+            &lt;strong&gt;
+              UNKNOWN
+            &lt;/strong&gt;
+            &lt;small&gt;
+              Staged changes
+            &lt;/small&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;p&gt;
+          Ownership remains UNKNOWN unless supported by evidence.
+        &lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/div&gt;
+    &lt;section
+      class=&quot;panel&quot;
+    &gt;
+      &lt;h2&gt;
+        Recorded gates
+      &lt;/h2&gt;
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th&gt;
+              Gate
+            &lt;/th&gt;
+            &lt;th&gt;
+              Status
+            &lt;/th&gt;
+            &lt;th&gt;
+              Evidence
+            &lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;
+            &lt;td&gt;
+              R3.1
+            &lt;/td&gt;
+            &lt;td&gt;
+              &lt;span
+                class=&quot;badge good&quot;
+              &gt;
+                PASS
+              &lt;/span&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+              &lt;details
+                c...
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/ui.test.tsx:9:233
+            </failure>
+        </testcase>
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; never promotes unknown state" time="0.003647">
+        </testcase>
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; keeps runtime evidence historical" time="0.0106002">
+            <failure message="Found multiple elements with the text: NOT_VERIFIED
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m&lt;span[39m
+  [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+[36m&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/span&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;section[39m
+      [33mclass[39m=[32m&quot;panel&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;h2&gt;[39m
+        [0mRuntime identity chain[0m
+      [36m&lt;/h2&gt;[39m
+      [36m&lt;span[39m
+        [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+      [36m&gt;[39m
+        [0mHISTORICAL_CONTROLLED_RUNTIME[0m
+      [36m&lt;/span&gt;[39m
+      [36m&lt;p&gt;[39m
+        [0mCurrent live runtime: [0m
+        [36m&lt;span[39m
+          [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+        [36m&gt;[39m
+          [0mNOT_VERIFIED[0m
+        [36m&lt;/span&gt;[39m
+      [36m&lt;/p&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;identity-chain&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mConfigured model[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mEffective model[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mSelected provider[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mActual model (historical receipt)[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mBuild identity[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mProcess ID (historical)[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;p&gt;[39m
+        [0mReceipt state: [0m
+        [0mNOT_VERIFIED[0m
+        [0m · timestamp [0m
+        [0mUNKNOWN[0m
+      [36m&lt;/p&gt;[39m
+      [36m&lt;details[39m
+        [33mclass[39m=[32m&quot;trace&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;summary&gt;[39m
+          [0mTrace to evidence · [0m
+          [0m1[0m
+        [36m&lt;/summary&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mr3[0m
+          [36m&lt;/strong&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+          [36m&gt;[39m
+            [0mVERIFIED_ARTIFACT[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;code&gt;[39m
+            [0msynthetic fixture only[0m
+          [36m&lt;/code&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mSHA-256 [0m
+            [0m0000000000000000000000000000000000000000000000000000000000000000[0m
+          [36m&lt;/small&gt;[39m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/details&gt;[39m
+    [36m&lt;/section&gt;[39m
+    [36m&lt;section[39m
+      [33mclass[39m=[32m&quot;panel warnings&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;h2&gt;[39m
+        [0mFindings / warnings / limitations[0m
+      [36m&lt;/h2&gt;[39m
+      [36m&lt;p&gt;[39m
+        [0m△ [0m
+        [0mSynthetic test data; not engineering evidence.[0m
+      [36m&lt;/p&gt;[39m
+    [36m&lt;/section&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Found multiple elements with the text: NOT_VERIFIED
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+&lt;span
+  class=&quot;badge neutral&quot;
+&gt;
+  NOT_VERIFIED
+&lt;/span&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;section
+      class=&quot;panel&quot;
+    &gt;
+      &lt;h2&gt;
+        Runtime identity chain
+      &lt;/h2&gt;
+      &lt;span
+        class=&quot;badge neutral&quot;
+      &gt;
+        HISTORICAL_CONTROLLED_RUNTIME
+      &lt;/span&gt;
+      &lt;p&gt;
+        Current live runtime: 
+        &lt;span
+          class=&quot;badge neutral&quot;
+        &gt;
+          NOT_VERIFIED
+        &lt;/span&gt;
+      &lt;/p&gt;
+      &lt;div
+        class=&quot;identity-chain&quot;
+      &gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Configured model
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Effective model
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Selected provider
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Actual model (historical receipt)
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Build identity
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Process ID (historical)
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;p&gt;
+        Receipt state: 
+        NOT_VERIFIED
+         · timestamp 
+        UNKNOWN
+      &lt;/p&gt;
+      &lt;details
+        class=&quot;trace&quot;
+      &gt;
+        &lt;summary&gt;
+          Trace to evidence · 
+          1
+        &lt;/summary&gt;
+        &lt;div&gt;
+          &lt;strong&gt;
+            r3
+          &lt;/strong&gt;
+          &lt;span
+            class=&quot;badge neutral&quot;
+          &gt;
+            VERIFIED_ARTIFACT
+          &lt;/span&gt;
+          &lt;code&gt;
+            synthetic fixture only
+          &lt;/code&gt;
+          &lt;small&gt;
+            SHA-256 
+            0000000000000000000000000000000000000000000000000000000000000000
+          &lt;/small&gt;
+        &lt;/div&gt;
+      &lt;/details&gt;
+    &lt;/section&gt;
+    &lt;section
+      class=&quot;panel warnings&quot;
+    &gt;
+      &lt;h2&gt;
+        Findings / warnings / limitations
+      &lt;/h2&gt;
+      &lt;p&gt;
+        △ 
+        Synthetic test data; not engineering evidence.
+      &lt;/p&gt;
+    &lt;/section&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/ui.test.tsx:11:191
+            </failure>
+        </testcase>
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; renders actual fixture receipt without production claim" time="0.012351">
+        </testcase>
+    </testsuite>
+</testsuites>

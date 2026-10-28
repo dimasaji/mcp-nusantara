@@ -1,0 +1,100 @@
+{
+  "contract": "NUS-MDE-LC-20261008-5GAP",
+  "phase": "LEVEL_C_MINIMAL_REMEDIATION",
+  "authorization": "APPROVE LEVEL C — MINIMAL REMEDIATION — FIVE FINDINGS ONLY; includes the preceding explicit tools.py expansion request for LC-B3/LC-B4",
+  "disposition": "IMPLEMENTED_VERIFIED_SCOPED",
+  "level_c": "COMPLETE_SCOPED",
+  "runtime_identity": "NOT_VERIFIED",
+  "live_integration": "NOT_VERIFIED",
+  "verified_at": "2026-10-08T20:36:08.757776+07:00",
+  "repository": {
+    "path": "C:/users/dmaza/mcp-starter",
+    "branch": "codex/fullroot-control-20261007",
+    "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+    "commit_or_stage_performed": false
+  },
+  "before_evidence": "../d2-isolated-reproduction-20261008-9f4d2a61/REPORT.json and OBSERVATIONS.json; FILES_BEFORE.json and five *.before snapshots in this directory",
+  "exact_application_and_test_files_changed": [
+    "app/devcore/core.py",
+    "app/devcore/grounding.py",
+    "app/devcore/tools.py",
+    "tests/v2/test_devcore.py",
+    "tests/v2/test_devcore_grounding_response.py"
+  ],
+  "remediations": [
+    {
+      "id": "LC-B1",
+      "status": "FIXED_SCOPED_BY_REGRESSION",
+      "root_cause": "grounding.check_grounding previously skipped an entire sentence if any negation occurred",
+      "patch": "Split clauses and apply negation only before the current recognized claim, after preceding claims",
+      "behavioral_evidence": ["test_mixed_negation_does_not_hide_unsupported_positive_claim", "test_negation_after_positive_claim_and_adjacent_claims"],
+      "result": "Supported print plus negated retry plus unsupported storage yields failed verification; unsupported answer is replaced. Negation following a positive storage claim cannot exempt it. Existing supported negative statements remain accepted."
+    },
+    {
+      "id": "LC-B2",
+      "status": "FIXED_SCOPED_BY_REGRESSION",
+      "root_cause": "core._sanitize accepted returned path/content without binding them to the approved request and retained outside paths",
+      "patch": "Canonical containment and requested-path binding; compare bounded returned read content with a bounded local read of the approved file; discard untrusted payload fields; validate find paths and listing child containment; strip content from failed results",
+      "behavioral_evidence": ["test_backend_provenance_accepts_valid_and_rejects_forged_results", "test_valid_backend_truncated_content_remains_incomplete", "existing test_run_dev_contract16", "existing test_gate_protects_even_if_registry_is_naive"],
+      "result": "Valid local results accepted; outside paths, different in-workspace paths, forged content under valid paths, extra foreign content, outside find results and traversal listing names rejected before analysis. Existing stub RegistryBackend integration still passes.",
+      "tradeoff": "External read results require an additional bounded local read for content provenance; unavailable or mismatched local evidence fails closed. CRLF and LF representations are normalized for comparison."
+    },
+    {
+      "id": "LC-B3",
+      "status": "FIXED_SCOPED_BY_REGRESSION",
+      "root_cause": "tools.find_file pruned skip directories but omitted sensitive-name directory policy",
+      "patch": "Apply existing is_sensitive_name policy to walk directory pruning; workspace policy itself unchanged",
+      "behavioral_evidence": ["test_sensitive_directory_search_and_listing_are_consistent"],
+      "result": "secrets, credentials_backup and .env.private metadata absent from search and listing; normal/visible.py remains searchable and readable; sensitive read remains denied."
+    },
+    {
+      "id": "LC-B4",
+      "status": "FIXED_SCOPED_BY_REGRESSION",
+      "root_cause": "tools.find_file used os.walk without onerror; resolution could consume partial matches despite failed enumeration",
+      "patch": "Collect traversal error types and return success false/incomplete true/truncated true; report failure in answer and do not read partial matches; make directory listing OSError structured",
+      "behavioral_evidence": ["test_traversal_error_is_explicit_and_partial_matches_not_read", "test_directory_permission_error_is_structured"],
+      "result": "Injected PermissionError yields explicit incomplete state and no read from partial match; accessible enumeration succeeds; absent match succeeds empty. Listing PermissionError is explicit. No ACLs changed."
+    },
+    {
+      "id": "LC-B5",
+      "status": "FIXED_SCOPED_BY_REGRESSION",
+      "root_cause": "core._analyze ignored truncated source; only verbatim output disclosed truncation",
+      "patch": "For truncated source return fragment-qualified static facts, incomplete_source status and evidence_completeness incomplete; bypass generation callback; aggregate incomplete status; preserve verbatim truncation marker",
+      "behavioral_evidence": ["test_truncated_source_is_incomplete_and_callback_not_invoked", "test_truncated_source_without_callback_and_verbatim_keeps_limitation", "test_valid_backend_truncated_content_remains_incomplete"],
+      "result": "Truncated source cannot receive passed status or synthetic whole-file claim; limitation visible with or without callback and in verbatim mode. Complete source still permits supported print claim."
+    }
+  ],
+  "verification": {
+    "targeted": "9 passed, 88 deselected; TARGETED_OUTPUT.txt and TARGETED_BACKEND_RESULTS.xml",
+    "full_relevant": "97 collected: 96 passed, 1 skipped; BACKEND_RESULTS.xml and TEST_OUTPUT.txt",
+    "new_regressions": "9 passed",
+    "existing_relevant": "87 passed, 1 skipped",
+    "test_files_executed": ["tests/test_inspection_preview_api.py", "tests/v2/test_devcore_integration.py", "tests/v2/test_devcore_inspection.py", "tests/v2/test_devcore.py", "tests/v2/test_devcore_grounding_response.py"],
+    "skip": "test_symlink_outside_workspace_blocked: Windows symlink privilege unavailable; ENVIRONMENT_LIMITED, not PASS",
+    "isolation": "BACKEND_GUARDS.json: violations empty; pytest exit 0; real app composition, provider/knowledge imports, sqlite, child processes and live persistence blocked; writes restricted to this report directory; networking blocked except stdlib asyncio internal socketpair",
+    "static_validation": "Five edited Python files parse successfully; scoped Git diff whitespace check exit 0",
+    "whole_repository_whitespace": "Pre-existing app/main.py:103 blank line at EOF; file hash unchanged; left untouched and not repaired",
+    "preservation": "3493 inventoried files: exactly five authorized source/test files changed, zero missing, zero unauthorized changes; four unattributed reports preserved byte-for-byte; graph unchanged",
+    "scope_note": "Graph refresh omitted because this contract restricts additional mutations to required remediation dependencies. No frontend, router, configuration, token, provider, RAG, database or governance source was changed."
+  },
+  "evidence": ["FILES_BEFORE.json", "FILES_AFTER.json", "PRESERVATION.json", "TASK_DIFF.patch", "*.before", "TARGETED_OUTPUT.txt", "TARGETED_BACKEND_RESULTS.xml", "TARGETED_BACKEND_GUARDS.json", "TEST_OUTPUT.txt", "BACKEND_RESULTS.xml", "BACKEND_GUARDS.json", "DIFF_CHECK_RESULT.json", "SCOPED_DIFF_CHECK.txt", "GIT_BEFORE.txt", "GIT_AFTER.txt", "isolated_runner.py", "verify_evidence.py", "INITIAL_*"],
+  "reproduce_tests": ".venv\\Scripts\\python.exe -B docs\\reports\\lc-five-gap-20261008\\isolated_runner.py",
+  "limitations": [
+    "Local fixture regression evidence only. Existing active-process/OpenAPI discrepancy remains unresolved; no runtime identity promotion or active-process build verification performed.",
+    "Integration tests use copied integration fixtures and stub dependencies; they do not establish live registry or provider compatibility.",
+    "Grounding remains a lexical heuristic and is not a proof of arbitrary factual correctness.",
+    "Provenance comparison verifies a bounded local snapshot, not an atomic OS-level path/content attestation.",
+    "Existing inaccessible Git report directories remain untouched; Git enumeration retains inherited permission warnings.",
+    "Filesystem preservation evidence covers the recorded inventory. Protected live stores and token values were not opened to establish a broader state claim."
+  ],
+  "protected_operations": {
+    "provider_or_real_model_invocations": 0,
+    "database_RAG_WAL_SHM_operations": 0,
+    "preview_chat_live_requests": 0,
+    "service_restarts": 0,
+    "token_read_or_change": false,
+    "R2_R3_attestation_governance_mutation": false,
+    "unattributed_report_mutation": false
+  },
+  "closure": "Authorized five-finding implementation complete with scoped behavioral evidence; stop at contract boundary. No further implementation or live activation is authorized."
+}

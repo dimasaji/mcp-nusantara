@@ -1,0 +1,8 @@
+Run: CC-01 HTTP branch, isolated pytest run
+Command: .\.venv\Scripts\python.exe -B -m pytest -c tests/pytest-evidence.ini -o addopts='' -o faulthandler_timeout=10 -p no:cacheprovider --basetemp <run>\pytest-tmp --junitxml <run>\results.xml -vv -s tests/test_v1_response_projection.py::test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[local_rule]
+Observed: venv relocation warning; one test collected; execution hung before route dispatch.
+Faulthandler (10 seconds):
+Timeout (0:00:10)!
+Thread (AnyIO worker): socket.py line 295 in accept; socket.py line 627 in _fallback_socketpair; asyncio/proactor_events.py _make_self_pipe; asyncio/proactor_events.py __init__; asyncio/windows_events.py __init__; asyncio.runners.py _lazy_init; anyio._backends._asyncio.run; anyio._core._eventloop.run; anyio.from_thread.run_blocking_portal; anyio.from_thread.start_blocking_portal; starlette.testclient.__enter__; tests/test_v1_response_projection.py line 198.
+Main thread: pytest waiting in test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[local_rule] at tests/test_v1_response_projection.py line 198.
+Termination: manual Ctrl+C after stack dump; exit code 1. No pytest result XML was produced. This transcript records a blocked run, not a test result.

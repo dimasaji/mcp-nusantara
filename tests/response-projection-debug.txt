@@ -1,0 +1,1813 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.15, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\dmaza\mcp-starter\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\dmaza\mcp-starter
+configfile: pyproject.toml
+plugins: anyio-4.15.1, asyncio-1.4.0, cov-7.1.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 1 item
+
+tests/test_v1_response_projection.py::test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[local_rule] FAILED [100%]
+
+================================== FAILURES ===================================
+_ test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[local_rule] _
+
+branch = 'local_rule'
+controlled_pipeline = {'available': True, 'reject': False, 'empty': False, 'human': False, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000000006CC42B0>
+
+    @pytest.mark.parametrize("branch", ["local_rule", "fast", "ollama", "offline", "unsupported",
+                                         "missing", "requires_human", "policy_sensitive"])
+    def test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state(
+        branch, controlled_pipeline, monkeypatch,
+    ):
+        state = controlled_pipeline
+        state.update(available=branch != "offline", fast=branch == "fast",
+                     reject=branch == "unsupported", empty=branch == "missing",
+                     human=branch == "requires_human")
+        # Current helper always returns None; cover dormant branch only with a test double.
+        if branch == "local_rule":
+            monkeypatch.setattr(routes, "_deterministic_response", lambda **kwargs: "Public answer.")
+        before = deepcopy(state["context"])
+        with TestClient(app) as client:
+>           response = client.post("/v1/chat", json={"session_id": "current-request",
+                "user_input": "Hapus record" if branch == "policy_sensitive" else "Apa status permohonan saya?"},
+                headers={"X-Admin-Token": "projection-fixture"})
+
+tests\test_v1_response_projection.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.testclient.TestClient object at 0x0000000006C50C20>
+url = '/v1/chat', content = None, data = None, files = None
+json = {'session_id': 'current-request', 'user_input': 'Apa status permohonan saya?'}
+params = None, headers = {'X-Admin-Token': 'projection-fixture'}, cookies = None
+auth = <httpx._client.UseClientDefault object at 0x0000000005267A10>
+follow_redirects = <httpx._client.UseClientDefault object at 0x0000000005267A10>
+timeout = <httpx._client.UseClientDefault object at 0x0000000005267A10>
+extensions = None
+
+    def post(
+        self,
+        url: URL | str,
+        *,
+        content: RequestContent | None = None,
+        data: RequestData | None = None,
+        files: RequestFiles | None = None,
+        json: typing.Any | None = None,
+        params: QueryParamTypes | None = None,
+        headers: HeaderTypes | None = None,
+        cookies: CookieTypes | None = None,
+        auth: AuthTypes | UseClientDefault = USE_CLIENT_DEFAULT,
+        follow_redirects: bool | UseClientDefault = USE_CLIENT_DEFAULT,
+        timeout: TimeoutTypes | UseClientDefault = USE_CLIENT_DEFAULT,
+        extensions: RequestExtensions | None = None,
+    ) -> Response:
+        """
+        Send a `POST` request.
+    
+        **Parameters**: See `httpx.request`.
+        """
+>       return self.request(
+            "POST",
+            url,
+            content=content,
+            data=data,
+            files=files,
+            json=json,
+            params=params,
+            headers=headers,
+            cookies=cookies,
+            auth=auth,
+            follow_redirects=follow_redirects,
+            timeout=timeout,
+            extensions=extensions,
+        )
+
+.venv\Lib\site-packages\httpx\_client.py:1144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.testclient.TestClient object at 0x0000000006C50C20>
+method = 'POST', url = URL('http://testserver/v1/chat'), content = None
+data = None, files = None
+json = {'session_id': 'current-request', 'user_input': 'Apa status permohonan saya?'}
+params = None, headers = {'X-Admin-Token': 'projection-fixture'}, cookies = None
+auth = <httpx._client.UseClientDefault object at 0x0000000005267A10>
+follow_redirects = <httpx._client.UseClientDefault object at 0x0000000005267A10>
+timeout = <httpx._client.UseClientDefault object at 0x0000000005267A10>
+extensions = None
+
+    def request(  # type: ignore[override]
+        self,
+        method: str,
+        url: httpx._types.URLTypes,
+        *,
+        content: httpx._types.RequestContent | None = None,
+        data: _RequestData | None = None,
+        files: httpx._types.RequestFiles | None = None,
+        json: Any = None,
+        params: httpx._types.QueryParamTypes | None = None,
+        headers: httpx._types.HeaderTypes | None = None,
+        cookies: httpx._types.CookieTypes | None = None,
+        auth: httpx._types.AuthTypes | httpx._client.UseClientDefault = httpx._client.USE_CLIENT_DEFAULT,
+        follow_redirects: bool | httpx._client.UseClientDefault = httpx._client.USE_CLIENT_DEFAULT,
+        timeout: httpx._types.TimeoutTypes | httpx._client.UseClientDefault = httpx._client.USE_CLIENT_DEFAULT,
+        extensions: dict[str, Any] | None = None,
+    ) -> httpx.Response:
+        if timeout is not httpx.USE_CLIENT_DEFAULT:
+            warnings.warn(
+                "You should not use the 'timeout' argument with the TestClient. "
+                "See https://github.com/Kludex/starlette/issues/1108 for more information.",
+                StarletteDeprecationWarning,
+                stacklevel=2,
+            )
+        url = self._merge_url(url)
+>       return super().request(
+            method,
+            url,
+            content=content,
+            data=data,
+            files=files,
+            json=json,
+            params=params,
+            headers=headers,
+            cookies=cookies,
+            auth=auth,
+            follow_redirects=follow_redirects,
+            timeout=timeout,
+            extensions=extensions,
+        )
+
+.venv\Lib\site-packages\starlette\testclient.py:463: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.testclient.TestClient object at 0x0000000006C50C20>
+method = 'POST', url = URL('http://testserver/v1/chat'), content = None
+data = None, files = None
+json = {'session_id': 'current-request', 'user_input': 'Apa status permohonan saya?'}
+params = None, headers = {'X-Admin-Token': 'projection-fixture'}, cookies = None
+auth = <httpx._client.UseClientDefault object at 0x0000000005267A10>
+follow_redirects = <httpx._client.UseClientDefault object at 0x0000000005267A10>
+timeout = <httpx._client.UseClientDefault object at 0x0000000005267A10>
+extensions = None
+
+    def request(
+        self,
+        method: str,
+        url: URL | str,
+        *,
+        content: RequestContent | None = None,
+        data: RequestData | None = None,
+        files: RequestFiles | None = None,
+        json: typing.Any | None = None,
+        params: QueryParamTypes | None = None,
+        headers: HeaderTypes | None = None,
+        cookies: CookieTypes | None = None,
+        auth: AuthTypes | UseClientDefault | None = USE_CLIENT_DEFAULT,
+        follow_redirects: bool | UseClientDefault = USE_CLIENT_DEFAULT,
+        timeout: TimeoutTypes | UseClientDefault = USE_CLIENT_DEFAULT,
+        extensions: RequestExtensions | None = None,
+    ) -> Response:
+        """
+        Build and send a request.
+    
+        Equivalent to:
+    
+        ```python
+        request = client.build_request(...)
+        response = client.send(request, ...)
+        ```
+    
+        See `Client.build_request()`, `Client.send()` and
+        [Merging of configuration][0] for how the various parameters
+        are merged with client-level configuration.
+    
+        [0]: /advanced/clients/#merging-of-configuration
+        """
+        if cookies is not None:
+            message = (
+                "Setting per-request cookies=<...> is being deprecated, because "
+                "the expected behaviour on cookie persistence is ambiguous. Set "
+                "cookies directly on the client instance instead."
+            )
+            warnings.warn(message, DeprecationWarning, stacklevel=2)
+    
+        request = self.build_request(
+            method=method,
+            url=url,
+            content=content,
+            data=data,
+            files=files,
+            json=json,
+            params=params,
+            headers=headers,
+            cookies=cookies,
+            timeout=timeout,
+            extensions=extensions,
+        )
+>       return self.send(request, auth=auth, follow_redirects=follow_redirects)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv\Lib\site-packages\httpx\_client.py:825: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.testclient.TestClient object at 0x0000000006C50C20>
+request = <Request('POST', 'http://testserver/v1/chat')>, stream = False
+auth = <httpx.Auth object at 0x0000000006C53380>, follow_redirects = True
+
+    def send(
+        self,
+        request: Request,
+        *,
+        stream: bool = False,
+        auth: AuthTypes | UseClientDefault | None = USE_CLIENT_DEFAULT,
+        follow_redirects: bool | UseClientDefault = USE_CLIENT_DEFAULT,
+    ) -> Response:
+        """
+        Send a request.
+    
+        The request is sent as-is, unmodified.
+    
+        Typically you'll want to build one with `Client.build_request()`
+        so that any client-level configuration is merged into the request,
+        but passing an explicit `httpx.Request()` is supported as well.
+    
+        See also: [Request instances][0]
+    
+        [0]: /advanced/clients/#request-instances
+        """
+        if self._state == ClientState.CLOSED:
+            raise RuntimeError("Cannot send a request, as the client has been closed.")
+    
+        self._state = ClientState.OPENED
+        follow_redirects = (
+            self.follow_redirects
+            if isinstance(follow_redirects, UseClientDefault)
+            else follow_redirects
+        )
+    
+        self._set_timeout(request)
+    
+        auth = self._build_request_auth(request, auth)
+    
+>       response = self._send_handling_auth(
+            request,
+            auth=auth,
+            follow_redirects=follow_redirects,
+            history=[],
+        )
+
+.venv\Lib\site-packages\httpx\_client.py:914: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.testclient.TestClient object at 0x0000000006C50C20>
+request = <Request('POST', 'http://testserver/v1/chat')>
+auth = <httpx.Auth object at 0x0000000006C53380>, follow_redirects = True
+history = []
+
+    def _send_handling_auth(
+        self,
+        request: Request,
+        auth: Auth,
+        follow_redirects: bool,
+        history: list[Response],
+    ) -> Response:
+        auth_flow = auth.sync_auth_flow(request)
+        try:
+            request = next(auth_flow)
+    
+            while True:
+>               response = self._send_handling_redirects(
+                    request,
+                    follow_redirects=follow_redirects,
+                    history=history,
+                )
+
+.venv\Lib\site-packages\httpx\_client.py:942: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.testclient.TestClient object at 0x0000000006C50C20>
+request = <Request('POST', 'http://testserver/v1/chat')>
+follow_redirects = True, history = []
+
+    def _send_handling_redirects(
+        self,
+        request: Request,
+        follow_redirects: bool,
+        history: list[Response],
+    ) -> Response:
+        while True:
+            if len(history) > self.max_redirects:
+                raise TooManyRedirects(
+                    "Exceeded maximum allowed redirects.", request=request
+                )
+    
+            for hook in self._event_hooks["request"]:
+                hook(request)
+    
+>           response = self._send_single_request(request)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv\Lib\site-packages\httpx\_client.py:979: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.testclient.TestClient object at 0x0000000006C50C20>
+request = <Request('POST', 'http://testserver/v1/chat')>
+
+    def _send_single_request(self, request: Request) -> Response:
+        """
+        Sends a single request, without handling any redirections.
+        """
+        transport = self._transport_for_url(request.url)
+        start = time.perf_counter()
+    
+        if not isinstance(request.stream, SyncByteStream):
+            raise RuntimeError(
+                "Attempted to send an async request with a sync Client instance."
+            )
+    
+        with request_context(request=request):
+>           response = transport.handle_request(request)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv\Lib\site-packages\httpx\_client.py:1014: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.testclient._TestClientTransport object at 0x0000000006C50D70>
+request = <Request('POST', 'http://testserver/v1/chat')>
+
+    def handle_request(self, request: httpx.Request) -> httpx.Response:
+        scheme = request.url.scheme
+        host = request.url.raw_host.decode(encoding="ascii")
+        path = request.url.path
+        raw_path = request.url.raw_path
+        query = request.url.query.decode(encoding="ascii")
+    
+        default_port = {"http": 80, "ws": 80, "https": 443, "wss": 443}[scheme]
+        port = request.url.port
+        if port is None:
+            port = default_port
+    
+        # Include the 'host' header.
+        if "host" in request.headers:
+            headers: list[tuple[bytes, bytes]] = []
+        else:  # pragma: no cover
+            headers = [(b"host", request.url.netloc)]
+    
+        # Include other request headers.
+        headers += [(key.lower().encode(), value.encode()) for key, value in request.headers.multi_items()]
+    
+        scope: dict[str, Any]
+    
+        if scheme in {"ws", "wss"}:
+            subprotocol = request.headers.get("sec-websocket-protocol", None)
+            if subprotocol is None:
+                subprotocols: Sequence[str] = []
+            else:
+                subprotocols = [value.strip() for value in subprotocol.split(",")]
+            scope = {
+                "type": "websocket",
+                "path": unquote(path),
+                "raw_path": raw_path.split(b"?", 1)[0],
+                "root_path": self.root_path,
+                "scheme": scheme,
+                "query_string": query.encode(),
+                "headers": headers,
+                "client": self.client,
+                "server": [host, port],
+                "subprotocols": subprotocols,
+                "state": self.app_state.copy(),
+                "extensions": {"websocket.http.response": {}},
+            }
+            session = WebSocketTestSession(self.app, scope, self.portal_factory)
+            raise _Upgrade(session)
+    
+        scope = {
+            "type": "http",
+            "http_version": "1.1",
+            "method": request.method,
+            "path": unquote(path),
+            "raw_path": raw_path.split(b"?", 1)[0],
+            "root_path": self.root_path,
+            "scheme": scheme,
+            "query_string": query.encode(),
+            "headers": headers,
+            "client": self.client,
+            "server": [host, port],
+            "extensions": {"http.response.debug": {}, "http.response.trailers": {}},
+            "state": self.app_state.copy(),
+        }
+    
+        request_complete = False
+        response_started = False
+        body_complete = False
+        trailers_expected = False
+        trailers: list[tuple[bytes, bytes]] = []
+        response_complete: anyio.Event
+        raw_kwargs: dict[str, Any] = {"stream": io.BytesIO()}
+        debug_info: dict[str, Any] | None = None
+    
+        async def receive() -> Message:
+            nonlocal request_complete
+    
+            if request_complete:
+                if not response_complete.is_set():
+                    await response_complete.wait()
+                return {"type": "http.disconnect"}
+    
+            body = request.read()
+            if isinstance(body, str):
+                body_bytes: bytes = body.encode("utf-8")  # pragma: no cover
+            elif body is None:
+                body_bytes = b""  # pragma: no cover
+            elif isinstance(body, GeneratorType):
+                try:  # pragma: no cover
+                    chunk = body.send(None)
+                    if isinstance(chunk, str):
+                        chunk = chunk.encode("utf-8")
+                    return {"type": "http.request", "body": chunk, "more_body": True}
+                except StopIteration:  # pragma: no cover
+                    request_complete = True
+                    return {"type": "http.request", "body": b""}
+            else:
+                body_bytes = body
+    
+            request_complete = True
+            return {"type": "http.request", "body": body_bytes}
+    
+        async def send(message: Message) -> None:
+            nonlocal raw_kwargs, response_started, debug_info, body_complete, trailers_expected
+    
+            if message["type"] == "http.response.start":
+                assert not response_started, 'Received multiple "http.response.start" messages.'
+                raw_kwargs["status_code"] = message["status"]
+                raw_kwargs["headers"] = [(key.decode(), value.decode()) for key, value in message.get("headers", [])]
+                response_started = True
+                trailers_expected = message.get("trailers", False)
+            elif message["type"] == "http.response.body":
+                assert response_started, 'Received "http.response.body" without "http.response.start".'
+                assert not response_complete.is_set(), 'Received "http.response.body" after response completed.'
+                assert not body_complete, 'Received "http.response.body" after body completed.'
+                body = message.get("body", b"")
+                more_body = message.get("more_body", False)
+                if request.method != "HEAD":
+                    raw_kwargs["stream"].write(body)
+                if not more_body:
+                    raw_kwargs["stream"].seek(0)
+                    body_complete = True
+                    if not trailers_expected:
+                        response_complete.set()
+            elif message["type"] == "http.response.trailers":
+                assert trailers_expected, 'Received "http.response.trailers" without declaring trailers.'
+                assert body_complete, 'Received "http.response.trailers" before body completed.'
+                assert not response_complete.is_set(), 'Received "http.response.trailers" after response completed.'
+                trailers.extend(message.get("headers", []))
+                if not message.get("more_trailers", False):
+                    response_complete.set()
+            elif message["type"] == "http.response.debug":
+                debug_info = message["info"]
+    
+        try:
+            with self.portal_factory() as portal:
+                response_complete = portal.call(anyio.Event)
+                portal.call(self.app, scope, receive, send)
+        except BaseException as exc:
+            if self.raise_server_exceptions:
+>               raise exc
+
+.venv\Lib\site-packages\starlette\testclient.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.testclient._TestClientTransport object at 0x0000000006C50D70>
+request = <Request('POST', 'http://testserver/v1/chat')>
+
+    def handle_request(self, request: httpx.Request) -> httpx.Response:
+        scheme = request.url.scheme
+        host = request.url.raw_host.decode(encoding="ascii")
+        path = request.url.path
+        raw_path = request.url.raw_path
+        query = request.url.query.decode(encoding="ascii")
+    
+        default_port = {"http": 80, "ws": 80, "https": 443, "wss": 443}[scheme]
+        port = request.url.port
+        if port is None:
+            port = default_port
+    
+        # Include the 'host' header.
+        if "host" in request.headers:
+            headers: list[tuple[bytes, bytes]] = []
+        else:  # pragma: no cover
+            headers = [(b"host", request.url.netloc)]
+    
+        # Include other request headers.
+        headers += [(key.lower().encode(), value.encode()) for key, value in request.headers.multi_items()]
+    
+        scope: dict[str, Any]
+    
+        if scheme in {"ws", "wss"}:
+            subprotocol = request.headers.get("sec-websocket-protocol", None)
+            if subprotocol is None:
+                subprotocols: Sequence[str] = []
+            else:
+                subprotocols = [value.strip() for value in subprotocol.split(",")]
+            scope = {
+                "type": "websocket",
+                "path": unquote(path),
+                "raw_path": raw_path.split(b"?", 1)[0],
+                "root_path": self.root_path,
+                "scheme": scheme,
+                "query_string": query.encode(),
+                "headers": headers,
+                "client": self.client,
+                "server": [host, port],
+                "subprotocols": subprotocols,
+                "state": self.app_state.copy(),
+                "extensions": {"websocket.http.response": {}},
+            }
+            session = WebSocketTestSession(self.app, scope, self.portal_factory)
+            raise _Upgrade(session)
+    
+        scope = {
+            "type": "http",
+            "http_version": "1.1",
+            "method": request.method,
+            "path": unquote(path),
+            "raw_path": raw_path.split(b"?", 1)[0],
+            "root_path": self.root_path,
+            "scheme": scheme,
+            "query_string": query.encode(),
+            "headers": headers,
+            "client": self.client,
+            "server": [host, port],
+            "extensions": {"http.response.debug": {}, "http.response.trailers": {}},
+            "state": self.app_state.copy(),
+        }
+    
+        request_complete = False
+        response_started = False
+        body_complete = False
+        trailers_expected = False
+        trailers: list[tuple[bytes, bytes]] = []
+        response_complete: anyio.Event
+        raw_kwargs: dict[str, Any] = {"stream": io.BytesIO()}
+        debug_info: dict[str, Any] | None = None
+    
+        async def receive() -> Message:
+            nonlocal request_complete
+    
+            if request_complete:
+                if not response_complete.is_set():
+                    await response_complete.wait()
+                return {"type": "http.disconnect"}
+    
+            body = request.read()
+            if isinstance(body, str):
+                body_bytes: bytes = body.encode("utf-8")  # pragma: no cover
+            elif body is None:
+                body_bytes = b""  # pragma: no cover
+            elif isinstance(body, GeneratorType):
+                try:  # pragma: no cover
+                    chunk = body.send(None)
+                    if isinstance(chunk, str):
+                        chunk = chunk.encode("utf-8")
+                    return {"type": "http.request", "body": chunk, "more_body": True}
+                except StopIteration:  # pragma: no cover
+                    request_complete = True
+                    return {"type": "http.request", "body": b""}
+            else:
+                body_bytes = body
+    
+            request_complete = True
+            return {"type": "http.request", "body": body_bytes}
+    
+        async def send(message: Message) -> None:
+            nonlocal raw_kwargs, response_started, debug_info, body_complete, trailers_expected
+    
+            if message["type"] == "http.response.start":
+                assert not response_started, 'Received multiple "http.response.start" messages.'
+                raw_kwargs["status_code"] = message["status"]
+                raw_kwargs["headers"] = [(key.decode(), value.decode()) for key, value in message.get("headers", [])]
+                response_started = True
+                trailers_expected = message.get("trailers", False)
+            elif message["type"] == "http.response.body":
+                assert response_started, 'Received "http.response.body" without "http.response.start".'
+                assert not response_complete.is_set(), 'Received "http.response.body" after response completed.'
+                assert not body_complete, 'Received "http.response.body" after body completed.'
+                body = message.get("body", b"")
+                more_body = message.get("more_body", False)
+                if request.method != "HEAD":
+                    raw_kwargs["stream"].write(body)
+                if not more_body:
+                    raw_kwargs["stream"].seek(0)
+                    body_complete = True
+                    if not trailers_expected:
+                        response_complete.set()
+            elif message["type"] == "http.response.trailers":
+                assert trailers_expected, 'Received "http.response.trailers" without declaring trailers.'
+                assert body_complete, 'Received "http.response.trailers" before body completed.'
+                assert not response_complete.is_set(), 'Received "http.response.trailers" after response completed.'
+                trailers.extend(message.get("headers", []))
+                if not message.get("more_trailers", False):
+                    response_complete.set()
+            elif message["type"] == "http.response.debug":
+                debug_info = message["info"]
+    
+        try:
+            with self.portal_factory() as portal:
+                response_complete = portal.call(anyio.Event)
+>               portal.call(self.app, scope, receive, send)
+
+.venv\Lib\site-packages\starlette\testclient.py:357: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <anyio.from_thread.BlockingPortal object at 0x0000000006C51BE0>
+func = <fastapi.applications.FastAPI object at 0x0000000006B238C0>
+args = ({'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}, <function _TestClientTransport.handle_request.<locals>.receive at 0x0000000006CA0400>, <function _TestClientTransport.handle_request.<locals>.send at 0x0000000006CA0720>)
+
+    def call(
+        self,
+        func: Callable[[Unpack[PosArgsT]], Awaitable[T_Retval] | T_Retval],
+        *args: Unpack[PosArgsT],
+    ) -> T_Retval:
+        """
+        Call the given function in the event loop thread.
+    
+        If the callable returns a coroutine object, it is awaited on.
+    
+        :param func: any callable
+        :raises RuntimeError: if the portal is not running or if this method is called
+            from within the event loop thread
+    
+        """
+>       return cast(T_Retval, self.start_task_soon(func, *args).result())
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv\Lib\site-packages\anyio\from_thread.py:340: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = None, timeout = None
+
+    def result(self, timeout=None):
+        """Return the result of the call that the future represents.
+    
+        Args:
+            timeout: The number of seconds to wait for the result if the
+                future isn't done.  If None, then there is no limit on the
+                wait time.
+    
+        Returns:
+            The result of the call that the future represents.
+    
+        Raises:
+            CancelledError: If the future was cancelled.
+            TimeoutError: If the future didn't finish executing before the
+                given timeout.
+            Exception: If the call raised then that exception will be
+                raised.
+        """
+        try:
+            with self._condition:
+                if self._state in [CANCELLED, CANCELLED_AND_NOTIFIED]:
+                    raise CancelledError()
+                elif self._state == FINISHED:
+                    return self.__get_result()
+    
+                self._condition.wait(timeout)
+    
+                if self._state in [CANCELLED, CANCELLED_AND_NOTIFIED]:
+                    raise CancelledError()
+                elif self._state == FINISHED:
+>                   return self.__get_result()
+                           ^^^^^^^^^^^^^^^^^^^
+
+..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = None
+
+    def __get_result(self):
+        if self._exception is not None:
+            try:
+>               raise self._exception
+
+..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <anyio.from_thread.BlockingPortal object at 0x0000000006C51BE0>
+func = <fastapi.applications.FastAPI object at 0x0000000006B238C0>
+args = ({'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}, <function _TestClientTransport.handle_request.<locals>.receive at 0x0000000006CA0400>, <function _TestClientTransport.handle_request.<locals>.send at 0x0000000006CA0720>)
+kwargs = {}, future = <Future at 0x6c89050 state=finished raised AttributeError>
+
+    async def _call_func(
+        self,
+        func: Callable[[Unpack[PosArgsT]], Awaitable[T_Retval] | T_Retval],
+        args: tuple[Unpack[PosArgsT]],
+        kwargs: dict[str, Any],
+        future: Future[T_Retval],
+    ) -> None:
+        event_loop_thread_id = self._event_loop_thread_id
+    
+        def callback(f: Future[T_Retval]) -> None:
+            if f.cancelled():
+                if event_loop_thread_id == get_ident():
+                    scope.cancel("the future was cancelled")
+                elif event_loop_thread_id is not None:
+                    run_sync(
+                        scope.cancel, "the future was cancelled", token=self._token
+                    )
+    
+        try:
+            retval_or_awaitable = func(*args, **kwargs)
+            if isawaitable(retval_or_awaitable):
+                with CancelScope() as scope:
+                    future.add_done_callback(callback)
+>                   retval = await retval_or_awaitable
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv\Lib\site-packages\anyio\from_thread.py:265: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <fastapi.applications.FastAPI object at 0x0000000006B238C0>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function _TestClientTransport.handle_request.<locals>.receive at 0x0000000006CA0400>
+send = <function _TestClientTransport.handle_request.<locals>.send at 0x0000000006CA0720>
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if self.root_path:
+            scope["root_path"] = self.root_path
+>       await super().__call__(scope, receive, send)
+
+.venv\Lib\site-packages\fastapi\applications.py:1163: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <fastapi.applications.FastAPI object at 0x0000000006B238C0>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function _TestClientTransport.handle_request.<locals>.receive at 0x0000000006CA0400>
+send = <function _TestClientTransport.handle_request.<locals>.send at 0x0000000006CA0720>
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        scope["app"] = self
+        if self.middleware_stack is None:
+            self.middleware_stack = self.build_middleware_stack()
+>       await self.middleware_stack(scope, receive, send)
+
+.venv\Lib\site-packages\starlette\applications.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000000006C52A50>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function _TestClientTransport.handle_request.<locals>.receive at 0x0000000006CA0400>
+send = <function _TestClientTransport.handle_request.<locals>.send at 0x0000000006CA0720>
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+    
+        response_started = False
+    
+        async def _send(message: Message) -> None:
+            nonlocal response_started, send
+    
+            if message["type"] == "http.response.start":
+                response_started = True
+            await send(message)
+    
+        try:
+            await self.app(scope, receive, _send)
+        except Exception as exc:
+            request = Request(scope)
+            if self.debug:
+                # In debug mode, return traceback responses.
+                response = await run_in_threadpool(self.debug_response, request, exc)
+            elif self.handler is None:
+                # Use our default 500 error handler.
+                response = self.error_response(request, exc)
+            else:
+                # Use an installed 500 error handler.
+                if is_async_callable(self.handler):
+                    response = await self.handler(request, exc)  # type: ignore[assignment, arg-type]
+                else:
+                    response = await run_in_threadpool(self.handler, request, exc)  # type: ignore[arg-type]
+    
+            if not response_started:
+                await response(scope, receive, send)
+    
+            # We always continue to raise the exception.
+            # This allows servers to log the error, or allows test clients
+            # to optionally raise the error within the test case.
+>           raise exc
+
+.venv\Lib\site-packages\starlette\middleware\errors.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.middleware.errors.ServerErrorMiddleware object at 0x0000000006C52A50>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function _TestClientTransport.handle_request.<locals>.receive at 0x0000000006CA0400>
+send = <function _TestClientTransport.handle_request.<locals>.send at 0x0000000006CA0720>
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+    
+        response_started = False
+    
+        async def _send(message: Message) -> None:
+            nonlocal response_started, send
+    
+            if message["type"] == "http.response.start":
+                response_started = True
+            await send(message)
+    
+        try:
+>           await self.app(scope, receive, _send)
+
+.venv\Lib\site-packages\starlette\middleware\errors.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.middleware.base.BaseHTTPMiddleware object at 0x0000000006C52900>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function _TestClientTransport.handle_request.<locals>.receive at 0x0000000006CA0400>
+send = <function ServerErrorMiddleware.__call__.<locals>._send at 0x0000000006CEC180>
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+    
+        request = _CachedRequest(scope, receive)
+        wrapped_receive = request.wrapped_receive
+        response_sent = anyio.Event()
+        app_exc: Exception | None = None
+        exception_already_raised = False
+    
+        async def call_next(request: Request) -> Response:
+            async def receive_or_disconnect() -> Message:
+                if response_sent.is_set():
+                    return {"type": "http.disconnect"}
+    
+                async with anyio.create_task_group() as task_group:
+    
+                    async def wrap(func: Callable[[], Awaitable[T]]) -> T:
+                        result = await func()
+                        task_group.cancel_scope.cancel()
+                        return result
+    
+                    task_group.start_soon(wrap, response_sent.wait)
+                    message = await wrap(wrapped_receive)
+    
+                if response_sent.is_set():
+                    return {"type": "http.disconnect"}
+    
+                return message
+    
+            async def send_no_error(message: Message) -> None:
+                try:
+                    await send_stream.send(message)
+                except anyio.BrokenResourceError:
+                    # recv_stream has been closed, i.e. response_sent has been set.
+                    return
+    
+                if message["type"] == "http.response.pathsend" or (
+                    message["type"] == "http.response.body" and not message.get("more_body", False)
+                ):
+                    await response_sent.wait()
+    
+            async def coro() -> None:
+                nonlocal app_exc
+    
+                with send_stream:
+                    try:
+                        await self.app(scope, receive_or_disconnect, send_no_error)
+                    except Exception as exc:
+                        app_exc = exc
+    
+            task_group.start_soon(coro)
+    
+            try:
+                message = await recv_stream.receive()
+                info = message.get("info", None)
+                if message["type"] == "http.response.debug" and info is not None:
+                    message = await recv_stream.receive()
+            except anyio.EndOfStream:
+                if app_exc is not None:
+                    nonlocal exception_already_raised
+                    exception_already_raised = True
+                    # Prevent `anyio.EndOfStream` from polluting app exception context.
+                    # If both cause and context are None then the context is suppressed
+                    # and `anyio.EndOfStream` is not present in the exception traceback.
+                    # If exception cause is not None then it is propagated with
+                    # reraising here.
+                    # If exception has no cause but has context set then the context is
+                    # propagated as a cause with the reraise. This is necessary in order
+                    # to prevent `anyio.EndOfStream` from polluting the exception
+                    # context.
+                    raise app_exc from app_exc.__cause__ or app_exc.__context__
+                raise RuntimeError("No response returned.")
+    
+            assert message["type"] == "http.response.start"
+    
+            async def body_stream() -> BodyStreamGenerator:
+                async for message in recv_stream:
+                    if message["type"] == "http.response.pathsend":
+                        yield message
+                        break
+                    assert message["type"] == "http.response.body", f"Unexpected message: {message}"
+                    body = message.get("body", b"")
+                    if body:
+                        yield body
+                    if not message.get("more_body", False):
+                        break
+    
+            response = _StreamingResponse(status_code=message["status"], content=body_stream(), info=info)
+            response.raw_headers = message["headers"]
+            return response
+    
+        send_stream, recv_stream = anyio.create_memory_object_stream[Message]()
+        with recv_stream, send_stream:
+            async with create_collapsing_task_group() as task_group:
+>               response = await self.dispatch_func(request, call_next)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv\Lib\site-packages\starlette\middleware\base.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request = <starlette.middleware.base._CachedRequest object at 0x0000000006C534D0>
+call_next = <function BaseHTTPMiddleware.__call__.<locals>.call_next at 0x0000000006CEC2C0>
+
+    @app.middleware("http")
+    async def request_id_middleware(request, call_next):
+        """Correlation ID + V1 HTTP observability."""
+        incoming = '' if getattr(request.app.state, 'runtime_profile', 'NORMAL') == 'ATTESTATION' else request.headers.get("x-request-id", "")[:64]
+        rid = incoming if incoming.replace("-", "").replace("_", "").isalnum() else None
+    
+        started = time.perf_counter()
+        metrics.incr("requests_total")
+    
+        with request_context(request_id=rid or None) as ids:
+            try:
+>               response = await call_next(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^
+
+app\main.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request = <starlette.middleware.base._CachedRequest object at 0x0000000006C534D0>
+
+    async def call_next(request: Request) -> Response:
+        async def receive_or_disconnect() -> Message:
+            if response_sent.is_set():
+                return {"type": "http.disconnect"}
+    
+            async with anyio.create_task_group() as task_group:
+    
+                async def wrap(func: Callable[[], Awaitable[T]]) -> T:
+                    result = await func()
+                    task_group.cancel_scope.cancel()
+                    return result
+    
+                task_group.start_soon(wrap, response_sent.wait)
+                message = await wrap(wrapped_receive)
+    
+            if response_sent.is_set():
+                return {"type": "http.disconnect"}
+    
+            return message
+    
+        async def send_no_error(message: Message) -> None:
+            try:
+                await send_stream.send(message)
+            except anyio.BrokenResourceError:
+                # recv_stream has been closed, i.e. response_sent has been set.
+                return
+    
+            if message["type"] == "http.response.pathsend" or (
+                message["type"] == "http.response.body" and not message.get("more_body", False)
+            ):
+                await response_sent.wait()
+    
+        async def coro() -> None:
+            nonlocal app_exc
+    
+            with send_stream:
+                try:
+                    await self.app(scope, receive_or_disconnect, send_no_error)
+                except Exception as exc:
+                    app_exc = exc
+    
+        task_group.start_soon(coro)
+    
+        try:
+            message = await recv_stream.receive()
+            info = message.get("info", None)
+            if message["type"] == "http.response.debug" and info is not None:
+                message = await recv_stream.receive()
+        except anyio.EndOfStream:
+            if app_exc is not None:
+                nonlocal exception_already_raised
+                exception_already_raised = True
+                # Prevent `anyio.EndOfStream` from polluting app exception context.
+                # If both cause and context are None then the context is suppressed
+                # and `anyio.EndOfStream` is not present in the exception traceback.
+                # If exception cause is not None then it is propagated with
+                # reraising here.
+                # If exception has no cause but has context set then the context is
+                # propagated as a cause with the reraise. This is necessary in order
+                # to prevent `anyio.EndOfStream` from polluting the exception
+                # context.
+>               raise app_exc from app_exc.__cause__ or app_exc.__context__
+
+.venv\Lib\site-packages\starlette\middleware\base.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def coro() -> None:
+        nonlocal app_exc
+    
+        with send_stream:
+            try:
+>               await self.app(scope, receive_or_disconnect, send_no_error)
+
+.venv\Lib\site-packages\starlette\middleware\base.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.middleware.cors.CORSMiddleware object at 0x0000000006C527B0>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x0000000006CEC4A0>
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":  # pragma: no cover
+            await self.app(scope, receive, send)
+            return
+    
+        method = scope["method"]
+        headers = Headers(scope=scope)
+        origin = headers.get("origin")
+    
+        if origin is not None and method == "OPTIONS" and "access-control-request-method" in headers:
+            response = self.preflight_response(request_headers=headers)
+            await response(scope, receive, send)
+            return
+    
+>       await self.simple_response(scope, receive, send, request_headers=headers)
+
+.venv\Lib\site-packages\starlette\middleware\cors.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.middleware.cors.CORSMiddleware object at 0x0000000006C527B0>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = functools.partial(<bound method CORSMiddleware.send of <starlette.middleware.cors.CORSMiddleware object at 0x0000000006C527B0>>, send=<function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x0000000006CEC4A0>, request_headers=Headers({'host': 'testserver', 'accept': '*/*', 'accept-encoding': 'gzip, deflate', 'connection': 'keep-alive', 'user-agent': 'testclient', 'x-admin-token': 'projection-fixture', 'content-length': '75', 'content-type': 'application/json'}))
+request_headers = Headers({'host': 'testserver', 'accept': '*/*', 'accept-encoding': 'gzip, deflate', 'connection': 'keep-alive', 'user-agent': 'testclient', 'x-admin-token': 'projection-fixture', 'content-length': '75', 'content-type': 'application/json'})
+
+    async def simple_response(self, scope: Scope, receive: Receive, send: Send, request_headers: Headers) -> None:
+        send = functools.partial(self.send, send=send, request_headers=request_headers)
+>       await self.app(scope, receive, send)
+
+.venv\Lib\site-packages\starlette\middleware\cors.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <starlette.middleware.exceptions.ExceptionMiddleware object at 0x0000000006C52660>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = functools.partial(<bound method CORSMiddleware.send of <starlette.middleware.cors.CORSMiddleware object at 0x0000000006C527B0>>, send=<function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x0000000006CEC4A0>, request_headers=Headers({'host': 'testserver', 'accept': '*/*', 'accept-encoding': 'gzip, deflate', 'connection': 'keep-alive', 'user-agent': 'testclient', 'x-admin-token': 'projection-fixture', 'content-length': '75', 'content-type': 'application/json'}))
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] not in ("http", "websocket"):
+            await self.app(scope, receive, send)
+            return
+    
+        scope["starlette.exception_handlers"] = (
+            self._exception_handlers,
+            self._status_handlers,
+        )
+    
+        conn: Request | WebSocket
+        if scope["type"] == "http":
+            conn = Request(scope, receive, send)
+        else:
+            conn = WebSocket(scope, receive, send)
+    
+>       await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+
+.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = functools.partial(<bound method CORSMiddleware.send of <starlette.middleware.cors.CORSMiddleware object at 0x0000000006C527B0>>, send=<function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x0000000006CEC4A0>, request_headers=Headers({'host': 'testserver', 'accept': '*/*', 'accept-encoding': 'gzip, deflate', 'connection': 'keep-alive', 'user-agent': 'testclient', 'x-admin-token': 'projection-fixture', 'content-length': '75', 'content-type': 'application/json'}))
+
+    async def wrapped_app(scope: Scope, receive: Receive, send: Send) -> None:
+        response_started = False
+    
+        async def sender(message: Message) -> None:
+            nonlocal response_started
+    
+            if message["type"] == "http.response.start":
+                response_started = True
+            await send(message)
+    
+        try:
+            await app(scope, receive, sender)
+        except Exception as exc:
+            handler = None
+    
+            if isinstance(exc, HTTPException):
+                handler = status_handlers.get(exc.status_code)
+    
+            if handler is None:
+                handler = _lookup_exception_handler(exception_handlers, exc)
+    
+            if handler is None:
+>               raise exc
+
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = functools.partial(<bound method CORSMiddleware.send of <starlette.middleware.cors.CORSMiddleware object at 0x0000000006C527B0>>, send=<function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.send_no_error at 0x0000000006CEC4A0>, request_headers=Headers({'host': 'testserver', 'accept': '*/*', 'accept-encoding': 'gzip, deflate', 'connection': 'keep-alive', 'user-agent': 'testclient', 'x-admin-token': 'projection-fixture', 'content-length': '75', 'content-type': 'application/json'}))
+
+    async def wrapped_app(scope: Scope, receive: Receive, send: Send) -> None:
+        response_started = False
+    
+        async def sender(message: Message) -> None:
+            nonlocal response_started
+    
+            if message["type"] == "http.response.start":
+                response_started = True
+            await send(message)
+    
+        try:
+>           await app(scope, receive, sender)
+
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x0000000006C52510>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006CEC720>
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        async with AsyncExitStack() as stack:
+            scope[self.context_name] = stack
+>           await self.app(scope, receive, send)
+
+.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <fastapi.routing.APIRouter object at 0x0000000006C445A0>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006CEC720>
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        """
+        The main entry point to the Router class.
+        """
+>       await self.middleware_stack(scope, receive, send)
+
+.venv\Lib\site-packages\starlette\routing.py:676: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <fastapi.routing.APIRouter object at 0x0000000006C445A0>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006CEC720>
+
+    async def app(self, scope: Scope, receive: Receive, send: Send) -> None:
+        assert scope["type"] in ("http", "websocket", "lifespan")
+    
+        if "router" not in scope:
+            scope["router"] = self
+    
+        if scope["type"] == "lifespan":
+            await self.lifespan(scope, receive, send)
+            return
+    
+        partial: tuple[BaseRoute, Scope] | None = None
+        for route in self.routes:
+            match, child_scope = route.matches(scope)
+            if match == Match.FULL:
+                scope.update(child_scope)
+>               await route.handle(scope, receive, send)
+
+.venv\Lib\site-packages\fastapi\routing.py:2734: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = _IncludedRouter(original_router=<fastapi.routing.APIRouter object at 0x000000000585D6A0>, include_context=_RouterIncludeContext(included_router=<fastapi.routing.APIRouter object at 0x000000000585D6A0>, prefix='', tags=[], dependencies=[], default_response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051EEC60>, responses={}, callbacks=[], deprecated=None, include_in_schema=True, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051EECB0>, strict_content_type=True, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>), _effective_candidates=[_EffectiveRouteContext(original_route=APIRoute(path='/v1/health', name='health_check', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/health', endpoint=<function health_check at 0x000000000699D440>, stream_item_type=None, response_model=<class 'app.api.routes.HealthResponse'>, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='health_check', path_regex=re.compile('^/v1/health$'), path_format='/v1/health', param_convertors={}, methods={'GET'}, unique_id='health_check_v1_health_get', status_code=None, response_field=ModelField(field_info=FieldInfo(annotation=HealthResponse, required=True), name='Response_health_check_v1_health_get', mode='serialization', config=None), stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function health_check at 0x000000000699D440>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/health', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/health/detail', name='health_detail', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/health/detail', endpoint=<function health_detail at 0x0000000006ACC040>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='health_detail', path_regex=re.compile('^/v1/health/detail$'), path_format='/v1/health/detail', param_convertors={}, methods={'GET'}, unique_id='health_detail_v1_health_detail_get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function health_detail at 0x0000000006ACC040>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/health/detail', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/chat/history', name='chat_history', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/chat/history', endpoint=<function chat_history at 0x0000000006ACC720>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='chat_history', path_regex=re.compile('^/v1/chat/history$'), path_format='/v1/chat/history', param_convertors={}, methods={'GET'}, unique_id='chat_history_v1_chat_history_get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(), name='x_chat_session', mode='validation', config=None), ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function chat_history at 0x0000000006ACC720>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/chat/history', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/chat', name='chat', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/chat', endpoint=<function chat at 0x0000000006ACC9A0>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='chat', path_regex=re.compile('^/v1/chat$'), path_format='/v1/chat', param_convertors={}, methods={'POST'}, unique_id='chat_v1_chat_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function chat at 0x0000000006ACC9A0>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/chat', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/problem/analyze', name='analyze_problem', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/problem/analyze', endpoint=<function analyze_problem at 0x0000000006ACCC20>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='analyze_problem', path_regex=re.compile('^/v1/problem/analyze$'), path_format='/v1/problem/analyze', param_convertors={}, methods={'POST'}, unique_id='analyze_problem_v1_problem_analyze_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function analyze_problem at 0x0000000006ACCC20>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/problem/analyze', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/workflow/create', name='create_workflow', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/workflow/create', endpoint=<function create_workflow at 0x0000000006ACCE00>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='create_workflow', path_regex=re.compile('^/v1/workflow/create$'), path_format='/v1/workflow/create', param_convertors={}, methods={'POST'}, unique_id='create_workflow_v1_workflow_create_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function create_workflow at 0x0000000006ACCE00>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/workflow/create', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/workflow/{workflow_id}', name='get_workflow', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/workflow/{workflow_id}', endpoint=<function get_workflow at 0x0000000006ACCB80>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='get_workflow', path_regex=re.compile('^/v1/workflow/(?P<workflow_id>[^/]+)$'), path_format='/v1/workflow/{workflow_id}', param_convertors={'workflow_id': <starlette.convertors.StringConvertor object at 0x000000000511D550>}, methods={'GET'}, unique_id='get_workflow_v1_workflow__workflow_id__get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[ModelField(field_info=Path(PydanticUndefined), name='workflow_id', mode='validation', config=None)], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function get_workflow at 0x0000000006ACCB80>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/workflow/{workflow_id}', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/documents/ingest', name='ingest_document', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/documents/ingest', endpoint=<function ingest_document at 0x0000000006ACCF40>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='ingest_document', path_regex=re.compile('^/v1/documents/ingest$'), path_format='/v1/documents/ingest', param_convertors={}, methods={'POST'}, unique_id='ingest_document_v1_documents_ingest_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function ingest_document at 0x0000000006ACCF40>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/documents/ingest', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _IncludedRouter(original_router=<fastapi.routing.APIRouter object at 0x0000000006A23110>, include_context=_RouterIncludeContext(included_router=<fastapi.routing.APIRouter object at 0x0000000006A23110>, prefix='/v1', tags=['api'], dependencies=[], default_response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051D86D0>, responses={}, callbacks=[], deprecated=None, include_in_schema=True, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x000000000519DF60>, strict_content_type=True, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>), _effective_candidates=[], _effective_candidates_version=None, _effective_low_priority_routes=[], _effective_low_priority_routes_version=None), _EffectiveRouteContext(original_route=APIRoute(path='/v1/knowledge/search', name='search_knowledge', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/knowledge/search', endpoint=<function search_knowledge at 0x0000000006ACE660>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='search_knowledge', path_regex=re.compile('^/v1/knowledge/search$'), path_format='/v1/knowledge/search', param_convertors={}, methods={'POST'}, unique_id='search_knowledge_v1_knowledge_search_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function search_knowledge at 0x0000000006ACE660>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/knowledge/search', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/knowledge/documents', name='list_knowledge_documents', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/knowledge/documents', endpoint=<function list_knowledge_documents at 0x0000000006ACE840>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='list_knowledge_documents', path_regex=re.compile('^/v1/knowledge/documents$'), path_format='/v1/knowledge/documents', param_convertors={}, methods={'GET'}, unique_id='list_knowledge_documents_v1_knowledge_documents_get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function list_knowledge_documents at 0x0000000006ACE840>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/knowledge/documents', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/human/handoff', name='request_handoff', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/human/handoff', endpoint=<function request_handoff at 0x0000000006ACEA20>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='request_handoff', path_regex=re.compile('^/v1/human/handoff$'), path_format='/v1/human/handoff', param_convertors={}, methods={'POST'}, unique_id='request_handoff_v1_human_handoff_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function request_handoff at 0x0000000006ACEA20>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/human/handoff', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/metrics', name='get_metrics', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/metrics', endpoint=<function get_metrics at 0x0000000006ACEC00>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='get_metrics', path_regex=re.compile('^/v1/metrics$'), path_format='/v1/metrics', param_convertors={}, methods={'GET'}, unique_id='get_metrics_v1_metrics_get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function get_metrics at 0x0000000006ACEC00>, request_param_name='request', websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/metrics', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/developer-core', name='developer_core_status', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/developer-core', endpoint=<function developer_core_status at 0x0000000006ACEDE0>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='developer_core_status', path_regex=re.compile('^/v1/developer\\-core$'), path_format='/v1/developer-core', param_convertors={}, methods={'GET'}, unique_id='developer_core_status_v1_developer_core_get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='Read-only Developer Core / Graphify runtime inspection.', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function developer_core_status at 0x0000000006ACEDE0>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/developer-core', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False)], _effective_candidates_version=23, _effective_low_priority_routes=[], _effective_low_priority_routes_version=None)
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006CEC720>
+
+    async def handle(self, scope: Scope, receive: Receive, send: Send) -> None:
+        _get_fastapi_scope(scope)[_FASTAPI_INCLUDED_ROUTER_KEY] = self
+>       await self.original_router.handle(scope, receive, send)
+
+.venv\Lib\site-packages\fastapi\routing.py:1780: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <fastapi.routing.APIRouter object at 0x000000000585D6A0>
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006CEC720>
+
+    async def handle(self, scope: Scope, receive: Receive, send: Send) -> None:
+        included_router = _get_scope_included_router(scope)
+        if (
+            isinstance(included_router, _IncludedRouter)
+            and included_router.original_router is self
+        ):
+>           await included_router._handle_selected(scope, receive, send)
+
+.venv\Lib\site-packages\fastapi\routing.py:2789: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = _IncludedRouter(original_router=<fastapi.routing.APIRouter object at 0x000000000585D6A0>, include_context=_RouterIncludeContext(included_router=<fastapi.routing.APIRouter object at 0x000000000585D6A0>, prefix='', tags=[], dependencies=[], default_response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051EEC60>, responses={}, callbacks=[], deprecated=None, include_in_schema=True, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051EECB0>, strict_content_type=True, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>), _effective_candidates=[_EffectiveRouteContext(original_route=APIRoute(path='/v1/health', name='health_check', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/health', endpoint=<function health_check at 0x000000000699D440>, stream_item_type=None, response_model=<class 'app.api.routes.HealthResponse'>, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='health_check', path_regex=re.compile('^/v1/health$'), path_format='/v1/health', param_convertors={}, methods={'GET'}, unique_id='health_check_v1_health_get', status_code=None, response_field=ModelField(field_info=FieldInfo(annotation=HealthResponse, required=True), name='Response_health_check_v1_health_get', mode='serialization', config=None), stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function health_check at 0x000000000699D440>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/health', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/health/detail', name='health_detail', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/health/detail', endpoint=<function health_detail at 0x0000000006ACC040>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='health_detail', path_regex=re.compile('^/v1/health/detail$'), path_format='/v1/health/detail', param_convertors={}, methods={'GET'}, unique_id='health_detail_v1_health_detail_get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function health_detail at 0x0000000006ACC040>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/health/detail', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/chat/history', name='chat_history', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/chat/history', endpoint=<function chat_history at 0x0000000006ACC720>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='chat_history', path_regex=re.compile('^/v1/chat/history$'), path_format='/v1/chat/history', param_convertors={}, methods={'GET'}, unique_id='chat_history_v1_chat_history_get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(), name='x_chat_session', mode='validation', config=None), ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function chat_history at 0x0000000006ACC720>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/chat/history', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/chat', name='chat', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/chat', endpoint=<function chat at 0x0000000006ACC9A0>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='chat', path_regex=re.compile('^/v1/chat$'), path_format='/v1/chat', param_convertors={}, methods={'POST'}, unique_id='chat_v1_chat_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function chat at 0x0000000006ACC9A0>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/chat', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/problem/analyze', name='analyze_problem', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/problem/analyze', endpoint=<function analyze_problem at 0x0000000006ACCC20>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='analyze_problem', path_regex=re.compile('^/v1/problem/analyze$'), path_format='/v1/problem/analyze', param_convertors={}, methods={'POST'}, unique_id='analyze_problem_v1_problem_analyze_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function analyze_problem at 0x0000000006ACCC20>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/problem/analyze', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/workflow/create', name='create_workflow', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/workflow/create', endpoint=<function create_workflow at 0x0000000006ACCE00>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='create_workflow', path_regex=re.compile('^/v1/workflow/create$'), path_format='/v1/workflow/create', param_convertors={}, methods={'POST'}, unique_id='create_workflow_v1_workflow_create_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function create_workflow at 0x0000000006ACCE00>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/workflow/create', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/workflow/{workflow_id}', name='get_workflow', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/workflow/{workflow_id}', endpoint=<function get_workflow at 0x0000000006ACCB80>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='get_workflow', path_regex=re.compile('^/v1/workflow/(?P<workflow_id>[^/]+)$'), path_format='/v1/workflow/{workflow_id}', param_convertors={'workflow_id': <starlette.convertors.StringConvertor object at 0x000000000511D550>}, methods={'GET'}, unique_id='get_workflow_v1_workflow__workflow_id__get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[ModelField(field_info=Path(PydanticUndefined), name='workflow_id', mode='validation', config=None)], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function get_workflow at 0x0000000006ACCB80>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/workflow/{workflow_id}', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/documents/ingest', name='ingest_document', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/documents/ingest', endpoint=<function ingest_document at 0x0000000006ACCF40>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='ingest_document', path_regex=re.compile('^/v1/documents/ingest$'), path_format='/v1/documents/ingest', param_convertors={}, methods={'POST'}, unique_id='ingest_document_v1_documents_ingest_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function ingest_document at 0x0000000006ACCF40>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/documents/ingest', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _IncludedRouter(original_router=<fastapi.routing.APIRouter object at 0x0000000006A23110>, include_context=_RouterIncludeContext(included_router=<fastapi.routing.APIRouter object at 0x0000000006A23110>, prefix='/v1', tags=['api'], dependencies=[], default_response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051D86D0>, responses={}, callbacks=[], deprecated=None, include_in_schema=True, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x000000000519DF60>, strict_content_type=True, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>), _effective_candidates=[], _effective_candidates_version=None, _effective_low_priority_routes=[], _effective_low_priority_routes_version=None), _EffectiveRouteContext(original_route=APIRoute(path='/v1/knowledge/search', name='search_knowledge', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/knowledge/search', endpoint=<function search_knowledge at 0x0000000006ACE660>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='search_knowledge', path_regex=re.compile('^/v1/knowledge/search$'), path_format='/v1/knowledge/search', param_convertors={}, methods={'POST'}, unique_id='search_knowledge_v1_knowledge_search_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function search_knowledge at 0x0000000006ACE660>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/knowledge/search', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/knowledge/documents', name='list_knowledge_documents', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/knowledge/documents', endpoint=<function list_knowledge_documents at 0x0000000006ACE840>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='list_knowledge_documents', path_regex=re.compile('^/v1/knowledge/documents$'), path_format='/v1/knowledge/documents', param_convertors={}, methods={'GET'}, unique_id='list_knowledge_documents_v1_knowledge_documents_get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function list_knowledge_documents at 0x0000000006ACE840>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/knowledge/documents', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/human/handoff', name='request_handoff', methods=['POST']), starlette_route=None, frontend_prefix='', path='/v1/human/handoff', endpoint=<function request_handoff at 0x0000000006ACEA20>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC3C0>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051FC460>, strict_content_type=True, tags=['api'], responses={}, name='request_handoff', path_regex=re.compile('^/v1/human/handoff$'), path_format='/v1/human/handoff', param_convertors={}, methods={'POST'}, unique_id='request_handoff_v1_human_handoff_post', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function request_handoff at 0x0000000006ACEA20>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/human/handoff', scope='function'), _embed_body_fields=False, body_field=ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None), is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/metrics', name='get_metrics', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/metrics', endpoint=<function get_metrics at 0x0000000006ACEC00>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='get_metrics', path_regex=re.compile('^/v1/metrics$'), path_format='/v1/metrics', param_convertors={}, methods={'GET'}, unique_id='get_metrics_v1_metrics_get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function get_metrics at 0x0000000006ACEC00>, request_param_name='request', websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/metrics', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False), _EffectiveRouteContext(original_route=APIRoute(path='/v1/developer-core', name='developer_core_status', methods=['GET']), starlette_route=None, frontend_prefix='', path='/v1/developer-core', endpoint=<function developer_core_status at 0x0000000006ACEDE0>, stream_item_type=None, response_model=None, summary=None, response_description='Successful Response', deprecated=None, operation_id=None, response_model_include=None, response_model_exclude=None, response_model_by_alias=True, response_model_exclude_unset=False, response_model_exclude_defaults=False, response_model_exclude_none=False, include_in_schema=True, response_class=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4F50>, dependency_overrides_provider=<fastapi.applications.FastAPI object at 0x0000000006B238C0>, callbacks=[], openapi_extra=None, generate_unique_id_function=<fastapi.datastructures.DefaultPlaceholder object at 0x00000000051A4DD0>, strict_content_type=True, tags=['api'], responses={}, name='developer_core_status', path_regex=re.compile('^/v1/developer\\-core$'), path_format='/v1/developer-core', param_convertors={}, methods={'GET'}, unique_id='developer_core_status_v1_developer_core_get', status_code=None, response_field=None, stream_item_field=None, dependencies=[], description='Read-only Developer Core / Graphify runtime inspection.', response_fields={}, dependant=Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], name=None, call=<function developer_core_status at 0x0000000006ACEDE0>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/developer-core', scope='function'), _embed_body_fields=False, body_field=None, is_sse_stream=False, is_json_stream=False)], _effective_candidates_version=23, _effective_low_priority_routes=[], _effective_low_priority_routes_version=None)
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006CEC720>
+
+    async def _handle_selected(
+        self, scope: Scope, receive: Receive, send: Send
+    ) -> None:
+        match, child_scope, route, effective_context = self._match(scope)
+        if match == Match.NONE or route is None:
+            await self.original_router.default(scope, receive, send)
+            return
+        scope.update(child_scope)
+        if isinstance(route, _IncludedRouter):
+            await route.handle(scope, receive, send)
+            return
+        if effective_context is not None:
+            _get_fastapi_scope(scope)[_FASTAPI_EFFECTIVE_ROUTE_CONTEXT_KEY] = (
+                effective_context
+            )
+            original_route = effective_context.original_route
+            if isinstance(original_route, APIRoute):
+                scope["route"] = original_route
+>               await original_route.handle(scope, receive, send)
+
+.venv\Lib\site-packages\fastapi\routing.py:1800: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = APIRoute(path='/v1/chat', name='chat', methods=['POST'])
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006CEC720>
+
+    async def handle(self, scope: Scope, receive: Receive, send: Send) -> None:
+        effective_context = _get_scope_effective_route_context(scope)
+        if effective_context is not None and effective_context.original_route is self:
+            methods = effective_context.methods
+            if methods and scope["method"] not in methods:
+                headers = {"Allow": ", ".join(methods)}
+                if "app" in scope:
+                    raise HTTPException(status_code=405, headers=headers)
+                response = PlainTextResponse(
+                    "Method Not Allowed", status_code=405, headers=headers
+                )
+                await response(scope, receive, send)
+                return
+            token = _effective_route_context_var.set(effective_context)
+            try:
+                app = request_response(self.get_route_handler())
+            finally:
+                _effective_route_context_var.reset(token)
+>           await app(scope, receive, send)
+
+.venv\Lib\site-packages\fastapi\routing.py:1279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006CEC720>
+
+    async def app(scope: Scope, receive: Receive, send: Send) -> None:
+        request = Request(scope, receive, send)
+    
+        async def app(scope: Scope, receive: Receive, send: Send) -> None:
+            # Starts customization
+            response_awaited = False
+            async with AsyncExitStack() as request_stack:
+                scope["fastapi_inner_astack"] = request_stack
+                async with AsyncExitStack() as function_stack:
+                    scope["fastapi_function_astack"] = function_stack
+                    response = await f(request)
+                await response(scope, receive, send)
+                # Continues customization
+                response_awaited = True
+            if not response_awaited:
+                raise FastAPIError(
+                    "Response not awaited. There's a high chance that the "
+                    "application code is raising an exception and a dependency with yield "
+                    "has a block with a bare except, or a block with except Exception, "
+                    "and is not raising the exception again. Read more about it in the "
+                    "docs: https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/#dependencies-with-yield-and-except"
+                )
+    
+        # Same as in Starlette
+>       await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+
+.venv\Lib\site-packages\fastapi\routing.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006CEC720>
+
+    async def wrapped_app(scope: Scope, receive: Receive, send: Send) -> None:
+        response_started = False
+    
+        async def sender(message: Message) -> None:
+            nonlocal response_started
+    
+            if message["type"] == "http.response.start":
+                response_started = True
+            await send(message)
+    
+        try:
+            await app(scope, receive, sender)
+        except Exception as exc:
+            handler = None
+    
+            if isinstance(exc, HTTPException):
+                handler = status_handlers.get(exc.status_code)
+    
+            if handler is None:
+                handler = _lookup_exception_handler(exception_handlers, exc)
+    
+            if handler is None:
+>               raise exc
+
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006CEC720>
+
+    async def wrapped_app(scope: Scope, receive: Receive, send: Send) -> None:
+        response_started = False
+    
+        async def sender(message: Message) -> None:
+            nonlocal response_started
+    
+            if message["type"] == "http.response.start":
+                response_started = True
+            await send(message)
+    
+        try:
+>           await app(scope, receive, sender)
+
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+scope = {'type': 'http', 'http_version': '1.1', 'method': 'POST', 'path': '/v1/chat', ...}
+receive = <function BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.receive_or_disconnect at 0x0000000006CEC400>
+send = <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x0000000006C77600>
+
+    async def app(scope: Scope, receive: Receive, send: Send) -> None:
+        # Starts customization
+        response_awaited = False
+        async with AsyncExitStack() as request_stack:
+            scope["fastapi_inner_astack"] = request_stack
+            async with AsyncExitStack() as function_stack:
+                scope["fastapi_function_astack"] = function_stack
+>               response = await f(request)
+                           ^^^^^^^^^^^^^^^^
+
+.venv\Lib\site-packages\fastapi\routing.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request = <starlette.requests.Request object at 0x0000000006CE1A90>
+
+    async def app(request: Request) -> Response:
+        response: Response | None = None
+        file_stack = request.scope.get("fastapi_middleware_astack")
+        assert isinstance(file_stack, AsyncExitStack), (
+            "fastapi_middleware_astack not found in request scope"
+        )
+    
+        # Extract endpoint context for error messages
+        endpoint_ctx = (
+            _extract_endpoint_context(dependant.call)
+            if dependant.call
+            else EndpointContext()
+        )
+    
+        if dependant.path:
+            # For mounted sub-apps, include the mount path prefix
+            mount_path = request.scope.get("root_path", "").rstrip("/")
+            endpoint_ctx["path"] = f"{request.method} {mount_path}{dependant.path}"
+    
+        # Read body and auto-close files
+        try:
+            body: Any = None
+            if body_field:
+                if is_body_form:
+                    body = await request.form()
+                    file_stack.push_async_callback(body.close)
+                else:
+                    body_bytes = await request.body()
+                    if body_bytes:
+                        json_body: Any = Undefined
+                        content_type_value = request.headers.get("content-type")
+                        if not content_type_value:
+                            if not actual_strict_content_type:
+                                json_body = await request.json()
+                        else:
+                            message = email.message.Message()
+                            message["content-type"] = content_type_value
+                            if message.get_content_maintype() == "application":
+                                subtype = message.get_content_subtype()
+                                if subtype == "json" or subtype.endswith("+json"):
+                                    json_body = await request.json()
+                        if json_body != Undefined:
+                            body = json_body
+                        else:
+                            body = body_bytes
+        except json.JSONDecodeError as e:
+            validation_error = RequestValidationError(
+                [
+                    {
+                        "type": "json_invalid",
+                        "loc": ("body", e.pos),
+                        "msg": "JSON decode error",
+                        "input": {},
+                        "ctx": {"error": e.msg},
+                    }
+                ],
+                body=e.doc,
+                endpoint_ctx=endpoint_ctx,
+            )
+            raise validation_error from e
+        except HTTPException:
+            # If a middleware raises an HTTPException, it should be raised again
+            raise
+        except Exception as e:
+            http_error = HTTPException(
+                status_code=400, detail="There was an error parsing the body"
+            )
+            raise http_error from e
+    
+        # Solve dependencies and run path operation function, auto-closing dependencies
+        errors: list[Any] = []
+        async_exit_stack = request.scope.get("fastapi_inner_astack")
+        assert isinstance(async_exit_stack, AsyncExitStack), (
+            "fastapi_inner_astack not found in request scope"
+        )
+        solved_result = await solve_dependencies(
+            request=request,
+            dependant=dependant,
+            body=cast(dict[str, Any] | FormData | bytes | None, body),
+            dependency_overrides_provider=dependency_overrides_provider,
+            async_exit_stack=async_exit_stack,
+            embed_body_fields=embed_body_fields,
+        )
+        errors = solved_result.errors
+        assert dependant.call  # For types
+        if not errors:
+            # Shared serializer for stream items (JSONL and SSE).
+            # Validates against stream_item_field when set, then
+            # serializes to JSON bytes.
+            def _serialize_data(data: Any) -> bytes:
+                if stream_item_field:
+                    value, errors_ = stream_item_field.validate(
+                        data, {}, loc=("response",)
+                    )
+                    if errors_:
+                        ctx = endpoint_ctx or EndpointContext()
+                        raise ResponseValidationError(
+                            errors=errors_,
+                            body=data,
+                            endpoint_ctx=ctx,
+                        )
+                    return stream_item_field.serialize_json(
+                        value,
+                        include=response_model_include,
+                        exclude=response_model_exclude,
+                        by_alias=response_model_by_alias,
+                        exclude_unset=response_model_exclude_unset,
+                        exclude_defaults=response_model_exclude_defaults,
+                        exclude_none=response_model_exclude_none,
+                    )
+                else:
+                    data = jsonable_encoder(data)
+                    return json.dumps(data).encode("utf-8")
+    
+            if is_sse_stream:
+                # Generator endpoint: stream as Server-Sent Events
+                gen = dependant.call(**solved_result.values)
+    
+                def _serialize_sse_item(item: Any) -> bytes:
+                    if isinstance(item, ServerSentEvent):
+                        # User controls the event structure.
+                        # Serialize the data payload if present.
+                        # For ServerSentEvent items we skip stream_item_field
+                        # validation (the user may mix types intentionally).
+                        if item.raw_data is not None:
+                            data_str: str | None = item.raw_data
+                        elif item.data is not None:
+                            if hasattr(item.data, "model_dump_json"):
+                                data_str = item.data.model_dump_json()
+                            else:
+                                data_str = json.dumps(jsonable_encoder(item.data))
+                        else:
+                            data_str = None
+                        return format_sse_event(
+                            data_str=data_str,
+                            event=item.event,
+                            id=item.id,
+                            retry=item.retry,
+                            comment=item.comment,
+                        )
+                    else:
+                        # Plain object: validate + serialize via
+                        # stream_item_field (if set) and wrap in data field
+                        return format_sse_event(
+                            data_str=_serialize_data(item).decode("utf-8")
+                        )
+    
+                if _is_async_gen_callable(dependant.call):
+                    sse_aiter: AsyncIterator[Any] = gen.__aiter__()
+                else:
+                    sse_aiter = iterate_in_threadpool(gen)
+    
+                @asynccontextmanager
+                async def _sse_producer_cm() -> AsyncIterator[
+                    ObjectReceiveStream[bytes]
+                ]:
+                    # Use a memory stream to decouple generator iteration
+                    # from the keepalive timer. A producer task pulls items
+                    # from the generator independently, so
+                    # `anyio.fail_after` never wraps the generator's
+                    # `__anext__` directly - avoiding CancelledError that
+                    # would finalize the generator and also working for sync
+                    # generators running in a thread pool.
+                    #
+                    # This context manager is entered on the request-scoped
+                    # AsyncExitStack so its __aexit__ (which cancels the
+                    # task group) is called by the exit stack after the
+                    # streaming response completes — not by async generator
+                    # finalization via GeneratorExit.
+                    # Ref: https://peps.python.org/pep-0789/
+                    send_stream, receive_stream = anyio.create_memory_object_stream[
+                        bytes
+                    ](max_buffer_size=1)
+    
+                    async def _producer() -> None:
+                        async with send_stream:
+                            async for raw_item in sse_aiter:
+                                await send_stream.send(_serialize_sse_item(raw_item))
+    
+                    send_keepalive, receive_keepalive = (
+                        anyio.create_memory_object_stream[bytes](max_buffer_size=1)
+                    )
+    
+                    async def _keepalive_inserter() -> None:
+                        """Read from the producer and forward to the output,
+                        inserting keepalive comments on timeout."""
+                        async with send_keepalive, receive_stream:
+                            try:
+                                while True:
+                                    try:
+                                        with anyio.fail_after(_PING_INTERVAL):
+                                            data = await receive_stream.receive()
+                                        await send_keepalive.send(data)
+                                    except TimeoutError:
+                                        await send_keepalive.send(KEEPALIVE_COMMENT)
+                            except anyio.EndOfStream:
+                                pass
+    
+                    async with anyio.create_task_group() as tg:
+                        tg.start_soon(_producer)
+                        tg.start_soon(_keepalive_inserter)
+                        yield receive_keepalive
+                        tg.cancel_scope.cancel()
+    
+                # Enter the SSE context manager on the request-scoped
+                # exit stack. The stack outlives the streaming response,
+                # so __aexit__ runs via proper structured teardown, not
+                # via GeneratorExit thrown into an async generator.
+                sse_receive_stream = await async_exit_stack.enter_async_context(
+                    _sse_producer_cm()
+                )
+                # Ensure the receive stream is closed when the exit stack
+                # unwinds, preventing ResourceWarning from __del__.
+                async_exit_stack.push_async_callback(sse_receive_stream.aclose)
+    
+                async def _sse_with_checkpoints(
+                    stream: ObjectReceiveStream[bytes],
+                ) -> AsyncIterator[bytes]:
+                    async for data in stream:
+                        yield data
+                        # Guarantee a checkpoint so cancellation can be
+                        # delivered even when the producer is faster than
+                        # the consumer and receive() never suspends.
+                        await anyio.sleep(0)
+    
+                sse_stream_content: AsyncIterator[bytes] | Iterator[bytes] = (
+                    _sse_with_checkpoints(sse_receive_stream)
+                )
+    
+                response_args = _build_response_args(
+                    status_code=status_code, solved_result=solved_result
+                )
+                response = StreamingResponse(
+                    sse_stream_content,
+                    media_type="text/event-stream",
+                    **response_args,
+                )
+                response.headers["Cache-Control"] = "no-cache"
+                # For Nginx proxies to not buffer server sent events
+                response.headers["X-Accel-Buffering"] = "no"
+                response.headers.raw.extend(solved_result.response.headers.raw)
+            elif is_json_stream:
+                # Generator endpoint: stream as JSONL
+                gen = dependant.call(**solved_result.values)
+    
+                def _serialize_item(item: Any) -> bytes:
+                    return _serialize_data(item) + b"\n"
+    
+                if _is_async_gen_callable(dependant.call):
+    
+                    async def _async_stream_jsonl() -> AsyncIterator[bytes]:
+                        async for item in gen:
+                            yield _serialize_item(item)
+                            # To allow for cancellation to trigger
+                            # Ref: https://github.com/fastapi/fastapi/issues/14680
+                            await anyio.sleep(0)
+    
+                    jsonl_stream_content: AsyncIterator[bytes] | Iterator[bytes] = (
+                        _async_stream_jsonl()
+                    )
+                else:
+    
+                    def _sync_stream_jsonl() -> Iterator[bytes]:
+                        for item in gen:  # ty: ignore[not-iterable]
+                            yield _serialize_item(item)
+    
+                    jsonl_stream_content = _sync_stream_jsonl()
+    
+                response_args = _build_response_args(
+                    status_code=status_code, solved_result=solved_result
+                )
+                response = StreamingResponse(
+                    jsonl_stream_content,
+                    media_type="application/jsonl",
+                    **response_args,
+                )
+                response.headers.raw.extend(solved_result.response.headers.raw)
+            elif _is_async_gen_callable(dependant.call) or _is_gen_callable(
+                dependant.call
+            ):
+                # Raw streaming with explicit response_class (e.g. StreamingResponse)
+                gen = dependant.call(**solved_result.values)
+                if _is_async_gen_callable(dependant.call):
+    
+                    async def _async_stream_raw(
+                        async_gen: AsyncIterator[Any],
+                    ) -> AsyncIterator[Any]:
+                        async for chunk in async_gen:
+                            yield chunk
+                            # To allow for cancellation to trigger
+                            # Ref: https://github.com/fastapi/fastapi/issues/14680
+                            await anyio.sleep(0)
+    
+                    gen = _async_stream_raw(gen)
+                response_args = _build_response_args(
+                    status_code=status_code, solved_result=solved_result
+                )
+                response = actual_response_class(content=gen, **response_args)
+                response.headers.raw.extend(solved_result.response.headers.raw)
+            else:
+>               raw_response = await run_endpoint_function(
+                    dependant=dependant,
+                    values=solved_result.values,
+                    is_coroutine=is_coroutine,
+                )
+
+.venv\Lib\site-packages\fastapi\routing.py:706: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dependant = Dependant(path_params=[], query_params=[], header_params=[ModelField(field_info=Header(None), name='x_admin_token', mode='validation', config=None)], cookie_params=[], body_params=[ModelField(field_info=Body(PydanticUndefined), name='request', mode='validation', config=None)], dependencies=[], name=None, call=<function chat at 0x0000000006ACC9A0>, request_param_name=None, websocket_param_name=None, http_connection_param_name=None, response_param_name=None, background_tasks_param_name=None, security_scopes_param_name=None, own_oauth_scopes=None, parent_oauth_scopes=None, use_cache=True, path='/v1/chat', scope='function')
+values = {'x_admin_token': 'projection-fixture', 'request': ChatRequest(sop_version=None, sop_case=None, session_id='current-request', user_input='Apa status permohonan saya?', model=None, stream=False, request_id=None, retry_of=None, document_ids=[])}
+is_coroutine = True
+
+    async def run_endpoint_function(
+        *, dependant: Dependant, values: dict[str, Any], is_coroutine: bool
+    ) -> Any:
+        # Only called by get_request_handler. Has been split into its own function to
+        # facilitate profiling endpoints, since inner functions are harder to profile.
+        assert dependant.call is not None, "dependant.call must be a function"
+    
+        if is_coroutine:
+>           return await dependant.call(**values)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv\Lib\site-packages\fastapi\routing.py:352: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request = ChatRequest(sop_version=None, sop_case=None, session_id='current-request', user_input='Apa status permohonan saya?', model=None, stream=False, request_id=None, retry_of=None, document_ids=[])
+x_admin_token = 'projection-fixture'
+
+    @router.post("/chat")
+    async def chat(
+        request: ChatRequest,
+        x_admin_token: str | None = Header(default=None),
+    ):
+        operator = isinstance(x_admin_token, str) and bool(x_admin_token)
+        if operator:
+            require_admin(x_admin_token)
+        from app.knowledge.sop_review import SOPReview
+>       review = SOPReview(_knowledge) if operator else None
+                 ^^^^^^^^^^^^^^^^^^^^^
+
+app\api\routes.py:1060: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <app.knowledge.sop_review.SOPReview object at 0x0000000006D14050>
+engine = namespace(search_knowledge=<function controlled_pipeline.<locals>.<lambda> at 0x0000000006CA1DA0>, scan_knowledge_watch=<function controlled_pipeline.<locals>.<lambda> at 0x0000000006CA1C60>)
+
+    def __init__(self, engine):
+        self.engine = engine
+>       with engine._pipeline_db() as conn:
+             ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'types.SimpleNamespace' object has no attribute '_pipeline_db'
+
+app\knowledge\sop_review.py:54: AttributeError
+------------------------------ Captured log call ------------------------------
+ERROR    app.exceptions:exceptions.py:115 Unhandled exception: POST /v1/chat
+Traceback (most recent call last):
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\middleware\base.py", line 197, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dmaza\mcp-starter\app\main.py", line 96, in request_id_middleware
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\middleware\base.py", line 173, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\middleware\base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\middleware\cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\middleware\cors.py", line 149, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\routing.py", line 676, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dmaza\mcp-starter\app\api\routes.py", line 1060, in chat
+    review = SOPReview(_knowledge) if operator else None
+             ~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\dmaza\mcp-starter\app\knowledge\sop_review.py", line 54, in __init__
+    with engine._pipeline_db() as conn:
+         ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'types.SimpleNamespace' object has no attribute '_pipeline_db'
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\dmaza\mcp-starter\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_v1_response_projection.py::test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[local_rule] - AttributeError: 'types.SimpleNamespace' object has no attribute '_pipeline_db'
+======================== 1 failed, 1 warning in 0.93s =========================

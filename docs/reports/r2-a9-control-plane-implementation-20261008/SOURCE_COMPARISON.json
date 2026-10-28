@@ -1,0 +1,19 @@
+{
+  "monitored_existing": 378,
+  "changed_existing": [
+    "app/api/control_plane.py",
+    "control-plane/src/acceptance.ts",
+    "control-plane/src/api.ts",
+    "control-plane/src/human.tsx",
+    "control-plane/src/schemas.ts",
+    "control-plane/src/ui.tsx",
+    "app/approval/runtime_authorization.py"
+  ],
+  "new_source_files": [
+    "tests/test_control_plane_attestation_binding.py",
+    "control-plane/tests/attestation.test.tsx"
+  ],
+  "unexpected_monitored_changes": [],
+  "unchanged_existing": 371,
+  "limits": "No DB/WAL/SHM digests; monitored manifest is not full repository/build identity."
+}

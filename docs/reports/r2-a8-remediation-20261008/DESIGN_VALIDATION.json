@@ -1,0 +1,171 @@
+{
+  "timestamp_utc": "2026-10-08T03:42:08.9246400Z",
+  "task": "R2-A8 MINIMUM CORRELATION REMEDIATION",
+  "phase": "DESIGN_COMPLETE_WAITING_HUMAN",
+  "validation_kind": "STATIC_SOURCE_TRACE_AND_DOCUMENT_CONSISTENCY",
+  "source_comparisons": [
+    {
+      "path": "app/main.py",
+      "before_sha256": "7f527d9d25e9756c70f2cbd60e9ba741211ae6ab5da34c47c96988f96cc4328b",
+      "after_sha256": "7f527d9d25e9756c70f2cbd60e9ba741211ae6ab5da34c47c96988f96cc4328b",
+      "unchanged": true
+    },
+    {
+      "path": "app/core/runtime_attestation.py",
+      "before_sha256": "87285801446782494cb3cdebd2abee3a41bead92761219ed2b617301b5adfe28",
+      "after_sha256": "87285801446782494cb3cdebd2abee3a41bead92761219ed2b617301b5adfe28",
+      "unchanged": true
+    },
+    {
+      "path": "app/core/runtime_identity.py",
+      "before_sha256": "37ea9d6992f6ce0df7ccf47a8ab2315a7e5b546190b38f9e37a6aa6b63160e8e",
+      "after_sha256": "37ea9d6992f6ce0df7ccf47a8ab2315a7e5b546190b38f9e37a6aa6b63160e8e",
+      "unchanged": true
+    },
+    {
+      "path": "app/models/ollama.py",
+      "before_sha256": "b964fbe2e6a72619191a090790e16caad6a40aeab0087a9c578dcae0c6aa5da8",
+      "after_sha256": "b964fbe2e6a72619191a090790e16caad6a40aeab0087a9c578dcae0c6aa5da8",
+      "unchanged": true
+    },
+    {
+      "path": "app/models/base.py",
+      "before_sha256": "ebce1420ea29cc2604fa552bc855568755b5190fe53ca1c090fb20179599136e",
+      "after_sha256": "ebce1420ea29cc2604fa552bc855568755b5190fe53ca1c090fb20179599136e",
+      "unchanged": true
+    },
+    {
+      "path": "app/api/routes.py",
+      "before_sha256": "a386c237028b782599ed51c22c2f9774f96ba82bb60b24c5ce437b1672b28982",
+      "after_sha256": "a386c237028b782599ed51c22c2f9774f96ba82bb60b24c5ce437b1672b28982",
+      "unchanged": true
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "before_sha256": "7ba30ca90841d5eb2810a7f734d0bdd77bb4d12bfb4894ed80512de7095bff9c",
+      "after_sha256": "7ba30ca90841d5eb2810a7f734d0bdd77bb4d12bfb4894ed80512de7095bff9c",
+      "unchanged": true
+    },
+    {
+      "path": "app/hermes/agent.py",
+      "before_sha256": "0f7a2d1c69aa38c49368d44931ea8069f5c9b1f57bf5e273777ba2c20dbe0ff8",
+      "after_sha256": "0f7a2d1c69aa38c49368d44931ea8069f5c9b1f57bf5e273777ba2c20dbe0ff8",
+      "unchanged": true
+    },
+    {
+      "path": "app/observability/context.py",
+      "before_sha256": "f358d24a423ca94fa28b38c78c4aa187734ab1061322cf988bc5b5ca988f600c",
+      "after_sha256": "f358d24a423ca94fa28b38c78c4aa187734ab1061322cf988bc5b5ca988f600c",
+      "unchanged": true
+    },
+    {
+      "path": "app/observability/logging.py",
+      "before_sha256": "3a66234e6eae311716267b13f51848702f19b17ba99306c134400700c219a4f4",
+      "after_sha256": "3a66234e6eae311716267b13f51848702f19b17ba99306c134400700c219a4f4",
+      "unchanged": true
+    },
+    {
+      "path": "app/knowledge/engine.py",
+      "before_sha256": "19d9f206cfe4193d2080845b80c27faa1d6f20f2c990c67f27272ae1a92acee3",
+      "after_sha256": "19d9f206cfe4193d2080845b80c27faa1d6f20f2c990c67f27272ae1a92acee3",
+      "unchanged": true
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "before_sha256": "3ad2ee38c6c3a4c4bee46c8b1e242cdc4cae6bd753cf2edd02143fa0a8eed21f",
+      "after_sha256": "3ad2ee38c6c3a4c4bee46c8b1e242cdc4cae6bd753cf2edd02143fa0a8eed21f",
+      "unchanged": true
+    },
+    {
+      "path": "app/knowledge/store.py",
+      "before_sha256": "09140f8d098a84696f4f34b153bfacd9e36ead04652f0fd49b1cf89708ecf323",
+      "after_sha256": "09140f8d098a84696f4f34b153bfacd9e36ead04652f0fd49b1cf89708ecf323",
+      "unchanged": true
+    },
+    {
+      "path": "service/nusantara-service.ps1",
+      "before_sha256": "55ae3f554eb9550fce214c024bd726ffd0f91cf7f32258d6e6402a4c043e02c2",
+      "after_sha256": "55ae3f554eb9550fce214c024bd726ffd0f91cf7f32258d6e6402a4c043e02c2",
+      "unchanged": true
+    },
+    {
+      "path": "service/nusantara-supervisor.ps1",
+      "before_sha256": "42af97c27a58eee642c38e0e2d5c735dfb5664af08ab43b20dd854477ab6494a",
+      "after_sha256": "42af97c27a58eee642c38e0e2d5c735dfb5664af08ab43b20dd854477ab6494a",
+      "unchanged": true
+    },
+    {
+      "path": "service/install-nusantara-task.ps1",
+      "before_sha256": "58ae939e959cc2ce4d24fbcc983a08d040dac58b3f189251887488cd9c1af4c6",
+      "after_sha256": "58ae939e959cc2ce4d24fbcc983a08d040dac58b3f189251887488cd9c1af4c6",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/start-nusantara.bat",
+      "before_sha256": "7758d041bbab9061e53f36ad410de6e82db821e63fe0b91e51a9b1d17a5b7401",
+      "after_sha256": "7758d041bbab9061e53f36ad410de6e82db821e63fe0b91e51a9b1d17a5b7401",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/start_windows.ps1",
+      "before_sha256": "ae7293756cebfdaf75013e0b3840a53d34d7e0056c8817fe9723a4d558bcf793",
+      "after_sha256": "ae7293756cebfdaf75013e0b3840a53d34d7e0056c8817fe9723a4d558bcf793",
+      "unchanged": true
+    },
+    {
+      "path": "tests/test_runtime_attestation.py",
+      "before_sha256": "557a90f3e050450fd1ee0daaef4535a8eee1b9c3fb3b9992a5568fc349de6513",
+      "after_sha256": "557a90f3e050450fd1ee0daaef4535a8eee1b9c3fb3b9992a5568fc349de6513",
+      "unchanged": true
+    }
+  ],
+  "inspected_input_change_count": 0,
+  "required_documents": [
+    {
+      "file": "DISCOVERY.md",
+      "exists": true,
+      "sha256": "975d3909891a0d858c9491cd3053df4afa40e919e5cebe21da18bd1bdbb4f543"
+    },
+    {
+      "file": "CORRELATION_DESIGN.md",
+      "exists": true,
+      "sha256": "448631ebb73527d80e71832195e489dba6dc392216466836e72b5463ffed60bd"
+    },
+    {
+      "file": "PROTECTED_STATE_ANALYSIS.md",
+      "exists": true,
+      "sha256": "4e4c1e712b3791e209627fcb725d7d50959fb2f42635ef4182df9ba7cd3e69c9"
+    },
+    {
+      "file": "LIFECYCLE_ANALYSIS.md",
+      "exists": true,
+      "sha256": "b371f26b3c9ac0c90d0d8a30110c0ba9c5792c64139d6d85296f1c23cf17158a"
+    },
+    {
+      "file": "IMPLEMENTATION_PLAN.md",
+      "exists": true,
+      "sha256": "b9b90cbabfd1a4ab235729bae4e2607294d2c916cc5134d399665c1962bdb5fb"
+    },
+    {
+      "file": "REPORT.md",
+      "exists": true,
+      "sha256": "ba0c97696e6c3a58bd0491fdb861a7b7ba2ebc39abcf6b2c788ecce1fa623843"
+    }
+  ],
+  "implementation_performed": false,
+  "tests_executed": false,
+  "runtime_probe_performed": false,
+  "http_request_count": 0,
+  "generation_count": 0,
+  "provider_health_probe_count": 0,
+  "lifecycle_execution_count": 0,
+  "runtime_identity": "NOT_VERIFIED",
+  "r2_a8": "BLOCKED / NOT_VERIFIED",
+  "global_protected_integrity_claim": false,
+  "unresolved_decisions": [
+    "SCOPED_ACCEPTANCE",
+    "TRUSTED_PERMIT_CHANNEL",
+    "DIAGNOSTIC_INITIALIZATION_AND_PROTECTED_DAEMON_BOUNDARY"
+  ],
+  "next_gate": "AUTHORIZE MINIMUM REMEDIATION IMPLEMENTATION"
+}

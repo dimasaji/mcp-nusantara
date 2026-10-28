@@ -1,0 +1,335 @@
+"""R3 real canonical query and API source fixtures, without database or model I/O."""
+import ast
+import asyncio
+import json
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import FrozenInstanceError
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+from app.core.nusantara_config import ConfigurationError, load_nusantara_config
+from app.knowledge.engine import KnowledgeEngine
+from app.knowledge.rag import RAG
+from app.knowledge.schemas import KnowledgeBaseConfig, StoredChunk, capture_retrieval
+from app.observability.context import request_context
+
+
+ROOT = Path(__file__).parents[1]
+
+
+class FakeStore:
+    def __init__(self, semantic=(0.9, 0.6), lexical=(0.5, 0.3)):
+        self.semantic, self.lexical = semantic, lexical
+        self.seen = []
+        self.chunks = [StoredChunk(chunk_id=str(i), document_id='doc', chunk_index=i,
+                                  content='alpha beta' if i == 0 else 'alpha gamma',
+                                  start_char=0, end_char=10) for i in range(max(len(semantic), len(lexical)))]
+
+    def search_similarity(self, embedding, top_k):
+        self.seen.append(('semantic', top_k))
+        return list(zip(self.chunks, self.semantic))
+
+    def search_lexical(self, query, top_k):
+        self.seen.append(('lexical', top_k))
+        return list(zip(self.chunks, self.lexical))
+
+    def get_document_info(self, doc):
+        return SimpleNamespace(title='fixture', source='fixture://source')
+
+
+def make_rag(tmp_path, *, top_k=2, kb=None, store=None, reranker=False):
+    config = load_nusantara_config(project_root=tmp_path, environment={}, dotenv_environment={},
+                                  overrides={'features': {'reranker': reranker},
+                                             'rag': {'top_k': top_k, 'reranker_enabled': reranker,
+                                                     'reranker_model': 'never-loaded' if reranker else None}})
+    return RAG(nusantara_config=config, config=kb,
+               vector_store=store if store is not None else FakeStore(), embedding_func=lambda text: [1.0])
+
+
+def profile(result):
+    return result.effective_profile.snapshot()
+
+
+def test_creation_identity_and_deep_immutability(tmp_path):
+    rag = make_rag(tmp_path)
+    first, second = rag.query('alpha beta'), rag.query('alpha beta')
+    a, b = profile(first), profile(second)
+    assert a['profile_id'] == b['profile_id']
+    assert a['invocation_id'] != b['invocation_id']
+    assert a['profile_version'] == 1
+    assert a['consumer'] == 'DIRECT_RAG'
+    with pytest.raises(FrozenInstanceError):
+        first.effective_profile.consumer = 'forged'
+    a['effective_values']['top_k'] = 999
+    assert profile(first)['effective_values']['top_k'] == 2
+    assert 'effective_profile' not in first.model_dump()
+
+
+@pytest.mark.parametrize('argument,effective,status', [(None, 2, 'INHERITED'), (0, 2, 'INHERITED'), (1, 1, 'OVERRIDDEN'), (6, 6, 'OVERRIDDEN')])
+def test_topk_precedence_and_r1_ownership(tmp_path, argument, effective, status):
+    rag = make_rag(tmp_path)
+    data = profile(rag.query('alpha', top_k=argument))
+    entry = data['provenance']['top_k']
+    assert entry['configured_value'] == 2
+    assert entry['effective_value'] == effective
+    assert entry['override'] == argument
+    assert entry['status'] == status
+    assert data['effective_values']['candidate_count'] == max(effective * 4, 20)
+    assert rag._store.seen == [('semantic', max(effective * 4, 20)), ('lexical', max(effective * 4, 20))]
+    assert rag.configuration.rag.top_k == 2
+
+
+def test_explicit_kb_and_instance_mutation(tmp_path):
+    kb = KnowledgeBaseConfig(retrieval_top_k=7)
+    rag = make_rag(tmp_path, kb=kb)
+    data = profile(rag.query('alpha'))
+    assert data['provenance']['top_k']['source_layer'] == 'KB_EXPLICIT'
+    assert data['effective_values']['top_k'] == 7
+    kb.retrieval_top_k = 8
+    data = profile(rag.query('alpha'))
+    assert data['effective_values']['top_k'] == 8
+    assert data['provenance']['top_k']['source_layer'] == 'INSTANCE_MUTATION'
+
+
+def test_weights_mode_missing_score_and_gate(tmp_path):
+    rag = make_rag(tmp_path)
+    result = rag.query('alpha')
+    data = profile(result)
+    values = data['effective_values']
+    assert (values['semantic_weight'], values['lexical_weight']) == (.7, .3)
+    assert values['missing_stage_score'] == 0
+    assert values['retrieval_mode'] == result.evidence_pack.retrieval_method == 'hybrid'
+    assert data['provenance']['semantic_weight']['source_layer'] == 'RAG_INTERNAL'
+    assert data['provenance']['semantic_weight']['configured_value'] is None
+    assert data['thresholds']['absolute_relevance_gate'] == .3
+    assert data['thresholds']['relative_threshold'] == .5
+    assert data['thresholds']['resolved_relevance_gate'] == pytest.approx(.39)
+    assert [e.score for e in result.evidence_pack.evidence] == pytest.approx([.78, .51])
+    assert data['execution_outcome']['returned_count'] == 2
+    assert data['provenance']['resolved_relevance_gate']['status'] == 'EXECUTED'
+
+
+@pytest.mark.parametrize('enabled,requested,executed', [(False, False, False), (False, True, False), (True, False, False), (True, True, True)])
+def test_reranker_label_is_not_model_identity(tmp_path, enabled, requested, executed):
+    rag = make_rag(tmp_path, reranker=enabled)
+    result = rag.query('alpha beta', rerank=requested)
+    data = profile(result)
+    assert data['reranker_identity']['execution_status'] == ('EXECUTED' if executed else 'NOT_EXECUTED')
+    assert data['reranker_identity']['model_identity'] == 'NOT_APPLICABLE'
+    assert data['reranker_identity']['algorithm'] == ('simple_keyword_overlap' if executed else 'NOT_APPLICABLE')
+    assert result.evidence_pack.reranked == executed
+    if executed:
+        assert data['thresholds']['score_space'] == 'keyword_overlap'
+        assert data['thresholds']['resolved_relevance_gate'] == .5
+        assert [e.score for e in result.evidence_pack.evidence] == [1, .5]
+
+
+def test_custom_store_and_embedding_are_unknown(tmp_path):
+    data = profile(make_rag(tmp_path).query('alpha'))
+    for name in ['semantic_normalization', 'lexical_normalization', 'knowledge_source', 'embedding_identity']:
+        assert data['provenance'][name]['status'] == 'NOT_VERIFIED'
+    assert data['effective_values']['embedding_identity']['actual_model'] is None
+
+
+def test_custom_reranker_is_not_attested_as_builtin(tmp_path):
+    rag = make_rag(tmp_path, reranker=True)
+    rag._simple_rerank = lambda evidence, query: evidence
+    data = profile(rag.query('alpha', rerank=True))
+    assert data['reranker_identity']['algorithm'] == 'NOT_VERIFIED'
+    assert data['reranker_identity']['model_identity'] == 'NOT_VERIFIED'
+    assert data['thresholds']['score_space'] == 'NOT_VERIFIED'
+
+
+def test_enablement_mutated_during_embedding_is_captured(tmp_path):
+    rag = make_rag(tmp_path)
+    def embedding(text):
+        rag._config.reranker_enabled = True
+        rag._config.reranker_model = 'changed-label'
+        return [1]
+    rag.set_embedding_func(embedding)
+    data = profile(rag.query('alpha beta', rerank=True))
+    assert data['effective_values']['rerank_enabled'] is True
+    assert data['provenance']['rerank_enabled']['source_layer'] == 'INSTANCE_MUTATION'
+    assert data['reranker_identity']['configured_label'] == 'changed-label'
+    assert data['reranker_identity']['execution_status'] == 'EXECUTED'
+
+
+def test_profile_identity_changes_only_with_descriptor(tmp_path):
+    rag = make_rag(tmp_path)
+    first = rag.query('alpha', top_k=1)
+    assert first.effective_profile.profile_id != rag.query('alpha', top_k=2).effective_profile.profile_id
+    with request_context('different-request', 'different-session'):
+        with capture_retrieval('V1_CHAT', .5) as capture:
+            second = rag.query('alpha', top_k=1)
+        capture.post_filter(1, 1)
+    assert first.effective_profile.profile_id == second.effective_profile.profile_id == capture.receipts[0].profile_id
+    assert rag.query('alpha').effective_profile.profile_id == rag.query('alpha', top_k=0).effective_profile.profile_id
+
+
+def test_default_store_algorithm_recorded_without_database(tmp_path, monkeypatch):
+    import app.knowledge.rag as module
+    class IsolatedSQLite(FakeStore):
+        db_path = tmp_path / 'fake.db'
+    monkeypatch.setattr(module, 'SQLiteVectorStore', IsolatedSQLite)
+    data = profile(make_rag(tmp_path, store=IsolatedSQLite()).query('alpha'))
+    assert data['effective_values']['semantic_normalization'] == 'cosine_without_rescaling'
+    assert data['effective_values']['lexical_normalization'] == 'token_overlap/query_tokens_capped_at_1'
+    assert not IsolatedSQLite.db_path.exists()
+
+
+def test_empty_result_is_linked(tmp_path):
+    with capture_retrieval('V2_CHAT') as capture:
+        result = make_rag(tmp_path, store=FakeStore((), ())).query('alpha')
+    data = profile(result)
+    assert not result.evidence_pack.evidence
+    assert capture.receipts == [result.effective_profile]
+    assert data['execution_outcome']['status'] == 'COMPLETED'
+    assert data['execution_outcome']['gate_status'] == 'NOT_APPLICABLE_EMPTY'
+    assert data['thresholds']['resolved_relevance_gate'] is None
+
+
+@pytest.mark.parametrize('failed_stage', ['embedding', 'semantic_search', 'lexical_search'])
+def test_exception_receipt_and_original_exception(tmp_path, failed_stage):
+    rag = make_rag(tmp_path)
+    exception = RuntimeError('private failure text')
+    def fail(*args):
+        raise exception
+    if failed_stage == 'embedding':
+        rag.set_embedding_func(fail)
+    else:
+        setattr(rag._store, 'search_similarity' if failed_stage == 'semantic_search' else 'search_lexical', fail)
+    with capture_retrieval('V1_CHAT') as capture:
+        with pytest.raises(RuntimeError) as caught:
+            rag.query('alpha')
+    assert caught.value is exception
+    data = capture.receipts[0].snapshot()
+    assert data['execution_outcome']['status'] == 'FAILED'
+    assert data['execution_outcome']['stage'] == failed_stage
+    assert 'private failure text' not in json.dumps(data)
+
+
+def test_facade_list_contract_filter_rejected_and_receipt(tmp_path):
+    rag = make_rag(tmp_path)
+    engine = KnowledgeEngine(rag=rag)
+    with pytest.raises(ValueError, match='KNOWLEDGE_FILTER_NOT_SUPPORTED'):
+        engine.search_knowledge('alpha', filter={'source': 'not-present'})
+    result = engine.search_knowledge('alpha', filter={})
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert result.retrieval_receipt.snapshot()['consumer'] == 'DIRECT_RAG'
+    assert all('profile_id' not in item.metadata for item in result)
+
+
+def test_consumers_correlation_multiple_and_concurrent(tmp_path):
+    rag = make_rag(tmp_path)
+    def run(consumer):
+        with request_context(request_id='same-request', session_id='fixture'):
+            with capture_retrieval(consumer) as capture:
+                rag.query('alpha')
+                rag.query('beta')
+            return [p.snapshot() for p in capture.receipts]
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        a, b = list(pool.map(run, ['V1_CHAT', 'V2_CHAT']))
+    assert {p['consumer'] for p in a} == {'V1_CHAT'}
+    assert {p['consumer'] for p in b} == {'V2_CHAT'}
+    assert len({p['invocation_id'] for p in a + b}) == 4
+    assert len({p['profile_id'] for p in a + b}) == 1
+    assert all(p['correlation']['request_id'] == 'same-request' for p in a + b)
+    assert profile(rag.query('alpha'))['consumer'] == 'DIRECT_RAG'
+
+
+def source_tree(path):
+    return ast.parse((ROOT / path).read_text(encoding='utf-8-sig'))
+
+
+def test_actual_v1_chat_retrieval_and_filter_block(tmp_path):
+    tree = source_tree('app/hermes/agent.py')
+    owner = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'HermesAgent')
+    chat = next(n for n in owner.body if isinstance(n, ast.AsyncFunctionDef) and n.name == 'execute_v1')
+    # Run the actual retrieval/filter statements, omitting unrelated generation owners.
+    nodes = list(ast.walk(chat))
+    context = next(n for n in nodes if isinstance(n, ast.With) and any(
+        isinstance(i.context_expr, ast.Call) and getattr(i.context_expr.func, 'id', '') == 'capture_retrieval'
+        for i in n.items))
+    score = next(n for n in nodes if isinstance(n, ast.FunctionDef) and n.name == '_evidence_score')
+    before = next(n for n in nodes if isinstance(n, ast.Assign) and any(
+        isinstance(t, ast.Name) and t.id == 'before_consumer_filter' for t in n.targets))
+    filtered = next(n for n in nodes if isinstance(n, ast.Assign) and isinstance(n.value, ast.ListComp)
+                    and any(isinstance(t, ast.Name) and t.id == 'evidence' for t in n.targets))
+    post = next(n for n in nodes if isinstance(n, ast.Expr) and isinstance(n.value, ast.Call)
+                and getattr(n.value.func, 'attr', '') == 'post_filter')
+    body = [context, score, before, filtered, post,
+            ast.Return(value=ast.Tuple(elts=[ast.Name(id='evidence', ctx=ast.Load()),
+                                            ast.Name(id='retrieval_capture', ctx=ast.Load())], ctx=ast.Load()))]
+    fixture = ast.AsyncFunctionDef(name='fixture', args=ast.arguments(posonlyargs=[], args=[], kwonlyargs=[], kw_defaults=[], defaults=[]),
+                                   body=body, decorator_list=[])
+    ns = {'capture_retrieval': capture_retrieval, '_knowledge': KnowledgeEngine(rag=make_rag(tmp_path, store=FakeStore((.8,.55), (0,0)))),
+          'request': SimpleNamespace(user_input='alpha')}
+    async def run_sync(fn, *args, **kwargs):
+        return await asyncio.to_thread(fn, *args, **kwargs)
+    ns['_run_sync_v1'] = run_sync
+    exec(compile(ast.fix_missing_locations(ast.Module(body=[fixture], type_ignores=[])), '<v1-source-fixture>', 'exec'), ns)
+    evidence, capture = asyncio.run(ns['fixture']())
+    assert len(evidence) == 1
+    data = capture.receipts[0].snapshot()
+    assert data['consumer'] == 'V1_CHAT'
+    assert data['thresholds']['consumer_post_filter']['threshold'] == .5
+    assert data['thresholds']['consumer_post_filter']['before'] == 2
+    assert data['thresholds']['consumer_post_filter']['after'] == 1
+    assert data['thresholds']['absolute_relevance_gate'] == .3
+
+
+def test_actual_v2_callback_public_shape_and_internal_linkage(tmp_path, caplog):
+    tree = source_tree('app/api/v2_routes.py')
+    callback = next(n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == 'retrieve')
+    ns = {'capture_retrieval': capture_retrieval, 'Any': object,
+          '_knowledge': KnowledgeEngine(rag=make_rag(tmp_path))}
+    exec(compile(ast.Module(body=[callback], type_ignores=[]), '<v2-source-fixture>', 'exec'), ns)
+    with caplog.at_level('INFO', logger='nusantara'):
+        results = ns['retrieve']('alpha')
+    assert set(results[0]) == {'document_id', 'title', 'source', 'chunk', 'score', 'metadata'}
+    data = next(r.fields['profile'] for r in caplog.records if r.message == 'effective_rag_profile')
+    assert data['consumer'] == 'V2_CHAT'
+    assert data['thresholds']['consumer_post_filter']['status'] == 'NOT_APPLICABLE'
+
+
+@pytest.mark.parametrize('request_values,source', [({}, 'REQUEST_DEFAULT'), ({'top_k': 5}, 'REQUEST_EXPLICIT')])
+def test_actual_v1_search_default_override_and_response(tmp_path, caplog, request_values, source):
+    from fastapi import APIRouter, HTTPException
+    tree = source_tree('app/api/routes.py')
+    endpoint = next(n for n in tree.body if isinstance(n, ast.AsyncFunctionDef) and n.name == 'search_knowledge')
+    request_class = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'KnowledgeSearchRequest')
+    from pydantic import BaseModel, Field
+    ns = {'router': APIRouter(), 'BaseModel': BaseModel, 'Field': Field, 'Dict': dict, 'Any': object,
+          'HTTPException': HTTPException, 'capture_retrieval': capture_retrieval,
+          '_knowledge': KnowledgeEngine(rag=make_rag(tmp_path))}
+    async def run_sync(fn, *args, **kwargs):
+        return await asyncio.to_thread(fn, *args, **kwargs)
+    ns['_run_sync_v1'] = run_sync
+    exec(compile(ast.Module(body=[request_class, endpoint], type_ignores=[]), '<v1-search-source>', 'exec'), ns)
+    with caplog.at_level('INFO', logger='nusantara'):
+        response = asyncio.run(ns['search_knowledge'](ns['KnowledgeSearchRequest'](query='alpha', **request_values)))
+    data = next(r.fields['profile'] for r in caplog.records if r.message == 'effective_rag_profile')
+    assert data['consumer'] == 'V1_KNOWLEDGE_SEARCH'
+    assert data['effective_values']['top_k'] == 5
+    assert data['provenance']['top_k']['configured_value'] == 2
+    assert data['provenance']['top_k']['request_source'] == source
+    assert set(response) == {'query', 'results'}
+    assert 'profile_id' not in json.dumps(response)
+
+
+def test_dev_endpoint_has_no_rag_claim():
+    tree = source_tree('app/api/v2_routes.py')
+    endpoint = next(n for n in tree.body if isinstance(n, ast.AsyncFunctionDef) and n.name == 'dev_chat')
+    text = ast.unparse(endpoint)
+    assert 'capture_retrieval' not in text and '_knowledge' not in text
+    assert 'DevCore' in text  # RAG = NOT_APPLICABLE; no fabricated receipt.
+
+
+@pytest.mark.parametrize('overrides', [{'semantic_weight': .7, 'lexical_weight': .3}, {'similarity_threshold': .5}])
+def test_unwired_r1_settings_still_rejected(tmp_path, overrides):
+    config = load_nusantara_config(project_root=tmp_path, environment={}, dotenv_environment={}, overrides={'rag': overrides})
+    with pytest.raises(ConfigurationError, match='RAG_PARAMETER_NOT_INTEGRATED'):
+        RAG(nusantara_config=config, vector_store=FakeStore(), embedding_func=lambda text: [1])

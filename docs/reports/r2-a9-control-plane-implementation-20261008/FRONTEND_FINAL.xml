@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="50" failures="1" errors="0" time="2.7411624">
+    <testsuite name="tests/acceptance.test.ts" timestamp="2026-10-08T05:54:31.612Z" hostname="DESKTOP-GJHS3LR" tests="11" failures="0" errors="0" skipped="0" time="0.016148">
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; never copies engineering PASS to human tests" time="0.0108442">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; requires complete human PASS, acknowledgements and inspected sources" time="0.0009362">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; does not approve incomplete or hash-unverified gate evidence" time="0.0007535">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; ignores refresh timestamps but detects material evidence drift" time="0.0009135">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; keeps runtime and protected-file limitations visible" time="0.0005446">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; unlocks exactly one next stage after each completion" time="0.000549">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Evidence cannot bypass upstream prerequisites even with stale downstream flags" time="0.0001966">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Test cannot bypass upstream prerequisites even with stale downstream flags" time="0.0000801">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Review cannot bypass upstream prerequisites even with stale downstream flags" time="0.0000955">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Decision cannot bypass upstream prerequisites even with stale downstream flags" time="0.0000952">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; invalid and missing results do not count as explicit human completion" time="0.0001264">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/api.test.ts" timestamp="2026-10-08T05:54:31.615Z" hostname="DESKTOP-GJHS3LR" tests="3" failures="0" errors="0" skipped="0" time="0.0098945">
+        <testcase classname="tests/api.test.ts" name="typed read-only API &gt; rejects malformed evidence before rendering" time="0.0060611">
+        </testcase>
+        <testcase classname="tests/api.test.ts" name="typed read-only API &gt; exposes failure instead of healthy dashboard" time="0.0007878">
+        </testcase>
+        <testcase classname="tests/api.test.ts" name="typed read-only API &gt; uses one allowlisted GET without credentials" time="0.0022042">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/attestation.test.tsx" timestamp="2026-10-08T05:54:31.616Z" hostname="DESKTOP-GJHS3LR" tests="13" failures="0" errors="0" skipped="0" time="0.2678081">
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; accepts ATTESTATION and preserves NORMAL without masquerading" time="0.0134053">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status PASS" time="0.0004598">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status READY" time="0.0003">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status AUTHORIZED" time="0.0002948">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status ACTIVE" time="0.0003511">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status VERIFIED" time="0.0002361">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; uses the typed snapshot fetch and fixed intention body only" time="0.002198">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects authorization responses, stale binding and failure without retry" time="0.0011261">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; invalidates material changes but not capture time" time="0.0004589">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; renders scoped evidence in every engineering view without historical gates" time="0.0274889">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; blocks bypass, separates observations and only submits on an explicit click" time="0.1635266">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; clears reviewed context on drift" time="0.0538179">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects opening Decision without observations" time="0.0030558">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/human.test.tsx" timestamp="2026-10-08T05:54:31.618Z" hostname="DESKTOP-GJHS3LR" tests="19" failures="0" errors="0" skipped="0" time="2.3747661">
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; opening a PASS gate alone does not fabricate human inspection" time="0.1619079">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; accepts explicit System checklist clicks during background refresh without skipping the transition guard" time="0.0350176">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; provides an explicit alternate System acknowledgement without assigning human PASS" time="0.0730326">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; counts source inspection during unchanged background refresh while acknowledgement waits" time="0.1882138">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Evidence entry without System acknowledgement" time="0.0112708">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Test entry without System acknowledgement" time="0.0083085">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Review entry without System acknowledgement" time="0.0086539">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Decision entry without System acknowledgement" time="0.0080093">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; locks shortcuts and displays evidence-derived runtime without promotion" time="0.0171099">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; requires all 14 inspected sources and separate acknowledgement before Test" time="0.1540338">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; missing source cannot be counted as inspected" time="0.056848">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; seven explicit results do not unlock Review; FAIL/BLOCKED do not become PASS" time="0.1418526">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; requires Review acknowledgement even when all tests PASS" time="0.1430282">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; preserves unchecked approval and explicit second confirmation" time="0.3376005">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; REJECT follows completed review and requires a reason" time="0.2043635">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; HOLD follows completed review and requires a reason" time="0.1775253">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; invalidates Review and Decision when a human result changes" time="0.2133718">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; relocks all downstream stages when System acknowledgement is withdrawn" time="0.1613262">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; preserves unchanged refresh and locks everything after material evidence drift" time="0.2718209">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/ui.test.tsx" timestamp="2026-10-08T05:54:31.620Z" hostname="DESKTOP-GJHS3LR" tests="4" failures="1" errors="0" skipped="0" time="0.0725457">
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; renders source-derived phase state" time="0.0516244">
+        </testcase>
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; never promotes unknown state" time="0.0017726">
+        </testcase>
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; keeps runtime evidence historical" time="0.0127109">
+            <failure message="Found multiple elements with the text: NOT_VERIFIED
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m&lt;span[39m
+  [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+[36m&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/span&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;strong&gt;[39m
+  [0mNOT_VERIFIED[0m
+[36m&lt;/strong&gt;[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;section[39m
+      [33mclass[39m=[32m&quot;panel&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;h2&gt;[39m
+        [0mRuntime identity chain[0m
+      [36m&lt;/h2&gt;[39m
+      [36m&lt;span[39m
+        [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+      [36m&gt;[39m
+        [0mHISTORICAL_CONTROLLED_RUNTIME[0m
+      [36m&lt;/span&gt;[39m
+      [36m&lt;p&gt;[39m
+        [0mCurrent live runtime: [0m
+        [36m&lt;span[39m
+          [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+        [36m&gt;[39m
+          [0mNOT_VERIFIED[0m
+        [36m&lt;/span&gt;[39m
+      [36m&lt;/p&gt;[39m
+      [36m&lt;div[39m
+        [33mclass[39m=[32m&quot;identity-chain&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mConfigured model[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mEffective model[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mSelected provider[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mActual model (historical receipt)[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mBuild identity[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mProcess ID (historical)[0m
+          [36m&lt;/small&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mNOT_VERIFIED[0m
+          [36m&lt;/strong&gt;[39m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/div&gt;[39m
+      [36m&lt;p&gt;[39m
+        [0mReceipt state: [0m
+        [0mFIXTURE_EVIDENCE[0m
+        [0m · timestamp [0m
+        [0mUNKNOWN[0m
+      [36m&lt;/p&gt;[39m
+      [36m&lt;details[39m
+        [33mclass[39m=[32m&quot;trace&quot;[39m
+      [36m&gt;[39m
+        [36m&lt;summary&gt;[39m
+          [0mTrace to evidence · [0m
+          [0m1[0m
+        [36m&lt;/summary&gt;[39m
+        [36m&lt;div&gt;[39m
+          [36m&lt;strong&gt;[39m
+            [0mr3[0m
+          [36m&lt;/strong&gt;[39m
+          [36m&lt;span[39m
+            [33mclass[39m=[32m&quot;badge neutral&quot;[39m
+          [36m&gt;[39m
+            [0mVERIFIED_ARTIFACT[0m
+          [36m&lt;/span&gt;[39m
+          [36m&lt;code&gt;[39m
+            [0msynthetic fixture only[0m
+          [36m&lt;/code&gt;[39m
+          [36m&lt;small&gt;[39m
+            [0mSHA-256 [0m
+            [0m0000000000000000000000000000000000000000000000000000000000000000[0m
+          [36m&lt;/small&gt;[39m
+        [36m&lt;/div&gt;[39m
+      [36m&lt;/details&gt;[39m
+    [36m&lt;/section&gt;[39m
+    [36m&lt;section[39m
+      [33mclass[39m=[32m&quot;panel warnings&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;h2&gt;[39m
+        [0mFindings / warnings / limitations[0m
+      [36m&lt;/h2&gt;[39m
+      [36m&lt;p&gt;[39m
+        [0m△ [0m
+        [0mSynthetic test data; not engineering evidence.[0m
+      [36m&lt;/p&gt;[39m
+    [36m&lt;/section&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Found multiple elements with the text: NOT_VERIFIED
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+&lt;span
+  class=&quot;badge neutral&quot;
+&gt;
+  NOT_VERIFIED
+&lt;/span&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+Ignored nodes: comments, script, style
+&lt;strong&gt;
+  NOT_VERIFIED
+&lt;/strong&gt;
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;section
+      class=&quot;panel&quot;
+    &gt;
+      &lt;h2&gt;
+        Runtime identity chain
+      &lt;/h2&gt;
+      &lt;span
+        class=&quot;badge neutral&quot;
+      &gt;
+        HISTORICAL_CONTROLLED_RUNTIME
+      &lt;/span&gt;
+      &lt;p&gt;
+        Current live runtime: 
+        &lt;span
+          class=&quot;badge neutral&quot;
+        &gt;
+          NOT_VERIFIED
+        &lt;/span&gt;
+      &lt;/p&gt;
+      &lt;div
+        class=&quot;identity-chain&quot;
+      &gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Configured model
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Effective model
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Selected provider
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Actual model (historical receipt)
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Build identity
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;small&gt;
+            Process ID (historical)
+          &lt;/small&gt;
+          &lt;strong&gt;
+            NOT_VERIFIED
+          &lt;/strong&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;p&gt;
+        Receipt state: 
+        FIXTURE_EVIDENCE
+         · timestamp 
+        UNKNOWN
+      &lt;/p&gt;
+      &lt;details
+        class=&quot;trace&quot;
+      &gt;
+        &lt;summary&gt;
+          Trace to evidence · 
+          1
+        &lt;/summary&gt;
+        &lt;div&gt;
+          &lt;strong&gt;
+            r3
+          &lt;/strong&gt;
+          &lt;span
+            class=&quot;badge neutral&quot;
+          &gt;
+            VERIFIED_ARTIFACT
+          &lt;/span&gt;
+          &lt;code&gt;
+            synthetic fixture only
+          &lt;/code&gt;
+          &lt;small&gt;
+            SHA-256 
+            0000000000000000000000000000000000000000000000000000000000000000
+          &lt;/small&gt;
+        &lt;/div&gt;
+      &lt;/details&gt;
+    &lt;/section&gt;
+    &lt;section
+      class=&quot;panel warnings&quot;
+    &gt;
+      &lt;h2&gt;
+        Findings / warnings / limitations
+      &lt;/h2&gt;
+      &lt;p&gt;
+        △ 
+        Synthetic test data; not engineering evidence.
+      &lt;/p&gt;
+    &lt;/section&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/ui.test.tsx:11:191
+            </failure>
+        </testcase>
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; renders actual fixture receipt without production claim" time="0.0055666">
+        </testcase>
+    </testsuite>
+</testsuites>

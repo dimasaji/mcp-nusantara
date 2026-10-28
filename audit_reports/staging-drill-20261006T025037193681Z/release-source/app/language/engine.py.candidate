@@ -1,0 +1,1024 @@
+
+"""
+Nusantara Core - Language Engine
+================================
+
+Pipeline:
+
+    raw text
+        ↓
+    normalization
+        ↓
+    language detection
+        ↓
+    intent classification
+        ↓
+    entity extraction
+        ↓
+    structured understanding
+
+Design goals:
+- Backward compatible dengan Language Engine existing.
+- Tidak mengganti normalizer/intent/entity.
+- Tidak mengarang confidence.
+- Aman terhadap variasi schema lama.
+- Mendukung Bahasa Indonesia formal/informal.
+- Mendukung mixed Indonesian/English.
+- Siap menjadi integration point IndoBERT.
+- Tidak melakukan network call.
+- Tidak melakukan LLM call.
+- Tidak menyimpan PII mentah ke log.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any, Callable, Mapping, Sequence
+import re
+
+
+# ---------------------------------------------------------------------------
+# Optional imports
+# ---------------------------------------------------------------------------
+
+try:
+    from .normalizer import TextNormalizer
+except ImportError:
+    TextNormalizer = None  # type: ignore[misc,assignment]
+
+try:
+    from .intent import IntentClassifier
+except ImportError:
+    IntentClassifier = None  # type: ignore[misc,assignment]
+
+try:
+    from .entity import EntityExtractor
+except ImportError:
+    EntityExtractor = None  # type: ignore[misc,assignment]
+
+try:
+    from .schemas import (
+        NormalizeResult,
+        NormalizationResult,
+        IntentResult,
+        LanguageResult,
+        EntityResult,
+        StructuredUnderstanding,
+    )
+except ImportError:
+    NormalizeResult = None  # type: ignore[misc,assignment]
+    NormalizationResult = None  # type: ignore[misc,assignment]
+    IntentResult = None  # type: ignore[misc,assignment]
+    LanguageResult = None  # type: ignore[misc,assignment]
+    EntityResult = None  # type: ignore[misc,assignment]
+    StructuredUnderstanding = None  # type: ignore[misc,assignment]
+
+
+# ---------------------------------------------------------------------------
+# Internal immutable result
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class LanguageDetection:
+    language: str
+    confidence: float | None
+    is_mixed: bool
+    languages: dict[str, float]
+
+
+# ---------------------------------------------------------------------------
+# Language Engine
+# ---------------------------------------------------------------------------
+
+class LanguageEngine:
+    """
+    Main orchestrator for Nusantara Language Engine.
+
+    Existing components remain authoritative:
+
+        TextNormalizer
+        IntentClassifier
+        EntityExtractor
+
+    This class only orchestrates them.
+    """
+
+    VERSION = "1.1.0"
+
+    # Domain terms that must survive normalization.
+    DOMAIN_TERMS = frozenset(
+        {
+            "KTP",
+            "KK",
+            "NIK",
+            "NPWP",
+            "SIM",
+            "NIB",
+            "KIA",
+            "STNK",
+            "SKCK",
+            "BPJS",
+            "AKTA",
+            "AKTA KEMATIAN",
+            "AKTA KELAHIRAN",
+            "KTP-EL",
+            "KTP EL",
+            "DUKCAPIL",
+            "DISDUKCAPIL",
+            "SOBAT DUKCAPIL",
+        }
+    )
+
+    # Indonesian function/common words.
+    ID_WORDS = frozenset(
+        {
+            "saya",
+            "aku",
+            "kami",
+            "kita",
+            "anda",
+            "kamu",
+            "dia",
+            "mau",
+            "ingin",
+            "bisa",
+            "tidak",
+            "sudah",
+            "belum",
+            "bagaimana",
+            "kenapa",
+            "mengapa",
+            "dimana",
+            "di",
+            "ke",
+            "dari",
+            "untuk",
+            "dengan",
+            "yang",
+            "ini",
+            "itu",
+            "cek",
+            "buat",
+            "mengurus",
+            "urus",
+            "status",
+            "cara",
+            "tolong",
+            "mohon",
+            "terima",
+            "kasih",
+            "apakah",
+            "berapa",
+            "kapan",
+            "hari",
+            "dokumen",
+            "data",
+            "pelayanan",
+            "layanan",
+        }
+    )
+
+    EN_WORDS = frozenset(
+        {
+            "the",
+            "a",
+            "an",
+            "is",
+            "are",
+            "am",
+            "can",
+            "could",
+            "would",
+            "please",
+            "how",
+            "what",
+            "why",
+            "where",
+            "when",
+            "check",
+            "status",
+            "document",
+            "documents",
+            "help",
+            "need",
+            "want",
+            "make",
+            "create",
+            "update",
+            "delete",
+            "login",
+            "error",
+        }
+    )
+
+    # Lightweight indicators for Indonesian.
+    ID_MARKERS = (
+        "yang",
+        "dan",
+        "atau",
+        "saya",
+        "aku",
+        "kami",
+        "kamu",
+        "mau",
+        "ingin",
+        "bisa",
+        "tidak",
+        "belum",
+        "sudah",
+        "tolong",
+        "bagaimana",
+        "kenapa",
+        "mengapa",
+        "cek",
+        "buat",
+        "urus",
+        "status",
+    )
+
+    def __init__(
+        self,
+        *,
+        normalizer: Any | None = None,
+        intent_classifier: Any | None = None,
+        entity_extractor: Any | None = None,
+        language_detector: Callable[[str], Any] | None = None,
+        indo_bert: Any | None = None,
+    ) -> None:
+        self.normalizer = (
+            normalizer
+            if normalizer is not None
+            else self._build_component(TextNormalizer)
+        )
+
+        self.intent_classifier = (
+            intent_classifier
+            if intent_classifier is not None
+            else self._build_component(IntentClassifier)
+        )
+
+        self.entity_extractor = (
+            entity_extractor
+            if entity_extractor is not None
+            else self._build_component(EntityExtractor)
+        )
+
+        # Optional external language detector.
+        self.language_detector = language_detector
+
+        # Optional IndoBERT adapter.
+        #
+        # IMPORTANT:
+        # IndoBERT tidak dipaksa aktif.
+        # Engine tetap berjalan jika model belum terpasang.
+        self.indo_bert = indo_bert
+
+    # ------------------------------------------------------------------
+    # Public API
+    # ------------------------------------------------------------------
+
+    def process(self, text: str) -> Any:
+        """
+        Process a user input through the complete language pipeline.
+
+        Returns:
+            StructuredUnderstanding when project schema is available,
+            otherwise a dictionary-compatible structure.
+        """
+
+        raw_text = self._validate_input(text)
+
+        # 1. Normalize
+        normalization = self._normalize(raw_text)
+        normalized_text = self._extract_text(
+            normalization,
+            fallback=raw_text,
+        )
+
+        # 2. Language detection
+        language = self._detect_language(normalized_text)
+
+        # 3. Intent
+        intent = self._classify_intent(
+            normalized_text,
+            language=language,
+        )
+
+        # 4. Entity
+        entities = self._extract_entities(
+            normalized_text,
+            language=language,
+        )
+
+        # 5. Structured understanding
+        return self._build_structured_result(
+            raw_text=raw_text,
+            normalized_text=normalized_text,
+            normalization=normalization,
+            language=language,
+            intent=intent,
+            entities=entities,
+        )
+
+    # Compatibility aliases.
+    def understand(self, text: str) -> Any:
+        return self.process(text)
+
+    def analyze(self, text: str) -> Any:
+        return self.process(text)
+
+    def run(self, text: str) -> Any:
+        return self.process(text)
+
+    # ------------------------------------------------------------------
+    # Normalization
+    # ------------------------------------------------------------------
+
+    def _normalize(self, text: str) -> Any:
+        """
+        Call existing normalizer without assuming one exact API.
+        """
+
+        if self.normalizer is None:
+            return self._fallback_normalization(text)
+
+        candidates = (
+            ("normalize_text", text),
+            ("normalize", text),
+            ("process", text),
+        )
+
+        for method_name, argument in candidates:
+            method = getattr(self.normalizer, method_name, None)
+
+            if callable(method):
+                try:
+                    return method(argument)
+                except TypeError:
+                    continue
+
+        # Callable object support.
+        if callable(self.normalizer):
+            try:
+                return self.normalizer(text)
+            except TypeError:
+                pass
+
+        return self._fallback_normalization(text)
+
+    def _fallback_normalization(self, text: str) -> dict[str, Any]:
+        """
+        Conservative fallback.
+
+        IMPORTANT:
+        Do not perform aggressive semantic rewriting here.
+        """
+
+        cleaned = re.sub(r"\s+", " ", text.strip())
+
+        return {
+            "text": cleaned,
+            "original_text": text,
+            "changed": cleaned != text,
+        }
+
+    # ------------------------------------------------------------------
+    # Language detection
+    # ------------------------------------------------------------------
+
+    def _detect_language(self, text: str) -> LanguageDetection:
+        """
+        Detect Indonesian / English / mixed language.
+
+        If an external detector is configured, use it first.
+
+        Confidence is never fabricated from an arbitrary constant.
+        When no model confidence exists, confidence is None.
+        """
+
+        if self.language_detector is not None:
+            try:
+                result = self.language_detector(text)
+                parsed = self._parse_language_result(result)
+
+                if parsed is not None:
+                    return parsed
+            except Exception:
+                # Language detection must not break the whole engine.
+                pass
+
+        tokens = self._tokenize(text)
+
+        if not tokens:
+            return LanguageDetection(
+                language="unknown",
+                confidence=None,
+                is_mixed=False,
+                languages={},
+            )
+
+        id_count = sum(token in self.ID_WORDS for token in tokens)
+        en_count = sum(token in self.EN_WORDS for token in tokens)
+
+        total = max(len(tokens), 1)
+
+        id_ratio = id_count / total
+        en_ratio = en_count / total
+
+        # Strong Indonesian signal.
+        if id_count > 0 and en_count == 0:
+            return LanguageDetection(
+                language="id",
+                confidence=None,
+                is_mixed=False,
+                languages={"id": id_ratio},
+            )
+
+        # Strong English signal.
+        if en_count > 0 and id_count == 0:
+            return LanguageDetection(
+                language="en",
+                confidence=None,
+                is_mixed=False,
+                languages={"en": en_ratio},
+            )
+
+        # Mixed.
+        if id_count > 0 and en_count > 0:
+            return LanguageDetection(
+                language="id",
+                confidence=None,
+                is_mixed=True,
+                languages={
+                    "id": id_ratio,
+                    "en": en_ratio,
+                },
+            )
+
+        # Regional/domain text such as:
+        # "KTP saya"
+        #
+        # Domain entities themselves are not enough to claim
+        # language confidence.
+        lower = text.lower()
+
+        marker_hits = sum(
+            1 for marker in self.ID_MARKERS
+            if re.search(
+                rf"(?<!\w){re.escape(marker)}(?!\w)",
+                lower,
+            )
+        )
+
+        if marker_hits:
+            ratio = min(marker_hits / max(len(tokens), 1), 1.0)
+
+            return LanguageDetection(
+                language="id",
+                confidence=None,
+                is_mixed=False,
+                languages={"id": ratio},
+            )
+
+        return LanguageDetection(
+            language="unknown",
+            confidence=None,
+            is_mixed=False,
+            languages={},
+        )
+
+    def _parse_language_result(
+        self,
+        result: Any,
+    ) -> LanguageDetection | None:
+        if result is None:
+            return None
+
+        if isinstance(result, LanguageDetection):
+            return result
+
+        data = self._to_dict(result)
+
+        if not data:
+            return None
+
+        language = (
+            data.get("language")
+            or data.get("lang")
+            or data.get("detected_language")
+        )
+
+        if not language:
+            return None
+
+        confidence = self._safe_float(
+            data.get("confidence")
+        )
+
+        is_mixed = bool(
+            data.get("is_mixed", data.get("mixed", False))
+        )
+
+        languages = data.get("languages")
+
+        if not isinstance(languages, Mapping):
+            languages = {str(language): confidence} if confidence is not None else {
+                str(language): 1.0
+            }
+
+        return LanguageDetection(
+            language=str(language),
+            confidence=confidence,
+            is_mixed=is_mixed,
+            languages={
+                str(k): float(v)
+                for k, v in languages.items()
+                if self._is_number(v)
+            },
+        )
+
+    # ------------------------------------------------------------------
+    # Intent
+    # ------------------------------------------------------------------
+
+    def _classify_intent(
+        self,
+        text: str,
+        *,
+        language: LanguageDetection,
+    ) -> Any:
+        if self.intent_classifier is None:
+            return self._fallback_intent(text)
+
+        # Existing intent.py may expose different method names.
+        candidates = (
+            ("classify", text),
+            ("predict", text),
+            ("process", text),
+            ("detect", text),
+            ("classify_intent", text),
+        )
+
+        for method_name, argument in candidates:
+            method = getattr(
+                self.intent_classifier,
+                method_name,
+                None,
+            )
+
+            if callable(method):
+                try:
+                    return method(argument)
+                except TypeError:
+                    continue
+
+        if callable(self.intent_classifier):
+            try:
+                return self.intent_classifier(text)
+            except TypeError:
+                pass
+
+        return self._fallback_intent(text)
+
+    def _fallback_intent(self, text: str) -> dict[str, Any]:
+        """
+        Conservative fallback only.
+
+        This is NOT intended to replace IntentClassifier.
+        """
+
+        lower = text.lower()
+
+        if any(
+            phrase in lower
+            for phrase in (
+                "status ktp",
+                "cek status ktp",
+                "ktp saya sudah",
+                "ktp saya belum",
+                "status kartu",
+            )
+        ):
+            return {
+                "intent": "document_status",
+                "confidence": None,
+                "category": "document",
+                "parent_intent": None,
+            }
+
+        if any(
+            phrase in lower
+            for phrase in (
+                "cara buat ktp",
+                "membuat ktp",
+                "buat ktp",
+                "urus ktp",
+            )
+        ):
+            return {
+                "intent": "document_creation",
+                "confidence": None,
+                "category": "document",
+                "parent_intent": None,
+            }
+
+        if any(
+            phrase in lower
+            for phrase in (
+                "cara buat kk",
+                "membuat kk",
+                "buat kk",
+                "urus kk",
+            )
+        ):
+            return {
+                "intent": "document_creation",
+                "confidence": None,
+                "category": "document",
+                "parent_intent": None,
+            }
+
+        return {
+            "intent": "unknown",
+            "confidence": None,
+            "category": "general",
+            "parent_intent": None,
+        }
+
+    # ------------------------------------------------------------------
+    # Entity
+    # ------------------------------------------------------------------
+
+    def _extract_entities(
+        self,
+        text: str,
+        *,
+        language: LanguageDetection,
+    ) -> Any:
+        if self.entity_extractor is None:
+            return self._fallback_entities(text)
+
+        candidates = (
+            ("extract", text),
+            ("extract_entities", text),
+            ("process", text),
+            ("find", text),
+        )
+
+        for method_name, argument in candidates:
+            method = getattr(
+                self.entity_extractor,
+                method_name,
+                None,
+            )
+
+            if callable(method):
+                try:
+                    return method(argument)
+                except TypeError:
+                    continue
+
+        if callable(self.entity_extractor):
+            try:
+                return self.entity_extractor(text)
+            except TypeError:
+                pass
+
+        return self._fallback_entities(text)
+
+    def _fallback_entities(self, text: str) -> list[dict[str, Any]]:
+        entities: list[dict[str, Any]] = []
+
+        upper_text = text.upper()
+
+        # Longest domain entities first.
+        ordered_terms = sorted(
+            self.DOMAIN_TERMS,
+            key=len,
+            reverse=True,
+        )
+
+        occupied: list[tuple[int, int]] = []
+
+        for term in ordered_terms:
+            pattern = re.compile(
+                rf"(?<!\w){re.escape(term)}(?!\w)",
+                re.IGNORECASE,
+            )
+
+            for match in pattern.finditer(upper_text):
+                start = match.start()
+                end = match.end()
+
+                if any(
+                    start < existing_end
+                    and end > existing_start
+                    for existing_start, existing_end in occupied
+                ):
+                    continue
+
+                occupied.append((start, end))
+
+                entities.append(
+                    {
+                        "text": text[start:end],
+                        "type": "DOCUMENT",
+                        "label": "DOCUMENT",
+                        "start": start,
+                        "end": end,
+                    }
+                )
+
+        entities.sort(key=lambda item: item["start"])
+
+        return entities
+
+    # ------------------------------------------------------------------
+    # Structured output
+    # ------------------------------------------------------------------
+
+    def _build_structured_result(
+        self,
+        *,
+        raw_text: str,
+        normalized_text: str,
+        normalization: Any,
+        language: LanguageDetection,
+        intent: Any,
+        entities: Any,
+    ) -> Any:
+        """
+        Build the project's StructuredUnderstanding schema when possible.
+
+        If the project's schema constructor differs, fall back to a
+        dictionary rather than crashing the entire Language Engine.
+        """
+
+        language_payload = {
+            "language": language.language,
+            "confidence": language.confidence,
+            "is_mixed": language.is_mixed,
+            "languages": language.languages,
+        }
+
+        intent_payload = self._to_dict(intent)
+
+        entity_payload = self._to_serializable(entities)
+
+        payload = {
+            "text": normalized_text,
+            "raw_text": raw_text,
+            "normalization": self._to_serializable(normalization),
+            "language": language_payload,
+            "intent": intent_payload,
+            "entities": entity_payload,
+            "metadata": {
+                "engine": "nusantara-language-engine",
+                "version": self.VERSION,
+                "domain_terms_detected": self._domain_terms_detected(
+                    normalized_text
+                ),
+            },
+        }
+
+        if StructuredUnderstanding is None:
+            return payload
+
+        # Pydantic v2.
+        try:
+            if hasattr(StructuredUnderstanding, "model_validate"):
+                return StructuredUnderstanding.model_validate(payload)
+        except Exception:
+            pass
+
+        # Pydantic v1.
+        try:
+            if hasattr(StructuredUnderstanding, "parse_obj"):
+                return StructuredUnderstanding.parse_obj(payload)
+        except Exception:
+            pass
+
+        # Direct constructor.
+        try:
+            return StructuredUnderstanding(**payload)
+        except Exception:
+            return payload
+
+    # ------------------------------------------------------------------
+    # Utilities
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _build_component(component_cls: Any) -> Any:
+        if component_cls is None:
+            return None
+
+        try:
+            return component_cls()
+        except TypeError:
+            return None
+
+    @staticmethod
+    def _validate_input(text: str) -> str:
+        if text is None:
+            raise ValueError("text must not be None")
+
+        if not isinstance(text, str):
+            raise TypeError("text must be a string")
+
+        cleaned = text.strip()
+
+        if not cleaned:
+            raise ValueError("text must not be empty")
+
+        return cleaned
+
+    @staticmethod
+    def _tokenize(text: str) -> list[str]:
+        return re.findall(
+            r"[A-Za-zÀ-ÿ0-9]+",
+            text.lower(),
+        )
+
+    @staticmethod
+    def _extract_text(
+        result: Any,
+        *,
+        fallback: str,
+    ) -> str:
+        if result is None:
+            return fallback
+
+        if isinstance(result, str):
+            return result.strip() or fallback
+
+        data = LanguageEngine._to_dict(result)
+
+        for key in (
+            "text",
+            "normalized_text",
+            "output",
+            "value",
+        ):
+            value = data.get(key)
+
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+
+        return fallback
+
+    @staticmethod
+    def _to_dict(value: Any) -> dict[str, Any]:
+        if value is None:
+            return {}
+
+        if isinstance(value, Mapping):
+            return dict(value)
+
+        # Pydantic v2
+        try:
+            if hasattr(value, "model_dump"):
+                dumped = value.model_dump()
+                if isinstance(dumped, Mapping):
+                    return dict(dumped)
+        except Exception:
+            pass
+
+        # Pydantic v1
+        try:
+            if hasattr(value, "dict"):
+                dumped = value.dict()
+                if isinstance(dumped, Mapping):
+                    return dict(dumped)
+        except Exception:
+            pass
+
+        # Dataclass / regular object
+        try:
+            raw = vars(value)
+            if isinstance(raw, dict):
+                return dict(raw)
+        except Exception:
+            pass
+
+        return {}
+
+    @classmethod
+    def _to_serializable(cls, value: Any) -> Any:
+        if value is None:
+            return None
+
+        if isinstance(value, (str, int, float, bool)):
+            return value
+
+        if isinstance(value, Mapping):
+            return {
+                str(key): cls._to_serializable(item)
+                for key, item in value.items()
+            }
+
+        if isinstance(value, Sequence) and not isinstance(
+            value,
+            (str, bytes, bytearray),
+        ):
+            return [
+                cls._to_serializable(item)
+                for item in value
+            ]
+
+        data = cls._to_dict(value)
+
+        if data:
+            return {
+                str(key): cls._to_serializable(item)
+                for key, item in data.items()
+            }
+
+        return str(value)
+
+    @staticmethod
+    def _safe_float(value: Any) -> float | None:
+        if value is None:
+            return None
+
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return None
+
+    @staticmethod
+    def _is_number(value: Any) -> bool:
+        try:
+            float(value)
+            return True
+        except (TypeError, ValueError):
+            return False
+
+    @classmethod
+    def _domain_terms_detected(cls, text: str) -> list[str]:
+        found: list[str] = []
+
+        for term in sorted(
+            cls.DOMAIN_TERMS,
+            key=len,
+            reverse=True,
+        ):
+            if re.search(
+                rf"(?<!\w){re.escape(term)}(?!\w)",
+                text,
+                re.IGNORECASE,
+            ):
+                found.append(term)
+
+        return found
+
+
+# ---------------------------------------------------------------------------
+# Factory
+# ---------------------------------------------------------------------------
+
+def create_language_engine(
+    *,
+    normalizer: Any | None = None,
+    intent_classifier: Any | None = None,
+    entity_extractor: Any | None = None,
+    language_detector: Callable[[str], Any] | None = None,
+    indo_bert: Any | None = None,
+) -> LanguageEngine:
+    """
+    Canonical factory used by the application.
+
+    Example:
+
+        engine = create_language_engine()
+
+        result = engine.process(
+            "Saya gk bisa cek KTP"
+        )
+    """
+
+    return LanguageEngine(
+        normalizer=normalizer,
+        intent_classifier=intent_classifier,
+        entity_extractor=entity_extractor,
+        language_detector=language_detector,
+        indo_bert=indo_bert,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Backward compatibility
+# ---------------------------------------------------------------------------
+
+Engine = LanguageEngine
+NusantaraLanguageEngine = LanguageEngine
+
+
+__all__ = [
+    "LanguageDetection",
+    "LanguageEngine",
+    "NusantaraLanguageEngine",
+    "Engine",
+    "create_language_engine",
+]
+

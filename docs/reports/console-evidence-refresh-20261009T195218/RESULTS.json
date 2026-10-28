@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-10-09T19:58:56.2781758+07:00",
+  "tests": {
+    "command": "node node_modules/vitest/vitest.mjs run tests/engineering-console.test.tsx tests/assistant.test.tsx --maxWorkers=1 --minWorkers=1 --pool=threads --reporter=default --reporter=json --outputFile=../docs/reports/console-evidence-refresh-20261009T195218/UI_TEST_RESULTS_FINAL.json",
+    "exit_code": 0,
+    "FAIL": 0,
+    "PASS": 28,
+    "historical_backend_results_not_rerun": true,
+    "guard": "NODE_OPTIONS=--require=./tests/inspection-preview-network-guard.cjs",
+    "pending": 0
+  },
+  "protected_implementation_hash_mismatches": [],
+  "status": "IMPLEMENTED_VERIFIED_SCOPED_UI",
+  "HEAD": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "runtime_operations": 0,
+  "V2": "DEFERRED",
+  "files": [
+    {
+      "after_sha256": "FFCE353767A90421D6D5B0CDD10A5CD44F0B588C78797B71501F85782B01BBCF",
+      "before_sha256": "51856D8E6F918B0BD83DA14005E35954B1811333DBF52F4E7FD7AAA8B77B3DE2",
+      "path": "control-plane/src/engineering-evidence.ts"
+    },
+    {
+      "after_sha256": "962D9461977FB63A5AF2F3835817359865FC1F84E8EAEE6F42D9030ECFD8C760",
+      "before_sha256": "A97AE9228E3836234164AC008AA4F2952DFD79ACE8B3AFFFDC8C15EDEAA6F2A9",
+      "path": "control-plane/src/engineering-console.tsx"
+    },
+    {
+      "after_sha256": "95ED70D128E5070A6579029F0465EF81A4899B75CA6A1CB3C6ADE9969AA2D658",
+      "before_sha256": "F8086D3D4726478CF9E2B2906B98388447A65AFFE3D3891EB36C3A6D21F67224",
+      "path": "control-plane/tests/engineering-console.test.tsx"
+    }
+  ],
+  "active_database_access": false,
+  "typecheck": {
+    "exit_code": 0,
+    "command": "node node_modules/typescript/bin/tsc --noEmit"
+  },
+  "V1": "FAIL / HOLD",
+  "owner_input": {
+    "status": "NEEDS_OWNER_INPUT",
+    "exact_fixture_path": "MISSING",
+    "reply": "1",
+    "approval_reference": "MISSING"
+  },
+  "limits": [
+    "Console remains historical/offline; no live runtime verification",
+    "Temporary adapter tests do not verify operational rollback",
+    "Phase 0-21 remain NOT_VERIFIED",
+    "WEIP-COMP-DB-01 remains REVIEW_REQUIRED",
+    "Backend tests were not repeated for frontend-only changes",
+    "Graph query/update not run to preserve unrelated graph/cache and active-data boundaries"
+  ],
+  "integration": "NOT_AUTHORIZED"
+}

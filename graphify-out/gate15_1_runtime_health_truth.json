@@ -1,0 +1,66 @@
+{
+  "gate": "15.1",
+  "name": "Runtime Health Truth",
+  "version": "15.1.0",
+  "timestamp": "2026-10-03T21:21:59.916497",
+  "status": "PASS",
+  "checks": {
+    "basic_health": true,
+    "detail_health": true,
+    "components": true,
+    "llm": true
+  },
+  "component_results": {
+    "api": true,
+    "language_engine": true,
+    "problem_engine": true,
+    "knowledge_engine": true,
+    "reasoning_engine": true,
+    "workflow_engine": true,
+    "policy_engine": true,
+    "trust_engine": true,
+    "memory": true,
+    "tools": true,
+    "mcp": true,
+    "handoff": true
+  },
+  "runtime": {
+    "basic": {
+      "status": "ok",
+      "service": "nusantara-core",
+      "version": "0.1.0"
+    },
+    "detail": {
+      "status": "ok",
+      "service": "Nusantara Core + Hermes",
+      "version": "0.1.0",
+      "llm": {
+        "status": "ok",
+        "model": "llama3.2:1b",
+        "available": true,
+        "latency_ms": 298
+      },
+      "components": {
+        "api": "available",
+        "language_engine": "available",
+        "problem_engine": "available",
+        "knowledge_engine": "available",
+        "reasoning_engine": "available",
+        "workflow_engine": "available",
+        "policy_engine": "available",
+        "trust_engine": "available",
+        "memory": "available",
+        "tools": "available",
+        "mcp": "available",
+        "handoff": "available"
+      }
+    }
+  },
+  "contract": {
+    "api_must_be_healthy": true,
+    "detail_endpoint_must_be_healthy": true,
+    "required_components_must_be_available": true,
+    "llm_must_be_available": true,
+    "no_chat_generation_required": true
+  }
+}

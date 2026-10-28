@@ -1,0 +1,150 @@
+{
+  "phase": "R2",
+  "gate": "R2-A1",
+  "verification_type": "READ_ONLY_DISCOVERY",
+  "runtime_identity": "NOT_VERIFIED",
+  "requests": [
+    {
+      "http_status": 200,
+      "body": {
+        "status": "ok",
+        "version": "0.1.0",
+        "build_id": "sha256:2cfc98c71f65027c56646ec8958c5c6a0fa658b9311167e2c1b4a27e714593f2"
+      },
+      "timestamp_utc": "2026-10-08T02:05:21.3955167Z",
+      "url": "http://127.0.0.1:8000/health",
+      "request_id_returned": [
+        "r2-61a3d46fc0c04076b01008a3641aac96"
+      ],
+      "request_id_sent": "r2-61a3d46fc0c04076b01008a3641aac96"
+    },
+    {
+      "http_status": 200,
+      "body": {
+        "status": "ok",
+        "service": "Nusantara Core + Hermes",
+        "version": "0.1.0",
+        "llm": {
+          "status": "ok",
+          "model": "llama3.2:1b",
+          "available": true,
+          "latency_ms": 351
+        },
+        "identity": {
+          "service": {
+            "status": "ok"
+          },
+          "provider": {
+            "name": "ollama",
+            "status": "ok",
+            "verification_state": "HEALTH_PROBE_ONLY"
+          },
+          "model": {
+            "configured": "llama3.2:1b",
+            "effective": "llama3.2:1b",
+            "selected": "llama3.2:1b",
+            "payload": null,
+            "actual": null,
+            "source": "DEFAULT",
+            "override_source": "CONFIGURATION",
+            "verification_state": "NOT_VERIFIED"
+          },
+          "build": {
+            "id": "sha256:2cfc98c71f65027c56646ec8958c5c6a0fa658b9311167e2c1b4a27e714593f2",
+            "verification_state": "SOURCE_SNAPSHOT"
+          },
+          "verification_state": "NOT_VERIFIED",
+          "confirmation_source": "MODEL_INVENTORY_ONLY"
+        },
+        "components": {
+          "api": "available",
+          "language_engine": "available",
+          "problem_engine": "available",
+          "knowledge_engine": "available",
+          "reasoning_engine": "available",
+          "workflow_engine": "available",
+          "policy_engine": "available",
+          "trust_engine": "available",
+          "memory": "available",
+          "tools": "available",
+          "mcp": "available",
+          "handoff": "available"
+        }
+      },
+      "timestamp_utc": "2026-10-08T02:05:22.0780593Z",
+      "url": "http://127.0.0.1:8000/v1/health/detail",
+      "request_id_returned": [
+        "r2-5d0b292b8e5a454eae8ec6bcb3ed51b1"
+      ],
+      "request_id_sent": "r2-5d0b292b8e5a454eae8ec6bcb3ed51b1"
+    }
+  ],
+  "provider_inventory": {
+    "models": [
+      {
+        "name": "llama3.2:1b",
+        "model": "llama3.2:1b",
+        "modified_at": "2026-09-25T17:23:31.0159226+07:00",
+        "size": 1321098329,
+        "digest": "baf6a787fdffd633537aa2eb51cfd54cb93ff08e28040095462bb63daf552878",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "llama",
+          "families": [
+            "llama"
+          ],
+          "parameter_size": "1.2B",
+          "quantization_level": "Q8_0",
+          "context_length": 131072,
+          "embedding_length": 2048
+        },
+        "capabilities": [
+          "completion",
+          "tools"
+        ]
+      }
+    ]
+  },
+  "processes": [
+    {
+      "ProcessId": 18296,
+      "ParentProcessId": 940,
+      "Name": "ollama.exe",
+      "ExecutablePath": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Ollama\\ollama.exe",
+      "CreationDate": "2026-09-30T17:01:18.861866+07:00"
+    },
+    {
+      "ProcessId": 26952,
+      "ParentProcessId": 40720,
+      "Name": "python.exe",
+      "ExecutablePath": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+      "CreationDate": "2026-10-07T18:43:49.675391+07:00"
+    },
+    {
+      "ProcessId": 32796,
+      "ParentProcessId": 26952,
+      "Name": "python.exe",
+      "ExecutablePath": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "CreationDate": "2026-10-07T18:43:49.802242+07:00"
+    }
+  ],
+  "ports": [
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 11434,
+      "OwningProcess": 18296
+    },
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 8000,
+      "OwningProcess": 32796
+    }
+  ],
+  "actual_generation_performed": false,
+  "provider_request_correlation_verified": false,
+  "runtime_instance_id": null,
+  "working_directory_verified": false,
+  "current_source_build_id": "sha256:2cfc98c71f65027c56646ec8958c5c6a0fa658b9311167e2c1b4a27e714593f2",
+  "historical_evidence_reused_as_live": false
+}

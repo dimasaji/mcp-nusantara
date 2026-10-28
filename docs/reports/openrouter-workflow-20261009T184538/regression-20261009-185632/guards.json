@@ -1,0 +1,9 @@
+{
+  "pytest_exit": 2,
+  "violations": [],
+  "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+  "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+  "subprocess": "BLOCKED",
+  "writes": "NEW_RUN_DIRECTORY_ONLY",
+  "selection": "not runtime_instances_differ_in_real_subprocesses and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+}

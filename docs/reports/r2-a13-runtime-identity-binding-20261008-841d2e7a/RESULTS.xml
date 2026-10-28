@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="16" skipped="0" tests="23" time="3.867" timestamp="2026-10-08T16:21:39.100985+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="tests.test_runtime_identity" name="test_identity_changes_with_source_and_excludes_environment" time="0.008" /><testcase classname="tests.test_runtime_identity" name="test_health_reports_same_loaded_build" time="0.116"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_identity.py:23: in test_health_reports_same_loaded_build
+    with TestClient(app) as client:
+         ^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_attestation_is_stable_and_uses_current_process_os_identity" time="0.003"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:38: in test_attestation_is_stable_and_uses_current_process_os_identity
+    with client(application()) as session:
+         ^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_nonlocal_or_nonruntime_access_is_denied[192.0.2.1-http://127.0.0.1:8000-None]" time="0.004"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:79: in test_nonlocal_or_nonruntime_access_is_denied
+    with client(application(), peer=peer, url=url) as session:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_nonlocal_or_nonruntime_access_is_denied[127.0.0.1-http://example.com:8000-None]" time="0.008"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:79: in test_nonlocal_or_nonruntime_access_is_denied
+    with client(application(), peer=peer, url=url) as session:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_nonlocal_or_nonruntime_access_is_denied[127.0.0.1-http://127.0.0.1:5173-None]" time="0.003"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:79: in test_nonlocal_or_nonruntime_access_is_denied
+    with client(application(), peer=peer, url=url) as session:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_nonlocal_or_nonruntime_access_is_denied[127.0.0.1-http://127.0.0.1:8000-http://example.com:8000]" time="0.004"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:79: in test_nonlocal_or_nonruntime_access_is_denied
+    with client(application(), peer=peer, url=url) as session:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_nonlocal_or_nonruntime_access_is_denied[127.0.0.1-http://127.0.0.1:8000-http://127.0.0.1:5173]" time="0.008"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:79: in test_nonlocal_or_nonruntime_access_is_denied
+    with client(application(), peer=peer, url=url) as session:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_nonlocal_or_nonruntime_access_is_denied[127.0.0.1-http://127.0.0.1:8000-null]" time="0.003"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:79: in test_nonlocal_or_nonruntime_access_is_denied
+    with client(application(), peer=peer, url=url) as session:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_nonlocal_or_nonruntime_access_is_denied[127.0.0.1-http://127.0.0.1:8000-http://localhost:invalid]" time="0.005"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:79: in test_nonlocal_or_nonruntime_access_is_denied
+    with client(application(), peer=peer, url=url) as session:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_nonlocal_or_nonruntime_access_is_denied[127.0.0.1-http://127.0.0.1:8000-http://[invalid]" time="0.002"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:79: in test_nonlocal_or_nonruntime_access_is_denied
+    with client(application(), peer=peer, url=url) as session:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_local_runtime_origin_is_allowed_and_post_is_not" time="0.003"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:87: in test_local_runtime_origin_is_allowed_and_post_is_not
+    with client(application()) as session:
+         ^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_live_handler_code_changes_are_detected_without_reading_source" time="0.004"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:95: in test_live_handler_code_changes_are_detected_without_reading_source
+    with client(app) as session:
+         ^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_endpoint_does_not_open_files_databases_network_or_configuration" time="0.003"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:116: in test_endpoint_does_not_open_files_databases_network_or_configuration
+    with client(app) as session:
+         ^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_duplicate_endpoint_registration_is_rejected" time="0.002" /><testcase classname="tests.test_runtime_attestation" name="test_unavailable_os_identity_is_not_fabricated" time="0.003"><failure message="AssertionError: R2-A10 protected database/network operation">..\..\..\tests\test_runtime_attestation.py:142: in test_unavailable_os_identity_is_not_fabricated
+    with client(application()) as session:
+         ^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\testclient.py:504: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:460: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py:402: in __get_result
+    raise self._exception
+..\..\..\.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+..\..\..\.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="tests.test_runtime_attestation" name="test_new_processes_have_distinct_instances_and_actual_main_integration" time="1.177" /><testcase classname="tests.test_runtime_attestation" name="test_main_change_only_installs_attestation_and_preserves_existing_handlers" time="0.003" /><testcase classname="docs.reports.r2-a13-runtime-identity-binding-20261008-841d2e7a.test_binding_limits" name="test_import_time_snapshot_can_stay_old_while_disk_identity_changes" time="0.004" /><testcase classname="docs.reports.r2-a13-runtime-identity-binding-20261008-841d2e7a.test_binding_limits" name="test_unchanged_disk_hash_is_deterministic" time="0.004" /><testcase classname="docs.reports.r2-a13-runtime-identity-binding-20261008-841d2e7a.test_binding_limits" name="test_equal_registered_code_hash_does_not_cover_changed_global" time="0.003"><failure message="AssertionError: R2-A10 protected database/network operation">test_binding_limits.py:29: in test_equal_registered_code_hash_does_not_cover_changed_global
+    assert asyncio.run(namespace['handler']())=='before'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:195: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="docs.reports.r2-a13-runtime-identity-binding-20261008-841d2e7a.test_binding_limits" name="test_registered_manifest_does_not_cover_transitive_helper_code" time="0.002"><failure message="AssertionError: R2-A10 protected database/network operation">test_binding_limits.py:40: in test_registered_manifest_does_not_cover_transitive_helper_code
+    assert asyncio.run(namespace['handler']())=='before'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:195: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\runners.py:138: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:840: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py:737: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:635: in __init__
+    self._make_self_pipe()
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\asyncio\proactor_events.py:781: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\AppData\Local\Programs\Python\Python313\Lib\socket.py:623: in _fallback_socketpair
+    csock.connect((addr, port))
+isolated_runner.py:20: in forbidden
+    raise AssertionError('R2-A10 protected database/network operation')
+E   AssertionError: R2-A10 protected database/network operation</failure></testcase><testcase classname="docs.reports.r2-a13-runtime-identity-binding-20261008-841d2e7a.test_binding_limits" name="test_source_algorithm_has_no_record_of_bytes_used_by_a_loader" time="0.004" /></testsuite></testsuites>

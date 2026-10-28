@@ -1,0 +1,292 @@
+{
+  "chat_definition_line": 753,
+  "chat_decorators": [
+    "router.post('/chat')"
+  ],
+  "chat_response_line": 1200,
+  "public_trust_keys": [
+    "supports_claim",
+    "confidence",
+    "risk_level",
+    "requires_human",
+    "evidence_count",
+    "evidence_available"
+  ],
+  "root_response_keys": [
+    "developer_core",
+    "session_id",
+    "trust",
+    "response",
+    "gate_pipeline",
+    "model",
+    "provider_status",
+    "latency_ms",
+    "grounding",
+    "understanding",
+    "problem",
+    "evidence",
+    "timestamp"
+  ],
+  "returns_gate_context_unfiltered": true,
+  "hermes_run_called": false,
+  "provider_generate_called_directly": true,
+  "calls": [
+    {
+      "call": "router.post",
+      "line": 752
+    },
+    {
+      "call": "OllamaProvider",
+      "line": 786
+    },
+    {
+      "call": "time.perf_counter",
+      "line": 797
+    },
+    {
+      "call": "HermesAgent",
+      "line": 803
+    },
+    {
+      "call": "_trust_engine.evaluate",
+      "line": 889
+    },
+    {
+      "call": "_extract_understanding_data",
+      "line": 899
+    },
+    {
+      "call": "_extract_intent",
+      "line": 905
+    },
+    {
+      "call": "_reconcile_problem_with_intent",
+      "line": 925
+    },
+    {
+      "call": "_extract_entities",
+      "line": 933
+    },
+    {
+      "call": "_get_problem_value",
+      "line": 942
+    },
+    {
+      "call": "_get_problem_value",
+      "line": 948
+    },
+    {
+      "call": "_build_evidence_text",
+      "line": 958
+    },
+    {
+      "call": "_gate_integration.process",
+      "line": 965
+    },
+    {
+      "call": "_deterministic_response",
+      "line": 980
+    },
+    {
+      "call": "_model_dump",
+      "line": 1170
+    },
+    {
+      "call": "_gate_integration.remember_response",
+      "line": 1179
+    },
+    {
+      "call": "_developer_core.runtime_snapshot",
+      "line": 1187
+    },
+    {
+      "call": "provider.health_check",
+      "line": 794
+    },
+    {
+      "call": "_run_sync_v1",
+      "line": 812
+    },
+    {
+      "call": "_run_sync_v1",
+      "line": 820
+    },
+    {
+      "call": "_run_sync_v1",
+      "line": 829
+    },
+    {
+      "call": "datetime.now(timezone.utc).isoformat",
+      "line": 1277
+    },
+    {
+      "call": "HTTPException",
+      "line": 1287
+    },
+    {
+      "call": "isinstance",
+      "line": 854
+    },
+    {
+      "call": "float",
+      "line": 857
+    },
+    {
+      "call": "_evidence_score",
+      "line": 884
+    },
+    {
+      "call": "_build_system_prompt",
+      "line": 1125
+    },
+    {
+      "call": "_build_user_prompt",
+      "line": 1135
+    },
+    {
+      "call": "bool",
+      "line": 1193
+    },
+    {
+      "call": "provider.close",
+      "line": 1297
+    },
+    {
+      "call": "float",
+      "line": 855
+    },
+    {
+      "call": "_evidence_score",
+      "line": 866
+    },
+    {
+      "call": "isinstance",
+      "line": 1030
+    },
+    {
+      "call": "int",
+      "line": 1051
+    },
+    {
+      "call": "_grounding_guard.validate",
+      "line": 1055
+    },
+    {
+      "call": "_build_system_prompt",
+      "line": 1069
+    },
+    {
+      "call": "_build_user_prompt",
+      "line": 1076
+    },
+    {
+      "call": "str(result.get('content', '')).strip",
+      "line": 1095
+    },
+    {
+      "call": "int",
+      "line": 1102
+    },
+    {
+      "call": "_grounding_guard.validate",
+      "line": 1106
+    },
+    {
+      "call": "_grounding_guard.build_system_instruction",
+      "line": 1132
+    },
+    {
+      "call": "getattr",
+      "line": 1249
+    },
+    {
+      "call": "getattr",
+      "line": 1254
+    },
+    {
+      "call": "getattr",
+      "line": 1259
+    },
+    {
+      "call": "getattr",
+      "line": 1264
+    },
+    {
+      "call": "getattr",
+      "line": 1269
+    },
+    {
+      "call": "datetime.now",
+      "line": 1277
+    },
+    {
+      "call": "getattr",
+      "line": 858
+    },
+    {
+      "call": "_evidence_score",
+      "line": 1025
+    },
+    {
+      "call": "(first_evidence.get('chunk') or first_evidence.get('source') or '').strip",
+      "line": 1031
+    },
+    {
+      "call": "(getattr(first_evidence, 'chunk', None) or getattr(first_evidence, 'source', None) or '').strip",
+      "line": 1037
+    },
+    {
+      "call": "_grounding_guard.build_system_instruction",
+      "line": 1073
+    },
+    {
+      "call": "provider.generate",
+      "line": 1086
+    },
+    {
+      "call": "gate_context.get('reasoning', {}).get",
+      "line": 1194
+    },
+    {
+      "call": "item.get",
+      "line": 855
+    },
+    {
+      "call": "str",
+      "line": 1095
+    },
+    {
+      "call": "time.perf_counter",
+      "line": 1052
+    },
+    {
+      "call": "result.get",
+      "line": 1096
+    },
+    {
+      "call": "time.perf_counter",
+      "line": 1103
+    },
+    {
+      "call": "gate_context.get",
+      "line": 1194
+    },
+    {
+      "call": "first_evidence.get",
+      "line": 1032
+    },
+    {
+      "call": "first_evidence.get",
+      "line": 1033
+    },
+    {
+      "call": "getattr",
+      "line": 1038
+    },
+    {
+      "call": "getattr",
+      "line": 1039
+    }
+  ],
+  "build_id": "sha256:1f6298a5c04d9a751cf3f16b461ba376429970669758a77cdd595f61d6d91b8d"
+}

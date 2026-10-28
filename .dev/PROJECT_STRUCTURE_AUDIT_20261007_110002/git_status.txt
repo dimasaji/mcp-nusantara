@@ -1,0 +1,207 @@
+﻿ M .env.example
+ M .graphifyignore
+ M RELEASE_READINESS_REPORT.md
+ M ROLLBACK_PLAN.md
+ M app/api/routes.py
+ M app/api/v2_routes.py
+ M app/approval/queue.py
+ M app/core/config.py
+ M app/developer_core/engine.py
+ M app/evaluation/evaluator.py
+ M app/experience/events.py
+ M app/hermes/agent.py
+ M app/improvement/gate.py
+ M app/improvement/release.py
+ M app/knowledge/engine.py
+ M app/knowledge/indobert_embedding.py
+ M app/knowledge/rag.py
+ M app/language/semantic/indobert_client.py
+ M app/main.py
+ M app/models/ollama.py
+ M app/observability/context.py
+ M app/research/improvement.py
+ M app/research/knowledge_discovery.py
+ M app/security/readiness.py
+ M app/security/scanner.py
+ M app/trust/engine.py
+ M app/ui/index.html
+ M app/v2/orchestrator.py
+ M app/v2/wiring.py
+ M docs/v2/ROADMAP_STATUS.md
+ M pyproject.toml
+ M run_tests.py
+ M scripts/release_check.py
+ M scripts/run_eval.py
+?? '
+?? .dev/PROJECT_STRUCTURE_AUDIT_20261007_110002/
+?? .dev/checkpoints/
+?? .dev/commands/
+?? .dev/control_report.json
+?? .dev/security-source/
+?? .dev/test-full.json
+?? .dev/test-full.xml
+?? .dev/validate-initial.json
+?? _phase4_trust_baseline.py
+?? app/core/runtime_identity.py
+?? app/evaluation/datasets/v1_id.json
+?? app/evaluation/datasets/v1_recovery_oracle.json
+?? app/mcp/stdio_server.py
+?? app/memory/session_adapter.py
+?? app/research/source_fetcher.py
+?? app/ui/review.html
+?? app/v2/hermes_adapter.py
+?? docs/MDE-04_MODEL_REGISTRY_DESIGN.md
+?? docs/audit/NUSANTARA-V1-CONTRACT-COMPLIANCE-ADDENDUM-2026-10-06.md
+?? docs/commands/
+?? docs/contracts/NUSANTARA-AGENT-ORCHESTRATION-CONTRACT-V1.md
+?? docs/contracts/NUSANTARA-INTELLIGENCE-MODEL-CONTRACT-V1.md
+?? docs/contracts/NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md
+?? docs/contracts/NUSANTARA-RUNTIME-EXECUTION-CONTRACT-V1.md
+?? docs/contracts/NUSANTARA-TOOL-MCP-API-CONTRACT-V1.md
+?? docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md
+?? reports/CONFIGURATION_BASELINE_20261006.json
+?? reports/CONFIGURATION_CLASSIFICATION_20261006.json
+?? reports/CONFIGURATION_DISCOVERY_20261006.json
+?? reports/DEVELOPER_CORE_ANALYSIS_20261006.json
+?? reports/DEVELOPER_CORE_BASELINE_20261006.xml
+?? reports/DEVELOPER_CORE_ENGINE_IMPLEMENTATION_PROGRESS.json
+?? reports/DEVELOPER_CORE_ENGINE_IMPLEMENTATION_RESULT_20261006.json
+?? reports/DEVELOPER_CORE_REGRESSION_20261006.xml
+?? reports/DEVELOPER_CORE_SECURITY_20261006.json
+?? reports/DEVELOPER_CORE_TARGETED_20261006.xml
+?? reports/FULLROOT_BASELINE_20261007.xml
+?? reports/FULLROOT_BOUNDARIES_20261007.xml
+?? reports/FULLROOT_CONTROL_20261007.xml
+?? reports/FULLROOT_EXECUTOR_FAILURE_20261007.json
+?? reports/FULLROOT_REGRESSION_FINAL_20261007.xml
+?? reports/FULLROOT_ROUTER_20261007.xml
+?? reports/FULLROOT_ROUTER_REGRESSION_20261007.xml
+?? reports/MDE04_FOCUSED_20261007.xml
+?? reports/MDE04_FOCUSED_OBSERVATIONS_20261007.json
+?? reports/MDE04_IDENTITY_MAP_20261007.json
+?? reports/MDE04_INTEGRITY_20261007.json
+?? reports/MEMORY_RETENTION_2026-10-06.md
+?? reports/NUSANTARA-DEVELOPER-CORE-ENGINE-IMPLEMENTATION-2026-10-06.md
+?? reports/NUSANTARA-V1-CC01-OPTION-C-IMPLEMENTATION-2026-10-06.md
+?? reports/NUSANTARA-V1-CC01-RESPONSE-PROJECTION-PROPOSAL-2026-10-06.md
+?? reports/NUSANTARA-V1-CONTRACT-COMPLIANCE-2026-10-06.md
+?? reports/NUSANTARA-V1-FINAL-CLOSURE-REPORT-2026-10-06.md
+?? reports/NUSANTARA-V1-RECOVERY-REPORT-2026-10-06.md
+?? reports/NUSANTARA_CONFIGURATION_ARCHITECTURE_20261006.md
+?? reports/NUSANTARA_CONFIGURATION_MAP_20261006.md
+?? reports/NUSANTARA_CONFIGURATION_REGRESSION_20261006.json
+?? reports/NUSANTARA_CONFIGURATION_VALIDATION_20261006.json
+?? reports/NUSANTARA_V1_VERIFICATION_2026-10-06.md
+?? reports/V1_CC01_IMPLEMENTATION_PROGRESS.json
+?? reports/V1_CC01_OPTION_C_IMPLEMENTATION.json
+?? reports/V1_CC01_REGRESSION.xml
+?? reports/V1_CC01_RESPONSE_PROJECTION_PROPOSAL.json
+?? reports/V1_CC01_SECURITY.json
+?? reports/V1_CC01_TARGETED.xml
+?? reports/V1_CC01_TARGETED_FIXED.xml
+?? reports/V1_CHAT_VERIFY_2026-10-06.json
+?? reports/V1_CLOSURE_BUILD_ID.json
+?? reports/V1_CLOSURE_ENVIRONMENT.json
+?? reports/V1_CLOSURE_FILESYSTEM.xml
+?? reports/V1_CLOSURE_INTEGRITY.json
+?? reports/V1_CLOSURE_ORACLE_AUDIT.json
+?? reports/V1_CLOSURE_SECURITY.json
+?? reports/V1_CLOSURE_TARGETED.xml
+?? reports/V1_COMPILE_VERIFY_2026-10-06.json
+?? reports/V1_CONTRACT_COMPLIANCE.json
+?? reports/V1_CONTRACT_COMPLIANCE_PROGRESS.json
+?? reports/V1_CONTRACT_COMPLIANCE_SOURCE_EVIDENCE.json
+?? reports/V1_FINAL_CLOSURE.xml
+?? reports/V1_FINAL_REGRESSION.xml
+?? reports/V1_GIT_VERIFY_2026-10-06.xml
+?? reports/V1_HEALTH_VERIFY_2026-10-06.json
+?? reports/V1_LIVE_VERIFY_2026-10-06.json
+?? reports/V1_RECOVERY_BASELINE.xml
+?? reports/V1_RECOVERY_CHANGES.json
+?? reports/V1_RECOVERY_ENVIRONMENT.json
+?? reports/V1_RECOVERY_FILESYSTEM.xml
+?? reports/V1_RECOVERY_IDENTITY_TESTS.xml
+?? reports/V1_RECOVERY_INDOBERT_CLIENT.json
+?? reports/V1_RECOVERY_INDOBERT_FAILURE.json
+?? reports/V1_RECOVERY_INDOBERT_NATIVE.json
+?? reports/V1_RECOVERY_INDOBERT_NOWINDOW.json
+?? reports/V1_RECOVERY_INDOBERT_TARGETED.xml
+?? reports/V1_RECOVERY_KNOWLEDGE_INVENTORY.json
+?? reports/V1_RECOVERY_MCP.xml
+?? reports/V1_RECOVERY_ORACLE_SOURCE_PINS.json
+?? reports/V1_RECOVERY_PROGRESS.json
+?? reports/V1_RECOVERY_RAG.json
+?? reports/V1_RECOVERY_ROUTE_DIAG.json
+?? reports/V1_RECOVERY_RUNTIME.json
+?? reports/V1_RECOVERY_SECURITY.json
+?? reports/V1_RECOVERY_TEST_091744129784_STDERR_0.txt
+?? reports/V1_RECOVERY_TEST_STDERR_0.txt
+?? reports/V1_RECOVERY_TEST_STDERR_1.txt
+?? reports/V1_RECOVERY_TEST_STDERR_2.txt
+?? reports/V1_RECOVERY_WORKER_091744129784.xml
+?? reports/V1_RECOVERY_WORKER_CAPTURE.xml
+?? reports/V1_RECOVERY_WORKER_STDERR_0.txt
+?? reports/V1_RECOVERY_WORKER_STDERR_1.txt
+?? reports/V1_RUNTIME_VERIFY_2026-10-06.json
+?? reports/V1_SECURITY_SCAN_2026-10-06.json
+?? reports/V1_VERIFY_2026-10-06.xml
+?? reports/configuration-phase6-compat-tmp/
+?? reports/configuration-phase6-targeted-tmp/
+?? reports/configuration-phase7-memory-diagnosis-tmp/
+?? reports/configuration-phase7-regression-final-tmp/
+?? reports/configuration-phase7-regression-tmp/
+?? reports/configuration-phase7-targeted-final-tmp/
+?? reports/configuration-phase7-targeted-fixed-tmp/
+?? reports/configuration-phase7-targeted-tmp/
+?? reports/configuration/
+?? reports/developer-core-backup-20261006-175153/
+?? reports/developer-core-regression-tmp/
+?? reports/developer-core-targeted-tmp/
+?? reports/diagnose_v1_worker.py
+?? reports/fullroot-baseline-tmp-20261007/
+?? reports/nusantara-phases/
+?? reports/prepare_v1_closure.py
+?? reports/v1-cc01-option-c-backup-20261006/
+?? reports/v1-cc01-regression-tmp/
+?? reports/v1-cc01-targeted-fixed-tmp/
+?? reports/v1-cc01-targeted-tmp/
+?? reports/v1-closure-backup-20261006/
+?? reports/v1-closure-targeted-tmp/
+?? reports/v1-final-closure-tmp/
+?? reports/v1-final-regression-tmp/
+?? reports/v1-rag-4kvfxegr/
+?? reports/v1-recovery-backup-20261006/
+?? reports/v1-recovery-candidate/
+?? reports/v1-recovery-identity-tmp/
+?? reports/v1-recovery-mcp-tmp/
+?? scripts/classify_configuration_phase2.py
+?? scripts/implement_v2_hermes_runtime.py
+?? scripts/implement_v2_hermes_runtime_safe.py
+?? scripts/load_test.py
+?? scripts/nusantara_master_phase_runner.ps1
+?? scripts/staging_drill.py
+?? scripts/verify_v1_recovery_rag.py
+?? scripts/verify_v1_recovery_runtime.py
+?? scripts/wire_v2_chat_hermes.py
+?? tests/evaluation/test_live_harness.py
+?? tests/test_approval_persistence.py
+?? tests/test_backup_restore.py
+?? tests/test_configuration_contract.py
+?? tests/test_configuration_integration.py
+?? tests/test_developer_core_engine_contract.py
+?? tests/test_indobert_timeout.py
+?? tests/test_mcp_stdio.py
+?? tests/test_phase3_v1_metrics_integration.py
+?? tests/test_phase4_trust_contract.py
+?? tests/test_phase4_v1_chat_runtime.py
+?? tests/test_phase4_v1_trust_integration.py
+?? tests/test_provider_failure.py
+?? tests/test_research_persistence.py
+?? tests/test_review_branch.py
+?? tests/test_runtime_identity.py
+?? tests/test_session_memory.py
+?? tests/test_source_fetcher.py
+?? tests/test_trace_retention.py
+?? tests/test_v1_response_projection.py
+?? tests/test_v1_stage_budget.py
+?? tests/v2/test_context_budget.py

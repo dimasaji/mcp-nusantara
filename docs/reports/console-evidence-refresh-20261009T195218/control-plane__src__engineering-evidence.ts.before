@@ -1,0 +1,337 @@
+export default {
+  "blockers": [
+    "CC05 consent/session ownership/retention remains open under approved temporary legacy preservation",
+    "CC06 official oracle: two REVIEW_REQUIRED cases, one MISSING passport case; issuer/jurisdiction/validity/ingest authorization needed",
+    "Approved filter grammar/authority metadata absent; nonempty filter safely rejected, not implemented",
+    "Full native semantic-worker plus production RAG/store/model UI integration not verified",
+    "Native Windows symlink privilege/security operational enforcement not reverified",
+    "Production deployment, provisioned credentials/resources and launch-worker consistency unverified; no deployment authorized",
+    "Current user runtime port8000 missing final model-control routes; explicit controlled restart/replacement authorization required",
+    "Conversation recall memory-read semantics not defined/implemented; preserve legacy capture until CC05 decision"
+  ],
+  "preservation": {
+    "status": "REVIEW_REQUIRED",
+    "databaseInspectedNow": false,
+    "explanation": "Bukti historis mencatat WAL/SHM tidak ditemukan pada pemeriksaan akhir. Penyebab dan pelaku tidak terbukti. Hash database utama saat itu tetap sama; ini tidak membuktikan keadaan logis database tetap sama.",
+    "attribution": "NOT_VERIFIED",
+    "reference": "docs/reports/weip-completion-20261009T104250Z/CHANGE_AUDIT.json",
+    "id": "WEIP-COMP-DB-01"
+  },
+  "v1": "FAIL / HOLD",
+  "gates": [
+    {
+      "status": "PASS",
+      "detail": "Fixture registry and URL rejection tests; real official authority remains separately unverified.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Source registry/allowlist",
+      "id": "WEIP-01"
+    },
+    {
+      "status": "PASS",
+      "detail": "Mock API acquisition/JSON/timeout tests; real official API NOT_RUN.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "API fetcher",
+      "id": "WEIP-02"
+    },
+    {
+      "status": "PASS",
+      "detail": "Mock MIME, size, redirect, retry tests; no real source acquisition.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Web/PDF acquisition",
+      "id": "WEIP-03"
+    },
+    {
+      "status": "PASS",
+      "detail": "Non-public/mixed/rebinding/redirect rejection and bounded-DNS regression; live TLS behavior NOT_RUN.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "SSRF/DNS",
+      "id": "WEIP-04"
+    },
+    {
+      "status": "REVIEW_REQUIRED",
+      "detail": "API/web and PDF fail-closed controls tested. pypdf/PyPDF2/fitz unavailable; native extraction/resource isolation NOT_RUN.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Parsing/resources",
+      "id": "WEIP-05"
+    },
+    {
+      "status": "PASS",
+      "detail": "Hash, metadata, binding and explicit owner-declared assurance tests; source authority not attested.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Provenance",
+      "id": "WEIP-06"
+    },
+    {
+      "status": "PASS",
+      "detail": "Existing and new version/metadata/expiry tests passed.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Versions/expiry/conflict",
+      "id": "WEIP-07"
+    },
+    {
+      "status": "PASS",
+      "detail": "Isolated directory and tamper/lifecycle tests; single writer only, not tamper-proof against a privileged malicious writer.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Staging/quarantine/audit",
+      "id": "WEIP-08"
+    },
+    {
+      "status": "REVIEW_REQUIRED",
+      "detail": "Default deny, principal/binding/legacy rejection PASS offline; trusted production authorizer and approved official fixture absent.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Approval",
+      "id": "WEIP-09"
+    },
+    {
+      "status": "REVIEW_REQUIRED",
+      "detail": "Pure projection, document/chunk/provenance/dedup compatibility PASS in temporary SQLite with synthetic embeddings. Whole-ingestion failure rollback/compensation not demonstrated.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "V1 adapter",
+      "id": "WEIP-10"
+    },
+    {
+      "status": "NOT_AUTHORIZED",
+      "detail": "No active integration. Preservation finding WEIP-COMP-DB-01 remains REVIEW_REQUIRED.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Active store",
+      "id": "WEIP-11"
+    },
+    {
+      "status": "DEFERRED",
+      "detail": "Not executed or implemented.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Crawling/deployment/V2",
+      "id": "WEIP-12"
+    }
+  ],
+  "v2": "DEFERRED",
+  "capturedAt": "2026-10-09T17:50:46.548448+07:00",
+  "branch": "codex/fullroot-control-20261007",
+  "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "weip": "PARTIAL / REVIEW_REQUIRED",
+  "diskFingerprint": "sha256:0600d86dc183eb21052085c53ef5a26e3b273d27676c8f56e5af2c3bce06fc7b",
+  "fingerprintScope": "SHA256 sorted app Python paths normalized to / + NUL + file SHA256 + newline; on-disk only, not loaded-process identity",
+  "sources": [
+    {
+      "path": "docs/reports/v1-functional-closure-20261009-101736/REMAINING_GATES.json",
+      "sha256": "ec43e8ca0dae362d85f17c3091be672b61bb2eb43d1bb9f3c2527dddbcf3152c"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/BASELINE.json",
+      "sha256": "0fafd9f33aed67a5f91459d2e0664590c136e4d428e552dd67d617f622b8f0b0"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/CHANGE_AUDIT.json",
+      "sha256": "b517aeeacc7a713ec8eafcf422fea8773616bf8bab62a3f5a117aac0915eac93"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "sha256": "cebfbc4e5c9a66b4166706228ae210a0eaf6ac94e5a09fe7323e9089c804a394"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/regression-20261009-174852/guards.json",
+      "sha256": "32f090a44ad8df0bd9263b43d27c903bdae13e41ab82061d7b5d49b1fef00861"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/regression-20261009-174852/results.xml",
+      "sha256": "ce94485021bdce9a7a92b489c9c4c994a3ae421d584e4ca695a8e6bcf13af863"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/SCOPED_CHANGES.patch",
+      "sha256": "e2e6bccf5b5c5ed49220fd7a585799815b859fcf2be2f6e96646cdf71e1871e6"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174413/guards.json",
+      "sha256": "b8d8dcd8100fc98b8ff4755aa8c7f9c27e8f48ba188b3984337514129514d752"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174413/results.xml",
+      "sha256": "a320698312a64f871c9956b9b79da82c9d144a5668603bf6e1ee46f0f951031e"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174735/guards.json",
+      "sha256": "7ce138f087d859bf225ef1f8d9fd603c88d47b4ed27713b0e2a5324a8ba37fad"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174735/results.xml",
+      "sha256": "d5d702a6805dc23db55b121461a51b7199e246695ce67f4d82f63fd7276d4ee3"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174841/guards.json",
+      "sha256": "7ce138f087d859bf225ef1f8d9fd603c88d47b4ed27713b0e2a5324a8ba37fad"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174841/results.xml",
+      "sha256": "68cff133c6b9cf511011d231beb159e5a77d86a6fcab4fffac4a228c4fce58b0"
+    }
+  ],
+  "tests": [
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 6,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-174852",
+      "tests": 154,
+      "reference": "docs/reports/weip-completion-20261009T104250Z/regression-20261009-174852/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 1,
+      "historical": true,
+      "deselected": 53,
+      "skipped": 0,
+      "violations": [],
+      "id": "targeted-20261009-174413",
+      "tests": 9,
+      "reference": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174413/results.xml",
+      "failures": 9,
+      "errors": 0,
+      "status": "FAIL"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 53,
+      "skipped": 0,
+      "violations": [],
+      "id": "targeted-20261009-174735",
+      "tests": 9,
+      "reference": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174735/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 53,
+      "skipped": 0,
+      "violations": [],
+      "id": "targeted-20261009-174841",
+      "tests": 16,
+      "reference": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174841/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    }
+  ],
+  "activeIntegration": "NOT_AUTHORIZED",
+  "mode": "HISTORICAL_ARTIFACT_SNAPSHOT",
+  "runtimeIdentity": "NOT_VERIFIED",
+  "phases": [
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 0
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 1
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 2
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 3
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 4
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 5
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 6
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 7
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 8
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 9
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 10
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 11
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 12
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 13
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 14
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 15
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 16
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 17
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 18
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 19
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 20
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 21
+    }
+  ]
+};

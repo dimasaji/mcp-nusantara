@@ -1,0 +1,54 @@
+{
+  "observations": [
+    {
+      "name": "model_name_not_query_filtered",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "stored_model": "foreign-model-same-width",
+        "query_dimension": 3,
+        "result_count": 1
+      },
+      "scope": "Isolated SQLite fixture, not production retrieval"
+    },
+    {
+      "name": "declared_dimension_not_insert_gate",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "input_declared_dimension": 768,
+        "stored_vector_dimension": 3
+      },
+      "scope": "Isolated SQLite fixture, not production retrieval"
+    },
+    {
+      "name": "dimension_mismatch_is_empty_not_block_error",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "query_dimension": 2,
+        "stored_dimension": 3,
+        "result": "[]; no explicit compatibility exception"
+      },
+      "scope": "Isolated SQLite fixture, not production retrieval"
+    },
+    {
+      "name": "cosine_mismatch_is_negative_sentinel",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "result": -1.0
+      },
+      "scope": "Isolated SQLite fixture, not production retrieval"
+    },
+    {
+      "name": "malformed_blob_raises",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "error_type": "struct.error"
+      },
+      "scope": "Isolated SQLite fixture, not production retrieval"
+    }
+  ],
+  "asserted": 5,
+  "passed": 5,
+  "production_db_used": false,
+  "worker_started": false,
+  "index_rebuilt": false
+}

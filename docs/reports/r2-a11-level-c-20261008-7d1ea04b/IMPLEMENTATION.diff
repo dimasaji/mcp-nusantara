@@ -1,0 +1,23 @@
+diff --git a/docs/reports/r2-a11-level-c-20261008-7d1ea04b/before/runtime_verification.py b/app/api/runtime_verification.py
+index a5cd5b9..4c8a2e9 100644
+--- a/docs/reports/r2-a11-level-c-20261008-7d1ea04b/before/runtime_verification.py
++++ b/app/api/runtime_verification.py
+@@ -89,14 +89,14 @@ class VerificationController:
+             process = _process_identity()
+             instance = current_runtime_instance()
+             code = self._code_observer() if self._code_observer else None
++            return assess_receipt(receipt, observation, pid=os.getpid(),
++                process_start=process['process_start_time'], runtime_instance=instance.runtime_instance_id,
++                source_snapshot=BUILD_ID, scoped_loaded_code=code,
++                provider_id=self.configuration.llm.provider, endpoint=self.endpoint, now=now)
+         except Exception:
+             return {'status': 'NOT_VERIFIED', 'correlation_valid': False,
+                     'reason': 'CURRENT_CONTEXT_UNAVAILABLE',
+                     'application_response_sent': False, 'external_client_observed': False}
+-        return assess_receipt(receipt, observation, pid=os.getpid(),
+-            process_start=process['process_start_time'], runtime_instance=instance.runtime_instance_id,
+-            source_snapshot=BUILD_ID, scoped_loaded_code=code,
+-            provider_id=self.configuration.llm.provider, endpoint=self.endpoint, now=now)
+ 
+     def mark_response_sent(self, request_id):
+         with self._lock:

@@ -1,0 +1,486 @@
+{
+  "status": "IMPLEMENTED_VERIFIED_SCOPED_OFFLINE",
+  "v1": "HOLD",
+  "v2": "DEFERRED",
+  "audit": {
+    "timestamp_utc": "2026-10-09T12:02:58.941682+00:00",
+    "files": [
+      {
+        "path": "app/api/routes.py",
+        "before_sha256": "f5e44750e42775a0d0d94ec2c57ad23636633e8ca2e26193f4270eba368e05d6",
+        "after_sha256": "845b8846fabb491b7f43d11d5fad4d8c9694f61e1b1576deeb7188b22bea8402",
+        "kind": "MODIFIED"
+      },
+      {
+        "path": "app/core/nusantara_config.py",
+        "before_sha256": "667df5909d0b9957816ce99e60933fa2484544cf4d28242cc0bdc18ff4fe3f88",
+        "after_sha256": "41223ef95c963e2c243dd30dc176e4fd05cb1c566c58577d1ca623e9979c09ae",
+        "kind": "MODIFIED"
+      },
+      {
+        "path": "app/hermes/agent.py",
+        "before_sha256": "2b119c94e8bfb001c2450e9450a4703c2aa74c9e75d878835a7d72eee9b7a767",
+        "after_sha256": "5a4e24af50205beaafba6ba6e65d18fa8215d7754a2adbc233998d4be0580072",
+        "kind": "MODIFIED"
+      },
+      {
+        "path": "app/models/base.py",
+        "before_sha256": "ebce1420ea29cc2604fa552bc855568755b5190fe53ca1c090fb20179599136e",
+        "after_sha256": "2dc96b087ae8239d3238894878782fefc7b0cfbc045f5058680f5bb833601f6c",
+        "kind": "MODIFIED"
+      },
+      {
+        "path": "pyproject.toml",
+        "before_sha256": "b0284a11317a3a5688350659e21f32c5bb223aaca915df2009a8e0af9b9d201c",
+        "after_sha256": "219df746c70a6d08a005fac894b98a15862d4830d9087b8276564d28167b6595",
+        "kind": "MODIFIED"
+      },
+      {
+        "path": "tests/test_provider_identity.py",
+        "before_sha256": "f4ddb479a0619f72170544bbee8a3c8207911bf9589bffb34f075bb855d1e4d0",
+        "after_sha256": "3b03d33d8dcae71cad9816c13fcd30bcca2dc7f925a0eabb66f6e886fa2c1258",
+        "kind": "MODIFIED"
+      },
+      {
+        "path": "app/models/openrouter.py",
+        "after_sha256": "a7897460a7cf1261187655ab36ea70a6c9ac53942bfd893e61d31e00ed2318bc",
+        "kind": "CREATED"
+      },
+      {
+        "path": "app/workflow/v1_langgraph.py",
+        "after_sha256": "ae587482c4812f7237a0aa7ae5ea74d2e46c7e30e6408439a8eee4763a898388",
+        "kind": "CREATED"
+      },
+      {
+        "path": "tests/test_openrouter_provider.py",
+        "after_sha256": "460a7f6742f54a8fe2f1340c2fe9332a88751950bf1ad9e37cca9bc62fab764b",
+        "kind": "CREATED"
+      },
+      {
+        "path": "tests/test_v1_langgraph.py",
+        "after_sha256": "329d7f7e4d7dfb22d96ce775e1cf1d75c91e8385593fda437d93332a776f7878",
+        "kind": "CREATED"
+      },
+      {
+        "path": "docs/OPENROUTER_LANGGRAPH.md",
+        "after_sha256": "6a221c57ad6ea9602d91a26262dcafba3dc28eb89f943a2e7c589c7271a7d607",
+        "kind": "CREATED"
+      }
+    ],
+    "fingerprint": "sha256:11ced101d161a692fc7bcce289465e2d83b6462b6f9d282a79b3d056a4b1909f",
+    "fingerprint_scope": [
+      [
+        "app/api/routes.py",
+        "845b8846fabb491b7f43d11d5fad4d8c9694f61e1b1576deeb7188b22bea8402"
+      ],
+      [
+        "app/core/nusantara_config.py",
+        "41223ef95c963e2c243dd30dc176e4fd05cb1c566c58577d1ca623e9979c09ae"
+      ],
+      [
+        "app/hermes/agent.py",
+        "5a4e24af50205beaafba6ba6e65d18fa8215d7754a2adbc233998d4be0580072"
+      ],
+      [
+        "app/models/base.py",
+        "2dc96b087ae8239d3238894878782fefc7b0cfbc045f5058680f5bb833601f6c"
+      ],
+      [
+        "app/models/openrouter.py",
+        "a7897460a7cf1261187655ab36ea70a6c9ac53942bfd893e61d31e00ed2318bc"
+      ],
+      [
+        "app/workflow/v1_langgraph.py",
+        "ae587482c4812f7237a0aa7ae5ea74d2e46c7e30e6408439a8eee4763a898388"
+      ],
+      [
+        "pyproject.toml",
+        "219df746c70a6d08a005fac894b98a15862d4830d9087b8276564d28167b6595"
+      ]
+    ],
+    "note": "Scoped source bytes, not full code closure or user-runtime identity.",
+    "preservation": "Existing baseline files retained; scoped patch computed against pre-task snapshots, not HEAD.",
+    "active_database_and_sidecars": "NOT_ACCESSED_OR_MODIFIED_BY_TASK",
+    "runtime_operations": "NONE",
+    "v2_changes": "NONE"
+  },
+  "decision": {
+    "request_id": "HDR-OPENROUTER-01",
+    "owner_choice": "A",
+    "scope": "One additive openrouter value in public provider_status enum; local source/tests only",
+    "runtime_activation_authorized": false,
+    "status": "IMPLEMENTED_VERIFIED_SCOPED"
+  },
+  "test_runs": [
+    {
+      "run": "regression-20261009-185326",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+      "counts": null,
+      "limitation": "JUnit incomplete after blocked platform.node subprocess; not a PASS.",
+      "exit_code": 1,
+      "deselected": 3
+    },
+    {
+      "run": "regression-20261009-185424",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+      "counts": {
+        "tests": 157,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 156
+      },
+      "failures": [
+        "test_public_request_response_models_and_routes_unchanged"
+      ],
+      "exit_code": 1,
+      "deselected": 3
+    },
+    {
+      "run": "regression-20261009-185632",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0,
+        "passed": 0
+      },
+      "failures": [
+        "tests.test_openrouter_provider"
+      ],
+      "exit_code": 2,
+      "deselected": 3
+    },
+    {
+      "run": "regression-20261009-185646",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+      "counts": {
+        "tests": 166,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 166
+      },
+      "failures": [],
+      "exit_code": 0,
+      "deselected": 3
+    },
+    {
+      "run": "regression-20261009-185807",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+      "counts": {
+        "tests": 169,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 167
+      },
+      "failures": [
+        "test_actual_chat_endpoint_selects_only_explicit_provider_and_projects[ollama]",
+        "test_actual_chat_endpoint_selects_only_explicit_provider_and_projects[openrouter]"
+      ],
+      "exit_code": 1,
+      "deselected": 3
+    },
+    {
+      "run": "regression-20261009-185830",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+      "counts": {
+        "tests": 169,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 167
+      },
+      "failures": [
+        "test_actual_chat_endpoint_selects_only_explicit_provider_and_projects[ollama]",
+        "test_actual_chat_endpoint_selects_only_explicit_provider_and_projects[openrouter]"
+      ],
+      "exit_code": 1,
+      "deselected": 3
+    },
+    {
+      "run": "regression-20261009-185852",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+      "counts": {
+        "tests": 169,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 169
+      },
+      "failures": [],
+      "exit_code": 0,
+      "deselected": 3
+    },
+    {
+      "run": "regression-20261009-190056",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+      "counts": {
+        "tests": 169,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 169
+      },
+      "failures": [],
+      "exit_code": 0,
+      "deselected": 3
+    },
+    {
+      "run": "stage1-20261009-184852",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py stage1",
+      "counts": {
+        "tests": 40,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 39
+      },
+      "failures": [
+        "test_existing_chat_projection_contract_without_importing_application"
+      ],
+      "exit_code": 1,
+      "deselected": 0
+    },
+    {
+      "run": "stage1-final-20261009-184945",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py stage1-final",
+      "counts": {
+        "tests": 40,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 40
+      },
+      "failures": [],
+      "exit_code": 0,
+      "deselected": 0
+    },
+    {
+      "run": "stage1-fixed-20261009-184918",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py stage1-fixed",
+      "counts": {
+        "tests": 40,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 39
+      },
+      "failures": [
+        "test_existing_chat_projection_contract_without_importing_application"
+      ],
+      "exit_code": 1,
+      "deselected": 0
+    },
+    {
+      "run": "workflow-20261009-185310",
+      "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py workflow",
+      "counts": {
+        "tests": 57,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 57
+      },
+      "failures": [],
+      "exit_code": 0,
+      "deselected": 0
+    }
+  ],
+  "dependency_install": {
+    "command": ".venv/Scripts/python.exe -B -m pip install --disable-pip-version-check --no-cache-dir --no-compile --target docs/reports/openrouter-workflow-20261009T184538/workflow-dependencies 'langgraph>=1.0,<2'",
+    "exit_code": 0,
+    "shared_environment_modified": false,
+    "packages": [
+      {
+        "Name": "annotated-types",
+        "Version": "0.8.0"
+      },
+      {
+        "Name": "anyio",
+        "Version": "4.15.1"
+      },
+      {
+        "Name": "certifi",
+        "Version": "2026.7.22"
+      },
+      {
+        "Name": "charset-normalizer",
+        "Version": "3.5.2"
+      },
+      {
+        "Name": "Antergos Linux",
+        "Version": "2015.10 (ISO-Rolling)"
+      },
+      {
+        "Name": "h11",
+        "Version": "0.16.0"
+      },
+      {
+        "Name": "httpcore",
+        "Version": "1.0.9"
+      },
+      {
+        "Name": "httpcore2",
+        "Version": "2.13.1"
+      },
+      {
+        "Name": "httpx",
+        "Version": "0.28.1"
+      },
+      {
+        "Name": "httpx2",
+        "Version": "2.13.1"
+      },
+      {
+        "Name": "idna",
+        "Version": "3.20"
+      },
+      {
+        "Name": "jsonpatch",
+        "Version": "1.34"
+      },
+      {
+        "Name": "jsonpointer",
+        "Version": "3.2.0"
+      },
+      {
+        "Name": "langchain-core",
+        "Version": "1.6.9"
+      },
+      {
+        "Name": "langchain-protocol",
+        "Version": "0.0.19"
+      },
+      {
+        "Name": "langgraph",
+        "Version": "1.2.14"
+      },
+      {
+        "Name": "langgraph-checkpoint",
+        "Version": "4.2.0"
+      },
+      {
+        "Name": "langgraph-prebuilt",
+        "Version": "1.1.0"
+      },
+      {
+        "Name": "langgraph-sdk",
+        "Version": "0.4.6"
+      },
+      {
+        "Name": "langsmith",
+        "Version": "0.14.5"
+      },
+      {
+        "Name": "orjson",
+        "Version": "3.13.0"
+      },
+      {
+        "Name": "ormsgpack",
+        "Version": "1.12.2"
+      },
+      {
+        "Name": "packaging",
+        "Version": "26.3"
+      },
+      {
+        "Name": "pydantic",
+        "Version": "2.14.0"
+      },
+      {
+        "Name": "pydantic_core",
+        "Version": "2.50.0"
+      },
+      {
+        "Name": "PyYAML",
+        "Version": "6.0.3"
+      },
+      {
+        "Name": "requests",
+        "Version": "2.34.2"
+      },
+      {
+        "Name": "requests-toolbelt",
+        "Version": "1.0.0"
+      },
+      {
+        "Name": "sniffio",
+        "Version": "1.3.1"
+      },
+      {
+        "Name": "tenacity",
+        "Version": "9.2.1"
+      },
+      {
+        "Name": "truststore",
+        "Version": "0.10.4"
+      },
+      {
+        "Name": "typing_extensions",
+        "Version": "4.16.0"
+      },
+      {
+        "Name": "typing-inspection",
+        "Version": "0.4.4"
+      },
+      {
+        "Name": "urllib3",
+        "Version": "2.8.0"
+      },
+      {
+        "Name": "uuid_utils",
+        "Version": "0.17.1"
+      },
+      {
+        "Name": "websockets",
+        "Version": "16.1.1"
+      },
+      {
+        "Name": "xxhash",
+        "Version": "4.0.1"
+      },
+      {
+        "Name": "zstandard",
+        "Version": "0.25.0"
+      }
+    ]
+  },
+  "latest_results": "169 PASS / 0 FAIL / 0 ERROR / 0 SKIP / 3 DESELECTED, exit 0",
+  "excluded": {
+    "test_runtime_instances_differ_in_real_subprocesses": "subprocess blocked",
+    "test_bootstrap_layers_preserve_provenance_and_secrets": "Settings bootstrap outside offline scope",
+    "test_owner_reads_dotenv_once_and_process_environment_wins": "Settings/.env bootstrap outside offline scope"
+  },
+  "initial_findings": [
+    "BOM read in AST test corrected using utf-8-sig",
+    "Public enum changed: owner choice A obtained, historical assertion permits only that exact delta",
+    "JUnit platform.node subprocess blocked; runner uses fixed isolated XML hostname",
+    "pytest reserved request parameter renamed in new test",
+    "AST node locations and Pydantic forward references corrected in new endpoint test"
+  ],
+  "token_usage_verification": "VERIFIED_MOCK_PARSING_ONLY",
+  "cost_verification": "PARTIAL; provider-reported fields handled, live billing UNKNOWN, no hard budget",
+  "langgraph": "VERIFIED_SCOPED: real StateGraph 1.2.14, existing Hermes method, mock providers/services",
+  "limitations": [
+    "No real OpenRouter/Ollama call or loaded-weight attestation",
+    "No running-process/HTTP server verification; endpoint AST execution is isolated source evidence",
+    "No production/native RAG or active-store integration",
+    "Existing local model-control routes are not cloud controls",
+    "Optional workflow packages tested on isolated import path, not installed in shared runtime",
+    "Structured generation and native streaming fail closed; not implemented",
+    "Client cancellation does not attest server/provider cancellation or avoidance of charges",
+    "Graphify cache/update not run to preserve unrelated graph artifacts and data-access boundaries",
+    "Repository-wide status has pre-existing inaccessible report directories; no completeness claim for unrelated filesystem"
+  ],
+  "gates_open": [
+    "V1 mandatory security, recovery, knowledge/provenance, memory and deployment gates remain unresolved",
+    "Explicit future runtime/cloud activation and operational readiness verification required"
+  ],
+  "references": [
+    "https://openrouter.ai/docs/api/api-reference/chat/send-chat-completion-request",
+    "https://reference.langchain.com/python/langgraph/graph/state/StateGraph"
+  ]
+}

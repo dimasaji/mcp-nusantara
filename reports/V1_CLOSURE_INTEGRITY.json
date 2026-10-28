@@ -1,0 +1,25 @@
+{
+  "oracle_existing_fields_unchanged": true,
+  "knowledge_database_hashes_unchanged": true,
+  "existing_contract_hashes_unchanged": true,
+  "created_contract_count": 6,
+  "oracle_backup_hash": "3b607419129cea6d3b91a2bff3e35835a16142cb78fd5212a20b2ce307c26358",
+  "checkpoint_backup_hash": "0309ad88d2c16ef27506ec1123a0ac77804abd03f56419b37292b865c209d9f3",
+  "rollback_scope": "Backup availability/integrity checked; restore not executed. Production deployment rollback NOT_RUN.",
+  "junit": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "1",
+    "tests": "269",
+    "time": "90.487",
+    "timestamp": "2026-10-06T16:45:26.553427+07:00",
+    "hostname": "DESKTOP-GJHS3LR"
+  },
+  "skipped_tests": [
+    {
+      "test": "tests.v2.test_devcore.TestSecurityGate::test_symlink_outside_workspace_blocked",
+      "reason": "Windows membutuhkan privilege untuk membuat symlink"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+﻿
+  import socket
+  import sys
+  
+> output = Path(sys.argv[1]).resolve(strict=False)
+  if not output.is_dir():
+>     raise SystemExit("isolated output directory is not readable")
+> repository = Path(__file__).resolve(strict=False).parents[1]
+  sys.path.insert(0, str(repository))
+  sys.dont_write_bytecode = True
+  
+  
+  def blocked(*_args, **_kwargs):
+  
+  
+  def within_output(value: object) -> bool:
+>     path = Path(os.fsdecode(value)).resolve(strict=False)
+      return path == output or output in path.parents
+  
+  
+  def writing(flags: object) -> bool:
+      if isinstance(flags, int):
+  
+  
+  os.open = guarded_os_open
+> for name in ("mkdir", "makedirs", "remove", "unlink", "rmdir", "removedirs", "truncate"):
+      original = getattr(os, name)
+  
+      def make_guard(function):
+          def guard(path, *args, **kwargs):
+              if not within_output(path):
+
+
+

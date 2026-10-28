@@ -1,0 +1,172 @@
+{
+  "blocker": "UI-01",
+  "status": "CANDIDATE_BUILD_VERIFIED_SCOPED_RUNTIME_NOT_ACTIVATED",
+  "timestamp": "2026-10-09T09:15:46.430Z",
+  "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "change": "Built existing UI04 source into a separate candidate directory; no source patch required.",
+  "commands": [
+    {
+      "command": "node node_modules/vitest/vitest.mjs run tests/assistant.test.tsx",
+      "attempt": "sandbox",
+      "exit_code": 1,
+      "result": "Startup failed: access denied reading config; no test result."
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run tests/assistant.test.tsx",
+      "attempt": "approved execution",
+      "exit_code": 0,
+      "result": "17 passed, 0 failed; mocked fetch, no live API calls."
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exit_code": 0
+    },
+    {
+      "command": "node node_modules/vite/bin/vite.js build --outDir C:/Users/dmaza/mcp-starter/docs/reports/v1-ui01-candidate-20261009T091424Z/frontend",
+      "exit_code": 0,
+      "warnings": [
+        "Two dependency PURE annotations removed by Rollup",
+        "Output outside control-plane project root; Vite did not empty directory"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\acceptance.ts",
+      "Hash": "61A9B2B7997FF9D9A20554790B4BFF11EDAB6C32350C2BBE10587B084923CA32"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\api.ts",
+      "Hash": "6A2A5B94D805DC2046A4291DC6604C368874279E4A554FA9D6667CF8CE6D81D3"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\assistant.tsx",
+      "Hash": "7F5BC4C4704E30E5D8D3109F648B3B2B171DB5F3971B9ABC5AA98F36F4DB592D"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\graph.tsx",
+      "Hash": "F6224055806ADD0D6D7AD8D90AB4B3CDAF89214874AD4172B504D39AD0E5DD73"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\human.tsx",
+      "Hash": "E5B7FC3B6C9312B7FDA5DCEF409F4F0F5006F40C27550CB734DFF09C1058AACB"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\human.tsx.bak",
+      "Hash": "B608CE546B046A2DC5A38E2CCAAF08F4FC6C4835938131A1BE41BE6673E005A8"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\main.tsx",
+      "Hash": "EBF26915E88993C541F618723C6EAEC0BACE82748C838F2FD1CB49966381FAC4"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\router.tsx",
+      "Hash": "342777FDA6AC6938EA4DC3D96DA0710716327B1C8427D5CB8A44DBBA5078E19F"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\schemas.ts",
+      "Hash": "6F6037C66BF41EDF8777ED339820E68DB46A3300CCE85FDB3F581344245F68CA"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\styles.css",
+      "Hash": "35631C3DAB62B0B29A2CCB6FF05D073CCB90D82733E785B31B0D7115E9B0188E"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\src\\ui.tsx",
+      "Hash": "6F169120F9D738D371B0C56048A903A38F3D304F82A11C28E0856E21AD68D952"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\acceptance.test.ts",
+      "Hash": "0AADA0234652414EDB1F65EC0A28183876D8D359D5D7C2CF9DEADEAE340EFB82"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\api.test.ts",
+      "Hash": "6C8D57885C0139D5CCB2A872CF7CF3D1D39B0EDEBE12448BD5ECD5ADA41A42FD"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\assistant.test.tsx",
+      "Hash": "0897334CEE08818E116AADAE8212809140C07983642F1C3F752C7DB12573DA14"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\attestation.test.tsx",
+      "Hash": "9DF2320C50F9E8FEBBB3E98197FE6B144BBF87CFBD5747D0AB38EF0274A5755B"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\human.test.tsx",
+      "Hash": "05B9586D07E25C36325EDD455CBA0803AF495D5F917ACB834AE3F55D2AF986AB"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\inspection-preview-network-guard.cjs",
+      "Hash": "B844677D595B4745F0FA0185A3AD8EC6F93341B42D1CC4DCB6F17960FAA81D19"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\inspection-preview.test.tsx",
+      "Hash": "3008C6DA4214231C80F94CEE548DADCFAB2D8B3324EFB2FD9B7E606249CB46B5"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\setup.ts",
+      "Hash": "4A9780306C4EAE1B3D29F331D89CBCA6A86CF864ADB50D5AE918C1D628F13705"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\tests\\ui.test.tsx",
+      "Hash": "9FF3DFABE5E3F61EF1D7BA86EF7F113F2184626F15763DB87A072D112066A340"
+    }
+  ],
+  "configuration": [
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\package.json",
+      "Hash": "2353A70500B50FBC9C2305653B0E6DB74FF64B909B233A0330099F5DD2545D4A"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\package-lock.json",
+      "Hash": "BF7DE0AF474C140A08A0250FBE9487008E8FC6488D74398DBD4459E9C68FE715"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\vite.config.ts",
+      "Hash": "FAE428DC9B1C53A8E038507070460D0EFB12E99B62996CDE205FE2BF6EBE1E0A"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\vitest.config.ts",
+      "Hash": "B8F9901BDD84BEDA7CCE38EC1460073FC61EB73FEEF127B4A89CDA98D2E56A36"
+    },
+    {
+      "Path": "C:\\users\\dmaza\\mcp-starter\\control-plane\\tsconfig.json",
+      "Hash": "CE2954AFCD4A4F33584D9A814C5BB17B1D129CDFAABD44DCB6EABC90055CAC9C"
+    }
+  ],
+  "artifacts": [
+    {
+      "Path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-ui01-candidate-20261009T091424Z\\frontend\\index.html",
+      "Hash": "D6A58ACFCF652D204F3A56F69E6E78C77EC0F5CC7E8C8D7B3970E51A982E85B6"
+    },
+    {
+      "Path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-ui01-candidate-20261009T091424Z\\frontend\\assets\\graph-BnuhLJ6X.css",
+      "Hash": "1243B61A71923367CE620FB944427C80C9B03E863E18374FCF4F74D6D06F63FC"
+    },
+    {
+      "Path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-ui01-candidate-20261009T091424Z\\frontend\\assets\\graph-BsHL5xdw.js",
+      "Hash": "7D35E3B71428268FCCE77C134EBD26362D7CC27BADAAEA045E9B2444DCA761F5"
+    },
+    {
+      "Path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-ui01-candidate-20261009T091424Z\\frontend\\assets\\index-CmsA6OFH.css",
+      "Hash": "9C6AE5AC91BF5BEA9B3243FA05DABA7700D3A1CF6AC06A9EA787A25A05D24B7D"
+    },
+    {
+      "Path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-ui01-candidate-20261009T091424Z\\frontend\\assets\\index-Ry5oqxsC.js",
+      "Hash": "29CA65726D3DB346D15043530DCB0F61B60370AF837CC7A876ECDC9D60A1E435"
+    }
+  ],
+  "checks": {
+    "sourceTestsDist": true,
+    "git": true,
+    "servedOldBundleTimeoutMarker": false,
+    "candidateTimeoutMarker": true
+  },
+  "limitations": [
+    "No browser test of candidate bundle",
+    "No runtime activation or runtime parity proof",
+    "No full dependency closure attestation",
+    "V1 HOLD; V2 DEFERRED"
+  ],
+  "rollback": "Candidate is unactivated. No application source hunks or served bundle were changed. Keep existing files intact; remove only this new candidate directory if separately desired."
+}

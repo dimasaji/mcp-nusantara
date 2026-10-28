@@ -1,0 +1,57 @@
+--- a/tests/test_runtime_verification.py
++++ b/tests/test_runtime_verification.py
+@@ -211,6 +211,7 @@
+ assert app.state.effective_configuration is settings.effective_configuration
+ assert app.state.runtime_profile == 'NORMAL'
+ assert not hasattr(app.state, 'runtime_verification')
++assert not hasattr(app.state, 'runtime_authorization')
+ paths = set(app.openapi()['paths'])
+ assert {'/v1/chat','/v2/chat','/v2/dev'} <= paths
+ assert '/v1/runtime/verification' not in paths
+@@ -256,7 +257,7 @@
+     root = Path(__file__).parents[1]
+     evidence = json.loads((root/'docs/reports/r2-a8-remediation-20261008/PROFILE_BEFORE.json').read_text(encoding='utf-8-sig'))
+     protected = {'app/api/routes.py', 'app/api/v2_routes.py', 'app/core/config.py',
+-                 'app/core/runtime_identity.py', 'app/api/control_plane.py', 'app/core/control_plane_projection.py'}
++                 'app/core/runtime_identity.py', 'app/core/control_plane_projection.py'}
+     for item in evidence['files']:
+         if item['path'] in protected:
+             assert hashlib.sha256((root/item['path']).read_bytes()).hexdigest() == item['sha256']
+@@ -269,7 +270,7 @@
+ from pathlib import Path
+ class ProtectedImports(importlib.abc.MetaPathFinder):
+     def find_spec(self, fullname, path=None, target=None):
+-        if fullname.startswith(('app.knowledge', 'app.rag', 'app.approval', 'app.language')) or fullname in ('app.api.routes','app.api.v2_routes'):
++        if fullname.startswith(('app.knowledge', 'app.rag', 'app.language')) or fullname in ('app.api.routes','app.api.v2_routes'):
+             raise AssertionError('protected runtime owner imported')
+ sys.meta_path.insert(0, ProtectedImports())
+ def forbidden(*args, **kwargs):
+@@ -301,6 +302,9 @@
+ assert controller.authorization.state == 'DISARMED'
+ token = controller.authorization.grant()
+ with TestClient(app, base_url='http://127.0.0.1:8000', client=('127.0.0.1',1)) as client:
++    import app.api.control_plane as control_plane
++    control_plane.project = forbidden
++    assert client.get('/v1/control-plane/snapshot').json()['live_actions'] == 'LOCKED'
+     response = client.post('/v1/runtime/verification', json={'probe':'runtime-correlation'},
+         headers={'Authorization':'Bearer '+token, 'X-Request-ID':'untrusted-client-id'})
+     assert response.status_code == 200
+@@ -313,9 +317,16 @@
+ assert len(calls) == 1
+ encoded = json.dumps(observation)
+ assert token not in encoded and 'SENSITIVE_FIXTURE_RESPONSE' not in encoded
+-assert not any(name.startswith(('app.knowledge','app.rag','app.approval','app.language')) for name in sys.modules)
++assert not any(name.startswith(('app.knowledge','app.rag','app.language')) for name in sys.modules)
++assert app.state.runtime_authorization._audit.path is None
++assert app.state.runtime_authorization._policy is None
++assert app.state.runtime_authorization._isolated_transport is None
++assert app.state.runtime_authorization.evidence()['live_actions'] == 'LOCKED'
++assert {name for name in sys.modules if name.startswith('app.approval')} <= {
++    'app.approval','app.approval.audit_trail','app.approval.queue','app.approval.runtime_authorization'}
+ print(json.dumps({'verification_type':'ISOLATED_GUARDED_ASGI_WITH_MOCK_HTTP','live_runtime_verified':False,
+-    'profile':'ATTESTATION','dispatch_count':len(calls),'observation':observation}))
++    'profile':'ATTESTATION','dispatch_count':len(calls),'observation':observation,
++    'foundation':app.state.runtime_authorization.evidence()}))
+ '''
+     env = {**os.environ, 'PYTHONPATH': str(root), 'PYTHONDONTWRITEBYTECODE': '1',
+         'NUSANTARA_RUNTIME_PROFILE': 'ATTESTATION', 'NUSANTARA_CONTROL_PLANE_READ_ONLY': '0',

@@ -1,0 +1,117 @@
+{
+  "gate": "16.3",
+  "name": "SOP -> Knowledge/RAG Bridge Truth",
+  "status": "PASS",
+  "static_bridge": {
+    "knowledge_engine": {
+      "exists": true,
+      "matches": 3,
+      "patterns_found": [
+        "RAG",
+        "knowledge",
+        "search"
+      ],
+      "status": "PASS"
+    },
+    "rag": {
+      "exists": true,
+      "matches": 5,
+      "patterns_found": [
+        "retriev",
+        "knowledge",
+        "search",
+        "chunk",
+        "evidence"
+      ],
+      "status": "PASS"
+    },
+    "retriever": {
+      "exists": true,
+      "matches": 4,
+      "patterns_found": [
+        "search",
+        "retrieve",
+        "knowledge",
+        "chunk"
+      ],
+      "status": "PASS"
+    },
+    "production_hybrid_rag": {
+      "exists": true,
+      "matches": 4,
+      "patterns_found": [
+        "semantic",
+        "retriev",
+        "knowledge",
+        "search"
+      ],
+      "status": "PASS"
+    },
+    "production_semantic_retriever": {
+      "exists": true,
+      "matches": 4,
+      "patterns_found": [
+        "semantic",
+        "retriev",
+        "embedding",
+        "search"
+      ],
+      "status": "PASS"
+    },
+    "production_kb": {
+      "exists": true,
+      "matches": 4,
+      "patterns_found": [
+        "knowledge",
+        "chunk",
+        "document",
+        "search"
+      ],
+      "status": "PASS"
+    },
+    "grounding": {
+      "exists": true,
+      "matches": 3,
+      "patterns_found": [
+        "evidence",
+        "ground",
+        "source"
+      ],
+      "status": "PASS"
+    },
+    "schemas": {
+      "exists": true,
+      "matches": 4,
+      "patterns_found": [
+        "source",
+        "evidence",
+        "chunk",
+        "document"
+      ],
+      "status": "PASS"
+    }
+  },
+  "knowledge_databases": [
+    {
+      "file": "data\\knowledge\\nusantara_knowledge.db",
+      "exists": true,
+      "size": 49152,
+      "nonempty": true
+    },
+    {
+      "file": "data\\knowledge\\production_knowledge.db",
+      "exists": true,
+      "size": 208896,
+      "nonempty": true
+    }
+  ],
+  "contract": {
+    "knowledge_engine_required": true,
+    "rag_required": true,
+    "retriever_required": true,
+    "production_rag_required": true,
+    "grounding_required": true,
+    "knowledge_database_required": true,
+    "llm_required": false
+  }
+}

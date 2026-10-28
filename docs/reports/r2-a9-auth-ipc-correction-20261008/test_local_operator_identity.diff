@@ -1,0 +1,267 @@
+diff --git a/docs/reports/r2-a9-auth-ipc-correction-20261008/before/test_local_operator_identity.py b/tests/test_local_operator_identity.py
+index e848316..2318bb6 100644
+--- a/docs/reports/r2-a9-auth-ipc-correction-20261008/before/test_local_operator_identity.py
++++ b/tests/test_local_operator_identity.py
+@@ -1,71 +1,217 @@
+-"""Real Windows local IPC in isolated test processes, never application service."""
++"""Isolated native Windows IPC; no live application, HTTP or authority calls."""
++import ctypes
++from ctypes import wintypes as w
++import hashlib
+ import json
+ import os
+ import subprocess
+ import sys
+-from dataclasses import replace
++import threading
++import time
++from dataclasses import asdict, replace
+ from uuid import uuid4
+-
+ import pytest
++from app.security.local_operator import ActorError, LocalOperatorChannel, OperatorPolicy, Windows, operator_exchange, validate_name
++pytestmark = pytest.mark.skipif(sys.platform != 'win32', reason='Windows feasibility required')
+ 
+-from app.security.local_operator import (ActorError, LocalOperatorChannel, OperatorPolicy,
+-                                         Windows, operator_exchange, validate_name)
++def policy_for(actor):
++    return OperatorPolicy(actor.sid, actor.logon_id, actor.session)
+ 
+-pytestmark = pytest.mark.skipif(sys.platform != 'win32', reason='Windows feasibility required')
++def no_impersonation(api):
++    token = w.HANDLE()
++    ok = api.a.OpenThreadToken(api.k.GetCurrentThread(), 8, True, ctypes.byref(token))
++    if ok:
++        api.k.CloseHandle(token)
++    assert not ok and ctypes.get_last_error() == 1008
++
++def channel_for(**kwargs):
++    actor = Windows().current_actor()
++    return LocalOperatorChannel(r'\\.\pipe\nusantara-r2-a9-' + uuid4().hex, policy_for(actor), **kwargs)
+ 
++def threaded_exchange(channel, body=None, *, pid=None, start=None, handler=None, client=None):
++    result = {}
++    pid = os.getpid() if pid is None else pid
++    start = channel.api.process_start(os.getpid()) if start is None else start
++    def run_client():
++        try:
++            result['client'] = client() if client else operator_exchange(channel.name, pid, start, body or {'probe':'isolated'})
++        except Exception as error:
++            result['client_error'] = error
++    thread = threading.Thread(target=run_client, daemon=True)
++    thread.start()
++    try:
++        channel.serve_once(handler or (lambda actor,data: {'observed':True}))
++    except Exception as error:
++        result['server_error'] = error
++        channel.api.k.DisconnectNamedPipe(channel.handle)
++    thread.join(timeout=5)
++    assert not thread.is_alive(), 'isolated client failed to terminate'
++    return result
+ 
+-def test_actual_windows_peer_session_and_server_binding():
++def test_actual_windows_peer_session_server_and_launcher_correlation():
+     api = Windows()
+     own = api.current_actor()
+-    assert own.interactive and own.session > 0 and own.process_start > 0
+-    name = r'\\.\pipe\nusantara-r2-a9-' + uuid4().hex
+-    policy = OperatorPolicy(own.sid, own.logon_id, own.session)
+-    child = None
+-    with LocalOperatorChannel(name, policy) as channel:
+-        # Child's claim is deliberately forged. Actual actor must come from impersonated OS peer.
+-        code = ('import json; from app.security.local_operator import operator_exchange; '
+-                f'print(json.dumps(operator_exchange({name!r},{os.getpid()},{own.process_start},'
+-                '{"reviewer":"FORGED","probe":"isolated"})))')
+-        child = subprocess.Popen([sys.executable, '-B', '-c', code], stdout=subprocess.PIPE,
+-                                 stderr=subprocess.PIPE, text=True)
++    server = api.process_identity(os.getpid())
++    observed = {}
++    with channel_for() as channel:
++        code = ('import json,os,sys; from app.security.local_operator import operator_exchange; '
++                'print(json.dumps({"worker_pid":os.getpid(),"parent_pid":os.getppid(),"sys_executable":sys.executable,"base_executable":sys._base_executable}),flush=True); '
++                f'print(json.dumps(operator_exchange({channel.name!r},{os.getpid()},{own.process_start},'
++                '{"probe":"isolated"})),flush=True)')
++        child = subprocess.Popen([sys.executable,'-B','-c',code],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+         try:
+-            def handle(actor, body):
+-                assert actor.pid == child.pid and actor.pid != os.getpid()
+-                assert policy.permits(actor) and body['reviewer'] == 'FORGED'
+-                assert actor.sid != body['reviewer']
+-                assert not replace(policy, session=own.session + 1).permits(actor)
+-                assert not replace(policy, sid='S-1-5-18').permits(actor)
+-                # No thread impersonation leaks into handler.
+-                from ctypes import wintypes as w
+-                import ctypes
+-                token = w.HANDLE()
+-                assert not api.a.OpenThreadToken(api.k.GetCurrentThread(), 8, True, ctypes.byref(token))
+-                assert ctypes.get_last_error() == 1008
+-                return {'os_peer_verified': True, 'session_bound': True, 'client_pid': actor.pid,
+-                        'server_pid': os.getpid(), 'impersonation_reverted': True}
++            worker = json.loads(child.stdout.readline())
++            launcher = api.process_identity(child.pid)
++            def handle(actor,body):
++                actual = api.process_identity(actor.pid)
++                assert actor == api.process_actor(actor.pid) and policy_for(own).permits(actor)
++                assert actor.pid != os.getpid() and actual.pid == actor.pid
++                # Self-report corroborated by native pipe/process APIs; never authority.
++                assert worker['worker_pid'] == actor.pid and worker['parent_pid'] == actual.parent_pid
++                assert actual.start == actor.process_start and actual.start >= launcher.start
++                if actor.pid != child.pid:
++                    assert actual.parent_pid == child.pid
++                    assert os.path.normcase(actual.executable) == os.path.normcase(worker['base_executable'])
++                    assert os.path.normcase(launcher.executable) == os.path.normcase(sys.executable)
++                    assert os.path.normcase(actual.executable) != os.path.normcase(launcher.executable)
++                else:
++                    assert actual == launcher
++                assert actor.session == own.session and actor.logon_id == own.logon_id
++                no_impersonation(api)
++                observed.update(server=asdict(server),launcher=asdict(launcher),actual_peer=asdict(actual),worker_self_report=worker,
++                    peer_sid_sha256=hashlib.sha256(actor.sid.encode()).hexdigest(),peer_session=actor.session,
++                    peer_logon_id=actor.logon_id,server_session=own.session,server_logon_id=own.logon_id,
++                    primary_token_matches_impersonated_peer=True,impersonation_cleanup=True,
++                    redirected_launcher=actor.pid != child.pid,live_application_observed=False)
++                return {'os_peer_verified':True,'server_pid':server.pid}
+             channel.serve_once(handle)
+-            out, err = child.communicate(timeout=5)
+-            assert child.returncode == 0, err
++            out,err = child.communicate(timeout=5)
++            assert child.returncode == 0,err
+             assert json.loads(out)['os_peer_verified'] is True
++            no_impersonation(api)
+         finally:
+             if child.poll() is None:
+                 child.kill()
+                 child.communicate(timeout=5)
++    destination = os.environ.get('R2_A9_IPC_EVIDENCE')
++    if destination:
++        with open(destination,'w',encoding='utf-8') as stream:
++            json.dump(observed,stream,indent=2,sort_keys=True)
++
++@pytest.mark.parametrize('field,value',[('session',99999),('sid','S-1-5-18'),('logon_id','00000000:ffffffff')])
++def test_wrong_os_policy_rejected_with_cleanup(field,value):
++    with channel_for() as channel:
++        channel.policy = replace(channel.policy,**{field:value})
++        result = threaded_exchange(channel,handler=lambda *_: pytest.fail('unauthorized handler'))
++        assert 'OPERATOR_POLICY_MISMATCH' in str(result['server_error'])
++        no_impersonation(channel.api)
++
++@pytest.mark.parametrize('claim',['reviewer','sid','pid','session','logon_id','actor','token'])
++def test_forged_client_identity_rejected(claim):
++    with channel_for() as channel:
++        result = threaded_exchange(channel,{claim:'FORGED'},handler=lambda *_: pytest.fail('forged handler'))
++        assert 'CLIENT_IDENTITY_CLAIM_REJECTED' in str(result['server_error'])
++        no_impersonation(channel.api)
++
++@pytest.mark.parametrize('wrong',['pid','start'])
++def test_server_os_identity_mismatch_rejected(wrong):
++    with channel_for() as channel:
++        result = threaded_exchange(channel,pid=os.getpid()+(1 if wrong=='pid' else 0),
++            start=channel.api.process_start(os.getpid())+(1 if wrong=='start' else 0),
++            handler=lambda *_: pytest.fail('unbound server handler'))
++        assert 'SERVER_PROCESS_NOT_BOUND' in str(result['client_error']) and 'server_error' in result
++        no_impersonation(channel.api)
++
++def raw_proof(channel,corrupt=False,delay=0):
++    api = Windows()
++    handle = api.k.CreateFileW(channel.name,0xc0000000,0,None,3,0x120000,None)
++    assert handle != ctypes.c_void_p(-1).value
++    try:
++        mode = w.DWORD(2)
++        api.check(api.k.SetNamedPipeHandleState(handle,ctypes.byref(mode),None,None))
++        api.write(handle,{'protocol':'R2-A9-IPC-1','phase':'HELLO'})
++        challenge = api.read(handle)
++        if delay:
++            time.sleep(delay)
++        api.write(handle,{'phase':'PROOF','nonce':'0'*64 if corrupt else challenge['nonce'],'body':{'probe':'isolated'}})
++        return api.read(handle)
++    finally:
++        api.k.CloseHandle(handle)
++
++@pytest.mark.parametrize('scenario',['wrong_nonce','expired'])
++def test_native_nonce_rejection(scenario):
++    with channel_for(challenge_ttl=0.01 if scenario=='expired' else 30) as channel:
++        result = threaded_exchange(channel,client=lambda: raw_proof(channel,scenario=='wrong_nonce',0.05 if scenario=='expired' else 0),
++            handler=lambda *_: pytest.fail('bad proof handler'))
++        assert 'IPC_PROOF_REJECTED' in str(result['server_error'])
++        no_impersonation(channel.api)
++
++def test_successful_exchange_cannot_replay_or_reopen():
++    with channel_for() as channel:
++        result = threaded_exchange(channel)
++        assert result['client'] == {'observed':True} and 'server_error' not in result
++        with pytest.raises(ActorError,match='CHANNEL_ALREADY_USED'):
++            channel.serve_once(lambda *_: pytest.fail('replay handler'))
++        with pytest.raises(ActorError,match='IPC_PROOF_REJECTED'):
++            channel._consume(channel.api.current_actor(),{'phase':'PROOF','nonce':'0'*64,'body':{}})
++    with pytest.raises(ActorError,match='CHANNEL_ALREADY_USED'):
++        channel.__enter__()
+ 
++def test_cleanup_on_identity_api_failure(monkeypatch):
++    with channel_for() as channel:
++        def fail(*args,**kwargs):
++            raise ActorError('INJECTED_TOKEN_READ_FAILURE')
++        monkeypatch.setattr(channel.api,'actor',fail)
++        result = threaded_exchange(channel)
++        assert 'INJECTED_TOKEN_READ_FAILURE' in str(result['server_error'])
++        no_impersonation(channel.api)
+ 
+-def test_local_only_names_and_explicit_policy():
+-    for name in [r'\\REMOTE\pipe\anything', r'\\.\pipe\anything', 'http://127.0.0.1:8000']:
++def test_primary_process_mismatch_fails_closed(monkeypatch):
++    with channel_for() as channel:
++        native = channel.api.process_actor
++        monkeypatch.setattr(channel.api,'process_actor',lambda pid: replace(native(pid),session=99999))
++        result = threaded_exchange(channel,handler=lambda *_: pytest.fail('mismatch handler'))
++        assert 'PEER_PROCESS_ACTOR_MISMATCH' in str(result['server_error'])
++        no_impersonation(channel.api)
++
++def test_local_namespace_native_remote_flag_and_acl(monkeypatch):
++    for name in [r'\\REMOTE\pipe\anything',r'\\127.0.0.1\pipe\anything',r'\\.\pipe\anything','http://127.0.0.1:8000']:
+         with pytest.raises(ActorError):
+             validate_name(name)
+     with pytest.raises(ActorError):
+-        LocalOperatorChannel(r'\\.\pipe\nusantara-r2-a9-' + uuid4().hex, None)
+-
++        LocalOperatorChannel(r'\\.\pipe\nusantara-r2-a9-'+uuid4().hex,None)
++    channel = channel_for()
++    captured = {}
++    native = channel.api.k.CreateNamedPipeW
++    def capture(*args):
++        captured.update(mode=args[2],open_flags=args[1])
++        return native(*args)
++    monkeypatch.setattr(channel.api.k,'CreateNamedPipeW',capture)
++    with channel:
++        assert captured['mode'] & 8 and captured['open_flags'] & 0x80000
++        get = channel.api.a.GetSecurityInfo
++        get.argtypes = [w.HANDLE,ctypes.c_int,w.DWORD]+[ctypes.POINTER(w.LPVOID)]*5
++        get.restype = w.DWORD
++        convert = channel.api.a.ConvertSecurityDescriptorToStringSecurityDescriptorW
++        convert.argtypes = [w.LPVOID,w.DWORD,w.DWORD,ctypes.POINTER(w.LPWSTR),w.LPVOID]
++        convert.restype = w.BOOL
++        dacl,descriptor,text = w.LPVOID(),w.LPVOID(),w.LPWSTR()
++        assert get(channel.handle,6,4,None,None,ctypes.byref(dacl),None,ctypes.byref(descriptor)) == 0
++        try:
++            channel.api.check(convert(descriptor,1,4,ctypes.byref(text),None))
++            assert text.value.count('(A;') == 1 and channel.policy.sid in text.value
++        finally:
++            if text:
++                channel.api.k.LocalFree(ctypes.cast(text,w.HANDLE))
++            channel.api.k.LocalFree(descriptor)
+ 
+-def test_pipe_first_instance_cannot_be_replaced():
+-    actor = Windows().current_actor()
+-    policy = OperatorPolicy(actor.sid, actor.logon_id, actor.session)
+-    name = r'\\.\pipe\nusantara-r2-a9-' + uuid4().hex
+-    with LocalOperatorChannel(name, policy):
+-        with pytest.raises(ActorError):
+-            with LocalOperatorChannel(name, policy):
++def test_first_instance_anti_squatting():
++    with channel_for() as first:
++        with pytest.raises(ActorError,match='PIPE_CREATION_FAILED'):
++            with LocalOperatorChannel(first.name,first.policy):
+                 pass
++
++@pytest.mark.parametrize('ttl',[0,-1,31,True])
++def test_challenge_time_bounds(ttl):
++    with pytest.raises(ActorError,match='INVALID_CHALLENGE_TTL'):
++        channel_for(challenge_ttl=ttl)

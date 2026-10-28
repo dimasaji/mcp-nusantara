@@ -1,0 +1,115 @@
+warning: in the working copy of 'docs/reports/r2-a8-remediation-20261008/profile-before/app__core__runtime_attestation.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/core/runtime_attestation.py', LF will be replaced by CRLF the next time Git touches it
+diff --git a/docs/reports/r2-a8-remediation-20261008/profile-before/app__core__runtime_attestation.py b/app/core/runtime_attestation.py
+index e0615bb..12dd3a3 100644
+--- a/docs/reports/r2-a8-remediation-20261008/profile-before/app__core__runtime_attestation.py
++++ b/app/core/runtime_attestation.py
+@@ -2,13 +2,14 @@
+ from __future__ import annotations
+ 
+ import hashlib
++from dataclasses import asdict
+ import json
+-import marshal
+ import os
+ from pathlib import Path
+ import sys
+ from datetime import datetime, timezone
+ from urllib.parse import urlsplit
++from types import CodeType
+ 
+ from fastapi import FastAPI, HTTPException, Request
+ 
+@@ -65,6 +66,31 @@ def _process_identity() -> dict:
+     return identity
+ 
+ 
++def _code_fingerprint(code: CodeType) -> str:
++    """Canonical logical code fields; marshal's string-intern flags can drift on execution."""
++    def constant(value):
++        if isinstance(value, CodeType):
++            return {'code': describe(value)}
++        if isinstance(value, tuple):
++            return {'tuple': [constant(item) for item in value]}
++        if isinstance(value, frozenset):
++            return {'frozenset': sorted((constant(item) for item in value), key=repr)}
++        if isinstance(value, bytes):
++            return {'bytes': value.hex()}
++        return {'type': type(value).__name__, 'value': repr(value)}
++
++    def describe(value):
++        return {'bytecode': value.co_code.hex(), 'constants': [constant(v) for v in value.co_consts],
++            'names': value.co_names, 'varnames': value.co_varnames, 'freevars': value.co_freevars,
++            'cellvars': value.co_cellvars, 'flags': value.co_flags,
++            'argcount': value.co_argcount, 'posonlyargcount': value.co_posonlyargcount,
++            'kwonlyargcount': value.co_kwonlyargcount, 'filename': value.co_filename,
++            'name': value.co_name, 'qualname': value.co_qualname, 'firstlineno': value.co_firstlineno,
++            'linetable': value.co_linetable.hex(), 'exceptiontable': value.co_exceptiontable.hex()}
++
++    return hashlib.sha256(json.dumps(describe(code), sort_keys=True, separators=(',', ':')).encode()).hexdigest()
++
++
+ def _loaded_code_manifest(application: FastAPI) -> tuple:
+     """Hash actual code objects, not disk files; explicitly scoped/non-transitive."""
+     manifest = []
+@@ -74,17 +100,22 @@ def _loaded_code_manifest(application: FastAPI) -> tuple:
+         if code is not None:
+             methods = ','.join(sorted(getattr(route, 'methods', ()) or ()))
+             label = f"route:{methods}:{route.path}:{endpoint.__module__}.{endpoint.__qualname__}"
+-            manifest.append((label, hashlib.sha256(marshal.dumps(code)).hexdigest()))
++            manifest.append((label, _code_fingerprint(code)))
+     for middleware in application.user_middleware:
+         dispatch = middleware.kwargs.get('dispatch')
+         code = getattr(dispatch, '__code__', None)
+         if code is not None:
+             label = f'middleware:{dispatch.__module__}.{dispatch.__qualname__}'
+-            manifest.append((label, hashlib.sha256(marshal.dumps(code)).hexdigest()))
+-    for function in (current_runtime_instance, _process_identity, _loaded_code_manifest, _manifest_hash,
++            manifest.append((label, _code_fingerprint(code)))
++    for function in (current_runtime_instance, _process_identity, _code_fingerprint, _loaded_code_manifest, _manifest_hash,
+                      install_runtime_attestation):
+         manifest.append((f'identity:{function.__module__}.{function.__qualname__}',
+-                         hashlib.sha256(marshal.dumps(function.__code__)).hexdigest()))
++                         _code_fingerprint(function.__code__)))
++    controller = getattr(application.state, 'runtime_verification', None)
++    if controller is not None:
++        for function in controller.code_functions():
++            manifest.append((f'diagnostic:{function.__module__}.{function.__qualname__}',
++                             _code_fingerprint(function.__code__)))
+     return tuple(sorted(manifest))
+ 
+ 
+@@ -120,6 +151,8 @@ def install_runtime_attestation(application: FastAPI, *, entrypoint: str) -> Non
+                          and instance.runtime_instance_id == current.runtime_instance_id)
+         current_manifest = _loaded_code_manifest(application)
+         code_bound = current_manifest == startup_manifest
++        controller = getattr(application.state, 'runtime_verification', None)
++        receipt = controller.receipt if controller is not None else None
+         return {
+             'attestation': {
+                 'application': dict(app_identity),
+@@ -139,14 +172,14 @@ def install_runtime_attestation(application: FastAPI, *, entrypoint: str) -> Non
+                     'loaded_code_manifest': [{'symbol': name, 'code_sha256': value}
+                                              for name, value in startup_manifest],
+                 },
+-                'provider_invocation': None,
+-                'provider_observation': 'NOT_OBSERVED',
++                'provider_invocation': asdict(receipt) if receipt is not None else None,
++                'provider_observation': receipt.outcome if receipt is not None else 'NOT_OBSERVED',
+                 'correlation_readiness': {
+                     'runtime_instance_id': current.runtime_instance_id,
+                     'process_id': os.getpid(), 'source_build_hash': BUILD_ID,
+                     'required_external_receipt_fields': ['runtime_instance_id', 'process_id', 'build_id',
+                         'request_id', 'invocation_id', 'provider_id', 'actual_model', 'timestamp', 'identity_status'],
+-                    'provider_receipt_exposed': False,
++                    'provider_receipt_exposed': controller is not None,
+                 },
+                 'runtime_identity': 'NOT_VERIFIED',
+             }
+@@ -154,3 +187,6 @@ def install_runtime_attestation(application: FastAPI, *, entrypoint: str) -> Non
+ 
+     # Capture after registration, before this application starts serving.
+     startup_manifest = _loaded_code_manifest(application)
++    controller = getattr(application.state, 'runtime_verification', None)
++    if controller is not None:
++        controller.bind_loaded_code(lambda: _manifest_hash(_loaded_code_manifest(application)))

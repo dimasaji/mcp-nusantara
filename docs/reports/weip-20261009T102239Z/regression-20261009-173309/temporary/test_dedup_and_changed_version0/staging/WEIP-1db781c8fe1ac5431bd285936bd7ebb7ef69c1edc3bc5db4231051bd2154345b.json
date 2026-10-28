@@ -1,0 +1,74 @@
+{
+  "document_id": "WEIP-1db781c8fe1ac5431bd285936bd7ebb7ef69c1edc3bc5db4231051bd2154345b",
+  "source_id": "fixture",
+  "original_url": "https://example.org/allowed/doc",
+  "final_url": "https://example.org/allowed/doc",
+  "redirects": [],
+  "retrieved_at": "2026-10-09T10:33:10.496260+00:00",
+  "content_type": "text/plain",
+  "content_hash": "7246e01bf5dcb6001fad3973de0f849cad38e3041f69af28e075c7b916cebf31",
+  "version": "sha256:7246e01bf5dcb6001fad3973de0f849cad38e3041f69af28e075c7b916cebf31",
+  "version_conflict": true,
+  "metadata": {
+    "title": "Fixture",
+    "publisher": "Fixture Publisher",
+    "agency": "Fixture Agency",
+    "domain": "example.org",
+    "jurisdiction": "FIXTURE_ONLY",
+    "service": "fixture-service",
+    "publication_date": null,
+    "effective_date": null,
+    "expiry_date": null,
+    "risk": "HIGH",
+    "source_verification_status": "VERIFIED",
+    "source_verification_reference": "fixture-review-001",
+    "registry_fingerprint": "8e515af3a274c9b1c09bc98eec1549e917772a32a56c5b358a5098093af6c4bc",
+    "validation_status": "PARSED_REVIEW_PENDING",
+    "chunk_reference": "FULL_PARSED_DOCUMENT"
+  },
+  "text": "New version",
+  "status": "REVIEW_REQUIRED",
+  "audit": [
+    {
+      "at": "2026-10-09T10:33:10.497938+00:00",
+      "from": "DISCOVERED",
+      "to": "FETCHED",
+      "reason": "FETCH_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "",
+      "content_hash": "7246e01bf5dcb6001fad3973de0f849cad38e3041f69af28e075c7b916cebf31",
+      "event_hash": "769167887eccd9861026586bb2b019c2254e194c4f6138b5d98f52c32884595a"
+    },
+    {
+      "at": "2026-10-09T10:33:10.499942+00:00",
+      "from": "FETCHED",
+      "to": "PARSED",
+      "reason": "PARSE_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "769167887eccd9861026586bb2b019c2254e194c4f6138b5d98f52c32884595a",
+      "content_hash": "7246e01bf5dcb6001fad3973de0f849cad38e3041f69af28e075c7b916cebf31",
+      "event_hash": "218a681323bc4ddb6a17b2ec4bd693786e3090733f8656ef991ce6f2e935a146"
+    },
+    {
+      "at": "2026-10-09T10:33:10.502526+00:00",
+      "from": "PARSED",
+      "to": "VALIDATION_PENDING",
+      "reason": "PROVENANCE_REVIEW",
+      "actor": "pipeline",
+      "previous_hash": "218a681323bc4ddb6a17b2ec4bd693786e3090733f8656ef991ce6f2e935a146",
+      "content_hash": "7246e01bf5dcb6001fad3973de0f849cad38e3041f69af28e075c7b916cebf31",
+      "event_hash": "fbae3a780142236e191817e4c1890309ee785559b468e8fcc3420debe2ea7d19"
+    },
+    {
+      "at": "2026-10-09T10:33:10.505197+00:00",
+      "from": "VALIDATION_PENDING",
+      "to": "REVIEW_REQUIRED",
+      "reason": "OWNER_DOCUMENT_REVIEW",
+      "actor": "pipeline",
+      "previous_hash": "fbae3a780142236e191817e4c1890309ee785559b468e8fcc3420debe2ea7d19",
+      "content_hash": "7246e01bf5dcb6001fad3973de0f849cad38e3041f69af28e075c7b916cebf31",
+      "event_hash": "0cf7af784f6b52cc3c3c754f6ce3cd78b1ad04a6314b85ef4b6495f936e9772b"
+    }
+  ],
+  "parsed_hash": "7246e01bf5dcb6001fad3973de0f849cad38e3041f69af28e075c7b916cebf31"
+}

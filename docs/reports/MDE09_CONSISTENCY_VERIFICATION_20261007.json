@@ -1,0 +1,117 @@
+{
+  "status": "PASS_SCOPED_EVIDENCE_CONSISTENCY",
+  "phase_checkpoints_read": 8,
+  "historical_evidence_hash_entries_checked": 81,
+  "intentional_superseded_metadata": [
+    {
+      "phase": 2,
+      "path": ".dev/PROJECT_STATE.json",
+      "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+    },
+    {
+      "phase": 2,
+      "path": ".dev/TASKS.json",
+      "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+    },
+    {
+      "phase": 2,
+      "path": ".dev/DECISIONS.jsonl",
+      "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+    },
+    {
+      "phase": 3,
+      "path": ".dev/PROJECT_STATE.json",
+      "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+    },
+    {
+      "phase": 3,
+      "path": ".dev/TASKS.json",
+      "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+    },
+    {
+      "phase": 3,
+      "path": ".dev/DECISIONS.jsonl",
+      "reason": "Later authorized MDE04 state update; latest state hash verified, not unexpected drift"
+    }
+  ],
+  "unexpected_hash_mismatches": [],
+  "junit_validation": {
+    "2": {
+      "path": "reports/MDE02_FOCUSED_20261007.xml",
+      "sha256": "509944d309528b279d61ec8aa0664a186ce3ac70dc77eeec9513b86fa82986c8",
+      "tests": 143,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+    },
+    "3": {
+      "path": "reports/MDE03_BASELINE_20261007.xml",
+      "sha256": "688551683fd2d8c322971709fac975d5b65cbb60d0ae4c11ce90cba030290eb8",
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+    },
+    "4": {
+      "path": "reports/MDE04_FOCUSED_20261007.xml",
+      "sha256": "dfdfc1a70c1cf40e72aa111bd7ef5010b96cfd9e3a82e88da61acdfde4f0df61",
+      "tests": 71,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+    },
+    "5": {
+      "path": "docs/reports/MDE05_FOCUSED_20261007.xml",
+      "sha256": "46c6594f2edfdb9a7ecf908c49c922e54d9c0dc284ed729ac741ee4f0aa84ef4",
+      "tests": 60,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+    },
+    "6": {
+      "path": "docs/reports/MDE06_FOCUSED_20261007.xml",
+      "sha256": "97468fd7c9db8eb6c8cd37772b15af72bd529968a7c6522118907174064ecc5c",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+    },
+    "7": {
+      "path": "docs/reports/MDE07_FOCUSED_20261007.xml",
+      "sha256": "1bbb1abd5898a3723e841a8eb64595a3ce3dd95d2fb3bd8ff57226b0e01414bd",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+    },
+    "8": {
+      "path": "docs/reports/MDE08_FOCUSED_20261007.xml",
+      "sha256": "cd109f2ee1f9fecf32a7487fc17df81ffe6c325631080c994157bb957c7ba095",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+    }
+  },
+  "source_build_matches": true,
+  "MDE06_index_status": {
+    "production": "PARTIAL",
+    "canonical": "UNKNOWN",
+    "production_active_chunks": 27,
+    "production_missing_active_embeddings": 25,
+    "runtime_use_required_by_contract": "BLOCKED_UNTIL_COMPATIBILITY_PROVEN",
+    "hard_gate_implemented": false
+  },
+  "MDE07_identity_status": "NOT_VERIFIED",
+  "MDE08_capability_acceptance": "PARTIAL_NOT_READY",
+  "new_pytest_runs": 0,
+  "live_runtime_verification": "NOT_RUN_IN_MDE09",
+  "limitations": "Schema/count/hash consistency does not independently prove implementation semantics or deployed behavior"
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "backend",
+    "url": "http://127.0.0.1:8000/health",
+    "time_utc": "2026-10-27T03:17:17.245309+00:00",
+    "status": "UNREACHABLE",
+    "error_type": "URLError",
+    "reason_type": "ConnectionRefusedError"
+  },
+  {
+    "name": "frontend",
+    "url": "http://127.0.0.1:5180/",
+    "time_utc": "2026-10-27T03:17:19.315985+00:00",
+    "status": 200,
+    "body": "omitted"
+  },
+  {
+    "name": "frontend_health_proxy",
+    "url": "http://127.0.0.1:5180/health",
+    "time_utc": "2026-10-27T03:17:20.831835+00:00",
+    "status": 500,
+    "error_type": "HTTPError"
+  },
+  {
+    "name": "ollama",
+    "url": "http://127.0.0.1:11434/api/version",
+    "time_utc": "2026-10-27T03:17:21.695005+00:00",
+    "status": "UNREACHABLE",
+    "error_type": "URLError",
+    "reason_type": "ConnectionRefusedError"
+  }
+]

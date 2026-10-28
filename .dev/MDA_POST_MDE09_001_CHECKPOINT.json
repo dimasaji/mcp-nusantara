@@ -1,0 +1,58 @@
+{
+  "task": "MDA-POST-MDE09-001",
+  "status": "BLOCKED_PROTECTED_SIDECAR_CHANGE",
+  "timestamp": "2026-10-07T05:05:29.298379+00:00",
+  "command": "docs/commands/MDA-POST-MDE09-001.md",
+  "previous_checkpoint": ".dev/MDE09_CHECKPOINT.json",
+  "evidence_sha256": {
+    "docs/reports/MDA_POST_MDE09_INTEGRITY_20261007.json": "5f819ddfbf2b7bb8263aac0005e010210b6e889e97e894b30602deef693e1ed3",
+    "docs/MDA_R1_LOCAL_001_PROPOSAL.md": "c6c9eb91da21ecaed7854c38f4755b83a57185a9f031db642336a7ddb2ecdc00",
+    "docs/reports/MDA_POST_MDE09_PREFLIGHT_REPORT_20261007.md": "8da3be486f8148092f8ab62a8178a7424ea926181d39b3f9a1f3c20369b62b96"
+  },
+  "change_ledger": "docs/reports/MDA_POST_MDE09_CHANGE_LEDGER_20261007.json",
+  "changes": [
+    "docs/reports/MDA_POST_MDE09_INTEGRITY_20261007.json",
+    "docs/MDA_R1_LOCAL_001_PROPOSAL.md",
+    "docs/reports/MDA_POST_MDE09_PREFLIGHT_REPORT_20261007.md",
+    ".dev/MDA_POST_MDE09_001_CHECKPOINT.json",
+    "docs/reports/MDA_POST_MDE09_CHANGE_LEDGER_20261007.json"
+  ],
+  "completed_steps": [
+    "MDE09 initial integrity",
+    "completion matrix/dependency/remediation loaded",
+    "critical gates mapped",
+    "R1 preliminary scope/impact/test/rollback proposal",
+    "integrity difference recorded/report"
+  ],
+  "implementation": "NOT_STARTED",
+  "actual_model": null,
+  "identity_status": "NOT_VERIFIED",
+  "next_action": "READ_ONLY_INVESTIGATE_SIDECAR_DIFFERENCE_THEN_REVIEW_SAFE_BASELINE_AND_R1_AUTHORIZATION",
+  "approval_required": true,
+  "approval_source": {
+    "file": "docs/commands/MDA-POST-MDE09-001.md",
+    "sections": [
+      "VII",
+      "XXII",
+      "XXXIV",
+      "XXXV"
+    ],
+    "quote": "No implementation before authorization."
+  },
+  "protected_differences": [
+    {
+      "path": "data/knowledge/nusantara_knowledge.db-shm",
+      "status": "MISSING",
+      "expected_sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+    },
+    {
+      "path": "data/knowledge/nusantara_knowledge.db-wal",
+      "status": "MISSING",
+      "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "resume_instruction": "Verify own artifacts and current protected inventory. Do not repeat MDE audits or restore/recreate sidecars. Investigate missing WAL/SHM safely; no cause inferred. Once resolved obtain scoped baseline/implementation authorization. Preliminary R1 proposal already saved; no implementation approved.",
+  "token_stop_resume": "Continue from sidecar investigation, not completed audit steps",
+  "architecture": "NOT_READY",
+  "overall_v1": "FAIL/HOLD"
+}

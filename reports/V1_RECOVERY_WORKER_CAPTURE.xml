@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="5" time="67.357" timestamp="2026-10-06T16:15:27.557055+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="tests.test_phase4_v1_chat_runtime" name="test_phase4_v1_chat_exposes_trust_assessment" time="35.359"><failure message="assert 500 == 200&#10; +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code">def test_phase4_v1_chat_exposes_trust_assessment():
+        client = TestClient(app)
+    
+        response = client.post(
+            "/v1/chat",
+            json={
+                "session_id": "phase4-trust-test",
+                "user_input": "Apa itu KTP-el?",
+                "stream": False,
+            },
+        )
+    
+&gt;       assert response.status_code == 200
+E       assert 500 == 200
+E        +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code
+
+tests\test_phase4_v1_chat_runtime.py:20: AssertionError</failure></testcase><testcase classname="tests.test_phase4_v1_chat_runtime" name="test_phase4_v1_chat_trust_confidence_is_bounded" time="25.554" /><testcase classname="tests.test_v1_smoke" name="test_v1_chat_does_not_500" time="5.129" /><testcase classname="tests.test_v1_smoke" name="test_v1_problem_analyze_does_not_500" time="0.025" /><testcase classname="tests.test_v1_smoke" name="test_v1_knowledge_search_does_not_500" time="0.135" /></testsuite></testsuites>

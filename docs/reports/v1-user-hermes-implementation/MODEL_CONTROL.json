@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-10-09T09:36:53.821008+07:00",
+  "status": "PASS_SCOPED",
+  "observed_evidence": [
+    "Existing immutable Settings owner snapshot/revision replaces only validated model leaf",
+    "Invalid model/auth/inventory failure/stale revision/race fail closed",
+    "In-flight snapshot stable; subsequent fixture request consumes selected fixture-b",
+    "Native browser/receipt confirms selected llama3.2:1b, revision 1, process 29356"
+  ],
+  "files_changed": [
+    "app/core/config.py",
+    "app/core/nusantara_config.py",
+    "app/api/control_plane.py",
+    "app/api/routes.py",
+    "control-plane/src/api.ts",
+    "control-plane/src/assistant.tsx"
+  ],
+  "reason": "Implement approved operator-global selection on the existing configuration authority",
+  "tests_run": [
+    "regression-20261009-090953/results.xml",
+    "regression-20261009-090953/guards.json",
+    "FRONTEND_REGRESSION.json",
+    "BROWSER_OBSERVATIONS.json",
+    "LOCAL_PROVIDER_BROWSER_OBSERVATIONS.json"
+  ],
+  "limitations": [
+    "CURRENT_PROCESS_ONLY, volatile, declared NORMAL single worker",
+    "Cross-process/restart consistency not implemented",
+    "Only one real installed model; distinct-real-model switch unverified"
+  ],
+  "remaining_blockers": [
+    "Verify launch topology before operator-global deployment"
+  ]
+}

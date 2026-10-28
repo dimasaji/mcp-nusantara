@@ -1,0 +1,169 @@
+{
+  "captured_at_utc": "2026-10-28T04:23:21.011295+00:00",
+  "observations": [
+    {
+      "name": "backend_health",
+      "url": "http://127.0.0.1:8000/health",
+      "at_utc": "2026-10-28T04:23:20.758091+00:00",
+      "http_status": 200,
+      "elapsed_ms": 54,
+      "content_length": 118
+    },
+    {
+      "name": "backend_review_direct",
+      "url": "http://127.0.0.1:8000/v1/knowledge/pipeline/reviews/DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+      "at_utc": "2026-10-28T04:23:20.811661+00:00",
+      "http_status": 200,
+      "elapsed_ms": 199,
+      "content_length": 42686,
+      "review": {
+        "document_id": "DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+        "version_id": "2c79e2bf120c90c8dcb9bc568e9c8067e2ac587a16fd901bbf6f5b1b83a0f09c",
+        "source_sha256": "d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+        "status": "Isi sudah diperiksa",
+        "content_ok": true,
+        "can_approve": false,
+        "source_available": true,
+        "extraction_status": "COMPLETE",
+        "required_cases": [
+          "requirements",
+          "procedure",
+          "time_cost",
+          "followup",
+          "missing"
+        ],
+        "approval_requirements": [
+          {
+            "key": "source_available",
+            "satisfied": true
+          },
+          {
+            "key": "extraction_complete",
+            "satisfied": true
+          },
+          {
+            "key": "content_checked",
+            "satisfied": true
+          },
+          {
+            "key": "case:requirements",
+            "satisfied": true
+          },
+          {
+            "key": "case:procedure",
+            "satisfied": true
+          },
+          {
+            "key": "case:time_cost",
+            "satisfied": true
+          },
+          {
+            "key": "case:followup",
+            "satisfied": true
+          },
+          {
+            "key": "case:missing",
+            "satisfied": false
+          },
+          {
+            "key": "all_trials_reviewed",
+            "satisfied": true
+          },
+          {
+            "key": "no_open_problems",
+            "satisfied": true
+          }
+        ],
+        "trials": [
+          {
+            "trial_id": "850a62c7c8fa49e1b6494e8c66002f37",
+            "case_id": "requirements",
+            "principal": "shared-admin-token",
+            "created_at": "2026-10-27T08:10:49.270878+00:00",
+            "rating": {
+              "ok": true,
+              "event_id": "95821dabf14d4182b5bddb95a3fa03f9",
+              "principal": "shared-admin-token",
+              "created_at": "2026-10-27T09:49:50.958149+00:00"
+            }
+          },
+          {
+            "trial_id": "87b222138b5f4016840ed23412b959c1",
+            "case_id": "procedure",
+            "principal": "shared-admin-token",
+            "created_at": "2026-10-27T08:12:31.936767+00:00",
+            "rating": {
+              "ok": true,
+              "event_id": "4bc6603613df451f9572a8fc32867363",
+              "principal": "shared-admin-token",
+              "created_at": "2026-10-27T09:49:51.194474+00:00"
+            }
+          },
+          {
+            "trial_id": "060f2704d41b4e31adad4732c8956dc0",
+            "case_id": "time_cost",
+            "principal": "shared-admin-token",
+            "created_at": "2026-10-27T08:22:15.299272+00:00",
+            "rating": {
+              "ok": true,
+              "event_id": "845900a512524b2a919803f1f32da49e",
+              "principal": "shared-admin-token",
+              "created_at": "2026-10-27T09:49:51.477524+00:00"
+            }
+          },
+          {
+            "trial_id": "8ce32c56dcf44360b2fe77dbcbd803b9",
+            "case_id": "followup",
+            "principal": "shared-admin-token",
+            "created_at": "2026-10-27T09:00:43.048255+00:00",
+            "rating": {
+              "ok": true,
+              "event_id": "357fd67ace714a6a94efbc551aef5f77",
+              "principal": "shared-admin-token",
+              "created_at": "2026-10-27T09:49:51.733034+00:00"
+            }
+          }
+        ],
+        "events": [
+          {
+            "event_id": "bb9639c3d35a4247ac4eb1abc626ef57",
+            "kind": "content_ok",
+            "trial_id": null,
+            "principal": "shared-admin-token",
+            "created_at": "2026-10-27T09:40:50.141536+00:00"
+          },
+          {
+            "event_id": "95821dabf14d4182b5bddb95a3fa03f9",
+            "kind": "rating",
+            "trial_id": "850a62c7c8fa49e1b6494e8c66002f37",
+            "principal": "shared-admin-token",
+            "created_at": "2026-10-27T09:49:50.958149+00:00"
+          },
+          {
+            "event_id": "4bc6603613df451f9572a8fc32867363",
+            "kind": "rating",
+            "trial_id": "87b222138b5f4016840ed23412b959c1",
+            "principal": "shared-admin-token",
+            "created_at": "2026-10-27T09:49:51.194474+00:00"
+          },
+          {
+            "event_id": "845900a512524b2a919803f1f32da49e",
+            "kind": "rating",
+            "trial_id": "060f2704d41b4e31adad4732c8956dc0",
+            "principal": "shared-admin-token",
+            "created_at": "2026-10-27T09:49:51.477524+00:00"
+          },
+          {
+            "event_id": "357fd67ace714a6a94efbc551aef5f77",
+            "kind": "rating",
+            "trial_id": "8ce32c56dcf44360b2fe77dbcbd803b9",
+            "principal": "shared-admin-token",
+            "created_at": "2026-10-27T09:49:51.733034+00:00"
+          }
+        ],
+        "open_problem_count": 0,
+        "approval_record_present": false
+      }
+    }
+  ]
+}

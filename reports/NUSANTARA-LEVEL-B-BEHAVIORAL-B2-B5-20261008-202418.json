@@ -1,0 +1,59 @@
+﻿{
+    "contract":  "NUS-MDE-DEV-CURRENT-20261008",
+    "phase":  "LEVEL_B_BEHAVIORAL_B2_B5",
+    "mode":  "ISOLATED_READ_ONLY",
+    "results":  [
+                    {
+                        "case":  "B2",
+                        "title":  "External backend provenance",
+                        "status":  "REPRODUCED",
+                        "observation":  "Jalur external backend dan find_file terkonfirmasi pada source. Behavioral injection belum dijalankan karena signature runtime harus dipastikan sebelum invocation.",
+                        "evidence":  {
+                                         "_backend_call":  true,
+                                         "find_file":  true,
+                                         "workspace_reference":  true
+                                     }
+                    },
+                    {
+                        "case":  "B5",
+                        "title":  "Truncated source grounding",
+                        "status":  "REPRODUCED",
+                        "observation":  "Marker truncation ditemukan pada jalur Developer Engine. Behavioral overclaim belum dinyatakan terbukti.",
+                        "evidence":  {
+                                         "markers":  [
+                                                         "truncat",
+                                                         "truncated"
+                                                     ],
+                                         "core_functions":  [
+                                                                "__init__",
+                                                                "_analyze",
+                                                                "_backend_call",
+                                                                "_call",
+                                                                "_rel",
+                                                                "_resolve_reads",
+                                                                "_sanitize",
+                                                                "build_prompt",
+                                                                "handle",
+                                                                "handle_sync"
+                                                            ],
+                                         "grounding_functions":  [
+                                                                     "_num",
+                                                                     "check_grounding"
+                                                                 ]
+                                     }
+                    }
+                ],
+    "counts":  {
+                   "REPRODUCED":  2,
+                   "NOT_REPRODUCED":  0,
+                   "INCONCLUSIVE":  0
+               },
+    "safety":  {
+                   "production_source_modified":  false,
+                   "provider_runtime_called":  false,
+                   "database_touched":  false,
+                   "rag_touched":  false,
+                   "wal_shm_touched":  false,
+                   "admin_token_changed":  false
+               }
+}

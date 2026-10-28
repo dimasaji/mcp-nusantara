@@ -1,0 +1,7955 @@
+{
+  "status": "PASS_SCOPED_STATIC",
+  "architecture": {
+    "status": "SCOPED_STATIC_ARCHITECTURE",
+    "entrypoints": [
+      "app/main.py",
+      "app/api/routes.py",
+      "app/api/v2_routes.py",
+      "app/v2/orchestrator.py",
+      "app/v2/hermes_adapter.py",
+      "app/models/router.py",
+      "app/models/ollama.py",
+      "app/knowledge/rag.py",
+      "app/context/context_builder.py"
+    ],
+    "absolute_app_imports": [
+      {
+        "file": "_phase4_trust_baseline.py",
+        "line": 1,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "TrustEngine"
+        ]
+      },
+      {
+        "file": "audit_grounding.py",
+        "line": 2,
+        "module": "app.api",
+        "level": 0,
+        "names": [
+          "routes"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 20,
+        "module": "app.models.mock_provider",
+        "level": 0,
+        "names": [
+          "MockProvider"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 21,
+        "module": "app.models.router",
+        "level": 0,
+        "names": [
+          "ModelRouter"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 23,
+        "module": "app.language.normalizer",
+        "level": 0,
+        "names": [
+          "normalize_text"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 24,
+        "module": "app.language.intent",
+        "level": 0,
+        "names": [
+          "verify_examples"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 25,
+        "module": "app.language.entity",
+        "level": 0,
+        "names": [
+          "extract_entities"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 27,
+        "module": "app.context.context_builder",
+        "level": 0,
+        "names": [
+          "ContextBuilder"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 29,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 31,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": [
+          "create_rag"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 33,
+        "module": "app.reasoning.engine",
+        "level": 0,
+        "names": [
+          "ReasoningEngine"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 42,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 44,
+        "module": "app.policy.policy_engine",
+        "level": 0,
+        "names": [
+          "PolicyEngine"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 46,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "TrustEngine"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 48,
+        "module": "app.memory.memory",
+        "level": 0,
+        "names": [
+          "MemoryStore"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 50,
+        "module": "app.tools.base",
+        "level": 0,
+        "names": [
+          "calculator"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 52,
+        "module": "app.mcp.mcp",
+        "level": 0,
+        "names": [
+          "MCPServer"
+        ]
+      },
+      {
+        "file": "run_tests.py",
+        "line": 54,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine"
+        ]
+      },
+      {
+        "file": "app/exceptions.py",
+        "line": 58,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "AppException",
+          "ValidationError",
+          "NotFoundError",
+          "NotAuthorizedError",
+          "ConflictError",
+          "InternalError",
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "app/main.py",
+        "line": 10,
+        "module": "app.api.routes",
+        "level": 0,
+        "names": [
+          "router"
+        ]
+      },
+      {
+        "file": "app/main.py",
+        "line": 11,
+        "module": "app.api.v2_routes",
+        "level": 0,
+        "names": [
+          "router"
+        ]
+      },
+      {
+        "file": "app/main.py",
+        "line": 12,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "configure_logging",
+          "request_context",
+          "metrics"
+        ]
+      },
+      {
+        "file": "app/main.py",
+        "line": 13,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "register_exception_handlers"
+        ]
+      },
+      {
+        "file": "app/main.py",
+        "line": 14,
+        "module": "app.core.runtime_identity",
+        "level": 0,
+        "names": [
+          "BUILD_ID"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 14,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 15,
+        "module": "app.core.runtime_identity",
+        "level": 0,
+        "names": [
+          "BUILD_ID"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 16,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "metrics"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 17,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 18,
+        "module": "app.security.auth",
+        "level": 0,
+        "names": [
+          "require_admin"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 19,
+        "module": "app.core.gate_integration",
+        "level": 0,
+        "names": [
+          "GateIntegration"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 20,
+        "module": "app.developer_core.graph_bridge",
+        "level": 0,
+        "names": [
+          "GraphifyBridge"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 21,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 22,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 23,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 24,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 25,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 26,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 27,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 28,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 29,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 30,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 31,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "TrustEngine"
+        ]
+      },
+      {
+        "file": "app/api/routes.py",
+        "line": 1605,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 15,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "ApprovalError",
+          "ApprovalQueue",
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 16,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 17,
+        "module": "app.security.auth",
+        "level": 0,
+        "names": [
+          "require_admin"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 18,
+        "module": "app.devcore",
+        "level": 0,
+        "names": [
+          "DevCore"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 19,
+        "module": "app.experience",
+        "level": 0,
+        "names": [
+          "EventRecorder",
+          "FeedbackRejected",
+          "FeedbackStore"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 20,
+        "module": "app.research.failure_analysis",
+        "level": 0,
+        "names": [
+          "analyze"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 21,
+        "module": "app.research.gap_detection",
+        "level": 0,
+        "names": [
+          "detect_gaps"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 22,
+        "module": "app.research.knowledge_discovery",
+        "level": 0,
+        "names": [
+          "CandidateStore",
+          "SourceRejected",
+          "SourceValidator"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 23,
+        "module": "app.research.source_fetcher",
+        "level": 0,
+        "names": [
+          "SourceFetcher"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 24,
+        "module": "app.research.improvement",
+        "level": 0,
+        "names": [
+          "ProposalEngine",
+          "ProposalInvalid"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 25,
+        "module": "app.approval.change_request",
+        "level": 0,
+        "names": [
+          "ReviewWorkflow"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 27,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 28,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 29,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 30,
+        "module": "app.memory.session_adapter",
+        "level": 0,
+        "names": [
+          "SessionMemory"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 31,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "metrics"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 32,
+        "module": "app.v2",
+        "level": 0,
+        "names": [
+          "VERSION"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 33,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 34,
+        "module": "app.v2.hermes_adapter",
+        "level": 0,
+        "names": [
+          "HermesV2Adapter"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 35,
+        "module": "app.v2.orchestrator",
+        "level": 0,
+        "names": [
+          "V2Orchestrator"
+        ]
+      },
+      {
+        "file": "app/api/v2_routes.py",
+        "line": 36,
+        "module": "app.v2.wiring",
+        "level": 0,
+        "names": [
+          "v1_policy_check",
+          "v1_trust_check"
+        ]
+      },
+      {
+        "file": "app/approval/__init__.py",
+        "line": 1,
+        "module": "app.approval.audit_trail",
+        "level": 0,
+        "names": [
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "app/approval/__init__.py",
+        "line": 2,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "ApprovalError",
+          "ApprovalQueue",
+          "ApprovalRequest",
+          "payload_hash"
+        ]
+      },
+      {
+        "file": "app/approval/audit_trail.py",
+        "line": 11,
+        "module": "app.observability.logging",
+        "level": 0,
+        "names": [
+          "redact"
+        ]
+      },
+      {
+        "file": "app/approval/change_request.py",
+        "line": 8,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "APPROVED",
+          "CONSUMED",
+          "ApprovalQueue",
+          "ApprovalRequest"
+        ]
+      },
+      {
+        "file": "app/approval/change_request.py",
+        "line": 9,
+        "module": "app.observability.context",
+        "level": 0,
+        "names": [
+          "new_id"
+        ]
+      },
+      {
+        "file": "app/approval/change_request.py",
+        "line": 10,
+        "module": "app.research.improvement",
+        "level": 0,
+        "names": [
+          "Proposal"
+        ]
+      },
+      {
+        "file": "app/approval/queue.py",
+        "line": 11,
+        "module": "app.approval.audit_trail",
+        "level": 0,
+        "names": [
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "app/approval/queue.py",
+        "line": 12,
+        "module": "app.observability.context",
+        "level": 0,
+        "names": [
+          "new_id"
+        ]
+      },
+      {
+        "file": "app/context/context_builder.py",
+        "line": 7,
+        "module": "app.context.schemas",
+        "level": 0,
+        "names": [
+          "ContextState",
+          "HistoryEntry",
+          "ContextUpdate",
+          "ContextMetadata",
+          "MissingInformationRequest",
+          "MissingInformationResponse",
+          "ContextWindowConfig"
+        ]
+      },
+      {
+        "file": "app/context/context_builder.py",
+        "line": 294,
+        "module": "app.context.schemas",
+        "level": 0,
+        "names": [
+          "ContextState",
+          "HistoryEntry",
+          "ContextMetadata"
+        ]
+      },
+      {
+        "file": "app/context/engine.py",
+        "line": 5,
+        "module": "app.context.schemas",
+        "level": 0,
+        "names": [
+          "ContextState",
+          "ContextUpdate",
+          "ContextMetadata",
+          "ContextWindowConfig",
+          "SessionIsolationConfig",
+          "HistoryEntry",
+          "MissingInformationRequest",
+          "MissingInformationResponse"
+        ]
+      },
+      {
+        "file": "app/context/engine.py",
+        "line": 15,
+        "module": "app.context.session",
+        "level": 0,
+        "names": [
+          "SessionManager"
+        ]
+      },
+      {
+        "file": "app/context/engine.py",
+        "line": 16,
+        "module": "app.context.context_builder",
+        "level": 0,
+        "names": [
+          "ContextBuilder"
+        ]
+      },
+      {
+        "file": "app/context/session.py",
+        "line": 9,
+        "module": "app.context.schemas",
+        "level": 0,
+        "names": [
+          "ContextState",
+          "ContextUpdate",
+          "HistoryEntry",
+          "ContextMetadata",
+          "SessionIsolationConfig"
+        ]
+      },
+      {
+        "file": "app/core/gate_integration.py",
+        "line": 4,
+        "module": "app.action.engine",
+        "level": 0,
+        "names": [
+          "ActionEngine"
+        ]
+      },
+      {
+        "file": "app/core/gate_integration.py",
+        "line": 5,
+        "module": "app.memory.engine",
+        "level": 0,
+        "names": [
+          "MemoryEngine"
+        ]
+      },
+      {
+        "file": "app/core/gate_integration.py",
+        "line": 6,
+        "module": "app.orchestration.engine",
+        "level": 0,
+        "names": [
+          "OrchestrationEngine"
+        ]
+      },
+      {
+        "file": "app/core/gate_integration.py",
+        "line": 7,
+        "module": "app.policy.engine",
+        "level": 0,
+        "names": [
+          "PolicyEngine"
+        ]
+      },
+      {
+        "file": "app/core/gate_integration.py",
+        "line": 8,
+        "module": "app.reasoning.engine",
+        "level": 0,
+        "names": [
+          "ReasoningEngine"
+        ]
+      },
+      {
+        "file": "app/core/gate_pipeline.py",
+        "line": 3,
+        "module": "app.reasoning.engine",
+        "level": 0,
+        "names": [
+          "ReasoningEngine"
+        ]
+      },
+      {
+        "file": "app/core/gate_pipeline.py",
+        "line": 4,
+        "module": "app.policy.engine",
+        "level": 0,
+        "names": [
+          "PolicyEngine"
+        ]
+      },
+      {
+        "file": "app/core/gate_pipeline.py",
+        "line": 5,
+        "module": "app.memory.engine",
+        "level": 0,
+        "names": [
+          "MemoryEngine"
+        ]
+      },
+      {
+        "file": "app/core/gate_pipeline.py",
+        "line": 6,
+        "module": "app.action.engine",
+        "level": 0,
+        "names": [
+          "ActionEngine"
+        ]
+      },
+      {
+        "file": "app/core/hardening/__init__.py",
+        "line": 1,
+        "module": "app.core.hardening.circuit_breaker",
+        "level": 0,
+        "names": [
+          "CircuitBreaker",
+          "CircuitOpen"
+        ]
+      },
+      {
+        "file": "app/core/hardening/__init__.py",
+        "line": 2,
+        "module": "app.core.hardening.retry",
+        "level": 0,
+        "names": [
+          "aretry",
+          "retry"
+        ]
+      },
+      {
+        "file": "app/core/hardening/__init__.py",
+        "line": 3,
+        "module": "app.core.hardening.safe_execution",
+        "level": 0,
+        "names": [
+          "SafeResult",
+          "safe_acall",
+          "safe_call"
+        ]
+      },
+      {
+        "file": "app/core/hardening/__init__.py",
+        "line": 4,
+        "module": "app.core.hardening.timeout",
+        "level": 0,
+        "names": [
+          "OperationTimeout",
+          "await_with_timeout",
+          "run_with_timeout"
+        ]
+      },
+      {
+        "file": "app/core/hardening/__init__.py",
+        "line": 5,
+        "module": "app.core.hardening.validator",
+        "level": 0,
+        "names": [
+          "InputRejected",
+          "sanitize_text",
+          "validate_output",
+          "validate_schema"
+        ]
+      },
+      {
+        "file": "app/core/hardening/safe_execution.py",
+        "line": 10,
+        "module": "app.core.hardening.circuit_breaker",
+        "level": 0,
+        "names": [
+          "CircuitBreaker"
+        ]
+      },
+      {
+        "file": "app/core/hardening/safe_execution.py",
+        "line": 11,
+        "module": "app.core.hardening.timeout",
+        "level": 0,
+        "names": [
+          "OperationTimeout",
+          "await_with_timeout",
+          "run_with_timeout"
+        ]
+      },
+      {
+        "file": "app/devcore/__init__.py",
+        "line": 1,
+        "module": "app.devcore.backend",
+        "level": 0,
+        "names": [
+          "RegistryBackend",
+          "normalize_result"
+        ]
+      },
+      {
+        "file": "app/devcore/__init__.py",
+        "line": 2,
+        "module": "app.devcore.core",
+        "level": 0,
+        "names": [
+          "DevCore"
+        ]
+      },
+      {
+        "file": "app/devcore/__init__.py",
+        "line": 3,
+        "module": "app.devcore.grounding",
+        "level": 0,
+        "names": [
+          "check_grounding"
+        ]
+      },
+      {
+        "file": "app/devcore/__init__.py",
+        "line": 4,
+        "module": "app.devcore.router",
+        "level": 0,
+        "names": [
+          "extract_file_refs",
+          "plan"
+        ]
+      },
+      {
+        "file": "app/devcore/__init__.py",
+        "line": 5,
+        "module": "app.devcore.workspace",
+        "level": 0,
+        "names": [
+          "PathBlocked",
+          "Workspace"
+        ]
+      },
+      {
+        "file": "app/devcore/core.py",
+        "line": 12,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "ApprovalQueue",
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "app/devcore/core.py",
+        "line": 13,
+        "module": "app.core.hardening",
+        "level": 0,
+        "names": [
+          "safe_acall",
+          "validate_output"
+        ]
+      },
+      {
+        "file": "app/devcore/core.py",
+        "line": 14,
+        "module": "app.devcore.facts",
+        "level": 0,
+        "names": [
+          "static_facts"
+        ]
+      },
+      {
+        "file": "app/devcore/core.py",
+        "line": 15,
+        "module": "app.devcore.grounding",
+        "level": 0,
+        "names": [
+          "check_grounding"
+        ]
+      },
+      {
+        "file": "app/devcore/core.py",
+        "line": 16,
+        "module": "app.devcore.router",
+        "level": 0,
+        "names": [
+          "DevPlan",
+          "plan"
+        ]
+      },
+      {
+        "file": "app/devcore/core.py",
+        "line": 17,
+        "module": "app.devcore.tools",
+        "level": 0,
+        "names": [
+          "register_dev_tools"
+        ]
+      },
+      {
+        "file": "app/devcore/core.py",
+        "line": 18,
+        "module": "app.devcore.workspace",
+        "level": 0,
+        "names": [
+          "SKIP_DIRS",
+          "PathBlocked",
+          "Workspace",
+          "is_sensitive_name"
+        ]
+      },
+      {
+        "file": "app/devcore/core.py",
+        "line": 19,
+        "module": "app.governance",
+        "level": 0,
+        "names": [
+          "GovernedToolRegistry"
+        ]
+      },
+      {
+        "file": "app/devcore/core.py",
+        "line": 20,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "request_context"
+        ]
+      },
+      {
+        "file": "app/devcore/router.py",
+        "line": 8,
+        "module": "app.devcore.workspace",
+        "level": 0,
+        "names": [
+          "is_sensitive_name"
+        ]
+      },
+      {
+        "file": "app/devcore/tools.py",
+        "line": 9,
+        "module": "app.devcore.workspace",
+        "level": 0,
+        "names": [
+          "SKIP_DIRS",
+          "PathBlocked",
+          "Workspace",
+          "is_sensitive_name"
+        ]
+      },
+      {
+        "file": "app/devcore/tools.py",
+        "line": 10,
+        "module": "app.governance.tools",
+        "level": 0,
+        "names": [
+          "GovernedToolRegistry",
+          "Risk",
+          "ToolClass",
+          "ToolSpec"
+        ]
+      },
+      {
+        "file": "app/developer_core/change_plan_approval.py",
+        "line": 15,
+        "module": "app.approval.change_request",
+        "level": 0,
+        "names": [
+          "ChangeRequest"
+        ]
+      },
+      {
+        "file": "app/developer_core/change_plan_approval.py",
+        "line": 16,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "APPROVED",
+          "ApprovalQueue",
+          "ApprovalRequest",
+          "payload_hash"
+        ]
+      },
+      {
+        "file": "app/developer_core/change_plan_approval.py",
+        "line": 17,
+        "module": "app.developer_core.change_plan",
+        "level": 0,
+        "names": [
+          "ChangePlan"
+        ]
+      },
+      {
+        "file": "app/developer_core/change_plan_approval.py",
+        "line": 18,
+        "module": "app.developer_core.change_plan_validator",
+        "level": 0,
+        "names": [
+          "validate_change_plan"
+        ]
+      },
+      {
+        "file": "app/developer_core/change_plan_validator.py",
+        "line": 11,
+        "module": "app.developer_core.change_plan",
+        "level": 0,
+        "names": [
+          "ALLOWED_TRANSITIONS",
+          "APPROVED",
+          "ChangePlan",
+          "INVALID",
+          "READY",
+          "VALIDATED",
+          "VALID_RISKS",
+          "VALID_STATUSES"
+        ]
+      },
+      {
+        "file": "app/developer_core/controlled_patch_executor.py",
+        "line": 9,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "ExecutionPlan"
+        ]
+      },
+      {
+        "file": "app/developer_core/execution_approval.py",
+        "line": 28,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "APPROVED",
+          "CONSUMED",
+          "ApprovalQueue",
+          "payload_hash"
+        ]
+      },
+      {
+        "file": "app/developer_core/execution_approval.py",
+        "line": 29,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "BOUNDARY_VALIDATED",
+          "EXECUTABLE",
+          "ExecutionPlan"
+        ]
+      },
+      {
+        "file": "app/developer_core/execution_audit.py",
+        "line": 7,
+        "module": "app.approval.audit_trail",
+        "level": 0,
+        "names": [
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "app/developer_core/execution_boundary.py",
+        "line": 29,
+        "module": "app.approval.change_request",
+        "level": 0,
+        "names": [
+          "ChangeRequest"
+        ]
+      },
+      {
+        "file": "app/developer_core/execution_boundary.py",
+        "line": 30,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "BOUNDARY_VALIDATED",
+          "EXECUTABLE",
+          "ExecutionPlan",
+          "VALID_OPERATIONS"
+        ]
+      },
+      {
+        "file": "app/developer_core/graph_bridge.py",
+        "line": 4,
+        "module": "app.developer_core.engine",
+        "level": 0,
+        "names": [
+          "DeveloperCoreEngine"
+        ]
+      },
+      {
+        "file": "app/developer_core/graph_bridge.py",
+        "line": 5,
+        "module": "app.developer_core.runtime",
+        "level": 0,
+        "names": [
+          "DeveloperRuntime"
+        ]
+      },
+      {
+        "file": "app/developer_core/snapshot_manager.py",
+        "line": 32,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "ExecutionPlan"
+        ]
+      },
+      {
+        "file": "app/evaluation/__init__.py",
+        "line": 1,
+        "module": "app.evaluation.evaluator",
+        "level": 0,
+        "names": [
+          "DIMENSIONS",
+          "EvalCase",
+          "EvalRecord",
+          "aggregate",
+          "compare",
+          "load_baseline",
+          "run_cases",
+          "save_baseline",
+          "score_record"
+        ]
+      },
+      {
+        "file": "app/evaluation/evaluator.py",
+        "line": 11,
+        "module": "app.rag.store",
+        "level": 0,
+        "names": [
+          "tokenize"
+        ]
+      },
+      {
+        "file": "app/experience/__init__.py",
+        "line": 1,
+        "module": "app.experience.events",
+        "level": 0,
+        "names": [
+          "EVENT_TYPES",
+          "SCHEMA_VERSION",
+          "Event",
+          "EventRecorder"
+        ]
+      },
+      {
+        "file": "app/experience/__init__.py",
+        "line": 2,
+        "module": "app.experience.feedback",
+        "level": 0,
+        "names": [
+          "TAXONOMY",
+          "FeedbackRecord",
+          "FeedbackRejected",
+          "FeedbackStore"
+        ]
+      },
+      {
+        "file": "app/experience/events.py",
+        "line": 11,
+        "module": "app.observability.context",
+        "level": 0,
+        "names": [
+          "current_ids",
+          "new_id"
+        ]
+      },
+      {
+        "file": "app/experience/events.py",
+        "line": 12,
+        "module": "app.observability.logging",
+        "level": 0,
+        "names": [
+          "redact"
+        ]
+      },
+      {
+        "file": "app/experience/feedback.py",
+        "line": 13,
+        "module": "app.observability.context",
+        "level": 0,
+        "names": [
+          "new_id"
+        ]
+      },
+      {
+        "file": "app/experience/feedback.py",
+        "line": 14,
+        "module": "app.observability.logging",
+        "level": 0,
+        "names": [
+          "redact"
+        ]
+      },
+      {
+        "file": "app/governance/__init__.py",
+        "line": 1,
+        "module": "app.governance.tools",
+        "level": 0,
+        "names": [
+          "Decision",
+          "GovernedToolRegistry",
+          "Risk",
+          "ToolClass",
+          "ToolOutcome",
+          "ToolSpec",
+          "default_tool_policy"
+        ]
+      },
+      {
+        "file": "app/governance/mcp_bridge.py",
+        "line": 14,
+        "module": "app.governance.tools",
+        "level": 0,
+        "names": [
+          "GovernedToolRegistry",
+          "Risk",
+          "ToolClass",
+          "ToolSpec"
+        ]
+      },
+      {
+        "file": "app/governance/tools.py",
+        "line": 10,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "ApprovalQueue"
+        ]
+      },
+      {
+        "file": "app/governance/tools.py",
+        "line": 11,
+        "module": "app.core.hardening",
+        "level": 0,
+        "names": [
+          "CircuitBreaker",
+          "safe_call",
+          "validate_schema"
+        ]
+      },
+      {
+        "file": "app/governance/tools.py",
+        "line": 12,
+        "module": "app.observability.metrics",
+        "level": 0,
+        "names": [
+          "metrics"
+        ]
+      },
+      {
+        "file": "app/handoff/engine.py",
+        "line": 12,
+        "module": "app.handoff.schemas",
+        "level": 0,
+        "names": [
+          "HandoffLevel",
+          "HandoffRequest",
+          "HandoffStatus"
+        ]
+      },
+      {
+        "file": "app/hermes/agent.py",
+        "line": 3,
+        "module": "app.models.mock",
+        "level": 0,
+        "names": [
+          "MockProvider"
+        ]
+      },
+      {
+        "file": "app/hermes/agent.py",
+        "line": 4,
+        "module": "app.models.router",
+        "level": 0,
+        "names": [
+          "ModelRouter"
+        ]
+      },
+      {
+        "file": "app/hermes/agent.py",
+        "line": 5,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "app/hermes/agent.py",
+        "line": 6,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "app/hermes/agent.py",
+        "line": 7,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "app/hermes/agent.py",
+        "line": 8,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "app/hermes/agent.py",
+        "line": 9,
+        "module": "app.reasoning.engine",
+        "level": 0,
+        "names": [
+          "ReasoningEngine"
+        ]
+      },
+      {
+        "file": "app/improvement/gate.py",
+        "line": 12,
+        "module": "app.approval.change_request",
+        "level": 0,
+        "names": [
+          "ChangeRequest"
+        ]
+      },
+      {
+        "file": "app/improvement/gate.py",
+        "line": 13,
+        "module": "app.research.improvement",
+        "level": 0,
+        "names": [
+          "Proposal"
+        ]
+      },
+      {
+        "file": "app/improvement/gate.py",
+        "line": 113,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "CONSUMED",
+          "payload_hash"
+        ]
+      },
+      {
+        "file": "app/improvement/release.py",
+        "line": 11,
+        "module": "app.approval.change_request",
+        "level": 0,
+        "names": [
+          "ChangeRequest"
+        ]
+      },
+      {
+        "file": "app/improvement/release.py",
+        "line": 12,
+        "module": "app.improvement.gate",
+        "level": 0,
+        "names": [
+          "VersionRegistry"
+        ]
+      },
+      {
+        "file": "app/knowledge/engine.py",
+        "line": 7,
+        "module": "app.core.nusantara_config",
+        "level": 0,
+        "names": [
+          "NusantaraConfig"
+        ]
+      },
+      {
+        "file": "app/knowledge/indobert_embedding.py",
+        "line": 5,
+        "module": "app.language.semantic.indobert_client",
+        "level": 0,
+        "names": [
+          "IndoBERTClient"
+        ]
+      },
+      {
+        "file": "app/knowledge/indobert_embedding.py",
+        "line": 6,
+        "module": "app.core.nusantara_config",
+        "level": 0,
+        "names": [
+          "ConfigurationError",
+          "NusantaraConfig"
+        ]
+      },
+      {
+        "file": "app/knowledge/production_embedding_bridge.py",
+        "line": 1,
+        "module": "app.runtime.indobert_cache",
+        "level": 0,
+        "names": [
+          "get_cached"
+        ]
+      },
+      {
+        "file": "app/knowledge/production_hybrid_rag.py",
+        "line": 265,
+        "module": "app.knowledge.production_semantic_retriever",
+        "level": 0,
+        "names": [
+          "ProductionSemanticRetriever"
+        ]
+      },
+      {
+        "file": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+        "line": 87,
+        "module": "app.knowledge.production_embedding_bridge",
+        "level": 0,
+        "names": [
+          "search_semantic"
+        ]
+      },
+      {
+        "file": "app/knowledge/production_semantic_retriever.py",
+        "line": 87,
+        "module": "app.knowledge.production_embedding_bridge",
+        "level": 0,
+        "names": [
+          "search_semantic"
+        ]
+      },
+      {
+        "file": "app/knowledge/rag.py",
+        "line": 9,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentMetadata",
+          "TextChunk",
+          "StoredChunk",
+          "Evidence",
+          "EvidencePack",
+          "DocumentIngestRequest",
+          "DocumentIngestResponse",
+          "DocumentInfo",
+          "DocumentListResponse",
+          "KnowledgeBaseConfig",
+          "KnowledgeStore",
+          "QueryResult",
+          "RetrievalResult"
+        ]
+      },
+      {
+        "file": "app/knowledge/rag.py",
+        "line": 24,
+        "module": "app.knowledge.chunker",
+        "level": 0,
+        "names": [
+          "Chunker",
+          "SentenceChunker",
+          "ParagraphChunker",
+          "get_chunker"
+        ]
+      },
+      {
+        "file": "app/knowledge/rag.py",
+        "line": 30,
+        "module": "app.knowledge.parser",
+        "level": 0,
+        "names": [
+          "TextParser",
+          "MarkdownParser",
+          "PdfParser",
+          "DocumentParser",
+          "Parser",
+          "get_parser"
+        ]
+      },
+      {
+        "file": "app/knowledge/rag.py",
+        "line": 41,
+        "module": "app.knowledge.indobert_embedding",
+        "level": 0,
+        "names": [
+          "IndoBERTEmbeddingAdapter"
+        ]
+      },
+      {
+        "file": "app/knowledge/rag.py",
+        "line": 42,
+        "module": "app.knowledge.store",
+        "level": 0,
+        "names": [
+          "SQLiteVectorStore"
+        ]
+      },
+      {
+        "file": "app/knowledge/rag.py",
+        "line": 43,
+        "module": "app.core.nusantara_config",
+        "level": 0,
+        "names": [
+          "ConfigurationError",
+          "NusantaraConfig"
+        ]
+      },
+      {
+        "file": "app/knowledge/reranker.py",
+        "line": 6,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "Evidence",
+          "EvidencePack"
+        ]
+      },
+      {
+        "file": "app/knowledge/retriever.py",
+        "line": 6,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "Evidence",
+          "EvidencePack",
+          "RetrievalResult",
+          "KnowledgeBaseConfig"
+        ]
+      },
+      {
+        "file": "app/knowledge/retriever.py",
+        "line": 12,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": [
+          "MemoriaVectorStore"
+        ]
+      },
+      {
+        "file": "app/knowledge/retriever.py",
+        "line": 13,
+        "module": "app.knowledge.embeddings",
+        "level": 0,
+        "names": [
+          "EmbeddingProvider"
+        ]
+      },
+      {
+        "file": "app/language/entity.py",
+        "line": 29,
+        "module": "app.language.schemas",
+        "level": 0,
+        "names": [
+          "EntityResult"
+        ]
+      },
+      {
+        "file": "app/language/intent.py",
+        "line": 7,
+        "module": "app.language.schemas",
+        "level": 0,
+        "names": [
+          "IntentResult"
+        ]
+      },
+      {
+        "file": "app/language/normalizer.py",
+        "line": 16,
+        "module": "app.language.schemas",
+        "level": 0,
+        "names": [
+          "NormalizeResult"
+        ]
+      },
+      {
+        "file": "app/language/semantic/fusion.py",
+        "line": 5,
+        "module": "app.language.intent",
+        "level": 0,
+        "names": [
+          "IntentClassifier"
+        ]
+      },
+      {
+        "file": "app/language/semantic/fusion.py",
+        "line": 6,
+        "module": "app.language.semantic.semantic_intent",
+        "level": 0,
+        "names": [
+          "SemanticIntentEngine"
+        ]
+      },
+      {
+        "file": "app/language/semantic/semantic_intent.py",
+        "line": 7,
+        "module": "app.language.semantic.indobert_client",
+        "level": 0,
+        "names": [
+          "IndoBERTClient"
+        ]
+      },
+      {
+        "file": "app/language/semantic/semantic_intent.py",
+        "line": 8,
+        "module": "app.language.semantic.intent_prototypes",
+        "level": 0,
+        "names": [
+          "INTENT_PROTOTYPES"
+        ]
+      },
+      {
+        "file": "app/mcp/mcp.py",
+        "line": 11,
+        "module": "app.mcp.schemas",
+        "level": 0,
+        "names": [
+          "MCPTool",
+          "MCPServerInfo",
+          "MCPSessionInfo",
+          "MCPError"
+        ]
+      },
+      {
+        "file": "app/mcp/session.py",
+        "line": 8,
+        "module": "app.mcp.mcp",
+        "level": 0,
+        "names": [
+          "MCPServer",
+          "MCPSession"
+        ]
+      },
+      {
+        "file": "app/mcp/session.py",
+        "line": 9,
+        "module": "app.mcp.schemas",
+        "level": 0,
+        "names": [
+          "MCPSessionInfo"
+        ]
+      },
+      {
+        "file": "app/mcp/stdio_server.py",
+        "line": 13,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "ApprovalQueue",
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "app/mcp/stdio_server.py",
+        "line": 14,
+        "module": "app.governance.mcp_bridge",
+        "level": 0,
+        "names": [
+          "register_builtin_tools"
+        ]
+      },
+      {
+        "file": "app/mcp/stdio_server.py",
+        "line": 15,
+        "module": "app.governance.tools",
+        "level": 0,
+        "names": [
+          "GovernedToolRegistry"
+        ]
+      },
+      {
+        "file": "app/memory/session_adapter.py",
+        "line": 15,
+        "module": "app.memory.memory",
+        "level": 0,
+        "names": [
+          "LongTermMemory"
+        ]
+      },
+      {
+        "file": "app/memory/session_adapter.py",
+        "line": 16,
+        "module": "app.observability.logging",
+        "level": 0,
+        "names": [
+          "redact"
+        ]
+      },
+      {
+        "file": "app/models/__init__.py",
+        "line": 2,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "app/models/__init__.py",
+        "line": 3,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "app/models/__init__.py",
+        "line": 4,
+        "module": "app.models.openai_compatible",
+        "level": 0,
+        "names": [
+          "OpenAICompatibleProvider"
+        ]
+      },
+      {
+        "file": "app/models/__init__.py",
+        "line": 5,
+        "module": "app.models.mock",
+        "level": 0,
+        "names": [
+          "MockProvider"
+        ]
+      },
+      {
+        "file": "app/models/__init__.py",
+        "line": 6,
+        "module": "app.models.router",
+        "level": 0,
+        "names": [
+          "ModelRouter"
+        ]
+      },
+      {
+        "file": "app/models/__init__.py",
+        "line": 7,
+        "module": "app.models.schemas",
+        "level": 0,
+        "names": [
+          "GenerateRequest",
+          "GenerateResponse",
+          "StructuredGenerateRequest",
+          "StructuredGenerateResponse",
+          "HealthCheckResponse",
+          "ModelSelection"
+        ]
+      },
+      {
+        "file": "app/models/mock.py",
+        "line": 6,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "LLMProvider",
+          "GenerateRequest",
+          "GenerateResponse"
+        ]
+      },
+      {
+        "file": "app/models/mock.py",
+        "line": 7,
+        "module": "app.models.schemas",
+        "level": 0,
+        "names": [
+          "GenerateResponse"
+        ]
+      },
+      {
+        "file": "app/models/mock_provider.py",
+        "line": 1,
+        "module": "app.models.mock",
+        "level": 0,
+        "names": [
+          "MockProvider",
+          "create_mock_provider"
+        ]
+      },
+      {
+        "file": "app/models/ollama.py",
+        "line": 11,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "app/models/ollama.py",
+        "line": 12,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "app/models/ollama.py",
+        "line": 13,
+        "module": "app.core.nusantara_config",
+        "level": 0,
+        "names": [
+          "ConfigurationError",
+          "NusantaraConfig"
+        ]
+      },
+      {
+        "file": "app/models/ollama.py",
+        "line": 15,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "GenerateRequest",
+          "GenerateResponse",
+          "StructuredGenerateRequest",
+          "StructuredGenerateResponse",
+          "HealthCheckResponse",
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "app/models/ollama_provider.py",
+        "line": 1,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "app/models/openai_compatible.py",
+        "line": 11,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "GenerateRequest",
+          "GenerateResponse",
+          "StructuredGenerateRequest",
+          "StructuredGenerateResponse",
+          "HealthCheckResponse",
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "app/models/router.py",
+        "line": 8,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "GenerateRequest",
+          "GenerateResponse",
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "app/models/router.py",
+        "line": 11,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "app/observability/__init__.py",
+        "line": 1,
+        "module": "app.observability.context",
+        "level": 0,
+        "names": [
+          "current_ids",
+          "new_id",
+          "request_context"
+        ]
+      },
+      {
+        "file": "app/observability/__init__.py",
+        "line": 2,
+        "module": "app.observability.logging",
+        "level": 0,
+        "names": [
+          "configure_logging",
+          "log_event",
+          "redact"
+        ]
+      },
+      {
+        "file": "app/observability/__init__.py",
+        "line": 3,
+        "module": "app.observability.metrics",
+        "level": 0,
+        "names": [
+          "Metrics",
+          "metrics"
+        ]
+      },
+      {
+        "file": "app/observability/logging.py",
+        "line": 10,
+        "module": "app.observability.context",
+        "level": 0,
+        "names": [
+          "current_ids"
+        ]
+      },
+      {
+        "file": "app/policy/policy_engine.py",
+        "line": 10,
+        "module": "app.policy.schemas",
+        "level": 0,
+        "names": [
+          "PolicyEvaluation",
+          "PolicyDecision",
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "app/problem/__init__.py",
+        "line": 4,
+        "module": "app.problem.problem_schema",
+        "level": 0,
+        "names": [
+          "ProblemSchema",
+          "ProblemStatement",
+          "Goal",
+          "ClarificationRequest",
+          "MissingInfo",
+          "RiskAssessment",
+          "PossibleSolution",
+          "ProblemResolution",
+          "SolutionEvaluation",
+          "Situation"
+        ]
+      },
+      {
+        "file": "app/problem/__init__.py",
+        "line": 16,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector",
+          "detect_problem",
+          "TEST_SCENARIOS"
+        ]
+      },
+      {
+        "file": "app/problem/__init__.py",
+        "line": 17,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier",
+          "classify_problem"
+        ]
+      },
+      {
+        "file": "app/problem/__init__.py",
+        "line": 18,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine",
+          "process_problem",
+          "generate_problem_id"
+        ]
+      },
+      {
+        "file": "app/problem/classifier.py",
+        "line": 5,
+        "module": "app.problem.problem_schema",
+        "level": 0,
+        "names": [
+          "ProblemStatement"
+        ]
+      },
+      {
+        "file": "app/problem/detector.py",
+        "line": 8,
+        "module": "app.problem.problem_schema",
+        "level": 0,
+        "names": [
+          "ProblemStatement",
+          "ClarificationRequest",
+          "MissingInfo",
+          "RiskAssessment"
+        ]
+      },
+      {
+        "file": "app/problem/detector.py",
+        "line": 563,
+        "module": "app.problem.schemas",
+        "level": 0,
+        "names": [
+          "ProblemReport",
+          "ProblemSeverity"
+        ]
+      },
+      {
+        "file": "app/problem/engine.py",
+        "line": 7,
+        "module": "app.problem.problem_schema",
+        "level": 0,
+        "names": [
+          "ProblemStatement",
+          "Goal",
+          "ClarificationRequest",
+          "RiskAssessment",
+          "MissingInfo",
+          "PossibleSolution",
+          "ProblemResolution",
+          "ProblemSchema"
+        ]
+      },
+      {
+        "file": "app/problem/engine.py",
+        "line": 17,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector",
+          "detect_problem"
+        ]
+      },
+      {
+        "file": "app/problem/engine.py",
+        "line": 18,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier",
+          "classify_problem"
+        ]
+      },
+      {
+        "file": "app/problem/engine.py",
+        "line": 580,
+        "module": "app.problem.schemas",
+        "level": 0,
+        "names": [
+          "ProblemReport",
+          "ProblemSeverity"
+        ]
+      },
+      {
+        "file": "app/problem/schemas.py",
+        "line": 4,
+        "module": "app.problem.problem_schema",
+        "level": 0,
+        "names": [
+          "*"
+        ]
+      },
+      {
+        "file": "app/rag/__init__.py",
+        "line": 1,
+        "module": "app.rag.store",
+        "level": 0,
+        "names": [
+          "ACCESS_RANK",
+          "Conflict",
+          "DocMeta",
+          "Hit",
+          "RetrievalResult",
+          "VersionedKnowledgeStore",
+          "as_retriever",
+          "detect_conflicts",
+          "grounded_context"
+        ]
+      },
+      {
+        "file": "app/reasoning/engine.py",
+        "line": 5,
+        "module": "app.reasoning.schemas",
+        "level": 0,
+        "names": [
+          "Fact",
+          "Inference",
+          "ReasoningResult"
+        ]
+      },
+      {
+        "file": "app/reasoning/evaluator.py",
+        "line": 5,
+        "module": "app.reasoning.schemas",
+        "level": 0,
+        "names": [
+          "ReasoningPlan",
+          "ReasoningAction",
+          "ReasoningEvidence",
+          "ReasoningGoal",
+          "ValidationResult"
+        ]
+      },
+      {
+        "file": "app/reasoning/planner.py",
+        "line": 5,
+        "module": "app.reasoning.schemas",
+        "level": 0,
+        "names": [
+          "ReasoningGoal",
+          "ReasoningAssumption",
+          "ReasoningPlan",
+          "PlanStep",
+          "ReasoningEvidence"
+        ]
+      },
+      {
+        "file": "app/research/experiment_evaluator.py",
+        "line": 8,
+        "module": "app.research.experiment",
+        "level": 0,
+        "names": [
+          "ExperimentResult",
+          "VERDICTS"
+        ]
+      },
+      {
+        "file": "app/research/experiments.py",
+        "line": 9,
+        "module": "app.evaluation.evaluator",
+        "level": 0,
+        "names": [
+          "EvalCase",
+          "compare",
+          "run_cases"
+        ]
+      },
+      {
+        "file": "app/research/experiments.py",
+        "line": 10,
+        "module": "app.observability.context",
+        "level": 0,
+        "names": [
+          "new_id"
+        ]
+      },
+      {
+        "file": "app/research/gap_detection.py",
+        "line": 9,
+        "module": "app.rag.store",
+        "level": 0,
+        "names": [
+          "tokenize"
+        ]
+      },
+      {
+        "file": "app/research/gap_detection.py",
+        "line": 10,
+        "module": "app.research.failure_analysis",
+        "level": 0,
+        "names": [
+          "FailureReport"
+        ]
+      },
+      {
+        "file": "app/research/improvement.py",
+        "line": 9,
+        "module": "app.research.gap_detection",
+        "level": 0,
+        "names": [
+          "GapCandidate"
+        ]
+      },
+      {
+        "file": "app/research/knowledge_discovery.py",
+        "line": 16,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "ApprovalQueue",
+          "ApprovalRequest"
+        ]
+      },
+      {
+        "file": "app/research/knowledge_discovery.py",
+        "line": 17,
+        "module": "app.observability.context",
+        "level": 0,
+        "names": [
+          "new_id"
+        ]
+      },
+      {
+        "file": "app/research/knowledge_discovery.py",
+        "line": 18,
+        "module": "app.rag.store",
+        "level": 0,
+        "names": [
+          "DocMeta",
+          "VersionedKnowledgeStore"
+        ]
+      },
+      {
+        "file": "app/research/source_fetcher.py",
+        "line": 13,
+        "module": "app.research.knowledge_discovery",
+        "level": 0,
+        "names": [
+          "SourceRejected",
+          "SourceValidator"
+        ]
+      },
+      {
+        "file": "app/tools/base.py",
+        "line": 11,
+        "module": "app.tools.schemas",
+        "level": 0,
+        "names": [
+          "ToolResult",
+          "ToolDefinition"
+        ]
+      },
+      {
+        "file": "app/tools/registry.py",
+        "line": 3,
+        "module": "app.tools.filesystem",
+        "level": 0,
+        "names": [
+          "FileSystemTool"
+        ]
+      },
+      {
+        "file": "app/trust/engine.py",
+        "line": 10,
+        "module": "app.trust.schemas",
+        "level": 0,
+        "names": [
+          "TrustAssessment",
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "app/v2/hermes_adapter.py",
+        "line": 5,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "app/v2/orchestrator.py",
+        "line": 15,
+        "module": "app.approval.audit_trail",
+        "level": 0,
+        "names": [
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "app/v2/orchestrator.py",
+        "line": 16,
+        "module": "app.core.hardening",
+        "level": 0,
+        "names": [
+          "CircuitBreaker",
+          "InputRejected",
+          "safe_acall",
+          "sanitize_text",
+          "validate_output"
+        ]
+      },
+      {
+        "file": "app/v2/orchestrator.py",
+        "line": 19,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "log_event",
+          "metrics",
+          "request_context"
+        ]
+      },
+      {
+        "file": "app/v2/wiring.py",
+        "line": 6,
+        "module": "app.policy.policy_engine",
+        "level": 0,
+        "names": [
+          "PolicyEngine"
+        ]
+      },
+      {
+        "file": "app/v2/wiring.py",
+        "line": 7,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "TrustEngine"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/exceptions.py",
+        "line": 58,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "AppException",
+          "ValidationError",
+          "NotFoundError",
+          "NotAuthorizedError",
+          "ConflictError",
+          "InternalError",
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/main.py",
+        "line": 9,
+        "module": "app.api.routes",
+        "level": 0,
+        "names": [
+          "router"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/main.py",
+        "line": 10,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "register_exception_handlers"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/api/routes.py",
+        "line": 10,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/api/routes.py",
+        "line": 11,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/api/routes.py",
+        "line": 12,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/api/routes.py",
+        "line": 13,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/api/routes.py",
+        "line": 14,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/api/routes.py",
+        "line": 15,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/api/routes.py",
+        "line": 16,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/api/routes.py",
+        "line": 17,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/api/routes.py",
+        "line": 18,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/api/routes.py",
+        "line": 223,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/context/context_builder.py",
+        "line": 7,
+        "module": "app.context.schemas",
+        "level": 0,
+        "names": [
+          "ContextState",
+          "HistoryEntry",
+          "ContextUpdate",
+          "ContextMetadata",
+          "MissingInformationRequest",
+          "MissingInformationResponse",
+          "ContextWindowConfig"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/context/context_builder.py",
+        "line": 294,
+        "module": "app.context.schemas",
+        "level": 0,
+        "names": [
+          "ContextState",
+          "HistoryEntry",
+          "ContextMetadata"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/context/engine.py",
+        "line": 5,
+        "module": "app.context.schemas",
+        "level": 0,
+        "names": [
+          "ContextState",
+          "ContextUpdate",
+          "ContextMetadata",
+          "ContextWindowConfig",
+          "SessionIsolationConfig",
+          "HistoryEntry",
+          "MissingInformationRequest",
+          "MissingInformationResponse"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/context/engine.py",
+        "line": 15,
+        "module": "app.context.session",
+        "level": 0,
+        "names": [
+          "SessionManager"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/context/engine.py",
+        "line": 16,
+        "module": "app.context.context_builder",
+        "level": 0,
+        "names": [
+          "ContextBuilder"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/context/session.py",
+        "line": 9,
+        "module": "app.context.schemas",
+        "level": 0,
+        "names": [
+          "ContextState",
+          "ContextUpdate",
+          "HistoryEntry",
+          "ContextMetadata",
+          "SessionIsolationConfig"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/handoff/engine.py",
+        "line": 12,
+        "module": "app.handoff.schemas",
+        "level": 0,
+        "names": [
+          "HandoffLevel",
+          "HandoffRequest",
+          "HandoffStatus"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/hermes/agent.py",
+        "line": 3,
+        "module": "app.models.mock",
+        "level": 0,
+        "names": [
+          "MockProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/hermes/agent.py",
+        "line": 4,
+        "module": "app.models.router",
+        "level": 0,
+        "names": [
+          "ModelRouter"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/hermes/agent.py",
+        "line": 5,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/hermes/agent.py",
+        "line": 6,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/hermes/agent.py",
+        "line": 7,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/hermes/agent.py",
+        "line": 8,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/hermes/agent.py",
+        "line": 9,
+        "module": "app.reasoning.engine",
+        "level": 0,
+        "names": [
+          "ReasoningEngine"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/knowledge/rag.py",
+        "line": 9,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentMetadata",
+          "TextChunk",
+          "StoredChunk",
+          "Evidence",
+          "EvidencePack",
+          "DocumentIngestRequest",
+          "DocumentIngestResponse",
+          "DocumentInfo",
+          "DocumentListResponse",
+          "KnowledgeBaseConfig",
+          "KnowledgeStore",
+          "QueryResult",
+          "RetrievalResult"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/knowledge/rag.py",
+        "line": 24,
+        "module": "app.knowledge.chunker",
+        "level": 0,
+        "names": [
+          "Chunker",
+          "SentenceChunker",
+          "ParagraphChunker",
+          "get_chunker"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/knowledge/rag.py",
+        "line": 30,
+        "module": "app.knowledge.parser",
+        "level": 0,
+        "names": [
+          "TextParser",
+          "MarkdownParser",
+          "PdfParser",
+          "Parser",
+          "get_parser"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/knowledge/reranker.py",
+        "line": 6,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "Evidence",
+          "EvidencePack"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/knowledge/retriever.py",
+        "line": 6,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "Evidence",
+          "EvidencePack",
+          "RetrievalResult",
+          "KnowledgeBaseConfig"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/knowledge/retriever.py",
+        "line": 12,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": [
+          "MemoriaVectorStore"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/knowledge/retriever.py",
+        "line": 13,
+        "module": "app.knowledge.embeddings",
+        "level": 0,
+        "names": [
+          "EmbeddingProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/language/engine.py",
+        "line": 6,
+        "module": "app.language.schemas",
+        "level": 0,
+        "names": [
+          "NormalizationResult",
+          "LanguageDetectionResult",
+          "IntentResult",
+          "EntityResult",
+          "StructuredUnderstanding",
+          "PipelineConfig",
+          "PipelineResult"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/language/engine.py",
+        "line": 15,
+        "module": "app.language.normalizer",
+        "level": 0,
+        "names": [
+          "TextNormalizer"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/language/engine.py",
+        "line": 16,
+        "module": "app.language.intent",
+        "level": 0,
+        "names": [
+          "IntentClassifier"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/language/engine.py",
+        "line": 17,
+        "module": "app.language.entity",
+        "level": 0,
+        "names": [
+          "EntityExtractor"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/language/entity.py",
+        "line": 12,
+        "module": "app.language.schemas",
+        "level": 0,
+        "names": [
+          "EntityResult",
+          "EntityType"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/language/intent.py",
+        "line": 12,
+        "module": "app.language.schemas",
+        "level": 0,
+        "names": [
+          "IntentResult"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/language/normalizer.py",
+        "line": 11,
+        "module": "app.language.schemas",
+        "level": 0,
+        "names": [
+          "NormalizeResult"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/mcp/mcp.py",
+        "line": 11,
+        "module": "app.mcp.schemas",
+        "level": 0,
+        "names": [
+          "MCPTool",
+          "MCPServerInfo",
+          "MCPSessionInfo",
+          "MCPError"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/mcp/session.py",
+        "line": 8,
+        "module": "app.mcp.mcp",
+        "level": 0,
+        "names": [
+          "MCPServer",
+          "MCPSession"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/mcp/session.py",
+        "line": 9,
+        "module": "app.mcp.schemas",
+        "level": 0,
+        "names": [
+          "MCPSessionInfo"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/__init__.py",
+        "line": 2,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/__init__.py",
+        "line": 3,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/__init__.py",
+        "line": 4,
+        "module": "app.models.openai_compatible",
+        "level": 0,
+        "names": [
+          "OpenAICompatibleProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/__init__.py",
+        "line": 5,
+        "module": "app.models.mock",
+        "level": 0,
+        "names": [
+          "MockProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/__init__.py",
+        "line": 6,
+        "module": "app.models.router",
+        "level": 0,
+        "names": [
+          "ModelRouter"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/__init__.py",
+        "line": 7,
+        "module": "app.models.schemas",
+        "level": 0,
+        "names": [
+          "GenerateRequest",
+          "GenerateResponse",
+          "StructuredGenerateRequest",
+          "StructuredGenerateResponse",
+          "HealthCheckResponse",
+          "ModelSelection"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/mock.py",
+        "line": 6,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "LLMProvider",
+          "GenerateRequest",
+          "GenerateResponse"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/mock.py",
+        "line": 7,
+        "module": "app.models.schemas",
+        "level": 0,
+        "names": [
+          "GenerateResponse"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/mock_provider.py",
+        "line": 1,
+        "module": "app.models.mock",
+        "level": 0,
+        "names": [
+          "MockProvider",
+          "create_mock_provider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/ollama.py",
+        "line": 12,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "GenerateRequest",
+          "GenerateResponse",
+          "StructuredGenerateRequest",
+          "StructuredGenerateResponse",
+          "HealthCheckResponse",
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/ollama_provider.py",
+        "line": 1,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/openai_compatible.py",
+        "line": 11,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "GenerateRequest",
+          "GenerateResponse",
+          "StructuredGenerateRequest",
+          "StructuredGenerateResponse",
+          "HealthCheckResponse",
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/router.py",
+        "line": 8,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "GenerateRequest",
+          "GenerateResponse",
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/models/router.py",
+        "line": 11,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/policy/policy_engine.py",
+        "line": 10,
+        "module": "app.policy.schemas",
+        "level": 0,
+        "names": [
+          "PolicyEvaluation",
+          "PolicyDecision",
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/__init__.py",
+        "line": 4,
+        "module": "app.problem.problem_schema",
+        "level": 0,
+        "names": [
+          "ProblemSchema",
+          "ProblemStatement",
+          "Goal",
+          "ClarificationRequest",
+          "MissingInfo",
+          "RiskAssessment",
+          "PossibleSolution",
+          "ProblemResolution",
+          "SolutionEvaluation",
+          "Situation"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/__init__.py",
+        "line": 16,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector",
+          "detect_problem",
+          "TEST_SCENARIOS"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/__init__.py",
+        "line": 17,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier",
+          "classify_problem"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/__init__.py",
+        "line": 18,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine",
+          "process_problem",
+          "generate_problem_id"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/classifier.py",
+        "line": 5,
+        "module": "app.problem.problem_schema",
+        "level": 0,
+        "names": [
+          "ProblemStatement"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/detector.py",
+        "line": 8,
+        "module": "app.problem.problem_schema",
+        "level": 0,
+        "names": [
+          "ProblemStatement",
+          "ClarificationRequest",
+          "MissingInfo",
+          "RiskAssessment"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/detector.py",
+        "line": 563,
+        "module": "app.problem.schemas",
+        "level": 0,
+        "names": [
+          "ProblemReport",
+          "ProblemSeverity"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/engine.py",
+        "line": 7,
+        "module": "app.problem.problem_schema",
+        "level": 0,
+        "names": [
+          "ProblemStatement",
+          "Goal",
+          "ClarificationRequest",
+          "RiskAssessment",
+          "MissingInfo",
+          "PossibleSolution",
+          "ProblemResolution",
+          "ProblemSchema"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/engine.py",
+        "line": 17,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector",
+          "detect_problem"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/engine.py",
+        "line": 18,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier",
+          "classify_problem"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/engine.py",
+        "line": 580,
+        "module": "app.problem.schemas",
+        "level": 0,
+        "names": [
+          "ProblemReport",
+          "ProblemSeverity"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/problem/schemas.py",
+        "line": 4,
+        "module": "app.problem.problem_schema",
+        "level": 0,
+        "names": [
+          "*"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/reasoning/engine.py",
+        "line": 9,
+        "module": "app.reasoning.schemas",
+        "level": 0,
+        "names": [
+          "ReasoningGoal",
+          "ReasoningAssumption",
+          "ReasoningPlan",
+          "PlanStep",
+          "ReasoningEvidence",
+          "ReasoningAction",
+          "ValidationResult",
+          "ReasoningArtifact",
+          "ReasoningRequest",
+          "ReasoningResponse"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/reasoning/engine.py",
+        "line": 413,
+        "module": "app.reasoning.schemas",
+        "level": 0,
+        "names": [
+          "ReasoningRequest"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/reasoning/evaluator.py",
+        "line": 5,
+        "module": "app.reasoning.schemas",
+        "level": 0,
+        "names": [
+          "ReasoningPlan",
+          "ReasoningAction",
+          "ReasoningEvidence",
+          "ReasoningGoal",
+          "ValidationResult"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/reasoning/planner.py",
+        "line": 5,
+        "module": "app.reasoning.schemas",
+        "level": 0,
+        "names": [
+          "ReasoningGoal",
+          "ReasoningAssumption",
+          "ReasoningPlan",
+          "PlanStep",
+          "ReasoningEvidence"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/tools/base.py",
+        "line": 11,
+        "module": "app.tools.schemas",
+        "level": 0,
+        "names": [
+          "ToolResult",
+          "ToolDefinition"
+        ]
+      },
+      {
+        "file": "app_backup_before_openrouter/trust/engine.py",
+        "line": 10,
+        "module": "app.trust.schemas",
+        "level": 0,
+        "names": [
+          "TrustAssessment",
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_chat_debug.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_chat_domain_fix.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_domain_routing_20261002_161418.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_gate_fix.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_graph_rag_production_20261002_142501.py",
+        "line": 15,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_grounded_chat.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_hard_grounding_gate.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_master_20261002_162403.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_master_routing_fix.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_prod_integration_20261002_142101.py",
+        "line": 15,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_production_adapter.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_query_domain_FINAL.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_query_domain_fix.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_query_domain_fix2.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_query_expansion.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_query_expansion.py",
+        "line": 664,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_safe_graph_rag_20261002_142601.py",
+        "line": 15,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_service_routing.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.before_source_cleanup_20261002_142345.py",
+        "line": 15,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "archive/devcore_snapshots/developer_core_engine_BEFORE_ROUTING_PATCH.py",
+        "line": 42,
+        "module": "app.knowledge.production_hybrid_rag",
+        "level": 0,
+        "names": [
+          "ProductionHybridRAG"
+        ]
+      },
+      {
+        "file": "backup/GATE17_3_PASS_20261005_141834/change_plan_approval.py",
+        "line": 15,
+        "module": "app.approval.change_request",
+        "level": 0,
+        "names": [
+          "ChangeRequest"
+        ]
+      },
+      {
+        "file": "backup/GATE17_3_PASS_20261005_141834/change_plan_approval.py",
+        "line": 16,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "APPROVED",
+          "ApprovalQueue",
+          "ApprovalRequest",
+          "payload_hash"
+        ]
+      },
+      {
+        "file": "backup/GATE17_3_PASS_20261005_141834/change_plan_approval.py",
+        "line": 17,
+        "module": "app.developer_core.change_plan",
+        "level": 0,
+        "names": [
+          "ChangePlan"
+        ]
+      },
+      {
+        "file": "backup/GATE17_3_PASS_20261005_141834/change_plan_approval.py",
+        "line": 18,
+        "module": "app.developer_core.change_plan_validator",
+        "level": 0,
+        "names": [
+          "validate_change_plan"
+        ]
+      },
+      {
+        "file": "backup/GATE17_3_PASS_20261005_141834/change_plan_validator.py",
+        "line": 11,
+        "module": "app.developer_core.change_plan",
+        "level": 0,
+        "names": [
+          "ALLOWED_TRANSITIONS",
+          "APPROVED",
+          "ChangePlan",
+          "INVALID",
+          "READY",
+          "VALIDATED",
+          "VALID_RISKS",
+          "VALID_STATUSES"
+        ]
+      },
+      {
+        "file": "backup/GATE17_3_PASS_20261005_141915/change_plan_approval.py",
+        "line": 15,
+        "module": "app.approval.change_request",
+        "level": 0,
+        "names": [
+          "ChangeRequest"
+        ]
+      },
+      {
+        "file": "backup/GATE17_3_PASS_20261005_141915/change_plan_approval.py",
+        "line": 16,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "APPROVED",
+          "ApprovalQueue",
+          "ApprovalRequest",
+          "payload_hash"
+        ]
+      },
+      {
+        "file": "backup/GATE17_3_PASS_20261005_141915/change_plan_approval.py",
+        "line": 17,
+        "module": "app.developer_core.change_plan",
+        "level": 0,
+        "names": [
+          "ChangePlan"
+        ]
+      },
+      {
+        "file": "backup/GATE17_3_PASS_20261005_141915/change_plan_approval.py",
+        "line": 18,
+        "module": "app.developer_core.change_plan_validator",
+        "level": 0,
+        "names": [
+          "validate_change_plan"
+        ]
+      },
+      {
+        "file": "backup/GATE17_3_PASS_20261005_141915/change_plan_validator.py",
+        "line": 11,
+        "module": "app.developer_core.change_plan",
+        "level": 0,
+        "names": [
+          "ALLOWED_TRANSITIONS",
+          "APPROVED",
+          "ChangePlan",
+          "INVALID",
+          "READY",
+          "VALIDATED",
+          "VALID_RISKS",
+          "VALID_STATUSES"
+        ]
+      },
+      {
+        "file": "backup/GATE17_4_PASS_20261005_142343/controlled_patch_executor.py",
+        "line": 9,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "ExecutionPlan"
+        ]
+      },
+      {
+        "file": "backup/GATE17_4_PASS_20261005_142343/execution_approval.py",
+        "line": 28,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "APPROVED",
+          "CONSUMED",
+          "ApprovalQueue",
+          "payload_hash"
+        ]
+      },
+      {
+        "file": "backup/GATE17_4_PASS_20261005_142343/execution_approval.py",
+        "line": 29,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "BOUNDARY_VALIDATED",
+          "EXECUTABLE",
+          "ExecutionPlan"
+        ]
+      },
+      {
+        "file": "backup/GATE17_4_PASS_20261005_142343/execution_boundary.py",
+        "line": 29,
+        "module": "app.approval.change_request",
+        "level": 0,
+        "names": [
+          "ChangeRequest"
+        ]
+      },
+      {
+        "file": "backup/GATE17_4_PASS_20261005_142343/execution_boundary.py",
+        "line": 30,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "BOUNDARY_VALIDATED",
+          "EXECUTABLE",
+          "ExecutionPlan",
+          "VALID_OPERATIONS"
+        ]
+      },
+      {
+        "file": "backup/GATE17_4_PASS_20261005_142343/validate_gate17_4.py",
+        "line": 36,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "ExecutionPlan"
+        ]
+      },
+      {
+        "file": "backup/GATE17_4_PASS_20261005_142343/validate_gate17_4.py",
+        "line": 37,
+        "module": "app.developer_core.execution_approval",
+        "level": 0,
+        "names": [
+          "ExecutionApprovalEnforcer"
+        ]
+      },
+      {
+        "file": "backup/GATE17_4_PASS_20261005_142343/validate_gate17_4.py",
+        "line": 82,
+        "module": "app.developer_core",
+        "level": 0,
+        "names": [
+          "controlled_write"
+        ]
+      },
+      {
+        "file": "backup/GATE17_4_PASS_20261005_142343/validate_gate17_4.py",
+        "line": 194,
+        "module": "app.developer_core.execution_boundary",
+        "level": 0,
+        "names": [
+          "ExecutionBoundary"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 11,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 12,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 13,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 14,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 15,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 16,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 17,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 18,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 19,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 20,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 21,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/api_contract_fix_20261001_180209/routes.py",
+        "line": 1336,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 11,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 12,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 13,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 14,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 15,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 16,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 17,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 18,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 19,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 20,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 21,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/final_hardening_20261001_175929/routes.py",
+        "line": 1336,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 11,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 12,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 13,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 14,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 15,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 16,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 17,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 18,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 19,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 20,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 21,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/generation_hardening_20261001_175544/routes.py",
+        "line": 1336,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 11,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 12,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 13,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 14,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 15,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 16,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 17,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 18,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 19,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 20,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 21,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/app/api/routes.py",
+        "line": 1263,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/scripts/test_e2e_grounding_ollama.py",
+        "line": 12,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/scripts/test_e2e_grounding_ollama.py",
+        "line": 13,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/scripts/test_e2e_grounding_ollama.py",
+        "line": 14,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/grounding_safety_20261001_172504/scripts/test_e2e_grounding_ollama.py",
+        "line": 15,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "GenerateRequest"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 11,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 12,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 13,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 14,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 15,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 16,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 17,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 18,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 19,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 20,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 21,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/api/routes.py",
+        "line": 1336,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/knowledge/rag.py",
+        "line": 9,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentMetadata",
+          "TextChunk",
+          "StoredChunk",
+          "Evidence",
+          "EvidencePack",
+          "DocumentIngestRequest",
+          "DocumentIngestResponse",
+          "DocumentInfo",
+          "DocumentListResponse",
+          "KnowledgeBaseConfig",
+          "KnowledgeStore",
+          "QueryResult",
+          "RetrievalResult"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/knowledge/rag.py",
+        "line": 24,
+        "module": "app.knowledge.chunker",
+        "level": 0,
+        "names": [
+          "Chunker",
+          "SentenceChunker",
+          "ParagraphChunker",
+          "get_chunker"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/knowledge/rag.py",
+        "line": 30,
+        "module": "app.knowledge.parser",
+        "level": 0,
+        "names": [
+          "TextParser",
+          "MarkdownParser",
+          "PdfParser",
+          "DocumentParser",
+          "Parser",
+          "get_parser"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/knowledge/rag.py",
+        "line": 41,
+        "module": "app.knowledge.indobert_embedding",
+        "level": 0,
+        "names": [
+          "IndoBERTEmbeddingAdapter"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/knowledge/rag.py",
+        "line": 42,
+        "module": "app.knowledge.store",
+        "level": 0,
+        "names": [
+          "SQLiteVectorStore"
+        ]
+      },
+      {
+        "file": "backup/master_hardening_20261001_175243/app/models/ollama.py",
+        "line": 12,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "GenerateRequest",
+          "GenerateResponse",
+          "StructuredGenerateRequest",
+          "StructuredGenerateResponse",
+          "HealthCheckResponse",
+          "LLMProvider"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/main.py",
+        "line": 9,
+        "module": "app.api.routes",
+        "level": 0,
+        "names": [
+          "router"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/main.py",
+        "line": 10,
+        "module": "app.api.v2_routes",
+        "level": 0,
+        "names": [
+          "router"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/main.py",
+        "line": 11,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "configure_logging",
+          "request_context"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/main.py",
+        "line": 12,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "register_exception_handlers"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 14,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 15,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 16,
+        "module": "app.security.auth",
+        "level": 0,
+        "names": [
+          "require_admin"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 17,
+        "module": "app.core.gate_integration",
+        "level": 0,
+        "names": [
+          "GateIntegration"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 18,
+        "module": "app.developer_core.graph_bridge",
+        "level": 0,
+        "names": [
+          "GraphifyBridge"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 19,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 20,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 21,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 22,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 23,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 24,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 25,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 26,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 27,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 28,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_20261006_144255/routes.py",
+        "line": 1470,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/main.py",
+        "line": 10,
+        "module": "app.api.routes",
+        "level": 0,
+        "names": [
+          "router"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/main.py",
+        "line": 11,
+        "module": "app.api.v2_routes",
+        "level": 0,
+        "names": [
+          "router"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/main.py",
+        "line": 12,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "configure_logging",
+          "request_context",
+          "metrics",
+          "metrics"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/main.py",
+        "line": 13,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "register_exception_handlers"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 14,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 15,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "metrics"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 16,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 17,
+        "module": "app.security.auth",
+        "level": 0,
+        "names": [
+          "require_admin"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 18,
+        "module": "app.core.gate_integration",
+        "level": 0,
+        "names": [
+          "GateIntegration"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 19,
+        "module": "app.developer_core.graph_bridge",
+        "level": 0,
+        "names": [
+          "GraphifyBridge"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 20,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 21,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 22,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 23,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 24,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 25,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 26,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 27,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 28,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 29,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_fix_20261006_144548/routes.py",
+        "line": 1471,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/main.py",
+        "line": 10,
+        "module": "app.api.routes",
+        "level": 0,
+        "names": [
+          "router"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/main.py",
+        "line": 11,
+        "module": "app.api.v2_routes",
+        "level": 0,
+        "names": [
+          "router"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/main.py",
+        "line": 12,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "configure_logging",
+          "request_context",
+          "metrics"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/main.py",
+        "line": 13,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "register_exception_handlers"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 14,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 15,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "metrics"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 16,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 17,
+        "module": "app.security.auth",
+        "level": 0,
+        "names": [
+          "require_admin"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 18,
+        "module": "app.core.gate_integration",
+        "level": 0,
+        "names": [
+          "GateIntegration"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 19,
+        "module": "app.developer_core.graph_bridge",
+        "level": 0,
+        "names": [
+          "GraphifyBridge"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 20,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 21,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 22,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 23,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 24,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 25,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 26,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 27,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 28,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 29,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/phase3_v1_safe_20261006_144438/routes.py",
+        "line": 1471,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/phase4_trust_20261006_151054/engine.py",
+        "line": 10,
+        "module": "app.trust.schemas",
+        "level": 0,
+        "names": [
+          "TrustAssessment",
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "backup/phase4_trust_20261006_151054/test_phase4_trust_contract.py",
+        "line": 3,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "TrustEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_trust_20261006_151054/test_phase4_trust_contract.py",
+        "line": 4,
+        "module": "app.trust.schemas",
+        "level": 0,
+        "names": [
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "backup/phase4_trust_20261006_151118/engine.py",
+        "line": 10,
+        "module": "app.trust.schemas",
+        "level": 0,
+        "names": [
+          "TrustAssessment",
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "backup/phase4_trust_20261006_151118/test_phase4_trust_contract.py",
+        "line": 3,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "TrustEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_trust_20261006_151118/test_phase4_trust_contract.py",
+        "line": 4,
+        "module": "app.trust.schemas",
+        "level": 0,
+        "names": [
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/engine.py",
+        "line": 10,
+        "module": "app.trust.schemas",
+        "level": 0,
+        "names": [
+          "TrustAssessment",
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 14,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 15,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "metrics"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 16,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 17,
+        "module": "app.security.auth",
+        "level": 0,
+        "names": [
+          "require_admin"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 18,
+        "module": "app.core.gate_integration",
+        "level": 0,
+        "names": [
+          "GateIntegration"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 19,
+        "module": "app.developer_core.graph_bridge",
+        "level": 0,
+        "names": [
+          "GraphifyBridge"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 20,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 21,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 22,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 23,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 24,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 25,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 26,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 27,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 28,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 29,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_20261006_153022/routes.py",
+        "line": 1471,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 14,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 15,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "metrics"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 16,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 17,
+        "module": "app.security.auth",
+        "level": 0,
+        "names": [
+          "require_admin"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 18,
+        "module": "app.core.gate_integration",
+        "level": 0,
+        "names": [
+          "GateIntegration"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 19,
+        "module": "app.developer_core.graph_bridge",
+        "level": 0,
+        "names": [
+          "GraphifyBridge"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 20,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 21,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 22,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 23,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 24,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 25,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 26,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 27,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 28,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 29,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 30,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "TrustEngine"
+        ]
+      },
+      {
+        "file": "backup/phase4_v1_trust_runtime_20261006_153843/routes.py",
+        "line": 1475,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 11,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 12,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 13,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 14,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 15,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 16,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 17,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 18,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 19,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 20,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 21,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173449/routes.py",
+        "line": 1335,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 11,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 12,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 13,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 14,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 15,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 16,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 17,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 18,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 19,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 20,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 21,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "backup/routes_grounding_intent_20261001_173500/routes.py",
+        "line": 1336,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine",
+          "HandoffLevel"
+        ]
+      },
+      {
+        "file": "integration/agent_live_original.py",
+        "line": 6,
+        "module": "app.models.mock",
+        "level": 0,
+        "names": [
+          "MockProvider"
+        ]
+      },
+      {
+        "file": "integration/agent_live_original.py",
+        "line": 7,
+        "module": "app.models.router",
+        "level": 0,
+        "names": [
+          "ModelRouter"
+        ]
+      },
+      {
+        "file": "integration/agent_live_original.py",
+        "line": 8,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "integration/agent_live_original.py",
+        "line": 9,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "integration/agent_live_original.py",
+        "line": 10,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "integration/agent_live_original.py",
+        "line": 11,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "integration/agent_live_original.py",
+        "line": 12,
+        "module": "app.reasoning.engine",
+        "level": 0,
+        "names": [
+          "ReasoningEngine"
+        ]
+      },
+      {
+        "file": "integration/agent_live_original.py",
+        "line": 13,
+        "module": "app.tools.registry",
+        "level": 0,
+        "names": [
+          "ToolRegistry"
+        ]
+      },
+      {
+        "file": "integration/agent_with_devcore.py",
+        "line": 7,
+        "module": "app.models.mock",
+        "level": 0,
+        "names": [
+          "MockProvider"
+        ]
+      },
+      {
+        "file": "integration/agent_with_devcore.py",
+        "line": 8,
+        "module": "app.models.router",
+        "level": 0,
+        "names": [
+          "ModelRouter"
+        ]
+      },
+      {
+        "file": "integration/agent_with_devcore.py",
+        "line": 9,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "file": "integration/agent_with_devcore.py",
+        "line": 10,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "integration/agent_with_devcore.py",
+        "line": 11,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "integration/agent_with_devcore.py",
+        "line": 12,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "integration/agent_with_devcore.py",
+        "line": 13,
+        "module": "app.reasoning.engine",
+        "level": 0,
+        "names": [
+          "ReasoningEngine"
+        ]
+      },
+      {
+        "file": "integration/agent_with_devcore.py",
+        "line": 14,
+        "module": "app.tools.registry",
+        "level": 0,
+        "names": [
+          "ToolRegistry"
+        ]
+      },
+      {
+        "file": "integration/agent_with_devcore.py",
+        "line": 15,
+        "module": "app.devcore",
+        "level": 0,
+        "names": [
+          "DevCore",
+          "RegistryBackend",
+          "plan"
+        ]
+      },
+      {
+        "file": "integration/routes_live_original.py",
+        "line": 10,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "integration/routes_live_original.py",
+        "line": 11,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "integration/routes_live_original.py",
+        "line": 12,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "integration/routes_live_original.py",
+        "line": 13,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "integration/routes_live_original.py",
+        "line": 14,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "integration/routes_live_original.py",
+        "line": 15,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "integration/routes_live_original.py",
+        "line": 16,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "integration/routes_live_original.py",
+        "line": 17,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "integration/routes_live_original.py",
+        "line": 18,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "integration/routes_with_devcore.py",
+        "line": 10,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "integration/routes_with_devcore.py",
+        "line": 11,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "integration/routes_with_devcore.py",
+        "line": 12,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "integration/routes_with_devcore.py",
+        "line": 13,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "integration/routes_with_devcore.py",
+        "line": 14,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "integration/routes_with_devcore.py",
+        "line": 15,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "integration/routes_with_devcore.py",
+        "line": 16,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "integration/routes_with_devcore.py",
+        "line": 17,
+        "module": "app.hermes.agent",
+        "level": 0,
+        "names": [
+          "HermesAgent"
+        ]
+      },
+      {
+        "file": "integration/routes_with_devcore.py",
+        "line": 18,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "scripts/baseline_rag_cache.py",
+        "line": 48,
+        "module": "app.runtime.indobert_cache",
+        "level": 0,
+        "names": [
+          "get_cached",
+          "cache_stats"
+        ]
+      },
+      {
+        "file": "scripts/baseline_rag_cache.py",
+        "line": 105,
+        "module": "app.knowledge.production_semantic_retriever",
+        "level": 0,
+        "names": [
+          "ProductionSemanticRetriever"
+        ]
+      },
+      {
+        "file": "scripts/direct_guard_test.py",
+        "line": 7,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "scripts/fix_grounding_procedure_v4.py",
+        "line": 125,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "scripts/fix_rag_bom_and_canonical.py",
+        "line": 256,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "scripts/fix_rag_bom_and_canonical.py",
+        "line": 257,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "scripts/release_check.py",
+        "line": 20,
+        "module": "app.security.readiness",
+        "level": 0,
+        "names": [
+          "FAIL",
+          "NOT_RUN",
+          "PASS",
+          "Check",
+          "render",
+          "verdict"
+        ]
+      },
+      {
+        "file": "scripts/release_check.py",
+        "line": 21,
+        "module": "app.security.scanner",
+        "level": 0,
+        "names": [
+          "scan_tree"
+        ]
+      },
+      {
+        "file": "scripts/run_eval.py",
+        "line": 17,
+        "module": "app.evaluation",
+        "level": 0,
+        "names": [
+          "EvalCase",
+          "compare",
+          "load_baseline",
+          "run_cases",
+          "save_baseline"
+        ]
+      },
+      {
+        "file": "scripts/runtime_e2e_truth.py",
+        "line": 10,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "scripts/staging_drill.py",
+        "line": 20,
+        "module": "app.improvement.release",
+        "level": 0,
+        "names": [
+          "create_backup",
+          "restore_backup"
+        ]
+      },
+      {
+        "file": "scripts/test_e2e_grounding_ollama.py",
+        "line": 22,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "scripts/test_e2e_grounding_ollama.py",
+        "line": 23,
+        "module": "app.models.base",
+        "level": 0,
+        "names": [
+          "GenerateRequest"
+        ]
+      },
+      {
+        "file": "scripts/test_e2e_grounding_ollama.py",
+        "line": 24,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "scripts/test_grounding_hermes.py",
+        "line": 8,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "scripts/test_grounding_hermes.py",
+        "line": 9,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "scripts/test_grounding_hermes.py",
+        "line": 10,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "scripts/test_grounding_ollama_api.py",
+        "line": 19,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "scripts/test_grounding_ollama_api.py",
+        "line": 20,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "scripts/test_grounding_ollama_api.py",
+        "line": 35,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": []
+      },
+      {
+        "file": "scripts/test_knowledge_grounding.py",
+        "line": 8,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "scripts/test_knowledge_retrieval.py",
+        "line": 29,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": []
+      },
+      {
+        "file": "scripts/test_knowledge_retrieval.py",
+        "line": 46,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "scripts/test_knowledge_retrieval.py",
+        "line": 47,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate14.py",
+        "line": 9,
+        "module": "app.developer_core.engine",
+        "level": 0,
+        "names": [
+          "DeveloperCoreEngine"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate14.py",
+        "line": 10,
+        "module": "app.developer_core.graph_bridge",
+        "level": 0,
+        "names": [
+          "GraphifyBridge"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate14_mapper.py",
+        "line": 4,
+        "module": "app.developer_core.mapper",
+        "level": 0,
+        "names": [
+          "RuntimeGraphMapper"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate14_mapper.py",
+        "line": 5,
+        "module": "app.developer_core.impact",
+        "level": 0,
+        "names": [
+          "RuntimeImpactAnalyzer"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate15_operational_final.py",
+        "line": 7,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "ApprovalQueue",
+          "ApprovalError"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate15_operational_final.py",
+        "line": 8,
+        "module": "app.developer_core.change_plan",
+        "level": 0,
+        "names": [
+          "ChangePlan",
+          "PROPOSED",
+          "VALIDATED",
+          "APPROVED",
+          "READY"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate15_operational_final.py",
+        "line": 15,
+        "module": "app.developer_core.change_plan_validator",
+        "level": 0,
+        "names": [
+          "validate_change_plan",
+          "validate_transition"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate15_operational_final.py",
+        "line": 19,
+        "module": "app.developer_core.change_plan_approval",
+        "level": 0,
+        "names": [
+          "ChangePlanApprovalBinding",
+          "ChangePlanApprovalError"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_approval.py",
+        "line": 7,
+        "module": "app.approval.audit_trail",
+        "level": 0,
+        "names": [
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_approval.py",
+        "line": 8,
+        "module": "app.approval.queue",
+        "level": 0,
+        "names": [
+          "ApprovalQueue",
+          "APPROVED",
+          "CONSUMED"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_approval.py",
+        "line": 9,
+        "module": "app.developer_core.change_plan",
+        "level": 0,
+        "names": [
+          "ChangePlan"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_approval.py",
+        "line": 10,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "ExecutionPlan",
+          "BOUNDARY_VALIDATED"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_approval.py",
+        "line": 14,
+        "module": "app.developer_core.execution_approval",
+        "level": 0,
+        "names": [
+          "ExecutionApprovalEnforcer"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_audit.py",
+        "line": 12,
+        "module": "app.approval.audit_trail",
+        "level": 0,
+        "names": [
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_audit.py",
+        "line": 13,
+        "module": "app.developer_core.execution_audit",
+        "level": 0,
+        "names": [
+          "ExecutionAudit",
+          "ExecutionAuditError"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_boundary.py",
+        "line": 22,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "BLOCKED",
+          "BOUNDARY_VALIDATED",
+          "EXECUTABLE",
+          "PLANNED",
+          "ExecutionPlan"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_boundary.py",
+        "line": 29,
+        "module": "app.developer_core.execution_boundary",
+        "level": 0,
+        "names": [
+          "ExecutionBoundary"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_patch.py",
+        "line": 10,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "ExecutionPlan",
+          "BOUNDARY_VALIDATED"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_patch.py",
+        "line": 14,
+        "module": "app.developer_core.controlled_patch_executor",
+        "level": 0,
+        "names": [
+          "ControlledPatchExecutor",
+          "ControlledPatchError"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_snapshot.py",
+        "line": 10,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "ExecutionPlan",
+          "BOUNDARY_VALIDATED"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_snapshot.py",
+        "line": 14,
+        "module": "app.developer_core.snapshot_manager",
+        "level": 0,
+        "names": [
+          "SnapshotManager",
+          "SnapshotError"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_validation.py",
+        "line": 11,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "ExecutionPlan",
+          "BOUNDARY_VALIDATED"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate16_validation.py",
+        "line": 15,
+        "module": "app.developer_core.controlled_patch_executor",
+        "level": 0,
+        "names": [
+          "ControlledPatchExecutor",
+          "ControlledPatchError"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_4.py",
+        "line": 36,
+        "module": "app.developer_core.execution_plan",
+        "level": 0,
+        "names": [
+          "ExecutionPlan"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_4.py",
+        "line": 37,
+        "module": "app.developer_core.execution_approval",
+        "level": 0,
+        "names": [
+          "ExecutionApprovalEnforcer"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_4.py",
+        "line": 82,
+        "module": "app.developer_core",
+        "level": 0,
+        "names": [
+          "controlled_write"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_4.py",
+        "line": 194,
+        "module": "app.developer_core.execution_boundary",
+        "level": 0,
+        "names": [
+          "ExecutionBoundary"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_evaluation.py",
+        "line": 13,
+        "module": "app.research.experiment",
+        "level": 0,
+        "names": [
+          "ControlledExperiment"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_evaluation.py",
+        "line": 16,
+        "module": "app.research.experiment_evaluator",
+        "level": 0,
+        "names": [
+          "EvaluationError",
+          "ExperimentEvaluator"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_evidence.py",
+        "line": 12,
+        "module": "app.research.evidence_collector",
+        "level": 0,
+        "names": [
+          "EvidenceCollector",
+          "EvidenceCollectionError"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_experiment.py",
+        "line": 12,
+        "module": "app.research.experiment",
+        "level": 0,
+        "names": [
+          "ControlledExperiment",
+          "ExperimentError"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_gap.py",
+        "line": 11,
+        "module": "app.research.gap_detector",
+        "level": 0,
+        "names": [
+          "GapDetector",
+          "GapDetectionError"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_proposal.py",
+        "line": 14,
+        "module": "app.research.improvement",
+        "level": 0,
+        "names": [
+          "Proposal",
+          "ProposalEngine"
+        ]
+      },
+      {
+        "file": "scripts/validate_gate17_root_cause.py",
+        "line": 12,
+        "module": "app.research.root_cause",
+        "level": 0,
+        "names": [
+          "RootCauseAnalyzer",
+          "RootCauseAnalysisError"
+        ]
+      },
+      {
+        "file": "scripts/validate_gates_8_16.py",
+        "line": 8,
+        "module": "app.reasoning.engine",
+        "level": 0,
+        "names": [
+          "ReasoningEngine"
+        ]
+      },
+      {
+        "file": "scripts/validate_gates_8_16.py",
+        "line": 9,
+        "module": "app.policy.engine",
+        "level": 0,
+        "names": [
+          "PolicyEngine"
+        ]
+      },
+      {
+        "file": "scripts/validate_gates_8_16.py",
+        "line": 10,
+        "module": "app.memory.engine",
+        "level": 0,
+        "names": [
+          "MemoryEngine"
+        ]
+      },
+      {
+        "file": "scripts/validate_gates_8_16.py",
+        "line": 11,
+        "module": "app.action.engine",
+        "level": 0,
+        "names": [
+          "ActionEngine"
+        ]
+      },
+      {
+        "file": "scripts/validate_gates_8_16.py",
+        "line": 12,
+        "module": "app.orchestration.engine",
+        "level": 0,
+        "names": [
+          "OrchestrationEngine"
+        ]
+      },
+      {
+        "file": "scripts/verify_audit_runtime.py",
+        "line": 29,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": [
+          "RAG"
+        ]
+      },
+      {
+        "file": "scripts/verify_audit_runtime.py",
+        "line": 30,
+        "module": "app.knowledge.store",
+        "level": 0,
+        "names": [
+          "SQLiteVectorStore"
+        ]
+      },
+      {
+        "file": "scripts/verify_audit_runtime.py",
+        "line": 68,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "scripts/verify_audit_runtime.py",
+        "line": 69,
+        "module": "app.api",
+        "level": 0,
+        "names": [
+          "routes",
+          "v2_routes"
+        ]
+      },
+      {
+        "file": "scripts/verify_audit_runtime.py",
+        "line": 70,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "scripts/verify_audit_runtime.py",
+        "line": 71,
+        "module": "app.core.config",
+        "level": 0,
+        "names": [
+          "settings"
+        ]
+      },
+      {
+        "file": "scripts/verify_audit_runtime.py",
+        "line": 72,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "scripts/verify_docker_runtime.py",
+        "line": 105,
+        "module": "app.devcore.workspace",
+        "level": 0,
+        "names": [
+          "Workspace",
+          "PathBlocked"
+        ]
+      },
+      {
+        "file": "scripts/verify_v1_recovery_rag.py",
+        "line": 21,
+        "module": "app.knowledge.grounding",
+        "level": 0,
+        "names": [
+          "EvidenceGroundingGuard"
+        ]
+      },
+      {
+        "file": "scripts/verify_v1_recovery_rag.py",
+        "line": 22,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": [
+          "RAG"
+        ]
+      },
+      {
+        "file": "scripts/verify_v1_recovery_rag.py",
+        "line": 23,
+        "module": "app.knowledge.store",
+        "level": 0,
+        "names": [
+          "SQLiteVectorStore"
+        ]
+      },
+      {
+        "file": "scripts/verify_v1_recovery_runtime.py",
+        "line": 18,
+        "module": "app.core.runtime_identity",
+        "level": 0,
+        "names": [
+          "source_build_id"
+        ]
+      },
+      {
+        "file": "tests/test_approval_persistence.py",
+        "line": 3,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "ApprovalQueue",
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 9,
+        "module": "app.knowledge.parser",
+        "level": 0,
+        "names": [
+          "DocumentParser"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 19,
+        "module": "app.knowledge.parser",
+        "level": 0,
+        "names": [
+          "DocumentParser"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 35,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 36,
+        "module": "app.api",
+        "level": 0,
+        "names": [
+          "routes",
+          "v2_routes"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 65,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 66,
+        "module": "app.api",
+        "level": 0,
+        "names": [
+          "routes"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 67,
+        "module": "app.knowledge.parser",
+        "level": 0,
+        "names": [
+          "DocumentParser"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 89,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 90,
+        "module": "app.api",
+        "level": 0,
+        "names": [
+          "v2_routes"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 91,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 108,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 109,
+        "module": "app.api",
+        "level": 0,
+        "names": [
+          "routes"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 122,
+        "module": "app.language.semantic.indobert_client",
+        "level": 0,
+        "names": [
+          "IndoBERTClient"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 138,
+        "module": "app.api",
+        "level": 0,
+        "names": [
+          "routes"
+        ]
+      },
+      {
+        "file": "tests/test_audit_regressions.py",
+        "line": 40,
+        "module": "app.security.auth",
+        "level": 0,
+        "names": [
+          "require_admin"
+        ]
+      },
+      {
+        "file": "tests/test_backup_restore.py",
+        "line": 7,
+        "module": "app.improvement.release",
+        "level": 0,
+        "names": [
+          "create_backup",
+          "restore_backup"
+        ]
+      },
+      {
+        "file": "tests/test_configuration_contract.py",
+        "line": 11,
+        "module": "app.core.nusantara_config",
+        "level": 0,
+        "names": [
+          "ConfigurationError",
+          "load_nusantara_config"
+        ]
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 10,
+        "module": "app.core.nusantara_config",
+        "level": 0,
+        "names": [
+          "ConfigurationError",
+          "load_nusantara_config"
+        ]
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 11,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 12,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": [
+          "KnowledgeEngine"
+        ]
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 13,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": [
+          "RAG",
+          "MemoriaVectorStore",
+          "create_rag"
+        ]
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 14,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "KnowledgeBaseConfig"
+        ]
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 15,
+        "module": "app.knowledge.indobert_embedding",
+        "level": 0,
+        "names": [
+          "IndoBERTEmbeddingAdapter"
+        ]
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 50,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": []
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 60,
+        "module": "app.knowledge.indobert_embedding",
+        "level": 0,
+        "names": []
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 76,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": []
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 86,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": []
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 110,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "DocumentIngestRequest"
+        ]
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 135,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": []
+      },
+      {
+        "file": "tests/test_configuration_integration.py",
+        "line": 149,
+        "module": "app.knowledge.engine",
+        "level": 0,
+        "names": []
+      },
+      {
+        "file": "tests/test_developer_core_engine_contract.py",
+        "line": 10,
+        "module": "app.developer_core.engine",
+        "level": 0,
+        "names": [
+          "DeveloperAnalysis",
+          "DeveloperCoreEngine"
+        ]
+      },
+      {
+        "file": "tests/test_gate14_developer_core.py",
+        "line": 3,
+        "module": "app.developer_core.engine",
+        "level": 0,
+        "names": [
+          "DeveloperCoreEngine"
+        ]
+      },
+      {
+        "file": "tests/test_gate14_developer_core.py",
+        "line": 4,
+        "module": "app.developer_core.graph_bridge",
+        "level": 0,
+        "names": [
+          "GraphifyBridge"
+        ]
+      },
+      {
+        "file": "tests/test_gate14_mapper_impact.py",
+        "line": 3,
+        "module": "app.developer_core.mapper",
+        "level": 0,
+        "names": [
+          "RuntimeGraphMapper"
+        ]
+      },
+      {
+        "file": "tests/test_gate14_mapper_impact.py",
+        "line": 4,
+        "module": "app.developer_core.impact",
+        "level": 0,
+        "names": [
+          "RuntimeImpactAnalyzer"
+        ]
+      },
+      {
+        "file": "tests/test_gate_integration.py",
+        "line": 1,
+        "module": "app.core.gate_integration",
+        "level": 0,
+        "names": [
+          "GateIntegration"
+        ]
+      },
+      {
+        "file": "tests/test_gates_8_16.py",
+        "line": 1,
+        "module": "app.reasoning.engine",
+        "level": 0,
+        "names": [
+          "ReasoningEngine"
+        ]
+      },
+      {
+        "file": "tests/test_gates_8_16.py",
+        "line": 2,
+        "module": "app.policy.engine",
+        "level": 0,
+        "names": [
+          "PolicyEngine"
+        ]
+      },
+      {
+        "file": "tests/test_gates_8_16.py",
+        "line": 3,
+        "module": "app.memory.engine",
+        "level": 0,
+        "names": [
+          "MemoryEngine"
+        ]
+      },
+      {
+        "file": "tests/test_gates_8_16.py",
+        "line": 4,
+        "module": "app.action.engine",
+        "level": 0,
+        "names": [
+          "ActionEngine"
+        ]
+      },
+      {
+        "file": "tests/test_gates_8_16.py",
+        "line": 5,
+        "module": "app.orchestration.engine",
+        "level": 0,
+        "names": [
+          "OrchestrationEngine"
+        ]
+      },
+      {
+        "file": "tests/test_gates_8_16.py",
+        "line": 6,
+        "module": "app.core.gate_pipeline",
+        "level": 0,
+        "names": [
+          "GatePipeline"
+        ]
+      },
+      {
+        "file": "tests/test_indobert_timeout.py",
+        "line": 4,
+        "module": "app.language.semantic.indobert_client",
+        "level": 0,
+        "names": [
+          "IndoBERTClient"
+        ]
+      },
+      {
+        "file": "tests/test_language_normalizer.py",
+        "line": 11,
+        "module": "app.language",
+        "level": 0,
+        "names": [
+          "normalizer"
+        ]
+      },
+      {
+        "file": "tests/test_language_normalizer.py",
+        "line": 12,
+        "module": "app.language.intent",
+        "level": 0,
+        "names": [
+          "EXAMPLES_MINIMUM",
+          "classify_intent",
+          "verify_examples"
+        ]
+      },
+      {
+        "file": "tests/test_language_normalizer.py",
+        "line": 13,
+        "module": "app.language.normalizer",
+        "level": 0,
+        "names": [
+          "TextNormalizer",
+          "normalize_text"
+        ]
+      },
+      {
+        "file": "tests/test_language_normalizer.py",
+        "line": 14,
+        "module": "app.language.schemas",
+        "level": 0,
+        "names": [
+          "NormalizationResult",
+          "NormalizeResult"
+        ]
+      },
+      {
+        "file": "tests/test_language_normalizer.py",
+        "line": 117,
+        "module": "app.language.engine",
+        "level": 0,
+        "names": [
+          "create_language_engine"
+        ]
+      },
+      {
+        "file": "tests/test_mcp_stdio.py",
+        "line": 31,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "tests/test_phase2_hardening.py",
+        "line": 7,
+        "module": "app.core.hardening.circuit_breaker",
+        "level": 0,
+        "names": [
+          "CircuitBreaker"
+        ]
+      },
+      {
+        "file": "tests/test_phase2_hardening.py",
+        "line": 8,
+        "module": "app.core.hardening.safe_execution",
+        "level": 0,
+        "names": [
+          "safe_acall"
+        ]
+      },
+      {
+        "file": "tests/test_phase3_http_integration.py",
+        "line": 3,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_phase3_metrics_integration.py",
+        "line": 3,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_phase3_observability.py",
+        "line": 6,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "Metrics",
+          "configure_logging",
+          "current_ids",
+          "log_event",
+          "request_context",
+          "redact"
+        ]
+      },
+      {
+        "file": "tests/test_phase3_observability.py",
+        "line": 142,
+        "module": "app.observability",
+        "level": 0,
+        "names": []
+      },
+      {
+        "file": "tests/test_phase3_v1_metrics_integration.py",
+        "line": 3,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_phase4_trust_contract.py",
+        "line": 3,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "TrustEngine"
+        ]
+      },
+      {
+        "file": "tests/test_phase4_trust_contract.py",
+        "line": 4,
+        "module": "app.trust.schemas",
+        "level": 0,
+        "names": [
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "tests/test_phase4_v1_chat_runtime.py",
+        "line": 5,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_phase4_v1_trust_integration.py",
+        "line": 3,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "TrustEngine"
+        ]
+      },
+      {
+        "file": "tests/test_phase4_v1_trust_integration.py",
+        "line": 4,
+        "module": "app.trust.schemas",
+        "level": 0,
+        "names": [
+          "RiskLevel"
+        ]
+      },
+      {
+        "file": "tests/test_provider_failure.py",
+        "line": 5,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "tests/test_provider_failure.py",
+        "line": 6,
+        "module": "app.models.ollama",
+        "level": 0,
+        "names": [
+          "OllamaProvider"
+        ]
+      },
+      {
+        "file": "tests/test_research_persistence.py",
+        "line": 1,
+        "module": "app.research.improvement",
+        "level": 0,
+        "names": [
+          "ProposalEngine"
+        ]
+      },
+      {
+        "file": "tests/test_review_branch.py",
+        "line": 7,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "ApprovalQueue",
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "tests/test_review_branch.py",
+        "line": 8,
+        "module": "app.approval.change_request",
+        "level": 0,
+        "names": [
+          "ReviewWorkflow"
+        ]
+      },
+      {
+        "file": "tests/test_review_branch.py",
+        "line": 9,
+        "module": "app.improvement.gate",
+        "level": 0,
+        "names": [
+          "GateBlocked",
+          "create_review_branch"
+        ]
+      },
+      {
+        "file": "tests/test_review_branch.py",
+        "line": 10,
+        "module": "app.research.improvement",
+        "level": 0,
+        "names": [
+          "ProposalEngine"
+        ]
+      },
+      {
+        "file": "tests/test_runtime_identity.py",
+        "line": 1,
+        "module": "app.core.runtime_identity",
+        "level": 0,
+        "names": [
+          "BUILD_ID",
+          "source_build_id"
+        ]
+      },
+      {
+        "file": "tests/test_runtime_identity.py",
+        "line": 22,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_session_memory.py",
+        "line": 5,
+        "module": "app.memory.session_adapter",
+        "level": 0,
+        "names": [
+          "SessionMemory"
+        ]
+      },
+      {
+        "file": "tests/test_session_memory.py",
+        "line": 70,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_session_memory.py",
+        "line": 71,
+        "module": "app.api",
+        "level": 0,
+        "names": [
+          "v2_routes"
+        ]
+      },
+      {
+        "file": "tests/test_source_fetcher.py",
+        "line": 5,
+        "module": "app.research.knowledge_discovery",
+        "level": 0,
+        "names": [
+          "CandidateStore",
+          "SourceRejected",
+          "SourceValidator"
+        ]
+      },
+      {
+        "file": "tests/test_source_fetcher.py",
+        "line": 6,
+        "module": "app.research.source_fetcher",
+        "level": 0,
+        "names": [
+          "SourceFetcher"
+        ]
+      },
+      {
+        "file": "tests/test_trace_retention.py",
+        "line": 3,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "tests/test_trace_retention.py",
+        "line": 4,
+        "module": "app.experience",
+        "level": 0,
+        "names": [
+          "EventRecorder"
+        ]
+      },
+      {
+        "file": "tests/test_trace_retention.py",
+        "line": 5,
+        "module": "app.v2.orchestrator",
+        "level": 0,
+        "names": [
+          "V2Orchestrator"
+        ]
+      },
+      {
+        "file": "tests/test_v1_response_projection.py",
+        "line": 11,
+        "module": "app.api",
+        "level": 0,
+        "names": [
+          "routes"
+        ]
+      },
+      {
+        "file": "tests/test_v1_response_projection.py",
+        "line": 12,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_v1_response_projection.py",
+        "line": 13,
+        "module": "app.trust.schemas",
+        "level": 0,
+        "names": [
+          "RiskLevel",
+          "TrustAssessment"
+        ]
+      },
+      {
+        "file": "tests/test_v1_response_projection.py",
+        "line": 266,
+        "module": "app.exceptions",
+        "level": 0,
+        "names": [
+          "ProviderUnavailableError"
+        ]
+      },
+      {
+        "file": "tests/test_v1_smoke.py",
+        "line": 22,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/test_v1_stage_budget.py",
+        "line": 7,
+        "module": "app.api",
+        "level": 0,
+        "names": [
+          "routes"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 40,
+        "module": "app.language.normalizer",
+        "level": 0,
+        "names": [
+          "normalize_text"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 41,
+        "module": "app.language.intent",
+        "level": 0,
+        "names": [
+          "verify_examples"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 42,
+        "module": "app.language.entity",
+        "level": 0,
+        "names": [
+          "extract_entities"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 61,
+        "module": "app.problem.engine",
+        "level": 0,
+        "names": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 62,
+        "module": "app.problem.detector",
+        "level": 0,
+        "names": [
+          "ProblemDetector"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 63,
+        "module": "app.problem.classifier",
+        "level": 0,
+        "names": [
+          "ProblemClassifier"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 85,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": [
+          "RAG"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 86,
+        "module": "app.knowledge.embeddings",
+        "level": 0,
+        "names": [
+          "EmbeddingProvider"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 87,
+        "module": "app.knowledge.schemas",
+        "level": 0,
+        "names": [
+          "Document"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 117,
+        "module": "app.workflow.state",
+        "level": 0,
+        "names": [
+          "StateMachine"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 118,
+        "module": "app.workflow.engine",
+        "level": 0,
+        "names": [
+          "WorkflowEngine"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_evaluation.py",
+        "line": 137,
+        "module": "app.tools.base",
+        "level": 0,
+        "names": [
+          "calculator",
+          "current_time"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_live_harness.py",
+        "line": 11,
+        "module": "app.evaluation",
+        "level": 0,
+        "names": [
+          "EvalCase",
+          "compare",
+          "run_cases"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_smoke.py",
+        "line": 3,
+        "module": "app.main",
+        "level": 0,
+        "names": [
+          "app"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_smoke.py",
+        "line": 4,
+        "module": "app.models.mock_provider",
+        "level": 0,
+        "names": [
+          "MockProvider"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_smoke.py",
+        "line": 5,
+        "module": "app.models.router",
+        "level": 0,
+        "names": [
+          "ModelRouter"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_smoke.py",
+        "line": 6,
+        "module": "app.policy.policy_engine",
+        "level": 0,
+        "names": [
+          "PolicyEngine"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_smoke.py",
+        "line": 7,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "TrustEngine"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_smoke.py",
+        "line": 8,
+        "module": "app.memory.memory",
+        "level": 0,
+        "names": [
+          "MemoryStore"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_smoke.py",
+        "line": 9,
+        "module": "app.tools.base",
+        "level": 0,
+        "names": [
+          "calculator"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_smoke.py",
+        "line": 10,
+        "module": "app.mcp.mcp",
+        "level": 0,
+        "names": [
+          "MCPServer"
+        ]
+      },
+      {
+        "file": "tests/evaluation/test_smoke.py",
+        "line": 11,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "HandoffEngine"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 86,
+        "module": "app.language.normalizer",
+        "level": 0,
+        "names": [
+          "normalize_text"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 87,
+        "module": "app.language.intent",
+        "level": 0,
+        "names": [
+          "classify_intent",
+          "verify_examples"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 101,
+        "module": "app.knowledge.rag",
+        "level": 0,
+        "names": [
+          "RAG"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 102,
+        "module": "app.knowledge.embeddings",
+        "level": 0,
+        "names": [
+          "EmbeddingProvider"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 111,
+        "module": "app.workflow.state",
+        "level": 0,
+        "names": [
+          "StateMachine"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 116,
+        "module": "app.policy.policy_engine",
+        "level": 0,
+        "names": [
+          "evaluate_policy",
+          "PolicyDecision"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 123,
+        "module": "app.trust.engine",
+        "level": 0,
+        "names": [
+          "evaluate_trust"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 130,
+        "module": "app.memory.memory",
+        "level": 0,
+        "names": [
+          "MemoryStore"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 143,
+        "module": "app.tools.base",
+        "level": 0,
+        "names": [
+          "calculator",
+          "current_time"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 153,
+        "module": "app.mcp.mcp",
+        "level": 0,
+        "names": [
+          "MCPServer",
+          "MCPSession"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 167,
+        "module": "app.handoff.engine",
+        "level": 0,
+        "names": [
+          "create_handoff_request"
+        ]
+      },
+      {
+        "file": "tests/nevaluation/evaluation_legacy.py",
+        "line": 174,
+        "module": "app.api.routes",
+        "level": 0,
+        "names": [
+          "router"
+        ]
+      },
+      {
+        "file": "tests/v2/test_context_budget.py",
+        "line": 6,
+        "module": "app.core.hardening",
+        "level": 0,
+        "names": [
+          "InputRejected"
+        ]
+      },
+      {
+        "file": "tests/v2/test_context_budget.py",
+        "line": 7,
+        "module": "app.v2.orchestrator",
+        "level": 0,
+        "names": [
+          "V2Orchestrator"
+        ]
+      },
+      {
+        "file": "tests/v2/test_devcore.py",
+        "line": 9,
+        "module": "app.devcore",
+        "level": 0,
+        "names": [
+          "DevCore",
+          "PathBlocked",
+          "Workspace",
+          "check_grounding",
+          "extract_file_refs",
+          "plan"
+        ]
+      },
+      {
+        "file": "tests/v2/test_devcore.py",
+        "line": 10,
+        "module": "app.devcore.facts",
+        "level": 0,
+        "names": [
+          "static_facts"
+        ]
+      },
+      {
+        "file": "tests/v2/test_devcore_integration.py",
+        "line": 12,
+        "module": "app.devcore",
+        "level": 0,
+        "names": [
+          "RegistryBackend",
+          "normalize_result"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 9,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "ApprovalQueue",
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 10,
+        "module": "app.approval.change_request",
+        "level": 0,
+        "names": [
+          "NotApprovedForChange",
+          "ReviewWorkflow",
+          "assess_risk"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 11,
+        "module": "app.evaluation",
+        "level": 0,
+        "names": [
+          "EvalCase",
+          "aggregate",
+          "compare",
+          "load_baseline",
+          "run_cases",
+          "save_baseline",
+          "score_record",
+          "EvalRecord"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 12,
+        "module": "app.experience",
+        "level": 0,
+        "names": [
+          "EventRecorder",
+          "FeedbackRejected",
+          "FeedbackStore"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 13,
+        "module": "app.governance",
+        "level": 0,
+        "names": [
+          "GovernedToolRegistry"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 14,
+        "module": "app.governance.mcp_bridge",
+        "level": 0,
+        "names": [
+          "register_builtin_tools",
+          "register_manifest",
+          "safe_calc"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 15,
+        "module": "app.governance.sandbox",
+        "level": 0,
+        "names": [
+          "SandboxDenied",
+          "run_allowlisted"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 16,
+        "module": "app.improvement.gate",
+        "level": 0,
+        "names": [
+          "GateBlocked",
+          "VersionRegistry",
+          "branch_name",
+          "start"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 17,
+        "module": "app.improvement.release",
+        "level": 0,
+        "names": [
+          "create_backup",
+          "generate_release_notes",
+          "ready_to_release",
+          "release_checklist",
+          "rollback"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 19,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "request_context"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 20,
+        "module": "app.observability.logging",
+        "level": 0,
+        "names": [
+          "JsonFormatter"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 21,
+        "module": "app.rag",
+        "level": 0,
+        "names": [
+          "VersionedKnowledgeStore",
+          "as_retriever",
+          "grounded_context"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 22,
+        "module": "app.research.experiments",
+        "level": 0,
+        "names": [
+          "ExperimentRunner"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 23,
+        "module": "app.research.failure_analysis",
+        "level": 0,
+        "names": [
+          "analyze"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 24,
+        "module": "app.research.gap_detection",
+        "level": 0,
+        "names": [
+          "detect_gaps"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 25,
+        "module": "app.research.improvement",
+        "level": 0,
+        "names": [
+          "ProposalEngine",
+          "ProposalInvalid"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 26,
+        "module": "app.research.knowledge_discovery",
+        "level": 0,
+        "names": [
+          "CandidateStore",
+          "NotApproved",
+          "SourceRejected",
+          "SourceValidator"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 27,
+        "module": "app.security.readiness",
+        "level": 0,
+        "names": [
+          "Check",
+          "verdict"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 28,
+        "module": "app.security.scanner",
+        "level": 0,
+        "names": [
+          "scan_tree"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 29,
+        "module": "app.v2.orchestrator",
+        "level": 0,
+        "names": [
+          "V2Orchestrator"
+        ]
+      },
+      {
+        "file": "tests/v2/test_phases_7_21.py",
+        "line": 30,
+        "module": "app.v2.wiring",
+        "level": 0,
+        "names": [
+          "v1_policy_check",
+          "v1_trust_check"
+        ]
+      },
+      {
+        "file": "tests/v2/test_v2_core.py",
+        "line": 10,
+        "module": "app.approval",
+        "level": 0,
+        "names": [
+          "ApprovalError",
+          "ApprovalQueue",
+          "AuditTrail"
+        ]
+      },
+      {
+        "file": "tests/v2/test_v2_core.py",
+        "line": 11,
+        "module": "app.core.hardening",
+        "level": 0,
+        "names": [
+          "CircuitBreaker",
+          "InputRejected",
+          "OperationTimeout",
+          "retry",
+          "run_with_timeout",
+          "safe_acall",
+          "safe_call",
+          "sanitize_text",
+          "validate_schema",
+          "aretry"
+        ]
+      },
+      {
+        "file": "tests/v2/test_v2_core.py",
+        "line": 15,
+        "module": "app.governance",
+        "level": 0,
+        "names": [
+          "Decision",
+          "GovernedToolRegistry",
+          "Risk",
+          "ToolClass",
+          "ToolSpec"
+        ]
+      },
+      {
+        "file": "tests/v2/test_v2_core.py",
+        "line": 16,
+        "module": "app.memory.memory",
+        "level": 0,
+        "names": [
+          "LongTermMemory"
+        ]
+      },
+      {
+        "file": "tests/v2/test_v2_core.py",
+        "line": 17,
+        "module": "app.observability",
+        "level": 0,
+        "names": [
+          "redact",
+          "request_context",
+          "current_ids"
+        ]
+      },
+      {
+        "file": "tests/v2/test_v2_core.py",
+        "line": 18,
+        "module": "app.observability.logging",
+        "level": 0,
+        "names": [
+          "JsonFormatter"
+        ]
+      },
+      {
+        "file": "tests/v2/test_v2_core.py",
+        "line": 19,
+        "module": "app.v2.orchestrator",
+        "level": 0,
+        "names": [
+          "V2Orchestrator"
+        ]
+      },
+      {
+        "file": "tests/v2/test_v2_core.py",
+        "line": 20,
+        "module": "app.v2.wiring",
+        "level": 0,
+        "names": [
+          "v1_policy_check",
+          "v1_trust_check"
+        ]
+      }
+    ],
+    "missing_absolute_app_modules": [],
+    "active_syntax_errors": [],
+    "capabilities": {
+      "HermesAdapter": true,
+      "ModelRouter": true,
+      "named_ModelGateway": false,
+      "named_ExecutorInterface": false
+    },
+    "limits": "Imports/filenames do not prove live capability, dynamic resolution, or protocol equivalence"
+  },
+  "health": {
+    "status": "LOCAL_DEPENDENCY_CHECK",
+    "interpreter": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+    "packages": {
+      "fastapi": "0.141.1",
+      "uvicorn": "0.54.0",
+      "pydantic": "2.13.5",
+      "pydantic-settings": "2.15.0",
+      "httpx": "0.28.1",
+      "pytest": "9.1.1"
+    },
+    "source_build_id": "sha256:487ace8eb2a8ba4d8c979fdc7728cefe7802eb0b3f8f01d3f6462d9c83e9492a",
+    "provider_health": "NOT_RUN",
+    "worker_health": "NOT_RUN",
+    "runtime_startup": "NOT_RUN",
+    "database_connection": "NOT_RUN"
+  },
+  "overall_v1_acceptance": "NOT_EVALUATED_BY_THIS_STATIC_CHECK"
+}

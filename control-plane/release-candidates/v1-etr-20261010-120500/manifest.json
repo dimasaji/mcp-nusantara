@@ -1,0 +1,206 @@
+{
+  "contract_id": "NUS-MASTER-V1-ETR-20261010-001",
+  "evidence_directory": "control-plane/release-candidates/v1-etr-20261010-120500",
+  "evidence_timestamp_utc": "2026-10-10T12:05:00Z",
+  "git_commit": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "git_commit_short": "8f86bed",
+  "branch": "codex/fullroot-control-20261007",
+  "platform": "win32",
+  "python_version": "3.13.15",
+  "pytest_version": "9.1.1",
+  "isolation": {
+    "network_blocked": true,
+    "filesystem_writes_scoped": true,
+    "active_data_blocked": true,
+    "subprocess_blocked": true,
+    "cache_isolated": true
+  },
+  "command": [
+    "python",
+    "tests/run_evidence_tests_isolated.py",
+    "control-plane/release-candidates/v1-etr-20261010-120500"
+  ],
+  "exit_code": 0,
+  "test_counts": {
+    "collected": 22,
+    "passed": 22,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "test_scope": [
+    "tests/test_evidence_registry.py",
+    "tests/test_evidence_decision_api.py",
+    "tests/test_evidence_runner_guards.py"
+  ],
+  "source_sha256": {
+    "tests/run_evidence_tests_isolated.py": {
+      "sha256": "2d88efe965631f00c8b80c20f1b880f1f636e0f08c922b1fceaf83ad2dbd3521",
+      "matches_expected": true
+    },
+    "tests/test_evidence_runner_guards.py": {
+      "sha256": "8858f4ad4f5fe6fe594bad89c0cd4969ab397e184c0001c91a37cb595fb3288b",
+      "matches_expected": true
+    },
+    "tests/test_evidence_registry.py": {
+      "sha256": "d6dc1e02252d948429d360b3c9a8955d316afbcdb057c602fd97c62e3504c506",
+      "matches_expected": true
+    },
+    "tests/test_evidence_decision_api.py": {
+      "sha256": "60bccc558b2f6f8f42547341a575615de6acbad5c8dbf5956b423bc78fd7157a",
+      "matches_expected": true
+    },
+    "tests/pytest-evidence.ini": {
+      "sha256": "c14b489a30afe60312242394d2e54d37d23e99ccef8d68f203807b76e325c758",
+      "matches_expected": true
+    },
+    "app/core/evidence_registry.py": {
+      "sha256": "2cdf516a0c258e661d456e4de30450421d08f80d6a670cebc4d07816a780ed0a",
+      "matches_expected": true
+    },
+    "app/api/control_plane.py": {
+      "sha256": "339ac38bcbbc42825caf09b9f1ec3bad837cf8a0202672ed0c1a11df4475a958",
+      "matches_expected": true
+    },
+    "control-plane/evidence-requirements.json": {
+      "sha256": "f884ddd56f3b0431b7e83db3f4cccb12b5748d42edc59dac4431151030258e4a",
+      "matches_expected": true
+    }
+  },
+  "source_verification": true,
+  "test_run_manifest_path": "test-run.json",
+  "test_run_manifest_sha256": "065d6beb5c3115a5c52cdb848b64d091d76a712f28741571e76070c20a757b04",
+  "results_bundle_path": "results-bundle.json",
+  "results_bundle_sha256": "8ef665707cc48df5c380d25a34254a278984ebbb59b2aae4c2e9874935428fdc",
+  "xml_results_path": "python-results.xml",
+  "xml_results_sha256": "bb4640a0788e8d33c4d24c6e28ac28744ae63ba59f5fe54d7391247ba072a56d",
+  "bundle_sha256": {
+    "exit.txt": {
+      "sha256": "418a5c17f33c70e99b0cc0a07fce69191489cfedc94164bfa903785777c5bd4b",
+      "bytes": 7
+    },
+    "git-status.txt": {
+      "sha256": "8b3c6f08abd0063a8c1a87624aee48718bc7f325e8d6e3557f65560b8ec35153",
+      "bytes": 11605
+    },
+    "guard-descriptor-check.txt": {
+      "sha256": "460ee6aa3a80359181b794cc31a7185addba77626e9f719c10e3c8efb8668a1d",
+      "bytes": 7
+    },
+    "guard-reuse-check.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "guard-write-check.txt": {
+      "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+      "bytes": 2
+    },
+    "manifest.json": {
+      "sha256": "b1e87a8a3d3b4eb7f4575bbdf7c1a89ee50a8e5aac2c8fb8375c5512ef73c0ff",
+      "bytes": 7356
+    },
+    "pytest-stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "pytest-stdout.log": {
+      "sha256": "b3011b2855687555ca3626922cde3d0da35164d402d0adebbe9d5dff7216f87f",
+      "bytes": 2756
+    },
+    "pytest.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "python-results.xml": {
+      "sha256": "bb4640a0788e8d33c4d24c6e28ac28744ae63ba59f5fe54d7391247ba072a56d",
+      "bytes": 2891
+    },
+    "results-bundle.json": {
+      "sha256": "8ef665707cc48df5c380d25a34254a278984ebbb59b2aae4c2e9874935428fdc",
+      "bytes": 293
+    },
+    "test-run.json": {
+      "sha256": "065d6beb5c3115a5c52cdb848b64d091d76a712f28741571e76070c20a757b04",
+      "bytes": 1649
+    },
+    "test-summary.json": {
+      "sha256": "df9fd4f2b22bc47d22adb77d1d97ab0f4dc8bec62ef6e952b9b5a562279c9a97",
+      "bytes": 2597
+    },
+    "pytest-tmp/test_audit_chain_detects_tampe0/decisions.jsonl.head.json": {
+      "sha256": "1c6d058a45ce81c834f490ed94df5c6d8ead2805fe8534773cf60f0082a8c2ab",
+      "bytes": 202
+    },
+    "pytest-tmp/test_audit_chain_detects_tampe0/decisions.jsonl.lock": {
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "bytes": 1
+    },
+    "pytest-tmp/test_decision_api_requires_aut0/control_plane/evidence_decisions.jsonl": {
+      "sha256": "ada985529b750f9e32d4f247e153b0db3314fed96d9b594c37b021adbd158ed8",
+      "bytes": 557
+    },
+    "pytest-tmp/test_decision_api_requires_aut0/control_plane/evidence_decisions.jsonl.head.json": {
+      "sha256": "67c343c266ec354a1151efaffea4c67ee38787f8c8110f1c38984f5d8db92690",
+      "bytes": 202
+    },
+    "pytest-tmp/test_decision_api_requires_aut0/control_plane/evidence_decisions.jsonl.lock": {
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "bytes": 1
+    },
+    "pytest-tmp/test_missing_test_run_blocks_p0/control-plane/evidence-requirements.json": {
+      "sha256": "ce5ba00bba223a4a08b6a1f576ded0e2101785145a385b4554624a7d56fadeee",
+      "bytes": 4173
+    },
+    "pytest-tmp/test_package_id_changes_when_e0/source.txt": {
+      "sha256": "16367aacb67a4a017c8da8ab95682ccb390863780f7114dda0a0e0c55644c7c4",
+      "bytes": 6
+    },
+    "pytest-tmp/test_package_id_changes_when_e0/control-plane/evidence-requirements.json": {
+      "sha256": "56855846f5ce6b3db58484a44de5ded48d692b8d854d629010dd400959af0bb1",
+      "bytes": 1430
+    },
+    "pytest-tmp/test_saved_decision_survives_a0/control_plane/evidence_decisions.jsonl": {
+      "sha256": "afd2218c08c03fe1d09c8bc0986b0b20f737e7a9415a90d321c93711ca779efc",
+      "bytes": 521
+    },
+    "pytest-tmp/test_saved_decision_survives_a0/control_plane/evidence_decisions.jsonl.head.json": {
+      "sha256": "84cfe4e4c0e6cfe54e23824b33fd2c21a2ba8c4fcc83ba7c5e2182b2df076d44",
+      "bytes": 202
+    },
+    "pytest-tmp/test_saved_decision_survives_a0/control_plane/evidence_decisions.jsonl.lock": {
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "bytes": 1
+    },
+    "pytest-tmp/test_test_run_manifest_is_boun0/results-bundle.json": {
+      "sha256": "05280975c1166c6835ed3ce5f969765dfd79138f1704c081fed91bb1946e5c7c",
+      "bytes": 118
+    },
+    "pytest-tmp/test_test_run_manifest_is_boun0/results.txt": {
+      "sha256": "b80012851cf027c6d8adda328907d400c95773958fb4fec3e544a02cd5eeab0e",
+      "bytes": 8
+    },
+    "pytest-tmp/test_test_run_manifest_is_boun0/test-run.json": {
+      "sha256": "6ccfb3e339d5faed078088ce098ffc06f72d20b7f5a8dff33b13edb873ec10f1",
+      "bytes": 529
+    },
+    "pytest-tmp/test_validator_distinguishes_a0/present.txt": {
+      "sha256": "fa8f3eec3b8e088dddc5313be16a8f2bbf2a36c0eb3d3c0b197fddc99237a8e2",
+      "bytes": 16
+    }
+  },
+  "change_summary": [
+    {
+      "file": "tests/run_evidence_tests_isolated.py",
+      "change": "blocked(operation, target, reason) now includes operation name, target path, reason, and output dir in RuntimeError message for diagnosis. All 13 call sites updated."
+    },
+    {
+      "file": "tests/test_evidence_runner_guards.py",
+      "change": "Existing tests updated to match new diagnostic format (substring match on operation=). Added test_blocked_error_includes_operation_and_target as new regression test."
+    }
+  ],
+  "remediation": {
+    "root_cause": "blocked() raised RuntimeError with constant string only, providing no operation name or target path. When a test setup/cleanup error hit, the cause was opaque.",
+    "fix": "blocked() now accepts (operation, target, reason) and emits a structured message: 'EVIDENCE_TEST_EXTERNAL_EFFECT_BLOCKED operation=<op> target=<path> reason=<reason> output=<dir>'. All filesystem, database, socket, and audit-hook guard sites updated.",
+    "evidence": "Manual exercise confirms format; new regression test test_blocked_error_includes_operation_and_target verifies both 'open' and 'mkdir' produce the expected substring tokens."
+  }
+}

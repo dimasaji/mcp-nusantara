@@ -1,0 +1,15 @@
+# Security review — scoped foundation
+
+Authoritative actor comes from a sealed native IPC proof, not an Actor dataclass supplied by a caller or reviewer JSON. Proof checks server PID/start, peer primary token, interactive account/logon/session, short expiry and replay identity. Operator policy is explicit; installed app has none. No browser-only authorization or shared-secret fallback exists.
+
+Immutable decision binding covers exact scope, server-generated evidence digest, current process/start/runtime/source/scoped-code/configuration fingerprint and expiry; account/logon/session digest becomes reviewer only after authenticated approval. Every subsequent action must match it. Queue mutable references and audit shallow copies are not returned by public projections. Private memory tampering is tested to fail closed; arbitrary hostile execution inside Python is outside the security claim.
+
+Existing AuditTrail instance and ApprovalQueue provide ledger/approval operations. Only their ATTESTATION instance's record input is projected to reversible short hex groups so 16-digit patterns and secret-key/depth redaction cannot corrupt required identifiers/digests. Before/after semantic comparison and chain verification are required for each write. No new chain, file sink, audit store or NORMAL change. Reasons are bounded enum values, so raw prompt/secret/free text does not enter decision evidence. Internal permit never enters audit fields or external state.
+
+Queue/audit/permit are not a transactional database. Ordering is conservative: under one owner lock validate, decide/consume and audit before grant; any error poisons authority and calls terminal revoke. Post-grant failure clears server token. Existing dispatch counter and expiry guard allow at most one dispatch. Authenticated duplicates during an execution can conservatively abort the owner, even when a provider response subsequently arrives; this favors safety over availability. Failed audit cannot trigger an alternative sink/retry; failure event is attempted only in the same existing ledger.
+
+Live barrier: no MockTransport means ARM/EXECUTE reject; composition supplies none, no policy, no IPC listener and no public mutation endpoint. Isolated transport overrides require exact existing httpx.MockTransport and remain inside strict single-dispatch provider transport. These tests simulate provider responses; no live generation proof is asserted.
+
+Response_observed, application_response_sent and external_client_observed stay separate. Direct bridge return/IPC write cannot mark final ASGI delivery; only the existing successful final-send observer does. Abort after dispatch cannot prove cancellation/no provider receipt; actual observed model/response metadata is retained without generated content.
+
+ATTESTATION snapshot never calls legacy protected-file digest projection; guard tests trap it. NORMAL projection and audit remain unchanged. UI compatibility, browser authorization, live operator provisioning, synchronous IPC availability/lifecycle, stronger human-presence assurance, durable audit and full build verification remain outside this scope.

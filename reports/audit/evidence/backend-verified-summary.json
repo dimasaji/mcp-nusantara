@@ -1,0 +1,977 @@
+{
+  "counts": {
+    "error": 47,
+    "GUARD": 85,
+    "failure": 44,
+    "OTHER": 6,
+    "passed": 1040,
+    "skipped": 21
+  },
+  "modules": {
+    "": {
+      "error": 12
+    },
+    "tests.evaluation.test_live_harness.LiveHarness": {
+      "failure": 2,
+      "passed": 7
+    },
+    "tests.test_admin_token_source": {
+      "passed": 3
+    },
+    "tests.test_approval_persistence": {
+      "passed": 2
+    },
+    "tests.test_audit_file_writers": {
+      "passed": 2
+    },
+    "tests.test_audit_regressions": {
+      "passed": 15,
+      "failure": 9
+    },
+    "tests.test_backend_runtime_fixture": {
+      "failure": 1
+    },
+    "tests.test_backup_restore": {
+      "passed": 5
+    },
+    "tests.test_chat_identity_greeting": {
+      "passed": 8
+    },
+    "tests.test_chat_policy_handoff_regression": {
+      "passed": 5
+    },
+    "tests.test_configuration_contract": {
+      "passed": 56
+    },
+    "tests.test_configuration_integration": {
+      "passed": 12,
+      "failure": 1
+    },
+    "tests.test_control_plane_attestation_binding": {
+      "passed": 30,
+      "failure": 1
+    },
+    "tests.test_control_plane_readonly": {
+      "passed": 20,
+      "failure": 1
+    },
+    "tests.test_cost_governance_reference": {
+      "passed": 8
+    },
+    "tests.test_cost_ledger_v1": {
+      "passed": 7
+    },
+    "tests.test_cost_summary_api": {
+      "passed": 2
+    },
+    "tests.test_developer_control": {
+      "passed": 8
+    },
+    "tests.test_developer_core_engine_contract": {
+      "passed": 22
+    },
+    "tests.test_docling_layout": {
+      "passed": 3
+    },
+    "tests.test_document_answers": {
+      "passed": 2,
+      "failure": 1
+    },
+    "tests.test_document_context": {
+      "passed": 3
+    },
+    "tests.test_document_scope_v1": {
+      "passed": 2
+    },
+    "tests.test_document_tools": {
+      "passed": 2
+    },
+    "tests.test_effective_rag_profile": {
+      "passed": 29
+    },
+    "tests.test_evidence_decision_api": {
+      "passed": 5
+    },
+    "tests.test_evidence_finalization": {
+      "passed": 4
+    },
+    "tests.test_evidence_registry": {
+      "passed": 12
+    },
+    "tests.test_evidence_runner_guards": {
+      "failure": 5,
+      "passed": 3,
+      "skipped": 1
+    },
+    "tests.test_evidence_runner_subprocess": {
+      "failure": 1
+    },
+    "tests.test_fullroot_boundaries": {
+      "passed": 6
+    },
+    "tests.test_gate14_developer_core": {
+      "passed": 4,
+      "failure": 1
+    },
+    "tests.test_gate14_mapper_impact": {
+      "passed": 5
+    },
+    "tests.test_gate_integration": {
+      "passed": 3
+    },
+    "tests.test_gates_8_16": {
+      "passed": 6
+    },
+    "tests.test_hermes_acp_connection": {
+      "passed": 3,
+      "failure": 2
+    },
+    "tests.test_hermes_v1_conversation": {
+      "passed": 53,
+      "skipped": 2
+    },
+    "tests.test_indobert_timeout": {
+      "failure": 1
+    },
+    "tests.test_ingestion_atomic_profiles": {
+      "passed": 4
+    },
+    "tests.test_inspection_preview_api": {
+      "passed": 36
+    },
+    "tests.test_knowledge_pipeline": {
+      "passed": 5
+    },
+    "tests.test_knowledge_pipeline_api": {
+      "passed": 7
+    },
+    "tests.test_language_normalizer.NormalizerRegressionTest": {
+      "passed": 9
+    },
+    "tests.test_language_normalizer.DictionaryHygieneTest": {
+      "passed": 2
+    },
+    "tests.test_language_normalizer.IntentReportingTest": {
+      "passed": 2
+    },
+    "tests.test_language_normalizer.EngineIntegrationTest": {
+      "passed": 1
+    },
+    "tests.test_laya_intent": {
+      "passed": 19
+    },
+    "tests.test_local_operator_identity": {
+      "failure": 1,
+      "passed": 23
+    },
+    "tests.test_local_services_contract": {
+      "failure": 2,
+      "passed": 1
+    },
+    "tests.test_mcp_stdio": {
+      "failure": 1
+    },
+    "tests.test_model_inventory_provider_boundary": {
+      "passed": 2
+    },
+    "tests.test_model_router_configuration": {
+      "passed": 14
+    },
+    "tests.test_model_status_inference_v1": {
+      "passed": 2
+    },
+    "tests.test_ncp_v1_chat_contract": {
+      "passed": 13
+    },
+    "tests.test_normal_plan": {
+      "passed": 2
+    },
+    "tests.test_openrouter_cancellation_v1": {
+      "passed": 1
+    },
+    "tests.test_openrouter_cost_guard_v1": {
+      "passed": 1
+    },
+    "tests.test_openrouter_cost_integration_v1": {
+      "passed": 5
+    },
+    "tests.test_openrouter_cost_policy_v1": {
+      "passed": 4
+    },
+    "tests.test_openrouter_failure_safety_v1": {
+      "passed": 2
+    },
+    "tests.test_openrouter_provider": {
+      "passed": 37
+    },
+    "tests.test_openwebui_adapt": {
+      "passed": 6
+    },
+    "tests.test_pdf_preview": {
+      "passed": 1
+    },
+    "tests.test_phase2_hardening": {
+      "passed": 10
+    },
+    "tests.test_phase3_observability": {
+      "passed": 10
+    },
+    "tests.test_phase4_trust_contract": {
+      "passed": 11
+    },
+    "tests.test_phase4_v1_trust_integration": {
+      "passed": 5
+    },
+    "tests.test_provider_failure": {
+      "passed": 8
+    },
+    "tests.test_provider_identity": {
+      "passed": 46,
+      "failure": 2
+    },
+    "tests.test_pytest_collection": {
+      "failure": 1
+    },
+    "tests.test_research_persistence": {
+      "passed": 1
+    },
+    "tests.test_retrieval_evidence_persistence": {
+      "passed": 3
+    },
+    "tests.test_review_branch": {
+      "failure": 1
+    },
+    "tests.test_runtime_attestation": {
+      "passed": 15,
+      "failure": 1
+    },
+    "tests.test_runtime_authorization": {
+      "passed": 39
+    },
+    "tests.test_runtime_build_provenance": {
+      "passed": 24
+    },
+    "tests.test_runtime_correlation": {
+      "passed": 45
+    },
+    "tests.test_runtime_identity": {
+      "passed": 1,
+      "failure": 1
+    },
+    "tests.test_runtime_verification": {
+      "passed": 25,
+      "failure": 3
+    },
+    "tests.test_selected_pdf_chat": {
+      "passed": 7
+    },
+    "tests.test_semantic_cold_start": {
+      "passed": 1
+    },
+    "tests.test_session_memory": {
+      "passed": 6,
+      "failure": 1
+    },
+    "tests.test_sop_ingestion": {
+      "passed": 3
+    },
+    "tests.test_sop_review": {
+      "passed": 4
+    },
+    "tests.test_source_fetcher": {
+      "passed": 7
+    },
+    "tests.test_trace_retention": {
+      "passed": 2
+    },
+    "tests.test_v1_chat_history": {
+      "passed": 4
+    },
+    "tests.test_v1_execution_evidence": {
+      "passed": 7
+    },
+    "tests.test_v1_langgraph": {
+      "passed": 3,
+      "skipped": 15
+    },
+    "tests.test_v1_laya_integration": {
+      "passed": 3
+    },
+    "tests.test_v1_live_smoke": {
+      "skipped": 3
+    },
+    "tests.test_v1_operational_data": {
+      "passed": 7
+    },
+    "tests.test_v1_operator_control": {
+      "passed": 7,
+      "error": 19
+    },
+    "tests.test_v1_review_execution_api": {
+      "error": 16
+    },
+    "tests.test_v1_service_dialogue": {
+      "passed": 23
+    },
+    "tests.test_v1_smoke": {
+      "failure": 3
+    },
+    "tests.test_v1_sop_boundary": {
+      "passed": 19
+    },
+    "tests.test_v1_stream_transport": {
+      "passed": 2
+    },
+    "tests.test_v1_targeted_boundaries": {
+      "passed": 13
+    },
+    "tests.test_web_evidence_pipeline": {
+      "passed": 94
+    },
+    "tests.test_weip_rag_adapter": {
+      "passed": 29
+    },
+    "tests.test_worker_process": {
+      "failure": 1
+    }
+  },
+  "failures": [
+    {
+      "module": "",
+      "test": "tests.evaluation.test_smoke",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_chat_openrouter_route_wiring_v1",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_chat_request_idempotency",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_hermes_v1_arithmetic",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_phase3_http_integration",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_phase3_metrics_integration",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_phase3_v1_metrics_integration",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_phase4_v1_chat_runtime",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_v1_chat_rag_regression",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_v1_current_ui_contract",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_v1_response_projection",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "",
+      "test": "tests.test_v1_stage_budget",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "collection failure"
+    },
+    {
+      "module": "tests.evaluation.test_live_harness.LiveHarness",
+      "test": "test_cli_captures_live_baseline_and_detects_regression",
+      "kind": "failure",
+      "category": "OTHER",
+      "message": "AssertionError: 2 != 0"
+    },
+    {
+      "module": "tests.evaluation.test_live_harness.LiveHarness",
+      "test": "test_v1_transport_maps_evidence_and_isolates_sessions",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "urllib.error.URLError: <urlopen error AUDIT_GUARD_BLOCKED: socket.connect: external_network_disabled>"
+    },
+    {
+      "module": "tests.test_audit_regressions",
+      "test": "test_privileged_api_denies_before_access[False-None-/v2/dev-payload0]",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_audit_regressions",
+      "test": "test_privileged_api_denies_before_access[False-None-/v1/documents/ingest-payload1]",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_audit_regressions",
+      "test": "test_privileged_api_denies_before_access[True-None-/v2/dev-payload0]",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_audit_regressions",
+      "test": "test_privileged_api_denies_before_access[True-None-/v1/documents/ingest-payload1]",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_audit_regressions",
+      "test": "test_privileged_api_denies_before_access[True-invalid-/v2/dev-payload0]",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_audit_regressions",
+      "test": "test_privileged_api_denies_before_access[True-invalid-/v1/documents/ingest-payload1]",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_audit_regressions",
+      "test": "test_privileged_api_denies_before_access[True-invalid-\\u2603-/v2/dev-payload0]",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_audit_regressions",
+      "test": "test_privileged_api_denies_before_access[True-invalid-\\u2603-/v1/documents/ingest-payload1]",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_audit_regressions",
+      "test": "test_authorized_developer_lists_workspace",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_backend_runtime_fixture",
+      "test": "test_backend_process_ingestion_retrieval_chat_and_history",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_configuration_integration",
+      "test": "test_guarded_api_assembly_and_public_regression",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_control_plane_attestation_binding",
+      "test": "test_guarded_application_composition_no_network_or_protected_state",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_control_plane_readonly",
+      "test": "test_evidence_only_real_entrypoint_skips_production_owners",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_document_answers",
+      "test": "test_cost_absence_reaches_public_chat_without_an_intent_mapping_error",
+      "kind": "failure",
+      "category": "OTHER",
+      "message": "AssertionError: assert 'Biaya belum ...alam SOP ini.' == 'Informasi bi...alam SOP ini.'\n  \n  - Informasi biaya belum tercantum dalam SOP ini.\n  ? ^^^^^^^^^^^\n  + Biaya belum tercantum dalam SOP ini.\n  ? ^"
+    },
+    {
+      "module": "tests.test_evidence_runner_guards",
+      "test": "test_output_writes_are_allowed_and_outside_writes_blocked",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: open: write_outside_audit_run:C:\\Users\\dmaza\\mcp-starter\\tests\\test_output\\guard-write-check.txt"
+    },
+    {
+      "module": "tests.test_evidence_runner_guards",
+      "test": "test_blocked_error_includes_operation_and_target",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: os.mkdir: mutation_outside_audit_run"
+    },
+    {
+      "module": "tests.test_evidence_runner_guards",
+      "test": "test_unknown_descriptor_is_rejected_by_all_open_guards",
+      "kind": "failure",
+      "category": "OTHER",
+      "message": "OSError: [Errno 9] Bad file descriptor"
+    },
+    {
+      "module": "tests.test_evidence_runner_guards",
+      "test": "test_output_descriptor_and_pytest_style_duplicate_are_allowed",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: open: write_outside_audit_run:C:\\Users\\dmaza\\mcp-starter\\tests\\test_output\\guard-descriptor-check.txt"
+    },
+    {
+      "module": "tests.test_evidence_runner_guards",
+      "test": "test_descriptor_number_reuse_does_not_retain_authorization",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: open: write_outside_audit_run:C:\\Users\\dmaza\\mcp-starter\\tests\\test_output\\guard-reuse-check.txt"
+    },
+    {
+      "module": "tests.test_evidence_runner_subprocess",
+      "test": "test_evidence_guards_in_their_own_runner",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_gate14_developer_core",
+      "test": "test_gate14_existing_graphify",
+      "kind": "failure",
+      "category": "OTHER",
+      "message": "assert False is True"
+    },
+    {
+      "module": "tests.test_hermes_acp_connection",
+      "test": "test_closed_acp_process_maps_known_stderr_without_exposing_its_path",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_hermes_acp_connection",
+      "test": "test_initialize_handshake_accepts_only_hermes_agent_identity",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_indobert_timeout",
+      "test": "test_hung_worker_is_terminated_and_can_recover",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_local_operator_identity",
+      "test": "test_actual_windows_peer_session_server_and_launcher_correlation",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_local_services_contract",
+      "test": "test_restart_wrapper_delegates_and_preserves_failure",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_local_services_contract",
+      "test": "test_lifecycle_ownership_and_recovery",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_mcp_stdio",
+      "test": "test_real_stdio_discovery_call_rejection_and_audit",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_provider_identity",
+      "test": "test_runtime_instances_differ_in_real_subprocesses",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_provider_identity",
+      "test": "test_public_request_response_models_and_routes_unchanged",
+      "kind": "failure",
+      "category": "OTHER",
+      "message": "assert (['ClassDef(n...')])\"]), ...]) == (['ClassDef(n...')])\"]), ...])\n  \n  At index 0 diff: [\"ClassDef(name='ChatRequest', bases=[Name(id='BaseModel', ctx=Load())], body=[AnnAssign(target=Name(id='sop_version', ctx=Store()), annotation=BinOp(left=Name(id='str', ctx=Load()), op=BitOr(), right=Constant(value=None)), value=Call(func=Name(id='Field', ctx=Load()), keywords=[keyword(arg='default', value=Constant(value=None)), keyword(arg='pattern', value=Constant(value='^[a-f0-9]{64}$'))]), simple=1), AnnAssign(target=Name(id='sop_case', ctx=Store()), annotation=BinOp(left=Subscript(value=Name(id='Literal', ctx=Load()), slice=Tuple(elts=[Constant(va...\n  \n  ...Full output truncated (2 lines hidden), use '-vv' to show"
+    },
+    {
+      "module": "tests.test_pytest_collection",
+      "test": "test_collection_keeps_active_tests_and_ignores_backup_modules",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_review_branch",
+      "test": "test_git_branch_requires_durable_approved_payload",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_runtime_attestation",
+      "test": "test_new_processes_have_distinct_instances_and_actual_main_integration",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_runtime_identity",
+      "test": "test_health_reports_same_loaded_build",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_runtime_verification",
+      "test": "test_normal_app_composition_preserves_existing_routers_and_caller_ids",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_runtime_verification",
+      "test": "test_existing_public_v1_v2_configuration_and_control_plane_sources_untouched",
+      "kind": "failure",
+      "category": "OTHER",
+      "message": "AssertionError: app/api/routes.py"
+    },
+    {
+      "module": "tests.test_runtime_verification",
+      "test": "test_attestation_real_app_boot_request_response_shutdown_avoid_protected_state",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    },
+    {
+      "module": "tests.test_session_memory",
+      "test": "test_http_opt_in_and_delete",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_operator_model_is_used_by_real_hermes_and_public_projection",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_ollama_inventory_and_chat_use_selected_qwen_without_openrouter",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_ollama_inventory_failure_does_not_change_provider_selection",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_standalone_greeting_is_nonfactual_local_response[Hallo]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_standalone_greeting_is_nonfactual_local_response[Halo]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_standalone_greeting_is_nonfactual_local_response[Hai]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_standalone_greeting_is_nonfactual_local_response[Selamat pagi]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_standalone_greeting_is_nonfactual_local_response[  HALLO!  ]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_substantive_and_followup_questions_never_take_greeting_shortcut[Hallo, apa syarat membuat KTP?]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_substantive_and_followup_questions_never_take_greeting_shortcut[Halo apa biaya KTP?]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_substantive_and_followup_questions_never_take_greeting_shortcut[Apa syaratnya?]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_substantive_and_followup_questions_never_take_greeting_shortcut[Lalu berapa biayanya?]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_auth_unavailable_failure_and_conflict_never_change_selection",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_unsupported_knowledge_filter_is_rejected_before_retrieval",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_model_change_during_request_does_not_rebind_its_provider",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_inventory_race_fails_cas_without_applying_stale_operator_choice",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_evidence_profile_external_origin_and_missing_admin_fail_closed",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_document_chat_requires_auth_and_never_dispatches_to_external_provider",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_operator_control",
+      "test": "test_stream_final_uses_the_same_public_projection_and_replays_once",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_review_governance_executor_history[PASS]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_review_governance_executor_history[FAIL]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_review_governance_executor_history[HOLD]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_review_governance_executor_history[none]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_review_governance_executor_history[expired]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_review_governance_executor_history[different_evidence]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_review_governance_executor_history[changed_source]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_unauthorized_execution_does_not_write",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_operation_summary_stops_requesting_review_after_completion",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_unbound_pass_does_not_authorize_action",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_changed_plan_cannot_receive_stale_ui_approval",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_plan_changed_after_approval_is_rejected_and_recorded",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_copy_failure_is_persisted_and_cannot_reuse_approval",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_latest_hold_revokes_pass_without_erasing_history",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_other_runtime_profiles_cannot_reach_v1_mutation[ATTESTATION]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_review_execution_api",
+      "test": "test_other_runtime_profiles_cannot_reach_v1_mutation[EVIDENCE_ONLY]",
+      "kind": "error",
+      "category": "GUARD",
+      "message": "failed on setup with \"PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled\""
+    },
+    {
+      "module": "tests.test_v1_smoke",
+      "test": "test_v1_chat_does_not_500",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_v1_smoke",
+      "test": "test_v1_problem_analyze_does_not_500",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_v1_smoke",
+      "test": "test_v1_knowledge_search_does_not_500",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: sqlite3.connect: database_outside_audit_run"
+    },
+    {
+      "module": "tests.test_worker_process",
+      "test": "test_timeout_stops_the_python_child_tree",
+      "kind": "failure",
+      "category": "GUARD",
+      "message": "PermissionError: AUDIT_GUARD_BLOCKED: subprocess.Popen: subprocess_disabled"
+    }
+  ]
+}

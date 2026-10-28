@@ -1,0 +1,178 @@
+[
+  {
+    "run": "regression-20261009-185326",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+    "counts": null,
+    "limitation": "JUnit incomplete after blocked platform.node subprocess; not a PASS.",
+    "exit_code": 1,
+    "deselected": 3
+  },
+  {
+    "run": "regression-20261009-185424",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+    "counts": {
+      "tests": 157,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 156
+    },
+    "failures": [
+      "test_public_request_response_models_and_routes_unchanged"
+    ],
+    "exit_code": 1,
+    "deselected": 3
+  },
+  {
+    "run": "regression-20261009-185632",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+    "counts": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0,
+      "passed": 0
+    },
+    "failures": [
+      "tests.test_openrouter_provider"
+    ],
+    "exit_code": 2,
+    "deselected": 3
+  },
+  {
+    "run": "regression-20261009-185646",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+    "counts": {
+      "tests": 166,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 166
+    },
+    "failures": [],
+    "exit_code": 0,
+    "deselected": 3
+  },
+  {
+    "run": "regression-20261009-185807",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+    "counts": {
+      "tests": 169,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 167
+    },
+    "failures": [
+      "test_actual_chat_endpoint_selects_only_explicit_provider_and_projects[ollama]",
+      "test_actual_chat_endpoint_selects_only_explicit_provider_and_projects[openrouter]"
+    ],
+    "exit_code": 1,
+    "deselected": 3
+  },
+  {
+    "run": "regression-20261009-185830",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+    "counts": {
+      "tests": 169,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 167
+    },
+    "failures": [
+      "test_actual_chat_endpoint_selects_only_explicit_provider_and_projects[ollama]",
+      "test_actual_chat_endpoint_selects_only_explicit_provider_and_projects[openrouter]"
+    ],
+    "exit_code": 1,
+    "deselected": 3
+  },
+  {
+    "run": "regression-20261009-185852",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+    "counts": {
+      "tests": 169,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 169
+    },
+    "failures": [],
+    "exit_code": 0,
+    "deselected": 3
+  },
+  {
+    "run": "regression-20261009-190056",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression",
+    "counts": {
+      "tests": 169,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 169
+    },
+    "failures": [],
+    "exit_code": 0,
+    "deselected": 3
+  },
+  {
+    "run": "stage1-20261009-184852",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py stage1",
+    "counts": {
+      "tests": 40,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 39
+    },
+    "failures": [
+      "test_existing_chat_projection_contract_without_importing_application"
+    ],
+    "exit_code": 1,
+    "deselected": 0
+  },
+  {
+    "run": "stage1-final-20261009-184945",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py stage1-final",
+    "counts": {
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 40
+    },
+    "failures": [],
+    "exit_code": 0,
+    "deselected": 0
+  },
+  {
+    "run": "stage1-fixed-20261009-184918",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py stage1-fixed",
+    "counts": {
+      "tests": 40,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 39
+    },
+    "failures": [
+      "test_existing_chat_projection_contract_without_importing_application"
+    ],
+    "exit_code": 1,
+    "deselected": 0
+  },
+  {
+    "run": "workflow-20261009-185310",
+    "command": ".venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py workflow",
+    "counts": {
+      "tests": 57,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 57
+    },
+    "failures": [],
+    "exit_code": 0,
+    "deselected": 0
+  }
+]

@@ -1,0 +1,23 @@
+import {createRootRoute,createRoute,createRouter} from '@tanstack/react-router';
+import {Shell,Page} from './ui';
+import {HumanPage} from './human';
+import {UserChat,OperatorConsole} from './assistant';
+const root=createRootRoute({component:Shell});
+const index=createRoute({getParentRoute:()=>root,path:'/',component:UserChat});
+const consoleRoute=createRoute({getParentRoute:()=>root,path:'/console',component:OperatorConsole});
+const overview=createRoute({getParentRoute:()=>root,path:'/overview',component:()=> <HumanPage stage="System"/>});
+const system=createRoute({getParentRoute:()=>root,path:'/system',component:()=> <HumanPage stage="System"/>});
+const evidence=createRoute({getParentRoute:()=>root,path:'/evidence',component:()=> <HumanPage stage="Evidence"/>});
+const humanTest=createRoute({getParentRoute:()=>root,path:'/test',component:()=> <HumanPage stage="Test"/>});
+const review=createRoute({getParentRoute:()=>root,path:'/review',component:()=> <HumanPage stage="Review"/>});
+const decision=createRoute({getParentRoute:()=>root,path:'/decision',component:()=> <HumanPage stage="Decision"/>});
+const engineeringOverview=createRoute({getParentRoute:()=>root,path:'/engineering-overview',component:()=> <Page name="Overview"/>});
+const roadmap=createRoute({getParentRoute:()=>root,path:'/roadmap',component:()=> <Page name="Roadmap"/>});
+const architecture=createRoute({getParentRoute:()=>root,path:'/architecture',component:()=> <Page name="Architecture"/>});
+const engineering=createRoute({getParentRoute:()=>root,path:'/engineering',component:()=> <Page name="Engineering"/>});
+const governance=createRoute({getParentRoute:()=>root,path:'/governance',component:()=> <Page name="Governance"/>});
+const verification=createRoute({getParentRoute:()=>root,path:'/verification',component:()=> <Page name="Verification"/>});
+const runtime=createRoute({getParentRoute:()=>root,path:'/runtime',component:()=> <Page name="Runtime"/>});
+const knowledge=createRoute({getParentRoute:()=>root,path:'/knowledge',component:()=> <Page name="Knowledge"/>});
+export const router=createRouter({routeTree:root.addChildren([index,consoleRoute,overview,system,evidence,humanTest,review,decision,engineeringOverview,roadmap,architecture,engineering,governance,verification,runtime,knowledge])});
+declare module '@tanstack/react-router'{interface Register{router:typeof router}}

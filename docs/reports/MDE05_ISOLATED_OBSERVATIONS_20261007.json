@@ -1,0 +1,70 @@
+{
+  "observations": [
+    {
+      "name": "hardcoded_hybrid_weight",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "score": 0.7,
+        "metadata": {
+          "semantic_weight": 0.7,
+          "lexical_weight": 0.3,
+          "candidate_k": 20
+        }
+      },
+      "scope": "Isolated fake store/custom embedding; not production RAG or model verification"
+    },
+    {
+      "name": "source_attribution_can_be_empty",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "source": "",
+        "retained": 1
+      },
+      "scope": "Isolated fake store/custom embedding; not production RAG or model verification"
+    },
+    {
+      "name": "zero_topk_uses_config_truthiness",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "requested_top_k": 0,
+        "configured_top_k": 2,
+        "candidate_k": 20
+      },
+      "scope": "Isolated fake store/custom embedding; not production RAG or model verification"
+    },
+    {
+      "name": "reranker_label_not_execution_identity",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "label": "never-loaded-cross-encoder",
+        "reranked": true,
+        "operation": "existing _simple_rerank keyword overlap",
+        "score": 1.0
+      },
+      "scope": "Isolated fake store/custom embedding; not production RAG or model verification"
+    },
+    {
+      "name": "explicit_kb_configuration_precedes_snapshot",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "snapshot": 3,
+        "effective_kb": 7
+      },
+      "scope": "Isolated fake store/custom embedding; not production RAG or model verification"
+    },
+    {
+      "name": "unwired_weights_fail_closed",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "error": "Configuration error: RAG_PARAMETER_NOT_INTEGRATED"
+      },
+      "scope": "Isolated fake store/custom embedding; not production RAG or model verification"
+    }
+  ],
+  "asserted": 6,
+  "passed": 6,
+  "production_database_opened": false,
+  "worker_started": false,
+  "provider_called": false,
+  "index_rebuilt": false
+}

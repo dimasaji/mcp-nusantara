@@ -1,0 +1,77 @@
+--- a/control-plane/src/router.tsx
++++ b/control-plane/src/router.tsx
+@@ -4,6 +4,7 @@
+ import {UserChat,OperatorConsole} from './assistant';
+ const root=createRootRoute({component:Shell});
+ const index=createRoute({getParentRoute:()=>root,path:'/',component:UserChat});
++const uiAlias=createRoute({getParentRoute:()=>root,path:'/ui',component:UserChat});
+ const consoleRoute=createRoute({getParentRoute:()=>root,path:'/console',component:OperatorConsole});
+ const overview=createRoute({getParentRoute:()=>root,path:'/overview',component:()=> <HumanPage stage="System"/>});
+ const system=createRoute({getParentRoute:()=>root,path:'/system',component:()=> <HumanPage stage="System"/>});
+@@ -19,5 +20,5 @@
+ const verification=createRoute({getParentRoute:()=>root,path:'/verification',component:()=> <Page name="Verification"/>});
+ const runtime=createRoute({getParentRoute:()=>root,path:'/runtime',component:()=> <Page name="Runtime"/>});
+ const knowledge=createRoute({getParentRoute:()=>root,path:'/knowledge',component:()=> <Page name="Knowledge"/>});
+-export const router=createRouter({routeTree:root.addChildren([index,consoleRoute,overview,system,evidence,humanTest,review,decision,engineeringOverview,roadmap,architecture,engineering,governance,verification,runtime,knowledge])});
++export const router=createRouter({routeTree:root.addChildren([index,uiAlias,consoleRoute,overview,system,evidence,humanTest,review,decision,engineeringOverview,roadmap,architecture,engineering,governance,verification,runtime,knowledge])});
+ declare module '@tanstack/react-router'{interface Register{router:typeof router}}
+--- a/control-plane/src/ui.tsx
++++ b/control-plane/src/ui.tsx
+@@ -11,7 +11,7 @@
+ export type PageName=typeof navigation[number];
+ const snapshotKey=['control-plane','snapshot'];
+ export function Badge({status}:{status:string}){const tone=status==='PASS'||status==='CLOSED_PASS'||status==='UNCHANGED'?'good':status.includes('FAIL')||status==='ERROR'?'bad':'neutral';return <span className={`badge ${tone}`}>{status}</span>}
+-export function Shell(){const pathname=useRouterState({select:s=>s.location.pathname});if(pathname==='/')return <main className="user-app"><Outlet/></main>;return <HumanProvider><div className="shell"><aside><Link className="brand" to="/overview"><span className="mark">N</span><span>NUSANTARA<small>HUMAN ACCEPTANCE CONSOLE</small></span></Link><div className="mode">INSPECT · TEST · REVIEW · DECIDE</div><nav aria-label="Runtime control"><Link to="/">Asisten AI</Link><Link to="/console">Kendali runtime</Link></nav><HumanNavigation/><details className="engineering-nav"><summary>Engineering views</summary><nav aria-label="Engineering views">{navigation.map(name=><Link key={name} to={(name==='Overview'?'/engineering-overview':`/${name.toLowerCase()}`) as '/overview'} activeProps={{className:'active'}}><span className="navdot"/>{name==='Overview'?'Engineering overview':name}</Link>)}</nav></details><div className="sidebar-foot">Read-only engineering evidence<br/>Human decisions remain yours<details><summary>Frontend build identity</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details></div></aside><main><Outlet/></main></div></HumanProvider>}
++export function Shell(){const pathname=useRouterState({select:s=>s.location.pathname});if(pathname==='/'||pathname==='/ui')return <main className="user-app"><Outlet/></main>;return <HumanProvider><div className="shell"><aside><Link className="brand" to="/overview"><span className="mark">N</span><span>NUSANTARA<small>HUMAN ACCEPTANCE CONSOLE</small></span></Link><div className="mode">INSPECT · TEST · REVIEW · DECIDE</div><nav aria-label="Runtime control"><Link to="/">Asisten AI</Link><Link to="/console">Kendali runtime</Link></nav><HumanNavigation/><details className="engineering-nav"><summary>Engineering views</summary><nav aria-label="Engineering views">{navigation.map(name=><Link key={name} to={(name==='Overview'?'/engineering-overview':`/${name.toLowerCase()}`) as '/overview'} activeProps={{className:'active'}}><span className="navdot"/>{name==='Overview'?'Engineering overview':name}</Link>)}</nav></details><div className="sidebar-foot">Read-only engineering evidence<br/>Human decisions remain yours<details><summary>Frontend build identity</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details></div></aside><main><Outlet/></main></div></HumanProvider>}
+ export function Evidence({state,ids}:{state:SystemHealth;ids:string[]}){return <details className="trace"><summary>Trace to evidence · {ids.length}</summary>{ids.map(id=>{const e=state.evidence.find(x=>x.id===id);return <div key={id}><strong>{id}</strong><Badge status={e?.status??'NOT_VERIFIED'}/><code>{e?.reference??'Source unavailable'}</code><small>SHA-256 {e?.sha256??'NOT_VERIFIED'}</small></div>})}</details>}
+ export function Page({name}:{name:PageName}){return name==='Overview'?<EngineeringConsole/>:<EvidencePage name={name}/>}
+ function EvidencePage({name}:{name:PageName}){const q=useQuery({queryKey:snapshotKey,queryFn:({signal})=>fetchSnapshot(signal)});return <><header><div><div className="eyebrow">NUSANTARA CORE + HERMES / {name.toUpperCase()}</div><h1>{name}</h1></div><button onClick={()=>void q.refetch()} disabled={q.isFetching}>{q.isFetching?'Refreshing…':'↻ Refresh evidence'}</button></header>{q.isPending?<section className="panel" role="status">LOADING · Reading engineering evidence…</section>:q.isError?<section className="panel error" role="alert"><h2>ERROR · Evidence unavailable</h2><p>{q.error.message}</p><p>System health is UNKNOWN. Cached state is not promoted to PASS.</p></section>:<><div className="diagnostics"><Badge status={q.data.state.status}/><span>API {q.data.latencyMs} ms</span><span>Last refresh {new Date(q.data.fetchedAt).toLocaleTimeString()}</span><span>Source {q.data.source}</span><span>Evidence captured {isAttestation(q.data.state)?q.data.state.created_at:q.data.state.timestamp}</span></div><Content name={name} state={q.data.state}/></>}<footer>Projection of engineering evidence · no mutation actions <details><summary>Frontend build identity</summary><code>{JSON.stringify(__CPLANE_BUILD__,null,2)}</code></details></footer></>}
+--- /dev/null
++++ b/control-plane/tests/ui-routing.test.tsx
+@@ -0,0 +1,46 @@
++import {render,screen,cleanup} from '@testing-library/react';
++import {afterEach,beforeEach,describe,it,expect,vi} from 'vitest';
++import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
++import {createRouter,createMemoryHistory,RouterProvider} from '@tanstack/react-router';
++import {router as existingRouter} from '../src/router';
++import {UserChat} from '../src/assistant';
++import {fetchModelStatus,sendUserChat} from '../src/api';
++
++vi.mock('../src/api',async importOriginal=>{
++  const original=await importOriginal<typeof import('../src/api')>();
++  return {...original,
++    fetchModelStatus:vi.fn().mockResolvedValue({model:'fixture-local',provider:'ollama',
++      revision:0,process_id:42,consistency_scope:'CURRENT_PROCESS_ONLY',
++      availability:'NOT_VERIFIED',status:'NOT_VERIFIED',selection_enabled:false,
++      selection_source:'BOOTSTRAP',last_request:null}),
++    sendUserChat:vi.fn()};
++});
++beforeEach(()=>{
++  vi.spyOn(window,'scrollTo').mockImplementation(()=>{});
++  vi.stubGlobal('fetch',vi.fn(()=>{throw new Error('Unexpected network request');}));
++});
++afterEach(()=>{cleanup();vi.mocked(window.scrollTo).mockRestore();vi.clearAllMocks();vi.unstubAllGlobals();});
++
++describe('V1 assistant route alias',()=>{
++  it.each(['/','/ui'])('renders the existing assistant at %s without Console layout',async path=>{
++    const router=createRouter({routeTree:existingRouter.routeTree,
++      history:createMemoryHistory({initialEntries:[path]})});
++    const client=new QueryClient({defaultOptions:{queries:{retry:false}}});
++    render(<QueryClientProvider client={client}><RouterProvider router={router}/></QueryClientProvider>);
++    expect(await screen.findByRole('heading',{name:'Asisten Anda'})).toBeInTheDocument();
++    expect(screen.getByLabelText('Pertanyaan Anda')).toBeInTheDocument();
++    expect(screen.getByRole('button',{name:'Kirim pertanyaan'})).toBeDisabled();
++    expect(screen.queryByRole('navigation',{name:'Runtime control'})).not.toBeInTheDocument();
++    expect(screen.queryByText('Not Found')).not.toBeInTheDocument();
++    expect(router.state.location.pathname).toBe(path);
++    expect(fetchModelStatus).toHaveBeenCalled();
++    expect(sendUserChat).not.toHaveBeenCalled();
++    expect(fetch).not.toHaveBeenCalled();
++  });
++  it('uses exactly the same chat component for both routes',()=>{
++    const routes=existingRouter.routeTree.children??[];
++    const componentFor=(path:string)=>routes.find(route=>'path' in route.options&&route.options.path===path)?.options.component;
++    expect(componentFor('/')).toBe(UserChat);
++    expect(componentFor('/ui')).toBe(UserChat);
++  });
++});

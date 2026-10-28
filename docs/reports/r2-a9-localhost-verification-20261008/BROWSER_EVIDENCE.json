@@ -1,0 +1,19 @@
+{
+  "browser": "Codex In-app Browser",
+  "attempts": [
+    {
+      "url": "http://127.0.0.1:8000/v1/runtime/attestation",
+      "result": "net::ERR_BLOCKED_BY_CLIENT"
+    },
+    {
+      "url": "http://127.0.0.1:5173/overview",
+      "result": "net::ERR_CONNECTION_REFUSED",
+      "observed_title": "This site can't be reached",
+      "observed_message": "127.0.0.1 refused to connect"
+    }
+  ],
+  "screenshot": "NOT_CAPTURED: browser error page uses data URL; browser URL policy blocks binding",
+  "console": "NOT_INSPECTED: application never loaded",
+  "manual_intention": "NOT_TESTED",
+  "retry": false
+}

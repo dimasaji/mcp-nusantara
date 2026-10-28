@@ -1,0 +1,90 @@
+{
+  "architecture": "EXISTING_NUSANTARA_V1_PRESERVED",
+  "overall_status": "IN_PROGRESS",
+  "current_task": "MDE-03 verified provider registry discovery/contract; stopped as instructed",
+  "last_completed_task": "MDE-03-20261007 scoped KEEP with explicit open identity/capability limits",
+  "working_components": [
+    "developer control",
+    "model router",
+    "optional gateway",
+    "governed executor adapter",
+    "existing Hermes boundary",
+    "existing API/configuration tests"
+  ],
+  "broken_components": [],
+  "known_issues": [
+    "Configuration DoD NOT_COMPLETE",
+    "V1 FAIL/HOLD",
+    "Mandatory Windows symlink skip",
+    "Oracle review/missing evidence",
+    "Deployment verification NOT_RUN",
+    "CC02-06 gaps",
+    "Default snapshot/gateway/executor adoption not active",
+    "Provider/router/response identity not universally enforced",
+    "Native openai_compatible differs from router preferred openai ID",
+    "Registration does not prove provider health/capability; no live provider verified"
+  ],
+  "next_priority": "Await next instruction; MDE-04 not started. Identity/capability/default activation and V1 acceptance gaps remain open",
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "prior_source_build_id": "sha256:487ace8eb2a8ba4d8c979fdc7728cefe7802eb0b3f8f01d3f6462d9c83e9492a",
+  "git": {
+    "status": "AVAILABLE",
+    "branch": "codex/fullroot-control-20261007",
+    "observed_head_at_mde03_start": "fa4cd8f",
+    "observed_at": "2026-10-07T03:34:32.482892+00:00",
+    "source_implementation_commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
+    "working_tree": "Inherited dirty/untracked source retained; task-owned artifacts only selected for commits"
+  },
+  "baseline_test_passed": 145,
+  "targeted_router_passed": 32,
+  "targeted_boundaries_passed": 87,
+  "dependencies_added": [],
+  "source_files_changed": [
+    "developer.py",
+    "app/models/router.py",
+    "app/models/gateway.py",
+    "app/execution/__init__.py",
+    "app/execution/base.py",
+    "app/execution/native.py",
+    "tests/test_developer_control.py",
+    "tests/test_model_router_configuration.py",
+    "tests/test_fullroot_boundaries.py"
+  ],
+  "runtime_activation": false,
+  "production_operations": false,
+  "regression": {
+    "passed": 380,
+    "subtests_passed": 28,
+    "skipped": 1,
+    "failures": 0,
+    "errors": 0,
+    "junit": "reports/MDE02_REGRESSION_20261007.xml"
+  },
+  "static_security_findings": 0,
+  "overall_v1_acceptance": "FAIL/HOLD",
+  "configuration_dod": "NOT_COMPLETE",
+  "git_source_commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
+  "checkpoint": ".dev/MDE03_CHECKPOINT.json",
+  "mde02": {
+    "status": "DONE_SCOPED_KEEP",
+    "runtime_source_changed": false,
+    "effective_configuration": "DESIGN_ONLY",
+    "composition": "Existing app entrypoint and delegated assembly retained",
+    "focused_passed": 139,
+    "resolution_probe_assertions": 10,
+    "checkpoint": ".dev/MDE02_CHECKPOINT.json"
+  },
+  "mde03": {
+    "status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+    "decision": "KEEP",
+    "runtime_source_changed": false,
+    "registry_owner": "ModelRouter._providers",
+    "focused_passed": 38,
+    "asserted_fixture_observations": 22,
+    "live_provider_verification": "NOT_RUN",
+    "universal_identity_consistency": "FALSE_COUNTEREXAMPLES_OBSERVED",
+    "full_regression": "MDE02_BASELINE_REUSED_NO_SOURCE_CHANGE",
+    "mde04_started": false,
+    "checkpoint": ".dev/MDE03_CHECKPOINT.json"
+  }
+}

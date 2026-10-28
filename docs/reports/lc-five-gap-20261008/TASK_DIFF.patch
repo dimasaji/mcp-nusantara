@@ -1,0 +1,421 @@
+--- app/devcore/core.py (LEVEL C before)
++++ app/devcore/core.py
+@@ -15,7 +15,7 @@
+ from app.devcore.facts import static_facts
+ from app.devcore.grounding import check_grounding
+ from app.devcore.router import DevPlan, plan as make_plan
+-from app.devcore.tools import register_dev_tools
++from app.devcore.tools import read_file, register_dev_tools
+ from app.devcore.workspace import SKIP_DIRS, PathBlocked, Workspace, is_sensitive_name
+ from app.governance import GovernedToolRegistry
+ from app.observability import request_context
+@@ -58,7 +58,12 @@
+             except PathBlocked as exc:
+                 return {"success": False, "tool": name, "error": f"DIBLOKIR: {exc}", "path": str(args.get("path"))}
+         res = self.backend.execute(name, args)
+-        return self._sanitize(name, args, res) if res.get("success") else res
++        if not isinstance(res, dict):
++            return {"success": False, "tool": name, "path": args.get("path"), "error": "hasil backend tidak valid"}
++        if not res.get("success"):
++            return {"success": False, "tool": name, "path": args.get("path"),
++                    "error": str(res.get("error") or "backend gagal")[:300]}
++        return self._sanitize(name, args, res)
+ 
+     def _rel(self, p: Any) -> str:
+         s = str(p).replace("\\", "/")
+@@ -69,22 +74,63 @@
+ 
+     def _sanitize(self, name: str, args: dict[str, Any], res: dict[str, Any]) -> dict[str, Any]:
+         ok_name = lambda rel: not any(x in SKIP_DIRS or is_sensitive_name(x) for x in rel.split("/"))  # noqa: E731
++        def rejected() -> dict[str, Any]:
++            return {"success": False, "tool": name, "error": "DIBLOKIR: provenance hasil backend tidak valid",
++                    "path": args.get("path")}
++
+         if name == "read_file":
+             c = res.get("content")
+             if not isinstance(c, str):
+                 return {"success": False, "tool": name, "error": "hasil tool tidak berisi content", "path": args.get("path")}
+             if "\x00" in c[:8000]:
+                 return {"success": False, "tool": name, "error": "file biner tidak didukung", "path": args.get("path")}
+-            trunc = bool(res.get("truncated")) or len(c) > self.ws.max_read_bytes
+-            c = c[: self.ws.max_read_bytes]
+-            res.update(content=c, truncated=trunc, path=self._rel(res.get("path") or args.get("path")),
+-                       lines=c.count("\n") + (1 if c and not c.endswith("\n") else 0))
++            try:
++                requested = self.ws.resolve(args.get("path"))
++                returned = self.ws.resolve(res.get("path") or args.get("path"))
++            except (PathBlocked, OSError, ValueError):
++                return rejected()
++            if returned != requested:
++                return rejected()
++            # A claimed safe path cannot establish content provenance by itself.
++            trusted = read_file(self.ws, {"path": self.ws.rel(requested)})
++            normalized = c.replace("\r\n", "\n")
++            expected = trusted.get("content", "").replace("\r\n", "\n")
++            if not trusted["success"] or normalized[:len(expected)] != expected or (
++                    not trusted["truncated"] and normalized != expected):
++                return rejected()
++            trusted.update(content=expected, truncated=trusted["truncated"] or bool(res.get("truncated")),
++                           lines=expected.count("\n") + (1 if expected and not expected.endswith("\n") else 0))
++            return trusted
+         elif name == "find_file":
+-            m = [self._rel(x) for x in (res.get("matches") or [])]
+-            res.update(matches=[x for x in m if ok_name(x)][:20], query=res.get("query") or args.get("name"))
++            try:
++                m = [self.ws.rel(self.ws.resolve(x)) for x in (res.get("matches") or [])]
++            except (PathBlocked, OSError, ValueError, TypeError):
++                return rejected()
++            return {"success": True, "tool": name, "matches": m[:20], "query": args.get("name"),
++                    "truncated": bool(res.get("truncated")) or len(m) > 20, "error": None}
+         elif name == "list_directory":
+-            ents = [e for e in (res.get("entries") or []) if isinstance(e, dict) and ok_name(str(e.get("name", "")))]
+-            res.update(entries=ents[:200], path=res.get("path") or args.get("path") or ".")
++            try:
++                requested = self.ws.resolve(args.get("path") or ".")
++                returned = self.ws.resolve(res.get("path") or args.get("path") or ".")
++                if returned != requested:
++                    return rejected()
++                ents = []
++                for e in res.get("entries") or []:
++                    if not isinstance(e, dict):
++                        return rejected()
++                    child = str(e.get("name", ""))
++                    if not ok_name(child):
++                        continue
++                    if not child or child in (".", "..") or "/" in child or "\\" in child:
++                        return rejected()
++                    target = self.ws.resolve(str(requested / child))
++                    if target.parent != requested:
++                        return rejected()
++                    ents.append({"name": child, "type": e.get("type")})
++            except (PathBlocked, OSError, ValueError):
++                return rejected()
++            return {"success": True, "tool": name, "entries": ents[:200], "path": self.ws.rel(requested),
++                    "truncated": bool(res.get("truncated")) or len(ents) > 200, "error": None}
+         return res
+ 
+     def _call(self, name: str, args: dict[str, Any], calls: list[dict[str, Any]], requester: str) -> dict[str, Any]:
+@@ -115,6 +161,8 @@
+             if mode == "find_then_read":
+                 found = self._call("find_file", {"name": target}, calls, req)
+                 results.append(found)
++                if not found.get("success"):
++                    continue
+                 m = found.get("matches") or []
+                 if len(m) != 1:
+                     notes.append(f"'{target}' tidak ditemukan." if not m else
+@@ -124,7 +172,8 @@
+             r = self._call("read_file", {"path": path}, calls, req)
+             if not r["success"] and r.get("error") == "file tidak ditemukan" and mode == "read":
+                 f = self._call("find_file", {"name": path.rsplit("/", 1)[-1]}, calls, req)
+-                m = f.get("matches") or []
++                results.append(f)
++                m = (f.get("matches") or []) if f.get("success") else []
+                 if len(m) == 1:
+                     notes.append(f"'{path}' tidak ada; memakai satu-satunya kecocokan '{m[0]}'.")
+                     r = self._call("read_file", {"path": m[0]}, calls, req)
+@@ -135,6 +184,10 @@
+ 
+     async def _analyze(self, r: dict[str, Any], request: str) -> tuple[str, dict[str, Any]]:
+         facts = static_facts(r["path"], r["content"])
++        if r.get("truncated"):
++            return ("Source terpotong; evidence tidak lengkap. Fakta berikut hanya mencakup fragmen yang terbaca, "
++                    "bukan keseluruhan file:\n" + "\n".join(f"- {f}" for f in facts),
++                    {"status": "incomplete_source", "violations": [], "evidence_completeness": "incomplete"})
+         model_text = None
+         if self.generate:
+             g = await safe_acall(self.generate, build_prompt(r["path"], r["content"], r["lines"], facts, request),
+@@ -195,6 +248,8 @@
+                 elif r.get("tool") == "find_file" and r.get("success") and p.intent == "find_file":
+                     m = r["matches"]
+                     parts.append(f"Hasil pencarian '{r['query']}': " + (", ".join(m) if m else "tidak ditemukan"))
++                elif r.get("tool") == "find_file" and not r.get("success"):
++                    parts.append(f"Pencarian tidak lengkap/gagal: {r.get('error')}")
+                 elif r.get("tool") == "list_directory":
+                     parts.append(f"Isi `{r['path']}`:\n" + "\n".join(f"- {e['name']}{'/' if e['type']=='dir' else ''}" for e in r["entries"])
+                                  if r.get("success") else f"Gagal membuka direktori: {r.get('error')}")
+@@ -209,8 +264,11 @@
+                 parts.append(f"Analisis `{r['path']}`:\n{body}")
+                 statuses.append(v["status"])
+                 ver["violations"] += v["violations"]
++                if v.get("evidence_completeness"):
++                    ver["evidence_completeness"] = v["evidence_completeness"]
+             if statuses:
+                 ver["status"] = "failed" if "failed" in statuses else \
++                    "incomplete_source" if "incomplete_source" in statuses else \
+                     "fallback_static_facts" if "fallback_static_facts" in statuses else "passed"
+             if p.modify_requested:
+                 parts.append(_MODIFY_NOTE)
+--- app/devcore/grounding.py (LEVEL C before)
++++ app/devcore/grounding.py
+@@ -1,5 +1,5 @@
+ """Grounding gate (workflow #17, #20): tandai klaim jawaban yang TIDAK didukung source.
+-Heuristik leksikal per kalimat; kalimat bernegasi ("tidak ada print()") dilewati. Bukan bukti kebenaran."""
++Heuristik leksikal per klaim; negasi hanya berlaku pada klaim setempat. Bukan bukti kebenaran."""
+ from __future__ import annotations
+ 
+ import re
+@@ -7,6 +7,7 @@
+ 
+ _NEG = re.compile(r"\b(tidak|bukan|tanpa|belum|tak|no|not|without|tiada)\b", re.I)
+ _SPLIT = re.compile(r"(?<=[.!?])\s+|\n+")
++_CLAUSES = re.compile(r"[,;:]|\b(?:tetapi|namun|tapi|dan|sedangkan|but|however|and|while)\b", re.I)
+ _EXT_URL = re.compile(r"https?://(?!127\.|localhost|0\.0\.0\.0|\[::1\])", re.I)
+ 
+ # (nama_rule, klaim_di_jawaban, bukti_di_source)
+@@ -39,18 +40,25 @@
+     return float(s.replace(",", "."))
+ 
+ 
++def _negated(sent: str, start: int) -> bool:
++    # Negation after a claim, or belonging to an earlier claim, does not exempt it.
++    preceding = [m.end() for pattern in [r[1] for r in _RULES] + [_INTERNET, _TIMEOUT_CLAIM]
++                 for m in pattern.finditer(sent) if m.end() <= start]
++    return bool(_NEG.search(sent[max(preceding, default=0):start]))
++
++
+ def check_grounding(answer: str, source: str) -> list[Violation]:
+     out: list[Violation] = []
+     src_timeouts = {_num(m) for m in _TIMEOUT_SRC.findall(source)}
+-    for sent in (s.strip() for s in _SPLIT.split(answer)):
+-        if not sent or _NEG.search(sent):
++    for sent in (s.strip() for sentence in _SPLIT.split(answer) for s in _CLAUSES.split(sentence)):
++        if not sent:
+             continue
+         for name, claim, evidence in _RULES:
+-            if claim.search(sent) and not evidence.search(source):
++            if any(not _negated(sent, m.start()) for m in claim.finditer(sent)) and not evidence.search(source):
+                 out.append(Violation(name, sent[:200]))
+-        if _INTERNET.search(sent) and not _EXT_URL.search(source):
++        if any(not _negated(sent, m.start()) for m in _INTERNET.finditer(sent)) and not _EXT_URL.search(source):
+             out.append(Violation("pengecekan internet/host eksternal", sent[:200]))
+-        for m in _TIMEOUT_CLAIM.findall(sent):
+-            if _num(m) not in src_timeouts:
++        for m in _TIMEOUT_CLAIM.finditer(sent):
++            if not _negated(sent, m.start()) and _num(m.group(1)) not in src_timeouts:
+                 out.append(Violation("nilai timeout tidak sesuai source", sent[:200]))
+     return out
+--- app/devcore/tools.py (LEVEL C before)
++++ app/devcore/tools.py
+@@ -44,9 +44,15 @@
+     if not q or ".." in q.split("/"):
+         return _fail("find_file", "query tidak valid", query=q)
+     matches: list[str] = []
++    traversal_errors: list[str] = []
++
++    def traversal_error(exc: OSError) -> None:
++        traversal_errors.append(type(exc).__name__)
++
+     scanned, truncated = 0, False
+-    for dirpath, dirs, files in os.walk(ws.root, followlinks=False):
+-        dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS and not (dirpath == str(ws.root) and d == "data"))
++    for dirpath, dirs, files in os.walk(ws.root, followlinks=False, onerror=traversal_error):
++        dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS and not is_sensitive_name(d)
++                         and not (dirpath == str(ws.root) and d == "data"))
+         for name in sorted(files):
+             scanned += 1
+             if scanned > MAX_SCAN:
+@@ -62,6 +68,10 @@
+                     break
+         if truncated:
+             break
++    if traversal_errors:
++        return {"success": False, "tool": "find_file", "query": q, "matches": matches,
++                "truncated": True, "incomplete": True,
++                "error": "pencarian tidak lengkap: " + ", ".join(sorted(set(traversal_errors)))}
+     return {"success": True, "tool": "find_file", "query": q, "matches": matches, "truncated": truncated, "error": None}
+ 
+ 
+@@ -73,10 +83,15 @@
+     if not p.is_dir():
+         return _fail("list_directory", "direktori tidak ditemukan", path=ws.rel(p) if p.is_relative_to(ws.root) else "?")
+     entries = []
+-    for child in sorted(p.iterdir(), key=lambda c: (not c.is_dir(), c.name.lower())):
+-        if child.name in SKIP_DIRS or is_sensitive_name(child.name) or (p == ws.root and child.name == "data"):
+-            continue
+-        entries.append({"name": child.name, "type": "dir" if child.is_dir() else "file"})
++    try:
++        children = sorted(p.iterdir(), key=lambda c: (not c.is_dir(), c.name.lower()))
++        for child in children:
++            if child.name in SKIP_DIRS or is_sensitive_name(child.name) or (p == ws.root and child.name == "data"):
++                continue
++            entries.append({"name": child.name, "type": "dir" if child.is_dir() else "file"})
++    except OSError as exc:
++        return _fail("list_directory", f"gagal membuka direktori: {type(exc).__name__}",
++                     path=ws.rel(p), incomplete=True)
+     return {"success": True, "tool": "list_directory", "path": ws.rel(p), "entries": entries[:MAX_ENTRIES],
+             "truncated": len(entries) > MAX_ENTRIES, "error": None}
+ 
+--- tests/v2/test_devcore.py (LEVEL C before)
++++ tests/v2/test_devcore.py
+@@ -197,3 +197,116 @@
+ 
+ if __name__ == "__main__":
+     unittest.main()
++def test_backend_provenance_accepts_valid_and_rejects_forged_results(tmp_path):
++    from app.devcore import DevCore
++    (tmp_path / 'app').mkdir()
++    (tmp_path / 'app/example.py').write_bytes(b'x = 1\n')
++    (tmp_path / 'app/other.py').write_bytes(b'x = 2\n')
++
++    class Backend:
++        result = {}
++        calls = 0
++        def execute(self, name, args):
++            self.calls += 1
++            return dict(self.result)
++
++    backend = Backend()
++    core = DevCore(str(tmp_path), backend=backend)
++    backend.result = dict(success=True, tool='read_file', path=str(tmp_path / 'app/example.py'), content='x = 1\n')
++    valid = core.handle_sync('Analisis app/example.py')
++    assert valid['tool']['result']['success']
++    assert valid['tool']['result']['path'] == 'app/example.py'
++    for path, content in ((str(tmp_path.parent / 'outside.py'), 'foreign = 42\n'),
++                          ('app/other.py', 'x = 2\n'), ('app/example.py', 'foreign = 42\n'),
++                          ('app/example.py', 'x = 1\nforeign = 42\n')):
++        backend.result = dict(success=True, tool='read_file', path=path, content=content)
++        result = core.handle_sync('Analisis app/example.py')
++        assert not result['tool']['result']['success']
++        assert 'foreign = 42' not in result['answer']
++        assert result['verification']['status'] == 'not_applicable'
++    before = backend.calls
++    assert not core._backend_call('read_file', {'path': str(tmp_path.parent / 'outside.py')})['success']
++    assert backend.calls == before
++    backend.result = dict(success=True, tool='find_file', matches=[str(tmp_path.parent / 'outside.py')])
++    assert not core._backend_call('find_file', {'name': '*.py'})['success']
++    backend.result = dict(success=True, tool='find_file', matches=[str(tmp_path / 'app/example.py')])
++    assert core._backend_call('find_file', {'name': '*.py'})['matches'] == ['app/example.py']
++    backend.result = dict(success=True, tool='list_directory', path=str(tmp_path.parent), entries=[])
++    assert not core._backend_call('list_directory', {'path': '.'})['success']
++    backend.result = dict(success=True, tool='list_directory', entries=[{'name': '../outside.py', 'type': 'file'}])
++    assert not core._backend_call('list_directory', {'path': '.'})['success']
++    backend.result = dict(success=True, tool='list_directory', entries=[{'name': 'app', 'type': 'dir'}])
++    assert core._backend_call('list_directory', {'path': '.'})['entries'] == [{'name': 'app', 'type': 'dir'}]
++    backend.result = dict(success=False, tool='read_file', path=str(tmp_path.parent / 'outside.py'),
++                          content='foreign = 42\n', error='backend failed')
++    failed = core._backend_call('read_file', {'path': 'app/example.py'})
++    assert not failed['success'] and 'content' not in failed and failed['path'] == 'app/example.py'
++
++
++def test_valid_backend_truncated_content_remains_incomplete(tmp_path):
++    from app.devcore import DevCore
++    (tmp_path / 'app').mkdir()
++    (tmp_path / 'app/example.py').write_bytes(b'x = 1\nprint("later")\n')
++    class Backend:
++        def execute(self, name, args):
++            return dict(success=True, tool=name, path='app/example.py', content='x = 1\nprint("later")\n')
++    calls = []
++    core = DevCore(str(tmp_path), backend=Backend(), generate=lambda _: calls.append(True) or 'No print.')
++    core.ws.max_read_bytes = 6
++    result = core.handle_sync('Analisis app/example.py')
++    assert result['tool']['result']['success'] and result['tool']['result']['content'] == 'x = 1\n'
++    assert result['verification']['status'] == 'incomplete_source' and not calls
++
++
++def test_sensitive_directory_search_and_listing_are_consistent(tmp_path):
++    from app.devcore.tools import find_file, read_file, list_directory
++    from app.devcore.workspace import Workspace
++    for directory in ('secrets', 'credentials_backup', '.env.private', 'normal'):
++        (tmp_path / directory).mkdir()
++        (tmp_path / directory / 'visible.py').write_text('# fixture\n')
++    ws = Workspace(str(tmp_path))
++    assert find_file(ws, {'name': 'visible.py'})['matches'] == ['normal/visible.py']
++    assert [e['name'] for e in list_directory(ws, {'path': '.'})['entries']] == ['normal']
++    assert not read_file(ws, {'path': 'secrets/visible.py'})['success']
++    assert read_file(ws, {'path': 'normal/visible.py'})['success']
++
++
++def test_traversal_error_is_explicit_and_partial_matches_not_read(tmp_path, monkeypatch):
++    import os
++    from pathlib import Path
++    from app.devcore import DevCore
++    from app.devcore.tools import find_file
++    from app.devcore.workspace import Workspace
++    (tmp_path / 'restricted').mkdir()
++    (tmp_path / 'restricted/hidden.py').write_text('x = 1\n')
++    (tmp_path / 'hidden.py').write_text('x = 2\n')
++    original = os.scandir
++    def denied(path):
++        if Path(path).resolve() == (tmp_path / 'restricted').resolve():
++            raise PermissionError('fixture denial')
++        return original(path)
++    monkeypatch.setattr(os, 'scandir', denied)
++    result = find_file(Workspace(str(tmp_path)), {'name': 'hidden.py'})
++    assert not result['success'] and result['incomplete'] and result['truncated']
++    assert 'PermissionError' in result['error'] and result['matches'] == ['hidden.py']
++    answer = DevCore(str(tmp_path)).handle_sync('Baca hidden.py')
++    assert not any(c['name'] == 'read_file' for c in answer['tool']['calls'])
++    assert 'Pencarian tidak lengkap/gagal' in answer['answer']
++    monkeypatch.setattr(os, 'scandir', original)
++    assert find_file(Workspace(str(tmp_path)), {'name': 'hidden.py'})['success']
++    empty = find_file(Workspace(str(tmp_path)), {'name': 'absent.py'})
++    assert empty['success'] and empty['matches'] == [] and empty['error'] is None
++
++
++def test_directory_permission_error_is_structured(tmp_path, monkeypatch):
++    from pathlib import Path
++    from app.devcore.tools import list_directory
++    from app.devcore.workspace import Workspace
++    original = Path.iterdir
++    def denied(path):
++        if path == tmp_path:
++            raise PermissionError('fixture denial')
++        return original(path)
++    monkeypatch.setattr(Path, 'iterdir', denied)
++    result = list_directory(Workspace(str(tmp_path)), {'path': '.'})
++    assert not result['success'] and result['incomplete'] and 'PermissionError' in result['error']
+--- tests/v2/test_devcore_grounding_response.py (LEVEL C before)
++++ tests/v2/test_devcore_grounding_response.py
+@@ -58,3 +58,51 @@
+     assert 'read-only' in result['answer']
+     assert {call['name'] for call in result['tool']['calls']} <= {'find_file', 'read_file'}
+     assert (root/'healthcheck.py').read_text(encoding='utf-8') == SOURCE
++
++
++def test_mixed_negation_does_not_hide_unsupported_positive_claim(tmp_path):
++    root = tmp_path / 'workspace'
++    (root / 'app').mkdir(parents=True)
++    (root / 'app/example.py').write_text('print("fixture")\n', encoding='utf-8')
++    mixed = 'Script mencetak hasil, tidak ada retry, tetapi script menyimpan response ke file.'
++    result = DevCore(str(root), generate=lambda _: mixed).handle_sync('Analisis app/example.py')
++    assert result['verification']['status'] == 'failed'
++    assert {v['rule'] for v in result['verification']['violations']} == {'penyimpanan response/file'}
++    assert mixed not in result['answer']
++
++
++def test_negation_after_positive_claim_and_adjacent_claims():
++    from app.devcore.grounding import check_grounding
++    for claim in ('Script menyimpan response tanpa retry.',
++                  'Tidak ada retry script menyimpan response ke file.',
++                  'Tidak ada retry dan script menyimpan response ke file.'):
++        assert any(v.rule == 'penyimpanan response/file' for v in check_grounding(claim, 'x = 1\n'))
++    assert not check_grounding('Tidak ada print(). Tidak ada retry.', 'x = 1\n')
++
++
++def test_truncated_source_is_incomplete_and_callback_not_invoked(tmp_path):
++    (tmp_path / 'app').mkdir()
++    prefix = 'x = 1\n' + '# padding\n' * 8
++    (tmp_path / 'app/example.py').write_bytes((prefix + 'print("later")\n').encode())
++    calls = []
++    core = DevCore(str(tmp_path), generate=lambda _: calls.append(True) or 'Tidak ada print().')
++    core.ws.max_read_bytes = len(prefix.encode())
++    result = core.handle_sync('Analisis app/example.py')
++    assert result['tool']['result']['truncated']
++    assert result['verification']['status'] == 'incomplete_source'
++    assert result['verification']['evidence_completeness'] == 'incomplete'
++    assert 'Source terpotong' in result['answer'] and 'fragmen' in result['answer']
++    assert not calls
++    complete = DevCore(str(tmp_path), generate=lambda _: 'Script mencetak hasil.').handle_sync('Analisis app/example.py')
++    assert complete['verification']['status'] == 'passed'
++    assert not complete['tool']['result']['truncated']
++
++
++def test_truncated_source_without_callback_and_verbatim_keeps_limitation(tmp_path):
++    (tmp_path / 'app').mkdir()
++    (tmp_path / 'app/example.py').write_bytes(b'x = 1\nprint("later")\n')
++    core = DevCore(str(tmp_path))
++    core.ws.max_read_bytes = 6
++    result = core.handle_sync('Baca app/example.py dan tampilkan isi persis')
++    assert result['verification']['status'] == 'incomplete_source'
++    assert '(dipotong)' in result['answer'] and 'Source terpotong' in result['answer']

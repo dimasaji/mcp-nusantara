@@ -1,0 +1,50 @@
+{
+  "protected_full_after_hash_check": "NOT_PERFORMED: retained no-touch boundary",
+  "verification_type": "ISOLATED_TESTS_ONLY",
+  "gate": "R2-A4",
+  "tests": {
+    "junit_sha256": "fa7bacb3a9dbd146846799f45a4a02cb10ed8cd3636bb08d659c3e7810b8537a",
+    "errors": 0,
+    "new_cases": 26,
+    "failures": 0,
+    "count": 119,
+    "passed": 119
+  },
+  "source_after": [
+    {
+      "sha256": "37ea9d6992f6ce0df7ccf47a8ab2315a7e5b546190b38f9e37a6aa6b63160e8e",
+      "path": "app\\core\\runtime_identity.py"
+    },
+    {
+      "sha256": "b964fbe2e6a72619191a090790e16caad6a40aeab0087a9c578dcae0c6aa5da8",
+      "path": "app\\models\\ollama.py"
+    },
+    {
+      "sha256": "f4ddb479a0619f72170544bbee8a3c8207911bf9589bffb34f075bb855d1e4d0",
+      "path": "tests\\test_provider_identity.py"
+    }
+  ],
+  "protected_surfaces_mutated": false,
+  "live_generation_performed": false,
+  "runtime_identity": "NOT_VERIFIED",
+  "phase": "R2",
+  "timestamp_utc": "2026-10-08T02:18:26.4882677Z",
+  "service_restart_performed": false,
+  "limitations": [
+    "Existing running application was not restarted and does not gain new instrumentation",
+    "No actual HTTP-to-provider live generation was verified",
+    "One existing Starlette TestClient deprecation warning"
+  ],
+  "final_junit": "final-http-tests.xml",
+  "report_sha256": "0ca1ddae725688fe46a8b08cc0beebd84ae17f0de0e9723fd6deb7028eff5220",
+  "graphify": {
+    "nodes": 8160,
+    "coverage_limit": "Five inherited report directories unreadable",
+    "llm_tokens": 0,
+    "communities": 1601,
+    "edges": 13740,
+    "status": "AST_UPDATE_COMPLETE",
+    "sha256": "a2ffdc5f658cd7dde0ee38662941077357d5a7d41abdf008c3deafd99d7cea4f"
+  },
+  "patch_sha256": "c5826c9df2548a3a93395a5038543bc7a8550ce11b47abdfd198d02592852bc5"
+}

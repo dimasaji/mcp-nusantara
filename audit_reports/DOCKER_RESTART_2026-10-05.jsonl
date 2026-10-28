@@ -1,0 +1,5 @@
+{"name": "container_http_health", "status": "PASS", "detail": "API responds from inside Linux container", "seconds": 0.155}
+{"name": "container_authorization", "status": "PASS", "detail": "Anonymous privileged requests rejected", "seconds": 0.008}
+{"name": "retrieval_after_container_restart", "status": "PASS", "detail": {"document_id": "docker-audit-fixture-20261005", "score": 0.6661381733841352}, "seconds": 18.101}
+{"name": "audit_after_container_restart", "status": "PASS", "detail": {"entries": 6, "hash_chain_valid": true}, "seconds": 0.08}
+{"phase": "restart", "status": "PASS", "checks": [{"name": "container_http_health", "status": "PASS", "detail": "API responds from inside Linux container", "seconds": 0.155}, {"name": "container_authorization", "status": "PASS", "detail": "Anonymous privileged requests rejected", "seconds": 0.008}, {"name": "retrieval_after_container_restart", "status": "PASS", "detail": {"document_id": "docker-audit-fixture-20261005", "score": 0.6661381733841352}, "seconds": 18.101}, {"name": "audit_after_container_restart", "status": "PASS", "detail": {"entries": 6, "hash_chain_valid": true}, "seconds": 0.08}]}

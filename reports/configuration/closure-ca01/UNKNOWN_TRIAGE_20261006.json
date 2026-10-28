@@ -1,0 +1,1542 @@
+{
+  "status": "COMPLETE_STATIC_TRIAGE_46_OF_46",
+  "created_at": "2026-10-06T12:13:58.042588+00:00",
+  "historical_map_sha256": "bd2ca84820b7a499fb19c030d0b4be669ebc040fa7f08bf989d4b7962657653d",
+  "disposition_counts": {
+    "CONFIGURATION_DECLARATION": 2,
+    "RESULT_SCHEMA_OR_CALL_METADATA": 4,
+    "CONFIGURATION_ENV_READ": 3,
+    "DERIVED_VALUE_OR_EXECUTION_OBJECT": 22,
+    "COMPILE_TIME_PATH_POLICY": 1,
+    "EVALUATION_EVIDENCE_DATA": 2,
+    "DEPENDENCY_INJECTION": 2,
+    "COMPATIBILITY_ALIAS_OR_LOOKUP": 2,
+    "UNREFERENCED_COMPILE_TIME_CONSTANT": 1,
+    "SECRET_ENV_IDENTIFIER_ONLY": 1,
+    "UNWIRED_CONFIG_DOCUMENT": 1,
+    "BUILD_TOOL_CONFIGURATION": 1,
+    "VERIFICATION_SOURCE_PATH": 2,
+    "TEST_HARNESS_CONFIGURATION": 1,
+    "TEST_FIXTURE_PARAMETER": 1
+  },
+  "candidates": [
+    {
+      "candidate_id": "832cc6b5a2cefc5a",
+      "source_file": ".env.example",
+      "historical_line": 10,
+      "current_nearest_occurrence": {
+        "line": 10,
+        "node_type": "EnvironmentIdentifierDeclaration"
+      },
+      "identifier": "CONTEXT_WINDOW_SIZE",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "CONFIGURATION_DECLARATION",
+      "reason": "Settings/ENV declaration; no app settings.context_window_size AST access found. Snapshot maps alias into legacy_declarations; same-name context state is a separate object, not proof of Settings wiring.",
+      "current_symbol_occurrences": [
+        {
+          "line": 10,
+          "node_type": "EnvironmentIdentifierDeclaration"
+        }
+      ],
+      "source_sha256": "9a3610a3c1ebd9575458f7be7704b3b5fafef8d339b22a2e581684a4cc5a43d8",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "eca520425fdc93af",
+      "source_file": "app/api/routes.py",
+      "historical_line": 128,
+      "current_nearest_occurrence": {
+        "line": 128,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "grounded",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "GOVERNANCE",
+      "disposition": "RESULT_SCHEMA_OR_CALL_METADATA",
+      "reason": "Grounding outcome field or forwarded snapshot argument; input/output metadata rather than configuration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 128,
+          "node_type": "Name",
+          "access": "Store"
+        }
+      ],
+      "source_sha256": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "abc9b3416d6f74a5",
+      "source_file": "app/api/v2_routes.py",
+      "historical_line": 45,
+      "current_nearest_occurrence": {
+        "line": 45,
+        "node_type": "IdentifierLiteralCall"
+      },
+      "identifier": "NUSANTARA_DATA_DIR",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "PATH",
+      "disposition": "CONFIGURATION_ENV_READ",
+      "reason": "Direct ENV controls data root for V2 persistence or MCP stdio. Static consumer read proven; effective live ENV not inspected.",
+      "current_symbol_occurrences": [
+        {
+          "line": 45,
+          "node_type": "IdentifierLiteralCall"
+        }
+      ],
+      "source_sha256": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "f4520e555b348b97",
+      "source_file": "app/api/v2_routes.py",
+      "historical_line": 332,
+      "current_nearest_occurrence": {
+        "line": 332,
+        "node_type": "IdentifierLiteralCall"
+      },
+      "identifier": "NUSANTARA_WORKSPACE",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "PATH",
+      "disposition": "CONFIGURATION_ENV_READ",
+      "reason": "V2 dev endpoint passes ENV workspace root into DevCore; no change to DeveloperCore contract.",
+      "current_symbol_occurrences": [
+        {
+          "line": 332,
+          "node_type": "IdentifierLiteralCall"
+        }
+      ],
+      "source_sha256": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "63b15f7124267d0c",
+      "source_file": "app/core/config.py",
+      "historical_line": 17,
+      "current_nearest_occurrence": {
+        "line": 17,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "context_window_size",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "CONFIGURATION_DECLARATION",
+      "reason": "Settings/ENV declaration; no app settings.context_window_size AST access found. Snapshot maps alias into legacy_declarations; same-name context state is a separate object, not proof of Settings wiring.",
+      "current_symbol_occurrences": [
+        {
+          "line": 17,
+          "node_type": "Name",
+          "access": "Store"
+        }
+      ],
+      "source_sha256": "996bfaed79b989576ec31dd10f9d94f5bc419466dc67e4da5c54f7666e3af5b6",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "46db8c93c4eb8f63",
+      "source_file": "app/developer_core/context_router.py",
+      "historical_line": 164,
+      "current_nearest_occurrence": {
+        "line": 164,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "rag_task",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "SYSTEM",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 164,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 190,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 256,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 310,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "c60092f56dfc2240b3bec8a8939537a758fffdd617db6768b7a0395c69ae3737",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "ca5050b31ecb0377",
+      "source_file": "app/developer_core/context_router.py",
+      "historical_line": 257,
+      "current_nearest_occurrence": {
+        "line": 257,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "rag_priority",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "PATH",
+      "disposition": "COMPILE_TIME_PATH_POLICY",
+      "reason": "Constant ordered source-file paths used for RAG context selection; protected context routing policy, no migration performed.",
+      "current_symbol_occurrences": [
+        {
+          "line": 257,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 267,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "c60092f56dfc2240b3bec8a8939537a758fffdd617db6768b7a0395c69ae3737",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "eb292adad986fbfc",
+      "source_file": "app/developer_core/graph_bridge.py",
+      "historical_line": 53,
+      "current_nearest_occurrence": {
+        "line": 61,
+        "node_type": "Parameter"
+      },
+      "identifier": "grounded",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "GOVERNANCE",
+      "disposition": "RESULT_SCHEMA_OR_CALL_METADATA",
+      "reason": "Grounding outcome field or forwarded snapshot argument; input/output metadata rather than configuration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 61,
+          "node_type": "Parameter"
+        },
+        {
+          "line": 70,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "daee585ec3aecd6635ab5444fffbed3ff1749f021c74789a72122f90c9cf2d79",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "3ad2af79cf063fd9",
+      "source_file": "app/developer_core/runtime.py",
+      "historical_line": 11,
+      "current_nearest_occurrence": {
+        "line": 19,
+        "node_type": "Parameter"
+      },
+      "identifier": "grounded",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "GOVERNANCE",
+      "disposition": "RESULT_SCHEMA_OR_CALL_METADATA",
+      "reason": "Grounding outcome field or forwarded snapshot argument; input/output metadata rather than configuration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 19,
+          "node_type": "Parameter"
+        },
+        {
+          "line": 36,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "b8b0b7ea6f5229c1ebe7d397e16c513e8bb176699f0ede4b8dde978e4716fa7a",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "02390815eab5721b",
+      "source_file": "app/evaluation/baselines/smoke_mock.json",
+      "historical_line": 10,
+      "current_nearest_occurrence": {
+        "line": 10,
+        "node_type": "StructuredKeyOrPattern"
+      },
+      "identifier": "groundedness",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "EVALUATION_EVIDENCE_DATA",
+      "reason": "Recorded RAG/groundedness evaluation data, not runtime configuration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 10,
+          "node_type": "StructuredKeyOrPattern"
+        }
+      ],
+      "source_sha256": "499e80e1d7f9d1072dc88c24e9da2eb0fa16d8f5f100e903a7bd3183a0d39841",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "a58c77dd916fcaea",
+      "source_file": "app/knowledge/engine.py",
+      "historical_line": 10,
+      "current_nearest_occurrence": {
+        "line": 11,
+        "node_type": "Parameter"
+      },
+      "identifier": "rag",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "KNOWLEDGE",
+      "disposition": "DEPENDENCY_INJECTION",
+      "reason": "Optional RAG object parameter/instance assignment; dependency injection, not numeric/string config knob. Existing lines moved during Phase7.",
+      "current_symbol_occurrences": [
+        {
+          "line": 11,
+          "node_type": "Parameter"
+        },
+        {
+          "line": 13,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 13,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "748e6fbf9eec1678",
+      "source_file": "app/knowledge/engine.py",
+      "historical_line": 11,
+      "current_nearest_occurrence": {
+        "line": 11,
+        "node_type": "Parameter"
+      },
+      "identifier": "rag",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "KNOWLEDGE",
+      "disposition": "DEPENDENCY_INJECTION",
+      "reason": "Optional RAG object parameter/instance assignment; dependency injection, not numeric/string config knob. Existing lines moved during Phase7.",
+      "current_symbol_occurrences": [
+        {
+          "line": 11,
+          "node_type": "Parameter"
+        },
+        {
+          "line": 13,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 13,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "6954896d49bd1145",
+      "source_file": "app/knowledge/grounding.py",
+      "historical_line": 15,
+      "current_nearest_occurrence": {
+        "line": 15,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "grounded",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "GOVERNANCE",
+      "disposition": "RESULT_SCHEMA_OR_CALL_METADATA",
+      "reason": "Grounding outcome field or forwarded snapshot argument; input/output metadata rather than configuration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 15,
+          "node_type": "Name",
+          "access": "Store"
+        }
+      ],
+      "source_sha256": "0d12e6f1f1056cecc6d75e7812522aeae62f0f89bcdd1c151f78fd8ac4644107",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "c81e865612a59582",
+      "source_file": "app/knowledge/grounding.py",
+      "historical_line": 859,
+      "current_nearest_occurrence": {
+        "line": 859,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "coverage",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "RAG",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 859,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 863,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "0d12e6f1f1056cecc6d75e7812522aeae62f0f89bcdd1c151f78fd8ac4644107",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "e2e29f0554b493ed",
+      "source_file": "app/knowledge/parser.py",
+      "historical_line": 72,
+      "current_nearest_occurrence": {
+        "line": 72,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "paragraphs",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "RAG",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 72,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 78,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "8c53de3e1091be58a9c850e42ba37be475dad16a3443e595e1b2a4fdec4c9820",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "096087dc14b87335",
+      "source_file": "app/knowledge/production_hybrid_rag.py",
+      "historical_line": 130,
+      "current_nearest_occurrence": {
+        "line": 130,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "grounded_candidate",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "RAG",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 130,
+          "node_type": "Name",
+          "access": "Store"
+        }
+      ],
+      "source_sha256": "ca8cc7d81db769f0385a2a2e2884314ac3970bd794f90a959398d271137b2993",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "cf59547f0e0bd71d",
+      "source_file": "app/knowledge/production_kb.py",
+      "historical_line": 111,
+      "current_nearest_occurrence": {
+        "line": 111,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "paragraphs",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "RAG",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 111,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 129,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 409,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 421,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "f90e02c4acd108be75cb6d4330cec435d74a54a849fc5b6ae3624223c47de8ee",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "459f0cb766fb5fc5",
+      "source_file": "app/knowledge/production_kb.py",
+      "historical_line": 409,
+      "current_nearest_occurrence": {
+        "line": 409,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "paragraphs",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "RAG",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 111,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 129,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 409,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 421,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "f90e02c4acd108be75cb6d4330cec435d74a54a849fc5b6ae3624223c47de8ee",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "09b712aa9235cc70",
+      "source_file": "app/knowledge/rag.py",
+      "historical_line": 714,
+      "current_nearest_occurrence": {
+        "line": 745,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "HybridRAG",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "RAG",
+      "disposition": "COMPATIBILITY_ALIAS_OR_LOOKUP",
+      "reason": "Public RAG class compatibility alias or getattr lookup; not configuration source.",
+      "current_symbol_occurrences": [
+        {
+          "line": 745,
+          "node_type": "Name",
+          "access": "Store"
+        }
+      ],
+      "source_sha256": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "ecf5f58e087f3f3d",
+      "source_file": "app/language/semantic/semantic_intent.py",
+      "historical_line": 327,
+      "current_nearest_occurrence": {
+        "line": 327,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "average_similarity",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "SYSTEM",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 327,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 340,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "f3515261a7e6c79d4add64d6e5db16fe0a2936725727605adafde48ca8a2610c",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "dc6d0eff1b6e6ac7",
+      "source_file": "app/mcp/stdio_server.py",
+      "historical_line": 19,
+      "current_nearest_occurrence": {
+        "line": 19,
+        "node_type": "IdentifierLiteralCall"
+      },
+      "identifier": "NUSANTARA_DATA_DIR",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "PATH",
+      "disposition": "CONFIGURATION_ENV_READ",
+      "reason": "Direct ENV controls data root for V2 persistence or MCP stdio. Static consumer read proven; effective live ENV not inspected.",
+      "current_symbol_occurrences": [
+        {
+          "line": 19,
+          "node_type": "IdentifierLiteralCall"
+        }
+      ],
+      "source_sha256": "5340ea4e7c1fc62f101d6c313f962d7afdc3c86f783e17a21aa24d39f238cf6e",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "1e10e8735743b342",
+      "source_file": "app/reasoning/engine.py",
+      "historical_line": 11,
+      "current_nearest_occurrence": {
+        "line": 11,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "MIN_GROUNDED_CONFIDENCE",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "GOVERNANCE",
+      "disposition": "UNREFERENCED_COMPILE_TIME_CONSTANT",
+      "reason": "Reasoning class constant declaration; identifier search found no other app occurrence. Not proof of enforced threshold.",
+      "current_symbol_occurrences": [
+        {
+          "line": 11,
+          "node_type": "Name",
+          "access": "Store"
+        }
+      ],
+      "source_sha256": "75033927476c9f434621f6f8f36eb8a9478d72401af8615824fe7fa1fd6a07d9",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "dc894d120c66f532",
+      "source_file": "app/security/auth.py",
+      "historical_line": 11,
+      "current_nearest_occurrence": {
+        "line": 11,
+        "node_type": "IdentifierLiteralCall"
+      },
+      "identifier": "NUSANTARA_ADMIN_TOKEN",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "GOVERNANCE",
+      "disposition": "SECRET_ENV_IDENTIFIER_ONLY",
+      "reason": "require_admin reads ENV identifier and compares with supplied token fail-closed. Values/defaults omitted; auth policy unchanged.",
+      "current_symbol_occurrences": [
+        {
+          "line": 11,
+          "node_type": "IdentifierLiteralCall"
+        }
+      ],
+      "source_sha256": "4d3105ba4d5c34d864392f0918dda797bf296a2987ec5964245949dbc55f7552",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "e2e25c65baa7f1d1",
+      "source_file": "app/trust/engine.py",
+      "historical_line": 55,
+      "current_nearest_occurrence": {
+        "line": 55,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "coverage",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "GOVERNANCE",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 55,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 58,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 62,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 68,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 74,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 83,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 95,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "c0a962ef941cb6c1afecb32891e7b34eb44a166c0fa964c23683a03f495a8274",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "0d9ac84fa3cbb431",
+      "source_file": "config/rag_runtime.json",
+      "historical_line": 2,
+      "current_nearest_occurrence": {
+        "line": 2,
+        "node_type": "StructuredKeyOrPattern"
+      },
+      "identifier": "rag",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "RAG",
+      "disposition": "UNWIRED_CONFIG_DOCUMENT",
+      "reason": "JSON configuration declaration; baseline_rag_cache.py constructs/checks cfg path but does not load JSON. No app reference to rag_runtime found; dynamic external consumers not ruled out.",
+      "current_symbol_occurrences": [
+        {
+          "line": 2,
+          "node_type": "StructuredKeyOrPattern"
+        }
+      ],
+      "source_sha256": "17dd875eae9afbf4e36f625b05762345231343e4db4ab0bbe3dc08e2d3341f66",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "8404143b751d57a8",
+      "source_file": "docs/audit/master_engine/evidence/v2/00/result.json",
+      "historical_line": 62,
+      "current_nearest_occurrence": {
+        "line": 62,
+        "node_type": "StructuredKeyOrPattern"
+      },
+      "identifier": "RAG",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "EVALUATION_EVIDENCE_DATA",
+      "reason": "Recorded RAG/groundedness evaluation data, not runtime configuration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 62,
+          "node_type": "StructuredKeyOrPattern"
+        }
+      ],
+      "source_sha256": "16f697cec329bf995cd0b029a179cfc03485d35acce079d3a1ec7566d170c1c3",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "b1ef08ff55e62760",
+      "source_file": "nusantara_master_pdf_sop_engine.py",
+      "historical_line": 1613,
+      "current_nearest_occurrence": {
+        "line": 1613,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "average_confidences",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 1613,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 1630,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 1634,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 1637,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "6a50c94ed57c44b4cb85c1e99ba03730cfba0b71f65803a70c4dccd8256fdac5",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "a88b462cc6ddea2e",
+      "source_file": "nusantara_master_pdf_sop_engine.py",
+      "historical_line": 1943,
+      "current_nearest_occurrence": {
+        "line": 1943,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "average_confidence",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 1457,
+          "node_type": "IdentifierLiteralCall"
+        },
+        {
+          "line": 1615,
+          "node_type": "IdentifierLiteralCall"
+        },
+        {
+          "line": 1621,
+          "node_type": "IdentifierLiteralCall"
+        },
+        {
+          "line": 1943,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 2028,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "6a50c94ed57c44b4cb85c1e99ba03730cfba0b71f65803a70c4dccd8256fdac5",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "8e7578575468f187",
+      "source_file": "pyproject.toml",
+      "historical_line": 115,
+      "current_nearest_occurrence": {
+        "line": 115,
+        "node_type": "StructuredKeyOrPattern"
+      },
+      "identifier": "pragma",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "SYSTEM",
+      "disposition": "BUILD_TOOL_CONFIGURATION",
+      "reason": "Coverage exclude_lines pattern pragma: no cover; coverage-tool config, not application runtime setting.",
+      "current_symbol_occurrences": [
+        {
+          "line": 115,
+          "node_type": "StructuredKeyOrPattern"
+        }
+      ],
+      "source_sha256": "b0284a11317a3a5688350659e21f32c5bb223aaca915df2009a8e0af9b9d201c",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "a4cda242ac6655c8",
+      "source_file": "run_tests.py",
+      "historical_line": 37,
+      "current_nearest_occurrence": {
+        "line": 37,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "grounded",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 37,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 40,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 40,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 40,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "e54f1b47cebe54fc24494d3bbd5dbbd13d292bb97bc9a2c020ffcc7336edaec0",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "63be31f036c7db4c",
+      "source_file": "scripts/test_e2e_nusantara.py",
+      "historical_line": 94,
+      "current_nearest_occurrence": {
+        "line": 94,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "actual_grounded",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 94,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 101,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 124,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 139,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "6ef71e96c40ede3697e0f5efd3baf036dd06550f122f5295ca09c91b19896cad",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "8bfbdd6299ed48be",
+      "source_file": "scripts/test_knowledge_retrieval.py",
+      "historical_line": 35,
+      "current_nearest_occurrence": {
+        "line": 35,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "expected_rag",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "PATH",
+      "disposition": "VERIFICATION_SOURCE_PATH",
+      "reason": "Verification script identifies expected RAG source file; not app runtime path setting.",
+      "current_symbol_occurrences": [
+        {
+          "line": 35,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 39,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 42,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "5f3ab114cc0ba10f0e4fd1ac685061550e1460b71cebc6e94194b43ace6ec889",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "bed38fe9b3d4dfee",
+      "source_file": "scripts/test_knowledge_retrieval.py",
+      "historical_line": 37,
+      "current_nearest_occurrence": {
+        "line": 37,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "actual_rag",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 37,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 39,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 43,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "5f3ab114cc0ba10f0e4fd1ac685061550e1460b71cebc6e94194b43ace6ec889",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "32d5a77d646a1bda",
+      "source_file": "scripts/test_knowledge_retrieval.py",
+      "historical_line": 49,
+      "current_nearest_occurrence": {
+        "line": 49,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "HybridRAG",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "RAG",
+      "disposition": "COMPATIBILITY_ALIAS_OR_LOOKUP",
+      "reason": "Public RAG class compatibility alias or getattr lookup; not configuration source.",
+      "current_symbol_occurrences": [
+        {
+          "line": 49,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 49,
+          "node_type": "IdentifierLiteralCall"
+        },
+        {
+          "line": 51,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 65,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "5f3ab114cc0ba10f0e4fd1ac685061550e1460b71cebc6e94194b43ace6ec889",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "22d1be08dd4dc3ef",
+      "source_file": "scripts/validate_gate16_5_evidence_grounding.py",
+      "historical_line": 127,
+      "current_nearest_occurrence": {
+        "line": 127,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "rag_file",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "PATH",
+      "disposition": "VERIFICATION_SOURCE_PATH",
+      "reason": "Verification script identifies expected RAG source file; not app runtime path setting.",
+      "current_symbol_occurrences": [
+        {
+          "line": 127,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 139,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 143,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "98ccfd503e9e225b17b41ecdda68a3aa5485764508e3ef7ba259533fd4e619d5",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "9af45e3fd87eef61",
+      "source_file": "scripts/validate_gate16_5_evidence_grounding.py",
+      "historical_line": 138,
+      "current_nearest_occurrence": {
+        "line": 138,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "rag_text",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 138,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 167,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "98ccfd503e9e225b17b41ecdda68a3aa5485764508e3ef7ba259533fd4e619d5",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "dd500e4b2309c324",
+      "source_file": "scripts/validate_gate16_5_evidence_grounding.py",
+      "historical_line": 160,
+      "current_nearest_occurrence": {
+        "line": 160,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "rag_evidence_found",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 160,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 171,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 183,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 240,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "98ccfd503e9e225b17b41ecdda68a3aa5485764508e3ef7ba259533fd4e619d5",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "9213bdd8cccb2d8b",
+      "source_file": "scripts/verify_audit_runtime.py",
+      "historical_line": 32,
+      "current_nearest_occurrence": {
+        "line": 32,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "rag",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 32,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 34,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 39,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "5b55227af1abd3e752169bf6700322331da2a91b36fe3c8bbd44ee3372fd2b29",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "bb31e8181f8f6fff",
+      "source_file": "scripts/verify_v1_recovery_rag.py",
+      "historical_line": 37,
+      "current_nearest_occurrence": {
+        "line": 37,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "rag",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 37,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 46,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 73,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "a029818f6277f63869ae3541995f051faad15c146fd09f2d1c0e64543d64dc5b",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "bc95c5a05a6514ba",
+      "source_file": "sop_governance_ocr_engine.py",
+      "historical_line": 535,
+      "current_nearest_occurrence": {
+        "line": 535,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "average_confidence",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 535,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 548,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 563,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 593,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "895faf0967662a22740566f339c511a669644b36cd2d5622a753deab319845b0",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "5b980cc94b2eb083",
+      "source_file": "sop_governance_ocr_engine.py",
+      "historical_line": 548,
+      "current_nearest_occurrence": {
+        "line": 548,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "average_confidence",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 535,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 548,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 563,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 593,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "895faf0967662a22740566f339c511a669644b36cd2d5622a753deab319845b0",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "3b88502b4635b9ab",
+      "source_file": "sop_table_reconstruction_engine.py",
+      "historical_line": 640,
+      "current_nearest_occurrence": {
+        "line": 640,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "average_activity_confidence",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 640,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 650,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 652,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 710,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 805,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "eac1987217c72b33b99347ab54e7a889bf034d66658f8679ebe334c9cc838b4c",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "95fb0e29277b6ab5",
+      "source_file": "sop_table_reconstruction_engine.py",
+      "historical_line": 650,
+      "current_nearest_occurrence": {
+        "line": 650,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "average_activity_confidence",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 640,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 650,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 652,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 710,
+          "node_type": "Name",
+          "access": "Load"
+        },
+        {
+          "line": 805,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "eac1987217c72b33b99347ab54e7a889bf034d66658f8679ebe334c9cc838b4c",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "a74128e982fd326c",
+      "source_file": "sop_visual_evidence_inspector.py",
+      "historical_line": 338,
+      "current_nearest_occurrence": {
+        "line": 338,
+        "node_type": "Name",
+        "access": "Store"
+      },
+      "identifier": "paragraph",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "DERIVED_VALUE_OR_EXECUTION_OBJECT",
+      "reason": "Computed local result, paragraph/score/count/list, or constructed RAG execution object; identifier matched discovery heuristics but is not configuration declaration.",
+      "current_symbol_occurrences": [
+        {
+          "line": 338,
+          "node_type": "Name",
+          "access": "Store"
+        },
+        {
+          "line": 350,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "9225a148f0ed013832157c802e7e989e0eb812a10155444e1ae5d5bd1c09f99d",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "e5fc266843433488",
+      "source_file": "tests/test_review_branch.py",
+      "historical_line": 14,
+      "current_nearest_occurrence": {
+        "line": 14,
+        "node_type": "IdentifierLiteralCall"
+      },
+      "identifier": "NUSANTARA_TEST_GIT",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "RUNTIME",
+      "disposition": "TEST_HARNESS_CONFIGURATION",
+      "reason": "Test-only executable selector for isolated Git fixture; not production config.",
+      "current_symbol_occurrences": [
+        {
+          "line": 14,
+          "node_type": "IdentifierLiteralCall"
+        }
+      ],
+      "source_sha256": "8bcfcc93509a88df6edd56cd1d13b2bc3730a36f6931e6168606c728fa344b28",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    },
+    {
+      "candidate_id": "427c621b8cacb431",
+      "source_file": "tests/v2/test_phases_7_21.py",
+      "historical_line": 205,
+      "current_nearest_occurrence": {
+        "line": 205,
+        "node_type": "Parameter"
+      },
+      "identifier": "n_rag",
+      "original_category": "UNKNOWN",
+      "reviewed_domain": "LEGACY",
+      "disposition": "TEST_FIXTURE_PARAMETER",
+      "reason": "Number of synthetic RAG error events generated by test fixture.",
+      "current_symbol_occurrences": [
+        {
+          "line": 205,
+          "node_type": "Parameter"
+        },
+        {
+          "line": 207,
+          "node_type": "Name",
+          "access": "Load"
+        }
+      ],
+      "source_sha256": "9c974b3b3efe94479a9fb5674e51bed70d4e9954f72c51a46cb87669e4f963a8",
+      "review_status": "REVIEWED_STATIC",
+      "runtime_execution_proven": false,
+      "values_recorded": false
+    }
+  ],
+  "limit": "UNKNOWN candidates classified by role; does not prove inventory completeness or runtime activation. Original map immutable."
+}

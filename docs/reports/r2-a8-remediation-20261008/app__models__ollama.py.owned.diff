@@ -1,0 +1,34 @@
+warning: in the working copy of 'docs/reports/r2-a8-remediation-20261008/profile-before/app__models__ollama.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/models/ollama.py', LF will be replaced by CRLF the next time Git touches it
+diff --git a/docs/reports/r2-a8-remediation-20261008/profile-before/app__models__ollama.py b/app/models/ollama.py
+index 5aed43b..f1827ce 100644
+--- a/docs/reports/r2-a8-remediation-20261008/profile-before/app__models__ollama.py
++++ b/app/models/ollama.py
+@@ -43,6 +43,7 @@ class OllamaProvider(LLMProvider):
+         *,
+         nusantara_config: NusantaraConfig | None = None,
+         model_source: str | None = None,
++        http_client: httpx.AsyncClient | None = None,
+     ):
+         # Omitted values use the snapshot; explicit values always win, including
+         # values equal to the old defaults. No provider registry is duplicated.
+@@ -63,7 +64,9 @@ class OllamaProvider(LLMProvider):
+         self.base_url = (base_url if base_url is not None else "http://localhost:11434").rstrip("/")
+         self.model_name = model if model is not None else "llama3.2:1b"
+         self.timeout = timeout if timeout is not None else 120.0
+-        self._client: Optional[httpx.AsyncClient] = None
++        # An explicitly injected diagnostic client is owned/closed by this instance.
++        self._client: Optional[httpx.AsyncClient] = http_client
++        self._injected_client = http_client is not None
+ 
+     def _capture_identity(self):
+         return capture_model_identity(provider_id=self.name, selected_model=self.model,
+@@ -104,6 +107,8 @@ class OllamaProvider(LLMProvider):
+     async def _get_client(self) -> httpx.AsyncClient:
+         """Get atau buat HTTP client."""
+         if self._client is None or self._client.is_closed:
++            if self._injected_client:
++                raise RuntimeError('INJECTED_CLIENT_CLOSED')
+             self._client = httpx.AsyncClient(
+                 base_url=self.base_url,
+                 timeout=httpx.Timeout(self.timeout),

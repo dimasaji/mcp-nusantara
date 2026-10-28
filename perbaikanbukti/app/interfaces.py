@@ -1,0 +1,3 @@
+from typing import Protocol, Any
+class LLMProviderProtocol(Protocol):
+    def generate(self, request: Any) -> Any: ...

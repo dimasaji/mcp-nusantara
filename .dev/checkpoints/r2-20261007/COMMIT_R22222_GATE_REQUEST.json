@@ -1,0 +1,36 @@
+{
+  "id": "COMMIT-R22222-PREREQUISITES",
+  "status": "HOLD_SCOPE_DECISION",
+  "requested_commit_message": "R22222",
+  "timestamp": "2026-10-07T09:13:20.617441+00:00",
+  "R2_closure": "CLOSED_PASS unchanged",
+  "requested_source_scope": [
+    "app/api/routes.py",
+    "app/api/v2_routes.py",
+    "app/core/runtime_identity.py",
+    "app/models/base.py",
+    "app/models/gateway.py",
+    "app/models/ollama.py",
+    "app/models/openai_compatible.py",
+    "app/models/router.py",
+    "tests/test_provider_identity.py"
+  ],
+  "concrete_dependency_evidence": {
+    "HEAD_config_has_effective_configuration": false,
+    "HEAD_config_has_compose_configuration": false,
+    "HEAD_nusantara_config_present": false,
+    "HEAD_runtime_identity_present": false,
+    "working_tree_config_diff_exists": true,
+    "working_tree_nusantara_config_present": true
+  },
+  "prerequisites_outside_R2_source_scope": [
+    "app/core/config.py (existing R1 composition changes)",
+    "app/core/nusantara_config.py (existing configuration owner; not present in HEAD)"
+  ],
+  "risk": "A commit of only current nine R2 sources would reference the missing R1 configuration owner/composition API in its parent Git tree. Full current scoped files also contain inherited changes, so committing them blindly would combine unapproved prerequisites.",
+  "decision_requested": "Authorize inclusion of required inherited R1 configuration prerequisites in commit R22222, with a reviewed exact dependency scope before staging; or select acceptance/evidence-only commit.",
+  "staged_paths": [],
+  "mutations_performed": "None: no staging, commit, push, reset, clean, or source change",
+  "separate_authorization_needed": "MDA-R2-AUTH-001 scope-drift/prerequisite rule; user commit request authorizes commit but does not specify inherited out-of-scope prerequisites",
+  "R3_MDE10_authorized": false
+}

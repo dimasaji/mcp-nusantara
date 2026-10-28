@@ -1,0 +1,432 @@
+{
+  "gate": "14.7",
+  "engine": "Runtime Static Consistency",
+  "version": "14.7.0",
+  "timestamp": "2026-10-03T18:46:09.978265",
+  "source_of_truth": "C:\\Users\\dmaza\\mcp-starter",
+  "graph": {
+    "nodes": 2768,
+    "links": 6079
+  },
+  "runtime": {
+    "modules": 7
+  },
+  "consistency": {
+    "passed": 7,
+    "total": 7,
+    "results": [
+      {
+        "runtime_module": "app.api.routes",
+        "runtime_file": "C:\\Users\\dmaza\\mcp-starter\\app\\api\\routes.py",
+        "graph_matches": [
+          {
+            "id": "app_api_routes",
+            "label": "routes.py",
+            "type": null
+          },
+          {
+            "id": "app_api_v2_routes",
+            "label": "v2_routes.py",
+            "type": null
+          },
+          {
+            "id": "tests_v2_test_devcore_routes",
+            "label": "test_devcore_routes.py",
+            "type": null
+          },
+          {
+            "id": "tests_v2_test_devcore_routes_rationale_1",
+            "label": "Uji routes.py LIVE (patched vs original) dengan STUB…",
+            "type": null
+          }
+        ],
+        "match_count": 4,
+        "status": "PASS"
+      },
+      {
+        "runtime_module": "app.language.engine",
+        "runtime_file": "C:\\Users\\dmaza\\mcp-starter\\app\\language\\engine.py",
+        "graph_matches": [
+          {
+            "id": "app_action_engine",
+            "label": "action/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_context_engine",
+            "label": "context/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_developer_core_engine",
+            "label": "developer_core/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_handoff_engine",
+            "label": "handoff/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_knowledge_engine",
+            "label": "knowledge/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_language_engine",
+            "label": "language/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_memory_engine",
+            "label": "memory/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_orchestration_engine",
+            "label": "orchestration/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_policy_engine",
+            "label": "policy/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_policy_policy_engine",
+            "label": "policy_engine.py",
+            "type": null
+          },
+          {
+            "id": "app_problem_engine",
+            "label": "problem/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_reasoning_engine",
+            "label": "reasoning/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_skills_sop_semantic_engine",
+            "label": "sop_semantic/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_trust_engine",
+            "label": "trust/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_workflow_engine",
+            "label": "workflow/engine.py",
+            "type": null
+          },
+          {
+            "id": "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script",
+            "label": "1. `developer_core_engine.py` (root, 49 KB) adalah orphaned dev script",
+            "type": null
+          }
+        ],
+        "match_count": 16,
+        "status": "PASS"
+      },
+      {
+        "runtime_module": "app.problem.engine",
+        "runtime_file": "C:\\Users\\dmaza\\mcp-starter\\app\\problem\\engine.py",
+        "graph_matches": [
+          {
+            "id": "app_action_engine",
+            "label": "action/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_context_engine",
+            "label": "context/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_developer_core_engine",
+            "label": "developer_core/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_handoff_engine",
+            "label": "handoff/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_knowledge_engine",
+            "label": "knowledge/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_language_engine",
+            "label": "language/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_memory_engine",
+            "label": "memory/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_orchestration_engine",
+            "label": "orchestration/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_policy_engine",
+            "label": "policy/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_policy_policy_engine",
+            "label": "policy_engine.py",
+            "type": null
+          },
+          {
+            "id": "app_problem_engine",
+            "label": "problem/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_reasoning_engine",
+            "label": "reasoning/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_skills_sop_semantic_engine",
+            "label": "sop_semantic/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_trust_engine",
+            "label": "trust/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_workflow_engine",
+            "label": "workflow/engine.py",
+            "type": null
+          },
+          {
+            "id": "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script",
+            "label": "1. `developer_core_engine.py` (root, 49 KB) adalah orphaned dev script",
+            "type": null
+          }
+        ],
+        "match_count": 16,
+        "status": "PASS"
+      },
+      {
+        "runtime_module": "app.knowledge.engine",
+        "runtime_file": "C:\\Users\\dmaza\\mcp-starter\\app\\knowledge\\engine.py",
+        "graph_matches": [
+          {
+            "id": "app_action_engine",
+            "label": "action/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_context_engine",
+            "label": "context/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_developer_core_engine",
+            "label": "developer_core/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_handoff_engine",
+            "label": "handoff/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_knowledge_engine",
+            "label": "knowledge/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_language_engine",
+            "label": "language/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_memory_engine",
+            "label": "memory/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_orchestration_engine",
+            "label": "orchestration/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_policy_engine",
+            "label": "policy/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_policy_policy_engine",
+            "label": "policy_engine.py",
+            "type": null
+          },
+          {
+            "id": "app_problem_engine",
+            "label": "problem/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_reasoning_engine",
+            "label": "reasoning/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_skills_sop_semantic_engine",
+            "label": "sop_semantic/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_trust_engine",
+            "label": "trust/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_workflow_engine",
+            "label": "workflow/engine.py",
+            "type": null
+          },
+          {
+            "id": "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script",
+            "label": "1. `developer_core_engine.py` (root, 49 KB) adalah orphaned dev script",
+            "type": null
+          }
+        ],
+        "match_count": 16,
+        "status": "PASS"
+      },
+      {
+        "runtime_module": "app.reasoning.engine",
+        "runtime_file": "C:\\Users\\dmaza\\mcp-starter\\app\\reasoning\\engine.py",
+        "graph_matches": [
+          {
+            "id": "app_action_engine",
+            "label": "action/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_context_engine",
+            "label": "context/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_developer_core_engine",
+            "label": "developer_core/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_handoff_engine",
+            "label": "handoff/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_knowledge_engine",
+            "label": "knowledge/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_language_engine",
+            "label": "language/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_memory_engine",
+            "label": "memory/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_orchestration_engine",
+            "label": "orchestration/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_policy_engine",
+            "label": "policy/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_policy_policy_engine",
+            "label": "policy_engine.py",
+            "type": null
+          },
+          {
+            "id": "app_problem_engine",
+            "label": "problem/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_reasoning_engine",
+            "label": "reasoning/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_skills_sop_semantic_engine",
+            "label": "sop_semantic/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_trust_engine",
+            "label": "trust/engine.py",
+            "type": null
+          },
+          {
+            "id": "app_workflow_engine",
+            "label": "workflow/engine.py",
+            "type": null
+          },
+          {
+            "id": "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script",
+            "label": "1. `developer_core_engine.py` (root, 49 KB) adalah orphaned dev script",
+            "type": null
+          }
+        ],
+        "match_count": 16,
+        "status": "PASS"
+      },
+      {
+        "runtime_module": "app.developer_core.graph_bridge",
+        "runtime_file": "C:\\Users\\dmaza\\mcp-starter\\app\\developer_core\\graph_bridge.py",
+        "graph_matches": [
+          {
+            "id": "app_developer_core_graph_bridge",
+            "label": "graph_bridge.py",
+            "type": null
+          }
+        ],
+        "match_count": 1,
+        "status": "PASS"
+      },
+      {
+        "runtime_module": "app.core.gate_integration",
+        "runtime_file": "C:\\Users\\dmaza\\mcp-starter\\app\\core\\gate_integration.py",
+        "graph_matches": [
+          {
+            "id": "app_core_gate_integration",
+            "label": "gate_integration.py",
+            "type": null
+          },
+          {
+            "id": "tests_test_gate_integration",
+            "label": "test_gate_integration.py",
+            "type": null
+          }
+        ],
+        "match_count": 2,
+        "status": "PASS"
+      }
+    ]
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,91 @@
+{
+  "classification": "SYNTHETIC_DECLARED_ARTIFACTS_NOT_LIVE_APPLICATION",
+  "definition": {
+    "inventory": [
+      [
+        "app.py",
+        "APPLICATION_CODE"
+      ],
+      [
+        "asset.txt",
+        "STATIC_ASSET"
+      ],
+      [
+        "dependency.py",
+        "DEPENDENCY"
+      ],
+      [
+        "interpreter.bin",
+        "INTERPRETER"
+      ]
+    ],
+    "inputs": [
+      {
+        "name": "app.py",
+        "role": "APPLICATION_CODE",
+        "digest": "sha256:e13df8c44af5dea1e412403910b99cc5a48f2ccbf68a66b3374d6ab9cef9fc65"
+      },
+      {
+        "name": "asset.txt",
+        "role": "STATIC_ASSET",
+        "digest": "sha256:d59386e0ae435e292fbe0ebcdb954b75ed5fb3922091277cb19f798fc5d50718"
+      },
+      {
+        "name": "dependency.py",
+        "role": "DEPENDENCY",
+        "digest": "sha256:2e56472e83525c5233d298aa262d115e182503d79f5fc90f48c21fa02f0760b5"
+      },
+      {
+        "name": "interpreter.bin",
+        "role": "INTERPRETER",
+        "digest": "sha256:4b62a773ac00e62313dd1de0ffffb3c6d2c39e08ec73988c36c0ce2ca7917a91"
+      }
+    ]
+  },
+  "process_binding": {
+    "pid": 1234,
+    "process_start": "2026-10-08T01:00:00+00:00",
+    "runtime_instance_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "matching": {
+    "status": "NOT_VERIFIED",
+    "active_process_build": "NOT_DIRECTLY_VERIFIED",
+    "runtime_identity": "NOT_VERIFIED",
+    "artifact_binding": "VERIFIED",
+    "expected_build_id": "sha256:c28f49b75c22ec0937a68101bf1d861d7b6806e7daa1f6b5b39a1a74e5bb33f2",
+    "observed_loaded_build_id": "sha256:c28f49b75c22ec0937a68101bf1d861d7b6806e7daa1f6b5b39a1a74e5bb33f2",
+    "coverage": "DECLARED_ARTIFACT_INPUTS_ONLY",
+    "reason": "EXECUTION_CLOSURE_NOT_OBSERVED"
+  },
+  "missing_expected": {
+    "status": "NOT_VERIFIED",
+    "active_process_build": "NOT_DIRECTLY_VERIFIED",
+    "runtime_identity": "NOT_VERIFIED",
+    "artifact_binding": "NOT_VERIFIED",
+    "expected_build_id": null,
+    "observed_loaded_build_id": null,
+    "coverage": "DECLARED_ARTIFACT_INPUTS_ONLY",
+    "reason": "EXPECTED_BUILD_MISSING"
+  },
+  "pid_reuse": {
+    "status": "NOT_VERIFIED",
+    "active_process_build": "NOT_DIRECTLY_VERIFIED",
+    "runtime_identity": "NOT_VERIFIED",
+    "artifact_binding": "NOT_VERIFIED",
+    "expected_build_id": "sha256:c28f49b75c22ec0937a68101bf1d861d7b6806e7daa1f6b5b39a1a74e5bb33f2",
+    "observed_loaded_build_id": null,
+    "coverage": "DECLARED_ARTIFACT_INPUTS_ONLY",
+    "reason": "PROCESS_IDENTITY_MISMATCH"
+  },
+  "untrusted": {
+    "status": "NOT_VERIFIED",
+    "active_process_build": "NOT_DIRECTLY_VERIFIED",
+    "runtime_identity": "NOT_VERIFIED",
+    "artifact_binding": "NOT_VERIFIED",
+    "expected_build_id": null,
+    "observed_loaded_build_id": null,
+    "coverage": "DECLARED_ARTIFACT_INPUTS_ONLY",
+    "reason": "UNTRUSTED_PROVENANCE"
+  },
+  "repeat_equal": true
+}

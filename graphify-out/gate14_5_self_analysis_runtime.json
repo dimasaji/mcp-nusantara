@@ -1,0 +1,1965 @@
+{
+  "gate": "14.5",
+  "engine": "Developer Core Self-Analysis",
+  "version": "14.5.1",
+  "timestamp": "2026-10-03T18:44:16.670277",
+  "source_of_truth": "C:\\Users\\dmaza\\mcp-starter",
+  "runtime": {
+    "modules": 7,
+    "files": [
+      "engine.py",
+      "gate_integration.py",
+      "graph_bridge.py",
+      "routes.py"
+    ]
+  },
+  "graph": {
+    "nodes": 2768,
+    "links": 6079
+  },
+  "self_model": {
+    "runtime_nodes_detected": 23,
+    "runtime_connections_detected": 355
+  },
+  "runtime_nodes": [
+    {
+      "id": "app_action_engine",
+      "label": "action/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_api_routes",
+      "label": "routes.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_api_v2_routes",
+      "label": "v2_routes.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_context_engine",
+      "label": "context/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_core_gate_integration",
+      "label": "gate_integration.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_developer_core_engine",
+      "label": "developer_core/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_developer_core_graph_bridge",
+      "label": "graph_bridge.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_handoff_engine",
+      "label": "handoff/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_knowledge_engine",
+      "label": "knowledge/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_language_engine",
+      "label": "language/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_memory_engine",
+      "label": "memory/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_orchestration_engine",
+      "label": "orchestration/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_policy_engine",
+      "label": "policy/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_policy_policy_engine",
+      "label": "policy_engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_problem_engine",
+      "label": "problem/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_reasoning_engine",
+      "label": "reasoning/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_skills_sop_semantic_engine",
+      "label": "sop_semantic/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_trust_engine",
+      "label": "trust/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "app_workflow_engine",
+      "label": "workflow/engine.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "tests_test_gate_integration",
+      "label": "test_gate_integration.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "tests_v2_test_devcore_routes",
+      "label": "test_devcore_routes.py",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "tests_v2_test_devcore_routes_rationale_1",
+      "label": "Uji routes.py LIVE (patched vs original) dengan STUB…",
+      "type": null,
+      "file": null,
+      "path": null
+    },
+    {
+      "id": "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script",
+      "label": "1. `developer_core_engine.py` (root, 49 KB) adalah orphaned dev script",
+      "type": null,
+      "file": null,
+      "path": null
+    }
+  ],
+  "connections": [
+    {
+      "source": "app_action_engine",
+      "target": "app_action_engine_actionengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_action_tool_bridge",
+      "target": "app_action_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "time",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "datetime",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "fastapi",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "pydantic",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_core_config",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_core_gate_integration",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_developer_core_graph_bridge",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_knowledge_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_knowledge_grounding",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_knowledge_schemas",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_models_ollama",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_problem_classifier",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_problem_detector",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_problem_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_hermes_agent",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_language_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_workflow_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_chatrequest",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_problemanalyzerequest",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_workflowcreaterequest",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_documentingestrequest",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_knowledgesearchrequest",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_humanhandoffrequest",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_healthresponse",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_model_dump",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_extract_understanding_data",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_extract_intent",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_extract_entities",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_extract_document_entities",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_get_problem_value",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_reconcile_problem_with_intent",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_build_evidence_text",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_deterministic_response",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_build_system_prompt",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_build_user_prompt",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_apply_grounding_safety_gate",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_health_check",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_health_detail",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_chat",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_analyze_problem",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_create_workflow",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_get_workflow",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_ingest_document",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_search_knowledge",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_list_knowledge_documents",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_request_handoff",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_get_metrics",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_api_routes_developer_core_status",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_routes_rationale_1",
+      "target": "app_api_routes",
+      "type": "rationale_for"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "hmac",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "os",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "pathlib",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "fastapi",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "pydantic",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_approval_init",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_core_config",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_devcore_init",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_experience_init",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_research_failure_analysis",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_research_gap_detection",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_knowledge_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_language_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_models_ollama",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_observability_init",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_v2_init",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_v2_orchestrator",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_v2_wiring",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_require_admin",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_chatv2request",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_decisionrequest",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_health",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_chat",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_get_metrics",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_pending",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_decide",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_audit_verify",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_feedbackrequest",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_submit_feedback",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_experience_analysis",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_devrequest",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_api_v2_routes_dev_chat",
+      "type": "contains"
+    },
+    {
+      "source": "app_api_v2_routes_rationale_1",
+      "target": "app_api_v2_routes",
+      "type": "rationale_for"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_schemas",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_session",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_context_builder",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_engine_contextengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_context_engine_rationale_1",
+      "target": "app_context_engine",
+      "type": "rationale_for"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_action_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_memory_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_orchestration_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_policy_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_reasoning_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_core_gate_integration_gateintegration",
+      "type": "contains"
+    },
+    {
+      "source": "app_core_gate_pipeline",
+      "target": "app_reasoning_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_core_gate_pipeline",
+      "target": "app_policy_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_core_gate_pipeline",
+      "target": "app_memory_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_core_gate_pipeline",
+      "target": "app_action_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_developer_core_init",
+      "target": "app_developer_core_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_developer_core_init",
+      "target": "app_developer_core_graph_bridge",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_developer_core_engine",
+      "target": "dataclasses",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_developer_core_engine",
+      "target": "pathlib",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_developer_core_engine",
+      "target": "json",
+      "type": "imports"
+    },
+    {
+      "source": "app_developer_core_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_developer_core_engine",
+      "target": "app_developer_core_engine_developeranalysis",
+      "type": "contains"
+    },
+    {
+      "source": "app_developer_core_engine",
+      "target": "app_developer_core_engine_developercoreengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_developer_core_graph_bridge",
+      "target": "pathlib",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_developer_core_graph_bridge",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_developer_core_graph_bridge",
+      "target": "app_developer_core_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_developer_core_graph_bridge",
+      "target": "app_developer_core_runtime",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_developer_core_graph_bridge",
+      "target": "app_developer_core_graph_bridge_graphifybridge",
+      "type": "contains"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "uuid",
+      "type": "imports"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "dataclasses",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "datetime",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "enum",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "app_handoff_schemas",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "app_handoff_engine_handoffengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "app_handoff_engine_summarize_context",
+      "type": "contains"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "app_handoff_engine_create_handoff_engine",
+      "type": "contains"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "app_handoff_engine_get_default_handoff_engine",
+      "type": "contains"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "app_handoff_engine_create_handoff_request",
+      "type": "contains"
+    },
+    {
+      "source": "app_handoff_engine_rationale_1",
+      "target": "app_handoff_engine",
+      "type": "rationale_for"
+    },
+    {
+      "source": "app_hermes_agent",
+      "target": "app_language_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_hermes_agent",
+      "target": "app_problem_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_hermes_agent",
+      "target": "app_reasoning_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_knowledge_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_knowledge_engine",
+      "target": "app_knowledge_rag",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_knowledge_engine",
+      "target": "app_knowledge_engine_knowledgeengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_knowledge_engine_rationale_1",
+      "target": "app_knowledge_engine",
+      "type": "rationale_for"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "re",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "time",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "dataclasses",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_normalizer",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_intent",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_semantic_fusion",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_semantic_semantic_intent",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_entity",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_schemas",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_engine_languagedetection",
+      "type": "contains"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_engine_languageengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_engine_create_language_engine",
+      "type": "contains"
+    },
+    {
+      "source": "app_language_engine_rationale_1",
+      "target": "app_language_engine",
+      "type": "rationale_for"
+    },
+    {
+      "source": "app_main",
+      "target": "app_api_routes",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_main",
+      "target": "app_api_v2_routes",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_memory_engine",
+      "target": "collections",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_memory_engine",
+      "target": "datetime",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_memory_engine",
+      "target": "app_memory_engine_memoryengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_orchestration_engine",
+      "target": "app_orchestration_engine_orchestrationengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_policy_engine",
+      "target": "dataclasses",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_policy_engine",
+      "target": "app_policy_engine_policydecision",
+      "type": "contains"
+    },
+    {
+      "source": "app_policy_engine",
+      "target": "app_policy_engine_policyengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "dataclasses",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "enum",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "app_policy_schemas",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "app_policy_policy_engine_policyrule",
+      "type": "contains"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "app_policy_policy_engine_policyengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "app_policy_policy_engine_create_policy_engine",
+      "type": "contains"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "app_policy_policy_engine_evaluate_policy",
+      "type": "contains"
+    },
+    {
+      "source": "app_policy_policy_engine_rationale_1",
+      "target": "app_policy_policy_engine",
+      "type": "rationale_for"
+    },
+    {
+      "source": "app_problem_init",
+      "target": "app_problem_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "logging",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_problem_schema",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_detector",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_classifier",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_engine_problemengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_engine_generate_problem_id",
+      "type": "contains"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_engine_process_problem",
+      "type": "contains"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_engine_compat_analyze",
+      "type": "contains"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_engine_compat_analyze",
+      "type": "indirect_call"
+    },
+    {
+      "source": "app_problem_engine_rationale_1",
+      "target": "app_problem_engine",
+      "type": "rationale_for"
+    },
+    {
+      "source": "app_reasoning_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_reasoning_engine",
+      "target": "app_reasoning_schemas",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_reasoning_engine",
+      "target": "app_reasoning_engine_reasoningengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_init",
+      "target": "app_skills_sop_semantic_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "json",
+      "type": "imports"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "re",
+      "type": "imports"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "time",
+      "type": "imports"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "pathlib",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "requests",
+      "type": "imports"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_clean",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_unique",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_discover",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_evidenceadapter",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_extract_from_text",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_extract_metadata",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_get_list",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_call_ollama",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_semantic_section",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_run_semantic",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_quality_gate",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_process",
+      "type": "contains"
+    },
+    {
+      "source": "app_skills_sop_semantic_engine",
+      "target": "app_skills_sop_semantic_engine_main",
+      "type": "contains"
+    },
+    {
+      "source": "app_trust_engine",
+      "target": "dataclasses",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_trust_engine",
+      "target": "enum",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_trust_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_trust_engine",
+      "target": "app_trust_schemas",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_trust_engine",
+      "target": "app_trust_engine_trustengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_trust_engine",
+      "target": "app_trust_engine_create_trust_engine",
+      "type": "contains"
+    },
+    {
+      "source": "app_trust_engine",
+      "target": "app_trust_engine_evaluate_trust",
+      "type": "contains"
+    },
+    {
+      "source": "app_trust_engine_rationale_1",
+      "target": "app_trust_engine",
+      "type": "rationale_for"
+    },
+    {
+      "source": "app_v2_wiring",
+      "target": "app_policy_policy_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_v2_wiring",
+      "target": "app_trust_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_workflow_engine",
+      "target": "dataclasses",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_workflow_engine",
+      "target": "typing",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_workflow_engine",
+      "target": "app_workflow_engine_py_enum",
+      "type": "imports_from"
+    },
+    {
+      "source": "app_workflow_engine",
+      "target": "uuid",
+      "type": "imports"
+    },
+    {
+      "source": "app_workflow_engine",
+      "target": "app_workflow_engine_workflowstate",
+      "type": "contains"
+    },
+    {
+      "source": "app_workflow_engine",
+      "target": "app_workflow_engine_workflow",
+      "type": "contains"
+    },
+    {
+      "source": "app_workflow_engine",
+      "target": "app_workflow_engine_workflowengine",
+      "type": "contains"
+    },
+    {
+      "source": "app_workflow_engine",
+      "target": "app_workflow_engine_create_workflow_engine",
+      "type": "contains"
+    },
+    {
+      "source": "scripts_test_grounding_hermes",
+      "target": "app_knowledge_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "scripts_test_grounding_ollama_api",
+      "target": "app_knowledge_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "scripts_test_knowledge_grounding",
+      "target": "app_knowledge_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "scripts_test_knowledge_retrieval",
+      "target": "app_knowledge_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "scripts_validate_gate14",
+      "target": "app_developer_core_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "scripts_validate_gate14",
+      "target": "app_developer_core_graph_bridge",
+      "type": "imports_from"
+    },
+    {
+      "source": "scripts_validate_gates_8_16",
+      "target": "app_reasoning_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "scripts_validate_gates_8_16",
+      "target": "app_policy_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "scripts_validate_gates_8_16",
+      "target": "app_memory_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "scripts_validate_gates_8_16",
+      "target": "app_action_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "scripts_validate_gates_8_16",
+      "target": "app_orchestration_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_evaluation_test_smoke",
+      "target": "app_policy_policy_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_evaluation_test_smoke",
+      "target": "app_trust_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_evaluation_test_smoke",
+      "target": "app_handoff_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_test_gate14_developer_core",
+      "target": "app_developer_core_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_test_gate14_developer_core",
+      "target": "app_developer_core_graph_bridge",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_test_gate_integration",
+      "target": "app_core_gate_integration",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_test_gate_integration",
+      "target": "tests_test_gate_integration_test_grounded_gate_8_13",
+      "type": "contains"
+    },
+    {
+      "source": "tests_test_gate_integration",
+      "target": "tests_test_gate_integration_test_no_evidence_is_blocked",
+      "type": "contains"
+    },
+    {
+      "source": "tests_test_gate_integration",
+      "target": "tests_test_gate_integration_test_memory_keeps_conversation",
+      "type": "contains"
+    },
+    {
+      "source": "tests_test_gates_8_16",
+      "target": "app_reasoning_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_test_gates_8_16",
+      "target": "app_policy_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_test_gates_8_16",
+      "target": "app_memory_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_test_gates_8_16",
+      "target": "app_action_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_test_gates_8_16",
+      "target": "app_orchestration_engine",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "asyncio",
+      "type": "imports"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "importlib_util",
+      "type": "imports"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "sys",
+      "type": "imports"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "tempfile",
+      "type": "imports"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "types",
+      "type": "imports"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "unittest",
+      "type": "imports"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "pathlib",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "tests_v2_test_devcore_integration",
+      "type": "imports_from"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "tests_v2_test_devcore_routes_mod",
+      "type": "contains"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "tests_v2_test_devcore_routes_fakeprovider",
+      "type": "contains"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "tests_v2_test_devcore_routes_stubmodel",
+      "type": "contains"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "tests_v2_test_devcore_routes_load_routes",
+      "type": "contains"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "tests_v2_test_devcore_routes_testroutes",
+      "type": "contains"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes_rationale_1",
+      "target": "tests_v2_test_devcore_routes",
+      "type": "rationale_for"
+    },
+    {
+      "source": "audit_reports_audit_2026_10_03_code_quality_temuan_detail",
+      "target": "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script",
+      "type": "contains"
+    },
+    {
+      "source": "app_developer_core_init",
+      "target": "app_developer_core_engine",
+      "type": "re_exports"
+    },
+    {
+      "source": "app_developer_core_init",
+      "target": "app_developer_core_graph_bridge",
+      "type": "re_exports"
+    },
+    {
+      "source": "app_problem_init",
+      "target": "app_problem_engine",
+      "type": "re_exports"
+    },
+    {
+      "source": "app_skills_sop_semantic_init",
+      "target": "app_skills_sop_semantic_engine",
+      "type": "re_exports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_core_gate_integration_gateintegration",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_developer_core_graph_bridge_graphifybridge",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_knowledge_engine_knowledgeengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_knowledge_grounding_evidencegroundingguard",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_knowledge_schemas_documentingestrequest",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_models_ollama_ollamaprovider",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_problem_classifier_problemclassifier",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_problem_detector_problemdetector",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_problem_engine_problemengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_hermes_agent_hermesagent",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_language_engine_languageengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_workflow_engine_workflowengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_routes",
+      "target": "app_handoff_engine_handoffengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_approval_queue_approvalerror",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_approval_queue_approvalqueue",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_approval_audit_trail_audittrail",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_devcore_core_devcore",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_experience_events_eventrecorder",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_experience_feedback_feedbackrejected",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_experience_feedback_feedbackstore",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_research_failure_analysis_analyze",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_research_gap_detection_detect_gaps",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_knowledge_engine_knowledgeengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_language_engine_languageengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_models_ollama_ollamaprovider",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_v2_orchestrator_v2orchestrator",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_v2_wiring_v1_policy_check",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_v2_wiring_v1_trust_check",
+      "type": "imports"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_schemas_contextstate",
+      "type": "imports"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_schemas_contextupdate",
+      "type": "imports"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_schemas_contextmetadata",
+      "type": "imports"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_schemas_contextwindowconfig",
+      "type": "imports"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_schemas_sessionisolationconfig",
+      "type": "imports"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_schemas_historyentry",
+      "type": "imports"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_schemas_missinginformationrequest",
+      "type": "imports"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_schemas_missinginformationresponse",
+      "type": "imports"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_session_sessionmanager",
+      "type": "imports"
+    },
+    {
+      "source": "app_context_engine",
+      "target": "app_context_context_builder_contextbuilder",
+      "type": "imports"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_action_engine_actionengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_memory_engine_memoryengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_orchestration_engine_orchestrationengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_policy_engine_policyengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_core_gate_integration",
+      "target": "app_reasoning_engine_reasoningengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_developer_core_graph_bridge",
+      "target": "app_developer_core_engine_developercoreengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_developer_core_graph_bridge",
+      "target": "app_developer_core_runtime_developerruntime",
+      "type": "imports"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "app_handoff_schemas_handofflevel",
+      "type": "imports"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "app_handoff_schemas_handoffrequest",
+      "type": "imports"
+    },
+    {
+      "source": "app_handoff_engine",
+      "target": "app_handoff_schemas_handoffstatus",
+      "type": "imports"
+    },
+    {
+      "source": "app_knowledge_engine",
+      "target": "app_knowledge_rag_rag",
+      "type": "imports"
+    },
+    {
+      "source": "app_knowledge_engine",
+      "target": "app_knowledge_rag_create_rag",
+      "type": "imports"
+    },
+    {
+      "source": "app_knowledge_engine",
+      "target": "app_knowledge_schemas_documentingestrequest",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_normalizer_textnormalizer",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_intent_intentclassifier",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_semantic_fusion_intentfusion",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_semantic_semantic_intent_semanticintentengine",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_entity_entityextractor",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_schemas_normalizationresult",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_schemas_languagedetectionresult",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_schemas_intentresult",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_schemas_entity",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_schemas_entityresult",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_schemas_entitytype",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_schemas_structuredunderstanding",
+      "type": "imports"
+    },
+    {
+      "source": "app_language_engine",
+      "target": "app_language_schemas_pipelineresult",
+      "type": "imports"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "app_policy_schemas_policyevaluation",
+      "type": "imports"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "app_policy_schemas_policydecision",
+      "type": "imports"
+    },
+    {
+      "source": "app_policy_policy_engine",
+      "target": "app_policy_schemas_risklevel",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_problem_schema_problemstatement",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_problem_schema_goal",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_problem_schema_clarificationrequest",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_problem_schema_riskassessment",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_problem_schema_missinginfo",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_problem_schema_possiblesolution",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_problem_schema_problemresolution",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_problem_schema_problemschema",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_detector_problemdetector",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_detector_detect_problem",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_classifier_problemclassifier",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_classifier_classify_problem",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_schemas_problemreport",
+      "type": "imports"
+    },
+    {
+      "source": "app_problem_engine",
+      "target": "app_problem_schemas_problemseverity",
+      "type": "imports"
+    },
+    {
+      "source": "app_reasoning_engine",
+      "target": "app_reasoning_schemas_fact",
+      "type": "imports"
+    },
+    {
+      "source": "app_reasoning_engine",
+      "target": "app_reasoning_schemas_inference",
+      "type": "imports"
+    },
+    {
+      "source": "app_reasoning_engine",
+      "target": "app_reasoning_schemas_reasoningresult",
+      "type": "imports"
+    },
+    {
+      "source": "app_trust_engine",
+      "target": "app_trust_schemas_trustassessment",
+      "type": "imports"
+    },
+    {
+      "source": "app_trust_engine",
+      "target": "app_trust_schemas_risklevel",
+      "type": "imports"
+    },
+    {
+      "source": "tests_test_gate_integration",
+      "target": "app_core_gate_integration_gateintegration",
+      "type": "imports"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "tests_v2_test_devcore_integration_naiveregistry",
+      "type": "imports"
+    },
+    {
+      "source": "tests_v2_test_devcore_routes",
+      "target": "tests_v2_test_devcore_integration_stub_modules",
+      "type": "imports"
+    },
+    {
+      "source": "app_api_v2_routes",
+      "target": "app_observability_metrics",
+      "type": "imports_from"
+    },
+    {
+      "source": "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script",
+      "target": "app_knowledge_production_hybrid_rag_productionhybridrag_build_grounding_context",
+      "type": "references"
+    }
+  ],
+  "status": "PASS"
+}

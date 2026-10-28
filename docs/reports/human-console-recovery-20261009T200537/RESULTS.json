@@ -1,0 +1,105 @@
+{
+  "V1": "FAIL / HOLD",
+  "repository": {
+    "initial_status_entries": 262,
+    "working_tree": "DIRTY; pre-existing tracked changes and untracked UI files preserved",
+    "status_limitation": "Git reported pre-existing inaccessible report directories; no exhaustive unrelated-filesystem claim",
+    "HEAD": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+    "branch": "codex/fullroot-control-20261007"
+  },
+  "findings": [
+    {
+      "status": "OWNER_SCOPE_RECORDED; fixture verification NOT_RUN",
+      "id": "HCU-EVIDENCE-01",
+      "root_cause": "Hardcoded missing-owner-input message became stale after explicit owner consent",
+      "recovery": "Subsequent explicit consent setuju sudah sesuai, bound to the prior question naming all four KTP-el offline fixtures",
+      "historical_reply_1": "INSUFFICIENT; not interpreted as approval"
+    },
+    {
+      "scope": "Existing Engineering Console only; broader Human acceptance UI unchanged",
+      "remediation": "Indonesian navigation, beginner guide, NOT_VERIFIED API/AI explanation and safe next action",
+      "id": "HCU-USABILITY-01",
+      "root_cause": "English navigation and absence of a simple distinction between offline evidence and live API/AI status"
+    },
+    {
+      "attribution": "NOT_VERIFIED",
+      "reference": "docs/reports/post-weip-console-20261009T175526/PRESERVATION_REVIEW.json",
+      "status": "REVIEW_REQUIRED",
+      "id": "WEIP-COMP-DB-01",
+      "remediation": "No database/sidecar operation; no unsupported cause asserted"
+    }
+  ],
+  "status": "IMPLEMENTED_VERIFIED_SCOPED_UI",
+  "safety": {
+    "integration": "NOT_AUTHORIZED",
+    "historical_evidence": "NOT_OVERWRITTEN",
+    "dependencies_installed": false,
+    "active_database_or_sidecar_access": false,
+    "rollback": "Review newly scoped hunks against .before snapshots; reverse only those hunks, never restore whole user files",
+    "graph_updates_or_cache_operations": "NOT_PERFORMED",
+    "runtime_operations": 0,
+    "protected_hash_mismatches": [],
+    "protected_files_checked": 14,
+    "network_calls": false
+  },
+  "V2": "DEFERRED",
+  "tests": {
+    "fixture_sha256": "5AA2A4D65AEFCF234A8CEC7E82195E9E4D8D6FE210DF5FABD021ED4FD74B29BD",
+    "working_directory": "control-plane",
+    "NOT_RUN": [
+      "Backend regression",
+      "Live runtime checks",
+      "Application E2E/browser or asset build",
+      "Fixture document verification",
+      "Network acquisition"
+    ],
+    "initial_run": {
+      "cause": "CPLANE_SNAPSHOT_FILE unset; historical fixture located and bound only to test-process environment",
+      "artifact": "UI_TEST_RESULTS.json",
+      "FAIL": 19,
+      "exit_code": 1,
+      "PASS": 30
+    },
+    "CPLANE_SNAPSHOT_FILE": "docs/reports/r2-a9-control-plane-implementation-20261008/SYNTHETIC_NORMAL.json",
+    "final_run": {
+      "artifact": "UI_TEST_RESULTS_FINAL.json",
+      "pending": 0,
+      "FAIL": 0,
+      "exit_code": 0,
+      "PASS": 49
+    },
+    "NODE_OPTIONS": "--require=./tests/inspection-preview-network-guard.cjs",
+    "typecheck": {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exit_code": 0
+    },
+    "git_diff_check_exit": 0,
+    "actual_command": "node node_modules/vitest/vitest.mjs run tests/engineering-console.test.tsx tests/assistant.test.tsx tests/human.test.tsx --maxWorkers=1 --minWorkers=1 --pool=threads --reporter=default --reporter=json --outputFile=../docs/reports/human-console-recovery-20261009T200537/UI_TEST_RESULTS_FINAL.json"
+  },
+  "next_action": "Verify the four approved KTP-el fixtures offline using the existing normalized-checksum method; no ingestion or promotion.",
+  "files": [
+    {
+      "path": "control-plane/src/engineering-evidence.ts",
+      "before_sha256": "FFCE353767A90421D6D5B0CDD10A5CD44F0B588C78797B71501F85782B01BBCF",
+      "after_sha256": "34387A9AE58FD387CD70F1161B467A30BD6CA554A153EC3C0377A4FBF086A81A"
+    },
+    {
+      "path": "control-plane/src/engineering-console.tsx",
+      "before_sha256": "962D9461977FB63A5AF2F3835817359865FC1F84E8EAEE6F42D9030ECFD8C760",
+      "after_sha256": "A13C739112A9F45CEC13A66CD95B876FAE3650DFD79C0AF39A3CA99F6C528E8D"
+    },
+    {
+      "path": "control-plane/tests/engineering-console.test.tsx",
+      "before_sha256": "95ED70D128E5070A6579029F0465EF81A4899B75CA6A1CB3C6ADE9969AA2D658",
+      "after_sha256": "1A2B4E6D8B63CEB79BA661FD8FEC948CB57B601FD9605CE4AF5476DCA002C450"
+    }
+  ],
+  "remaining": [
+    "Fixture checksum/metadata/provenance verification pending; owner inputs now provided",
+    "Independent source authentication and trusted operator identity NOT_VERIFIED",
+    "WEIP-COMP-DB-01 attribution REVIEW_REQUIRED",
+    "Phase 0-21 NOT_VERIFIED",
+    "Live source/runtime alignment, operational rollback and mandatory V1 gates unresolved"
+  ],
+  "timestamp": "2026-10-09T20:10:49.7439099+07:00"
+}

@@ -1,0 +1,376 @@
+﻿git : warning: could not open directory 'reports/memory-retention-tests-20261006/': Permission denied
+At line:2 char:5
++     git status --short --branch
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: could ...rmission denied:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warning: could not open directory 'reports/memory-retention-tests-20261006-final/': Permission denied
+warning: could not open directory 'reports/v1-git-verify-tmp/': Permission denied
+warning: could not open directory 'reports/v1-recovery-tmp/': Permission denied
+warning: could not open directory 'reports/v1-verify-20261006-tmp/': Permission denied
+## codex/fullroot-control-20261007...origin/codex/fullroot-control-20261007
+ M .dockerignore
+ M .env.example
+ M .gitignore
+ M .graphifyignore
+ M Dockerfile
+ M RELEASE_READINESS_REPORT.md
+ M ROLLBACK_PLAN.md
+ M app/api/routes.py
+ M app/api/v2_routes.py
+ M app/core/config.py
+ M app/core/nusantara_config.py
+ M app/core/runtime_identity.py
+ M app/devcore/core.py
+ M app/devcore/grounding.py
+ M app/devcore/router.py
+ M app/devcore/tools.py
+ M app/evaluation/evaluator.py
+ M app/exceptions.py
+ M app/hermes/agent.py
+ M app/improvement/gate.py
+ M app/improvement/release.py
+ M app/knowledge/engine.py
+ M app/knowledge/indobert_embedding.py
+ M app/knowledge/production_hybrid_rag.py
+ M app/knowledge/production_semantic_retriever.py
+ M app/knowledge/rag.py
+ M app/knowledge/schemas.py
+ M app/knowledge/store.py
+ M app/main.py
+ M app/memory/engine.py
+ M app/models/base.py
+ M app/models/ollama.py
+ M app/security/readiness.py
+ M app/security/scanner.py
+ M app/trust/engine.py
+ M app/ui/index.html
+ M docker-compose.yml
+ M docs/v2/ROADMAP_STATUS.md
+ M pyproject.toml
+ M run_tests.py
+ M scripts/release_check.py
+ M scripts/run_eval.py
+ M service/nusantara-service.ps1
+ M tests/test_model_router_configuration.py
+ M tests/test_provider_identity.py
+ M tests/v2/test_devcore.py
+?? "'@ + $pkg + @'"
+?? .archify/
+?? .dev/MDA_ACCEPTED_BOUNDARY_20261007_131120.json
+?? .dev/MDA_MASTER_CONTRACT_CHECKPOINT.json
+?? .dev/MDA_POST_MDE09_001_CHECKPOINT.json
+?? .dev/MDA_R1_OFFICIAL_CLOSURE_20261007_143016.json
+?? .dev/MDA_R2_IMPLEMENTATION_CHECKPOINT.json
+?? .dev/MDA_R2_PRE_AUTHORIZATION_20261007_143236.json
+?? .dev/MDE00_CHECKPOINT.json
+?? .dev/MDE05_BASELINE_20261007.json
+?? .dev/MDE05_CHECKPOINT.json
+?? .dev/MDE06_BASELINE_20261007.json
+?? .dev/MDE06_CHECKPOINT.json
+?? .dev/MDE07_BASELINE_20261007.json
+?? .dev/MDE07_CHECKPOINT.json
+?? .dev/MDE08_BASELINE_20261007.json
+?? .dev/MDE08_CHECKPOINT.json
+?? .dev/MDE09_BASELINE_20261007.json
+?? .dev/MDE09_CHECKPOINT.json
+?? .dev/MDE_BASELINE_20261007T042435Z.json
+?? .dev/PROJECT_STRUCTURE_AUDIT_20261007_110002/
+?? .dev/R1_CORRECTION_BACKUP_20261007_141448/
+?? .dev/R1_CORRECTION_BACKUP_20261007_142020/
+?? .dev/R1_LOCAL_001_CHECKPOINT.json
+?? .dev/R1_SOCKET_GUARD_BACKUP_20261007_142145/
+?? .dev/R1_TARGETED_ERROR_20261007.txt
+?? .dev/R2_A10_AUTHORIZATION_CONTRACT_20261008_134113.md
+?? .dev/checkpoints/
+?? .dev/commands/
+?? .dev/control_report.json
+?? .dev/security-source/
+?? .dev/test-full.json
+?? .dev/test-full.xml
+?? .dev/validate-initial.json
+?? ".json\357\200\242,"
+?? Fix-NusantaraEmbeddingIdentity.ps1
+?? Invoke-NusantaraDukcapilGrounding.ps1
+?? Invoke-NusantaraGroundingTests.ps1
+?? Invoke-NusantaraV1-Readiness.ps1
+?? Nusantara-Git-Safe.ps1
+?? _phase4_trust_baseline.py
+?? app/api/control_plane.py
+?? app/api/inspection_preview.py
+?? app/api/routes.py.bak-20261010-224053
+?? app/api/routes.py.bak-20261010-224637
+?? app/api/routes.py.bak-arithmetic-20261010-225824
+?? app/api/routes.py.bak-nameerror-20261010-225031
+?? app/api/routes.py.bak-regression-20261010-224952
+?? app/api/routes.py.bak-signature-fix-20261010-224237
+?? app/api/routes.py.bak-small-fix-20261010-224325
+?? app/api/runtime_verification.py
+?? app/approval/runtime_authorization.py
+?? app/core/control_plane_projection.py
+?? app/core/evidence_registry.py
+?? app/core/runtime_attestation.py
+?? app/core/runtime_build_provenance.py
+?? app/core/runtime_correlation.py
+?? app/devcore/inspection.py
+?? app/evaluation/datasets/v1_id.json
+?? app/evaluation/datasets/v1_recovery_oracle.json
+?? app/exceptions.py.bak-health500-20261013-173259
+?? app/hermes/agent.py.bak-20261010-192532
+?? app/hermes/agent.py.bak-20261010-224053
+?? app/hermes/agent.py.bak-20261010-224637
+?? app/hermes/agent.py.bak-arithmetic-20261010-225824
+?? app/hermes/agent.py.bak-helper-compat-20261010-225912
+?? app/knowledge/indobert_embedding.py.bak-20261012-164647
+?? app/knowledge/retrieval_evidence.py
+?? app/knowledge/web_evidence.py
+?? app/mcp/stdio_server.py
+?? app/models/cost_ledger.py
+?? app/models/openrouter.py
+?? app/models/openrouter.py.bak-cost-guard-20261013-190750
+?? app/security/local_operator.py
+?? app/security/scanner.py.bak-credential-tuning-20261012-145040
+?? app/security/scanner.py.bak-final-tuning-20261012-145507
+?? app/security/scanner.py.bak-scan-prune-20261012-142716
+?? app/security/scanner.py.bak-vendor-scope-20261012-145136
+?? app/ui/review.html
+?? app/workflow/v1_langgraph.py
+?? archify-demo.html
+?? artifacts/
+?? backups/
+?? check_v1_default_knowledge_readonly.ps1
+?? control-plane/
+?? docs/MDA_R1_LOCAL_001_PROPOSAL.md
+?? docs/MDE-05_RAG_PROFILE_DESIGN.md
+?? docs/MDE-06_EMBEDDING_INDEX_SAFETY_DESIGN.md
+?? docs/MDE-07_RUNTIME_ENFORCEMENT_DESIGN.md
+?? docs/MDE-08_CAPABILITY_GOVERNANCE_DESIGN.md
+?? docs/MDE-09_CLOSURE_AND_REMEDIATION_DESIGN.md
+?? docs/OPENROUTER_LANGGRAPH.md
+?? docs/audit/NUSANTARA-V1-CONTRACT-COMPLIANCE-ADDENDUM-2026-10-06.md
+?? docs/audit/generated/
+?? docs/commands/
+?? docs/contracts/NUSANTARA-AGENT-ORCHESTRATION-CONTRACT-V1.md
+?? docs/contracts/NUSANTARA-CONTROL-PLANE-V1.md
+?? docs/contracts/NUSANTARA-INTELLIGENCE-MODEL-CONTRACT-V1.md
+?? docs/contracts/NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md
+?? docs/contracts/NUSANTARA-RUNTIME-EXECUTION-CONTRACT-V1.md
+?? docs/contracts/NUSANTARA-TOOL-MCP-API-CONTRACT-V1.md
+?? docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md
+?? docs/reports/
+?? human_acceptance_inspection.txt
+?? mcp-nusantara/
+?? nusantara-v1-chat-diagnosis-20261010-192042.txt
+?? nusantara/
+?? perbaikanbukti/
+?? readiness-script-error.txt
+?? reports/CONFIGURATION_BASELINE_20261006.json
+?? reports/CONFIGURATION_CLASSIFICATION_20261006.json
+?? reports/CONFIGURATION_DISCOVERY_20261006.json
+?? reports/DEVELOPER_CORE_ANALYSIS_20261006.json
+?? reports/DEVELOPER_CORE_BASELINE_20261006.xml
+?? reports/DEVELOPER_CORE_ENGINE_IMPLEMENTATION_PROGRESS.json
+?? reports/DEVELOPER_CORE_ENGINE_IMPLEMENTATION_RESULT_20261006.json
+?? reports/DEVELOPER_CORE_REGRESSION_20261006.xml
+?? reports/DEVELOPER_CORE_SECURITY_20261006.json
+?? reports/DEVELOPER_CORE_TARGETED_20261006.xml
+?? reports/FULLROOT_BASELINE_20261007.xml
+?? reports/FULLROOT_BOUNDARIES_20261007.xml
+?? reports/FULLROOT_CONTROL_20261007.xml
+?? reports/FULLROOT_EXECUTOR_FAILURE_20261007.json
+?? reports/FULLROOT_REGRESSION_FINAL_20261007.xml
+?? reports/FULLROOT_ROUTER_20261007.xml
+?? reports/FULLROOT_ROUTER_REGRESSION_20261007.xml
+?? reports/MEMORY_RETENTION_2026-10-06.md
+?? reports/NUSANTARA-DEVELOPER-CORE-ENGINE-IMPLEMENTATION-2026-10-06.md
+?? reports/NUSANTARA-LEVEL-B-BEHAVIORAL-B2-B5-20261008-202418.json
+?? reports/NUSANTARA-LEVEL-B-BEHAVIORAL-IMPACT-B2-B5-20261008-202523.json
+?? reports/NUSANTARA-LEVEL-B-RESULT-20261008-202057.json
+?? reports/NUSANTARA-LEVEL-B-RESULT-20261008-202057.md
+?? reports/NUSANTARA-LEVEL-B-RESULT-20261008-202215.json
+?? reports/NUSANTARA-LEVEL-B-RESULT-20261008-202252.json
+?? reports/NUSANTARA-V1-CC01-OPTION-C-IMPLEMENTATION-2026-10-06.md
+?? reports/NUSANTARA-V1-CC01-RESPONSE-PROJECTION-PROPOSAL-2026-10-06.md
+?? reports/NUSANTARA-V1-CONTRACT-COMPLIANCE-2026-10-06.md
+?? reports/NUSANTARA-V1-FINAL-CLOSURE-REPORT-2026-10-06.md
+?? reports/NUSANTARA-V1-RECOVERY-REPORT-2026-10-06.md
+?? reports/NUSANTARA_CONFIGURATION_ARCHITECTURE_20261006.md
+?? reports/NUSANTARA_CONFIGURATION_MAP_20261006.md
+?? reports/NUSANTARA_CONFIGURATION_REGRESSION_20261006.json
+?? reports/NUSANTARA_CONFIGURATION_VALIDATION_20261006.json
+?? reports/NUSANTARA_MASTER_BACKLOG_20261009-204835.json
+?? reports/NUSANTARA_MASTER_BACKLOG_20261009-204835.md
+?? reports/NUSANTARA_V1_VERIFICATION_2026-10-06.md
+?? reports/V1_CC01_IMPLEMENTATION_PROGRESS.json
+?? reports/V1_CC01_OPTION_C_IMPLEMENTATION.json
+?? reports/V1_CC01_REGRESSION.xml
+?? reports/V1_CC01_RESPONSE_PROJECTION_PROPOSAL.json
+?? reports/V1_CC01_SECURITY.json
+?? reports/V1_CC01_TARGETED.xml
+?? reports/V1_CC01_TARGETED_FIXED.xml
+?? reports/V1_CHAT_VERIFY_2026-10-06.json
+?? reports/V1_CLOSURE_BUILD_ID.json
+?? reports/V1_CLOSURE_ENVIRONMENT.json
+?? reports/V1_CLOSURE_FILESYSTEM.xml
+?? reports/V1_CLOSURE_INTEGRITY.json
+?? reports/V1_CLOSURE_ORACLE_AUDIT.json
+?? reports/V1_CLOSURE_SECURITY.json
+?? reports/V1_CLOSURE_TARGETED.xml
+?? reports/V1_COMPILE_VERIFY_2026-10-06.json
+?? reports/V1_CONTRACT_COMPLIANCE.json
+?? reports/V1_CONTRACT_COMPLIANCE_PROGRESS.json
+?? reports/V1_CONTRACT_COMPLIANCE_SOURCE_EVIDENCE.json
+?? reports/V1_FINAL_CLOSURE.xml
+?? reports/V1_FINAL_REGRESSION.xml
+?? reports/V1_GIT_VERIFY_2026-10-06.xml
+?? reports/V1_HEALTH_VERIFY_2026-10-06.json
+?? reports/V1_LIVE_VERIFY_2026-10-06.json
+?? reports/V1_RECOVERY_BASELINE.xml
+?? reports/V1_RECOVERY_CHANGES.json
+?? reports/V1_RECOVERY_ENVIRONMENT.json
+?? reports/V1_RECOVERY_FILESYSTEM.xml
+?? reports/V1_RECOVERY_IDENTITY_TESTS.xml
+?? reports/V1_RECOVERY_INDOBERT_CLIENT.json
+?? reports/V1_RECOVERY_INDOBERT_FAILURE.json
+?? reports/V1_RECOVERY_INDOBERT_NATIVE.json
+?? reports/V1_RECOVERY_INDOBERT_NOWINDOW.json
+?? reports/V1_RECOVERY_INDOBERT_TARGETED.xml
+?? reports/V1_RECOVERY_KNOWLEDGE_INVENTORY.json
+?? reports/V1_RECOVERY_MCP.xml
+?? reports/V1_RECOVERY_ORACLE_SOURCE_PINS.json
+?? reports/V1_RECOVERY_PROGRESS.json
+?? reports/V1_RECOVERY_RAG.json
+?? reports/V1_RECOVERY_RAG_AUDIT_20261009.json
+?? reports/V1_RECOVERY_ROUTE_DIAG.json
+?? reports/V1_RECOVERY_RUNTIME.json
+?? reports/V1_RECOVERY_SECURITY.json
+?? reports/V1_RECOVERY_TEST_091744129784_STDERR_0.txt
+?? reports/V1_RECOVERY_TEST_STDERR_0.txt
+?? reports/V1_RECOVERY_TEST_STDERR_1.txt
+?? reports/V1_RECOVERY_TEST_STDERR_2.txt
+?? reports/V1_RECOVERY_WORKER_091744129784.xml
+?? reports/V1_RECOVERY_WORKER_CAPTURE.xml
+?? reports/V1_RECOVERY_WORKER_STDERR_0.txt
+?? reports/V1_RECOVERY_WORKER_STDERR_1.txt
+?? reports/V1_RUNTIME_VERIFY_2026-10-06.json
+?? reports/V1_SECURITY_SCAN_2026-10-06.json
+?? reports/V1_VERIFY_2026-10-06.xml
+?? reports/configuration-phase6-compat-tmp/
+?? reports/configuration-phase6-targeted-tmp/
+?? reports/configuration-phase7-memory-diagnosis-tmp/
+?? reports/configuration-phase7-regression-final-tmp/
+?? reports/configuration-phase7-regression-tmp/
+?? reports/configuration-phase7-targeted-final-tmp/
+?? reports/configuration-phase7-targeted-fixed-tmp/
+?? reports/configuration-phase7-targeted-tmp/
+?? reports/configuration/
+?? reports/developer-core-backup-20261006-175153/
+?? reports/developer-core-regression-tmp/
+?? reports/developer-core-targeted-tmp/
+?? reports/diagnose_v1_worker.py
+?? reports/evidence-guards-check/
+?? reports/fullroot-baseline-tmp-20261007/
+?? reports/nusantara-phases/
+?? reports/nusantara-rag-runtime-inspection-20261010-205348.txt
+?? reports/prepare_v1_closure.py
+?? reports/rag-audit/
+?? reports/semantic-rag-verification/
+?? reports/v1-cc01-option-c-backup-20261006/
+?? reports/v1-cc01-regression-tmp/
+?? reports/v1-cc01-targeted-fixed-tmp/
+?? reports/v1-cc01-targeted-tmp/
+?? reports/v1-closure-backup-20261006/
+?? reports/v1-closure-targeted-tmp/
+?? reports/v1-final-closure-tmp/
+?? reports/v1-final-regression-tmp/
+?? reports/v1-rag-4kvfxegr/
+?? reports/v1-recovery-backup-20261006/
+?? reports/v1-recovery-candidate/
+?? reports/v1-recovery-identity-tmp/
+?? reports/v1-recovery-mcp-tmp/
+?? run_semantic_rag_verification.ps1
+?? scripts/Enable-RetrievalEvidence.ps1
+?? scripts/New-NusantaraAdminToken.ps1
+?? scripts/Nusantara-Git-Safe.ps1
+?? scripts/Test-NusantaraEvidenceScoreContract.ps1
+?? scripts/classify_configuration_phase2.py
+?? scripts/control-plane-final-check.ps1
+?? scripts/implement_v2_hermes_runtime.py
+?? scripts/implement_v2_hermes_runtime_safe.py
+?? scripts/load_test.py
+?? scripts/nusantara_master_phase_runner.ps1
+?? scripts/staging_drill.py
+?? scripts/verify_v1_recovery_rag.py
+?? scripts/verify_v1_recovery_runtime.py
+?? scripts/wire_v2_chat_hermes.py
+?? service/nusantara-service.ps1.bak-openrouter-env
+?? tests/evaluation/test_live_harness.py
+?? tests/inspection_preview_isolated_runner.py
+?? tests/pytest-evidence.ini
+?? tests/run_evidence_tests_isolated.py
+?? tests/run_evidence_tests_isolated.py.bak-20261010
+?? tests/run_evidence_tests_isolated.py.bak-before-fd-fix
+?? tests/run_evidence_tests_isolated.py.bak-path-guard
+?? tests/test_approval_persistence.py
+?? tests/test_backup_restore.py
+?? tests/test_configuration_contract.py
+?? tests/test_configuration_integration.py
+?? tests/test_configuration_integration.py.bak-20261012-164647
+?? tests/test_control_plane_attestation_binding.py
+?? tests/test_control_plane_readonly.py
+?? tests/test_cost_governance_reference.py
+?? tests/test_cost_ledger_v1.py
+?? tests/test_developer_core_engine_contract.py
+?? tests/test_effective_rag_profile.py
+?? tests/test_evidence_decision_api.py
+?? tests/test_evidence_registry.py
+?? tests/test_evidence_registry.py.bak-before-hermetic-test
+?? tests/test_evidence_runner_guards.py
+?? tests/test_hermes_v1_arithmetic.py
+?? tests/test_hermes_v1_conversation.py
+?? tests/test_hermes_v1_conversation.py.bak-20261010-192532
+?? tests/test_indobert_timeout.py
+?? tests/test_inspection_preview_api.py
+?? tests/test_inspection_preview_api.py.bak-sentinel-20261012-145905
+?? tests/test_inspection_preview_api.py.bak-token-default-20261012-145842
+?? tests/test_local_operator_identity.py
+?? tests/test_mcp_stdio.py
+?? tests/test_openrouter_cost_guard_v1.py
+?? tests/test_openrouter_provider.py
+?? tests/test_phase3_v1_metrics_integration.py
+?? tests/test_phase4_trust_contract.py
+?? tests/test_phase4_v1_chat_runtime.py
+?? tests/test_phase4_v1_trust_integration.py
+?? tests/test_provider_failure.py
+?? tests/test_research_persistence.py
+?? tests/test_retrieval_evidence_persistence.py
+?? tests/test_review_branch.py
+?? tests/test_runtime_attestation.py
+?? tests/test_runtime_authorization.py
+?? tests/test_runtime_build_provenance.py
+?? tests/test_runtime_correlation.py
+?? tests/test_runtime_identity.py
+?? tests/test_runtime_verification.py
+?? tests/test_session_memory.py
+?? tests/test_source_fetcher.py
+?? tests/test_trace_retention.py
+?? tests/test_v1_chat_rag_regression.py
+?? tests/test_v1_langgraph.py
+?? tests/test_v1_langgraph.py.bak-20261010-230324
+?? tests/test_v1_operator_control.py
+?? tests/test_v1_operator_control.py.bak-auth-fixture
+?? tests/test_v1_operator_control.py.bak-before-fixture-patch
+?? tests/test_v1_operator_control.py.bak-inventory-test-20261012-151724
+?? tests/test_v1_operator_control.py.bak-operator-inventory
+?? tests/test_v1_operator_control.py.bak-substantive-health
+?? tests/test_v1_response_projection.py
+?? tests/test_v1_response_projection.py.bak-grounding-20261012-173205
+?? tests/test_v1_stage_budget.py
+?? tests/test_v1_targeted_boundaries.py
+?? tests/test_web_evidence_pipeline.py
+?? tests/test_weip_rag_adapter.py
+?? tests/v2/test_context_budget.py
+?? tests/v2/test_devcore_grounding_response.py
+?? tests/v2/test_devcore_inspection.py
+

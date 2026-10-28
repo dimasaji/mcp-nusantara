@@ -1,0 +1,810 @@
+{
+  "engine": "Nusantara Precision Impact Analyzer",
+  "version": "1.0.0",
+  "graph": "C:\\Users\\dmaza\\mcp-starter\\graphify-out\\graph.json",
+  "total_nodes": 2935,
+  "total_edges": 6791,
+  "nodes_analyzed": 2935,
+  "top_impact_nodes": [
+    {
+      "id": "typing",
+      "name": "typing",
+      "incoming": 100,
+      "outgoing": 0,
+      "impact": 100,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "tests_v2_test_phases_7_21",
+      "name": "test_phases_7_21.py",
+      "incoming": 0,
+      "outgoing": 90,
+      "impact": 90,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "pathlib",
+      "name": "pathlib",
+      "incoming": 71,
+      "outgoing": 0,
+      "impact": 71,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_api_routes",
+      "name": "routes.py",
+      "incoming": 4,
+      "outgoing": 56,
+      "impact": 60,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_production_20261002_142501",
+      "name": "developer_core_engine.before_graph_rag_production_20261002_142501.py",
+      "incoming": 0,
+      "outgoing": 56,
+      "impact": 56,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "developer_core_engine_before_prod_integration_20261002_142101",
+      "name": "developer_core_engine.before_prod_integration_20261002_142101.py",
+      "incoming": 0,
+      "outgoing": 56,
+      "impact": 56,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "developer_core_engine_before_safe_graph_rag_20261002_142601",
+      "name": "developer_core_engine.before_safe_graph_rag_20261002_142601.py",
+      "incoming": 0,
+      "outgoing": 56,
+      "impact": 56,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "developer_core_engine_before_source_cleanup_20261002_142345",
+      "name": "developer_core_engine.before_source_cleanup_20261002_142345.py",
+      "incoming": 0,
+      "outgoing": 56,
+      "impact": 56,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_api_v2_routes",
+      "name": "v2_routes.py",
+      "incoming": 2,
+      "outgoing": 49,
+      "impact": 51,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "developer_core_engine_before_graph_adapter_20261002_132323",
+      "name": "developer_core_engine.before_graph_adapter_20261002_132323.py",
+      "incoming": 0,
+      "outgoing": 51,
+      "impact": 51,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "developer_core_engine_before_graph_rag_v2_20261002_132824",
+      "name": "developer_core_engine.before_graph_rag_v2_20261002_132824.py",
+      "incoming": 0,
+      "outgoing": 51,
+      "impact": 51,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "developer_core_engine_before_production_rag_20261002_141904",
+      "name": "developer_core_engine.before_production_rag_20261002_141904.py",
+      "incoming": 0,
+      "outgoing": 51,
+      "impact": 51,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "developer_core_engine_before_quality_20261002_131836",
+      "name": "developer_core_engine.before_quality_20261002_131836.py",
+      "incoming": 0,
+      "outgoing": 51,
+      "impact": 51,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "developer_core_engine_before_source_filter_20261002_132632",
+      "name": "developer_core_engine.before_source_filter_20261002_132632.py",
+      "incoming": 0,
+      "outgoing": 51,
+      "impact": 51,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "tests_v2_test_v2_core",
+      "name": "test_v2_core.py",
+      "incoming": 1,
+      "outgoing": 49,
+      "impact": 50,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_context_schemas_contextstate",
+      "name": "ContextState",
+      "incoming": 46,
+      "outgoing": 3,
+      "impact": 49,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "json",
+      "name": "json",
+      "incoming": 45,
+      "outgoing": 0,
+      "impact": 45,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_language_engine_languageengine",
+      "name": "LanguageEngine",
+      "incoming": 10,
+      "outgoing": 34,
+      "impact": 44,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "dataclasses",
+      "name": "dataclasses",
+      "incoming": 39,
+      "outgoing": 0,
+      "impact": 39,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_official_knowledge_ingestion",
+      "name": "official_knowledge_ingestion.py",
+      "incoming": 1,
+      "outgoing": 38,
+      "impact": 39,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_rag",
+      "name": "rag.py",
+      "incoming": 4,
+      "outgoing": 35,
+      "impact": 39,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "datetime",
+      "name": "datetime",
+      "incoming": 38,
+      "outgoing": 0,
+      "impact": 38,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_models_ollama_ollamaprovider",
+      "name": "OllamaProvider",
+      "incoming": 24,
+      "outgoing": 14,
+      "impact": 38,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_grounding_evidencegroundingguard",
+      "name": "EvidenceGroundingGuard",
+      "incoming": 14,
+      "outgoing": 23,
+      "impact": 37,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_rag_rag",
+      "name": "RAG",
+      "incoming": 9,
+      "outgoing": 28,
+      "impact": 37,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "developer_core_engine",
+      "name": "developer_core_engine.py",
+      "incoming": 0,
+      "outgoing": 37,
+      "impact": 37,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "sys",
+      "name": "sys",
+      "incoming": 36,
+      "outgoing": 0,
+      "impact": 36,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag_productionhybridrag",
+      "name": "ProductionHybridRAG",
+      "incoming": 19,
+      "outgoing": 17,
+      "impact": 36,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_reasoning_engine_reasoningengine",
+      "name": "ReasoningEngine",
+      "incoming": 11,
+      "outgoing": 25,
+      "impact": 36,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_devcore_core",
+      "name": "core.py",
+      "incoming": 3,
+      "outgoing": 31,
+      "impact": 34,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_production_kb",
+      "name": "production_kb.py",
+      "incoming": 0,
+      "outgoing": 34,
+      "impact": 34,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_mcp_mcp_mcpserver",
+      "name": "MCPServer",
+      "incoming": 20,
+      "outgoing": 14,
+      "impact": 34,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_problem_engine_problemengine",
+      "name": "ProblemEngine",
+      "incoming": 13,
+      "outgoing": 21,
+      "impact": 34,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "re",
+      "name": "re",
+      "incoming": 33,
+      "outgoing": 0,
+      "impact": 33,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_context_engine_contextengine",
+      "name": "ContextEngine",
+      "incoming": 2,
+      "outgoing": 30,
+      "impact": 32,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_languageengine",
+      "name": "LanguageEngine",
+      "incoming": 4,
+      "outgoing": 28,
+      "impact": 32,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_language_engine",
+      "name": "language/engine.py",
+      "incoming": 5,
+      "outgoing": 26,
+      "impact": 31,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_approval_queue_approvalqueue",
+      "name": "ApprovalQueue",
+      "incoming": 23,
+      "outgoing": 7,
+      "impact": 30,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_production_embedding_bridge",
+      "name": "production_embedding_bridge.py",
+      "incoming": 1,
+      "outgoing": 29,
+      "impact": 30,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_store_sqlitevectorstore",
+      "name": "SQLiteVectorStore",
+      "incoming": 7,
+      "outgoing": 23,
+      "impact": 30,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_problem_detector_problemdetector",
+      "name": "ProblemDetector",
+      "incoming": 18,
+      "outgoing": 12,
+      "impact": 30,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_problem_engine",
+      "name": "problem/engine.py",
+      "incoming": 5,
+      "outgoing": 24,
+      "impact": 29,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_core_hardening_init",
+      "name": "hardening/__init__.py",
+      "incoming": 4,
+      "outgoing": 24,
+      "impact": 28,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "run_tests_main",
+      "name": "main()",
+      "incoming": 1,
+      "outgoing": 27,
+      "impact": 28,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_context_context_builder_contextbuilder",
+      "name": "ContextBuilder",
+      "incoming": 8,
+      "outgoing": 19,
+      "impact": 27,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_language_semantic_fusion_intentfusion",
+      "name": "IntentFusion",
+      "incoming": 12,
+      "outgoing": 15,
+      "impact": 27,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "time",
+      "name": "time",
+      "incoming": 26,
+      "outgoing": 0,
+      "impact": 26,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_handoff_engine_handoffengine",
+      "name": "HandoffEngine",
+      "incoming": 13,
+      "outgoing": 13,
+      "impact": 26,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_schemas",
+      "name": "knowledge/schemas.py",
+      "incoming": 6,
+      "outgoing": 20,
+      "impact": 26,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_problem_init",
+      "name": "problem/__init__.py",
+      "incoming": 1,
+      "outgoing": 25,
+      "impact": 26,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_rag_store",
+      "name": "rag/store.py",
+      "incoming": 6,
+      "outgoing": 20,
+      "impact": 26,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_governance_tools",
+      "name": "governance/tools.py",
+      "incoming": 5,
+      "outgoing": 20,
+      "impact": 25,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_embeddings_embeddingprovider",
+      "name": "EmbeddingProvider",
+      "incoming": 18,
+      "outgoing": 7,
+      "impact": 25,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_models_base_llmprovider",
+      "name": "LLMProvider",
+      "incoming": 17,
+      "outgoing": 8,
+      "impact": 25,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_models_ollama",
+      "name": "ollama.py",
+      "incoming": 12,
+      "outgoing": 13,
+      "impact": 25,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "pydantic",
+      "name": "pydantic",
+      "incoming": 24,
+      "outgoing": 0,
+      "impact": 24,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_production_semantic_retriever",
+      "name": "production_semantic_retriever.py",
+      "incoming": 1,
+      "outgoing": 23,
+      "impact": 24,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "tests_nevaluation_test_evaluation_evaluationrunner",
+      "name": "EvaluationRunner",
+      "incoming": 3,
+      "outgoing": 21,
+      "impact": 24,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_rag_memoriavectorstore",
+      "name": "MemoriaVectorStore",
+      "incoming": 12,
+      "outgoing": 11,
+      "impact": 23,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_memory_memory_memorystore",
+      "name": "MemoryStore",
+      "incoming": 13,
+      "outgoing": 10,
+      "impact": 23,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_models_mock_mockprovider",
+      "name": "MockProvider",
+      "incoming": 10,
+      "outgoing": 13,
+      "impact": 23,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_tools_base",
+      "name": "tools/base.py",
+      "incoming": 4,
+      "outgoing": 19,
+      "impact": 23,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_v2_orchestrator",
+      "name": "orchestrator.py",
+      "incoming": 4,
+      "outgoing": 19,
+      "impact": 23,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "tests_evaluation_test_evaluation",
+      "name": "evaluation/test_evaluation.py",
+      "incoming": 1,
+      "outgoing": 22,
+      "impact": 23,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "tests_evaluation_test_smoke",
+      "name": "test_smoke.py",
+      "incoming": 0,
+      "outgoing": 23,
+      "impact": 23,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_reasoning_engine",
+      "name": "reasoning/engine.py",
+      "incoming": 4,
+      "outgoing": 18,
+      "impact": 22,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_research_knowledge_discovery",
+      "name": "knowledge_discovery.py",
+      "incoming": 2,
+      "outgoing": 20,
+      "impact": 22,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "run_tests",
+      "name": "run_tests.py",
+      "incoming": 1,
+      "outgoing": 21,
+      "impact": 22,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "tests_v2_test_v2_core_run",
+      "name": "run()",
+      "incoming": 22,
+      "outgoing": 0,
+      "impact": 22,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_devcore_init",
+      "name": "devcore/__init__.py",
+      "incoming": 3,
+      "outgoing": 18,
+      "impact": 21,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_governance_tools_governedtoolregistry",
+      "name": "GovernedToolRegistry",
+      "incoming": 16,
+      "outgoing": 5,
+      "impact": 21,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_schemas_evidence",
+      "name": "Evidence",
+      "incoming": 20,
+      "outgoing": 1,
+      "impact": 21,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_models_base_generaterequest",
+      "name": "GenerateRequest",
+      "incoming": 20,
+      "outgoing": 1,
+      "impact": 21,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_models_router_modelrouter",
+      "name": "ModelRouter",
+      "incoming": 13,
+      "outgoing": 8,
+      "impact": 21,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine",
+      "name": "backup_indobert_20261001_091633/engine.py",
+      "incoming": 1,
+      "outgoing": 20,
+      "impact": 21,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_language_engine_py_any",
+      "name": "Any",
+      "incoming": 20,
+      "outgoing": 0,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_approval_audit_trail_audittrail",
+      "name": "AuditTrail",
+      "incoming": 15,
+      "outgoing": 5,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_approval_queue",
+      "name": "queue.py",
+      "incoming": 6,
+      "outgoing": 14,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_context_session_sessionmanager",
+      "name": "SessionManager",
+      "incoming": 5,
+      "outgoing": 15,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_core_hardening_circuit_breaker_circuitbreaker",
+      "name": "CircuitBreaker",
+      "incoming": 14,
+      "outgoing": 6,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_evaluation_evaluator",
+      "name": "evaluation/evaluator.py",
+      "incoming": 4,
+      "outgoing": 16,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_exceptions",
+      "name": "exceptions.py",
+      "incoming": 2,
+      "outgoing": 18,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_grounding_evidencegroundingguard_validate",
+      "name": ".validate()",
+      "incoming": 2,
+      "outgoing": 18,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_production_hybrid_rag",
+      "name": "production_hybrid_rag.py",
+      "incoming": 6,
+      "outgoing": 14,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_knowledge_production_semantic_retriever_productionsemanticretriever",
+      "name": "ProductionSemanticRetriever",
+      "incoming": 6,
+      "outgoing": 14,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_models_init",
+      "name": "models/__init__.py",
+      "incoming": 0,
+      "outgoing": 20,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_policy_policy_engine_policyengine",
+      "name": "PolicyEngine",
+      "incoming": 14,
+      "outgoing": 6,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_problem_problem_schema",
+      "name": "problem_schema.py",
+      "incoming": 7,
+      "outgoing": 13,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "app_trust_engine_trustengine",
+      "name": "TrustEngine",
+      "incoming": 14,
+      "outgoing": 6,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "tests_v2_test_devcore",
+      "name": "test_devcore.py",
+      "incoming": 1,
+      "outgoing": 19,
+      "impact": 20,
+      "impact_level": "CRITICAL"
+    },
+    {
+      "id": "backup_indobert_20261001_091633_engine_py_any",
+      "name": "Any",
+      "incoming": 19,
+      "outgoing": 0,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "threading",
+      "name": "threading",
+      "incoming": 19,
+      "outgoing": 0,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_devcore_tools",
+      "name": "devcore/tools.py",
+      "incoming": 2,
+      "outgoing": 17,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_hermes_agent",
+      "name": "agent.py",
+      "incoming": 3,
+      "outgoing": 16,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_knowledge_engine_knowledgeengine",
+      "name": "KnowledgeEngine",
+      "incoming": 12,
+      "outgoing": 7,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_language_schemas",
+      "name": "language/schemas.py",
+      "incoming": 6,
+      "outgoing": 13,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_language_semantic_semantic_intent_semanticintentengine",
+      "name": "SemanticIntentEngine",
+      "incoming": 11,
+      "outgoing": 8,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_observability_init",
+      "name": "observability/__init__.py",
+      "incoming": 6,
+      "outgoing": 13,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_observability_logging",
+      "name": "logging.py",
+      "incoming": 8,
+      "outgoing": 11,
+      "impact": 19,
+      "impact_level": "HIGH"
+    },
+    {
+      "id": "app_problem_detector",
+      "name": "detector.py",
+      "incoming": 6,
+      "outgoing": 13,
+      "impact": 19,
+      "impact_level": "HIGH"
+    }
+  ]
+}

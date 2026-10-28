@@ -1,0 +1,24 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.15, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\dmaza\mcp-starter
+configfile: pyproject.toml
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 82 items
+
+..\..\..\tests\test_inspection_preview_api.py .......................... [ 31%]
+.........F                                                               [ 43%]
+..\..\..\tests\v2\test_devcore_inspection.py ........................... [ 76%]
+                                                                         [ 76%]
+..\..\..\tests\v2\test_devcore.py ...s...........                        [ 95%]
+..\..\..\tests\v2\test_devcore_grounding_response.py ....                [100%]
+
+================================== FAILURES ===================================
+________________ test_registration_and_existing_dev_preserved _________________
+..\..\..\tests\test_inspection_preview_api.py:109: in test_registration_and_existing_dev_preserved
+    assert [r.path for r in namespace["router"].routes] == ["/v2/dev/inspection-preview"]
+            ^^^^^^
+E   AttributeError: '_IncludedRouter' object has no attribute 'path'
+- generated xml file: C:\Users\dmaza\mcp-starter\docs\reports\normal-inspection-preview-20261008-01a11b73\BACKEND_RESULTS.xml -
+=========================== short test summary info ===========================
+FAILED ..\..\..\tests\test_inspection_preview_api.py::test_registration_and_existing_dev_preserved
+=================== 1 failed, 80 passed, 1 skipped in 1.31s ===================

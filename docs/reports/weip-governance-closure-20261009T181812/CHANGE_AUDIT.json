@@ -1,0 +1,59 @@
+{
+  "timestamp": "2026-10-09T11:24:45.481864+00:00",
+  "changed_source_test_files": [
+    "app\\knowledge\\web_evidence.py",
+    "tests\\test_web_evidence_pipeline.py"
+  ],
+  "unauthorized_baseline_source_changes": [],
+  "hashes": [
+    {
+      "path": "app/knowledge/web_evidence.py",
+      "before": "00775e90f841195eab44e183c10dd4a53335f1947c192232addff3732bf58e28",
+      "after": "cd258fcfb600fa4db48de150209519547a74faa90fb2324bf562a8f752590f61"
+    },
+    {
+      "path": "tests/test_web_evidence_pipeline.py",
+      "before": "2dfaaa66940d6d3f38f40c1ff50fd15f9a6fc0432853d5cd5d046251b15dc83d",
+      "after": "0ce7c306ad6b1a34b8eded4f3b2444415c8a38a8eddfbef0bf31e8435b567a4f"
+    }
+  ],
+  "fixture_manifest_preservation": [
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\manifest.json",
+      "sha256_before": "2cc3221ae56d8d09097b515040e8c2495121cbfaa694b1ecdd42e5daa6b34443",
+      "sha256_after": "2cc3221ae56d8d09097b515040e8c2495121cbfaa694b1ecdd42e5daa6b34443",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\tng-ktpel-001.md",
+      "sha256_before": "8aebcdbf09964b9bdf082d8fd67b7b1ebce78655d1a5cf81cca1ef178bc561df",
+      "sha256_after": "8aebcdbf09964b9bdf082d8fd67b7b1ebce78655d1a5cf81cca1ef178bc561df",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\tng-ktpel-002.md",
+      "sha256_before": "7d200fe47c6929a34025ee609107c5c8a94b60d54c51c3091197bd5bb42a31c0",
+      "sha256_after": "7d200fe47c6929a34025ee609107c5c8a94b60d54c51c3091197bd5bb42a31c0",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\tng-ktpel-003.md",
+      "sha256_before": "f065256d89d89f9d27909effab5eb8166ba19a31662bd26046fcb515ee54b23b",
+      "sha256_after": "f065256d89d89f9d27909effab5eb8166ba19a31662bd26046fcb515ee54b23b",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\tng-ktpel-004.md",
+      "sha256_before": "2f7dc22f56ac05dbdedd9769821a927720a35ff8c00c1fcfbb6bff6962aa50cc",
+      "sha256_after": "2f7dc22f56ac05dbdedd9769821a927720a35ff8c00c1fcfbb6bff6962aa50cc",
+      "unchanged": true
+    }
+  ],
+  "database_access": false,
+  "sidecar_access": false,
+  "runtime_operations": 0,
+  "network_requests": 0,
+  "console_changed": false,
+  "syntax_compile": "PASS_NO_BYTECODE",
+  "comparison_scope": "Existing app/tests/Console source hashes captured before the interrupted governance work; only two authorized files changed."
+}

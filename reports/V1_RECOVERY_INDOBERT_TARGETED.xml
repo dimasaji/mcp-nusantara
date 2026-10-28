@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="5" time="64.366" timestamp="2026-10-06T16:09:18.285509+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="tests.test_phase4_v1_chat_runtime" name="test_phase4_v1_chat_exposes_trust_assessment" time="21.376"><failure message="assert 500 == 200&#10; +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code">def test_phase4_v1_chat_exposes_trust_assessment():
+        client = TestClient(app)
+    
+        response = client.post(
+            "/v1/chat",
+            json={
+                "session_id": "phase4-trust-test",
+                "user_input": "Apa itu KTP-el?",
+                "stream": False,
+            },
+        )
+    
+&gt;       assert response.status_code == 200
+E       assert 500 == 200
+E        +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code
+
+tests\test_phase4_v1_chat_runtime.py:20: AssertionError</failure></testcase><testcase classname="tests.test_phase4_v1_chat_runtime" name="test_phase4_v1_chat_trust_confidence_is_bounded" time="13.543"><failure message="assert 500 == 200&#10; +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code">def test_phase4_v1_chat_trust_confidence_is_bounded():
+        client = TestClient(app)
+    
+        response = client.post(
+            "/v1/chat",
+            json={
+                "session_id": "phase4-trust-bound",
+                "user_input": "Apa itu KTP-el?",
+                "stream": False,
+            },
+        )
+    
+&gt;       assert response.status_code == 200
+E       assert 500 == 200
+E        +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code
+
+tests\test_phase4_v1_chat_runtime.py:46: AssertionError</failure></testcase><testcase classname="tests.test_v1_smoke" name="test_v1_chat_does_not_500" time="15.541"><failure message="AssertionError: /v1/chat 500 detected — likely F-S2 ProblemEngine.analyze missing. Body: {&quot;detail&quot;:&quot;Chat pipeline error: IndoBERT embedding gagal: Worker IndoBERT tidak memberikan response.&quot;}&#10;assert 500 != 500&#10; +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code">def test_v1_chat_does_not_500():
+        """F-S2 regression check: /v1/chat must not raise AttributeError."""
+        with _client() as c:
+            r = c.post(
+                "/v1/chat",
+                json={
+                    "session_id": "smoke",
+                    "user_input": "halo",
+                    "request_id": "req-smoke-1",
+                },
+            )
+&gt;       assert r.status_code != 500, (
+            f"/v1/chat 500 detected — likely F-S2 ProblemEngine.analyze missing. "
+            f"Body: {r.text[:500]}"
+        )
+E       AssertionError: /v1/chat 500 detected — likely F-S2 ProblemEngine.analyze missing. Body: {"detail":"Chat pipeline error: IndoBERT embedding gagal: Worker IndoBERT tidak memberikan response."}
+E       assert 500 != 500
+E        +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code
+
+tests\test_v1_smoke.py:37: AssertionError</failure></testcase><testcase classname="tests.test_v1_smoke" name="test_v1_problem_analyze_does_not_500" time="0.055" /><testcase classname="tests.test_v1_smoke" name="test_v1_knowledge_search_does_not_500" time="12.942"><failure message="AssertionError: /v1/knowledge/search 500 detected — likely F-S3 (KnowledgeSearchRequest missing attrs / undefined gate_context). Body: {&quot;detail&quot;:&quot;Knowledge search error: IndoBERT embedding gagal: Worker IndoBERT tidak memberikan response.&quot;}&#10;assert 500 != 500&#10; +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code">def test_v1_knowledge_search_does_not_500():
+        """F-S3 regression check: /v1/knowledge/search must not raise NameError."""
+        with _client() as c:
+            r = c.post(
+                "/v1/knowledge/search",
+                json={
+                    "query": "Apa itu paspor?",
+                    "top_k": 3,
+                    "filter": {},
+                    "session_id": "smoke",
+                    "user_input": "Apa itu paspor?",
+                    "request_id": "req-smoke-3",
+                },
+            )
+&gt;       assert r.status_code != 500, (
+            f"/v1/knowledge/search 500 detected — likely F-S3 "
+            "(KnowledgeSearchRequest missing attrs / undefined gate_context). "
+            f"Body: {r.text[:500]}"
+        )
+E       AssertionError: /v1/knowledge/search 500 detected — likely F-S3 (KnowledgeSearchRequest missing attrs / undefined gate_context). Body: {"detail":"Knowledge search error: IndoBERT embedding gagal: Worker IndoBERT tidak memberikan response."}
+E       assert 500 != 500
+E        +  where 500 = &lt;Response [500 Internal Server Error]&gt;.status_code
+
+tests\test_v1_smoke.py:74: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,140 @@
+{
+  "evidence_kind": "CURRENT_DISK_SOURCE_ONLY",
+  "checks": {
+    "frontend_client_has_no_devcore_request": true,
+    "existing_proxy_has_no_v2_path": true,
+    "request_fields_are_general_input_only": true,
+    "dev_route_requires_admin": true,
+    "dev_route_constructs_provider": true,
+    "dev_route_contains_generation_callback": true,
+    "dev_route_delegates_general_request_to_core": true,
+    "dev_route_absent_in_attestation_composition": true
+  },
+  "dev_request_fields": [
+    "session_id",
+    "user_input"
+  ],
+  "endpoint_call_names": [
+    "router.post",
+    "Header",
+    "_require_admin",
+    "OllamaProvider",
+    "DevCore",
+    "os.getenv",
+    "provider.generate",
+    "os.getcwd",
+    "core.handle",
+    "provider.close"
+  ],
+  "references": [
+    {
+      "file": "control-plane/src/api.ts",
+      "line": 3,
+      "source": "export async function fetchSnapshot(signal?:AbortSignal):Promise<SnapshotResult>{"
+    },
+    {
+      "file": "control-plane/src/api.ts",
+      "line": 10,
+      "source": "export async function submitIntention(state:Attestation):Promise<PendingIntention>{"
+    },
+    {
+      "file": "control-plane/vite.config.ts",
+      "line": 9,
+      "source": "export default defineConfig(({mode})=>({plugins:[react()], server:{host:'127.0.0.1',port:5173,strictPort:true,proxy:{'/v1/control-plane':{target:'http://127.0.0.1:8000',changeOrigin:true},'/health':{target:'http://127.0.0.1:8000',changeOrigin:true}}},preview:{host:'127.0.0.1'},"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 208,
+      "source": "_require_admin(x_admin_token)"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 217,
+      "source": "_require_admin(x_admin_token)"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 227,
+      "source": "_require_admin(x_admin_token)"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 253,
+      "source": "_require_admin(x_admin_token)"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 262,
+      "source": "class DevRequest(BaseModel):"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 288,
+      "source": "_require_admin(x_admin_token)"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 308,
+      "source": "_require_admin(x_admin_token)"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 325,
+      "source": "async def dev_chat(req: DevRequest, x_admin_token: str | None = Header(default=None)) -> dict[str, Any]:"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 327,
+      "source": "_require_admin(x_admin_token)"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 328,
+      "source": "provider = OllamaProvider(nusantara_config=_configuration)"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 337,
+      "source": "return await core.handle(req.user_input, req.session_id)"
+    },
+    {
+      "file": "app/security/auth.py",
+      "line": 10,
+      "source": "def require_admin(token: str | None) -> None:"
+    },
+    {
+      "file": "app/security/auth.py",
+      "line": 11,
+      "source": "expected = os.getenv(\"NUSANTARA_ADMIN_TOKEN\", \"\")"
+    },
+    {
+      "file": "app/main.py",
+      "line": 48,
+      "source": "allow_origins=[\"http://localhost:3000\", \"http://127.0.0.1:3000\", \"http://localhost:8000\", \"http://127.0.0.1:8000\"],"
+    },
+    {
+      "file": "app/main.py",
+      "line": 54,
+      "source": "app.include_router(v2_router)"
+    },
+    {
+      "file": "app/devcore/core.py",
+      "line": 139,
+      "source": "if self.generate:"
+    },
+    {
+      "file": "app/devcore/core.py",
+      "line": 170,
+      "source": "if p.inspection is not None:"
+    },
+    {
+      "file": "app/devcore/core.py",
+      "line": 188,
+      "source": "results = self._resolve_reads(p, calls, ids[\"request_id\"], notes)"
+    }
+  ],
+  "live_requests": 0,
+  "ui_tests_run": 0,
+  "runtime_profile_observed": false,
+  "provider_invocations": 0
+}

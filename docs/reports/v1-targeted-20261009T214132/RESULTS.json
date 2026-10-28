@@ -1,0 +1,149 @@
+{
+  "status": "V1 HOLD; V2 DEFERRED",
+  "rollback": [
+    "Remove only the if limit == 0 / return [] hunk in app/memory/engine.py",
+    "Reverse only the added conversation=False and repeated_text=None fixture inputs/comment in tests/test_effective_rag_profile.py",
+    "Remove only the newly created tests/test_v1_targeted_boundaries.py after confirming it has no subsequent changes; preserve all pre-existing work and reports"
+  ],
+  "runtime_operations": "NONE",
+  "excluded": [
+    "actual_v2_callback_public_shape_and_internal_linkage",
+    "dev_endpoint_has_no_rag_claim",
+    "consumers_correlation_multiple_and_concurrent (includes V2)"
+  ],
+  "new_test_sha256": "AC37237E25B7493A322A7AEAF43340EEEE1A380A75CA08803C1EC80B88B0901B",
+  "findings": {
+    "ORACLE": "BLOCKED: missing approved oracle evidence cannot be invented",
+    "CC01": "NO_BUG_FOUND in actual source projector; no startup import or live HTTP verification",
+    "SECURITY": "13 offline tests PASS; mandatory operational security gates not closed",
+    "RAG_FIXTURE": "FIXED_VERIFIED: missing conversation/repeated_text fixture inputs; assertions retained",
+    "RUNTIME": "BLOCKED: current process/build parity and production behavior not verified by offline tests",
+    "MEM_ZERO_LIMIT": "FIXED_VERIFIED: -0 slice returned all history; zero now returns empty",
+    "RAG_FILTER": "REQUIRES_APPROVAL: approved metadata filter grammar absent; nonempty filter remains rejected",
+    "CC05": "REQUIRES_APPROVAL: owner/session binding and retention policy remain unresolved"
+  },
+  "tests": [
+    {
+      "skip": 0,
+      "exit": 1,
+      "pass": 12,
+      "fail": 1,
+      "command": ".venv/Scripts/python.exe docs/reports/v1-targeted-20261009T214132/verify.py memory-baseline"
+    },
+    {
+      "skip": 0,
+      "exit": 0,
+      "pass": 13,
+      "fail": 0,
+      "command": ".venv/Scripts/python.exe docs/reports/v1-targeted-20261009T214132/verify.py targeted"
+    },
+    {
+      "pass": 117,
+      "deselected": 3,
+      "run": "regression-20261009-214303",
+      "exit": 1,
+      "fail": 1,
+      "skip": 0,
+      "command": ".venv/Scripts/python.exe docs/reports/v1-targeted-20261009T214132/verify.py regression"
+    },
+    {
+      "pass": 118,
+      "deselected": 3,
+      "run": "regression-20261009-214353",
+      "exit": 0,
+      "fail": 0,
+      "skip": 0,
+      "command": ".venv/Scripts/python.exe docs/reports/v1-targeted-20261009T214132/verify.py regression"
+    },
+    {
+      "skip": 0,
+      "exit": 0,
+      "pass": 13,
+      "fail": 0,
+      "command": ".venv/Scripts/python.exe docs/reports/v1-targeted-20261009T214132/verify.py security"
+    }
+  ],
+  "active_database_access": "BLOCKED by guards; database/sidecars intentionally not inspected",
+  "new_test": "tests/test_v1_targeted_boundaries.py",
+  "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "scoped_diff_check_exit": 0,
+  "guards": [
+    {
+      "result": {
+        "pytest_exit": 1,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": ""
+      },
+      "path": "C:\\users\\dmaza\\mcp-starter\\docs\\reports\\v1-targeted-20261009T214132\\memory-baseline-20261009-214224\\guards.json"
+    },
+    {
+      "result": {
+        "pytest_exit": 1,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not actual_v2 and not dev_endpoint and not consumers_correlation"
+      },
+      "path": "C:\\users\\dmaza\\mcp-starter\\docs\\reports\\v1-targeted-20261009T214132\\regression-20261009-214303\\guards.json"
+    },
+    {
+      "result": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not actual_v2 and not dev_endpoint and not consumers_correlation"
+      },
+      "path": "C:\\users\\dmaza\\mcp-starter\\docs\\reports\\v1-targeted-20261009T214132\\regression-20261009-214353\\guards.json"
+    },
+    {
+      "result": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": ""
+      },
+      "path": "C:\\users\\dmaza\\mcp-starter\\docs\\reports\\v1-targeted-20261009T214132\\security-20261009-214442\\guards.json"
+    },
+    {
+      "result": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": ""
+      },
+      "path": "C:\\users\\dmaza\\mcp-starter\\docs\\reports\\v1-targeted-20261009T214132\\targeted-20261009-214258\\guards.json"
+    }
+  ],
+  "source_changes": [
+    {
+      "before": "105CBF8A9C2A558253CC3AA52EB20177D4CED12EF89B11C105C9E81F8FDCA31E",
+      "after": "EB79D7F334A8046449ADCF87E32DCF6CCB7A13FD3454DA0C8D1CF4EBE12C8182",
+      "path": "app\\memory\\engine.py"
+    },
+    {
+      "before": "CA534C88BDB2C1CF34A613B5B0E82A93612FB03DB98BEEA0BB5781582F9E4CBD",
+      "after": "7346A75BA27BD0AC2C11FB16CBFEB2DA05975787D3929207EA1591B75A8442BC",
+      "path": "tests\\test_effective_rag_profile.py"
+    }
+  ],
+  "limitations": [
+    "No live HTTP, browser, provider, runtime attestation, or active DB inspection",
+    "PowerShell recursive evidence listing reported denied access to two pytest temporary directories; direct guards/results artifacts available",
+    "139 datetime.utcnow deprecation warnings; thresholds and production policy unchanged"
+  ]
+}

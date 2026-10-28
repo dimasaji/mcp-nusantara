@@ -1,0 +1,373 @@
+diff --git a/docs/reports/r2-a11-phase-b-20261008-55fd917c/before/app__api__runtime_verification.py b/app/api/runtime_verification.py
+index a43f1c8..a5cd5b9 100644
+--- a/docs/reports/r2-a11-phase-b-20261008-55fd917c/before/app__api__runtime_verification.py
++++ b/app/api/runtime_verification.py
+@@ -2,6 +2,7 @@
+ from __future__ import annotations
+ 
+ from dataclasses import replace
++from datetime import datetime, timedelta, timezone
+ import json
+ import os
+ import threading
+@@ -15,6 +16,8 @@ import httpx
+ from app.core.runtime_correlation import (CorrelationReceipt, EndpointBinding,
+     OneDispatchTransport, OneUseAuthorization, ResponseObservationMiddleware,
+     receipt_dump, utc_now)
++from app.core.runtime_correlation import ReceiptObservation, assess_receipt, _aware_time
++from app.core.runtime_attestation import _process_identity
+ from app.core.runtime_identity import (BUILD_ID, ModelExecutionIdentity,
+     capture_model_identity, current_runtime_instance)
+ from app.models.ollama import OllamaProvider
+@@ -35,6 +38,7 @@ class VerificationController:
+         self.endpoint = EndpointBinding.from_configuration(configuration)
+         self.authorization = OneUseAuthorization()
+         self._receipt = None
++        self._receipt_observation = None
+         self._lock = threading.Lock()
+         self._code_observer = None
+         self._code_hash = None
+@@ -48,6 +52,8 @@ class VerificationController:
+         return (VerificationController.__init__, VerificationController.invoke,
+                 VerificationController.bind_loaded_code, VerificationController.code_functions,
+                 VerificationController._store, VerificationController.mark_response_sent,
++                VerificationController.receipt_assessment, assess_receipt, _aware_time,
++                ReceiptObservation.__init__,
+                 OneUseAuthorization.__init__, OneUseAuthorization._bound, OneUseAuthorization.grant,
+                 OneUseAuthorization.reserve, OneUseAuthorization.dispatch, OneUseAuthorization.finish,
+                 OneUseAuthorization.abort,
+@@ -65,9 +71,32 @@ class VerificationController:
+         with self._lock:
+             return self._receipt
+ 
+-    def _store(self, receipt):
++    def _store(self, receipt, *, process_start=None, evidence_class='UNVERIFIED'):
++        observed = datetime.now(timezone.utc)
++        observation = ReceiptObservation(receipt, process_start, observed.isoformat(),
++            (observed + timedelta(seconds=60)).isoformat(), evidence_class)
+         with self._lock:
++            if self._receipt is not None:
++                raise ValueError('CONFLICTING_RECEIPT_REPLACEMENT')
+             self._receipt = receipt
++            self._receipt_observation = observation
++
++    def receipt_assessment(self, *, now=None):
++        """Detached internal assessment; no public schema/authority change."""
++        with self._lock:
++            receipt, observation = self._receipt, self._receipt_observation
++        try:
++            process = _process_identity()
++            instance = current_runtime_instance()
++            code = self._code_observer() if self._code_observer else None
++        except Exception:
++            return {'status': 'NOT_VERIFIED', 'correlation_valid': False,
++                    'reason': 'CURRENT_CONTEXT_UNAVAILABLE',
++                    'application_response_sent': False, 'external_client_observed': False}
++        return assess_receipt(receipt, observation, pid=os.getpid(),
++            process_start=process['process_start_time'], runtime_instance=instance.runtime_instance_id,
++            source_snapshot=BUILD_ID, scoped_loaded_code=code,
++            provider_id=self.configuration.llm.provider, endpoint=self.endpoint, now=now)
+ 
+     def mark_response_sent(self, request_id):
+         with self._lock:
+@@ -84,9 +113,13 @@ class VerificationController:
+         if request_id == '-':
+             request_id = 'r2_' + uuid4().hex
+         started = utc_now()
++        process_start = _process_identity()['process_start_time']
+         provider = None
++        evidence_class = 'UNVERIFIED'
+         try:
+             transport = OneDispatchTransport(self.endpoint, self.authorization, isolated_transport=isolated_transport)
++            evidence_class = ('PROVIDER_RESPONSE' if type(transport._transport) is httpx.AsyncHTTPTransport
++                              else 'TEST_ISOLATED')
+             client = httpx.AsyncClient(base_url=self.endpoint.origin, transport=transport,
+                 timeout=self.configuration.llm.connection_timeout_s,
+                 follow_redirects=False, trust_env=False)
+@@ -109,13 +142,15 @@ class VerificationController:
+                 os.getpid(), BUILD_ID, self._code_hash, self.configuration.llm.provider, self.endpoint,
+                 identity['actual_model'], started, utc_now(), True, False,
+                 self.authorization.dispatch_count, 'PROVIDER_RESPONSE_CORRELATED')
+-            self._store(receipt)
++            self._store(receipt, process_start=process_start, evidence_class=evidence_class)
+             return receipt
+         except BaseException:
+             # No prompt/content/raw exception, and no invented successful invocation/model receipt.
+-            self._store(CorrelationReceipt(request_id, None, instance.runtime_instance_id, os.getpid(),
+-                BUILD_ID, self._code_hash, self.configuration.llm.provider, self.endpoint, None,
+-                started, utc_now(), False, False, self.authorization.dispatch_count, 'FAILED_OR_CANCELLED'))
++            if self.receipt is None:
++                self._store(CorrelationReceipt(request_id, None, instance.runtime_instance_id, os.getpid(),
++                    BUILD_ID, self._code_hash, self.configuration.llm.provider, self.endpoint, None,
++                    started, utc_now(), False, False, self.authorization.dispatch_count, 'FAILED_OR_CANCELLED'),
++                    process_start=process_start, evidence_class=evidence_class)
+             raise
+         finally:
+             self.authorization.finish()
+diff --git a/docs/reports/r2-a11-phase-b-20261008-55fd917c/before/app__core__runtime_correlation.py b/app/core/runtime_correlation.py
+index 0547b9c..c2cab44 100644
+--- a/docs/reports/r2-a11-phase-b-20261008-55fd917c/before/app__core__runtime_correlation.py
++++ b/app/core/runtime_correlation.py
+@@ -5,6 +5,7 @@ from dataclasses import asdict, dataclass, replace
+ from datetime import datetime, timezone
+ import hashlib
+ import ipaddress
++import math
+ import os
+ import secrets
+ import threading
+@@ -66,6 +67,85 @@ class CorrelationReceipt:
+     full_application_build_verified: bool = False
+ 
+ 
++@dataclass(frozen=True)
++class ReceiptObservation:
++    """Private server context, never an authorization or client receipt assertion."""
++    receipt: CorrelationReceipt
++    process_start: str | None
++    observed_at: str
++    expires_at: str
++    evidence_class: str
++
++
++def _aware_time(value):
++    if not isinstance(value, str):
++        raise ValueError('MISSING_TIMESTAMP')
++    parsed = datetime.fromisoformat(value)
++    if parsed.tzinfo is None:
++        raise ValueError('UNBOUND_TIMESTAMP')
++    return parsed.astimezone(timezone.utc)
++
++
++def assess_receipt(receipt, observation, *, pid, process_start, runtime_instance,
++                   source_snapshot, scoped_loaded_code, provider_id, endpoint,
++                   now=None, max_age_s=60):
++    """Assess trusted server context only; never import client claims or promote gates.
++
++    A copied fixture labelled PROVIDER_RESPONSE is not authenticated by this pure
++    function. Callers must supply observation from their private invocation owner.
++    """
++    result = {'status': 'NOT_VERIFIED', 'correlation_valid': False,
++              'reason': 'MISSING_OR_INVALID_RECEIPT', 'application_response_sent': False,
++              'external_client_observed': False}
++    if type(receipt) is not CorrelationReceipt or type(observation) is not ReceiptObservation:
++        return result
++    try:
++        if (isinstance(max_age_s, bool) or not isinstance(max_age_s, (int, float))
++                or not math.isfinite(max_age_s) or not 0 < max_age_s <= 120):
++            raise ValueError('INVALID_FRESHNESS_BOUND')
++        if observation.evidence_class != 'PROVIDER_RESPONSE':
++            raise ValueError('NO_GENUINE_PROVIDER_OBSERVATION')
++        # Only the later successful ASGI send flag may differ from the stored copy.
++        if replace(receipt, application_response_sent=observation.receipt.application_response_sent) != observation.receipt:
++            raise ValueError('CONFLICTING_RECEIPT')
++        if (type(pid) is not int or pid <= 0 or type(receipt.pid) is not int
++                or receipt.pid != pid or not runtime_instance or receipt.runtime_instance_id != runtime_instance
++                or not source_snapshot or receipt.source_snapshot != source_snapshot
++                or not scoped_loaded_code or receipt.scoped_loaded_code != scoped_loaded_code
++                or not provider_id or receipt.provider_id != provider_id
++                or type(endpoint) is not EndpointBinding or receipt.provider_endpoint != endpoint
++                or _aware_time(observation.process_start) != _aware_time(process_start)):
++            raise ValueError('PROCESS_OR_CODE_BINDING_MISMATCH')
++        if (not isinstance(receipt.request_id, str) or not receipt.request_id
++                or not isinstance(receipt.invocation_id, str) or not receipt.invocation_id
++                or not isinstance(receipt.actual_model, str) or not receipt.actual_model.strip()
++                or any(ord(c) < 32 for c in receipt.actual_model) or len(receipt.actual_model) > 256
++                or receipt.response_observed is not True or type(receipt.dispatch_count) is not int
++                or receipt.dispatch_count != 1 or receipt.outcome != 'PROVIDER_RESPONSE_CORRELATED'
++                or type(receipt.application_response_sent) is not bool
++                or receipt.external_client_observed is not False
++                or receipt.full_application_build_verified is not False):
++            raise ValueError('INCOMPLETE_PROVIDER_EVIDENCE')
++        current = datetime.now(timezone.utc) if now is None else now
++        if not isinstance(current, datetime) or current.tzinfo is None:
++            raise ValueError('UNBOUND_OBSERVATION_TIME')
++        start, complete = _aware_time(receipt.started_at), _aware_time(receipt.completed_at)
++        observed, expires = _aware_time(observation.observed_at), _aware_time(observation.expires_at)
++        if (not _aware_time(process_start) <= start <= complete <= observed <= current < expires
++                or not 0 < (expires-observed).total_seconds() <= max_age_s
++                or (current-start).total_seconds() >= max_age_s):
++            raise ValueError('STALE_OR_INSUFFICIENT_FRESHNESS')
++    except (ValueError, TypeError, AttributeError, OverflowError) as error:
++        safe_reasons = {'INVALID_FRESHNESS_BOUND', 'NO_GENUINE_PROVIDER_OBSERVATION',
++            'CONFLICTING_RECEIPT', 'PROCESS_OR_CODE_BINDING_MISMATCH',
++            'INCOMPLETE_PROVIDER_EVIDENCE', 'UNBOUND_OBSERVATION_TIME',
++            'STALE_OR_INSUFFICIENT_FRESHNESS', 'MISSING_TIMESTAMP', 'UNBOUND_TIMESTAMP'}
++        result['reason'] = str(error) if str(error) in safe_reasons else 'MALFORMED_RECEIPT_CONTEXT'
++        return result
++    return {**result, 'correlation_valid': True, 'reason': 'SCOPED_SERVER_RECEIPT_BOUND',
++            'application_response_sent': receipt.application_response_sent}
++
++
+ class OneUseAuthorization:
+     """Trusted server-side grant only; no HTTP grant and no auto-grant on boot."""
+ 
+diff --git a/docs/reports/r2-a11-phase-b-20261008-55fd917c/before/tests__test_runtime_correlation.py b/tests/test_runtime_correlation.py
+index 36eff0f..fea406e 100644
+--- a/docs/reports/r2-a11-phase-b-20261008-55fd917c/before/tests__test_runtime_correlation.py
++++ b/tests/test_runtime_correlation.py
+@@ -138,3 +138,72 @@ async def test_transport_rejects_health_alternate_paths_and_second_dispatch(monk
+     assert len(seen) == grant.dispatch_count == 1
+     assert seen[0].url.host == '127.0.0.1'
+     assert seen[0].headers['host'] == 'localhost:11434'
++
++
++def receipt_assessment_fixture():
++    """Synthetic validation inputs; no provider call or authorization."""
++    from datetime import datetime, timezone
++    import app.core.runtime_correlation as owner
++    receipt = CorrelationReceipt('request', 'invocation', 'instance', 123,
++        'sha256:'+'a'*64, 'sha256:'+'b'*64, 'ollama',
++        EndpointBinding('http://localhost:11434', 'http://127.0.0.1:11434'),
++        'model', '2026-10-08T00:00:01+00:00', '2026-10-08T00:00:02+00:00',
++        True, False, 1, 'PROVIDER_RESPONSE_CORRELATED')
++    observation = owner.ReceiptObservation(receipt, '2026-10-08T00:00:00+00:00',
++        '2026-10-08T00:00:02+00:00', '2026-10-08T00:01:02+00:00', 'PROVIDER_RESPONSE')
++    expected = dict(pid=123, process_start=observation.process_start,
++        runtime_instance='instance', source_snapshot=receipt.source_snapshot,
++        scoped_loaded_code=receipt.scoped_loaded_code, provider_id='ollama',
++        endpoint=receipt.provider_endpoint, now=datetime(2026,10,8,0,0,3,tzinfo=timezone.utc))
++    return owner, receipt, observation, expected
++
++
++def test_receipt_assessment_separates_provider_send_and_full_identity():
++    owner, receipt, observation, expected = receipt_assessment_fixture()
++    value = owner.assess_receipt(receipt, observation, **expected)
++    assert value['correlation_valid'] is True and value['status'] == 'NOT_VERIFIED'
++    assert not value['application_response_sent'] and not value['external_client_observed']
++    sent = dataclasses.replace(receipt, application_response_sent=True)
++    assert owner.assess_receipt(sent, observation, **expected)['correlation_valid'] is True
++    assert owner.assess_receipt(sent, observation, **expected)['application_response_sent'] is True
++
++
++@pytest.mark.parametrize('field,value', [('pid',124),
++    ('process_start','2026-10-07T00:00:00+00:00'), ('runtime_instance','other'),
++    ('source_snapshot','sha256:'+'c'*64), ('scoped_loaded_code','sha256:'+'d'*64),
++    ('provider_id','other'), ('endpoint',EndpointBinding('http://127.0.0.1:11434','http://127.0.0.1:11434'))])
++def test_receipt_assessment_rejects_changed_binding(field, value):
++    owner, receipt, observation, expected = receipt_assessment_fixture()
++    expected[field] = value
++    assert not owner.assess_receipt(receipt, observation, **expected)['correlation_valid']
++
++
++@pytest.mark.parametrize('change', [ {'invocation_id':None}, {'request_id':''},
++    {'actual_model':None}, {'response_observed':False}, {'dispatch_count':0},
++    {'dispatch_count':True}, {'outcome':'FAILED_OR_CANCELLED'},
++    {'external_client_observed':True}, {'full_application_build_verified':True},
++    {'completed_at':'invalid'}, {'started_at':'2026-10-08T00:00:05+00:00'},
++    {'completed_at':'2026-10-08T00:00:02'}])
++def test_receipt_assessment_rejects_conflicting_or_incomplete_receipt(change):
++    owner, receipt, observation, expected = receipt_assessment_fixture()
++    assert not owner.assess_receipt(dataclasses.replace(receipt,**change),observation,**expected)['correlation_valid']
++
++
++@pytest.mark.parametrize('change', [{'evidence_class':'TEST_ISOLATED'},
++    {'evidence_class':'UNKNOWN'}, {'process_start':None}, {'expires_at':None},
++    {'observed_at':'invalid'}, {'observed_at':'2026-10-08T00:00:04+00:00'},
++    {'expires_at':'2026-10-08T00:00:02+00:00'}, {'expires_at':'2026-10-08T00:10:00+00:00'}])
++def test_receipt_assessment_rejects_fixture_and_insufficient_freshness(change):
++    owner, receipt, observation, expected = receipt_assessment_fixture()
++    assert not owner.assess_receipt(receipt,dataclasses.replace(observation,**change),**expected)['correlation_valid']
++
++
++def test_receipt_assessment_rejects_absence_expiry_and_unsafe_age():
++    from datetime import timedelta
++    owner, receipt, observation, expected = receipt_assessment_fixture()
++    for candidate,binding in [(None,observation),(receipt,None),(receipt,{})]:
++        assert not owner.assess_receipt(candidate,binding,**expected)['correlation_valid']
++    expected['now'] += timedelta(minutes=1)
++    assert not owner.assess_receipt(receipt,observation,**expected)['correlation_valid']
++    for age in (0,-1,True,float('nan'),float('inf'),121):
++        assert not owner.assess_receipt(receipt,observation,max_age_s=age,**expected)['correlation_valid']
+diff --git a/docs/reports/r2-a11-phase-b-20261008-55fd917c/before/tests__test_runtime_verification.py b/tests/test_runtime_verification.py
+index e05ebc9..b77543d 100644
+--- a/docs/reports/r2-a11-phase-b-20261008-55fd917c/before/tests__test_runtime_verification.py
++++ b/tests/test_runtime_verification.py
+@@ -45,6 +45,87 @@ def headers(token):
+     return {'Authorization': 'Bearer '+token, 'X-Request-ID': 'caller-owned-id'}
+ 
+ 
++def test_receipt_assessment_missing_unbound_and_conflicting_storage(tmp_path, monkeypatch):
++    from app.core.runtime_correlation import CorrelationReceipt
++    app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
++    assert not controller.receipt_assessment()['correlation_valid']
++    receipt = CorrelationReceipt('request', 'invocation', 'fixture-instance', os.getpid(),
++        'source', 'scoped', 'ollama', controller.endpoint, 'fixture-model',
++        '2026-10-08T00:00:00+00:00', '2026-10-08T00:00:01+00:00',
++        True, False, 1, 'PROVIDER_RESPONSE_CORRELATED')
++    controller._store(receipt)  # Unverified server test context, no permit/provider.
++    assert not controller.receipt_assessment()['correlation_valid']
++    with pytest.raises(ValueError, match='CONFLICTING_RECEIPT'):
++        controller._store(receipt)
++    assert controller.receipt == receipt and not calls
++    assert controller.authorization.state == 'DISARMED'
++    assert controller.authorization.dispatch_count == 0
++
++
++def test_receipt_assessment_controller_checks_current_os_code_and_fixture(tmp_path, monkeypatch):
++    from dataclasses import replace
++    from datetime import datetime, timedelta, timezone
++    import app.api.runtime_verification as owner
++    from app.core.runtime_correlation import CorrelationReceipt
++    app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
++    current = datetime.now(timezone.utc)
++    stamp = (current-timedelta(seconds=1)).isoformat()
++    process = owner._process_identity()
++    instance = owner.current_runtime_instance()
++    receipt = CorrelationReceipt('request', 'invocation', instance.runtime_instance_id, os.getpid(),
++        owner.BUILD_ID, controller._code_hash, 'ollama', controller.endpoint, 'fixture-model',
++        stamp, stamp, True, False, 1, 'PROVIDER_RESPONSE_CORRELATED')
++    # Synthetic trusted-context branch tests logic, not genuine provider evidence.
++    controller._store(receipt, process_start=process['process_start_time'], evidence_class='PROVIDER_RESPONSE')
++    assert controller.receipt_assessment()['correlation_valid']
++    observer = controller._code_observer
++    monkeypatch.setattr(controller, '_code_observer', lambda:'wrong-code')
++    assert not controller.receipt_assessment()['correlation_valid']
++    monkeypatch.setattr(controller, '_code_observer', observer)
++    monkeypatch.setattr(owner, '_process_identity', lambda:{'process_start_time':'2020-01-01T00:00:00+00:00'})
++    assert not controller.receipt_assessment()['correlation_valid']
++    monkeypatch.setattr(owner, '_process_identity', lambda:process)
++    monkeypatch.setattr(controller, '_receipt_observation', replace(controller._receipt_observation, evidence_class='TEST_ISOLATED'))
++    assert not controller.receipt_assessment()['correlation_valid']
++    assert not calls and controller.authorization.state == 'DISARMED'
++    assert controller.authorization.dispatch_count == 0
++
++
++def test_receipt_assessment_observer_failure_is_fail_closed(tmp_path, monkeypatch):
++    app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
++    def unavailable(): raise RuntimeError('PRIVATE_CONTEXT_FAILURE')
++    monkeypatch.setattr(controller, '_code_observer', unavailable)
++    result = controller.receipt_assessment()
++    assert result['status'] == 'NOT_VERIFIED' and not result['correlation_valid']
++    assert result['reason'] == 'CURRENT_CONTEXT_UNAVAILABLE'
++    assert 'PRIVATE_CONTEXT_FAILURE' not in json.dumps(result)
++    assert not calls and controller.authorization.state == 'DISARMED'
++
++
++@pytest.mark.asyncio
++async def test_receipt_assessment_send_success_failure_never_creates_provider_evidence(tmp_path, monkeypatch):
++    from app.core.runtime_correlation import ResponseObservationMiddleware, CorrelationReceipt
++    app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
++    receipt = CorrelationReceipt('request', 'invocation', 'fixture', os.getpid(),
++        'source', 'scoped', 'ollama', controller.endpoint, 'fixture-model',
++        'start', 'complete', True, False, 1, 'PROVIDER_RESPONSE_CORRELATED')
++    controller._store(receipt, evidence_class='TEST_ISOLATED')
++    async def response_app(scope, receive, send):
++        await send({'type':'http.response.start','status':200,'headers':[(b'x-request-id',b'request')]})
++        await send({'type':'http.response.body','body':b'','more_body':False})
++    async def failed_send(message):
++        if message['type']=='http.response.body': raise RuntimeError('isolated-send-failed')
++    async def sent(message): pass
++    wrapped = ResponseObservationMiddleware(response_app, controller)
++    scope={'type':'http','path':VERIFICATION_PATH}
++    with pytest.raises(RuntimeError): await wrapped(scope, None, failed_send)
++    assert not controller.receipt.application_response_sent
++    await wrapped(scope, None, sent)
++    assert controller.receipt.application_response_sent and not controller.receipt.external_client_observed
++    assert not controller.receipt_assessment()['correlation_valid']
++    assert not calls and controller.authorization.state == 'DISARMED'
++
++
+ def test_real_provider_receipt_join_send_observation_and_no_second_generation(tmp_path, monkeypatch):
+     app, controller, calls, factories = app_fixture(tmp_path, monkeypatch)
+     token = controller.authorization.grant()

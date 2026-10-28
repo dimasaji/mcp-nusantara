@@ -1,0 +1,21 @@
+diff --git a/docs/reports/r2-a10-isolation-fix-20261008/before/control_plane.py b/app/api/control_plane.py
+index 2c1b520..a8e11f1 100644
+--- a/docs/reports/r2-a10-isolation-fix-20261008/before/control_plane.py
++++ b/app/api/control_plane.py
+@@ -2,7 +2,6 @@
+ from urllib.parse import urlsplit
+ import json
+ from fastapi import APIRouter, HTTPException, Request
+-from app.approval.runtime_authorization import AuthorizationError, SCOPE
+ from app.core.control_plane_projection import project
+ 
+ router = APIRouter(prefix='/v1/control-plane', tags=['engineering-control-plane'])
+@@ -29,6 +28,8 @@ async def intention(request: Request):
+     """Local browser intention only; never an operator/authentication bridge."""
+     if getattr(request.app.state, 'runtime_profile', None) != 'ATTESTATION':
+         raise HTTPException(404, 'ATTESTATION_ONLY')
++    # Evidence-only/NORMAL imports must not pull in the private authorization owner.
++    from app.approval.runtime_authorization import AuthorizationError, SCOPE
+     if (not request.client or request.client.host not in {'127.0.0.1', '::1'}
+             or request.headers.get('host') != '127.0.0.1:8000'
+             or request.headers.get('origin') not in {'http://127.0.0.1:5173', 'http://127.0.0.1:8000'}

@@ -1,0 +1,111 @@
+{
+  "phase": "MDE06_EMBEDDING_INDEX_SAFETY",
+  "status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+  "timestamp": "2026-10-07T04:35:18.660601+00:00",
+  "git_head": "c24aa1b0db391009af44682bf2f2eb091f4f0f75",
+  "branch": "codex/fullroot-control-20261007",
+  "baseline": ".dev/MDE06_BASELINE_20261007.json",
+  "previous_checkpoint": ".dev/MDE05_CHECKPOINT.json",
+  "authorization": "Human APPROVE MDE-06; audit only, no production rebuild or Level C implementation",
+  "changes": [
+    ".dev/MDE06_BASELINE_20261007.json",
+    "docs/reports/MDE06_INDEX_SNAPSHOT_AUDIT_20261007.json",
+    "docs/reports/MDE06_FOCUSED_20261007.xml",
+    "docs/reports/MDE06_ISOLATED_OBSERVATIONS_20261007.json",
+    "docs/reports/MDE06_COMPATIBILITY_MAP_20261007.json",
+    "docs/MDE-06_EMBEDDING_INDEX_SAFETY_DESIGN.md",
+    "docs/reports/MDE06_INTEGRITY_20261007.json",
+    "docs/reports/MDE06_EXECUTION_REPORT_20261007.md",
+    ".dev/checkpoints/mde06-20261007/isolated_compatibility.db",
+    ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db",
+    ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db-shm",
+    ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db-wal",
+    ".dev/checkpoints/mde06-20261007/production_knowledge.db",
+    ".dev/checkpoints/mde06-20261007/production_knowledge.db-shm",
+    ".dev/checkpoints/mde06-20261007/production_knowledge.db-wal",
+    ".dev/MDE06_CHECKPOINT.json"
+  ],
+  "decision": "KEEP_DATA_AND_IMPLEMENTATIONS_EXTEND_SAFETY_DESIGN_ONLY",
+  "tests": {
+    "fresh_focused_passed": 3,
+    "junit": "docs/reports/MDE06_FOCUSED_20261007.xml",
+    "isolated_observations_passed": 5,
+    "observations": "docs/reports/MDE06_ISOLATED_OBSERVATIONS_20261007.json",
+    "full_regression": "Historical reuse, not rerun"
+  },
+  "runtime_verification": {
+    "actual_embedding_model": "NOT_VERIFIED",
+    "worker": "NOT_RUN",
+    "deployed_retrieval": "NOT_RUN",
+    "original_database_connection": false,
+    "snapshot_audit": "docs/reports/MDE06_INDEX_SNAPSHOT_AUDIT_20261007.json"
+  },
+  "index_status": {
+    "production": "PARTIAL",
+    "canonical": "UNKNOWN",
+    "production_active_chunks": 27,
+    "production_missing_active_embeddings": 25,
+    "runtime_use_required_by_contract": "BLOCKED_UNTIL_COMPATIBILITY_PROVEN",
+    "hard_gate_implemented": false
+  },
+  "evidence_sha256": {
+    ".dev/MDE06_BASELINE_20261007.json": "3f49c6d19bd321092304c6e1342dcee6501f8332d4722931931da2326046b0c7",
+    "docs/reports/MDE06_INDEX_SNAPSHOT_AUDIT_20261007.json": "b93a109ca49741ecf7bcc5b319e1effba0adc6f58dc5708aaeb7663ebcc1f157",
+    "docs/reports/MDE06_FOCUSED_20261007.xml": "97468fd7c9db8eb6c8cd37772b15af72bd529968a7c6522118907174064ecc5c",
+    "docs/reports/MDE06_ISOLATED_OBSERVATIONS_20261007.json": "a411be843b87de27e68a6b9ad2b7467d0ecdfb587056d4076eb61175780614ec",
+    "docs/reports/MDE06_COMPATIBILITY_MAP_20261007.json": "9269ec26223e1fdd7e5498d1e05c0224b5be00ef4c625ab6e5753901d57c64a0",
+    "docs/MDE-06_EMBEDDING_INDEX_SAFETY_DESIGN.md": "d14622d9c1b33be7dea6c62c153759798f3e2f0f4e91328e2f8ce0cb547989d3",
+    "docs/reports/MDE06_INTEGRITY_20261007.json": "8cd81111df346d3d6991f14729e43b2cdb28ef009f7661f38f02841b7287ba05",
+    "docs/reports/MDE06_EXECUTION_REPORT_20261007.md": "7e549dfed8698d9924f33e363c54e4dd4d192cd423b5a28f72c5c2aecacdc7f2",
+    ".dev/checkpoints/mde06-20261007/isolated_compatibility.db": "b0c1d1c206e26bd8b190776a09177915d301f5c27faea7ed334de3acf6967b93",
+    ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+    ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+    ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".dev/checkpoints/mde06-20261007/production_knowledge.db": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+    ".dev/checkpoints/mde06-20261007/production_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+    ".dev/checkpoints/mde06-20261007/production_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "protected_verification": {
+    "evidence": "docs/reports/MDE06_INTEGRITY_20261007.json",
+    "checked": 295,
+    "mismatches": []
+  },
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "source_changes": [],
+  "database_original_changes": [],
+  "index_rebuilt": false,
+  "limitations": [
+    "Production embedding coverage 2/27; 25 active chunks missing",
+    "Canonical generation/version/content binding unavailable",
+    "Actual embedding model/revision not attested",
+    "Current source lacks universal hard model/dimension gate",
+    "Live compatibility NOT_RUN",
+    "Manifest counts differ from current snapshot",
+    "Historical Windows symlink skip",
+    "MDE09/MDE10 scope conflict remains"
+  ],
+  "rollback": "Only new audit artifacts if requested; production rollback/rebuild not authorized or executed",
+  "next_phase": "MDE07_RUNTIME_ENFORCEMENT",
+  "next_action": "WAIT_FOR_HUMAN_APPROVAL_MDE07",
+  "approval_required": true,
+  "approval_source": {
+    "file": "docs/commands/MDE-04 -09.md",
+    "section": 34,
+    "quote": "STOP. GENERATE CHECKPOINT. WAIT FOR HUMAN APPROVAL."
+  },
+  "completed_steps": [
+    "checkpoint/preflight",
+    "golden baseline",
+    "embedding/index source discovery",
+    "stable DB+WAL copies",
+    "read-only snapshot schema/coverage/integrity audit",
+    "3 focused tests",
+    "5 isolated observations",
+    "gap/risk/design",
+    "integrity/impact/self-audit",
+    "report/checkpoint"
+  ],
+  "resume_instruction": "Verify evidence and protected hashes. Do not repeat MDE01-06. Await MDE07 approval; no production index rebuild or runtime activation authorized.",
+  "overall_status": "NOT_READY",
+  "overall_v1_acceptance": "FAIL/HOLD"
+}

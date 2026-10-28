@@ -1,0 +1,132 @@
+{
+  "timestamp": "2026-10-08T21:29:38.771776+07:00",
+  "repository": "C:\\Users\\dmaza\\mcp-starter",
+  "branch": "codex/fullroot-control-20261007",
+  "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "changes": "Evidence and new draft Control Plane contract only; stopped at unresolved architectural decisions",
+  "files_changed": [
+    "docs/reports/v1-closure-20261008/CC06_KNOWLEDGE_RAG.json"
+  ],
+  "source_changes": [],
+  "test_changes": [],
+  "configuration_changes": [],
+  "runtime_identity": {
+    "inspection": "Read-only Win32_Process discovery; not socket owner or active-build correlation",
+    "observed_backend_candidates": [
+      {
+        "pid": 37704,
+        "parent_pid": 20228,
+        "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+        "created_at": "2026-10-08T20:03:49.613978+07:00"
+      },
+      {
+        "pid": 33160,
+        "parent_pid": 37704,
+        "executable": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "created_at": "2026-10-08T20:03:49.631080+07:00"
+      }
+    ],
+    "launch_application": "app.main:app",
+    "launch_host": "127.0.0.1",
+    "launch_port": 8000,
+    "reload": false,
+    "active_source_build": "NOT_VERIFIED",
+    "runtime_profile": "NOT_VERIFIED",
+    "effective_provider_model": "NOT_VERIFIED",
+    "health_openapi_chat_requests_sent": 0
+  },
+  "live_integration_verified": false,
+  "unauthorized_changes": 0,
+  "change_audit": {
+    "existing_files_checked": 6686,
+    "modified_or_missing_existing_files": [],
+    "added_outside_evidence_directory": [
+      "docs/contracts/NUSANTARA-CONTROL-PLANE-V1.md"
+    ],
+    "unattributed_added": [],
+    "read_errors": [],
+    "source_test_configuration_changes": [],
+    "cache_preserved": true,
+    "historical_evidence_preserved": true
+  },
+  "limitations": [
+    "Pure isolated verification is not HTTP/runtime/official-source integration proof",
+    "No provider/model/worker, live DB, production restart, deployment or graph query executed",
+    "No V2 implementation or Hermes freeze performed"
+  ],
+  "scope": "Filter, reranker, grounding, relevance/authority and official oracle",
+  "results": {
+    "source": [
+      "app/knowledge/engine.py:33",
+      "app/knowledge/rag.py:448",
+      "app/knowledge/rag.py:707"
+    ],
+    "filter": "IGNORED: del filter; not an access/source policy boundary",
+    "reranker": "Receipt labels actual simple_keyword_overlap when requested and enabled; facade does not request rerank. Not a learned reranker proof.",
+    "grounding": "LC-DECIMAL-001 D4 PASS preserved; current grounding tests included in selected regression",
+    "trust": "Relevance-based supports_claim does not certify official authority",
+    "oracle_cases_historical": [
+      {
+        "id": "ktp-definition-local",
+        "domain": "KTP",
+        "oracle_status": "PROJECT_FIXTURE",
+        "authoritative_status": "FIXTURE_ONLY_NOT_OFFICIAL",
+        "closure_status": "AUDITED_FIXTURE_OR_NEGATIVE"
+      },
+      {
+        "id": "paspor-definition-local",
+        "domain": "Paspor",
+        "oracle_status": "PROJECT_FIXTURE",
+        "authoritative_status": "FIXTURE_ONLY_NOT_OFFICIAL",
+        "closure_status": "AUDITED_FIXTURE_OR_NEGATIVE"
+      },
+      {
+        "id": "nasi-goreng-local",
+        "domain": "Nasi Goreng",
+        "oracle_status": "PROJECT_FIXTURE",
+        "authoritative_status": "FIXTURE_ONLY_NOT_OFFICIAL",
+        "closure_status": "AUDITED_FIXTURE_OR_NEGATIVE"
+      },
+      {
+        "id": "tangerang-ktp-pemula-snapshot",
+        "domain": "Tangerang SOP",
+        "oracle_status": "REVIEW_REQUIRED",
+        "authoritative_status": "DECLARED_OFFICIAL_PENDING_GOVERNANCE_REVIEW",
+        "closure_status": "AUDITED_WITH_OPEN_GAP"
+      },
+      {
+        "id": "tangerang-sop-data-pribadi-snapshot",
+        "domain": "Tangerang SOP",
+        "oracle_status": "REVIEW_REQUIRED",
+        "authoritative_status": "DECLARED_OFFICIAL_PENDING_GOVERNANCE_REVIEW",
+        "closure_status": "AUDITED_WITH_OPEN_GAP"
+      },
+      {
+        "id": "paspor-requirements-missing",
+        "domain": "Paspor",
+        "oracle_status": "MISSING",
+        "authoritative_status": "UNAVAILABLE",
+        "closure_status": "AUDITED_WITH_OPEN_GAP"
+      },
+      {
+        "id": "unknown-service-negative",
+        "domain": "Negative retrieval",
+        "oracle_status": "NEGATIVE_CASE",
+        "authoritative_status": "NOT_APPLICABLE_NEGATIVE_CASE",
+        "closure_status": "AUDITED_FIXTURE_OR_NEGATIVE"
+      }
+    ],
+    "live_database_inventory": "NOT_INSPECTED",
+    "official_oracle": "OPEN: two REVIEW_REQUIRED cases and one MISSING case remain in historical authoritative audit; no later closure evidence established",
+    "non_government": "Nasi goreng remains fixture/non-government; never promoted to official knowledge",
+    "implementation": "STOPPED; filter semantics/approved authority schema and official sources not invented"
+  },
+  "tests": {
+    "grounding_regression": "26 existing tests passed within selected suite; not a RAG/official oracle integration run"
+  },
+  "decisions_required": [
+    "Approved filter/authority schema and enforcement before candidate scoring/top-k.",
+    "Approved official snapshots with issuer, jurisdiction, validity and ingestion authorization; no invented oracle."
+  ],
+  "final_status": "REVIEW_REQUIRED"
+}

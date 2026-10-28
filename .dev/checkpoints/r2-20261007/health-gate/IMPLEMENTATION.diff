@@ -1,0 +1,122 @@
+--- before/app/api/routes.py
++++ after/app/api/routes.py
+@@ -816,6 +816,39 @@
+             "service": settings.app_name,
+             "version": settings.app_version,
+             "llm": ollama,
++            # Inventory health does not prove that this process executed a model.
++            # Project only safe fields; retain the existing public health fields.
++            "identity": {
++                "service": {"status": "ok"},
++                "provider": {
++                    "name": provider.name,
++                    "status": ollama["status"],
++                    "verification_state": "HEALTH_PROBE_ONLY",
++                },
++                "model": {
++                    "configured": _configuration.llm.model,
++                    "effective": _configuration.llm.model,
++                    "selected": ollama["model"],
++                    "payload": None,
++                    "actual": None,
++                    "source": next(
++                        (record.source for record in _configuration.provenance
++                         if record.field == "llm.model"),
++                        "DEFAULT",
++                    ),
++                    "override_source": "CONFIGURATION",
++                    "verification_state": "NOT_VERIFIED",
++                },
++                "build": {
++                    "id": BUILD_ID,
++                    "verification_state": "SOURCE_SNAPSHOT",
++                },
++                "verification_state": "NOT_VERIFIED",
++                "confirmation_source": (
++                    "NONE" if ollama["status"] == "unavailable"
++                    else "MODEL_INVENTORY_ONLY"
++                ),
++            },
+             "components": {
+                 "api": "available",
+                 "language_engine": "available",
+--- before/tests/test_provider_identity.py
++++ after/tests/test_provider_identity.py
+@@ -185,3 +185,77 @@
+                               for d in node.decorator_list)]
+             return classes, routes
+         assert surface(root/name) == surface(baseline/name)
++
++
++def _health_endpoint_client(source, provider):
++    """Execute the actual endpoint AST without importing database/worker owners."""
++    from types import SimpleNamespace
++    from fastapi import APIRouter, FastAPI
++    from fastapi.testclient import TestClient
++
++    module = ast.parse(source.read_text(encoding='utf-8-sig'))
++    endpoint = next(node for node in module.body
++                    if isinstance(node, ast.AsyncFunctionDef) and node.name == 'health_detail')
++    namespace = {
++        'router': APIRouter(prefix='/v1'), 'OllamaProvider': provider,
++        '_configuration': config(), 'BUILD_ID': BUILD_ID,
++        'settings': SimpleNamespace(app_name='fixture-service', app_version='fixture-version'),
++    }
++    exec(compile(ast.Module(body=[endpoint], type_ignores=[]), str(source), 'exec'), namespace)
++    app = FastAPI()
++    app.include_router(namespace['router'])
++    return TestClient(app)
++
++
++@pytest.mark.parametrize('status,available', [
++    ('ok', True), ('degraded', False), ('unavailable', False),
++])
++def test_public_health_distinguishes_inventory_identity_and_preserves_legacy_fields(status, available):
++    root = Path(__file__).parents[1]
++    instances = []
++
++    class Provider:
++        name = 'ollama'
++
++        def __init__(self, *, nusantara_config):
++            self.closed = False
++            self.configuration = nusantara_config
++            # Private state is deliberately untrusted and must never be projected.
++            self.last_health_identity = {'actual_model': 'fabricated',
++                'identity_status': 'RUNTIME_CONFIRMED', 'executable': 'PRIVATE_PATH',
++                'api_key': 'PRIVATE_SECRET', 'build_id': 'forged'}
++            instances.append(self)
++
++        async def health_check(self):
++            return {'status': status, 'available': available,
++                    'model': self.configuration.llm.model, 'latency_ms': 12}
++
++        async def close(self):
++            self.closed = True
++
++    prior = root / '.dev/checkpoints/r2-20261007/health-gate/source-before/app/api/routes.py'
++    with _health_endpoint_client(prior, Provider) as client:
++        old = client.get('/v1/health/detail')
++    with _health_endpoint_client(root/'app/api/routes.py', Provider) as client:
++        new = client.get('/v1/health/detail')
++    assert old.status_code == new.status_code == 200
++    before, after = old.json(), new.json()
++    identity = after.pop('identity')
++    assert after == before
++    assert set(identity) == {'service', 'provider', 'model', 'build',
++                             'verification_state', 'confirmation_source'}
++    assert identity['service']['status'] == 'ok'
++    assert identity['provider'] == {'name': 'ollama', 'status': status,
++                                    'verification_state': 'HEALTH_PROBE_ONLY'}
++    assert identity['model']['configured'] == identity['model']['effective'] == 'configured'
++    assert identity['model']['selected'] == 'configured'
++    assert identity['model']['source'] == 'ENV'
++    assert identity['model']['payload'] is identity['model']['actual'] is None
++    assert identity['model']['verification_state'] == identity['verification_state'] == 'NOT_VERIFIED'
++    assert identity['build'] == {'id': BUILD_ID, 'verification_state': 'SOURCE_SNAPSHOT'}
++    assert identity['confirmation_source'] == ('NONE' if status == 'unavailable'
++                                               else 'MODEL_INVENTORY_ONLY')
++    serialized = json.dumps(identity)
++    assert all(secret not in serialized for secret in
++               ['PRIVATE_PATH', 'PRIVATE_SECRET', 'fabricated', 'forged', 'executable', 'api_key'])
++    assert all(provider.closed for provider in instances)

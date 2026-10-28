@@ -1,0 +1,407 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261010162501
+Username: DESKTOP-GJHS3LR\dmaza
+RunAs User: DESKTOP-GJHS3LR\dmaza
+Configuration Name: 
+Machine: DESKTOP-GJHS3LR (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+Process ID: 36316
+PSVersion: 5.1.26100.9444
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9444
+BuildVersion: 10.0.26100.9444
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS C:\Users\dmaza\mcp-starter> Write-Host "`n=== 1. REPOSITORY ===" -ForegroundColor Cyan
+
+=== 1. REPOSITORY ===
+PS C:\Users\dmaza\mcp-starter> Get-Location
+
+Path
+----
+C:\Users\dmaza\mcp-starter
+
+
+PS C:\Users\dmaza\mcp-starter> git status --short
+
+PS C:\Users\dmaza\mcp-starter> Write-Host "`n=== 2. REPAIR CONTRACT ===" -ForegroundColor Cyan
+
+=== 2. REPAIR CONTRACT ===
+PS C:\Users\dmaza\mcp-starter> if (Test-Path -LiteralPath $Contract) {
+    Get-Content -LiteralPath $Contract
+} else {
+    Write-Host "Contract not found: $Contract" -ForegroundColor Red
+}
+NUSANTARA CONTROL PLANE — DECISION REPAIR
+
+Repository: C:\Users\dmaza\mcp-starter
+Target: http://127.0.0.1:8000/decision
+Current package: evp_sha256_36bb8d0cdb4ff24fc994d87f8713877caf5a53bfe674d23dd0c9519ddeb574b6
+Primary blocker: TEST_SOURCE_CHANGED_AFTER_RUN
+
+Use the current repository state and the preflight artifacts in the newest
+docs/reports/decision-repair-* directory.
+
+1. Diagnose the exact cause of TEST_SOURCE_CHANGED_AFTER_RUN by tracing
+   test-run source hashes, evidence validation, package generation/refresh,
+   and the PASS eligibility gate. Do not assume one cause without evidence.
+
+2. Preserve historical results. Never rewrite an old test report to make
+   hashes match. Run the relevant tests against current source, recording
+   actual command, timestamp, exit code, source hashes, and result paths.
+
+3. Fix the minimum proven defect in the existing Evidence refresh/package
+   workflow. A fresh package must be derived from validated evidence.
+   Missing, stale, invalid, blocked, and unverified evidence must retain
+   their distinct statuses.
+
+4. Test the Decision API and UI: authorized and unauthorized reviewer,
+   package ID binding, audit entry, stale-package invalidation, PASS gate,
+   and authorized HOLD/FAIL. PASS must remain disabled until every mandatory
+   criterion is verified. Never bypass validation or fabricate PASS.
+
+5. Use the existing isolated test runner and UI test setup where feasible.
+   If the test environment or service is blocked, report the exact error;
+   do not claim a test passed if it did not execute successfully.
+
+6. Do not change the admin token, /v2, database schema/host data, protected
+   SQLite WAL/SHM files, model/RAG policy, or production deployment.
+   Preserve unrelated user changes.
+
+7. Refresh the evidence package only after relevant results are validated.
+   Report the new package ID, AC1-AC15 status, tests actually run, changed
+   files, artifact paths, and remaining blockers.
+
+Start with read-only diagnosis. Make only evidence-justified changes.
+PS C:\Users\dmaza\mcp-starter> Write-Host "`n=== 3. EVIDENCE SOURCE FILES ===" -ForegroundColor Cyan
+
+=== 3. EVIDENCE SOURCE FILES ===
+PS C:\Users\dmaza\mcp-starter> $Files = @(
+  'app\api\control_plane.py',
+  'app\core\evidence_registry.py',
+  'app\security\auth.py',
+  'control-plane\evidence-requirements.json',
+  'control-plane\src\api.ts',
+  'control-plane\src\human.tsx',
+  'tests\run_evidence_tests_isolated.py',
+  'tests\test_evidence_decision_api.py',
+  'tests\test_evidence_registry.py',
+  'control-plane\tests\acceptance.test.ts',
+  'control-plane\tests\human.test.tsx',
+  'docs\reports\nus-evidence-completion-20261010\current-test-run.json'
+)
+PS C:\Users\dmaza\mcp-starter> foreach ($File in $Files) {
+    $Path = Join-Path $Root $File
+    if (Test-Path -LiteralPath $Path) {
+        Write-Host "`n--- $File ---"
+        Get-FileHash -LiteralPath $Path -Algorithm SHA256 |
+            Format-List Algorithm, Hash, Path
+        if ($File -like '*current-test-run.json') {
+            Get-Content -LiteralPath $Path -Raw
+        }
+    } else {
+        Write-Host "MISSING: $File" -ForegroundColor Yellow
+    }
+}
+
+--- app\api\control_plane.py ---
+
+
+Algorithm : SHA256
+Hash      : 6D3ABB0A499307651AFF5B8622E56553D4BCBFB98E6B52EE56417FF1D78A7025
+Path      : C:\Users\dmaza\mcp-starter\app\api\control_plane.py
+
+
+
+
+--- app\core\evidence_registry.py ---
+
+
+Algorithm : SHA256
+Hash      : 2CDF516A0C258E661D456E4DE30450421D08F80D6A670CEBC4D07816A780ED0A
+Path      : C:\Users\dmaza\mcp-starter\app\core\evidence_registry.py
+
+
+
+
+--- app\security\auth.py ---
+
+
+Algorithm : SHA256
+Hash      : 4D3105BA4D5C34D864392F0918DDA797BF296A2987EC5964245949DBC55F7552
+Path      : C:\Users\dmaza\mcp-starter\app\security\auth.py
+
+
+
+
+--- control-plane\evidence-requirements.json ---
+
+
+Algorithm : SHA256
+Hash      : C36265DD880D7CE2F15A71B7B62CCF548685FB70B8416835FD7AF2C4299DAE01
+Path      : C:\Users\dmaza\mcp-starter\control-plane\evidence-requirements.json
+
+
+
+
+--- control-plane\src\api.ts ---
+
+
+Algorithm : SHA256
+Hash      : FC1273B72F6085F4B458A0EBC3F0425BF6E1FE7BAD933A18D8AEE807093B3E94
+Path      : C:\Users\dmaza\mcp-starter\control-plane\src\api.ts
+
+
+
+
+--- control-plane\src\human.tsx ---
+
+
+Algorithm : SHA256
+Hash      : A590278A9574B4948BFEDE5B61A6677E5CEC360615EEFB6E269E2DDD20E50F07
+Path      : C:\Users\dmaza\mcp-starter\control-plane\src\human.tsx
+
+
+
+
+--- tests\run_evidence_tests_isolated.py ---
+
+
+Algorithm : SHA256
+Hash      : D883B5F355DC373159AC21E5FF21E88AFEFBD96DBFF5621693E3E21F9EB15A08
+Path      : C:\Users\dmaza\mcp-starter\tests\run_evidence_tests_isolated.py
+
+
+
+
+--- tests\test_evidence_decision_api.py ---
+
+
+Algorithm : SHA256
+Hash      : 623C54C4C1FF491D5E87D23B9F39993E2EBCE868F34981AF585B691B2D4FE14A
+Path      : C:\Users\dmaza\mcp-starter\tests\test_evidence_decision_api.py
+
+
+
+
+--- tests\test_evidence_registry.py ---
+
+
+Algorithm : SHA256
+Hash      : D6DC1E02252D948429D360B3C9A8955D316AFBCDB057C602FD97C62E3504C506
+Path      : C:\Users\dmaza\mcp-starter\tests\test_evidence_registry.py
+
+
+
+
+--- control-plane\tests\acceptance.test.ts ---
+
+
+Algorithm : SHA256
+Hash      : 3D36ACCEE4AC33362E89ADECF961154269138DE21881B6C2352957D74365F8B3
+Path      : C:\Users\dmaza\mcp-starter\control-plane\tests\acceptance.test.ts
+
+
+
+
+--- control-plane\tests\human.test.tsx ---
+
+
+Algorithm : SHA256
+Hash      : 10E5866C924F031979489C754AC24DEBA4306B6B130429A638E0928055C9E2E1
+Path      : C:\Users\dmaza\mcp-starter\control-plane\tests\human.test.tsx
+
+
+
+
+--- docs\reports\nus-evidence-completion-20261010\current-test-run.json ---
+
+
+Algorithm : SHA256
+Hash      : 6B601996C5320C91B2E5287A1C682264C19FB6A44877284207EFA52663E7DE77
+Path      : C:\Users\dmaza\mcp-starter\docs\reports\nus-evidence-completion-20261010\current-test-run.json
+
+
+
+{
+  "schema_version": 1,
+  "run_id": "NUS-EVIDENCE-COMPLETION-003-20261010",
+  "timestamp": "2026-10-10T08:19:23.442390+00:00",
+  "command": [
+    "python -B tests/run_evidence_tests_isolated.py docs/reports/nus-evidence-completion-20261010/runs/003-python-final-07",
+    ".\\node_modules\\.bin\\vitest.cmd run tests/human.test.tsx --config vitest.config.ts --configLoader native --reporter=json --outputFile=C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nus-evidence-completion-20261010\\runs\\003-vitest-final-05\\vitest-results.json",
+    ".\\node_modules\\.bin\\tsc.cmd --noEmit --pretty false"
+  ],
+  "exit_code": 0,
+  "scope": "offline evidence registry, decision API, human decision UI and TypeScript static type check",
+  "isolation": {
+    "network_blocked": true,
+    "filesystem_writes_scoped": true,
+    "active_data_blocked": true,
+    "subprocess_blocked": true,
+    "cache_isolated": true,
+    "exceptions": [
+      "Vitest's exact tinypool worker entry and esbuild transformer only",
+      "Python guard permits an internal Windows loopback socketpair; final endpoint tests call handlers directly and do not use it"
+    ],
+    "cache_output": "docs/reports/nus-evidence-completion-20261010/runs/003-vitest-final-05/vite-cache",
+    "baseline_cache_sha256_before_after": "033a462d06bc94941574c6152b3e7b5b07f1216ac77e22e948ed5b4aca310453"
+  },
+  "results_path": "docs/reports/nus-evidence-completion-20261010/runs/003-python-final-07/results-bundle.json",
+  "results_sha256": "f28257d560bf5cd48d882f46b73f1ac250c7bf0af285740dcec954793b523a48",
+  "counts": {
+    "pytest_passed": 11,
+    "vitest_passed": 17,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "typecheck_exit_code": 0
+  },
+  "source_sha256": {
+    "app/api/control_plane.py": "6d3abb0a499307651aff5b8622e56553d4bcbfb98e6b52ee56417ff1d78a7025",
+    "app/core/evidence_registry.py": "2cdf516a0c258e661d456e4de30450421d08f80d6a670cebc4d07816a780ed0a",
+    "app/security/auth.py": "4d3105ba4d5c34d864392f0918dda797bf296a2987ec5964245949dbc55f7552",
+    "control-plane/evidence-requirements.json": "c36265dd880d7ce2f15a71b7b62ccf548685fb70b8416835fd7af2c4299dae01",
+    "control-plane/src/api.ts": "fc1273b72f6085f4b458a0ebc3f0425bf6e1fe7bad933a18d8aee807093b3e94",
+    "control-plane/src/human.tsx": "a590278a9574b4948bfede5b61a6677e5cec360615eefb6e269e2ddd20e50f07",
+    "control-plane/tests/acceptance.test.ts": "3d36accee4ac33362e89adecf961154269138de21881b6c2352957d74365f8b3",
+    "control-plane/tests/human.test.tsx": "10e5866c924f031979489c754ac24deba4306b6b130429a638e0928055c9e2e1",
+    "control-plane/tests/inspection-preview-network-guard.cjs": "5ef717288c1af29c6a8e3cf35ad9004f481261ee16cbaf9d01344a9c58dc00cd",
+    "control-plane/vitest.config.ts": "5dd0ce20a3cec5ea7cc3a680d827022900f5e27a8f94e90c28183866e7e6253f",
+    "docs/reports/nus-evidence-completion-20261010/EVIDENCE-WORK-INVENTORY.md": "e188cc864810436ad027bea324a5935e267fb158009ce14ec73a637a58f78cd0",
+    "docs/reports/nus-evidence-completion-20261010/MDA-E2-E3-OFFLINE-EVIDENCE-AND-MAPPING.md": "6d149a42ca1a49a7a4506653cb7bf45e6d154dab524b4cc368dee36650ef9083",
+    "tests/pytest-evidence.ini": "c14b489a30afe60312242394d2e54d37d23e99ccef8d68f203807b76e325c758",
+    "tests/run_evidence_tests_isolated.py": "88a594798da0a2f734c6354d892b637943ebe30517419704b35b087810ba7b3b",
+    "tests/test_evidence_decision_api.py": "623c54c4c1ff491d5e87d23b9f39993e2ebce868f34981af585b691b2d4fe14a",
+    "tests/test_evidence_registry.py": "20694ab2cc597cbae0666675eced6a253df9ff6f9212dc67e6553b57778d80c3"
+  },
+  "criteria": {
+    "AC1": {
+      "status": "PASS",
+      "test_ids": [
+        "test_registry_covers_all_acceptance_criteria"
+      ]
+    },
+    "AC2": {
+      "status": "PASS",
+      "test_ids": [
+        "test_collector_records_real_artifact_references"
+      ]
+    },
+    "AC3": {
+      "status": "PASS",
+      "test_ids": [
+        "test_validator_distinguishes_all_statuses"
+      ]
+    },
+    "AC4": {
+      "status": "PASS",
+      "test_ids": [
+        "test_each_criterion_links_sources_and_tests"
+      ]
+    },
+    "AC5": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    },
+    "AC6": {
+      "status": "PASS",
+      "test_ids": [
+        "test_test_run_manifest_is_bound_to_result_hashes"
+      ]
+    },
+    "AC7": {
+      "status": "PASS",
+      "test_ids": [
+        "uses only PASS, FAIL and HOLD with optional notes and keeps PASS blocked"
+      ]
+    },
+    "AC8": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_rejects_stale_or_client_forged_package"
+      ]
+    },
+    "AC9": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    },
+    "AC10": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    },
+    "AC11": {
+      "status": "PASS",
+      "test_ids": [
+        "test_package_id_changes_when_evidence_changes"
+      ]
+    },
+    "AC12": {
+      "status": "PASS",
+      "test_ids": [
+        "test_audit_chain_detects_tampering_and_appends"
+      ]
+    },
+    "AC13": {
+      "status": "PASS",
+      "test_ids": [
+        "uses only PASS, FAIL and HOLD with optional notes and keeps PASS blocked"
+      ]
+    },
+    "AC14": {
+      "status": "PASS",
+      "test_ids": [
+        "test_legacy_snapshot_route_is_unchanged"
+      ]
+    },
+    "AC15": {
+      "status": "PASS",
+      "test_ids": [
+        "test_package_is_bound_to_artifact_hash_and_blocks_missing_test_run"
+      ]
+    }
+  }
+}
+PS C:\Users\dmaza\mcp-starter> Write-Host "`n=== 4. TEST TOOL AVAILABILITY ===" -ForegroundColor Cyan
+
+=== 4. TEST TOOL AVAILABILITY ===
+PS C:\Users\dmaza\mcp-starter> $Py = Join-Path $Root '.venv\Scripts\python.exe'
+PS C:\Users\dmaza\mcp-starter> if (Test-Path -LiteralPath $Py) {
+    & $Py --version
+    Write-Host "Python exit code: $LASTEXITCODE"
+} else {
+    Write-Host "Repository venv Python is missing: $Py" -ForegroundColor Yellow
+}
+
+Python exit code: 0
+PS C:\Users\dmaza\mcp-starter> $Node = Get-Command node -ErrorAction SilentlyContinue
+PS C:\Users\dmaza\mcp-starter> $Npm = Get-Command npm -ErrorAction SilentlyContinue
+PS C:\Users\dmaza\mcp-starter> if ($Node) { node --version } else { Write-Host 'Node.js unavailable' }
+
+PS C:\Users\dmaza\mcp-starter> if ($Npm) { npm --version } else { Write-Host 'npm unavailable' }
+
+PS C:\Users\dmaza\mcp-starter> Write-Host "`n=== 5. DECISION ENDPOINT ===" -ForegroundColor Cyan
+
+=== 5. DECISION ENDPOINT ===
+PS C:\Users\dmaza\mcp-starter> try {
+    $Response = Invoke-WebRequest 'http://127.0.0.1:8000/decision' -TimeoutSec 5 -UseBasicParsing
+    Write-Host "HTTP status: $([int]$Response.StatusCode)"
+} catch {
+    Write-Host "Endpoint check failed: $($_.Exception.Message)" -ForegroundColor Yellow
+}
+HTTP status: 200
+PS C:\Users\dmaza\mcp-starter> Stop-Transcript | Out-Null
+**********************
+Windows PowerShell transcript end
+End time: 20261010162502
+**********************

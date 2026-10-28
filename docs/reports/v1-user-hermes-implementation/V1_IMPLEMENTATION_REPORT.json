@@ -1,0 +1,116 @@
+{
+  "timestamp": "2026-10-09T09:36:53.821008+07:00",
+  "status": "PARTIAL",
+  "implementation": "IMPLEMENTED_SCOPED",
+  "repository": "C:\\Users\\dmaza\\mcp-starter",
+  "branch": "codex/fullroot-control-20261007",
+  "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "authorization": "Latest NUSANTARA V1 architecture decisions implementation & user-to-Hermes repair mandate",
+  "approved_decisions": [
+    "LEGACY_BEHAVIOR_PRESERVED_TEMPORARILY",
+    "OPERATOR_GLOBAL_MODEL_SELECTION",
+    "EXISTING_HERMES_CORE",
+    "V1_ONLY"
+  ],
+  "phase_status": {
+    "MODEL_CONTROL": "PASS_SCOPED",
+    "MEMORY_PRESERVATION": "PASS_SCOPED",
+    "HERMES_EXECUTION": "PASS_SCOPED",
+    "RESPONSE_PROJECTION": "PASS_SCOPED",
+    "DEVELOPER_CONSOLE": "PASS_SCOPED",
+    "USER_UI": "PASS_SCOPED",
+    "KNOWLEDGE_RAG": "PARTIAL",
+    "UI_E2E": "PARTIAL",
+    "SECURITY": "PASS_SCOPED",
+    "REGRESSION": "PASS_SCOPED"
+  },
+  "observed_evidence": [
+    "BASELINE.json",
+    "CHANGE_AUDIT.json",
+    "LOCAL_PROVIDER_BROWSER_OBSERVATIONS.json",
+    "BROWSER_OBSERVATIONS.json",
+    "MODEL_CONTROL.json",
+    "MEMORY_PRESERVATION.json",
+    "HERMES_EXECUTION.json",
+    "RESPONSE_PROJECTION.json",
+    "DEVELOPER_CONSOLE.json",
+    "USER_UI.json",
+    "KNOWLEDGE_RAG.json",
+    "UI_E2E.json",
+    "SECURITY.json",
+    "REGRESSION.json"
+  ],
+  "files_changed": [
+    "Dockerfile",
+    "app/api/control_plane.py",
+    "app/api/routes.py",
+    "app/core/config.py",
+    "app/core/nusantara_config.py",
+    "app/hermes/agent.py",
+    "app/knowledge/engine.py",
+    "app/main.py",
+    "control-plane/src/api.ts",
+    "control-plane/src/router.tsx",
+    "control-plane/src/styles.css",
+    "control-plane/src/ui.tsx",
+    "control-plane/vite.config.ts",
+    "docs/contracts/NUSANTARA-CONTROL-PLANE-V1.md",
+    "tests/test_effective_rag_profile.py",
+    "tests/test_v1_response_projection.py",
+    "control-plane/src/assistant.tsx",
+    "tests/test_v1_operator_control.py",
+    "control-plane/index.html",
+    "control-plane/e2e/control-plane.spec.ts",
+    ".dockerignore",
+    "control-plane/README.md",
+    "control-plane/tests/assistant.test.tsx"
+  ],
+  "reason": "Repair existing V1 user/Console-to-Hermes path under approved architecture decisions",
+  "tests_run": {
+    "backend": {
+      "passed": 248,
+      "failed": 0,
+      "skipped": 0,
+      "deselected": 1
+    },
+    "frontend": {
+      "passed": 67,
+      "failed": 0,
+      "skipped": 0
+    },
+    "typescript": "PASS",
+    "frontend_build": "PASS",
+    "whitespace": "PASS"
+  },
+  "causal_changes": {
+    "unauthorized_source_changes": 0,
+    "unauthorized_test_changes": 0,
+    "removed_files": []
+  },
+  "limits": [
+    "One installed model only; no switch between distinct actual models",
+    "Model name returned by provider is not loaded-weight attestation",
+    "Semantic and retrieval fixtures do not prove native semantic/RAG production integration",
+    "Current-source identity is app disk fingerprint, not full transitive loaded closure",
+    "Port-8000 attestation endpoint refused candidate port with 403; boundary not bypassed; initial null attestation artifact retained",
+    "Old baseline blocker text is inherited history; approved MODEL/MEMORY decisions supersede those questions, not remaining governance gates"
+  ],
+  "remaining_blockers": [
+    "CC05 consent/session ownership/retention remains open under approved temporary legacy preservation",
+    "CC06 official oracle: two REVIEW_REQUIRED cases, one MISSING passport case; issuer/jurisdiction/validity/ingest authorization needed",
+    "Approved filter grammar/authority metadata absent; nonempty filter safely rejected, not implemented",
+    "Full native semantic-worker plus production RAG/store/model UI integration not verified",
+    "Native Windows symlink privilege/security operational enforcement not reverified",
+    "Production deployment, provisioned credentials/resources and launch-worker consistency unverified; no deployment authorized"
+  ],
+  "additional_decisions_required": [
+    "V1 memory consent/ownership/retention disposition beyond temporary preservation",
+    "Approved source-filter semantics and authority metadata",
+    "Official source issuer/jurisdiction/validity/ingest authorization",
+    "Controlled target/resources/security privileges for full native integration; verified single-process topology or separately approved cross-process consistency"
+  ],
+  "production_runtime": "NOT_VERIFIED; user backend PID33160 untouched; both controlled candidates stopped",
+  "v1_acceptance": "HOLD",
+  "v2": "V2_DEFERRED",
+  "hermes_freeze": "NOT_PERFORMED"
+}

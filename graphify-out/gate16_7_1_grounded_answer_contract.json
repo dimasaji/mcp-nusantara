@@ -1,0 +1,28 @@
+{
+  "gate": "16.7.1",
+  "name": "Grounded Answer Contract",
+  "status": "PASS",
+  "checks": {
+    "passed": 5,
+    "total": 5,
+    "results": {
+      "evidence_exists": true,
+      "supported_fact_exists": true,
+      "answer_exists": true,
+      "not_abstained_with_evidence": true,
+      "answer_contains_supported_fact": true
+    }
+  },
+  "answer": "KTP-el adalah dokumen identitas penduduk yang memiliki status pengajuan yang dapat diperiksa melalui layanan administrasi kependudukan. Dokumen KTP-el merupakan dokumen identitas yang diterbitkan sesuai ketentuan administrasi kependudukan. Status pengajuan KTP-el dapat diperiksa melalui layanan administrasi kependudukan.",
+  "evidence_count": 2,
+  "abstention_detected": false,
+  "supported_fact_exists": true,
+  "answer_contains_supported_fact": true,
+  "contract": {
+    "evidence_required": true,
+    "supported_fact_required": true,
+    "answer_required": true,
+    "abstention_for_supported_evidence_forbidden": true,
+    "answer_must_reflect_evidence": true
+  }
+}

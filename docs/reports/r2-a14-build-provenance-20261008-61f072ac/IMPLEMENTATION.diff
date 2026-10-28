@@ -1,0 +1,393 @@
+--- before/app/core/runtime_identity.py
++++ after/app/core/runtime_identity.py
+@@ -11,6 +11,10 @@
+ from uuid import uuid4
+ 
+ from app.observability.context import current_ids
++from app.core.runtime_build_provenance import (
++    BuildDefinition, BuildInput, BuildProvenanceOwner, ProcessBinding,
++    assess_untrusted_build_provenance,
++)
+ 
+ ROOT = Path(__file__).resolve().parents[2]
+ 
+@@ -38,8 +42,8 @@
+     return "sha256:" + digest.hexdigest()
+ 
+ 
+-# Requests always identify the source loaded at process startup, even if files
+-# are edited later. A new build requires a new process.
++# This is an import-time disk snapshot, not proof of loaded bytes or execution
++# closure. Keep it separate from server-owned artifact provenance and full build.
+ BUILD_ID = source_build_id()
+ 
+ 
+--- before/app/core/runtime_attestation.py
++++ after/app/core/runtime_attestation.py
+@@ -14,6 +14,7 @@
+ from fastapi import FastAPI, HTTPException, Request
+ 
+ from app.core.runtime_identity import BUILD_ID, current_runtime_instance
++from app.core import runtime_build_provenance as build_provenance
+ 
+ ATTESTATION_PATH = '/v1/runtime/attestation'
+ _LOOPBACK = {'127.0.0.1', '::1', 'localhost'}
+@@ -108,7 +109,13 @@
+             label = f'middleware:{dispatch.__module__}.{dispatch.__qualname__}'
+             manifest.append((label, _code_fingerprint(code)))
+     for function in (current_runtime_instance, _process_identity, _code_fingerprint, _loaded_code_manifest, _manifest_hash,
+-                     install_runtime_attestation):
++                     install_runtime_attestation, build_provenance._hash, build_provenance._name,
++                     build_provenance._result, build_provenance.BuildDefinition.validate,
++                     build_provenance.BuildDefinition.build_id, build_provenance.ProcessBinding.valid,
++                     build_provenance.BuildProvenanceOwner.__init__,
++                     build_provenance.BuildProvenanceOwner.observe_consumed_artifact,
++                     build_provenance.BuildProvenanceOwner.assess,
++                     build_provenance.assess_untrusted_build_provenance):
+         manifest.append((f'identity:{function.__module__}.{function.__qualname__}',
+                          _code_fingerprint(function.__code__)))
+     controller = getattr(application.state, 'runtime_verification', None)
+--- before/app/core/runtime_build_provenance.py
++++ after/app/core/runtime_build_provenance.py
+@@ -0,0 +1,186 @@
++"""Closed input manifests and server-owned artifact provenance, without activation.
++
++Artifact consumption is deliberately weaker than proof of executing a complete
++Python application. No current loader supplies an execution-closure witness, so
++this foundation never promotes ACTIVE_PROCESS_BUILD or Runtime Identity.
++"""
++from __future__ import annotations
++
++from dataclasses import dataclass
++from datetime import datetime, timezone
++import hashlib
++import json
++from pathlib import PurePosixPath
++import re
++import threading
++
++_ROLES = frozenset({'APPLICATION_CODE', 'STATIC_ASSET', 'DEPENDENCY', 'INTERPRETER'})
++_DIGEST = re.compile(r'sha256:[0-9a-f]{64}\Z')
++_INSTANCE = re.compile(r'[0-9a-f]{32}\Z')
++_MAX_INPUTS = 10000
++_MAX_ARTIFACT_BYTES = 16 * 1024 * 1024
++
++
++def _hash(value) -> str:
++    encoded = json.dumps(value, sort_keys=True, separators=(',', ':'),
++                         ensure_ascii=True).encode('utf-8')
++    return 'sha256:' + hashlib.sha256(encoded).hexdigest()
++
++
++def _name(value) -> bool:
++    if not isinstance(value, str) or not 0 < len(value) <= 512:
++        return False
++    path = PurePosixPath(value)
++    return (not path.is_absolute() and path.as_posix() == value
++            and all(part not in ('', '.', '..') for part in value.split('/'))
++            and ':' not in value and '\\' not in value
++            and all(ord(c) >= 32 for c in value)
++            and not value.lower().endswith(('.db', '.db-wal', '.db-shm')))
++
++
++@dataclass(frozen=True)
++class BuildInput:
++    name: str
++    role: str
++    digest: str
++
++
++@dataclass(frozen=True)
++class BuildDefinition:
++    """Inventory and digests are separate; membership cannot be inferred from hashes.
++
++    A real application definition must enumerate its transitive Python/native
++    dependencies, interpreter and assets independently of the source snapshot.
++    Exact inventory coverage here proves declared input coverage only. It cannot
++    establish that the declaration includes every executable input of a process.
++    """
++    inventory: tuple[tuple[str, str], ...]
++    inputs: tuple[BuildInput, ...]
++
++    def validate(self) -> str | None:
++        if type(self.inventory) is not tuple or type(self.inputs) is not tuple:
++            return 'MALFORMED_BUILD_DEFINITION'
++        if not 0 < len(self.inventory) <= _MAX_INPUTS or len(self.inputs) > _MAX_INPUTS:
++            return 'MALFORMED_BUILD_DEFINITION'
++        inventory = []
++        for item in self.inventory:
++            if (type(item) is not tuple or len(item) != 2 or not _name(item[0])
++                    or not isinstance(item[1], str) or item[1] not in _ROLES):
++                return 'MALFORMED_BUILD_DEFINITION'
++            inventory.append(item)
++        entries = []
++        for item in self.inputs:
++            if (type(item) is not BuildInput or not _name(item.name)
++                    or not isinstance(item.role, str) or item.role not in _ROLES or not isinstance(item.digest, str)
++                    or not _DIGEST.fullmatch(item.digest)):
++                return 'MALFORMED_BUILD_DEFINITION'
++            entries.append((item.name, item.role))
++        if (len({name for name, _ in inventory}) != len(inventory)
++                or len({name for name, _ in entries}) != len(entries)):
++            return 'MALFORMED_BUILD_DEFINITION'
++        if set(inventory) != set(entries) or {role for _, role in inventory} != _ROLES:
++            return 'INCOMPLETE_BUILD_DEFINITION'
++        return None
++
++    def build_id(self) -> str:
++        """Deterministic declared-artifact identity, never loaded-memory proof."""
++        if self.validate() is not None:
++            raise ValueError(self.validate())
++        return _hash({'version': 1, 'inventory': sorted(self.inventory),
++                      'inputs': sorted((i.name, i.role, i.digest) for i in self.inputs)})
++
++
++@dataclass(frozen=True)
++class ProcessBinding:
++    pid: int
++    process_start: str
++    runtime_instance_id: str
++
++    def valid(self) -> bool:
++        if (type(self.pid) is not int or self.pid <= 0
++                or not isinstance(self.process_start, str)
++                or not isinstance(self.runtime_instance_id, str)
++                or not _INSTANCE.fullmatch(self.runtime_instance_id)):
++            return False
++        try:
++            start = datetime.fromisoformat(self.process_start)
++            return start.tzinfo is not None and start.utcoffset() == timezone.utc.utcoffset(start)
++        except ValueError:
++            return False
++
++
++def _result(reason, *, expected=None, observed=None, artifact_binding='NOT_VERIFIED'):
++    return {'status': 'NOT_VERIFIED', 'active_process_build': 'NOT_DIRECTLY_VERIFIED',
++            'runtime_identity': 'NOT_VERIFIED', 'artifact_binding': artifact_binding,
++            'expected_build_id': expected, 'observed_loaded_build_id': observed,
++            'coverage': 'DECLARED_ARTIFACT_INPUTS_ONLY', 'reason': reason}
++
++
++class BuildProvenanceOwner:
++    """Private server memory owner for bytes actually consumed by a loader.
++
++    Instantiate only inside a trusted composition/loader, never from request JSON.
++    No HTTP adapter, global owner, permit, process launch or file I/O is provided.
++    A consumer records the bytes it consumed, not a client-supplied digest.
++    A lock makes observation and assessment coherent within this owner. This is
++    artifact evidence only: execution, imports and mutable globals are unobserved.
++    """
++    def __init__(self, definition: BuildDefinition, process: ProcessBinding):
++        if type(definition) is not BuildDefinition or definition.validate() is not None:
++            raise ValueError('INVALID_BUILD_DEFINITION')
++        if type(process) is not ProcessBinding or not process.valid():
++            raise ValueError('INVALID_PROCESS_BINDING')
++        self.__definition = definition
++        self.__process = process
++        self.__records: dict[str, str] = {}
++        self.__terminal = False
++        self.__lock = threading.Lock()
++
++    def observe_consumed_artifact(self, name: str, content: bytes) -> None:
++        """Record content digests without retaining potentially sensitive content."""
++        with self.__lock:
++            if (self.__terminal or not _name(name) or type(content) is not bytes
++                    or len(content) > _MAX_ARTIFACT_BYTES
++                    or name not in {i.name for i in self.__definition.inputs}
++                    or name in self.__records):
++                self.__terminal = True
++                raise ValueError('INVALID_OR_CONFLICTING_ARTIFACT_OBSERVATION')
++            self.__records[name] = 'sha256:' + hashlib.sha256(content).hexdigest()
++
++    def assess(self, expected: BuildDefinition | None, current: ProcessBinding | None) -> dict:
++        """Validate server-owned observations; full execution remains fail-closed."""
++        with self.__lock:
++            if expected is None:
++                return _result('EXPECTED_BUILD_MISSING')
++            if type(expected) is not BuildDefinition:
++                return _result('MALFORMED_BUILD_DEFINITION')
++            invalid = expected.validate()
++            if invalid is not None:
++                return _result(invalid)
++            expected_id = expected.build_id()
++            if type(current) is not ProcessBinding or not current.valid():
++                return _result('PROCESS_IDENTITY_MISSING_OR_MALFORMED', expected=expected_id)
++            if self.__process.pid != current.pid or self.__process.process_start != current.process_start:
++                return _result('PROCESS_IDENTITY_MISMATCH', expected=expected_id)
++            if self.__process.runtime_instance_id != current.runtime_instance_id:
++                return _result('RUNTIME_INSTANCE_MISMATCH', expected=expected_id)
++            if self.__terminal:
++                return _result('PROVENANCE_TERMINAL', expected=expected_id)
++            if not self.__records:
++                return _result('OBSERVED_LOADED_IDENTITY_MISSING', expected=expected_id)
++            if set(self.__records) != {item.name for item in self.__definition.inputs}:
++                return _result('INCOMPLETE_LOADED_PROVENANCE', expected=expected_id)
++            observed = BuildDefinition(self.__definition.inventory,
++                tuple(BuildInput(i.name, i.role, self.__records[i.name])
++                      for i in self.__definition.inputs))
++            observed_id = observed.build_id()
++            if expected_id != observed_id:
++                return _result('BUILD_MISMATCH', expected=expected_id, observed=observed_id)
++            # Even complete artifact consumption does not prove closed execution.
++            return _result('EXECUTION_CLOSURE_NOT_OBSERVED', expected=expected_id,
++                           observed=observed_id, artifact_binding='VERIFIED')
++
++
++def assess_untrusted_build_provenance(value=None) -> dict:
++    """Client/historical/serialized receipts are never authoritative observations."""
++    return _result('UNTRUSTED_PROVENANCE')
+--- before/tests/test_runtime_build_provenance.py
++++ after/tests/test_runtime_build_provenance.py
+@@ -0,0 +1,152 @@
++"""Isolated artifact provenance; never full application or live execution proof."""
++from concurrent.futures import ThreadPoolExecutor
++from dataclasses import replace
++import hashlib
++import json
++
++import pytest
++
++from app.core.runtime_identity import (BuildDefinition, BuildInput,
++    BuildProvenanceOwner, ProcessBinding, assess_untrusted_build_provenance)
++
++
++@pytest.fixture
++def build():
++    # Explicit synthetic artifact image; not Nusantara or interpreter evidence.
++    content = {'app.py': b'VALUE = 1\n', 'asset.txt': b'asset',
++               'dependency.py': b'DEPENDENCY = 1\n', 'interpreter.bin': b'test-only-image'}
++    roles = ('APPLICATION_CODE', 'STATIC_ASSET', 'DEPENDENCY', 'INTERPRETER')
++    inventory = tuple(zip(content, roles))
++    inputs = tuple(BuildInput(name, role, 'sha256:' + hashlib.sha256(content[name]).hexdigest())
++                   for name, role in inventory)
++    definition = BuildDefinition(inventory, inputs)
++    binding = ProcessBinding(1234, '2026-10-08T01:00:00+00:00', 'a' * 32)
++    return definition, binding, content
++
++
++def observed(build):
++    definition, binding, content = build
++    owner = BuildProvenanceOwner(definition, binding)
++    for name, value in content.items():
++        owner.observe_consumed_artifact(name, value)
++    return owner
++
++
++def test_matching_consumed_artifacts_do_not_manufacture_complete_execution(build):
++    definition, binding, _ = build
++    result = observed(build).assess(definition, binding)
++    assert result['artifact_binding'] == 'VERIFIED'
++    assert result['expected_build_id'] == result['observed_loaded_build_id'] == definition.build_id()
++    assert result['status'] == 'NOT_VERIFIED'
++    assert result['active_process_build'] == 'NOT_DIRECTLY_VERIFIED'
++    assert result['runtime_identity'] == 'NOT_VERIFIED'
++    assert result['reason'] == 'EXECUTION_CLOSURE_NOT_OBSERVED'
++
++
++def test_mismatch_is_fail_closed(build):
++    definition, binding, _ = build
++    changed = replace(definition, inputs=(replace(definition.inputs[0], digest='sha256:'+'0'*64),
++                                          *definition.inputs[1:]))
++    result = observed(build).assess(changed, binding)
++    assert result['reason'] == 'BUILD_MISMATCH'
++    assert result['artifact_binding'] == result['status'] == 'NOT_VERIFIED'
++
++
++def test_missing_expected(build):
++    assert observed(build).assess(None, build[1])['reason'] == 'EXPECTED_BUILD_MISSING'
++
++
++def test_missing_observed(build):
++    definition, binding, _ = build
++    assert BuildProvenanceOwner(definition, binding).assess(definition, binding)['reason'] == 'OBSERVED_LOADED_IDENTITY_MISSING'
++
++
++@pytest.mark.parametrize('change', ['digest', 'role', 'inventory', 'duplicate', 'protected', 'traversal'])
++def test_malformed_definition_is_bounded(build, change):
++    definition, binding, _ = build
++    altered = {
++        'digest': replace(definition, inputs=(replace(definition.inputs[0], digest='PRIVATE_SECRET'),)),
++        'role': replace(definition, inventory=(('app.py', []),)),
++        'inventory': replace(definition, inventory=[('app.py', 'APPLICATION_CODE')]),
++        'duplicate': replace(definition, inputs=definition.inputs + (definition.inputs[0],)),
++        'protected': replace(definition, inventory=(('knowledge.db', 'APPLICATION_CODE'),)),
++        'traversal': replace(definition, inventory=(('../app.py', 'APPLICATION_CODE'),)),
++    }[change]
++    result = observed(build).assess(altered, binding)
++    assert result['status'] == 'NOT_VERIFIED'
++    assert result['reason'] == 'MALFORMED_BUILD_DEFINITION'
++    assert 'PRIVATE_SECRET' not in json.dumps(result)
++
++
++def test_incomplete_definition_and_loaded_inventory(build):
++    definition, binding, content = build
++    incomplete = replace(definition, inputs=definition.inputs[:-1])
++    assert observed(build).assess(incomplete, binding)['reason'] == 'INCOMPLETE_BUILD_DEFINITION'
++    owner = BuildProvenanceOwner(definition, binding)
++    owner.observe_consumed_artifact('app.py', content['app.py'])
++    assert owner.assess(definition, binding)['reason'] == 'INCOMPLETE_LOADED_PROVENANCE'
++
++
++@pytest.mark.parametrize('receipt', [None, {}, {'trusted': True, 'complete': True, 'status': 'VERIFIED'}])
++def test_client_or_serialized_provenance_cannot_supply_authority(receipt):
++    result = assess_untrusted_build_provenance(receipt)
++    assert result['status'] == 'NOT_VERIFIED'
++    assert result['reason'] == 'UNTRUSTED_PROVENANCE'
++
++
++def test_determinism_and_inventory_order(build):
++    definition, binding, _ = build
++    reverse = replace(definition, inventory=tuple(reversed(definition.inventory)),
++                      inputs=tuple(reversed(definition.inputs)))
++    owner = observed(build)
++    assert definition.build_id() == reverse.build_id()
++    with ThreadPoolExecutor(max_workers=4) as pool:
++        results = list(pool.map(lambda _: owner.assess(definition, binding), range(20)))
++    assert all(result == results[0] for result in results)
++
++
++@pytest.mark.parametrize('field,value,reason', [
++    ('pid', 5678, 'PROCESS_IDENTITY_MISMATCH'),
++    ('process_start', '2026-10-08T02:00:00+00:00', 'PROCESS_IDENTITY_MISMATCH'),
++    ('runtime_instance_id', 'b'*32, 'RUNTIME_INSTANCE_MISMATCH'),
++    ('pid', True, 'PROCESS_IDENTITY_MISSING_OR_MALFORMED'),
++    ('process_start', 'bad', 'PROCESS_IDENTITY_MISSING_OR_MALFORMED'),
++])
++def test_process_reuse_and_instance_mismatch(build, field, value, reason):
++    result = observed(build).assess(build[0], replace(build[1], **{field: value}))
++    assert result['status'] == 'NOT_VERIFIED' and result['reason'] == reason
++
++
++def test_missing_process_identity(build):
++    assert observed(build).assess(build[0], None)['reason'] == 'PROCESS_IDENTITY_MISSING_OR_MALFORMED'
++
++
++def test_conflicting_record_terminal_and_redaction_safe(build):
++    owner = observed(build)
++    with pytest.raises(ValueError, match='CONFLICTING'):
++        owner.observe_consumed_artifact('app.py', b'PRIVATE_SECRET')
++    result = owner.assess(build[0], build[1])
++    assert result['reason'] == 'PROVENANCE_TERMINAL'
++    assert 'PRIVATE_SECRET' not in json.dumps(result)
++    assert 'PRIVATE_SECRET' not in repr(vars(owner))
++
++
++def test_assessment_and_recording_do_not_open_files_or_network(build, monkeypatch):
++    import builtins
++    import socket
++    import sqlite3
++    def prohibited(*args, **kwargs):
++        raise AssertionError('PROTECTED_IO')
++    monkeypatch.setattr(builtins, 'open', prohibited)
++    monkeypatch.setattr(socket.socket, 'connect', prohibited)
++    monkeypatch.setattr(sqlite3, 'connect', prohibited)
++    result = observed(build).assess(build[0], build[1])
++    assert result['status'] == 'NOT_VERIFIED'
++
++
++def test_helpers_are_in_existing_scoped_manifest():
++    from fastapi import FastAPI
++    from app.core.runtime_attestation import _loaded_code_manifest
++    symbols = {name for name, _ in _loaded_code_manifest(FastAPI())}
++    assert 'identity:app.core.runtime_build_provenance.BuildProvenanceOwner.assess' in symbols
++    assert 'identity:app.core.runtime_build_provenance.BuildDefinition.validate' in symbols

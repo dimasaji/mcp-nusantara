@@ -1,0 +1,13 @@
+﻿
+Stage                   Check          Status     Detail                                                                                                                                      
+-----                   -----          ------     ------                                                                                                                                      
+BASELINE                Git            RECORDED   Status, HEAD dan ringkasan diff dicatat; tidak ada reset.                                                                                   
+step1-http              pytest         PASS       Exit code 0. Log: C:\Users\dmaza\mcp-starter\docs\reports\nusantara-v1-diagnostic-20261014-092006\step1-http-pytest.txt                     
+step2-runtime-chat      pytest         PASS       Exit code 0. Log: C:\Users\dmaza\mcp-starter\docs\reports\nusantara-v1-diagnostic-20261014-092006\step2-runtime-chat-pytest.txt             
+STEP2                   Local health   RESPONDING Endpoint merespons. Periksa JSON untuk status setiap komponen.                                                                              
+step3-approval-evidence pytest         FAIL       Exit code 1. Periksa log: C:\Users\dmaza\mcp-starter\docs\reports\nusantara-v1-diagnostic-20261014-092006\step3-approval-evidence-pytest.txt
+step4-rag               pytest         FAIL       Exit code 1. Periksa log: C:\Users\dmaza\mcp-starter\docs\reports\nusantara-v1-diagnostic-20261014-092006\step4-rag-pytest.txt              
+STEP4                   Provider tests NOT_RUN    Tes provider ditemukan tetapi tidak dieksekusi otomatis untuk menghindari biaya API.                                                        
+
+
+

@@ -1,0 +1,94 @@
+{
+  "gate": "14.4",
+  "engine": "Developer Core Runtime Graph Manifest",
+  "version": "14.4.0",
+  "timestamp": "2026-10-03T20:07:37.747429",
+  "source_of_truth": "C:\\Users\\dmaza\\mcp-starter",
+  "sources": {
+    "graphify": "graph.json",
+    "runtime_truth": "gate14_runtime_graph_truth.json",
+    "connectivity": "gate14_3_runtime_graph_connectivity.json"
+  },
+  "graph": {
+    "nodes": 2768,
+    "links": 6079
+  },
+  "runtime": {
+    "module_count": 7,
+    "target_groups": 9,
+    "target_entries": 14,
+    "modules": [
+      {
+        "module": "app.api.routes",
+        "file": "C:\\Users\\dmaza\\mcp-starter\\app\\api\\routes.py",
+        "objects": [
+          "LanguageEngine",
+          "ProblemEngine",
+          "KnowledgeEngine",
+          "GraphifyBridge",
+          "GateIntegration"
+        ]
+      },
+      {
+        "module": "app.language.engine",
+        "file": "C:\\Users\\dmaza\\mcp-starter\\app\\language\\engine.py",
+        "objects": [
+          "LanguageEngine"
+        ]
+      },
+      {
+        "module": "app.problem.engine",
+        "file": "C:\\Users\\dmaza\\mcp-starter\\app\\problem\\engine.py",
+        "objects": [
+          "ProblemEngine"
+        ]
+      },
+      {
+        "module": "app.knowledge.engine",
+        "file": "C:\\Users\\dmaza\\mcp-starter\\app\\knowledge\\engine.py",
+        "objects": [
+          "KnowledgeEngine",
+          "RAG"
+        ]
+      },
+      {
+        "module": "app.reasoning.engine",
+        "file": "C:\\Users\\dmaza\\mcp-starter\\app\\reasoning\\engine.py",
+        "objects": [
+          "ReasoningEngine"
+        ]
+      },
+      {
+        "module": "app.developer_core.graph_bridge",
+        "file": "C:\\Users\\dmaza\\mcp-starter\\app\\developer_core\\graph_bridge.py",
+        "objects": [
+          "GraphifyBridge"
+        ]
+      },
+      {
+        "module": "app.core.gate_integration",
+        "file": "C:\\Users\\dmaza\\mcp-starter\\app\\core\\gate_integration.py",
+        "objects": [
+          "ReasoningEngine",
+          "GateIntegration"
+        ]
+      }
+    ]
+  },
+  "connectivity": {
+    "status": "PASS",
+    "checks_passed": 3
+  },
+  "manifest_contract": {
+    "gate": "14.4",
+    "graph_links_required": true,
+    "runtime_truth_required": true,
+    "connectivity_required": true
+  },
+  "checks": {
+    "graph_available": true,
+    "runtime_truth_available": true,
+    "connectivity_available": true
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,165 @@
+{
+  "updated_at": "2026-10-07T03:34:32.482892+00:00",
+  "tasks": [
+    {
+      "task_id": "FULLROOT-001",
+      "objective": "Developer control entrypoint and state/maps",
+      "status": "DONE",
+      "affected_components": [
+        "engineering control",
+        "docs"
+      ],
+      "files_changed": [
+        "developer.py",
+        "docs/NUSANTARA_REPO_MAP.md",
+        "docs/ARCHITECTURE_CURRENT.md",
+        "docs/ARCHITECTURE_TARGET_V1.md",
+        "docs/ARCHITECTURE_GAP.md",
+        "tests/test_developer_control.py"
+      ],
+      "tests": [
+        "8 control tests",
+        "145 baseline tests",
+        "9 actual CLI commands",
+        "380 pass + 28 passing subtests + 1 mandatory skip; full regression"
+      ],
+      "result": "Control and maps implemented; local verification complete",
+      "commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
+      "known_issue": "Static inventory/health are scoped, not production verification"
+    },
+    {
+      "task_id": "FULLROOT-002",
+      "objective": "Repair router model metadata and alternate provider fallback",
+      "status": "DONE",
+      "affected_components": [
+        "ModelRouter"
+      ],
+      "files_changed": [
+        "app/models/router.py",
+        "tests/test_model_router_configuration.py"
+      ],
+      "tests": [
+        "32 targeted router/compatibility tests"
+      ],
+      "result": "Actual provider.model reported; registered fallback works for coding/reasoning",
+      "commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
+      "known_issue": null
+    },
+    {
+      "task_id": "FULLROOT-003",
+      "objective": "Optional ModelGateway and governed executor boundary",
+      "status": "DONE",
+      "affected_components": [
+        "model gateway",
+        "execution"
+      ],
+      "files_changed": [
+        "app/models/gateway.py",
+        "app/execution/__init__.py",
+        "app/execution/base.py",
+        "app/execution/native.py",
+        "tests/test_fullroot_boundaries.py"
+      ],
+      "tests": [
+        "87 boundary/compatibility tests",
+        "380 pass + 28 passing subtests + 1 mandatory skip; full regression"
+      ],
+      "result": "Sync/async gateway, V2 callback integration, governed tool delegation, optional Hermes protocol pass; final regression PASS_SCOPED",
+      "commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
+      "known_issue": "No default API activation or live adapter health claim"
+    },
+    {
+      "task_id": "FULLROOT-004",
+      "objective": "Conservative cleanup classification",
+      "status": "DONE",
+      "affected_components": [
+        "repository"
+      ],
+      "files_changed": [],
+      "tests": [
+        "developer.py cleanup --dry-run"
+      ],
+      "result": "UNKNOWN and duplicate candidates retained; no deletes/moves",
+      "commit": "089e6e12a16ec0c703c391b67d14a98eaf92a222",
+      "known_issue": "Physical cleanup requires reference and recoverability proof"
+    },
+    {
+      "task_id": "FULLROOT-005",
+      "objective": "Composition root and default gateway/executor wiring design",
+      "status": "QUEUED",
+      "affected_components": [
+        "configuration",
+        "API"
+      ],
+      "files_changed": [],
+      "tests": [],
+      "result": "MDE-02 identifies and retains actual roots; precedence/effective design verified. Default gateway/executor/snapshot activation remains unimplemented separate roadmap work.",
+      "commit": null,
+      "known_issue": "Public response contract and existing defaults must be preserved"
+    },
+    {
+      "task_id": "FULLROOT-006",
+      "objective": "Close official oracle evidence and privileged symlink verification",
+      "status": "BLOCKED",
+      "affected_components": [
+        "acceptance evidence"
+      ],
+      "files_changed": [],
+      "tests": [],
+      "result": null,
+      "commit": null,
+      "known_issue": "Owner authority/review evidence and eligible Windows runner required; no acceptance changes"
+    },
+    {
+      "task_id": "FULLROOT-007",
+      "objective": "Live deployment/restart/workload/rollback verification",
+      "status": "BLOCKED",
+      "affected_components": [
+        "production verification"
+      ],
+      "files_changed": [],
+      "tests": [],
+      "result": null,
+      "commit": null,
+      "known_issue": "Production action requires explicit owner authorization and target"
+    },
+    {
+      "task_id": "MDE-02-20261007",
+      "objective": "Effective configuration design and actual composition ownership verification",
+      "status": "DONE_SCOPED_KEEP",
+      "affected_components": [
+        "configuration contract",
+        "composition documentation",
+        "state"
+      ],
+      "runtime_files_changed": [],
+      "tests": [
+        "10 isolated precedence assertions",
+        "139 focused passed + 4 passing subtests",
+        "380 regression passed + 28 passing subtests + 1 known skip"
+      ],
+      "result": "Actual construction and precedence documented; no runtime replacement/default activation required for scoped KEEP decision",
+      "known_issue": "Effective runtime observer/default activation not implemented; V1 FAIL/HOLD",
+      "checkpoint": ".dev/MDE02_CHECKPOINT.json"
+    },
+    {
+      "task_id": "MDE-03-20261007",
+      "objective": "Provider Registry discovery and contract closure",
+      "status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+      "decision": "KEEP",
+      "affected_components": [
+        "provider registry contract",
+        "engineering state"
+      ],
+      "runtime_files_changed": [],
+      "tests": [
+        "38 existing baseline/focused tests",
+        "22 isolated asserted fixture observations",
+        "MDE02 full regression reused: 380 pass/28 subtests/1 skip; unchanged source"
+      ],
+      "result": "Existing ModelRouter dictionary is sufficient conceptual local registry; full matrix and configured/registered/runtime distinction documented",
+      "known_issue": "Universal identity consistency false/not enforced; live provider health/capability not verified; no MDE04 work",
+      "checkpoint": ".dev/MDE03_CHECKPOINT.json"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "verification_type": "ISOLATED_GUARDED_ASGI_WITH_MOCK_HTTP",
+  "profile": "ATTESTATION",
+  "live_runtime_verified": false,
+  "correlation": {
+    "request_id": "req_4ac3854d682a4fce",
+    "invocation_id": "5726e04896764a27b2f031d80a248111",
+    "runtime_instance_id": "ad0c570d84e641cdafa38b103ee38746",
+    "pid": 12392,
+    "source_snapshot": "sha256:73e070d50b588dca6a064dbd4c5949afaa07639d950a76471b1f8fb4fc6034f4",
+    "scoped_loaded_code": "sha256:9f894328af8125498aa61230365b28ac13376ff2a59c536b0669af2afe16f460",
+    "provider_id": "ollama",
+    "provider_endpoint": {
+      "origin": "http://localhost:11434",
+      "connection_origin": "http://127.0.0.1:11434"
+    },
+    "actual_model": "fixture-model",
+    "started_at": "2026-10-08T11:12:20.289366+07:00",
+    "completed_at": "2026-10-08T11:12:20.291666+07:00",
+    "response_observed": true,
+    "application_response_sent": true,
+    "dispatch_count": 1,
+    "outcome": "PROVIDER_RESPONSE_CORRELATED",
+    "external_client_observed": false,
+    "full_application_build_verified": false
+  },
+  "provider_transport": {
+    "pinned_connection_origin": "http://127.0.0.1:11434",
+    "environment_proxy": false,
+    "retries": 0,
+    "redirects": false,
+    "configured_origin": "http://localhost:11434",
+    "transport_evidence": "MOCK_HTTP_FIXTURE_WITH_REAL_OLLAMA_PROVIDER_CODE",
+    "dispatch_count": 1
+  },
+  "protected_state": {
+    "sqlite_connect_allowed": false,
+    "rag_owner_imported": false,
+    "fixture_file_writes_allowed": false,
+    "knowledge_owner_imported": false,
+    "boot_guarded": true,
+    "shutdown_guarded": true,
+    "provider_guarded": true,
+    "request_guarded": true,
+    "response_guarded": true,
+    "db_wal_shm_open_allowed": false
+  },
+  "runtime_identity": "NOT_VERIFIED",
+  "active_process_build": "NOT_VERIFIED"
+}

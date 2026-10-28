@@ -1,0 +1,93 @@
+{
+  "schema": "nusantara-v1-blocker-closure-manifest-v1",
+  "recorded_at_local": "2026-10-10T16:44:01+07:00",
+  "decision": "V1_HOLD",
+  "report": {
+    "path": "docs/reports/NUSANTARA-V1-BLOCKER-CLOSURE-20261010.md",
+    "sha256": "C069F1BA39C20D5DA2D3B6A39DEDA0E7B81859E7D229B1A3D450127304B09BE5"
+  },
+  "registry": {
+    "package_path": "docs\\reports\\nus-evidence-completion-20261010\\runs\\blocker-closure-20261010-02\\registry-package.json",
+    "package_id": "evp_sha256_19bf808c764987e8372b98e7a45f44137a4bca31298de6d7ace3a63ebcf9c079",
+    "sha256": "5D0EA0B7287009D8DBB717E1EC4A661651A5505B90773BD4E65E00D3473FD637",
+    "pass_allowed": true,
+    "runtime_status": "NOT_VERIFIED",
+    "criteria_valid": 15,
+    "criteria_blocked": 0,
+    "criteria_not_verified": 0,
+    "blockers": 0,
+    "evidence_records_valid": 17,
+    "collector": "app.core.evidence_registry.collect_review_package",
+    "status": "VALID"
+  },
+  "current_test_run": {
+    "path": "docs/reports/nus-evidence-completion-20261010/current-test-run.json",
+    "sha256": "85A10D816637028CD09C9C318382DE29375C6A3E73281D38D3B5A63ABFDFA4F5",
+    "previous_copy": "docs\\reports\\nus-evidence-completion-20261010\\runs\\blocker-closure-20261010-02\\previous-current-test-run.json",
+    "previous_copy_sha256": "FC8538E22682D0931B3AB276B4192CDA801B31D2CE0A52C2FC63257C5EFBC066",
+    "criteria_pass": 15,
+    "criteria_blocked": 0,
+    "pytest_passed": 19,
+    "vitest_passed": 17,
+    "typecheck_exit": 0,
+    "failed": 0,
+    "skipped": 0,
+    "python_results_path": "docs\\reports\\nus-evidence-completion-20261010\\runs\\blocker-closure-20261010-02\\python-results.xml",
+    "python_results_sha256": "77A1ECBB0A41F8173C3F8037180E8E240F9A53BB299BD05DCB1073C6521951DA",
+    "results_bundle_path": "docs\\reports\\nus-evidence-completion-20261010\\runs\\blocker-closure-20261010-02\\results-bundle.json",
+    "results_bundle_sha256": "CF4ACC10FFFE1EB57616568172578516358837EB6343651EAE1B4C1B7CEBD374",
+    "reused_vitest_path": "docs/reports/nus-evidence-completion-20261010/runs/003-vitest-final-05/vitest-results.json",
+    "reused_vitest_sha256": "3DBB670B9D3E9AD6F39E723BD34F12F15F282DC78D228FA7D39D0E20CC743C36"
+  },
+  "evidence_requirements": {
+    "path": "control-plane/evidence-requirements.json",
+    "sha256": "F884DDD56F3B0431B7E83DB3F4CCCB12B5748D42EDC59DAC4431151030258E4A",
+    "prior_copy": "docs/reports/nus-evidence-completion-20261010/runs/blocker-closure-20261010-01/evidence-requirements.before.json",
+    "prior_sha256": "C36265DD880D7CE2F15A71B7B62CCF548685FB70B8416835FD7AF2C4299DAE01",
+    "change": "AC15 test-reference mapping only; criterion text unchanged"
+  },
+  "open_v1_blockers": [
+    {
+      "id": "CC-01-HTTP",
+      "status": "BLOCKED",
+      "cause": "Windows socketpair accept stall before route dispatch",
+      "evidence": "prior runs/cc01-http-followup-20261010-02/console-transcript.txt"
+    },
+    {
+      "id": "DOCKER-RUNTIME-ATTESTATION",
+      "status": "BLOCKED",
+      "cause": "Docker engine named-pipe access denied",
+      "command": "docker ps --format {{.Names}}",
+      "exit_code": 1
+    },
+    {
+      "id": "CC-06-CANDIDATE",
+      "status": "NOT_VERIFIED",
+      "cause": "candidate diagnostics/cache/model inaccessible"
+    },
+    {
+      "id": "CC-06-OFFICIAL-SOURCE-GOVERNANCE",
+      "status": "HOLD",
+      "cause": "source snapshot scope/date/authority and ingest approval unresolved"
+    },
+    {
+      "id": "CC-05-MEMORY-GOVERNANCE",
+      "status": "HOLD",
+      "cause": "consent/session ownership/retention policy absent"
+    },
+    {
+      "id": "SYMLINK-SECURITY",
+      "status": "NOT_VERIFIED",
+      "cause": "Windows symlink creation privilege unavailable in prior targeted check"
+    },
+    {
+      "id": "PRODUCTION-TARGET",
+      "status": "HOLD",
+      "cause": "target not named and deployment not authorized"
+    }
+  ],
+  "source_changes": [
+    "control-plane/evidence-requirements.json AC15 test references only"
+  ],
+  "runtime_changes": 0
+}

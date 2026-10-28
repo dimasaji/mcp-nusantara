@@ -1,0 +1,82 @@
+{
+  "phase": "MDE06",
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "consumers": [
+    {
+      "path": "app/knowledge/store.py",
+      "sha256": "09140f8d098a84696f4f34b153bfacd9e36ead04652f0fd49b1cf89708ecf323",
+      "finding": "SQLite float32 per-row dimensions; search filters width only, not model/version; missing width yields empty hits, not explicit safety gate."
+    },
+    {
+      "path": "app/knowledge/indobert_embedding.py",
+      "sha256": "065202822c8ec152a692cf6eb47aaf221d4be1f29216e640b911183a53968fb9",
+      "finding": "Config profile validates IndoBERT base-p1/768 before store; encode validates output width 768, not model checkpoint identity."
+    },
+    {
+      "path": "app/knowledge/production_embedding_bridge.py",
+      "sha256": "67292c054e2c6b5d13d176233ddb0e1f9c4400462460bff1ade81e0f333e59d6",
+      "finding": "Native float32 array, declared model/version/768; search filters model/version but not dimension; ensure_schema/model loading embedded in search must not be invoked during audit."
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "sha256": "2bf7f5eaf0197270b9e6087eaad189b32d50b702840a9c2cc292da9a00d5864a",
+      "finding": "Semantic/lexical fusion and bridge fallback source; live bridge/model not loaded."
+    },
+    {
+      "path": "app/knowledge/production_kb.py",
+      "sha256": "f90e02c4acd108be75cb6d4330cec435d74a54a849fc5b6ae3624223c47de8ee",
+      "finding": "Production chunk/source registry and ingestion path; mutation commands not executed."
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "sha256": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b",
+      "finding": "Canonical optional config/custom embedding precedence; no index generation safety receipt."
+    },
+    {
+      "path": "app/knowledge/embeddings.py",
+      "sha256": "7218a24a8d553433d3374fcdd1f34f108d1dafd1af7297b97c1556195a3d2cae",
+      "finding": "Alternate providers infer dimension from names or fallback 384; labels alone not actual vector/index compatibility."
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "sha256": "3d18304750d9b43e6cf33a19f5f1d73ea5b05bf2b22d9686deecd6fd4371911d",
+      "finding": "Configured embedding profile and knowledge path; not universally default-wired."
+    },
+    {
+      "path": "app/rag/store.py",
+      "sha256": "d28277759685e3f81cbb0e7738d070b6b8c3da555824e13cab98af105b33c537",
+      "finding": "Versioned lexical fallback has no vector index; do not assess it as a valid embedding index."
+    },
+    {
+      "path": "app/language/semantic/semantic_intent.py",
+      "sha256": "f3515261a7e6c79d4add64d6e5db16fe0a2936725727605adafde48ca8a2610c",
+      "finding": "Intent prototype index separate from knowledge index; actual model/worker/prototype generation unverified."
+    }
+  ],
+  "index_inventory": [
+    {
+      "path": "data/knowledge/nusantara_knowledge.db",
+      "status": "UNKNOWN",
+      "actual_embedding_model": "NOT_VERIFIED",
+      "runtime_use": "BLOCKED_UNTIL_COMPATIBILITY_PROVEN"
+    },
+    {
+      "path": "data/knowledge/production_knowledge.db",
+      "status": "PARTIAL",
+      "actual_embedding_model": "NOT_VERIFIED",
+      "runtime_use": "BLOCKED_UNTIL_COMPATIBILITY_PROVEN"
+    }
+  ],
+  "external_vector_files": {},
+  "fallback_index": "VersionedKnowledgeStore lexical; no embedding index; Memoria test fallback not production proof",
+  "historical_backups": "Byte-fingerprinted baseline backups retained; not assumed current active indexes",
+  "compatibility_required": [
+    "embedding_model",
+    "embedding_dimension",
+    "index_dimension",
+    "distance_metric",
+    "index_version",
+    "knowledge_version"
+  ],
+  "scope": "Only declared metadata/snapshot structure and isolated source behavior; no deployed runtime attestation"
+}

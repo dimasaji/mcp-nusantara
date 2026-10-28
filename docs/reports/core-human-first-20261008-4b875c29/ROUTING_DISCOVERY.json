@@ -1,0 +1,33 @@
+{
+  "classification": "PURE_ROUTER_NO_DISPATCH",
+  "results": [
+    {
+      "input": "Periksa masalah RAG dan perbaiki yang aman.",
+      "handled": false,
+      "intent": "none",
+      "actions": [],
+      "modify_requested": false
+    },
+    {
+      "input": "Baca app/main.py dan jelaskan.",
+      "handled": true,
+      "intent": "read_file",
+      "actions": [
+        [
+          "read",
+          "app/main.py"
+        ]
+      ],
+      "modify_requested": false
+    },
+    {
+      "input": "Apa itu KTP-el?",
+      "handled": false,
+      "intent": "none",
+      "actions": [],
+      "modify_requested": false
+    }
+  ],
+  "live_requests": 0,
+  "provider_calls": 0
+}

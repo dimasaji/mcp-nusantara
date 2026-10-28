@@ -1,0 +1,3478 @@
+{
+  "phase": "MDE05",
+  "created_at": "2026-10-07T04:30:14.231886+00:00",
+  "baseline": ".dev/MDE05_BASELINE_20261007.json",
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "configured_effective_runtime": "Configured/static and isolated effective behavior only; production runtime NOT_VERIFIED",
+  "profile_fields": [
+    {
+      "field": "profile_id",
+      "finding": "No dedicated profile identity; NusantaraConfig repr label is not an execution identity."
+    },
+    {
+      "field": "retriever",
+      "finding": "RAG.query hybrid differs from Retriever similarity and VersionedKnowledgeStore lexical."
+    },
+    {
+      "field": "top_k",
+      "finding": "Snapshot rag.top_k -> KB retrieval_top_k; explicit KB config wins; KnowledgeEngine default argument 5 overrides internal default; V1/V2 settings or search request override."
+    },
+    {
+      "field": "chunk_size",
+      "finding": "Snapshot/KB default 512; ingestion request override; production_kb constant 900."
+    },
+    {
+      "field": "chunk_overlap",
+      "finding": "Snapshot/KB default 64; request uses truthiness so 0 falls back; production_kb 120."
+    },
+    {
+      "field": "semantic_weight",
+      "finding": "Snapshot optional weights are rejected as unwired; canonical query hardcodes 0.70; production retriever accepts constructor value."
+    },
+    {
+      "field": "lexical_weight",
+      "finding": "Canonical query hardcodes 0.30; production semantic retriever normalizes constructor pair, hybrid wrapper requires sum 1."
+    },
+    {
+      "field": "similarity_threshold",
+      "finding": "Snapshot threshold rejected as unwired; canonical absolute gate 0.30 plus relative 0.50; V1 additionally filters >=0.50; static JSON min_score 0.35 not app-wired."
+    },
+    {
+      "field": "reranker",
+      "finding": "Config flag/model copied; query rerank defaults False; canonical uses _simple_rerank, not create_reranker; label can name unexecuted model."
+    },
+    {
+      "field": "knowledge_source",
+      "finding": "Default SQLite uses NUSANTARA_KNOWLEDGE_DB or cwd/data/knowledge/nusantara_knowledge.db; injected snapshot path optional; production uses distinct production_knowledge.db."
+    },
+    {
+      "field": "embedding_profile",
+      "finding": "Canonical default IndoBERT base-p1/768 adapter; config-injected mismatch rejected unless custom embedding supplied; actual worker/index identity not attested."
+    }
+  ],
+  "consumers": [
+    {
+      "path": "app/api/routes.py",
+      "sha256": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4",
+      "route": "V1 chat",
+      "trace": "KnowledgeEngine() -> RAG -> SQLite; settings top_k -> evidence score >=0.50 -> grounding/trust. Fast direct evidence and offline model paths are separate from retrieval execution.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "sha256": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7",
+      "route": "V2 chat",
+      "trace": "KnowledgeEngine() callback -> dictionaries; settings top_k; profile identity and full EvidencePack diagnostics dropped.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/api/routes.py",
+      "sha256": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4",
+      "route": "Knowledge search",
+      "trace": "request top_k forwarded; KnowledgeEngine discards filter reserved for backend.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "sha256": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b",
+      "route": "Canonical RAG",
+      "trace": "HybridRAG alias equals RAG; hybrid score plus gate; optional opt-in configuration; no standalone effective RAGProfile.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/knowledge/engine.py",
+      "sha256": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b",
+      "route": "Knowledge facade",
+      "trace": "Injection supported; default search top_k 5 overrides rag default even snapshot top_k differs.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "sha256": "52cc11f639295838c26dc501ab3b5fb684079f15367dffff1f43e69c24d5a249",
+      "route": "Similarity retriever",
+      "trace": "Separate similarity-only implementation; older Memoria protocol assumptions; not default canonical hybrid.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "sha256": "527dd1746cc5b33e35edd89fe8a66122eaab48818fdd57761653baa6fe57566c",
+      "route": "Reranker library",
+      "trace": "Simple/CrossEncoder/LLM factories; CrossEncoder import failure and missing LLM client use Simple; no canonical RAG factory consumer found.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/rag/store.py",
+      "sha256": "d28277759685e3f81cbb0e7738d070b6b8c3da555824e13cab98af105b33c537",
+      "route": "Versioned store",
+      "trace": "Access/version/conflict lexical store; V2 adapter observed in test_phases_7_21, not default API callback.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "sha256": "ca8cc7d81db769f0385a2a2e2884314ac3970bd794f90a959398d271137b2993",
+      "route": "Production wrapper",
+      "trace": "Lazy ProductionSemanticRetriever, optional authoritative-source filter; production DB connection possible; not called by default API in scanned source.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "sha256": "2bf7f5eaf0197270b9e6087eaad189b32d50b702840a9c2cc292da9a00d5864a",
+      "route": "Production retriever",
+      "trace": "Lexical/semantic paths and metadata hydration; bridge import exceptions recorded; health source labels not live proof.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/knowledge/production_embedding_bridge.py",
+      "sha256": "67292c054e2c6b5d13d176233ddb0e1f9c4400462460bff1ade81e0f333e59d6",
+      "route": "Production embedding bridge",
+      "trace": "Separate DB, model/dimension/version constants; embed/search CLI can touch production; not invoked in audit.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/knowledge/production_kb.py",
+      "sha256": "f90e02c4acd108be75cb6d4330cec435d74a54a849fc5b6ae3624223c47de8ee",
+      "route": "Production ingestion",
+      "trace": "Distinct 900/120 chunk constants and source registry; not default canonical ingestion.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/devcore/core.py",
+      "sha256": "94aa97883ecbb4330458caffe4898aa02503b52c9a5ef4887a5d45cc529a4004",
+      "route": "Tool/DeveloperCore",
+      "trace": "Source/Workspace tool grounding separate from KnowledgeEngine retrieval; no unified RAG receipt.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/developer_core/engine.py",
+      "sha256": "5f6bdc41cf7cd6960dcac84d5aea24a630952d54b6f323aa254c0d286c38e885",
+      "route": "Developer analysis",
+      "trace": "Graph/source evidence is distinct from knowledge RAG evidence.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "sha256": "3d18304750d9b43e6cf33a19f5f1d73ea5b05bf2b22d9686deecd6fd4371911d",
+      "route": "Configuration snapshot",
+      "trace": "Frozen configured view, optional injection; no proof that default API consumes it.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/core/config.py",
+      "sha256": "996bfaed79b989576ec31dd10f9d94f5bc419466dc67e4da5c54f7666e3af5b6",
+      "route": "Legacy settings",
+      "trace": "Cached Settings; defaults and environment influence API top_k.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "config/rag_runtime.json",
+      "sha256": "17dd875eae9afbf4e36f625b05762345231343e4db4ab0bbe3dc08e2d3341f66",
+      "route": "Static runtime JSON",
+      "trace": "No runtime reader found in scanned app; baseline_rag_cache references path/existence only.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    },
+    {
+      "path": "app/knowledge/indobert_embedding.py",
+      "sha256": "065202822c8ec152a692cf6eb47aaf221d4be1f29216e640b911183a53968fb9",
+      "route": "Embedding adapter",
+      "trace": "Validates supported configuration and 768-vector output; production health not queried.",
+      "runtime_status": "NOT_RUN",
+      "basis": "Source inspection; API modules not imported"
+    }
+  ],
+  "reference_sites": [
+    {
+      "path": "app/api/routes.py",
+      "line": 924,
+      "match": "retriev"
+    },
+    {
+      "path": "app/api/routes.py",
+      "line": 931,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "line": 118,
+      "match": "retriev"
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "line": 130,
+      "match": "retriev"
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "line": 144,
+      "match": "retriev"
+    },
+    {
+      "path": "app/core/config.py",
+      "line": 22,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/core/config.py",
+      "line": 23,
+      "match": "retriev"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 100,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 101,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 102,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 103,
+      "match": "rerank"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 104,
+      "match": "rerank"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 105,
+      "match": "similarity_threshold"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 109,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 111,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 113,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 114,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 116,
+      "match": "rerank"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 117,
+      "match": "rerank"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 145,
+      "match": "rerank"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 248,
+      "match": "CHUNK_OVERLAP"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 249,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 257,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 387,
+      "match": "rerank"
+    },
+    {
+      "path": "app/core/nusantara_config.py",
+      "line": 388,
+      "match": "RERANK"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 19,
+      "match": "retriev"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 22,
+      "match": "rerank"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 92,
+      "match": "retriev"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 167,
+      "match": "retriev"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 168,
+      "match": "retriev"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 169,
+      "match": "retriev"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 176,
+      "match": "rerank"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 177,
+      "match": "rerank"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 201,
+      "match": "retriev"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 259,
+      "match": "retriev"
+    },
+    {
+      "path": "app/developer_core/context_router.py",
+      "line": 261,
+      "match": "rerank"
+    },
+    {
+      "path": "app/developer_core/mapper.py",
+      "line": 34,
+      "match": "retriev"
+    },
+    {
+      "path": "app/evaluation/evaluator.py",
+      "line": 13,
+      "match": "retriev"
+    },
+    {
+      "path": "app/evaluation/evaluator.py",
+      "line": 34,
+      "match": "retriev"
+    },
+    {
+      "path": "app/evaluation/evaluator.py",
+      "line": 60,
+      "match": "retriev"
+    },
+    {
+      "path": "app/evaluation/evaluator.py",
+      "line": 107,
+      "match": "retriev"
+    },
+    {
+      "path": "app/experience/events.py",
+      "line": 17,
+      "match": "retriev"
+    },
+    {
+      "path": "app/experience/feedback.py",
+      "line": 24,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/__init__.py",
+      "line": 2,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/__init__.py",
+      "line": 3,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/grounding.py",
+      "line": 23,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/grounding.py",
+      "line": 179,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 7,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 15,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 17,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 19,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 29,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 108,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 120,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 122,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 123,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 140,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 141,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 142,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 165,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 171,
+      "match": "SEMANTIC_WEIGHT"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 172,
+      "match": "LEXICAL_WEIGHT"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 184,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 185,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 193,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 194,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 205,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 213,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 215,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 218,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 220,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 224,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 225,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 230,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 235,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 250,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 253,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 258,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 261,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 262,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 265,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 266,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 270,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 274,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 276,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 277,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 282,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 620,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 623,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 629,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 631,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 633,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 638,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 640,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 647,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 648,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 679,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 682,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 690,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 695,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 699,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 700,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 717,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 765,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 769,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 770,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 784,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 788,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 789,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 802,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 812,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 815,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 822,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 851,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 867,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 935,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 941,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 996,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 997,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1004,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1005,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1009,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1010,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1026,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1029,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1032,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1035,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1040,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1041,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1045,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1049,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1052,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1055,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1061,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1079,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1130,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1177,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1192,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1193,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1194,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1252,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1346,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_hybrid_rag.py",
+      "line": 1369,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_kb.before_authority_patch.py",
+      "line": 37,
+      "match": "CHUNK_OVERLAP"
+    },
+    {
+      "path": "app/knowledge/production_kb.before_authority_patch.py",
+      "line": 307,
+      "match": "CHUNK_OVERLAP"
+    },
+    {
+      "path": "app/knowledge/production_kb.before_authority_patch.py",
+      "line": 904,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/knowledge/production_kb.before_metadata_authority_patch.py",
+      "line": 37,
+      "match": "CHUNK_OVERLAP"
+    },
+    {
+      "path": "app/knowledge/production_kb.before_metadata_authority_patch.py",
+      "line": 307,
+      "match": "CHUNK_OVERLAP"
+    },
+    {
+      "path": "app/knowledge/production_kb.before_metadata_authority_patch.py",
+      "line": 904,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/knowledge/production_kb.py",
+      "line": 37,
+      "match": "CHUNK_OVERLAP"
+    },
+    {
+      "path": "app/knowledge/production_kb.py",
+      "line": 401,
+      "match": "CHUNK_OVERLAP"
+    },
+    {
+      "path": "app/knowledge/production_kb.py",
+      "line": 1073,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 2,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 6,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 7,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 37,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 38,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 79,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 103,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 235,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 239,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 241,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 245,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 248,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 249,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 255,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 256,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 263,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 264,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 276,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 277,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 279,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 280,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 282,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 286,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 289,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 290,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 510,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 668,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 670,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 692,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 756,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 782,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 801,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 843,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 853,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 855,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 862,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 864,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 872,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 873,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 893,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 928,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 929,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 980,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1021,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1061,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1062,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1121,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1133,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1134,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1239,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1240,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1254,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1259,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1264,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1294,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1309,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1355,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1403,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1405,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1406,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1413,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1419,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1434,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1447,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1448,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1449,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.before_authority_hydration.py",
+      "line": 1450,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 2,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 6,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 7,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 37,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 38,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 79,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 103,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 235,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 239,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 241,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 245,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 248,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 249,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 255,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 256,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 263,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 264,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 276,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 277,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 279,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 280,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 282,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 286,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 289,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 290,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 510,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 668,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 670,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 692,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 756,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 782,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 801,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 843,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 853,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 855,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 862,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 864,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 872,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 873,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 902,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 903,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1180,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1215,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1216,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1268,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1309,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1356,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1357,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1416,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1428,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1429,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1534,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1535,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1549,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1554,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1559,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1589,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1604,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1650,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1698,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1700,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1701,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1708,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1714,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1729,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1742,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1743,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1744,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/production_semantic_retriever.py",
+      "line": 1745,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 2,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 3,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 14,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 22,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 199,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 200,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 215,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 216,
+      "match": "similarity_threshold"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 229,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 230,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 231,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 232,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 314,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 318,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 319,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 438,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 439,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 441,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 454,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 460,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 470,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 569,
+      "match": "RERANK"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 571,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 572,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 592,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 597,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 598,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 599,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 600,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 602,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 604,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 605,
+      "match": "lexical_weight"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 610,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 614,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 615,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 661,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 667,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 668,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/rag.py",
+      "line": 693,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 2,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 3,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 6,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 9,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 11,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 18,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 25,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 28,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 35,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 37,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 38,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 44,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 51,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 80,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 82,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 105,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 112,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 115,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 116,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 117,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 132,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 134,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 148,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 155,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 162,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 165,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 166,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 167,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 187,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 190,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 191,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 193,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 195,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 197,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/reranker.py",
+      "line": 199,
+      "match": "Rerank"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 2,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 3,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 8,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 9,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 16,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 18,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 19,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 32,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 37,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 39,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 41,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 78,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 80,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 85,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 87,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 88,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 133,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 134,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 156,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 157,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 160,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 165,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 169,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 170,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/retriever.py",
+      "line": 171,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 3,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 52,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 66,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 67,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 69,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 72,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 73,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 74,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 78,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 79,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 81,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 82,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 83,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 84,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 96,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 134,
+      "match": "EvidencePack"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 138,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 139,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 149,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 150,
+      "match": "retriev"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 151,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/schemas.py",
+      "line": 152,
+      "match": "rerank"
+    },
+    {
+      "path": "app/knowledge/store.py",
+      "line": 304,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/rag/__init__.py",
+      "line": 1,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/rag/__init__.py",
+      "line": 2,
+      "match": "retriev"
+    },
+    {
+      "path": "app/rag/__init__.py",
+      "line": 4,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/rag/__init__.py",
+      "line": 5,
+      "match": "retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 3,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 4,
+      "match": "retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 66,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 144,
+      "match": "retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 145,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 155,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 164,
+      "match": "rerank"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 168,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 171,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 182,
+      "match": "retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 183,
+      "match": "retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 184,
+      "match": "retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 185,
+      "match": "retriev"
+    },
+    {
+      "path": "app/rag/store.py",
+      "line": 189,
+      "match": "retriev"
+    },
+    {
+      "path": "app/reasoning/engine.py",
+      "line": 68,
+      "match": "retriev"
+    },
+    {
+      "path": "app/reasoning/engine.py",
+      "line": 134,
+      "match": "retriev"
+    },
+    {
+      "path": "app/reasoning/planner.py",
+      "line": 53,
+      "match": "retriev"
+    },
+    {
+      "path": "app/research/failure_analysis.py",
+      "line": 10,
+      "match": "retriev"
+    },
+    {
+      "path": "app/research/failure_analysis.py",
+      "line": 13,
+      "match": "retriev"
+    },
+    {
+      "path": "app/research/failure_analysis.py",
+      "line": 20,
+      "match": "retriev"
+    },
+    {
+      "path": "app/research/gap_detector.py",
+      "line": 16,
+      "match": "retriev"
+    },
+    {
+      "path": "app/research/knowledge_discovery.py",
+      "line": 100,
+      "match": "retriev"
+    },
+    {
+      "path": "app/v2/hermes_adapter.py",
+      "line": 12,
+      "match": "retriev"
+    },
+    {
+      "path": "app/v2/orchestrator.py",
+      "line": 1,
+      "match": "retriev"
+    },
+    {
+      "path": "app/v2/orchestrator.py",
+      "line": 21,
+      "match": "retriev"
+    },
+    {
+      "path": "app/v2/orchestrator.py",
+      "line": 42,
+      "match": "retriev"
+    },
+    {
+      "path": "app/v2/orchestrator.py",
+      "line": 52,
+      "match": "retriev"
+    },
+    {
+      "path": "app/v2/orchestrator.py",
+      "line": 61,
+      "match": "retriev"
+    },
+    {
+      "path": "app/v2/orchestrator.py",
+      "line": 121,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/v2/orchestrator.py",
+      "line": 128,
+      "match": "retriev"
+    },
+    {
+      "path": "app/v2/orchestrator.py",
+      "line": 129,
+      "match": "retriev"
+    },
+    {
+      "path": "app/v2/orchestrator.py",
+      "line": 255,
+      "match": "Retriev"
+    },
+    {
+      "path": "app/v2/wiring.py",
+      "line": 35,
+      "match": "retriev"
+    },
+    {
+      "path": "app/workflow/__init__.py",
+      "line": 3,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/workflow/engine.py",
+      "line": 8,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/workflow/engine.py",
+      "line": 26,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/workflow/state.py",
+      "line": 3,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/workflow/state.py",
+      "line": 7,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "app/workflow/workflow_schema.py",
+      "line": 14,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "tests/evaluation/test_live_harness.py",
+      "line": 59,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/test_configuration_contract.py",
+      "line": 62,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "tests/test_configuration_contract.py",
+      "line": 79,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "tests/test_configuration_contract.py",
+      "line": 80,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "tests/test_configuration_contract.py",
+      "line": 81,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "tests/test_configuration_contract.py",
+      "line": 82,
+      "match": "similarity_threshold"
+    },
+    {
+      "path": "tests/test_configuration_contract.py",
+      "line": 83,
+      "match": "rerank"
+    },
+    {
+      "path": "tests/test_configuration_contract.py",
+      "line": 84,
+      "match": "rerank"
+    },
+    {
+      "path": "tests/test_configuration_contract.py",
+      "line": 180,
+      "match": "rerank"
+    },
+    {
+      "path": "tests/test_configuration_contract.py",
+      "line": 181,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "tests/test_configuration_contract.py",
+      "line": 182,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "tests/test_configuration_integration.py",
+      "line": 84,
+      "match": "semantic_weight"
+    },
+    {
+      "path": "tests/test_configuration_integration.py",
+      "line": 93,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "tests/test_configuration_integration.py",
+      "line": 114,
+      "match": "chunk_overlap"
+    },
+    {
+      "path": "tests/test_configuration_integration.py",
+      "line": 125,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/test_configuration_integration.py",
+      "line": 131,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/test_trace_retention.py",
+      "line": 15,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/test_trace_retention.py",
+      "line": 21,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/test_trace_retention.py",
+      "line": 30,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_context_budget.py",
+      "line": 69,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_devcore_routes.py",
+      "line": 47,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 21,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 46,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 48,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 54,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 62,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 67,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 68,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 75,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 82,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 142,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 145,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 173,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 179,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 208,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 217,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 252,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 256,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 264,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_phases_7_21.py",
+      "line": 317,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_v2_core.py",
+      "line": 202,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_v2_core.py",
+      "line": 213,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_v2_core.py",
+      "line": 222,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_v2_core.py",
+      "line": 223,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_v2_core.py",
+      "line": 224,
+      "match": "retriev"
+    },
+    {
+      "path": "tests/v2/test_v2_core.py",
+      "line": 257,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/baseline_rag_cache.py",
+      "line": 23,
+      "match": "rag_runtime"
+    },
+    {
+      "path": "scripts/baseline_rag_cache.py",
+      "line": 98,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/baseline_rag_cache.py",
+      "line": 102,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/baseline_rag_cache.py",
+      "line": 105,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/baseline_rag_cache.py",
+      "line": 106,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/baseline_rag_cache.py",
+      "line": 108,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/build_gate14_mapper.py",
+      "line": 38,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/fix_hermes_agent.py",
+      "line": 54,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/fix_rag_bom_and_canonical.py",
+      "line": 107,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/fix_rag_bom_and_canonical.py",
+      "line": 136,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/fix_rag_bom_and_canonical.py",
+      "line": 142,
+      "match": "rerank"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime.py",
+      "line": 363,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime.py",
+      "line": 380,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime.py",
+      "line": 396,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime.py",
+      "line": 405,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime.py",
+      "line": 418,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime.py",
+      "line": 434,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime.py",
+      "line": 445,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime.py",
+      "line": 477,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 68,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 69,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 73,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 84,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 88,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 97,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 103,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 104,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 108,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 110,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 112,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 113,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 116,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 120,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 122,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 125,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 140,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 185,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 297,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 298,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 300,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 302,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 306,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/implement_v2_hermes_runtime_safe.py",
+      "line": 307,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.py",
+      "line": 122,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.py",
+      "line": 144,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.py",
+      "line": 533,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.py",
+      "line": 2658,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v2.0.0.backup.py",
+      "line": 520,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v2.0.0.backup.py",
+      "line": 563,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v2.0.0.backup.py",
+      "line": 564,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v2.0.0.py",
+      "line": 520,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v2.0.0.py",
+      "line": 563,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v2.0.0.py",
+      "line": 564,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v3.0.0.pre-v2-audit.py",
+      "line": 122,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v3.0.0.pre-v2-audit.py",
+      "line": 144,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/nusantara_master_engine.v3.0.0.pre-v2-audit.py",
+      "line": 533,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_rag_canonical.py",
+      "line": 76,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/patch_rag_canonical.py",
+      "line": 96,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_rag_canonical.py",
+      "line": 112,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_rag_canonical.py",
+      "line": 118,
+      "match": "rerank"
+    },
+    {
+      "path": "scripts/patch_rag_canonical.py",
+      "line": 167,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_audit.py",
+      "line": 169,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 49,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 52,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 66,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 69,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 81,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 84,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 91,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 95,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 96,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 104,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 111,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 112,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/patch_v2_orchestrator_hermes.py",
+      "line": 152,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/precision_impact_v2.py",
+      "line": 36,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/release_check.py",
+      "line": 92,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/run_eval.py",
+      "line": 22,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/run_eval.py",
+      "line": 78,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/test_grounding_hermes.py",
+      "line": 62,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/test_grounding_hermes.py",
+      "line": 69,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/test_grounding_hermes.py",
+      "line": 81,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/test_grounding_hermes.py",
+      "line": 102,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/test_grounding_hermes.py",
+      "line": 178,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/test_knowledge_grounding.py",
+      "line": 113,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/test_knowledge_grounding.py",
+      "line": 135,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 19,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 94,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 136,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 140,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 142,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 147,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 151,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 154,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 156,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 160,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 173,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 227,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/test_knowledge_retrieval.py",
+      "line": 250,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "line": 11,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "line": 13,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "line": 21,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "line": 24,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "line": 26,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "line": 27,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "line": 30,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "line": 32,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "line": 33,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_3_sop_rag_bridge.py",
+      "line": 120,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_4_sop_retrieval.py",
+      "line": 8,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_4_sop_retrieval.py",
+      "line": 11,
+      "match": "RETRIEV"
+    },
+    {
+      "path": "scripts/validate_gate16_4_sop_retrieval.py",
+      "line": 137,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_4_sop_retrieval.py",
+      "line": 146,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_5_evidence_grounding.py",
+      "line": 165,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate16_7_pdf_to_answer.py",
+      "line": 70,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_evaluation.py",
+      "line": 45,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_evidence.py",
+      "line": 209,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_experiment.py",
+      "line": 41,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_gap.py",
+      "line": 39,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_gap.py",
+      "line": 53,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_gap.py",
+      "line": 61,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_gap.py",
+      "line": 107,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_gap.py",
+      "line": 122,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_gap.py",
+      "line": 152,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_gap.py",
+      "line": 167,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_proposal.py",
+      "line": 200,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_proposal.py",
+      "line": 210,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_proposal.py",
+      "line": 213,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_proposal.py",
+      "line": 232,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_proposal.py",
+      "line": 249,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_proposal.py",
+      "line": 253,
+      "match": "Retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_proposal.py",
+      "line": 256,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_proposal.py",
+      "line": 260,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_proposal.py",
+      "line": 264,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_root_cause.py",
+      "line": 42,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_root_cause.py",
+      "line": 45,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_root_cause.py",
+      "line": 53,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_root_cause.py",
+      "line": 63,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_root_cause.py",
+      "line": 71,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/validate_gate17_root_cause.py",
+      "line": 103,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_audit_runtime.py",
+      "line": 28,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_audit_runtime.py",
+      "line": 36,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_audit_runtime.py",
+      "line": 103,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_audit_runtime.py",
+      "line": 106,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_audit_runtime.py",
+      "line": 112,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_audit_runtime.py",
+      "line": 113,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_audit_runtime.py",
+      "line": 174,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_docker_runtime.py",
+      "line": 122,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_v1_recovery_rag.py",
+      "line": 4,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_v1_recovery_rag.py",
+      "line": 59,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_v1_recovery_rag.py",
+      "line": 66,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_v1_recovery_rag.py",
+      "line": 76,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/verify_v1_recovery_rag.py",
+      "line": 79,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/wire_v2_chat_hermes.py",
+      "line": 83,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/wire_v2_chat_hermes.py",
+      "line": 94,
+      "match": "retriev"
+    },
+    {
+      "path": "scripts/wire_v2_chat_hermes.py",
+      "line": 108,
+      "match": "retriev"
+    }
+  ],
+  "search_scope": "app/tests/scripts current .py only; includes historical before_authority_hydration file as archive candidate, not active truth",
+  "production_index_status": "UNKNOWN; deferred to separately approved MDE06"
+}

@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-10-09T09:38:19.061274+07:00",
+  "status": "PASS_SCOPED",
+  "observed_evidence": [
+    "Existing Hermes.run is called by execute_v1",
+    "V1 pipeline relocated into same Hermes agent; route has no provider.generate bypass",
+    "Browser candidate status records HERMES_RUN through PUBLIC_PROJECTION; actual Ollama receipt matches process/model"
+  ],
+  "files_changed": [
+    "app/hermes/agent.py",
+    "app/api/routes.py",
+    "tests/test_v1_response_projection.py",
+    "tests/test_v1_operator_control.py"
+  ],
+  "reason": "Make existing Hermes the V1 execution owner without another engine",
+  "tests_run": [
+    "regression-20261009-090953/results.xml",
+    "regression-20261009-090953/guards.json",
+    "targeted-20261009-093732/results.xml",
+    "FINAL_CHECKS.json",
+    "FRONTEND_REGRESSION.json",
+    "BROWSER_OBSERVATIONS.json",
+    "LOCAL_PROVIDER_BROWSER_OBSERVATIONS.20261009T093819.json"
+  ],
+  "limitations": [
+    "Native semantic worker remains fixture in guarded candidates",
+    "Existing stage diagnostics are observations, not full runtime attestation"
+  ],
+  "remaining_blockers": [
+    "Full native semantic-worker plus production RAG/store/model UI integration not verified"
+  ]
+}

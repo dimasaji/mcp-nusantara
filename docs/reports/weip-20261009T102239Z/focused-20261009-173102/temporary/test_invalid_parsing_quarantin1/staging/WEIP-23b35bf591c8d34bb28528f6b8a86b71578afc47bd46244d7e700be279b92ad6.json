@@ -1,0 +1,53 @@
+{
+  "document_id": "WEIP-23b35bf591c8d34bb28528f6b8a86b71578afc47bd46244d7e700be279b92ad6",
+  "source_id": "fixture",
+  "original_url": "https://example.org/allowed/doc",
+  "final_url": "https://example.org/allowed/doc",
+  "redirects": [],
+  "retrieved_at": "2026-10-09T10:31:03.015055+00:00",
+  "content_type": "application/json",
+  "content_hash": "85eee1ec8c934034fa557b72376e798678056074f4dbdfcf9e65f7d537aeff08",
+  "version": "sha256:85eee1ec8c934034fa557b72376e798678056074f4dbdfcf9e65f7d537aeff08",
+  "version_conflict": false,
+  "metadata": {
+    "title": "Fixture",
+    "publisher": "Fixture Publisher",
+    "agency": "Fixture Agency",
+    "domain": "example.org",
+    "jurisdiction": "FIXTURE_ONLY",
+    "service": "fixture-service",
+    "publication_date": null,
+    "effective_date": null,
+    "expiry_date": null,
+    "risk": "HIGH",
+    "source_verification_status": "UNVERIFIED",
+    "source_verification_reference": null,
+    "registry_fingerprint": "b62f459276e0e7d7599fde40d39c74773d761182bd015b40441c866f2f503501",
+    "validation_status": "PENDING",
+    "chunk_reference": "FULL_PARSED_DOCUMENT"
+  },
+  "text": null,
+  "status": "QUARANTINED",
+  "audit": [
+    {
+      "at": "2026-10-09T10:31:03.018537+00:00",
+      "from": "DISCOVERED",
+      "to": "FETCHED",
+      "reason": "FETCH_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "",
+      "content_hash": "85eee1ec8c934034fa557b72376e798678056074f4dbdfcf9e65f7d537aeff08",
+      "event_hash": "3d76878e0fb0ea1ac72cd34cd369ef5352278b6e62a5f8e02f2d9f0396491c68"
+    },
+    {
+      "at": "2026-10-09T10:31:03.020868+00:00",
+      "from": "FETCHED",
+      "to": "QUARANTINED",
+      "reason": "PARSE_UNSAFE_OR_UNAVAILABLE",
+      "actor": "pipeline",
+      "previous_hash": "3d76878e0fb0ea1ac72cd34cd369ef5352278b6e62a5f8e02f2d9f0396491c68",
+      "content_hash": "85eee1ec8c934034fa557b72376e798678056074f4dbdfcf9e65f7d537aeff08",
+      "event_hash": "ee9405e0a74f0c8f215979097ea32547b1b1cba1c79379ea6bc1e314f9ecca2b"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "command": [
+    "C:/Users/dmaza/AppData/Local/hermes/node/node.exe",
+    "C:/Users/dmaza/AppData/Local/hermes/node/node_modules/npm/bin/npm-cli.js",
+    "--prefix",
+    "control-plane",
+    "test",
+    "--",
+    "--run",
+    "tests/assistant.test.tsx",
+    "--configLoader",
+    "runner",
+    "--no-cache",
+    "--pool=threads",
+    "--maxWorkers=1",
+    "--minWorkers=1",
+    "--reporter=default",
+    "--reporter=json",
+    "--outputFile=C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\ui04-reverification-20261009-131800\\TEST_RESULTS.json"
+  ],
+  "working_directory": "C:\\Users\\dmaza\\mcp-starter",
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "node:internal/modules/cjs/loader:1433\n  throw err;\n  ^\n\nError: Cannot find module 'C:Usersdmazamcp-starterdocsreportsui04-reverification-20261009-131800preload.cjs'\nRequire stack:\n- internal/preload\n    at Function._resolveFilename (node:internal/modules/cjs/loader:1430:15)\n    at defaultResolveImpl (node:internal/modules/cjs/loader:1040:19)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1045:22)\n    at Function._load (node:internal/modules/cjs/loader:1216:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)\n    at Module.require (node:internal/modules/cjs/loader:1527:12)\n    at node:internal/modules/cjs/loader:2071:12\n    at loadPreloadModules (node:internal/process/pre_execution:756:5)\n    at setupUserModules (node:internal/process/pre_execution:231:5)\n    at prepareExecution (node:internal/process/pre_execution:159:5) {\n  code: 'MODULE_NOT_FOUND',\n  requireStack: [ 'internal/preload' ]\n}\n\nNode.js v22.23.3\n",
+  "transient_test_environment": "Installed Node PATH; report-local npm cache and child-only guards. No global configuration or dependencies changed."
+}

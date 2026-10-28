@@ -1,0 +1,37 @@
+﻿{
+  "rag": {
+    "enabled": true,
+    "semantic_enabled": true,
+    "lexical_enabled": true,
+    "semantic_weight": 0.70,
+    "lexical_weight": 0.30,
+    "top_k": 5,
+    "min_score": 0.35,
+    "model": {
+      "name": "indobenchmark/indobert-base-p1",
+      "device": "cpu",
+      "load_once": true,
+      "singleton": true,
+      "cache_model": true,
+      "cache_tokenizer": true,
+      "keep_in_memory": true
+    },
+    "performance": {
+      "torch_threads": 4,
+      "torch_interop_threads": 1,
+      "max_sequence_length": 256,
+      "batch_size": 1
+    },
+    "retrieval": {
+      "use_sqlite_fts5": true,
+      "use_embeddings": true,
+      "rerank": true
+    },
+    "grounding": {
+      "enabled": true,
+      "evidence_first": true,
+      "allow_model_only_answer": false,
+      "max_evidence": 5
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "fixture_only": true,
+  "operational_approval_created": false,
+  "probes": [
+    {
+      "id": "A-01",
+      "requirement": "FR-07; DOCX section 6; Integrity",
+      "upload_status": "READY",
+      "document_title": "PERMOHONAN DATA PRIBADI",
+      "review_status": "Menunggu pemeriksaan isi",
+      "retrievable_before_enrollment": 1,
+      "retrievable_after_enrollment": 0,
+      "expected_before_approval": 0,
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A-02",
+      "requirement": "FR-04/05; Integrity",
+      "worker": "synthetic adapter; installed Docling not exercised by this probe",
+      "extraction_hash_before": "010b74721f23f1a339a0db9cea19d2c9943f8098263f48190fb230cf43a59c38",
+      "extraction_hash_after": "68a23acbaea82821dc62fbacf1b30b89ffbd41bc604dccb5114a8098f7198f9f",
+      "version_unchanged": true,
+      "approval_unchanged": true,
+      "status_after_changed_extraction": "Aktif",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A-03",
+      "requirement": "FR-14; Recoverability",
+      "seam": "existing backup_database function extracted by AST; isolated SQLite WAL",
+      "source_committed_rows": 1,
+      "backup_rows": 0,
+      "verdict": "FAIL"
+    },
+    {
+      "id": "A-04",
+      "requirement": "FR-03; Reliability/Security",
+      "malformed_length_http_status": 500,
+      "expected_status_class": "4xx validation rejection",
+      "seam": "ASGI TestClient; real HTTP listener may reject malformed header before ASGI",
+      "verdict": "FAIL"
+    }
+  ]
+}

@@ -1,0 +1,449 @@
+{
+  "source_drift_since_baseline": [],
+  "files_rechecked": 645,
+  "current_source_pins": [
+    {
+      "path": "app/api/routes.py",
+      "expected": "fabec5bc263597f4b6b0d6dd2d17100d23d966a1066b535c2fe6e78a7afa68b7",
+      "actual": "b6fec1e912784363962c0379c3fc96408576eb6acb2b1b0c5a853e6388f69372",
+      "matches": false
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "expected": "f5f83de5795a03c968c95aa1ae86fcfe7245d189a85aa081a52405f676fe406f",
+      "actual": "f5f83de5795a03c968c95aa1ae86fcfe7245d189a85aa081a52405f676fe406f",
+      "matches": true
+    },
+    {
+      "path": "app/core/config.py",
+      "expected": "4b5d1ee6acb6d75c5b4806fa8d7f3e1b3ee5794c8936b811f9bc569f7f1290be",
+      "actual": "4b5d1ee6acb6d75c5b4806fa8d7f3e1b3ee5794c8936b811f9bc569f7f1290be",
+      "matches": true
+    },
+    {
+      "path": "app/core/runtime_identity.py",
+      "expected": "f60d05f67c6db97d021798665763023bed92d5540509ded19cb68fcea9bbdeb4",
+      "actual": "f60d05f67c6db97d021798665763023bed92d5540509ded19cb68fcea9bbdeb4",
+      "matches": true
+    },
+    {
+      "path": "app/core/control_plane_projection.py",
+      "expected": "d2e865ecd142f647d983eb1ed56851d32e6ccfb2c2d392397ead5a0a0a98a58f",
+      "actual": "d2e865ecd142f647d983eb1ed56851d32e6ccfb2c2d392397ead5a0a0a98a58f",
+      "matches": true
+    },
+    {
+      "path": "app/developer_core/engine.py",
+      "expected": "5f6bdc41cf7cd6960dcac84d5aea24a630952d54b6f323aa254c0d286c38e885",
+      "actual": "5f6bdc41cf7cd6960dcac84d5aea24a630952d54b6f323aa254c0d286c38e885",
+      "matches": true
+    },
+    {
+      "path": "app/trust/engine.py",
+      "expected": "3808ddb21c78f1fbf72581254c9097485f49c86c02dee4dbb54809e8b8aea735",
+      "actual": "3808ddb21c78f1fbf72581254c9097485f49c86c02dee4dbb54809e8b8aea735",
+      "matches": true
+    },
+    {
+      "path": "app/policy/engine.py",
+      "expected": "88587046801d0315a038d85d441030149ff97bcd9a16a9e937a99e755a0d2ffc",
+      "actual": "88587046801d0315a038d85d441030149ff97bcd9a16a9e937a99e755a0d2ffc",
+      "matches": true
+    }
+  ],
+  "historical_evidence": [
+    {
+      "path": "artifacts/document-chat-20261023/tests.xml",
+      "exists": true,
+      "sha256": "7bae3caaff1100af7f4a6ad13e9bfcd9d8345036e83b02a71a4a138c471c9031",
+      "provenance": "historical artifact; not current runtime evidence",
+      "tests": 109,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "path": "artifacts/v1-execution/regression-final.xml",
+      "exists": true,
+      "sha256": "1b0b88a2a8bc64252d62e27394673eccc89fae9e8335dd84c1b19f9cbf270bb0",
+      "provenance": "historical artifact; not current runtime evidence",
+      "tests": 473,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 17
+    },
+    {
+      "path": "artifacts/docling-ui/answers.json",
+      "exists": true,
+      "sha256": "9837ccfb4e9c928b85bda1e49c94d20ad4c77b57f6c36b5b3d5fecc929aeb144",
+      "provenance": "historical artifact; not current runtime evidence",
+      "saved_answer_entries": 9
+    },
+    {
+      "path": "artifacts/docling-main-chat/answers.json",
+      "exists": true,
+      "sha256": "5bc3607ed9332713607c36902ad5ab0c7489619414dc213b537598be1aab6cdb",
+      "provenance": "historical artifact; not current runtime evidence",
+      "saved_answer_entries": 3
+    }
+  ],
+  "graph_bytes": 65991241,
+  "graph_consumer_byte_limit": 16777216,
+  "routes": [
+    {
+      "file": "app/main.py",
+      "line": 105,
+      "method": "GET",
+      "route": "/health"
+    },
+    {
+      "file": "app/main.py",
+      "line": 114,
+      "method": "GET",
+      "route": "/"
+    },
+    {
+      "file": "app/main.py",
+      "line": 114,
+      "method": "GET",
+      "route": "/ui"
+    },
+    {
+      "file": "app/main.py",
+      "line": 114,
+      "method": "GET",
+      "route": "/assistant"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 18,
+      "method": "GET",
+      "route": "/cost-summary"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 62,
+      "method": "GET",
+      "route": "/model-status"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 113,
+      "method": "GET",
+      "route": "/models"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 142,
+      "method": "POST",
+      "route": "/model-selection"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 171,
+      "method": "GET",
+      "route": "/snapshot"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 203,
+      "method": "GET",
+      "route": "/knowledge-status"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 247,
+      "method": "GET",
+      "route": "/evidence-package"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 256,
+      "method": "POST",
+      "route": "/decisions"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 289,
+      "method": "GET",
+      "route": "/decisions"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 308,
+      "method": "POST",
+      "route": "/intention"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 375,
+      "method": "GET",
+      "route": "/execution-context"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 385,
+      "method": "POST",
+      "route": "/execute-reviewed"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 398,
+      "method": "GET",
+      "route": "/history"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 412,
+      "method": "GET",
+      "route": "/operations-summary"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 482,
+      "method": "GET",
+      "route": "/hermes/connection"
+    },
+    {
+      "file": "app/api/control_plane.py",
+      "line": 489,
+      "method": "POST",
+      "route": "/hermes/connection"
+    },
+    {
+      "file": "app/api/inspection_preview.py",
+      "line": 21,
+      "method": "POST",
+      "route": "/dev/inspection-preview"
+    },
+    {
+      "file": "app/api/knowledge_pipeline.py",
+      "line": 40,
+      "method": "GET",
+      "route": "/reviews/{document_id}"
+    },
+    {
+      "file": "app/api/knowledge_pipeline.py",
+      "line": 60,
+      "method": "POST",
+      "route": "/reviews/{document_id}/process"
+    },
+    {
+      "file": "app/api/knowledge_pipeline.py",
+      "line": 69,
+      "method": "GET",
+      "route": "/reviews/{document_id}/source"
+    },
+    {
+      "file": "app/api/knowledge_pipeline.py",
+      "line": 97,
+      "method": "POST",
+      "route": "/reviews/{document_id}/decision"
+    },
+    {
+      "file": "app/api/knowledge_pipeline.py",
+      "line": 105,
+      "method": "POST",
+      "route": "/reviews/{document_id}/trials/{trial_id}/rating"
+    },
+    {
+      "file": "app/api/knowledge_pipeline.py",
+      "line": 113,
+      "method": "POST",
+      "route": "/documents"
+    },
+    {
+      "file": "app/api/knowledge_pipeline.py",
+      "line": 134,
+      "method": "POST",
+      "route": "/runs/{run_id}/retry"
+    },
+    {
+      "file": "app/api/knowledge_pipeline.py",
+      "line": 143,
+      "method": "GET",
+      "route": "/status"
+    },
+    {
+      "file": "app/api/knowledge_pipeline.py",
+      "line": 156,
+      "method": "POST",
+      "route": "/watch"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 933,
+      "method": "GET",
+      "route": "/health"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 939,
+      "method": "GET",
+      "route": "/health/detail"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1018,
+      "method": "GET",
+      "route": "/chat/history"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1052,
+      "method": "POST",
+      "route": "/chat"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1307,
+      "method": "POST",
+      "route": "/problem/analyze"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1352,
+      "method": "POST",
+      "route": "/workflow/create"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1374,
+      "method": "GET",
+      "route": "/workflow/{workflow_id}"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1405,
+      "method": "POST",
+      "route": "/documents/ingest"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1436,
+      "method": "POST",
+      "route": "/knowledge/search"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1484,
+      "method": "GET",
+      "route": "/knowledge/documents"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1501,
+      "method": "POST",
+      "route": "/human/handoff"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1549,
+      "method": "GET",
+      "route": "/metrics"
+    },
+    {
+      "file": "app/api/routes.py",
+      "line": 1580,
+      "method": "GET",
+      "route": "/developer-core"
+    },
+    {
+      "file": "app/api/runtime_verification.py",
+      "line": 167,
+      "method": "POST",
+      "route": "dynamic"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 45,
+      "method": "GET",
+      "route": "/review"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 81,
+      "method": "GET",
+      "route": "/health"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 86,
+      "method": "POST",
+      "route": "/chat"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 183,
+      "method": "POST",
+      "route": "/memory/sessions"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 196,
+      "method": "POST",
+      "route": "/memory/delete"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 204,
+      "method": "GET",
+      "route": "/metrics"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 209,
+      "method": "GET",
+      "route": "/approvals/pending"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 217,
+      "method": "POST",
+      "route": "/approvals/{approval_id}/decision"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 228,
+      "method": "GET",
+      "route": "/audit/verify"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 242,
+      "method": "POST",
+      "route": "/feedback"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 254,
+      "method": "GET",
+      "route": "/experience/analysis"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 289,
+      "method": "POST",
+      "route": "/research/proposals"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 309,
+      "method": "POST",
+      "route": "/discovery/candidates"
+    },
+    {
+      "file": "app/api/v2_routes.py",
+      "line": 327,
+      "method": "POST",
+      "route": "/dev"
+    },
+    {
+      "file": "app/core/runtime_attestation.py",
+      "line": 143,
+      "method": "GET",
+      "route": "dynamic"
+    }
+  ],
+  "route_warning": "static decorators include optional/experimental/backup files; not installed-route proof"
+}

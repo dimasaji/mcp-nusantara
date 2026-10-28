@@ -1,0 +1,113 @@
+--- a/control-plane/src/api.ts
++++ b/control-plane/src/api.ts
+@@ -34,10 +34,23 @@
+   evidence:z.array(z.object({document_id:z.string(),title:z.string(),chunk:z.string(),score:z.number()}).strict())}).strict();
+ export type PublicChat=z.infer<typeof PublicChatSchema>;
+ export async function sendUserChat(user_input:string,session_id:string){
+-  const result=PublicChatSchema.safeParse(await runtimeFetch('/v1/chat',{method:'POST',
+-    headers:{'Content-Type':'application/json'},body:JSON.stringify({user_input,session_id})}));
+-  if(!result.success)throw new Error('Jawaban tidak sesuai kontrak layanan. Silakan coba kembali.');
+-  return result.data;
++  const controller=new AbortController();
++  let timeout:ReturnType<typeof setTimeout>|undefined;
++  try{
++    const deadline=new Promise<never>((_,reject)=>{
++      timeout=setTimeout(()=>{
++        reject(new Error('Batas waktu 30 detik tercapai. Backend mungkin masih memproses permintaan ini; pembatalan di browser tidak menjamin pembatalan di server. Coba lagi hanya secara manual.'));
++        controller.abort(); // Browser abort does not guarantee backend/provider cancellation.
++      },30000);
++    });
++    const result=PublicChatSchema.safeParse(await Promise.race([
++      runtimeFetch('/v1/chat',{method:'POST',signal:controller.signal,
++        headers:{'Content-Type':'application/json'},body:JSON.stringify({user_input,session_id})}),
++      deadline,
++    ]));
++    if(!result.success)throw new Error('Jawaban tidak sesuai kontrak layanan. Silakan coba kembali.');
++    return result.data;
++  }finally{if(timeout!==undefined)clearTimeout(timeout);}
+ }
+ 
+ const InspectionPreviewSchema = z.object({
+--- a/control-plane/tests/assistant.test.tsx
++++ b/control-plane/tests/assistant.test.tsx
+@@ -1,11 +1,78 @@
+-import {render,screen,fireEvent,waitFor} from '@testing-library/react';
++import {act,render,screen,fireEvent,waitFor} from '@testing-library/react';
+ import {afterEach,describe,it,expect,vi} from 'vitest';
+ import {UserChat,OperatorConsole} from '../src/assistant';
++import {fetchModelStatus,fetchAvailableModels,selectOperatorModel,sendUserChat} from '../src/api';
+ vi.mock('@tanstack/react-router',()=>({Link:({to,children}:{to:string;children:React.ReactNode})=><a href={to}>{children}</a>}));
+-afterEach(()=>vi.unstubAllGlobals());
++afterEach(()=>{vi.useRealTimers();vi.restoreAllMocks();vi.unstubAllGlobals();});
+ const status={model:'fixture-a',provider:'ollama',revision:0,process_id:42,consistency_scope:'CURRENT_PROCESS_ONLY',availability:'NOT_VERIFIED',status:'NOT_VERIFIED',selection_enabled:true,selection_source:'BOOTSTRAP',last_request:null};
+ const answer={session_id:'session',response:'Jawaban aman dari Hermes.',model:'fixture-a',provider_status:'ollama',latency_ms:2,timestamp:'2026-10-09',trust:{supports_claim:true,confidence:.9,risk_level:'low',requires_human:false,evidence_count:0,evidence_available:false},grounding:{enabled:true,grounded:true,reason:'grounded'},understanding:{intent:'general'},problem:{goal:null},evidence:[]};
+ describe('V1 user and operator surfaces',()=>{
++  it.each([false,true])('releases a stalled chat at 30 seconds and preserves manual retry when fetch honors abort: %s',async(honorsAbort)=>{
++    vi.useFakeTimers();
++    const fetch=vi.fn((path:string,options?:RequestInit)=>{
++      if(path!=='/v1/chat')return Promise.resolve({ok:true,json:async()=>status});
++      return new Promise<never>((_,reject)=>{
++        if(honorsAbort)options?.signal?.addEventListener('abort',()=>reject(new DOMException('Aborted','AbortError')),{once:true});
++      });
++    });vi.stubGlobal('fetch',fetch);
++    render(<UserChat/>);
++    await act(async()=>{await Promise.resolve();});
++    fireEvent.change(screen.getByLabelText('Pertanyaan Anda'),{target:{value:'Pertanyaan tetap tersedia'}});
++    fireEvent.click(screen.getByRole('button',{name:'Kirim pertanyaan'}));
++    expect(screen.getByRole('button',{name:'Memprosesâ€¦'})).toBeDisabled();
++    await act(async()=>{await vi.advanceTimersByTimeAsync(29999);});
++    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
++    expect(screen.getByRole('button',{name:'Memprosesâ€¦'})).toBeDisabled();
++    await act(async()=>{await vi.advanceTimersByTimeAsync(1);});
++    expect(screen.getByRole('alert')).toHaveTextContent('Batas waktu 30 detik');
++    expect(screen.getByRole('alert')).toHaveTextContent('Backend mungkin masih memproses');
++    expect(screen.getByRole('alert')).toHaveTextContent('tidak menjamin pembatalan di server');
++    expect(screen.getByLabelText('Pertanyaan Anda')).toHaveValue('Pertanyaan tetap tersedia');
++    expect(screen.getByRole('button',{name:'Kirim pertanyaan'})).toBeEnabled();
++    expect(screen.getByRole('button',{name:'+ New Chat'})).toBeEnabled();
++    const first=fetch.mock.calls.filter(([path])=>path==='/v1/chat');
++    expect(first).toHaveLength(1);expect(first[0][1]?.signal?.aborted).toBe(true);
++    expect(vi.getTimerCount()).toBe(0);
++    await act(async()=>{await vi.advanceTimersByTimeAsync(60000);});
++    expect(fetch.mock.calls.filter(([path])=>path==='/v1/chat')).toHaveLength(1);
++    fireEvent.click(screen.getByRole('button',{name:'Kirim pertanyaan'}));
++    const chats=fetch.mock.calls.filter(([path])=>path==='/v1/chat');
++    expect(chats).toHaveLength(2);
++    expect(JSON.parse(chats[1][1]?.body as string)).toEqual(JSON.parse(chats[0][1]?.body as string));
++    expect(chats[1][1]?.signal).not.toBe(chats[0][1]?.signal);
++    expect(chats[1][1]?.signal?.aborted).toBe(false);
++    expect(fetch.mock.calls.every(([path])=>path==='/v1/chat'||path==='/v1/control-plane/model-status')).toBe(true);
++    await act(async()=>{await vi.advanceTimersByTimeAsync(30000);});
++    expect(vi.getTimerCount()).toBe(0);
++  });
++  it.each(['success','http error','network error','invalid response'])('clears the chat deadline after %s',async(outcome)=>{
++    vi.useFakeTimers();
++    const fetch=vi.fn(async()=>{
++      if(outcome==='network error')throw new Error('Koneksi gagal');
++      return outcome==='http error'?{ok:false,status:503}:{ok:true,json:async()=>outcome==='invalid response'?{}:answer};
++    });vi.stubGlobal('fetch',fetch);
++    const request=sendUserChat('Pertanyaan','same-session');
++    if(outcome==='success')await expect(request).resolves.toEqual(answer);
++    else await expect(request).rejects.toThrow(outcome==='http error'?'503':outcome==='network error'?'Koneksi gagal':'kontrak layanan');
++    expect(vi.getTimerCount()).toBe(0);
++    const options=fetch.mock.calls[0] as unknown as [string,RequestInit];
++    expect(options[1].signal?.aborted).toBe(false);
++    await vi.advanceTimersByTimeAsync(30000);
++    expect(options[1].signal?.aborted).toBe(false);expect(fetch).toHaveBeenCalledTimes(1);
++  });
++  it('keeps model-control fetches outside the chat deadline',async()=>{
++    vi.useFakeTimers();
++    const resolvers:(()=>void)[]=[];
++    const fetch=vi.fn((path:string)=>new Promise(resolve=>resolvers.push(()=>resolve({ok:true,json:async()=>path.endsWith('/models')?{models:['fixture-a'],observed_revision:0}:status}))));
++    vi.stubGlobal('fetch',fetch);
++    const requests=[fetchModelStatus(),fetchAvailableModels('test-token'),selectOperatorModel('fixture-a',0,'test-token')];
++    expect(vi.getTimerCount()).toBe(0);
++    await vi.advanceTimersByTimeAsync(60000);
++    expect(fetch).toHaveBeenCalledTimes(3);
++    expect(fetch.mock.calls.every((call)=>(call as unknown as [string,RequestInit])[1].signal===undefined)).toBe(true);
++    resolvers.forEach(resolve=>resolve());await Promise.all(requests);
++    expect(vi.getTimerCount()).toBe(0);
++  });
+   it('starts a new client conversation without deleting server memory',async()=>{
+     const fetch=vi.fn(async(path:string)=>({ok:true,json:async()=>path==='/v1/chat'?answer:status}));vi.stubGlobal('fetch',fetch);
+     render(<UserChat/>);

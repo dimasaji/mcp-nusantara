@@ -1,0 +1,124 @@
+{
+  "classification": "NEW_READONLY_OBSERVATION_AND_DISK_SOURCE_COMPARISON",
+  "process_binding_status": "VERIFIED",
+  "repository_root": "C:\\Users\\dmaza\\mcp-starter",
+  "process_working_directory": "C:\\Users\\dmaza\\mcp-starter",
+  "working_directory_matches_repository": true,
+  "runtime_instance": "e8e33cd84be14c7b85df4e003513fc10",
+  "readiness_instance_matches": true,
+  "process_source_snapshot": "sha256:9789c2760ba7e78a4e6c5f6c7b1a5dec775c76f362cb40bb09d39e7d377a44df",
+  "current_disk_source_snapshot": "sha256:fea32d2a822f9a23a5ae8de62b61a0fe7dfe1ba6d8cf2b8f4f072c53543ad25a",
+  "process_source_matches_current_disk": false,
+  "source_snapshot_inputs": 211,
+  "source_algorithm_file_sha256": "37ea9d6992f6ce0df7ccf47a8ab2315a7e5b546190b38f9e37a6aa6b63160e8e",
+  "source_algorithm_classification": "INSPECTED_CURRENT_DISK_FUNCTION_AST_NOT_APP_IMPORT",
+  "live_scoped_loaded_code": "sha256:de7d20b64ee306483de026bb7bbce24763bb64d180b42c24a961d8eac23fbf60",
+  "live_scoped_current_registered_code": "sha256:de7d20b64ee306483de026bb7bbce24763bb64d180b42c24a961d8eac23fbf60",
+  "live_scoped_binding": "MATCH",
+  "scoped_current_disk_comparison": [
+    {
+      "symbol": "identity:app.core.runtime_attestation._code_fingerprint",
+      "code_sha256": "28bf1073f9a7af683c20b81552f56b21e28fc4c595be15e7f7bb188923700abe",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "28bf1073f9a7af683c20b81552f56b21e28fc4c595be15e7f7bb188923700abe",
+      "matches_disk_code": true
+    },
+    {
+      "symbol": "identity:app.core.runtime_attestation._loaded_code_manifest",
+      "code_sha256": "fdf3b25288718e990d91f4b2614e547e5b3678763dff3a71c115de2c72df0641",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "fdf3b25288718e990d91f4b2614e547e5b3678763dff3a71c115de2c72df0641",
+      "matches_disk_code": true
+    },
+    {
+      "symbol": "identity:app.core.runtime_attestation._manifest_hash",
+      "code_sha256": "1672f198af7c650fbf52e7782d453ec409e149bd5d3ca2ad017b392092455bf4",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "1672f198af7c650fbf52e7782d453ec409e149bd5d3ca2ad017b392092455bf4",
+      "matches_disk_code": true
+    },
+    {
+      "symbol": "identity:app.core.runtime_attestation._process_identity",
+      "code_sha256": "9fe5a45cad5eb7d56028a3cf09e8e1f18c9c4258336c9bf531041e3e1c814962",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "9fe5a45cad5eb7d56028a3cf09e8e1f18c9c4258336c9bf531041e3e1c814962",
+      "matches_disk_code": true
+    },
+    {
+      "symbol": "identity:app.core.runtime_attestation.install_runtime_attestation",
+      "code_sha256": "f6a266da4e850f0892c4ee8b9e6e1a8e9b0253a98bfbbaa9f1327cc58123cd6d",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "f6a266da4e850f0892c4ee8b9e6e1a8e9b0253a98bfbbaa9f1327cc58123cd6d",
+      "matches_disk_code": true
+    },
+    {
+      "symbol": "identity:app.core.runtime_identity.current_runtime_instance",
+      "code_sha256": "8f10362c24e7f8b1486c10b1b5b19bb5ef21fb34113dae083ce5b4043f7eaaea",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "8f10362c24e7f8b1486c10b1b5b19bb5ef21fb34113dae083ce5b4043f7eaaea",
+      "matches_disk_code": true
+    },
+    {
+      "symbol": "middleware:app.main.request_id_middleware",
+      "code_sha256": "1fd5429342b7f4cb57eb260e16f846c32392c6ab6126ba19196ea3ed6dae8925",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "1fd5429342b7f4cb57eb260e16f846c32392c6ab6126ba19196ea3ed6dae8925",
+      "matches_disk_code": true
+    },
+    {
+      "symbol": "route:GET,HEAD:/docs/oauth2-redirect:fastapi.applications.FastAPI.setup.<locals>.swagger_ui_redirect",
+      "code_sha256": "60a5aa46a876be11928ca46de87b360cb56f5657e8f3b0c14f27213f938dd5a2",
+      "disk_comparison_status": "NOT_OBSERVABLE"
+    },
+    {
+      "symbol": "route:GET,HEAD:/docs:fastapi.applications.FastAPI.setup.<locals>.swagger_ui_html",
+      "code_sha256": "f5b96a3f603528c95b27c4119429e129badef19f05cd7add0a883009cdfa8b11",
+      "disk_comparison_status": "NOT_OBSERVABLE"
+    },
+    {
+      "symbol": "route:GET,HEAD:/openapi.json:fastapi.applications.FastAPI.setup.<locals>.openapi",
+      "code_sha256": "1f284d0b1440c449c7ffece35a9f5d99344b6925dc965af6b17205378521345e",
+      "disk_comparison_status": "NOT_OBSERVABLE"
+    },
+    {
+      "symbol": "route:GET,HEAD:/redoc:fastapi.applications.FastAPI.setup.<locals>.redoc_html",
+      "code_sha256": "c0ad85adb0888d8307cc853a504975a82f7de65f78d9cbdf56829a93c66d15eb",
+      "disk_comparison_status": "NOT_OBSERVABLE"
+    },
+    {
+      "symbol": "route:GET:/:app.main.dashboard",
+      "code_sha256": "82e2768ce38c64ff0166e66465281891273eb252dfa2e4a42c5ea604de420bd5",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "82e2768ce38c64ff0166e66465281891273eb252dfa2e4a42c5ea604de420bd5",
+      "matches_disk_code": true
+    },
+    {
+      "symbol": "route:GET:/health:app.main.health_check",
+      "code_sha256": "52464558561bb9ee1c717e2248dc19276e6f62a3856a8a800fcba14bd7b3f8ad",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "52464558561bb9ee1c717e2248dc19276e6f62a3856a8a800fcba14bd7b3f8ad",
+      "matches_disk_code": true
+    },
+    {
+      "symbol": "route:GET:/ui:app.main.dashboard",
+      "code_sha256": "82e2768ce38c64ff0166e66465281891273eb252dfa2e4a42c5ea604de420bd5",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "82e2768ce38c64ff0166e66465281891273eb252dfa2e4a42c5ea604de420bd5",
+      "matches_disk_code": true
+    },
+    {
+      "symbol": "route:GET:/v1/runtime/attestation:app.core.runtime_attestation.install_runtime_attestation.<locals>.runtime_attestation",
+      "code_sha256": "db02b6e11e16087ac876a888cbb0322acd274e459a64f2b0e2e4f714f62f6410",
+      "disk_comparison_status": "VERIFIED",
+      "disk_code_sha256": "db02b6e11e16087ac876a888cbb0322acd274e459a64f2b0e2e4f714f62f6410",
+      "matches_disk_code": true
+    }
+  ],
+  "scope_limit": "Source compile comparison only, non-transitive; excludes dependency code, globals, closures, native/assets and actual provider.",
+  "ACTIVE_PROCESS_BUILD": "NOT_DIRECTLY_VERIFIED",
+  "Runtime Identity": "NOT_VERIFIED",
+  "provider_model_correlation": "NOT_VERIFIED",
+  "actual_model": null,
+  "provider_invocation": null,
+  "provider_receipt_exposed": false
+}

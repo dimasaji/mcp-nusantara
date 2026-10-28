@@ -1,0 +1,41 @@
+﻿NUSANTARA CONTROL PLANE — DECISION REPAIR
+
+Repository: C:\Users\dmaza\mcp-starter
+Target: http://127.0.0.1:8000/decision
+Current package: evp_sha256_36bb8d0cdb4ff24fc994d87f8713877caf5a53bfe674d23dd0c9519ddeb574b6
+Primary blocker: TEST_SOURCE_CHANGED_AFTER_RUN
+
+Use the current repository state and the preflight artifacts in the newest
+docs/reports/decision-repair-* directory.
+
+1. Diagnose the exact cause of TEST_SOURCE_CHANGED_AFTER_RUN by tracing
+   test-run source hashes, evidence validation, package generation/refresh,
+   and the PASS eligibility gate. Do not assume one cause without evidence.
+
+2. Preserve historical results. Never rewrite an old test report to make
+   hashes match. Run the relevant tests against current source, recording
+   actual command, timestamp, exit code, source hashes, and result paths.
+
+3. Fix the minimum proven defect in the existing Evidence refresh/package
+   workflow. A fresh package must be derived from validated evidence.
+   Missing, stale, invalid, blocked, and unverified evidence must retain
+   their distinct statuses.
+
+4. Test the Decision API and UI: authorized and unauthorized reviewer,
+   package ID binding, audit entry, stale-package invalidation, PASS gate,
+   and authorized HOLD/FAIL. PASS must remain disabled until every mandatory
+   criterion is verified. Never bypass validation or fabricate PASS.
+
+5. Use the existing isolated test runner and UI test setup where feasible.
+   If the test environment or service is blocked, report the exact error;
+   do not claim a test passed if it did not execute successfully.
+
+6. Do not change the admin token, /v2, database schema/host data, protected
+   SQLite WAL/SHM files, model/RAG policy, or production deployment.
+   Preserve unrelated user changes.
+
+7. Refresh the evidence package only after relevant results are validated.
+   Report the new package ID, AC1-AC15 status, tests actually run, changed
+   files, artifact paths, and remaining blockers.
+
+Start with read-only diagnosis. Make only evidence-justified changes.

@@ -1,0 +1,445 @@
+{
+  "phase": "R2",
+  "status": "PARTIAL",
+  "closure_gate": "FINAL_OWNER_ACCEPTANCE_PENDING",
+  "timestamp": "2026-10-07T08:55:41.516071+00:00",
+  "authorization": "R2 AUTHORIZATION GRANTED in current human turn; contract MDA-R2-AUTH-001; controlled implementation only",
+  "contract": "docs/commands/MDA-R2-AUTHORIZATION-CONTRACT.md",
+  "contract_sha256": "dfe5463d1bbc88c8e3faf0e28bb6ca4684d95b19428a71761205cf513c973f91",
+  "root": "C:\\Users\\dmaza\\mcp-starter",
+  "branch": "codex/fullroot-control-20261007",
+  "head": "c24aa1b0db391009af44682bf2f2eb091f4f0f75",
+  "precondition": {
+    "R1_closure": "CLOSED_PASS (verified handoff hash)",
+    "R1_tests_before": 13,
+    "API_tests_before": 30,
+    "protected_hashes_before": 359,
+    "database_integrity": "ok immutable read-only"
+  },
+  "changes": [
+    {
+      "path": "app/core/runtime_identity.py",
+      "before_sha256": "3ec47b16c5cf9c4d56210db854e5c460a4f714d292665719ccabf15b7ebae791",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/core/runtime_identity.py",
+      "after_sha256": "13eeb4b0dc2286bcc0f635cea840f4a1ab7d49ae85a96580c5461078f6b9c7fa"
+    },
+    {
+      "path": "app/models/base.py",
+      "before_sha256": "009297b09ddb3a56b4c038473d1839aa2f431409f7c9951a1cb94a40c2041892",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/base.py",
+      "after_sha256": "ebce1420ea29cc2604fa552bc855568755b5190fe53ca1c090fb20179599136e"
+    },
+    {
+      "path": "app/models/ollama.py",
+      "before_sha256": "a066e2930aa2d30be82e2b54a1a159a2406f75090c85121dec615af043126892",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/ollama.py",
+      "after_sha256": "d52921a64f0e18eea3990d0b560d474799f92e5afeae164c174543585662eaa9"
+    },
+    {
+      "path": "app/models/openai_compatible.py",
+      "before_sha256": "2832989348208b0d3706660d3dfe30d04590e83c11ab6f1662cc18806e23981a",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/openai_compatible.py",
+      "after_sha256": "8c906eac626234335447340611d27e69eaa46d6c1deaea90e9a37f887d4ca492"
+    },
+    {
+      "path": "app/models/router.py",
+      "before_sha256": "dd7e3a9da2aac5b9edc742f1bb6670ded6ed96f212079f720d2918fe9f9fbfff",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/router.py",
+      "after_sha256": "81c6c84339dc6d1a1aa3a466d14fe97bbb8bbd4cccc242689e021ce9c65f8cfd"
+    },
+    {
+      "path": "app/models/gateway.py",
+      "before_sha256": "a79fbaa0f3b9a1e3f386e33646e8cbda934168146f5213b4aab860092c3991e3",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/gateway.py",
+      "after_sha256": "c0e31d563675e4b81be24c74c27b76a2b9447f23f5401374b77b5a7ed7d7a2cd"
+    },
+    {
+      "path": "app/api/routes.py",
+      "before_sha256": "336ca3c55e85b33e604f8494e4ceb89221dc0d8c79a0e98db550634bd59e1b51",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/api/routes.py",
+      "after_sha256": "868ceb4b07564c5ec7bcf29efdbfbcf428e627d3db93f961f4fe9f3ed9b677ed"
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "before_sha256": "668fd8422ff90c0e365c6fb5a3d468e2e02121dd3e9819bd0a6281609bf9bac8",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/api/v2_routes.py",
+      "after_sha256": "65b2c77d795aff6094634a22d09c1c82292d6c2a993d968e11bdc2c40eab992b"
+    },
+    {
+      "path": "tests/test_provider_identity.py",
+      "before_sha256": null,
+      "existed": false,
+      "after_sha256": "492e2c3e288c425941031ce9ff97dee95f431c6d8a5775ff0c423d1cda2bbc43"
+    }
+  ],
+  "tests": {
+    "focused-regression.xml": {
+      "tests": 93,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "c4953d116839700c8902dadf9927c979a532a090ca14cb5c26e19154c25fcfb0"
+    },
+    "r1-after.xml": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "032e8688539811227248b7d5d01a88a36fe0d7425031df7838c451ef390137cd"
+    },
+    "api-after.xml": {
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "005289fcd71f4ca32096decdec6d6566942158eb812f59a80958667ac3b46294"
+    }
+  },
+  "gates": {
+    "R2.1": {
+      "status": "PASS",
+      "evidence": "Canonical provider identity captured; configured Ollama mismatch remains rejected; legacy wrappers not promoted to verified.",
+      "validation_scope": "Configured canonical Nusantara path and isolated regression fixtures; no production deployment claim"
+    },
+    "R2.2": {
+      "status": "PASS",
+      "evidence": "Existing R1 composition owner and llm.model provenance retained; configuration regressions pass."
+    },
+    "R2.3": {
+      "status": "PASS",
+      "evidence": "Immutable effective configuration fingerprint separated from selected/payload model and explicit overrides."
+    },
+    "R2.4": {
+      "status": "PASS",
+      "evidence": "Actual Ollama response model llama3.2:1b and done=true; absent/incomplete/mismatched reports classified honestly. Provider report, not weight attestation.",
+      "validation_scope": "Configured canonical Nusantara path and isolated regression fixtures; no production deployment claim"
+    },
+    "R2.5": {
+      "status": "PASS",
+      "evidence": "Runtime PID/interpreter/source build correlation matches; no claim about a deployed API process.",
+      "validation_scope": "Configured canonical Nusantara path and isolated regression fixtures; no production deployment claim"
+    },
+    "R2.6": {
+      "status": "PASS",
+      "evidence": "Existing deterministic router remains sole registry; frozen selection/name/model binding and gateway receipt checks."
+    },
+    "R2.7": {
+      "status": "PASS",
+      "evidence": "Omitted model and explicit legacy-default model have distinct provenance; V1/V2 request overrides tagged; empty model retains previous fallback."
+    },
+    "R2.8": {
+      "status": "NOT_APPLICABLE",
+      "evidence": "Canonical router/gateway does not perform provider failover; provider failures propagate, no silent substitution; OpenAI text-JSON format fallback explicitly distinguished from provider failover.",
+      "validation_scope": "Canonical provider router/gateway path; no automatic provider failover added"
+    },
+    "R2.9": {
+      "status": "PASS",
+      "evidence": "Authorized additive /v1/health/detail identity projection separates service/provider/model/build and verification; legacy fields identical for available, missing-model and unavailable states; secrets/private paths and fabricated private receipts excluded. Live controlled endpoint health returns NOT_VERIFIED, not execution claims."
+    },
+    "R2.10": {
+      "status": "PASS",
+      "evidence": "Fresh actual endpoint handler in isolated FastAPI harness plus canonical Nusantara gateway -> Ollama generation in same process; current build/process/provider/actual model correlate. No production app service startup.",
+      "validation_scope": "CONTROLLED_RUNTIME_ONLY"
+    }
+  },
+  "integrity": {
+    "protected_checked": 350,
+    "protected_mismatch": [],
+    "parent_source_mismatch": [],
+    "outside_R2_source_mismatch": [],
+    "original_evidence_mismatch": [],
+    "unexpected_new_source": [],
+    "owned_whitespace": [],
+    "static_syntax": "2/2 PASS",
+    "staged_unchanged": true,
+    "git_check": {
+      "exit": 2,
+      "inherited_trailing_whitespace": true,
+      "inherited_blank_EOF": true
+    },
+    "source_hashes": [
+      {
+        "path": "app/core/runtime_identity.py",
+        "before_sha256": "3ec47b16c5cf9c4d56210db854e5c460a4f714d292665719ccabf15b7ebae791",
+        "existed": true,
+        "backup": ".dev/checkpoints/r2-20261007/source-before/app/core/runtime_identity.py",
+        "after_sha256": "13eeb4b0dc2286bcc0f635cea840f4a1ab7d49ae85a96580c5461078f6b9c7fa"
+      },
+      {
+        "path": "app/models/base.py",
+        "before_sha256": "009297b09ddb3a56b4c038473d1839aa2f431409f7c9951a1cb94a40c2041892",
+        "existed": true,
+        "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/base.py",
+        "after_sha256": "ebce1420ea29cc2604fa552bc855568755b5190fe53ca1c090fb20179599136e"
+      },
+      {
+        "path": "app/models/ollama.py",
+        "before_sha256": "a066e2930aa2d30be82e2b54a1a159a2406f75090c85121dec615af043126892",
+        "existed": true,
+        "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/ollama.py",
+        "after_sha256": "d52921a64f0e18eea3990d0b560d474799f92e5afeae164c174543585662eaa9"
+      },
+      {
+        "path": "app/models/openai_compatible.py",
+        "before_sha256": "2832989348208b0d3706660d3dfe30d04590e83c11ab6f1662cc18806e23981a",
+        "existed": true,
+        "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/openai_compatible.py",
+        "after_sha256": "8c906eac626234335447340611d27e69eaa46d6c1deaea90e9a37f887d4ca492"
+      },
+      {
+        "path": "app/models/router.py",
+        "before_sha256": "dd7e3a9da2aac5b9edc742f1bb6670ded6ed96f212079f720d2918fe9f9fbfff",
+        "existed": true,
+        "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/router.py",
+        "after_sha256": "81c6c84339dc6d1a1aa3a466d14fe97bbb8bbd4cccc242689e021ce9c65f8cfd"
+      },
+      {
+        "path": "app/models/gateway.py",
+        "before_sha256": "a79fbaa0f3b9a1e3f386e33646e8cbda934168146f5213b4aab860092c3991e3",
+        "existed": true,
+        "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/gateway.py",
+        "after_sha256": "c0e31d563675e4b81be24c74c27b76a2b9447f23f5401374b77b5a7ed7d7a2cd"
+      },
+      {
+        "path": "app/api/routes.py",
+        "before_sha256": "336ca3c55e85b33e604f8494e4ceb89221dc0d8c79a0e98db550634bd59e1b51",
+        "existed": true,
+        "backup": ".dev/checkpoints/r2-20261007/source-before/app/api/routes.py",
+        "after_sha256": "868ceb4b07564c5ec7bcf29efdbfbcf428e627d3db93f961f4fe9f3ed9b677ed"
+      },
+      {
+        "path": "app/api/v2_routes.py",
+        "before_sha256": "668fd8422ff90c0e365c6fb5a3d468e2e02121dd3e9819bd0a6281609bf9bac8",
+        "existed": true,
+        "backup": ".dev/checkpoints/r2-20261007/source-before/app/api/v2_routes.py",
+        "after_sha256": "65b2c77d795aff6094634a22d09c1c82292d6c2a993d968e11bdc2c40eab992b"
+      },
+      {
+        "path": "tests/test_provider_identity.py",
+        "before_sha256": null,
+        "existed": false,
+        "after_sha256": "492e2c3e288c425941031ce9ff97dee95f431c6d8a5775ff0c423d1cda2bbc43"
+      }
+    ],
+    "database": {
+      "nusantara_knowledge.db": {
+        "integrity_check": [
+          "ok"
+        ],
+        "mode": "ro immutable=1",
+        "hashes": {
+          "data/knowledge/nusantara_knowledge.db": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+          "data/knowledge/nusantara_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "data/knowledge/nusantara_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+        },
+        "unchanged_during_check": true,
+        "baseline_match": true
+      },
+      "production_knowledge.db": {
+        "integrity_check": [
+          "ok"
+        ],
+        "mode": "ro immutable=1",
+        "hashes": {
+          "data/knowledge/production_knowledge.db": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+          "data/knowledge/production_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "data/knowledge/production_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+        },
+        "unchanged_during_check": true,
+        "baseline_match": true
+      }
+    },
+    "tests": {
+      "focused-regression.xml": {
+        "tests": 93,
+        "failures": 0,
+        "errors": 0,
+        "sha256": "c4953d116839700c8902dadf9927c979a532a090ca14cb5c26e19154c25fcfb0"
+      },
+      "r1-after.xml": {
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "sha256": "032e8688539811227248b7d5d01a88a36fe0d7425031df7838c451ef390137cd"
+      },
+      "api-after.xml": {
+        "tests": 30,
+        "failures": 0,
+        "errors": 0,
+        "sha256": "005289fcd71f4ca32096decdec6d6566942158eb812f59a80958667ac3b46294"
+      }
+    },
+    "graphify": {
+      "exit": 0,
+      "nodes": 7199,
+      "edges": 12201,
+      "sha256": "b86ecc19aafaebd28d64a2094b1d313a10b0c5df6db2a43403759f97152eb347",
+      "scope": "AST-only",
+      "coverage_limit": "Same five inherited unreadable report directories; no permission/semantic extraction changes"
+    },
+    "status": "PASS"
+  },
+  "git_diff": {
+    "git_diff_check_exit": 2,
+    "issues_inherited": {
+      "trailing_whitespace_line_958": true,
+      "blank_line_at_eof": true
+    },
+    "staged_diff_unchanged": true,
+    "owned_whitespace_issues": [],
+    "graphify": {
+      "status": "UPDATED_WITH_COVERAGE_LIMITATION",
+      "nodes": 7098,
+      "edges": 11925,
+      "before_sha256": "3aade9302197f35945d50d41193567a43a79100ce28cdc7e2acb7362794c6f3e",
+      "after_sha256": "ee61dec1b43a4552c17aa657a8e2a49a2cf834ceaa872921292fac235972e30a",
+      "warnings": "Five inherited reports directories could not be scanned; semantic/community names not regenerated by LLM; AST-only refresh"
+    }
+  },
+  "runtime": {
+    "timestamp": "2026-10-07T08:52:14.173139+00:00",
+    "scope": "Actual health_detail endpoint AST in isolated FastAPI harness with existing Settings/Ollama, then live ModelGateway generation in same process. No full production API startup.",
+    "process_id": 25156,
+    "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+    "build_id": "sha256:40661a1e1338f29d5f5ad9886bbf149b713e71bc18880fe3a4b99efbcc6b7e4e",
+    "root": "C:\\Users\\dmaza\\mcp-starter",
+    "production_api_verified": false,
+    "http_status": 200,
+    "health": {
+      "status": "ok",
+      "service": "Nusantara Core + Hermes",
+      "version": "0.1.0",
+      "llm": {
+        "status": "ok",
+        "model": "llama3.2:1b",
+        "available": true,
+        "latency_ms": 350
+      },
+      "identity": {
+        "service": {
+          "status": "ok"
+        },
+        "provider": {
+          "name": "ollama",
+          "status": "ok",
+          "verification_state": "HEALTH_PROBE_ONLY"
+        },
+        "model": {
+          "configured": "llama3.2:1b",
+          "effective": "llama3.2:1b",
+          "selected": "llama3.2:1b",
+          "payload": null,
+          "actual": null,
+          "source": "DEFAULT",
+          "override_source": "CONFIGURATION",
+          "verification_state": "NOT_VERIFIED"
+        },
+        "build": {
+          "id": "sha256:40661a1e1338f29d5f5ad9886bbf149b713e71bc18880fe3a4b99efbcc6b7e4e",
+          "verification_state": "SOURCE_SNAPSHOT"
+        },
+        "verification_state": "NOT_VERIFIED",
+        "confirmation_source": "MODEL_INVENTORY_ONLY"
+      },
+      "components": {
+        "api": "available",
+        "language_engine": "available",
+        "problem_engine": "available",
+        "knowledge_engine": "available",
+        "reasoning_engine": "available",
+        "workflow_engine": "available",
+        "policy_engine": "available",
+        "trust_engine": "available",
+        "memory": "available",
+        "tools": "available",
+        "mcp": "available",
+        "handoff": "available"
+      }
+    },
+    "execution_identity": {
+      "request_id": "ed5c7a34a3f149ca8b68c41720d4507d",
+      "timestamp": "2026-10-07T08:52:14.785954+00:00",
+      "build_id": "sha256:40661a1e1338f29d5f5ad9886bbf149b713e71bc18880fe3a4b99efbcc6b7e4e",
+      "process_id": 25156,
+      "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+      "provider_id": "ollama",
+      "configured_model": "llama3.2:1b",
+      "effective_model": "llama3.2:1b",
+      "configuration_source": "DEFAULT",
+      "configuration_fingerprint": "cce5004ee52a0b2045574b885ffcba4568ca916fe4fdfbef11f44811c2e60540",
+      "selected_model": "llama3.2:1b",
+      "requested_model": null,
+      "override_source": "CONFIGURATION",
+      "payload_model": "llama3.2:1b",
+      "actual_model": "llama3.2:1b",
+      "identity_status": "RUNTIME_CONFIRMED",
+      "confirmation_source": "PROVIDER_RESPONSE",
+      "fallback_status": "NOT_ATTEMPTED",
+      "selection_reason": "General task + local preference: ollama",
+      "selected_provider": "ollama",
+      "failover_status": "NOT_ATTEMPTED"
+    },
+    "response_content_sha256": "b814aabdde112d89d45105c3205482949a86d7bbc33040034db21f7a85c84c4a",
+    "checks": {
+      "http_health": true,
+      "health_not_execution": true,
+      "health_build": true,
+      "process": true,
+      "actual_model": true,
+      "provider_binding": true,
+      "private_fields_excluded": true
+    },
+    "status": "CONTROLLED_RUNTIME_PASS",
+    "database_hashes_before": {
+      "data/knowledge/nusantara_knowledge.db": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+      "data/knowledge/nusantara_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "data/knowledge/nusantara_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "data/knowledge/production_knowledge.db": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+      "data/knowledge/production_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "data/knowledge/production_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "data/knowledge/production_knowledge_backup_20261001_181113.db": "830ad12f8a4e09b62532976f15575db70b711b8035bdfbe5ee279044f3063c09",
+      "data/knowledge/production_knowledge_backup_20261002_143947.db": "f36043927b307ad035ea5c1f64a7d15cb3618294303806e9a8a4f11bc34a6aed",
+      "data/knowledge/production_knowledge_backup_20261002_144417.db": "0a7d27554772bbf8a808d16e64778a0db131fd1729d5c8d1f7be4d6634e0595e"
+    },
+    "database_hashes_after": {
+      "data/knowledge/nusantara_knowledge.db": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+      "data/knowledge/nusantara_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "data/knowledge/nusantara_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "data/knowledge/production_knowledge.db": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+      "data/knowledge/production_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "data/knowledge/production_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "data/knowledge/production_knowledge_backup_20261001_181113.db": "830ad12f8a4e09b62532976f15575db70b711b8035bdfbe5ee279044f3063c09",
+      "data/knowledge/production_knowledge_backup_20261002_143947.db": "f36043927b307ad035ea5c1f64a7d15cb3618294303806e9a8a4f11bc34a6aed",
+      "data/knowledge/production_knowledge_backup_20261002_144417.db": "0a7d27554772bbf8a808d16e64778a0db131fd1729d5c8d1f7be4d6634e0595e"
+    },
+    "database_sidecars_unchanged": true
+  },
+  "risks": [
+    "Final owner acceptance under section 21 is still pending; implementation authorization is not final acceptance",
+    "Controlled endpoint harness and gateway verified; complete production API deployment not verified",
+    "Provider-reported model identity is not a cryptographic weights attestation",
+    "OpenAI-compatible live runtime and legacy non-receipt wrappers remain unverified",
+    "Health inventory correctly reports NOT_VERIFIED and never reuses unrelated execution receipts",
+    "Graphify AST refresh retains five unreadable inherited report directories as a coverage limitation",
+    "Inherited Git whitespace findings remain preserved; owned patches add none"
+  ],
+  "rollback": {
+    "status": "AVAILABLE_NOT_EXECUTED",
+    "source_backups": "source-before/",
+    "owned_patch": "IMPLEMENTATION.diff",
+    "procedure": "Verify latest after-hashes. Reverse the health-gate owned patch first, then the initial R2 patch if full R2 rollback is authorized. Exact bytes are retained at both checkpoints. Preserve later human changes, staged state, DB/WAL/SHM; no reset/clean/global restore. Graph rollback uses the corresponding snapshot only after authorization.",
+    "staged_changes_preserved": true,
+    "health_gate_backup": ".dev/checkpoints/r2-20261007/health-gate/source-before",
+    "health_gate_patch": ".dev/checkpoints/r2-20261007/health-gate/IMPLEMENTATION.diff",
+    "health_gate_baseline": ".dev/checkpoints/r2-20261007/health-gate/BASELINE.json"
+  },
+  "next_action": "STOP_AFTER_R2_VERIFICATION; REQUEST_FINAL_OWNER_ACCEPTANCE; DO_NOT_START_R3_OR_MDE10",
+  "final_owner_acceptance": "PENDING",
+  "implementation": "VERIFIED",
+  "health_gate_authorization": "Human: Ya,,Lanjukan in response to R2-HEALTH-IDENTITY-001 authorization question"
+}

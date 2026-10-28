@@ -1,0 +1,523 @@
+﻿NUSANTARA V1 - RAG RUNTIME INSPECTION
+Timestamp: 2026-10-10 20:53:48
+Repository: C:\Users\dmaza\mcp-starter
+Mode: READ-ONLY SOURCE INSPECTION
+
+========================================================================
+KNOWLEDGE ENGINE
+File: .\app\knowledge\engine.py
+========================================================================
+Line 11: class KnowledgeEngine:
+  
+  
+>> class KnowledgeEngine:
+      def __init__(self, rag: Optional[RAG] = None, *, nusantara_config: NusantaraConfig | None = None):
+          self.configuration = nusantara_config
+          self.rag = rag if rag is not None else (
+              create_rag(nusantara_config=nusantara_config) if nusantara_config is not None else create_rag())
+
+Line 12: def __init__(self, rag: Optional[RAG] = None, *, nusantara_config: NusantaraConfig | None = None):
+  
+  class KnowledgeEngine:
+>>     def __init__(self, rag: Optional[RAG] = None, *, nusantara_config: NusantaraConfig | None = None):
+          self.configuration = nusantara_config
+          self.rag = rag if rag is not None else (
+              create_rag(nusantara_config=nusantara_config) if nusantara_config is not None else create_rag())
+  
+
+Line 15: create_rag(nusantara_config=nusantara_config) if nusantara_config is not None else create_rag())
+          self.configuration = nusantara_config
+          self.rag = rag if rag is not None else (
+>>             create_rag(nusantara_config=nusantara_config) if nusantara_config is not None else create_rag())
+  
+      def ingest_document(self, document: Any):
+          # Accept the lightweight API Document model as well as the canonical
+          # DocumentIngestRequest used by RAG.
+
+Line 32: def search_knowledge(self, query: str, top_k: int | None = None, filter: Optional[dict] = None):
+          return self.rag.ingest_document(request)
+  
+>>     def search_knowledge(self, query: str, top_k: int | None = None, filter: Optional[dict] = None):
+          if filter is not None and filter != {}:
+              # No approved metadata/authority filter grammar exists in V1 yet.
+              # Never let a requested restriction silently become unrestricted search.
+              raise ValueError('KNOWLEDGE_FILTER_NOT_SUPPORTED')
+
+Line 37: result = self.rag.query(query_text=query, top_k=top_k)
+              # Never let a requested restriction silently become unrestricted search.
+              raise ValueError('KNOWLEDGE_FILTER_NOT_SUPPORTED')
+>>         result = self.rag.query(query_text=query, top_k=top_k)
+          return RetrievalEvidenceList(result.evidence_pack.evidence, getattr(result, 'effective_profile', None))
+  
+      def search(self, query: str, top_k: int | None = None):
+          return self.search_knowledge(query, top_k=top_k)
+
+Line 41: return self.search_knowledge(query, top_k=top_k)
+  
+      def search(self, query: str, top_k: int | None = None):
+>>         return self.search_knowledge(query, top_k=top_k)
+  
+      def list_documents(self):
+          return self.rag.list_documents()
+
+
+========================================================================
+RAG IMPLEMENTATION
+File: .\app\knowledge\rag.py
+========================================================================
+Line 43: from app.knowledge.indobert_embedding import IndoBERTEmbeddingAdapter
+  
+  logger = logging.getLogger(__name__)
+>> from app.knowledge.indobert_embedding import IndoBERTEmbeddingAdapter
+  from app.knowledge.store import SQLiteVectorStore
+  from app.core.nusantara_config import ConfigurationError, NusantaraConfig
+  
+  
+
+Line 44: from app.knowledge.store import SQLiteVectorStore
+  logger = logging.getLogger(__name__)
+  from app.knowledge.indobert_embedding import IndoBERTEmbeddingAdapter
+>> from app.knowledge.store import SQLiteVectorStore
+  from app.core.nusantara_config import ConfigurationError, NusantaraConfig
+  
+  
+  class MemoriaVectorStore:
+
+Line 169: self._store = vector_store or SQLiteVectorStore()
+          self._chunker = chunker or SentenceChunker()
+          self._embedding_func = embedding_func or self._default_embedding
+>>         self._store = vector_store or SQLiteVectorStore()
+          self._config = config or KnowledgeBaseConfig()
+  
+      def default_embedding(self, text: str) -> List[float]:
+          """Embedding default (placeholder - nanti diganti dengan model nyata)."""
+
+Line 199: class RAG:
+  
+  
+>> class RAG:
+      """
+      RAG - Retrieval Augmented Generation orchestrator.
+      Pipeline lengkap dari ingest document sampai retrieval.
+      """
+
+Line 223: IndoBERTEmbeddingAdapter.validate_configuration(nusantara_config)
+                  raise ConfigurationError("RAG_PARAMETER_NOT_INTEGRATED")
+              if embedding_func is None:
+>>                 IndoBERTEmbeddingAdapter.validate_configuration(nusantara_config)
+                  if config is not None and (config.embedding_dimension != 768 or
+                          config.embedding_model != "indobenchmark/indobert-base-p1"):
+                      raise ConfigurationError("EMBEDDING_PROFILE_UNSUPPORTED")
+          if nusantara_config is not None and config is None:
+
+Line 241: SQLiteVectorStore(str(nusantara_config.knowledge.database))
+          self._kb_initial = self._config.model_dump()
+          self._store = vector_store if vector_store is not None else (
+>>             SQLiteVectorStore(str(nusantara_config.knowledge.database))
+              if nusantara_config is not None else SQLiteVectorStore())
+          self._parser = parser or DocParser()
+          self._chunker = chunker or SentenceChunker()
+          # Gunakan IndoBERT 768D sebagai default embedding RAG.
+
+Line 242: if nusantara_config is not None else SQLiteVectorStore())
+          self._store = vector_store if vector_store is not None else (
+              SQLiteVectorStore(str(nusantara_config.knowledge.database))
+>>             if nusantara_config is not None else SQLiteVectorStore())
+          self._parser = parser or DocParser()
+          self._chunker = chunker or SentenceChunker()
+          # Gunakan IndoBERT 768D sebagai default embedding RAG.
+          # Jika embedding_func diberikan dari luar, tetap gunakan custom embedding.
+
+Line 251: self._embedding_adapter = (IndoBERTEmbeddingAdapter(nusantara_config=nusantara_config)
+              self._embedding = embedding_func
+          else:
+>>             self._embedding_adapter = (IndoBERTEmbeddingAdapter(nusantara_config=nusantara_config)
+                                         if nusantara_config is not None else IndoBERTEmbeddingAdapter())
+              self._embedding = self._embedding_adapter
+          self._chunk_processor = None
+  
+
+Line 252: if nusantara_config is not None else IndoBERTEmbeddingAdapter())
+          else:
+              self._embedding_adapter = (IndoBERTEmbeddingAdapter(nusantara_config=nusantara_config)
+>>                                        if nusantara_config is not None else IndoBERTEmbeddingAdapter())
+              self._embedding = self._embedding_adapter
+          self._chunk_processor = None
+  
+      def _default_embedding(self, text: str) -> List[float]:
+
+Line 445: sqlite_store = type(self._store) is SQLiteVectorStore
+          snapshot = self.configuration
+          kb = self._config
+>>         sqlite_store = type(self._store) is SQLiteVectorStore
+          default_embedding = self._embedding_adapter is not None and self._embedding is self._embedding_adapter
+          known_reranker = getattr(self._simple_rerank, '__func__', None) is RAG._simple_rerank
+          algorithm = ('simple_keyword_overlap' if known_reranker else 'NOT_VERIFIED') if rerank and kb.reranker_enabled else 'NOT_APPLICABLE'
+          values = {
+
+Line 456: 'rerank_enabled': kb.reranker_enabled,
+              'missing_stage_score': 0.0, 'absolute_relevance_gate': 0.30,
+              'relative_threshold': 0.50, 'rerank_requested': bool(rerank),
+>>             'rerank_enabled': kb.reranker_enabled,
+              'actual_reranker': algorithm,
+              'knowledge_source': {'implementation': type(self._store).__module__ + '.' + type(self._store).__qualname__,
+                                   'reference': str(self._store.db_path) if sqlite_store else None,
+                                   'status': 'EFFECTIVE' if sqlite_store else 'NOT_VERIFIED'},
+
+Line 463: 'implementation': 'IndoBERTEmbeddingAdapter' if default_embedding else 'custom_callable',
+              'embedding_identity': {'configured_model': kb.embedding_model,
+                                     'configured_dimension': kb.embedding_dimension,
+>>                                    'implementation': 'IndoBERTEmbeddingAdapter' if default_embedding else 'custom_callable',
+                                     'actual_model': None, 'status': 'NOT_VERIFIED'},
+          }
+          provenance = {}
+  
+
+Line 479: ('rerank_enabled', 'reranker_enabled', 'rag.reranker_enabled')]:
+              record(name)
+          for name, field, r1_field in [('top_k', 'retrieval_top_k', 'rag.top_k'),
+>>                                      ('rerank_enabled', 'reranker_enabled', 'rag.reranker_enabled')]:
+              layer = self._kb_source
+              if getattr(kb, field) != self._kb_initial[field]:
+                  layer = 'INSTANCE_MUTATION'
+              if layer == 'R1':
+
+Line 501: record(name, layer='STORE_IMPLEMENTATION', location='app/knowledge/store.py:SQLiteVectorStore',
+                 precedence='query argument; default False', status='OVERRIDDEN' if rerank else 'DEFAULT')
+          for name in ('semantic_normalization', 'lexical_normalization'):
+>>             record(name, layer='STORE_IMPLEMENTATION', location='app/knowledge/store.py:SQLiteVectorStore',
+                     status='EFFECTIVE' if sqlite_store else 'NOT_VERIFIED')
+          record('knowledge_source', layer='STORE_INSTANCE', location='app/knowledge/rag.py:RAG.__init__',
+                 status=values['knowledge_source']['status'])
+          record('embedding_identity', layer='EMBEDDING_INSTANCE', location='app/knowledge/rag.py:RAG.__init__/set_embedding_func',
+
+Line 523: def query(self, query_text: str, top_k: Optional[int] = None, rerank: bool = False) -> RetrievalResult:
+          }
+  
+>>     def query(self, query_text: str, top_k: Optional[int] = None, rerank: bool = False) -> RetrievalResult:
+          effective_top_k = top_k or self._config.retrieval_top_k
+          candidate_k = max(effective_top_k * 4, 20)
+          descriptor = self._profile_descriptor(top_k, effective_top_k, rerank, candidate_k)
+          receipt = make_rag_profile(descriptor)
+
+Line 533: if 'rerank_enabled_consumed' in trace:
+          def finish_receipt():
+              # Observe mutations by custom callbacks without changing their behavior.
+>>             if 'rerank_enabled_consumed' in trace:
+                  enabled = trace['rerank_enabled_consumed']
+                  algorithm = trace['reranker_algorithm_consumed'] if rerank and enabled else 'NOT_APPLICABLE'
+                  if enabled != descriptor['effective_values']['rerank_enabled']:
+                      descriptor['provenance']['rerank_enabled'].update(source='INSTANCE_MUTATION', source_layer='INSTANCE_MUTATION')
+
+Line 534: enabled = trace['rerank_enabled_consumed']
+              # Observe mutations by custom callbacks without changing their behavior.
+              if 'rerank_enabled_consumed' in trace:
+>>                 enabled = trace['rerank_enabled_consumed']
+                  algorithm = trace['reranker_algorithm_consumed'] if rerank and enabled else 'NOT_APPLICABLE'
+                  if enabled != descriptor['effective_values']['rerank_enabled']:
+                      descriptor['provenance']['rerank_enabled'].update(source='INSTANCE_MUTATION', source_layer='INSTANCE_MUTATION')
+                  descriptor['effective_values'].update(rerank_enabled=enabled, actual_reranker=algorithm)
+
+Line 536: if enabled != descriptor['effective_values']['rerank_enabled']:
+                  enabled = trace['rerank_enabled_consumed']
+                  algorithm = trace['reranker_algorithm_consumed'] if rerank and enabled else 'NOT_APPLICABLE'
+>>                 if enabled != descriptor['effective_values']['rerank_enabled']:
+                      descriptor['provenance']['rerank_enabled'].update(source='INSTANCE_MUTATION', source_layer='INSTANCE_MUTATION')
+                  descriptor['effective_values'].update(rerank_enabled=enabled, actual_reranker=algorithm)
+                  descriptor['reranker_identity'].update(enabled=enabled, algorithm=algorithm,
+                      configured_label=trace['reranker_label_consumed'],
+
+Line 537: descriptor['provenance']['rerank_enabled'].update(source='INSTANCE_MUTATION', source_layer='INSTANCE_MUTATION')
+                  algorithm = trace['reranker_algorithm_consumed'] if rerank and enabled else 'NOT_APPLICABLE'
+                  if enabled != descriptor['effective_values']['rerank_enabled']:
+>>                     descriptor['provenance']['rerank_enabled'].update(source='INSTANCE_MUTATION', source_layer='INSTANCE_MUTATION')
+                  descriptor['effective_values'].update(rerank_enabled=enabled, actual_reranker=algorithm)
+                  descriptor['reranker_identity'].update(enabled=enabled, algorithm=algorithm,
+                      configured_label=trace['reranker_label_consumed'],
+                      model_identity='NOT_APPLICABLE' if algorithm != 'NOT_VERIFIED' else 'NOT_VERIFIED')
+
+Line 538: descriptor['effective_values'].update(rerank_enabled=enabled, actual_reranker=algorithm)
+                  if enabled != descriptor['effective_values']['rerank_enabled']:
+                      descriptor['provenance']['rerank_enabled'].update(source='INSTANCE_MUTATION', source_layer='INSTANCE_MUTATION')
+>>                 descriptor['effective_values'].update(rerank_enabled=enabled, actual_reranker=algorithm)
+                  descriptor['reranker_identity'].update(enabled=enabled, algorithm=algorithm,
+                      configured_label=trace['reranker_label_consumed'],
+                      model_identity='NOT_APPLICABLE' if algorithm != 'NOT_VERIFIED' else 'NOT_VERIFIED')
+                  descriptor['thresholds']['score_space'] = 'keyword_overlap' if algorithm == 'simple_keyword_overlap' else 'NOT_VERIFIED' if algorithm == 'NOT_VERIFIED' else 'hybrid'
+
+Line 543: descriptor['provenance']['rerank_enabled']['effective_value'] = enabled
+                      model_identity='NOT_APPLICABLE' if algorithm != 'NOT_VERIFIED' else 'NOT_VERIFIED')
+                  descriptor['thresholds']['score_space'] = 'keyword_overlap' if algorithm == 'simple_keyword_overlap' else 'NOT_VERIFIED' if algorithm == 'NOT_VERIFIED' else 'hybrid'
+>>                 descriptor['provenance']['rerank_enabled']['effective_value'] = enabled
+                  descriptor['provenance']['actual_reranker'].update(effective_value=algorithm,
+                      status='NOT_VERIFIED' if algorithm == 'NOT_VERIFIED' else 'EFFECTIVE')
+              return receipt.with_descriptor(descriptor).complete(trace)
+  
+
+Line 705: trace['rerank_enabled_consumed'] = self._config.reranker_enabled
+          # 5. OPTIONAL RERANK
+          # ============================================================
+>>         trace['rerank_enabled_consumed'] = self._config.reranker_enabled
+          trace['reranker_label_consumed'] = self._config.reranker_model
+          trace['reranker_algorithm_consumed'] = ('simple_keyword_overlap'
+              if getattr(self._simple_rerank, '__func__', None) is RAG._simple_rerank else 'NOT_VERIFIED')
+          if rerank and trace['rerank_enabled_consumed']:
+
+Line 709: if rerank and trace['rerank_enabled_consumed']:
+          trace['reranker_algorithm_consumed'] = ('simple_keyword_overlap'
+              if getattr(self._simple_rerank, '__func__', None) is RAG._simple_rerank else 'NOT_VERIFIED')
+>>         if rerank and trace['rerank_enabled_consumed']:
+              trace['stage'] = 'rerank'
+              evidence_list = self._simple_rerank(
+                  evidence_list,
+                  query_text,
+
+Line 807: def _simple_rerank(
+          return filtered
+  
+>>     def _simple_rerank(
+          self,
+          evidence: List[Evidence],
+          query: str,
+      ) -> List[Evidence]:
+
+
+========================================================================
+CHAT DAN KNOWLEDGE API
+File: .\app\api\routes.py
+========================================================================
+Line 30: from app.hermes.agent import HermesAgent
+  from app.problem.detector import ProblemDetector
+  from app.problem.engine import ProblemEngine
+>> from app.hermes.agent import HermesAgent
+  from app.language.engine import LanguageEngine
+  from app.workflow.engine import WorkflowEngine
+  from app.trust.engine import TrustEngine
+  
+
+Line 44: _knowledge = KnowledgeEngine(nusantara_config=_configuration)
+  
+  _configuration = settings.effective_configuration
+>> _knowledge = KnowledgeEngine(nusantara_config=_configuration)
+  _gate_integration = GateIntegration()
+  _developer_core = GraphifyBridge()
+  
+  # Evidence Grounding Guard
+
+Line 61: _knowledge.rag._embedding_adapter.client = _language.semantic_intent_engine.client
+  # Reuse its worker instead of loading a second 768D model for RAG.
+  if _language.semantic_intent_engine is not None:
+>>     _knowledge.rag._embedding_adapter.client = _language.semantic_intent_engine.client
+  _sync_slots = threading.BoundedSemaphore(2)
+  
+  
+  async def _run_sync_v1(fn, *args, timeout_s=30.0, **kwargs):
+
+Line 880: @router.post("/chat")
+  
+  
+>> @router.post("/chat")
+  async def chat(
+      request: ChatRequest,
+  ):
+      """
+
+Line 881: async def chat(
+  
+  @router.post("/chat")
+>> async def chat(
+      request: ChatRequest,
+  ):
+      """
+      End-to-end local chat.
+
+Line 920: agent = HermesAgent(provider=provider, language_engine=_language)
+          provider = provider_type(nusantara_config=configuration)
+  
+>>         agent = HermesAgent(provider=provider, language_engine=_language)
+          core = await agent.execute_v1(request, knowledge=_knowledge, gates=_gate_integration,
+              trust=_trust_engine, grounding=_grounding_guard, developer_core=_developer_core,
+              run_sync=_run_sync_v1, helpers={
+                  '_extract_understanding_data': _extract_understanding_data,
+
+Line 921: core = await agent.execute_v1(request, knowledge=_knowledge, gates=_gate_integration,
+  
+          agent = HermesAgent(provider=provider, language_engine=_language)
+>>         core = await agent.execute_v1(request, knowledge=_knowledge, gates=_gate_integration,
+              trust=_trust_engine, grounding=_grounding_guard, developer_core=_developer_core,
+              run_sync=_run_sync_v1, helpers={
+                  '_extract_understanding_data': _extract_understanding_data,
+                  '_extract_intent': _extract_intent,
+
+Line 1069: _knowledge.ingest_document,
+  
+          result = await asyncio.to_thread(
+>>             _knowledge.ingest_document,
+              RAGIngestRequest(
+                  document_id=(
+                      request.id
+                      or None
+
+Line 1108: async def search_knowledge(
+  
+  @router.post("/knowledge/search")
+>> async def search_knowledge(
+      request: KnowledgeSearchRequest,
+  ):
+  
+      if request.filter:
+
+Line 1117: with capture_retrieval('V1_KNOWLEDGE_SEARCH', request_top_k_source=(
+      try:
+  
+>>         with capture_retrieval('V1_KNOWLEDGE_SEARCH', request_top_k_source=(
+                  'REQUEST_EXPLICIT' if 'top_k' in request.model_fields_set else 'REQUEST_DEFAULT')):
+              results = await _run_sync_v1(
+                  _knowledge.search_knowledge,
+                  request.query,
+
+Line 1120: _knowledge.search_knowledge,
+                  'REQUEST_EXPLICIT' if 'top_k' in request.model_fields_set else 'REQUEST_DEFAULT')):
+              results = await _run_sync_v1(
+>>                 _knowledge.search_knowledge,
+                  request.query,
+                  request.top_k,
+                  request.filter,
+              )
+
+Line 1155: async def list_knowledge_documents():
+      "/knowledge/documents"
+  )
+>> async def list_knowledge_documents():
+  
+      result = (
+          _knowledge.list_documents()
+      )
+
+Line 1158: _knowledge.list_documents()
+  
+      result = (
+>>         _knowledge.list_documents()
+      )
+  
+      return result.model_dump()
+  
+
+
+========================================================================
+RUNTIME CONFIGURATION
+File: .\app\core\nusantara_config.py
+========================================================================
+Line 111: reranker_enabled: bool = False
+      semantic_weight: float | None = Field(default=None, ge=0, le=1)
+      lexical_weight: float | None = Field(default=None, ge=0, le=1)
+>>     reranker_enabled: bool = False
+      reranker_model: str | None = None
+      similarity_threshold: float | None = Field(default=None, ge=0, le=1)
+  
+      @model_validator(mode="after")
+
+Line 124: if self.reranker_enabled and not self.reranker_model:
+                  self.semantic_weight + self.lexical_weight, 1.0, abs_tol=1e-9):
+              raise ValueError("weight_sum")
+>>         if self.reranker_enabled and not self.reranker_model:
+              raise ValueError("reranker_model_required")
+          return self
+  
+  
+
+Line 131: database: Path
+  class _Knowledge(_Frozen):
+      root: Path
+>>     database: Path
+      document_root: Path | None = None
+      index: Path | None = None
+      cache: Path | None = None
+      store_backend: Literal["sqlite"] = "sqlite"
+
+Line 135: store_backend: Literal["sqlite"] = "sqlite"
+      index: Path | None = None
+      cache: Path | None = None
+>>     store_backend: Literal["sqlite"] = "sqlite"
+  
+  
+  class _Paths(_Frozen):
+      project_root: Path
+
+Line 141: worker_python: Path
+      project_root: Path
+      worker: Path
+>>     worker_python: Path
+  
+  
+  class _Governance(_Frozen):
+      trust_contract_ref: str = "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md"
+
+Line 161: embedding_model: str = "local-hash"
+  
+  class _Legacy(_Frozen):
+>>     embedding_model: str = "local-hash"
+      vector_store_type: str = "memory"
+      privacy_filter_enabled: bool = True
+      context_window_size: int = Field(default=10, gt=0)
+      session_timeout_minutes: int = Field(default=30, gt=0)
+
+Line 266: "EMBEDDING_MODEL": "legacy_declarations.embedding_model",
+      "LANGGRAPH_WORKFLOW_ENABLED": "features.langgraph_workflow",
+      "LLM_CONTEXT_TOKENS": "llm.generation.context_length",
+>>     "EMBEDDING_MODEL": "legacy_declarations.embedding_model",
+      "VECTOR_STORE_TYPE": "legacy_declarations.vector_store_type",
+      "PRIVACY_FILTER_ENABLED": "legacy_declarations.privacy_filter_enabled",
+      "CONTEXT_WINDOW_SIZE": "legacy_declarations.context_window_size",
+      "SESSION_TIMEOUT_MINUTES": "legacy_declarations.session_timeout_minutes",
+
+Line 273: "NUSANTARA_KNOWLEDGE_DB": "knowledge.database",
+      "CHUNK_SIZE": "rag.chunk_size", "CHUNK_OVERLAP": "rag.chunk_overlap",
+      "RETRIEVAL_TOP_K": "rag.top_k", "NUSANTARA_RAG_TOP_K": "rag.top_k",
+>>     "NUSANTARA_KNOWLEDGE_DB": "knowledge.database",
+      "NUSANTARA_INDOBERT_PYTHON": "paths.worker_python",
+      "NUSANTARA_INDOBERT_WORKER": "paths.worker",
+      "NUSANTARA_LLM_MODEL": "llm.model", "NUSANTARA_RUNTIME_PORT": "runtime.port",
+  })
+
+Line 274: "NUSANTARA_INDOBERT_PYTHON": "paths.worker_python",
+      "RETRIEVAL_TOP_K": "rag.top_k", "NUSANTARA_RAG_TOP_K": "rag.top_k",
+      "NUSANTARA_KNOWLEDGE_DB": "knowledge.database",
+>>     "NUSANTARA_INDOBERT_PYTHON": "paths.worker_python",
+      "NUSANTARA_INDOBERT_WORKER": "paths.worker",
+      "NUSANTARA_LLM_MODEL": "llm.model", "NUSANTARA_RUNTIME_PORT": "runtime.port",
+  })
+  _NUMERIC_ENV = frozenset({"runtime.port", "llm.generation.context_length",
+
+Line 352: worker_python=worker_root / "nusantara-models/.venv" /
+                          paths=_Paths(project_root=root,
+                          worker=worker_root / "nusantara-models/indobert_worker.py",
+>>                         worker_python=worker_root / "nusantara-models/.venv" /
+                          ("Scripts/python.exe" if os.name == "nt" else "bin/python")))
+      data = snapshot.model_dump(exclude_none=False)
+      # Excluded secret references still have a known field for explicit input.
+      data["llm"]["auth_env_ref"] = None
+
+Line 414: "paths": ("project_root", "worker", "worker_python")}.items():
+                  data["llm"][field] = value
+      for group, fields in {"knowledge": ("root", "database", "document_root", "index", "cache"),
+>>                           "paths": ("project_root", "worker", "worker_python")}.items():
+          for field in fields:
+              value = data[group][field]
+              if value is not None:
+                  path = Path(value)
+
+Line 423: if result.features.reranker != result.rag.reranker_enabled:
+          raise ConfigurationError("ROOT_CONFLICT")
+      result = _Snapshot.model_validate(data)
+>>     if result.features.reranker != result.rag.reranker_enabled:
+          raise ConfigurationError("RERANKER_FLAG_CONFLICT")
+      records = tuple(Provenance(key, provenance[key], "DECLARED_ONLY" if
+                      key.startswith(("legacy_declarations.", "governance.")) else "UNWIRED")
+                      for key in sorted(provenance))
+
+
+========================================================================
+END OF INSPECTION
+No application code or database was intentionally modified.
+========================================================================

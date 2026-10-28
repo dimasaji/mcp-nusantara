@@ -1,0 +1,240 @@
+{
+  "phase": "MDE09",
+  "generated_at": "2026-10-07T04:47:45.650458+00:00",
+  "contracts": {
+    "invoked": {
+      "path": "docs/commands/MDE-04 -09.md",
+      "section": 22,
+      "scope": "Final discovery, completion matrix and cross-phase consistency audit",
+      "sha256": "c29f10b29f4ed5c7eb2277a4bee444def67252fcdb0212c5595a8b5b10c87e9d"
+    },
+    "older": {
+      "path": "docs/commands/MDE_command1.md",
+      "sections": [
+        "XIII",
+        "XIV",
+        "XV"
+      ],
+      "scope": "MDE09 Runtime Dependency Graph and MDE10 Live Runtime Verification required for completion",
+      "sha256": "53322d93c2fae6819378aab55d214c67bd0e6429452923e87d1d178156c72f89"
+    },
+    "discovery": "No prior standalone MDE09 command/design/report/checkpoint found in scoped docs/.dev discovery before creating this phase artifacts",
+    "operating_scope": "Current explicit APPROVE MDE-09 permits invoked closure audit; does not resolve numbering conflict, waive runtime graph/live criteria, approve implementation, or advance MDE10",
+    "owner_decision_required": "Confirm authoritative numbering/closure mapping while retaining actual runtime graph and live verification acceptance requirements"
+  },
+  "phases": [
+    {
+      "phase": "MDE-01",
+      "audit_status": "PASS_SCOPED_STATIC_AWAITING_COMPOSITION_APPROVAL",
+      "architecture_acceptance": "PARTIAL_NOT_READY",
+      "checkpoint": "reports/configuration/mde-01/checkpoint.json",
+      "report": "reports/configuration/mde-01/MDE01_CONFIGURATION_INTELLIGENCE_20261006.md",
+      "evidence_sha256": "3fb97e541d2638bb0d2ac86658949b44cdc828f9afb2f8253d685e40ccf9996a",
+      "test": {
+        "execution": "No new MDE01 tests; earlier scoped regression reused"
+      },
+      "runtime_verification": "NOT_VERIFIED; MDE07 existing health and MDE08 isolated MCP are scoped exceptions, not full deployed proof",
+      "limitation": "Configuration DoD NOT_COMPLETE; no live effective values verified",
+      "rollback": "Historical phase artifacts/backups retained; no runtime rollback executed",
+      "source_build_scope": "Historical MDE01 earlier build; MDE02-08 current unchanged source"
+    },
+    {
+      "phase": "MDE-02",
+      "audit_status": "DONE_SCOPED_KEEP",
+      "architecture_acceptance": "PARTIAL_NOT_READY",
+      "checkpoint": ".dev/MDE02_CHECKPOINT.json",
+      "report": "reports/MDE02_REPORT_20261007.md",
+      "evidence_sha256": "d5e70da4f1a953cc944dc2a68605e1f2b23d0dd769544a08502fd873563cf591",
+      "test": {
+        "path": "reports/MDE02_FOCUSED_20261007.xml",
+        "sha256": "509944d309528b279d61ec8aa0664a186ce3ac70dc77eeec9513b86fa82986c8",
+        "tests": 143,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+      },
+      "runtime_verification": "NOT_VERIFIED; MDE07 existing health and MDE08 isolated MCP are scoped exceptions, not full deployed proof",
+      "limitation": "EffectiveConfiguration/composition design; default activation not proven",
+      "rollback": "Restore only backed-up docs/state files; remove new task artifacts selectively. No application/index restore needed; preserve inherited dirty tree.",
+      "source_build_scope": "Historical MDE01 earlier build; MDE02-08 current unchanged source"
+    },
+    {
+      "phase": "MDE-03",
+      "audit_status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+      "architecture_acceptance": "PARTIAL_NOT_READY",
+      "checkpoint": ".dev/MDE03_CHECKPOINT.json",
+      "report": "reports/MDE03_EXECUTION_REPORT_20261007.md",
+      "evidence_sha256": "fb871a60b72e930e62ce737caac3889ecd8c1d7fbc2912a86258989d2ac9f82f",
+      "test": {
+        "path": "reports/MDE03_BASELINE_20261007.xml",
+        "sha256": "688551683fd2d8c322971709fac975d5b65cbb60d0ae4c11ce90cba030290eb8",
+        "tests": 38,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+      },
+      "runtime_verification": "NOT_VERIFIED; MDE07 existing health and MDE08 isolated MCP are scoped exceptions, not full deployed proof",
+      "limitation": "Provider health/identity/failover limitations",
+      "rollback": "Restore only previous state/task/decision files and selectively remove new task artifacts; no runtime/index restore; preserve inherited dirty work",
+      "source_build_scope": "Historical MDE01 earlier build; MDE02-08 current unchanged source"
+    },
+    {
+      "phase": "MDE-04",
+      "audit_status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+      "architecture_acceptance": "PARTIAL_NOT_READY",
+      "checkpoint": ".dev/MDE04_CHECKPOINT.json",
+      "report": "reports/MDE04_EXECUTION_REPORT_20261007.md",
+      "evidence_sha256": "cbaf4451233ab74f1e4ffd5f73bd38966d4c2f0a841b3f918a1cdb652a456594",
+      "test": {
+        "path": "reports/MDE04_FOCUSED_20261007.xml",
+        "sha256": "dfdfc1a70c1cf40e72aa111bd7ef5010b96cfd9e3a82e88da61acdfde4f0df61",
+        "tests": 71,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+      },
+      "runtime_verification": "NOT_VERIFIED; MDE07 existing health and MDE08 isolated MCP are scoped exceptions, not full deployed proof",
+      "limitation": "Actual model identity and mutable selection unverified",
+      "rollback": "Restore only previous state/task/decision files, remove new task-owned artifacts selectively; no source/index restore or inherited dirty-tree reset",
+      "source_build_scope": "Historical MDE01 earlier build; MDE02-08 current unchanged source"
+    },
+    {
+      "phase": "MDE-05",
+      "audit_status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+      "architecture_acceptance": "PARTIAL_NOT_READY",
+      "checkpoint": ".dev/MDE05_CHECKPOINT.json",
+      "report": "docs/reports/MDE05_EXECUTION_REPORT_20261007.md",
+      "evidence_sha256": "4eb1e02bb46b100dde2fc1235a392b04484291f03d804b28b3d637ba62f99b6c",
+      "test": {
+        "path": "docs/reports/MDE05_FOCUSED_20261007.xml",
+        "sha256": "46c6594f2edfdb9a7ecf908c49c922e54d9c0dc284ed729ac741ee4f0aa84ef4",
+        "tests": 60,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+      },
+      "runtime_verification": "NOT_VERIFIED; MDE07 existing health and MDE08 isolated MCP are scoped exceptions, not full deployed proof",
+      "limitation": "Effective RAGProfile not implemented; configured labels/consumer drift",
+      "rollback": "Only newly created audit artifacts after hash/path verification; no runtime rollback performed",
+      "source_build_scope": "Historical MDE01 earlier build; MDE02-08 current unchanged source"
+    },
+    {
+      "phase": "MDE-06",
+      "audit_status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+      "architecture_acceptance": "PARTIAL_NOT_READY",
+      "checkpoint": ".dev/MDE06_CHECKPOINT.json",
+      "report": "docs/reports/MDE06_EXECUTION_REPORT_20261007.md",
+      "evidence_sha256": "7e549dfed8698d9924f33e363c54e4dd4d192cd423b5a28f72c5c2aecacdc7f2",
+      "test": {
+        "path": "docs/reports/MDE06_FOCUSED_20261007.xml",
+        "sha256": "97468fd7c9db8eb6c8cd37772b15af72bd529968a7c6522118907174064ecc5c",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+      },
+      "runtime_verification": "NOT_VERIFIED; MDE07 existing health and MDE08 isolated MCP are scoped exceptions, not full deployed proof",
+      "limitation": "Production PARTIAL 25/27 active chunks missing; canonical UNKNOWN",
+      "rollback": "Only new audit artifacts if requested; production rollback/rebuild not authorized or executed",
+      "source_build_scope": "Historical MDE01 earlier build; MDE02-08 current unchanged source"
+    },
+    {
+      "phase": "MDE-07",
+      "audit_status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+      "architecture_acceptance": "PARTIAL_NOT_READY",
+      "checkpoint": ".dev/MDE07_CHECKPOINT.json",
+      "report": "docs/reports/MDE07_EXECUTION_REPORT_20261007.md",
+      "evidence_sha256": "235f52f3463ffbe4e0bf99ed770d4079ea8cfa3972ef8a2c197df90d63cbbcb1",
+      "test": {
+        "path": "docs/reports/MDE07_FOCUSED_20261007.xml",
+        "sha256": "1bbb1abd5898a3723e841a8eb64595a3ce3dd95d2fb3bd8ff57226b0e01414bd",
+        "tests": 30,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+      },
+      "runtime_verification": "NOT_VERIFIED; MDE07 existing health and MDE08 isolated MCP are scoped exceptions, not full deployed proof",
+      "limitation": "Identity mutation/metadata loss; listener health omits build_id",
+      "rollback": "Only new audit outputs/fixtures if requested; production source/data/service rollback not needed or executed",
+      "source_build_scope": "Historical MDE01 earlier build; MDE02-08 current unchanged source"
+    },
+    {
+      "phase": "MDE-08",
+      "audit_status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+      "architecture_acceptance": "PARTIAL_NOT_READY",
+      "checkpoint": ".dev/MDE08_CHECKPOINT.json",
+      "report": "docs/reports/MDE08_EXECUTION_REPORT_20261007.md",
+      "evidence_sha256": "29a3d677e185660cf748ca6c23eff3bb2418606cad041f5e43b0cbecb559a20d",
+      "test": {
+        "path": "docs/reports/MDE08_FOCUSED_20261007.xml",
+        "sha256": "cd109f2ee1f9fecf32a7487fc17df81ffe6c325631080c994157bb957c7ba095",
+        "tests": 25,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "scope": "HISTORICAL_PHASE_RUN; not rerun in MDE09"
+      },
+      "runtime_verification": "NOT_VERIFIED; MDE07 existing health and MDE08 isolated MCP are scoped exceptions, not full deployed proof",
+      "limitation": "Capability readiness unproven; actor binding and legacy governance gaps",
+      "rollback": "Only new audit artifacts/fixtures if requested; production history/security/source rollback not performed",
+      "source_build_scope": "Historical MDE01 earlier build; MDE02-08 current unchanged source"
+    },
+    {
+      "phase": "MDE-09",
+      "audit_status": "DONE_SCOPED_CLOSURE_WITH_HOLD",
+      "architecture_acceptance": "NOT_READY",
+      "test": "Fresh evidence/schema/consistency checks only; no new pytest run",
+      "runtime_verification": "NOT_VERIFIED",
+      "limitation": "Runtime dependency graph/live verification not proven; final numbering conflict unresolved",
+      "rollback": "Only new audit artifacts, preserve existing data/source"
+    }
+  ],
+  "cross_phase_consistency": [
+    {
+      "boundary": "Configuration -> Effective configuration",
+      "status": "PARTIAL",
+      "finding": "MDE01 consumer gaps and MDE02 design-only representation"
+    },
+    {
+      "boundary": "Effective configuration -> Provider/model",
+      "status": "PARTIAL",
+      "finding": "Optional snapshot support differs from default cached settings/direct API providers"
+    },
+    {
+      "boundary": "Provider -> Model -> Runtime",
+      "status": "NOT_VERIFIED",
+      "finding": "Mutable selection/registry drift and response self-labels; callback metadata lost"
+    },
+    {
+      "boundary": "RAG -> Embedding/index",
+      "status": "BLOCKED",
+      "finding": "RAG profile unwired; production embedding coverage partial; actual model/index compatibility unknown"
+    },
+    {
+      "boundary": "Runtime -> Capability",
+      "status": "NOT_PROVEN",
+      "finding": "Source declarations/listener ok not actual model/readiness evidence"
+    },
+    {
+      "boundary": "Capability -> Governance",
+      "status": "PARTIAL",
+      "finding": "Visible tool not executable; fixture gates work; approval consume does not bind actor"
+    },
+    {
+      "boundary": "Governance -> MCP",
+      "status": "PARTIAL",
+      "finding": "Real governed stdio fixture tested; legacy handler route differs; desktop session unproven"
+    }
+  ],
+  "overall": "NOT_READY",
+  "v1": "FAIL/HOLD",
+  "audit_phase_completion_not_acceptance": true,
+  "new_pytest_runs": 0,
+  "test_count_rule": "Do not sum repeated/overlapping phase test executions into unique coverage or report reused tests as fresh"
+}

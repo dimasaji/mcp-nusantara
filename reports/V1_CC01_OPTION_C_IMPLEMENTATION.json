@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-06",
+  "status": "COMPLETE",
+  "scope_result": "PASS_SCOPED",
+  "overall_v1_acceptance": "FAIL / HOLD",
+  "authorization": "User selected Option C, then explicitly approved route/test implementation and verification: Ya,,lanjukan",
+  "source_build_id": "sha256:e96db7384baa11d3e2b76a83f894127d8c935e42213514392dcef698b91f101f",
+  "deployment": "NOT_RUN",
+  "runtime_changed": [
+    "app/api/routes.py"
+  ],
+  "new_tests": [
+    "tests/test_v1_response_projection.py"
+  ],
+  "protected_baseline_count": 299,
+  "protected_unchanged_count": 298,
+  "protected_changed": [
+    "app/api/routes.py"
+  ],
+  "backup_matches_baseline": true,
+  "current_route_sha256": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4",
+  "new_test_sha256": "72c55f094719bb798e71e4e2a0ab3fe8524436f28db2444189110223b8992173",
+  "targeted": {
+    "passed": 49,
+    "subtests_passed": 4,
+    "failed": 0,
+    "skipped": 0
+  },
+  "regression": {
+    "runs": 1,
+    "passed": 267,
+    "subtests_passed": 28,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1,
+    "wall_seconds": 78.41
+  },
+  "security": {
+    "finding_count": 0,
+    "status": "PASS_SCOPED"
+  },
+  "graphify": {
+    "mode": "AST_ONLY",
+    "nodes": 4619,
+    "edges": 9143,
+    "communities": 330,
+    "completed": true,
+    "warnings": [
+      "some existing temporary report directories inaccessible",
+      "PDF extraction unavailable",
+      "community labels partly inferred from hubs"
+    ]
+  },
+  "compatibility": {
+    "legacy_input_output_clients": "BREAKING_CHANGE",
+    "unknown_external_clients": "NOT_PROVEN"
+  },
+  "remaining_gates": [
+    "oracle REVIEW_REQUIRED x2 and MISSING x1",
+    "mandatory Windows symlink test skipped",
+    "deployment/workload/restart/rollback NOT_RUN",
+    "CC-02 through CC-06 remain open",
+    "shared errors/framework validation outside scope"
+  ],
+  "evidence_sha256": {
+    "reports/V1_CC01_TARGETED.xml": "cf2a7192346bda1b6b7aace73260ea3c2f069128a7d93644a1e65f05f3f854ff",
+    "reports/V1_CC01_TARGETED_FIXED.xml": "fc867c7376d682f9657380c6f309a9c8079c2daf3f64a2eaa9b28ee5c8ff34b2",
+    "reports/V1_CC01_REGRESSION.xml": "1c6623a7543c04a079f7ec6add026a1f592db44c1bdcfa4031e2f1641da9d8c4",
+    "reports/V1_CC01_SECURITY.json": "9e0555b1004aedec308c6b97c295eb92305a35bff72ea67ae6a12fcf665d848f",
+    "reports/NUSANTARA-V1-CC01-OPTION-C-IMPLEMENTATION-2026-10-06.md": "00e3db2335e2ab602141173cc18b25e64820305f64bc68ad71cc8c82057aeb7a"
+  },
+  "next_step": "STOP_COMPLETED_PRIMARY_SCOPE; use checkpoint before authorized follow-up; do not rerun completed regression",
+  "completed_at": "2026-10-06T10:32:01.013915+00:00"
+}

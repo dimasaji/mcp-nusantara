@@ -1,0 +1,45 @@
+{
+  "change_id": "MDA-PREFLIGHT-20261007",
+  "timestamp": "2026-10-07T05:05:29.235701+00:00",
+  "request": "Run MDA-POST-MDE09-001",
+  "reason": "Record blocked preflight and preliminary R1 proposal",
+  "scope": "Only new artifacts",
+  "files": [
+    {
+      "path": "docs/reports/MDA_POST_MDE09_INTEGRITY_20261007.json",
+      "before_hash": null,
+      "before_state": "ABSENT",
+      "after_hash": "5f819ddfbf2b7bb8263aac0005e010210b6e889e97e894b30602deef693e1ed3"
+    },
+    {
+      "path": "docs/MDA_R1_LOCAL_001_PROPOSAL.md",
+      "before_hash": null,
+      "before_state": "ABSENT",
+      "after_hash": "c6c9eb91da21ecaed7854c38f4755b83a57185a9f031db642336a7ddb2ecdc00"
+    },
+    {
+      "path": "docs/reports/MDA_POST_MDE09_PREFLIGHT_REPORT_20261007.md",
+      "before_hash": null,
+      "before_state": "ABSENT",
+      "after_hash": "8da3be486f8148092f8ab62a8178a7424ea926181d39b3f9a1f3c20369b62b96"
+    },
+    {
+      "path": ".dev/MDA_POST_MDE09_001_CHECKPOINT.json",
+      "before_hash": null,
+      "before_state": "ABSENT",
+      "after_hash": "12028636895e41cf8998719ba4f787cabd7226e9f954f1604a18e039a191480f"
+    }
+  ],
+  "risk": "LOW_ARTIFACT_ONLY; R1 proposal HIGH",
+  "impact": "No source/data/runtime mutation",
+  "authorization": "Human preflight request; Level C implementation pending",
+  "tests": "No new runs",
+  "runtime_verification": "NOT_RUN",
+  "rollback": "Only new owned artifacts after checking paths/hashes",
+  "status": "BLOCKED",
+  "evidence": [
+    "docs/reports/MDA_POST_MDE09_INTEGRITY_20261007.json",
+    ".dev/MDA_POST_MDE09_001_CHECKPOINT.json"
+  ],
+  "self_hash_rule": "Ledger digest is returned by final verification, not embedded in itself"
+}

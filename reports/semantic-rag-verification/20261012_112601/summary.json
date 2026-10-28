@@ -1,0 +1,28 @@
+﻿{
+    "project":  "C:\\Users\\dmaza\\mcp-starter",
+    "generated_at":  "2026-10-12T11:29:49.0015668+07:00",
+    "overall_status":  "FAIL",
+    "results":  [
+                    {
+                        "stage":  "Semantic Retriever Regression",
+                        "status":  "NOT VERIFIED",
+                        "detail":  "Tidak ada file tes cocok"
+                    },
+                    {
+                        "stage":  "Evidence Integrity",
+                        "status":  "FAIL",
+                        "detail":  "pytest exit code 1; jumlah file tes 40"
+                    },
+                    {
+                        "stage":  "RAG API Regression",
+                        "status":  "FAIL",
+                        "detail":  "pytest exit code 1; jumlah file tes 41"
+                    },
+                    {
+                        "stage":  "API Health",
+                        "status":  "PASS",
+                        "detail":  "Endpoint merespons; rincian ada di api-health.json"
+                    }
+                ],
+    "note":  "PASS hanya berlaku untuk pemeriksaan yang benar-benar dijalankan."
+}

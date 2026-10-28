@@ -1,0 +1,81 @@
+diff --git a/app/devcore/core.py b/app/devcore/core.py
+index 8562625..0976998 100644
+--- a/app/devcore/core.py
++++ b/app/devcore/core.py
+@@ -4,6 +4,7 @@ from __future__ import annotations
+ 
+ import asyncio
+ import concurrent.futures
++import json
+ import time
+ from pathlib import Path
+ from collections.abc import Callable
+@@ -150,9 +151,10 @@ class DevCore:
+         ver = {"status": "failed" if v else "passed", "violations": [x.__dict__ for x in v]}
+         body = model_text
+         if v:
+-            body += ("\n\nPERINGATAN verifikasi grounding: klaim berikut tidak didukung source -> "
+-                     + "; ".join(f"[{x.rule}] \"{x.sentence[:80]}\"" for x in v)
+-                     + "\nGunakan fakta statis:\n" + "\n".join(f"- {f}" for f in facts))
++            # Rejected model text remains diagnostic evidence, not the answer.
++            body = ("PERINGATAN: analisis model tidak lolos pemeriksaan source. "
++                    "Berikut fakta statis dari source:\n"
++                    + "\n".join(f"- {f}" for f in facts))
+         return body, ver
+ 
+     async def handle(self, text: str, session_id: str = "default") -> dict[str, Any]:
+@@ -165,6 +167,22 @@ class DevCore:
+             if not p.handled:
+                 return {**base, "answer": "", "tool": {"used": False, "name": None, "result": None, "calls": []},
+                         "verification": {"status": "not_applicable", "violations": []}, "modify_blocked": False}
++            if p.inspection is not None:
++                # Preview is terminal: no tools, source reads, model or execution.
++                preview = p.inspection
++                blocked = p.modify_requested or preview['status'] == 'HUMAN_DECISION_REQUIRED'
++                out = {**base, 'inspection_preview': preview,
++                       'answer': json.dumps(preview, ensure_ascii=False, indent=2),
++                       'latency_ms': round((time.perf_counter() - t0) * 1000, 2),
++                       'modify_blocked': blocked,
++                       'verification': {'status': 'not_applicable', 'violations': []},
++                       'tool': {'used': False, 'name': None, 'result': None, 'calls': []}}
++                self.audit.record('dev.request', request_id=ids['request_id'], session_id=session_id,
++                                  intent=p.intent, file_references=[], tools=[], model='NOT_INVOKED',
++                                  latency_ms=out['latency_ms'], verification='not_applicable',
++                                  modify_requested=p.modify_requested, errors=[],
++                                  preview_status=preview['status'], target=preview['target'])
++                return out
+             calls: list[dict[str, Any]] = []
+             notes: list[str] = []
+             results = self._resolve_reads(p, calls, ids["request_id"], notes)
+diff --git a/app/devcore/router.py b/app/devcore/router.py
+index 45389f2..6a3e2bf 100644
+--- a/app/devcore/router.py
++++ b/app/devcore/router.py
+@@ -6,6 +6,7 @@ import re
+ from dataclasses import dataclass, field
+ 
+ from app.devcore.workspace import is_sensitive_name
++from app.devcore.inspection import inspection_preview
+ 
+ _EXT = "py|md|toml|json|ya?ml|txt|ini|cfg|env|html|css|js|ts|tsx|jsx|ps1|sh|bat|sql|csv|lock|example"
+ _FILE = re.compile(rf"(?<![\w/\\.:@-])((?:[A-Za-z]:[/\\]|/)?(?:[\w.\-]+[/\\])*[\w.\-]+\.(?:{_EXT}))(?![\w])", re.I)
+@@ -35,6 +36,7 @@ class DevPlan:
+     actions: list[tuple[str, str]] = field(default_factory=list)   # (mode, target)
+     modify_requested: bool = False
+     verbatim: bool = False
++    inspection: dict | None = None
+ 
+ 
+ def extract_file_refs(text: str) -> list[str]:
+@@ -56,6 +58,11 @@ def plan(text: str, max_files: int = 3) -> DevPlan:
+     read_v, find_v, modify_v = has(_READ), has(_FIND), has(_MODIFY)
+     folder_ctx = has(_FOLDER) or _DIR_SLASH.search(norm) is not None
+     list_v = has(_LIST) and folder_ctx
++    preview = inspection_preview(orig, explicit_source=bool(refs) or list_v or bool(
++        re.search(r'\b(?:cari|temukan|find|search)\s+file\b', low)))
++    if preview is not None:
++        return DevPlan(True, 'inspection_preview', orig, norm, modify_requested=modify_v,
++                       inspection=preview)
+     actions: list[tuple[str, str]] = []
+     if refs:
+         for r in refs:

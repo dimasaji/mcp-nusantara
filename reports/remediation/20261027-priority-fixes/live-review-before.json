@@ -1,0 +1,38 @@
+{
+  "phase": "before",
+  "configured_provider": "ollama",
+  "configured_model": "llama3.2:1b",
+  "credential_present": true,
+  "observations": [
+    {
+      "name": "backend_health",
+      "url": "http://127.0.0.1:8000/health",
+      "at_utc": "2026-10-27T04:41:25.316301+00:00",
+      "http_status": null,
+      "error_type": "URLError",
+      "reason_type": "ConnectionRefusedError"
+    },
+    {
+      "name": "frontend_health",
+      "url": "http://127.0.0.1:5180/health",
+      "at_utc": "2026-10-27T04:41:27.415428+00:00",
+      "http_status": 500,
+      "error_type": "HTTPError"
+    },
+    {
+      "name": "ollama",
+      "url": "http://127.0.0.1:11434/api/version",
+      "at_utc": "2026-10-27T04:41:27.455475+00:00",
+      "http_status": null,
+      "error_type": "URLError",
+      "reason_type": "ConnectionRefusedError"
+    },
+    {
+      "name": "review",
+      "url": "http://127.0.0.1:5180/v1/knowledge/pipeline/reviews/DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b",
+      "at_utc": "2026-10-27T04:41:29.481973+00:00",
+      "http_status": 500,
+      "error_type": "HTTPError"
+    }
+  ]
+}

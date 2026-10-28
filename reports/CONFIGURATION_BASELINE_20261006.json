@@ -1,0 +1,768 @@
+{
+  "date": "2026-10-06",
+  "status": "AUDIT_ONLY",
+  "phase": 0,
+  "python_version": "3.13.15",
+  "platform": "Windows",
+  "interpreter": "C:\\users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+  "effective_runtime_configuration": "NOT_LOADED_OR_PROVEN",
+  "source": "STATIC_SOURCE_DEFAULTS_AND_DECLARATION_NAMES_ONLY",
+  "settings_source": "app/core/config.py",
+  "settings_defaults": {
+    "app_name": "Nusantara Core + Hermes",
+    "app_version": "0.1.0",
+    "debug": false,
+    "host": "127.0.0.1",
+    "port": 8000,
+    "llm_provider": "ollama",
+    "llm_base_url": "http://localhost:11434",
+    "llm_api_key": "VALUE_NOT_RECORDED",
+    "llm_model": "llama3.2:1b",
+    "llm_context_tokens": 4096,
+    "session_timeout_minutes": 30,
+    "embedding_model": "local-hash",
+    "chunk_size": 512,
+    "chunk_overlap": 64,
+    "retrieval_top_k": 5,
+    "log_level": "INFO",
+    "context_window_size": 10,
+    "vector_store_type": "memory",
+    "privacy_filter_enabled": true
+  },
+  "settings_fields": {
+    "app_name": {
+      "line": 7,
+      "default": "Nusantara Core + Hermes",
+      "type": "str",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "app_version": {
+      "line": 8,
+      "default": "0.1.0",
+      "type": "str",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "debug": {
+      "line": 9,
+      "default": false,
+      "type": "bool",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "host": {
+      "line": 10,
+      "default": "127.0.0.1",
+      "type": "str",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "port": {
+      "line": 11,
+      "default": 8000,
+      "type": "int",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "llm_provider": {
+      "line": 12,
+      "default": "ollama",
+      "type": "str",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "llm_base_url": {
+      "line": 13,
+      "default": "http://localhost:11434",
+      "type": "str",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "llm_api_key": {
+      "line": 14,
+      "default": "VALUE_NOT_RECORDED",
+      "type": "Optional[str]",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "llm_model": {
+      "line": 15,
+      "default": "llama3.2:1b",
+      "type": "str",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "llm_context_tokens": {
+      "line": 16,
+      "default": 4096,
+      "type": "int",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "session_timeout_minutes": {
+      "line": 18,
+      "default": 30,
+      "type": "int",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "embedding_model": {
+      "line": 19,
+      "default": "local-hash",
+      "type": "str",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "chunk_size": {
+      "line": 21,
+      "default": 512,
+      "type": "int",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "chunk_overlap": {
+      "line": 22,
+      "default": 64,
+      "type": "int",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "retrieval_top_k": {
+      "line": 23,
+      "default": 5,
+      "type": "int",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "log_level": {
+      "line": 25,
+      "default": "INFO",
+      "type": "str",
+      "environment_override": "BaseSettings field; case-insensitive by default; verify loader settings separately"
+    },
+    "context_window_size": {
+      "line": 17,
+      "default": 10,
+      "type": "int",
+      "environment_override": "BaseSettings field; case-insensitive"
+    },
+    "vector_store_type": {
+      "line": 20,
+      "default": "memory",
+      "type": "str",
+      "environment_override": "BaseSettings field; case-insensitive"
+    },
+    "privacy_filter_enabled": {
+      "line": 24,
+      "default": true,
+      "type": "bool",
+      "environment_override": "BaseSettings field; case-insensitive"
+    }
+  },
+  "environment": {
+    "dotenv_exists": false,
+    "dotenv_declarations": [],
+    "process_variable_names_only": [
+      "CODEX_APP_TOOLS_PIPE_PATH",
+      "CODEX_CLI_PATH",
+      "CODEX_MCP_NODE_PATH",
+      "CODEX_TECTONIC_PATH",
+      "HERMES_GIT_BASH_PATH",
+      "HOMEPATH",
+      "PATH",
+      "PATHEXT",
+      "PSMODULEPATH"
+    ],
+    "declared_or_read_variable_names": [
+      "APP_NAME",
+      "APP_VERSION",
+      "CHUNK_OVERLAP",
+      "CHUNK_SIZE",
+      "CONTEXT_WINDOW_SIZE",
+      "DEBUG",
+      "EMBEDDING_MODEL",
+      "HOST",
+      "LLM_BASE_URL",
+      "LLM_CONTEXT_TOKENS",
+      "LLM_MODEL",
+      "LLM_PROVIDER",
+      "LOG_LEVEL",
+      "NUSANTARA_ADMIN_TOKEN",
+      "NUSANTARA_BASE_URL",
+      "NUSANTARA_CODER_MODEL",
+      "NUSANTARA_DATA_DIR",
+      "NUSANTARA_DISCOVERY_HOSTS",
+      "NUSANTARA_INDOBERT_PYTHON",
+      "NUSANTARA_INDOBERT_WORKER",
+      "NUSANTARA_KNOWLEDGE_DB",
+      "NUSANTARA_TEST_GIT",
+      "NUSANTARA_TEST_TIMEOUT",
+      "NUSANTARA_WORKSPACE",
+      "OLLAMA_URL",
+      "PORT",
+      "PRIVACY_FILTER_ENABLED",
+      "RETRIEVAL_TOP_K",
+      "SESSION_TIMEOUT_MINUTES",
+      "VECTOR_STORE_TYPE"
+    ],
+    "secret_values_recorded": false
+  },
+  "configuration_files": [
+    {
+      "file": ".claude/settings.json",
+      "bytes": 492,
+      "scope": "OTHER"
+    },
+    {
+      "file": ".env.example",
+      "bytes": 385,
+      "scope": "OTHER"
+    },
+    {
+      "file": "app/core/config.py",
+      "bytes": 1019,
+      "scope": "APPLICATION"
+    },
+    {
+      "file": "app/evaluation/baselines/smoke_mock.json",
+      "bytes": 361,
+      "scope": "APPLICATION"
+    },
+    {
+      "file": "app/evaluation/datasets/smoke_id.json",
+      "bytes": 438,
+      "scope": "APPLICATION"
+    },
+    {
+      "file": "app/evaluation/datasets/v1_id.json",
+      "bytes": 1169,
+      "scope": "APPLICATION"
+    },
+    {
+      "file": "app/evaluation/datasets/v1_recovery_oracle.json",
+      "bytes": 9415,
+      "scope": "APPLICATION"
+    },
+    {
+      "file": "app_backup_before_openrouter/core/config.py",
+      "bytes": 984,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/AUDIT_2026-10-05_EVIDENCE.json",
+      "bytes": 7058,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/AUDIT_DOCKER_2026-10-05.json",
+      "bytes": 2947,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/AUDIT_RUNTIME_READINESS_2026-10-05.json",
+      "bytes": 1398,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/EVAL_V1_2026-10-06.json",
+      "bytes": 22938,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/LOAD_CHAT_2026-10-06.json",
+      "bytes": 543,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/LOAD_HEALTH_2026-10-06.json",
+      "bytes": 2085,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/PHASE12_LIVE_TRACE_2026-10-06.json",
+      "bytes": 780,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/release-source/app/core/config.py",
+      "bytes": 984,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/release-source/app/evaluation/baselines/smoke_mock.json",
+      "bytes": 361,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/release-source/app/evaluation/datasets/smoke_id.json",
+      "bytes": 438,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/release-source/app/evaluation/datasets/v1_id.json",
+      "bytes": 1169,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/release-source/config/rag_runtime.json",
+      "bytes": 823,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/release-source/pyproject.toml",
+      "bytes": 2722,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/restored/release-source/app/core/config.py",
+      "bytes": 984,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/restored/release-source/app/evaluation/baselines/smoke_mock.json",
+      "bytes": 361,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/restored/release-source/app/evaluation/datasets/smoke_id.json",
+      "bytes": 438,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/restored/release-source/app/evaluation/datasets/v1_id.json",
+      "bytes": 1169,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/restored/release-source/config/rag_runtime.json",
+      "bytes": 823,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/restored/release-source/pyproject.toml",
+      "bytes": 2722,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025037193681Z/result.json",
+      "bytes": 537,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/release-source/app/core/config.py",
+      "bytes": 984,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/release-source/app/evaluation/baselines/smoke_mock.json",
+      "bytes": 361,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/release-source/app/evaluation/datasets/smoke_id.json",
+      "bytes": 438,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/release-source/app/evaluation/datasets/v1_id.json",
+      "bytes": 1169,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/release-source/config/rag_runtime.json",
+      "bytes": 823,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/release-source/pyproject.toml",
+      "bytes": 2722,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/restored/release-source/app/core/config.py",
+      "bytes": 984,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/restored/release-source/app/evaluation/baselines/smoke_mock.json",
+      "bytes": 361,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/restored/release-source/app/evaluation/datasets/smoke_id.json",
+      "bytes": 438,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/restored/release-source/app/evaluation/datasets/v1_id.json",
+      "bytes": 1169,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/restored/release-source/config/rag_runtime.json",
+      "bytes": 823,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/restored/release-source/pyproject.toml",
+      "bytes": 2722,
+      "scope": "OTHER"
+    },
+    {
+      "file": "audit_reports/staging-drill-20261006T025945053115Z/result.json",
+      "bytes": 537,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE14_2_RUNTIME_GRAPH_PASS_20261005_140903/gate14_runtime_graph_truth.json",
+      "bytes": 5427,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE16_FREEZE_20261005_140152/gate14_3_runtime_graph_connectivity.json",
+      "bytes": 6876,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE16_FREEZE_20261005_140152/gate16_1_sop_artifact_truth.json",
+      "bytes": 837,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE16_FREEZE_20261005_140152/gate16_2_sop_pipeline_integrity.json",
+      "bytes": 1715,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE16_FREEZE_20261005_140152/gate16_3_sop_rag_bridge_truth.json",
+      "bytes": 2410,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE16_FREEZE_20261005_140152/gate16_4_sop_retrieval_truth.json",
+      "bytes": 8452,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE16_FREEZE_20261005_140152/gate16_5_evidence_grounding_truth.json",
+      "bytes": 8422,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE16_FREEZE_20261005_140152/gate16_6_negative_abstention_truth.json",
+      "bytes": 1943,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE16_FREEZE_20261005_140152/gate16_7_1_grounded_answer_contract.json",
+      "bytes": 1051,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE16_FREEZE_20261005_140152/gate16_7_pdf_to_answer_e2e.json",
+      "bytes": 23914,
+      "scope": "OTHER"
+    },
+    {
+      "file": "backup/GATE17_5_PASS_20261005_142513/gate14_runtime_graph_truth.json",
+      "bytes": 5427,
+      "scope": "OTHER"
+    },
+    {
+      "file": "config/rag_runtime.json",
+      "bytes": 823,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docker-compose.audit.yml",
+      "bytes": 389,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docker-compose.yml",
+      "bytes": 816,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V100/result.json",
+      "bytes": 470,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V101/result.json",
+      "bytes": 398,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V102/result.json",
+      "bytes": 378,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V103/result.json",
+      "bytes": 386,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V104/result.json",
+      "bytes": 367,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V105/result.json",
+      "bytes": 373,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V106/result.json",
+      "bytes": 401,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V107/result.json",
+      "bytes": 406,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V108/result.json",
+      "bytes": 367,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V109/result.json",
+      "bytes": 375,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V110/result.json",
+      "bytes": 382,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V111/result.json",
+      "bytes": 369,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V112/result.json",
+      "bytes": 362,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V113/result.json",
+      "bytes": 376,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V114/result.json",
+      "bytes": 371,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V115/result.json",
+      "bytes": 400,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V116/result.json",
+      "bytes": 365,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V117/result.json",
+      "bytes": 415,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V118/result.json",
+      "bytes": 382,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V200/result.json",
+      "bytes": 448,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V201/result.json",
+      "bytes": 373,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V202/result.json",
+      "bytes": 404,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V203/result.json",
+      "bytes": 413,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V204/result.json",
+      "bytes": 382,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V205/result.json",
+      "bytes": 375,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V206/result.json",
+      "bytes": 369,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V207/result.json",
+      "bytes": 401,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V208/result.json",
+      "bytes": 370,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V209/result.json",
+      "bytes": 373,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V210/result.json",
+      "bytes": 374,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V211/result.json",
+      "bytes": 360,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V212/result.json",
+      "bytes": 369,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V213/result.json",
+      "bytes": 367,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V214/result.json",
+      "bytes": 360,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V215/result.json",
+      "bytes": 420,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V216/result.json",
+      "bytes": 364,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V217/result.json",
+      "bytes": 382,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V218/result.json",
+      "bytes": 373,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V219/result.json",
+      "bytes": 377,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V220/result.json",
+      "bytes": 420,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/evidence/V221/result.json",
+      "bytes": 387,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/master_engine/evidence/v2/00/result.json",
+      "bytes": 9322,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/MASTER_ENGINE_REPORT.json",
+      "bytes": 7137,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/MASTER_ENGINE_STATE.json",
+      "bytes": 338,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/V2_GAPS.json",
+      "bytes": 190,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/V2_IMPLEMENTATION_MATRIX.json",
+      "bytes": 19814,
+      "scope": "OTHER"
+    },
+    {
+      "file": "docs/audit/V2_ROADMAP.json",
+      "bytes": 967,
+      "scope": "OTHER"
+    },
+    {
+      "file": "pyproject.toml",
+      "bytes": 2722,
+      "scope": "OTHER"
+    },
+    {
+      "file": "test-chat.json",
+      "bytes": 118,
+      "scope": "OTHER"
+    },
+    {
+      "file": "test-general.json",
+      "bytes": 123,
+      "scope": "OTHER"
+    },
+    {
+      "file": "test-grounding.json",
+      "bytes": 125,
+      "scope": "OTHER"
+    },
+    {
+      "file": "test-requirements.json",
+      "bytes": 139,
+      "scope": "OTHER"
+    },
+    {
+      "file": "test-status.json",
+      "bytes": 135,
+      "scope": "OTHER"
+    },
+    {
+      "file": "tests/evaluation/scenarios.json",
+      "bytes": 17386,
+      "scope": "TEST"
+    }
+  ],
+  "provider_default": "ollama",
+  "generation_model_default": "llama3.2:1b",
+  "embedding_model_default": "local-hash",
+  "rag_defaults": {
+    "chunk_size": 512,
+    "chunk_overlap": 64,
+    "retrieval_top_k": 5
+  },
+  "runtime_defaults": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "log_level": "INFO",
+    "debug": false
+  },
+  "path_configuration": "Discovery candidates; defaults not treated as live production configuration",
+  "developer_core_baseline": "14.2.0-read-only-analysis PASS_SCOPED; previous test evidence preserved",
+  "overall_v1_acceptance": "FAIL/HOLD unchanged",
+  "created_at": "2026-10-06T11:06:14.903537+00:00",
+  "settings_loader": {
+    "env_file": ".env",
+    "env_file_encoding": "utf-8",
+    "case_sensitive": false,
+    "extra": "ignore"
+  },
+  "coverage_correction": "Captured all annotated Settings fields, including names outside keyword pattern; values restricted to reviewed public defaults"
+}

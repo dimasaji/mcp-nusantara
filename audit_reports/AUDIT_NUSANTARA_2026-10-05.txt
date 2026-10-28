@@ -1,0 +1,210 @@
+AUDIT APLIKASI NUSANTARA — 5 Oktober 2026 (Asia/Jakarta)
+
+Kesimpulan
+Status akhir: PASS untuk temuan audit dan validasi Docker yang tercakup di laporan ini.
+Ini bukan sertifikasi kesiapan produksi menyeluruh; cakupan kualitas jawaban dan kapasitas belum diuji.
+Seluruh suite terbaru: 168 passed, 0 failed, 1 skipped, 2 warnings dalam 85.77 detik.
+Pengujian terarah: 52 passed, 0 failed dalam 56.03 detik.
+Ada 18 pengujian regresi baru untuk parser, otorisasi endpoint, pencarian, dan konfigurasi worker.
+Bukti terbaru: audit_reports/PYTEST_DOCKER_FIX_FULL_2026-10-05.xml.
+Bukti tahap sebelumnya: PYTEST_FIXES_FULL_2026-10-05.xml dan PYTEST_FIXES_TARGETED_2026-10-05.xml.
+Ini audit kode dan konfigurasi serta pengujian API melalui TestClient, bukan penetration
+test deployment aktif. Satu temuan awal (F02) ditarik karena kesalahan audit.
+
+Status tindak lanjut
+F01: DIPERBAIKI DAN DIUJI. Parser teks tidak membuka path; PDF/DOCX memerlukan bytes.
+     RAG tidak menyimpulkan tipe file dari konten. Ingest juga membutuhkan token admin.
+F02: DITARIK. Metode analyze tersedia melalui assignment kompatibilitas.
+F03: DIPERBAIKI DAN DIUJI. Snapshot konteks chat yang tidak tersedia dihapus dari
+     handler search; API asli dan skenario hasil kosong/terisi lulus.
+F04: DIPERBAIKI DAN DIUJI. /v2/dev dan ingest menggunakan gerbang admin bersama;
+     token kosong/tidak cocok ditolak sebelum akses backend. Docker bind ke loopback.
+F05: DIPERBAIKI DAN DIUJI DI DOCKER. Volume apidata dipasang pada
+     /app/data; jalur SQLite/audit konsisten; direktori dibuat untuk uid aplikasi.
+F06: DIPERBAIKI DAN DIUJI DI DOCKER. Skrip healthcheck tersedia; container healthy.
+F07: DIPERBAIKI DAN DIUJI DI DOCKER. Image menyiapkan venv worker
+     Linux dengan torch CPU/transformers, menyalin worker, dan mengatur interpreter/cache.
+     Image berhasil dibangun; ingest dan retrieval memakai embedding Linux nyata berhasil.
+Pemindai secret: DIPERBAIKI DAN DIUJI. Dokumentasi fixture diberi penanda nosecret
+     secara spesifik atau ditulis tanpa pola assignment. Pemindai dan fixture redaction
+     tetap utuh; pengujian pemindai lulus dalam suite penuh.
+
+Validasi runtime nyata (Windows, data sementara): 6/6 PASS dalam 35.742 detik.
+- API menolak ingest/developer tanpa otorisasi.
+- Ingest menggunakan IndoBERT asli; satu chunk tersimpan.
+- Pencarian semantik mengembalikan fixture yang benar.
+- Proses Python baru mengambil kembali dokumen dari SQLite yang sama.
+- Audit hash chain tetap valid setelah file dimuat ulang dan ditambah entry.
+- Ollama llama3.2:1b menghasilkan respons nyata, bukan mock.
+Bukti: audit_reports/AUDIT_RUNTIME_READINESS_2026-10-05.json.
+Skrip yang dapat dijalankan ulang: scripts/verify_audit_runtime.py.
+Tidak ada data produksi yang digunakan atau diubah oleh skrip ini.
+
+Tes test_blocked sebelumnya melewati seluruh pemeriksaan ketika symlink ditolak Windows.
+Kini pemeriksaan traversal, file sensitif, dan data/ dipisah dari pengujian symlink.
+Pengujian path lokal: 14 passed, 1 skipped; skip hanya untuk symlink (privilege Windows).
+Koreksi: skip ini bukan health gate DevCore seperti yang disebut dokumentasi lama.
+Pengujian symlink nyata juga PASS di container Linux; skip lokal Windows tetap tercatat
+karena privilege Windows, bukan kelemahan perlindungan yang ditemukan.
+Timestamp handoff memakai UTC dengan timezone; warning datetime.utcnow sudah hilang
+pada suite. Dua warning tersisa berasal dari dependensi httpx/Starlette dan anyio.
+
+Graphify update . berhasil: 3593 nodes, 7413 edges, 235 communities.
+Docker Desktop kini terpasang, engine Linux aktif, build dan pengujian berhasil.
+Project audit: nusantara-audit-20261005; dashboard http://127.0.0.1:8001/.
+Volume audit terpisah dari layanan lokal port 8000. Root filesystem read-only,
+proses memakai appuser. Dashboard audit dan health layanan lokal sama-sama HTTP 200.
+7 pemeriksaan image akhir PASS; 4 pemeriksaan setelah restart PASS.
+Dokumen tersimpan tetap bisa diretrieve setelah restart; hash chain audit tetap valid.
+Bukti: DOCKER_FIXED_INITIAL_2026-10-05.jsonl dan DOCKER_RESTART_2026-10-05.jsonl.
+Pengujian Docker menemukan blocking event loop saat ingest/pencarian sinkron;
+handler sekarang menjalankan kedua pekerjaan dengan asyncio.to_thread.
+Dua tes regresi baru lulus; health selama ingest nyata merespons dalam 0.003 detik.
+README memuat kebutuhan token admin, perubahan kontrak parser, volume, model cache,
+serta koneksi Ollama dari container. Container audit dibiarkan berjalan untuk pemeriksaan pengguna.
+
+Pekerjaan berikutnya sebelum penggunaan produksi
+1. Uji pertanyaan representatif terhadap SOP/dokumen pengguna yang memang disetujui
+   untuk dimasukkan; nilai relevansi sumber dan akurasi jawaban.
+2. Tetapkan konfigurasi deployment tetap: token admin kuat, lokasi penyimpanan,
+   backup/restore, koneksi Ollama. Token audit saat ini bersifat sementara.
+3. Uji kapasitas dan kegagalan layanan sesuai target penggunaan sebenarnya.
+4. Dua warning dependensi masih ada. Pengujian symlink Windows dapat diulang setelah
+   Developer Mode aktif; proteksi symlink sudah dibuktikan pada Linux.
+
+CATATAN HISTORIS — bagian di bawah merekam keadaan SEBELUM perbaikan.
+Angka kegagalan dan uraian source awal di bawah digantikan oleh status akhir di atas.
+
+Lingkup dan metode
+- Pemetaan graphify-out/graph.json, lalu pemeriksaan source API v1/v2, developer
+  workspace, RAG/parser/store, governance, approval/audit, UI, dan Docker.
+- CLI Graphify ada tetapi gagal: uv trampoline failed to canonicalize script path.
+  Relasi graph diperiksa melalui pembacaan node dan edge yang sudah tersedia.
+- Pemeriksaan sintaks 185 file Python di app/: tidak ada kesalahan sintaks.
+- Reproduksi parser menggunakan file sementara berisi marker buatan, bukan rahasia.
+- Reproduksi fungsi search_knowledge asli yang diekstrak dengan AST, dengan dependency
+  palsu agar tidak memanggil model/database. Ini bukti fungsi terisolasi, bukan HTTP end-to-end.
+- Environment pengujian ditemukan: C:/Users/dmaza/AppData/Local/Programs/Python/Python313/python.exe,
+  Python 3.13.15, pytest 9.1.1. Akses membutuhkan eksekusi di luar sandbox.
+  Python berbeda pada PATH dan .venv proyek tidak menyediakan pytest.
+- Pengujian API asli tests/test_v1_smoke.py: 2 passed, 1 failed dalam 42.16 detik.
+  Gagal: knowledge/search mengembalikan 500 karena session_id tidak tersedia.
+  Chat dan problem/analyze lolos pemeriksaan tidak menghasilkan 500.
+  Bukti: audit_reports/PYTEST_V1_2026-10-05.xml.
+- Seluruh suite tests/: 148 collected, 145 passed, 2 failed, 1 skipped,
+  3 warnings dalam 45.33 detik. Bukti: audit_reports/PYTEST_FULL_2026-10-05.xml.
+  Kegagalan pertama: tests/test_v1_smoke.py::test_v1_knowledge_search_does_not_500
+  (mengonfirmasi F03 melalui API asli).
+  Kegagalan kedua: tests/v2/test_phases_7_21.py::TestSecurity::test_project_has_no_secrets.
+  Pemindai menandai docs/audit/BASELINE.md:173,174,184,185 karena cuplikan diff dan
+  penjelasan fixture redaction. Inspeksi baris memastikan marker test buatan,
+  bukan kredensial nyata. Ini false positive dokumentasi yang perlu ditangani secara
+  sempit, tanpa melemahkan pemindaian atau menghapus pengujian redaction.
+  Warnings: kompatibilitas httpx/Starlette, anyio BlockingPortal, datetime.utcnow.
+  Hasil suite ini menggantikan angka pengujian historis untuk checkout yang diperiksa.
+- Docker tidak dibangun atau dijalankan; temuan Docker berasal dari konfigurasi.
+- Bukti terstruktur: audit_reports/AUDIT_2026-10-05_EVIDENCE.json.
+
+F01 — P1 — Konten dokumen dapat membaca file lokal server
+Source: app/knowledge/parser.py:18-25; app/api/routes.py:1332-1348;
+        app/knowledge/rag.py (pemanggilan DocumentParser saat ingest).
+TextParser mengubah string konten menjadi Path, lalu membaca file jika tersedia.
+Endpoint publik /v1/documents/ingest meneruskan request.content sebagai source.
+Tidak ada autentikasi atau pembatasan root pada jalur ini. Konten yang menyerupai
+path absolut/relatif bisa memasukkan isi file yang dapat dibaca proses server ke RAG.
+Dampak: kebocoran/penyalinan file lokal ke basis pengetahuan dan pencemaran sumber.
+Reproduksi: DocumentParser mengembalikan isi file sementara dari input berupa path.
+Keberhasilan ingest lengkap bergantung pada worker embedding dan database; belum diuji.
+Perbaikan: pisahkan parsing konten literal dan impor file. Konten API harus selalu
+literal; impor file harus membutuhkan autentikasi dan pemeriksaan workspace/sensitivitas.
+Verifikasi: ingest string path harus menyimpan string itu, tidak membaca file; uji
+path absolut, traversal, symlink, dan nama file sensitif dengan file contoh.
+
+F02 — DITARIK — Metode analyze tersedia melalui compatibility assignment
+Source: app/problem/engine.py:594.
+Audit awal hanya memeriksa definisi metode di dalam kelas, sehingga melewatkan
+ProblemEngine.analyze = _compat_analyze di akhir modul. Ini kesalahan audit awal.
+Pengujian API asli chat dan problem/analyze keduanya lolos pemeriksaan tidak-500.
+Tidak diperlukan perubahan engine berdasarkan temuan awal ini. Lolos smoke test
+tidak membuktikan seluruh semantik respons atau semua input sudah benar.
+
+F03 — P1 — Pencarian pengetahuan gagal setelah retrieval
+Source: app/api/routes.py:103 dan 1391-1403.
+KnowledgeSearchRequest hanya memiliki query, top_k, filter. Fungsi search_knowledge
+mengakses session_id/user_input dan gate_context/model_status/latency_ms yang tidak
+didefinisikan di fungsi. Field ekstra request tidak memperbaiki kontrak schema ini.
+Dampak: /v1/knowledge/search mengembalikan 500 setelah retrieval berhasil.
+Reproduksi fungsi terisolasi dan pengujian API asli: 500, atribut session_id tidak ada. Variabel tak terdefinisi
+akan tetap bermasalah jika hanya atribut request yang diperbaiki.
+Perbaikan: hilangkan snapshot chat dari handler search atau bentuk konteks search yang
+lengkap dan eksplisit. Pertahankan schema serta respons yang jelas.
+Verifikasi: hasil kosong maupun hasil terisi harus berhasil pada endpoint asli.
+
+F04 — P1 — Endpoint developer tidak memeriksa identitas pengguna
+Source: app/api/v2_routes.py:159-175; app/main.py (registrasi router);
+        docker-compose.yml:4.
+/v2/dev membuka DevCore pada NUSANTARA_WORKSPACE atau cwd tanpa _require_admin,
+Header token, atau dependency autentikasi. Endpoint admin lain sudah memakai token.
+Workspace mempunyai proteksi traversal/file sensitif, tetapi file source yang diizinkan
+tetap bisa diakses oleh siapa pun yang dapat menjangkau API. Docker mempublikasikan
+port pada semua interface host secara default.
+Dampak: pengungkapan source internal dan penggunaan model tanpa otorisasi.
+Perbaikan: wajibkan autentikasi/otorisasi developer; untuk penggunaan lokal batasi
+publikasi port ke 127.0.0.1. Proteksi workspace tetap diperlukan.
+Verifikasi: tanpa token atau token salah harus 401/403; pengguna berizin tetap berhasil.
+
+F05 — P1 — Docker read-only tidak menyediakan penyimpanan writable aplikasi
+Source: docker-compose.yml:9-10; app/knowledge/store.py:22-32;
+        app/api/routes.py (KnowledgeEngine global); app/api/v2_routes.py:29-35.
+Container API read_only:true hanya mempunyai tmpfs /tmp, tanpa volume data untuk API.
+SQLiteVectorStore default membuat data/knowledge dan menginisialisasi DB saat
+KnowledgeEngine dibuat pada import. Audit/experience juga menulis ke data/.
+Volume pgdata milik PostgreSQL tidak dipasang ke API dan tidak menggantikan SQLite ini.
+Dampak: dengan konfigurasi default, startup API berpotensi terhenti saat pembuatan
+database; audit/persistensi tidak dapat ditulis. Temuan konfigurasi, belum diuji Docker.
+Perbaikan: sediakan volume writable pada /app/data dengan pemilik yang sesuai, dan
+selaraskan NUSANTARA_DATA_DIR/NUSANTARA_KNOWLEDGE_DB. Pertahankan root read-only.
+Verifikasi: container start sehat, ingest/chat menulis data, restart mempertahankan data.
+
+F06 — P2 — Healthcheck Docker merujuk file yang tidak ada dalam image
+Source: Dockerfile:6-12.
+HEALTHCHECK menjalankan python scripts/healthcheck.py, tetapi Dockerfile tidak menyalin
+direktori scripts. COPY yang ada hanya app, docs, pyproject.toml, .env.example.
+Dampak: healthcheck gagal meskipun API sudah bisa berjalan; status container unhealthy.
+Perbaikan: salin skrip yang diperlukan atau gunakan pemeriksaan HTTP yang tersedia
+langsung di image. Verifikasi melalui health status container yang benar-benar berjalan.
+
+F07 — P1 — Jalur worker embedding default tidak tersedia pada Docker Linux
+Source: app/language/semantic/indobert_client.py:27-39;
+        app/knowledge/rag.py:220; Dockerfile:6-8.
+RAG memakai IndoBERTEmbeddingAdapter secara default. IndoBERTClient memakai
+nusantara-models/.venv/Scripts/python.exe dan nusantara-models/indobert_worker.py.
+Image Linux tidak menyalin nusantara-models dan tidak memiliki interpreter Windows.
+Dampak: ingest/retrieval yang membutuhkan embedding gagal, setelah masalah startup
+penyimpanan diperbaiki. Environment Windows lengkap bisa berbeda.
+Perbaikan: sediakan worker/model dan interpreter sesuai OS melalui konfigurasi,
+atau jalankan worker sebagai layanan yang jelas kontraknya. Kegagalan harus terlihat
+di readiness, bukan hanya health status ok.
+Verifikasi: embed, ingest, retrieval semantik berhasil dari dalam container bersih.
+
+Kontrol yang sudah terlihat
+- Admin approval/audit v2 menolak akses jika token tidak dikonfigurasi atau tidak cocok.
+- Workspace DevCore memeriksa containment setelah resolve dan memblokir sejumlah
+  nama sensitif serta direktori data. Ini tidak melindungi parser ingest terpisah.
+- Approval consume membandingkan hash payload, masa berlaku, dan status sekali pakai.
+- Audit memakai hash chain; pemeriksaan lintas proses/pemulihan belum dilakukan.
+- UI addMessage meng-escape teks sebelum memasukkannya ke HTML.
+Kontrol ini tidak membuktikan semua jalur aman atau seluruh UI bebas injeksi.
+
+Urutan tindak lanjut
+1. Tutup pembacaan file lewat ingest dan akses developer tanpa otorisasi.
+2. Perbaiki handler knowledge/search; temuan kontrak ProblemEngine sudah ditarik.
+3. Selaraskan Docker: volume data, worker embedding, dan healthcheck.
+4. Tangani false positive dokumentasi pada pemeriksaan secret. Environment dev
+   sudah ditemukan dan suite asli telah dijalankan; ulangi test yang gagal setelah
+   perbaikan. Uji Docker dan skenario API lebih luas dengan model/worker nyata.
+
+Batas audit
+Tidak menguji deployment server yang sedang aktif, jaringan eksternal, throughput, kualitas model,
+keamanan seluruh modul controlled-write, atau dependency advisory terbaru. Tidak ada
+skor keamanan numerik karena bukti dan cakupan belum mendukung skor yang andal.

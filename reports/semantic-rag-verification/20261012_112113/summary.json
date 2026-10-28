@@ -1,0 +1,42 @@
+﻿{
+    "project":  "C:\\Users\\dmaza\\mcp-starter",
+    "generated_at":  "2026-10-12T11:24:57.0432088+07:00",
+    "overall_status":  "FAIL",
+    "results":  [
+                    {
+                        "stage":  "Semantic Retriever Regression",
+                        "status":  "NOT VERIFIED",
+                        "detail":  "Tidak ditemukan file tes yang cocok.",
+                        "time":  "2026-10-12T11:21:14.8864882+07:00"
+                    },
+                    {
+                        "stage":  "Evidence Integrity",
+                        "status":  "FAIL",
+                        "detail":  "Pytest exit code: 1. Periksa execution.log.",
+                        "time":  "2026-10-12T11:22:43.2955785+07:00"
+                    },
+                    {
+                        "stage":  "RAG API Regression",
+                        "status":  "FAIL",
+                        "detail":  "Pytest exit code: 1. Periksa execution.log.",
+                        "time":  "2026-10-12T11:24:55.7940423+07:00"
+                    },
+                    {
+                        "stage":  "API Health Probe",
+                        "status":  "PASS",
+                        "detail":  "Endpoint health merespons. Periksa api-health.json untuk status komponen.",
+                        "time":  "2026-10-12T11:24:57.0065019+07:00"
+                    }
+                ],
+    "evidence_files":  [
+                           "execution.log",
+                           "summary.json",
+                           "api-health.json"
+                       ],
+    "limitations":  [
+                        "Tes yang dipilih berdasarkan pencarian pola pada source test.",
+                        "Health endpoint PASS tidak membuktikan kualitas jawaban RAG.",
+                        "Tes yang tidak ditemukan atau tidak dapat dikumpulkan bukan PASS.",
+                        "Belum ada klaim end-to-end RAG kecuali dibuktikan oleh tes yang berjalan."
+                    ]
+}

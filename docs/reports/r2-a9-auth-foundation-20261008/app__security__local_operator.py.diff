@@ -1,0 +1,52 @@
+--- a/app/security/local_operator.py
++++ b/app/security/local_operator.py
+@@ -19,6 +19,38 @@
+ 
+ class ActorError(ValueError):
+     pass
++
++
++_PEER_SEAL = object()
++
++
++class VerifiedPeer:
++    """Internal capability minted only after native IPC proof; never serialized."""
++    __slots__ = ('_actor', '_server_pid', '_server_start', '_deadline', '_identity', '_seal')
++
++    def __init__(self, actor, seal):
++        if seal is not _PEER_SEAL:
++            raise ActorError('NATIVE_IPC_PROOF_REQUIRED')
++        object.__setattr__(self, '_actor', actor)
++        object.__setattr__(self, '_server_pid', os.getpid())
++        object.__setattr__(self, '_server_start', Windows().process_start(os.getpid()))
++        object.__setattr__(self, '_deadline', time.monotonic() + 30)
++        object.__setattr__(self, '_identity', object())
++        object.__setattr__(self, '_seal', seal)
++
++    def __setattr__(self, name, value):
++        raise ActorError('IMMUTABLE_NATIVE_IPC_PROOF')
++
++    def validate(self):
++        if (self._seal is not _PEER_SEAL or self._server_pid != os.getpid()
++                or self._server_start != Windows().process_start(os.getpid())
++                or time.monotonic() >= self._deadline
++                or Windows().process_actor(self._actor.pid) != self._actor):
++            raise ActorError('STALE_NATIVE_IPC_PROOF')
++        return self._actor
++
++    def __repr__(self):
++        return '<VerifiedPeer internal>'
+ 
+ 
+ @dataclass(frozen=True)
+@@ -345,6 +377,10 @@
+             with self._lock:
+                 self._state, self._nonce, self._actor = 'TERMINAL', None, None
+ 
++    def serve_authenticated_once(self, handler):
++        """The only adapter entry to backend authority; no caller-provided Actor."""
++        return self.serve_once(lambda actor, body: handler(VerifiedPeer(actor, _PEER_SEAL), body))
++
+     def _challenge(self, actor):
+         with self._lock:
+             if self._state != 'CONNECTING':

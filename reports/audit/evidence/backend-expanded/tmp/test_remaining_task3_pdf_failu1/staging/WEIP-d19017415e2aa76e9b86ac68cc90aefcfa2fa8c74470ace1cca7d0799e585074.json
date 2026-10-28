@@ -1,0 +1,54 @@
+{
+  "document_id": "WEIP-d19017415e2aa76e9b86ac68cc90aefcfa2fa8c74470ace1cca7d0799e585074",
+  "source_id": "fixture",
+  "original_url": "https://example.org/allowed/doc",
+  "final_url": "https://example.org/allowed/doc",
+  "redirects": [],
+  "retrieved_at": "2026-10-27T02:41:03.261888+00:00",
+  "content_type": "application/pdf",
+  "content_hash": "f526795c95399cea27c055c842c3d6ab018ed0fa4f66f701c28ab22dec28237b",
+  "version": "sha256:f526795c95399cea27c055c842c3d6ab018ed0fa4f66f701c28ab22dec28237b",
+  "version_conflict": false,
+  "metadata": {
+    "title": "Fixture",
+    "publisher": "Fixture Publisher",
+    "agency": "Fixture Agency",
+    "domain": "example.org",
+    "jurisdiction": "FIXTURE_ONLY",
+    "service": "fixture-service",
+    "publication_date": null,
+    "effective_date": null,
+    "expiry_date": null,
+    "risk": "HIGH",
+    "source_verification_status": "UNVERIFIED",
+    "source_verification_reference": null,
+    "source_assurance": "OWNER_DECLARED_NOT_INDEPENDENTLY_AUTHENTICATED",
+    "registry_fingerprint": "362c69469cc111aef2edee8719e9f54a11baca49a5286ed46a5c64ba8cc00898",
+    "validation_status": "PENDING",
+    "chunk_reference": "FULL_PARSED_DOCUMENT"
+  },
+  "text": null,
+  "status": "QUARANTINED",
+  "audit": [
+    {
+      "at": "2026-10-27T02:41:03.266654+00:00",
+      "from": "DISCOVERED",
+      "to": "FETCHED",
+      "reason": "FETCH_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "",
+      "content_hash": "f526795c95399cea27c055c842c3d6ab018ed0fa4f66f701c28ab22dec28237b",
+      "event_hash": "deb8441b2298a209e9aaee99889d2ee14b84e7ec227610250d4e452695bd6673"
+    },
+    {
+      "at": "2026-10-27T02:41:03.291543+00:00",
+      "from": "FETCHED",
+      "to": "QUARANTINED",
+      "reason": "PARSE_UNSAFE_OR_UNAVAILABLE",
+      "actor": "pipeline",
+      "previous_hash": "deb8441b2298a209e9aaee99889d2ee14b84e7ec227610250d4e452695bd6673",
+      "content_hash": "f526795c95399cea27c055c842c3d6ab018ed0fa4f66f701c28ab22dec28237b",
+      "event_hash": "0d91087bfabd0577eda307ee34a58e15dc561ee271adf97f538389dfb365be3d"
+    }
+  ]
+}

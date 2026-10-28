@@ -1,0 +1,22 @@
+warning: in the working copy of 'docs/reports/r2-a8-remediation-20261008/profile-before/app__core__nusantara_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/core/nusantara_config.py', LF will be replaced by CRLF the next time Git touches it
+diff --git a/docs/reports/r2-a8-remediation-20261008/profile-before/app__core__nusantara_config.py b/app/core/nusantara_config.py
+index 13e4354..8eb19ff 100644
+--- a/docs/reports/r2-a8-remediation-20261008/profile-before/app__core__nusantara_config.py
++++ b/app/core/nusantara_config.py
+@@ -44,6 +44,7 @@ class _System(_Frozen):
+ 
+ 
+ class _Runtime(_Frozen):
++    profile: Literal["NORMAL", "ATTESTATION"] = "NORMAL"
+     host: str = Field(default="127.0.0.1", min_length=1, max_length=256)
+     port: int = Field(default=8000, ge=1, le=65535)
+     workers: int = Field(default=1, ge=1)
+@@ -235,6 +236,7 @@ class NusantaraConfig:
+ 
+ 
+ _ALIASES = MappingProxyType({
++    "NUSANTARA_RUNTIME_PROFILE": "runtime.profile",
+     "APP_NAME": "system.application_name", "APP_VERSION": "system.version",
+     "DEBUG": "system.debug", "HOST": "runtime.host", "PORT": "runtime.port",
+     "LOG_LEVEL": "runtime.log_level", "LLM_PROVIDER": "llm.provider",

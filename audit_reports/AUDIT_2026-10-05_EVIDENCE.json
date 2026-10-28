@@ -1,0 +1,241 @@
+{
+  "syntax": {
+    "files": 185,
+    "errors": []
+  },
+  "parser_reads_local_path": true,
+  "problem_engine_has_analyze": false,
+  "isolated_search_route": {
+    "status": 500,
+    "detail": "Knowledge search error: 'types.SimpleNamespace' object has no attribute 'session_id'"
+  },
+  "problem_engine_has_analyze_note": "Initial class-body AST check was incomplete: app/problem/engine.py:594 assigns ProblemEngine.analyze = _compat_analyze. Initial finding withdrawn.",
+  "runtime_verification": {
+    "python": "C:/Users/dmaza/AppData/Local/Programs/Python/Python313/python.exe",
+    "pytest": "9.1.1",
+    "v1": {
+      "passed": 2,
+      "failed": 1,
+      "xml": "PYTEST_V1_2026-10-05.xml"
+    },
+    "full": {
+      "collected": 148,
+      "passed": 145,
+      "failed": 2,
+      "skipped": 1,
+      "seconds": 45.33,
+      "xml": "PYTEST_FULL_2026-10-05.xml"
+    },
+    "failures": [
+      "knowledge/search returns HTTP 500: request.session_id missing",
+      "secret scanner flags four documented synthetic redaction fixtures in docs/audit/BASELINE.md"
+    ]
+  },
+  "post_fix": {
+    "targeted": {
+      "passed": 52,
+      "failed": 0,
+      "seconds": 56.03,
+      "xml": "PYTEST_FIXES_TARGETED_2026-10-05.xml"
+    },
+    "full": {
+      "collected": 166,
+      "passed": 165,
+      "failed": 0,
+      "skipped": 1,
+      "warnings": 3,
+      "seconds": 47.37,
+      "xml": "PYTEST_FIXES_FULL_2026-10-05.xml"
+    },
+    "docker": "configuration repaired; CLI not available for runtime verification",
+    "graph": "updated: 3563 nodes, 7338 edges, 241 communities",
+    "new_regression_tests": 18,
+    "status": "CONDITIONAL"
+  },
+  "followup": {
+    "full": {
+      "collected": 167,
+      "passed": 166,
+      "failed": 0,
+      "skipped": 1,
+      "warnings": 2,
+      "seconds": 54.99,
+      "xml": "PYTEST_READINESS_FULL_2026-10-05.xml"
+    },
+    "runtime": {
+      "status": "CONDITIONAL",
+      "seconds": 35.742,
+      "checks": [
+        {
+          "name": "api_authorization",
+          "status": "PASS",
+          "detail": "Both privileged endpoints returned 403 without credentials",
+          "seconds": 0.019
+        },
+        {
+          "name": "api_ingest_real_indobert",
+          "status": "PASS",
+          "detail": {
+            "chunks_stored": 1
+          },
+          "seconds": 10.043
+        },
+        {
+          "name": "api_semantic_retrieval",
+          "status": "PASS",
+          "detail": {
+            "document_id": "audit-runtime-fixture",
+            "score": 0.666138206289028
+          },
+          "seconds": 0.061
+        },
+        {
+          "name": "sqlite_process_restart",
+          "status": "PASS",
+          "detail": "Separate Python process retrieved the persisted fixture",
+          "seconds": 8.513
+        },
+        {
+          "name": "audit_persistence",
+          "status": "PASS",
+          "detail": "Hash chain verified before and after reopening and appending",
+          "seconds": 0.014
+        },
+        {
+          "name": "ollama_real_generation",
+          "status": "PASS",
+          "detail": {
+            "model": "llama3.2:1b",
+            "tokens_used": 39
+          },
+          "seconds": 15.916
+        },
+        {
+          "name": "docker_build_health_persistence",
+          "status": "NOT_RUN",
+          "detail": "Docker deployment still requires build and container tests",
+          "docker_cli_found": false
+        }
+      ]
+    },
+    "skip_reason": "Windows symlink creation requires privilege; ordinary path security checks now run independently",
+    "graph": "3578 nodes, 7376 edges, 235 communities",
+    "pending": [
+      "Docker build and container checks",
+      "symlink security verification on capable host"
+    ]
+  },
+  "docker_final": {
+    "scope": "audited fixes and isolated Linux container verification",
+    "status": "PASS",
+    "initial": {
+      "phase": "initial",
+      "status": "PASS",
+      "checks": [
+        {
+          "name": "container_http_health",
+          "status": "PASS",
+          "detail": "API responds from inside Linux container",
+          "seconds": 0.046
+        },
+        {
+          "name": "container_authorization",
+          "status": "PASS",
+          "detail": "Anonymous privileged requests rejected",
+          "seconds": 0.022
+        },
+        {
+          "name": "container_ingest_real_indobert",
+          "status": "PASS",
+          "detail": {
+            "chunks_stored": 1,
+            "health_during_ingest_seconds": 0.003
+          },
+          "seconds": 17.52
+        },
+        {
+          "name": "container_retrieval",
+          "status": "PASS",
+          "detail": {
+            "document_id": "docker-audit-fixture-20261005",
+            "score": 0.6661381733841352
+          },
+          "seconds": 0.286
+        },
+        {
+          "name": "container_audit",
+          "status": "PASS",
+          "detail": {
+            "entries": 6,
+            "hash_chain_valid": true
+          },
+          "seconds": 0.099
+        },
+        {
+          "name": "container_to_host_ollama",
+          "status": "PASS",
+          "detail": {
+            "model": "llama3.2:1b",
+            "tokens": 4
+          },
+          "seconds": 6.987
+        },
+        {
+          "name": "linux_symlink_boundary",
+          "status": "PASS",
+          "detail": "Real Linux symlink outside workspace rejected",
+          "seconds": 0.972
+        }
+      ]
+    },
+    "restart": {
+      "phase": "restart",
+      "status": "PASS",
+      "checks": [
+        {
+          "name": "container_http_health",
+          "status": "PASS",
+          "detail": "API responds from inside Linux container",
+          "seconds": 0.155
+        },
+        {
+          "name": "container_authorization",
+          "status": "PASS",
+          "detail": "Anonymous privileged requests rejected",
+          "seconds": 0.008
+        },
+        {
+          "name": "retrieval_after_container_restart",
+          "status": "PASS",
+          "detail": {
+            "document_id": "docker-audit-fixture-20261005",
+            "score": 0.6661381733841352
+          },
+          "seconds": 18.101
+        },
+        {
+          "name": "audit_after_container_restart",
+          "status": "PASS",
+          "detail": {
+            "entries": 6,
+            "hash_chain_valid": true
+          },
+          "seconds": 0.08
+        }
+      ]
+    },
+    "dashboard": "http://127.0.0.1:8001/",
+    "project": "nusantara-audit-20261005",
+    "root_readonly": true,
+    "user": "appuser",
+    "windows_dashboard_http": 200,
+    "original_local_health_http": 200,
+    "tests": {
+      "passed": 168,
+      "failed": 0,
+      "skipped": 1,
+      "warnings": 2
+    },
+    "production_readiness": "Representative document QA, capacity, and operational configuration still required"
+  }
+}

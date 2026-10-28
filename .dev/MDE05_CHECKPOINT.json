@@ -1,0 +1,94 @@
+{
+  "phase": "MDE-05_RAG_PROFILE",
+  "status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+  "timestamp": "2026-10-07T04:30:14.628236+00:00",
+  "git_head": "c24aa1b0db391009af44682bf2f2eb091f4f0f75",
+  "branch": "codex/fullroot-control-20261007",
+  "baseline": ".dev/MDE05_BASELINE_20261007.json",
+  "previous_checkpoint": ".dev/MDE00_CHECKPOINT.json",
+  "authorization": "Human APPROVE MDE-05; audit/design/isolated tests only",
+  "decision": "KEEP_EXISTING_IMPLEMENTATIONS_EXTEND_DESIGN_ONLY",
+  "changes": [
+    ".dev/MDE05_BASELINE_20261007.json",
+    "docs/reports/MDE05_RAG_PROFILE_MAP_20261007.json",
+    "docs/MDE-05_RAG_PROFILE_DESIGN.md",
+    "docs/reports/MDE05_FOCUSED_20261007.xml",
+    "docs/reports/MDE05_ISOLATED_OBSERVATIONS_20261007.json",
+    "docs/reports/MDE05_INTEGRITY_20261007.json",
+    "docs/reports/MDE05_EXECUTION_REPORT_20261007.md",
+    ".dev/MDE05_CHECKPOINT.json"
+  ],
+  "runtime_source_changed": [],
+  "test_source_changed": [],
+  "tests": {
+    "focused": {
+      "passed": 60,
+      "deselected": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit": "docs/reports/MDE05_FOCUSED_20261007.xml"
+    },
+    "isolated_observations": {
+      "asserted": 6,
+      "passed": 6,
+      "evidence": "docs/reports/MDE05_ISOLATED_OBSERVATIONS_20261007.json"
+    },
+    "full_regression": "Historical MDE02 reused; no source change; not rerun"
+  },
+  "runtime_verification": {
+    "production_rag": "NOT_RUN",
+    "actual_model": null,
+    "identity_status": "NOT_VERIFIED",
+    "index_compatibility": "UNKNOWN"
+  },
+  "evidence_sha256": {
+    ".dev/MDE05_BASELINE_20261007.json": "476b99590490f1dde3c0eab6587260e35a09658a01d513c301c38bc080168ffc",
+    "docs/reports/MDE05_RAG_PROFILE_MAP_20261007.json": "2994f8f518963652d3b4231408adf2e8da14b9c2c045a916c87fe017b7089ac4",
+    "docs/MDE-05_RAG_PROFILE_DESIGN.md": "e0633c82a840d6b901a36fd0aba01cbe1fd390d8f43b1d95df01428072984bc5",
+    "docs/reports/MDE05_FOCUSED_20261007.xml": "46c6594f2edfdb9a7ecf908c49c922e54d9c0dc284ed729ac741ee4f0aa84ef4",
+    "docs/reports/MDE05_ISOLATED_OBSERVATIONS_20261007.json": "fdd476c478b96170e8fca7f5e9d2d59d8c068230896521358a1f66fba430c2be",
+    "docs/reports/MDE05_INTEGRITY_20261007.json": "893976e174247c32e2b1390c88f5f44132cd344accfda3e61a0a641d9c9d57d5",
+    "docs/reports/MDE05_EXECUTION_REPORT_20261007.md": "4eb1e02bb46b100dde2fc1235a392b04484291f03d804b28b3d637ba62f99b6c"
+  },
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "protected_verification": {
+    "evidence": "docs/reports/MDE05_INTEGRITY_20261007.json",
+    "checked": 282,
+    "mismatches": []
+  },
+  "limitations": [
+    "Effective RAGProfile not implemented/default API not snapshot-wired",
+    "Hardcoded weights/thresholds and facade precedence",
+    "Reranker label does not attest actual model",
+    "Attribution/filter/source-authority gaps",
+    "Production embedding/index/runtime unverified",
+    "Historical Windows symlink skip",
+    "MDE09/MDE10 final scope conflict unresolved"
+  ],
+  "rollback": "Only newly created audit artifacts after hash/path verification; no runtime rollback performed",
+  "approval_required": true,
+  "approval_source": {
+    "file": "docs/commands/MDE-04 -09.md",
+    "section": 34,
+    "quote": "STOP. GENERATE CHECKPOINT. WAIT FOR HUMAN APPROVAL."
+  },
+  "next_phase": "MDE-06_EMBEDDING_INDEX_SAFETY",
+  "next_action": "WAIT_FOR_HUMAN_APPROVAL_MDE06",
+  "completed_steps": [
+    "preflight/checkpoint integrity",
+    "RAG consumer discovery/field map",
+    "architecture/gap/risk analysis",
+    "KEEP and EXTEND design",
+    "60 focused tests",
+    "6 isolated observations",
+    "historical regression evidence reuse",
+    "live verification limits",
+    "hash/integrity/impact recheck",
+    "self-audit/report/checkpoint"
+  ],
+  "resume_instruction": "Verify evidence and baseline/integrity hashes. Do not repeat completed Phase0/MDE01-05. Await explicit approval for MDE06. Level C implementation/index rebuild/runtime activation not authorized by audit approval.",
+  "overall_status": "NOT_READY",
+  "rag_profile_acceptance": "PARTIAL_NOT_IMPLEMENTED",
+  "overall_v1_acceptance": "FAIL/HOLD"
+}

@@ -1,0 +1,77 @@
+[
+  {
+    "source": "    expected = os.getenv(\"NUSANTARA_ADMIN_TOKEN\", \"\")",
+    "path": "app/security/auth.py",
+    "line": 11
+  },
+  {
+    "source": "    if not expected or not token or not hmac.compare_digest(",
+    "path": "app/security/auth.py",
+    "line": 12
+  },
+  {
+    "source": "  const response=await fetch('/v1/control-plane/snapshot',{method:'GET',credentials:'omit',cache:'no-store',signal});",
+    "path": "control-plane/src/api.ts",
+    "line": 5
+  },
+  {
+    "source": "  const response=await fetch('/v1/control-plane/intention',{method:'POST',credentials:'omit',cache:'no-store',",
+    "path": "control-plane/src/api.ts",
+    "line": 11
+  },
+  {
+    "source": "export default defineConfig(({mode})=>({plugins:[react()], server:{host:'127.0.0.1',port:5173,strictPort:true,proxy:{'/v1/control-plane':{target:'http://127.0.0.1:8000',changeOrigin:true},'/health':{target:'http://127.0.0.1:8000',changeOrigin:true}}},preview:{host:'127.0.0.1'},",
+    "path": "control-plane/vite.config.ts",
+    "line": 9
+  },
+  {
+    "source": "    allow_origins=[\"http://localhost:3000\", \"http://127.0.0.1:3000\", \"http://localhost:8000\", \"http://127.0.0.1:8000\"],",
+    "path": "app/main.py",
+    "line": 48
+  },
+  {
+    "source": "    app.include_router(v2_router)",
+    "path": "app/main.py",
+    "line": 54
+  },
+  {
+    "source": "    _require_admin(x_admin_token)",
+    "path": "app/api/v2_routes.py",
+    "line": 208
+  },
+  {
+    "source": "    _require_admin(x_admin_token)",
+    "path": "app/api/v2_routes.py",
+    "line": 217
+  },
+  {
+    "source": "    _require_admin(x_admin_token)",
+    "path": "app/api/v2_routes.py",
+    "line": 227
+  },
+  {
+    "source": "    _require_admin(x_admin_token)",
+    "path": "app/api/v2_routes.py",
+    "line": 253
+  },
+  {
+    "source": "    _require_admin(x_admin_token)",
+    "path": "app/api/v2_routes.py",
+    "line": 288
+  },
+  {
+    "source": "    _require_admin(x_admin_token)",
+    "path": "app/api/v2_routes.py",
+    "line": 308
+  },
+  {
+    "source": "async def dev_chat(req: DevRequest, x_admin_token: str | None = Header(default=None)) -> dict[str, Any]:",
+    "path": "app/api/v2_routes.py",
+    "line": 325
+  },
+  {
+    "source": "    _require_admin(x_admin_token)",
+    "path": "app/api/v2_routes.py",
+    "line": 327
+  }
+]

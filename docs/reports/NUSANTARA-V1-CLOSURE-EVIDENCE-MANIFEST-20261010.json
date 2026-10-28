@@ -1,0 +1,242 @@
+{
+  "schema": "nusantara-v1-closure-evidence-manifest-v1",
+  "generated_at_utc": "2026-10-10T09:28:41Z",
+  "repository": "C:/Users/dmaza/mcp-starter",
+  "decision": "V1_HOLD",
+  "provenance_note": "This continuation manifest supplements the official Evidence Registry output. It does not assert runtime identity or full harness isolation for direct pytest runs.",
+  "environment": {
+    "python": {
+      "path": ".venv/Scripts/python.exe",
+      "reported_version": "3.13.15",
+      "pytest": "9.1.1",
+      "fastapi": "0.141.1",
+      "exit_code": 0,
+      "warning": "Failed to find real location of C:/Users/dmaza/AppData/Local/Programs/Python/Python313/python.exe",
+      "pyvenv_home_missing": true,
+      "bundled_python": "3.12.14; pytest and FastAPI unavailable"
+    },
+    "docker": {
+      "pipe_present": true,
+      "command": "docker ps --format '{{.Names}}'",
+      "exit_code": 1,
+      "error": "permission denied while trying to connect to the Docker API at npipe:////./pipe/dockerDesktopLinuxEngine",
+      "candidate_runtime_status": "BLOCKED"
+    },
+    "disk_c_free_bytes": 142772051968,
+    "run_output_directories_writable": true
+  },
+  "source_sha256": {
+    "app/knowledge/indobert_embedding.py": "065202822C8EC152A692CF6EB47AAF221D4BE1F29216E640B911183A53968FB9",
+    "app/language/semantic/indobert_client.py": "16205C4213F3B4D051208A9335594AAF7DAA0A39D8A14BDD472A30AF9807A916",
+    "nusantara-models/indobert_worker.py": "30E6A4B64A449855C4A69FB7FDBA0E7E517A2DD2C89ECFEE21247EC88E903570",
+    "nusantara-models/.venv/Scripts/python.exe": "72B29481593C5DA37C99248C82777FBFB56217EA7809B771BC760D0A9ECB179B",
+    "nusantara-models/.venv/pyvenv.cfg": "470D5BAC5FC0D3F8FCF0FE96B35A48EB93D4C8D51A67A58E79C5AFFCDDDB816A",
+    "app/core/nusantara_config.py": "41223EF95C963E2C243DD30DC176E4FD05CB1C566C58577D1CA623E9979C09AE",
+    "app/api/routes.py": "845B8846FABB491B7F43D11D5FAD4D8C9694F61E1B1576DEEB7188B22BEA8402",
+    "app/core/runtime_attestation.py": "83E45EDA842BA7B768C6F21D1997CD6416AA99248399C4AE16DD154501BDA55C",
+    "app/main.py": "B8E3E0D518B30CC2C0F36926DCD215255CAB24BB3941648F1C7909166A5CE308",
+    "tests/test_indobert_timeout.py": "8D6EB32F5C5FD55B3A16EBE77C774975CDE93E0579F19D53090E97F356DBEB81",
+    "tests/test_configuration_integration.py": "9C9B56B87358256D9F70DCD58096EC67EE564C6211BAE5819325A549FA1CCAF9",
+    "tests/test_effective_rag_profile.py": "7346A75BA27BD0AC2C11FB16CBFEB2DA05975787D3929207EA1591B75A8442BC",
+    "tests/test_v1_response_projection.py": "F5D72F8E4CF998EEFDAA8A19E747E5D6FF0035C15361B02B542685CB4A115A1C",
+    "tests/test_runtime_attestation.py": "DFBF9A64ED21433480C8DB557CE04A9B5F23FA01CCAAC45D97E695C0BD147EF5",
+    "tests/test_evidence_registry.py": "D6DC1E02252D948429D360B3C9A8955D316AFBCDB057C602FD97C62E3504C506",
+    "control-plane/evidence-requirements.json": "C36265DD880D7CE2F15A71B7B62CCF548685FB70B8416835FD7AF2C4299DAE01",
+    "Dockerfile": "D03D7F7CE846FB343DAE0F2043D3BBB7C1783E0267EACCAEF5C2048D45B7F2E4",
+    "docker-compose.yml": "79825588EB0F91668B6B983695C04D6B72C6188BE51CE1432622848ED832418F",
+    "app/core/evidence_registry.py": "2CDF516A0C258E661D456E4DE30450421D08F80D6A670CEBC4D07816A780ED0A",
+    "app/api/control_plane.py": "6D3ABB0A499307651AFF5B8622E56553D4BCBFB98E6B52EE56417FF1D78A7025",
+    "app/security/auth.py": "4D3105BA4D5C34D864392F0918DDA797BF296A2987EC5964245949DBC55F7552"
+  },
+  "runs": [
+    {
+      "id": "cc06-worker-offline-20261010-01",
+      "classification": "CURRENT_OFFLINE",
+      "command": ".\\.venv\\Scripts\\python.exe -B -m pytest -o addopts='' -p no:cacheprovider --basetemp C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\cc06-worker-offline-20261010-01\\pytest-tmp --junitxml C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\cc06-worker-offline-20261010-01\\results.xml -q tests/test_indobert_timeout.py",
+      "exit_code": 0,
+      "counts": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "result": "docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-worker-offline-20261010-01/results.xml",
+      "result_sha256": "3CBBA11916FCD2F95644CB4C8B29F8C38FD206E0FA3AE8F54DBF353AE6940DB2",
+      "isolation": "Temporary pytest directory; test uses synthetic worker fixtures. No full external-effect guard installed.",
+      "shell": "PowerShell",
+      "run_directory": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-worker-offline-20261010-01",
+      "environment": {
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "TMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-worker-offline-20261010-01",
+        "TEMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-worker-offline-20261010-01",
+        "TMPDIR": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-worker-offline-20261010-01"
+      }
+    },
+    {
+      "id": "cc06-offline-20261010-03",
+      "classification": "CURRENT_OFFLINE",
+      "command": ".\\.venv\\Scripts\\python.exe -B -m pytest -c tests/pytest-evidence.ini -o addopts='' -p no:cacheprovider --basetemp C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\cc06-offline-20261010-03\\pytest-tmp --junitxml C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\cc06-offline-20261010-03\\results.xml -q tests/test_indobert_timeout.py tests/test_configuration_integration.py::test_adapter_constructs_existing_client_without_starting_worker tests/test_configuration_integration.py::test_incompatible_embedding_rejected_before_store_or_worker tests/test_effective_rag_profile.py -k 'not actual_v1_chat and not actual_v2_callback and not actual_v1_search and not dev_endpoint'",
+      "exit_code": 0,
+      "counts": {
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0,
+        "deselected": 5
+      },
+      "result": "docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-offline-20261010-03/results.xml",
+      "result_sha256": "BD95B7D6FAB81EC2AE298477FEDDDEC743588E8E0425A380DA70BE16279AAA72",
+      "isolation": "Temporary output/basetemp; offline fixtures. Test suite not wrapped by the external-effect-denying runner.",
+      "shell": "PowerShell",
+      "run_directory": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-offline-20261010-03",
+      "environment": {
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "TMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-offline-20261010-03",
+        "TEMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-offline-20261010-03",
+        "TMPDIR": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-offline-20261010-03"
+      }
+    },
+    {
+      "id": "cc01-pure-current-20261010-01",
+      "classification": "CURRENT_OFFLINE",
+      "command": ".\\.venv\\Scripts\\python.exe -B -m pytest -c tests/pytest-evidence.ini -o addopts='' -p no:cacheprovider --basetemp C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\cc01-pure-current-20261010-01\\pytest-tmp --junitxml C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\cc01-pure-current-20261010-01\\results.xml -q tests/test_v1_response_projection.py -k 'not http_'",
+      "exit_code": 0,
+      "counts": {
+        "passed": 11,
+        "failed": 0,
+        "skipped": 0,
+        "deselected": 16
+      },
+      "result": "docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-pure-current-20261010-01/results.xml",
+      "result_sha256": "5F15E19AFF971664550E9D0108B913B179D5E96F4526D51F436B507D2D1F47CB",
+      "isolation": "Temporary output/basetemp and an isolated NUSANTARA_DATA_DIR; no full external-effect guard installed.",
+      "shell": "PowerShell",
+      "run_directory": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-pure-current-20261010-01",
+      "environment": {
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "TMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-pure-current-20261010-01",
+        "TEMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-pure-current-20261010-01",
+        "TMPDIR": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-pure-current-20261010-01",
+        "NUSANTARA_DATA_DIR": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-pure-current-20261010-01/data"
+      }
+    },
+    {
+      "id": "cc01-http-followup-20261010-02",
+      "classification": "TEMPORARY",
+      "command": ".\\.venv\\Scripts\\python.exe -B -m pytest -c tests/pytest-evidence.ini -o addopts='' -o faulthandler_timeout=10 -p no:cacheprovider --basetemp C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\cc01-http-followup-20261010-02\\pytest-tmp --junitxml C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\cc01-http-followup-20261010-02\\results.xml -vv -s 'tests/test_v1_response_projection.py::test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[local_rule]'",
+      "exit_code": 1,
+      "counts": null,
+      "status": "BLOCKED_BEFORE_ROUTE_DISPATCH",
+      "result_xml": null,
+      "transcript": "docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-http-followup-20261010-02/console-transcript.txt",
+      "transcript_sha256": "9CA1AC063CD39327CFB2791460EB46B89F7CEFA0A938443C5E472486C3A7A171",
+      "observation": "AnyIO TestClient portal stalls in Windows socketpair fallback accept; no test result was produced.",
+      "shell": "PowerShell",
+      "run_directory": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-http-followup-20261010-02",
+      "environment": {
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "TMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-http-followup-20261010-02",
+        "TEMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-http-followup-20261010-02",
+        "TMPDIR": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\cc01-http-followup-20261010-02",
+        "NUSANTARA_DATA_DIR": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc01-http-followup-20261010-02/data"
+      }
+    },
+    {
+      "id": "socketpair-isolation-20261010",
+      "classification": "TEMPORARY",
+      "command": ".venv\\Scripts\\python.exe -B -c \"import faulthandler,socket; faulthandler.dump_traceback_later(5); print('before',flush=True); a,b=socket.socketpair(); print('socketpair-ok',flush=True); a.close(); b.close()\"",
+      "exit_code": 1,
+      "counts": null,
+      "status": "BLOCKED",
+      "observation": "Faulthandler showed socket.py::_fallback_socketpair at accept after 5 seconds; manually interrupted. No network service contacted.",
+      "shell": "PowerShell",
+      "environment": {
+        "PYTHONFAULTHANDLER": "1"
+      }
+    },
+    {
+      "id": "attestation-offline-20261010-01",
+      "classification": "CURRENT_OFFLINE",
+      "command": ".\\.venv\\Scripts\\python.exe -B -m pytest -c tests/pytest-evidence.ini -o addopts='' -p no:cacheprovider --basetemp C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\attestation-offline-20261010-01\\pytest-tmp --junitxml C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\attestation-offline-20261010-01\\results.xml -q tests/test_runtime_attestation.py::test_duplicate_endpoint_registration_is_rejected tests/test_runtime_attestation.py::test_main_change_only_installs_attestation_and_preserves_existing_handlers",
+      "exit_code": 1,
+      "counts": {
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "result": "docs/reports/nusantara-v1-autonomous-closure-20261010/runs/attestation-offline-20261010-01/results.xml",
+      "result_sha256": "D7CA157A6BE3F5B244956ABC2A4CBB356E13A63EF4AC9349E226527ADA124286",
+      "failure": "Legacy AST comparison detects the existing dashboard handler difference in app/main.py.",
+      "shell": "PowerShell",
+      "run_directory": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/attestation-offline-20261010-01",
+      "environment": {
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "TMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/attestation-offline-20261010-01",
+        "TEMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/attestation-offline-20261010-01",
+        "TMPDIR": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/attestation-offline-20261010-01"
+      }
+    },
+    {
+      "id": "evidence-registry-offline-20261010-01",
+      "classification": "CURRENT_OFFLINE",
+      "command": ".\\.venv\\Scripts\\python.exe -B -m pytest -c tests/pytest-evidence.ini -o addopts='' -p no:cacheprovider --basetemp C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\evidence-registry-offline-20261010-01\\pytest-tmp --junitxml C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\nusantara-v1-autonomous-closure-20261010\\runs\\evidence-registry-offline-20261010-01\\results.xml -q tests/test_evidence_registry.py",
+      "exit_code": 0,
+      "counts": {
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      },
+      "result": "docs/reports/nusantara-v1-autonomous-closure-20261010/runs/evidence-registry-offline-20261010-01/results.xml",
+      "result_sha256": "9A9CB0C11B85E5F0675AA903C406709038AEB9278DF47FB748C8026266ACCF58",
+      "shell": "PowerShell",
+      "run_directory": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/evidence-registry-offline-20261010-01",
+      "environment": {
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "TMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/evidence-registry-offline-20261010-01",
+        "TEMP": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/evidence-registry-offline-20261010-01",
+        "TMPDIR": "C:/Users/dmaza/mcp-starter/docs/reports/nusantara-v1-autonomous-closure-20261010/runs/evidence-registry-offline-20261010-01"
+      }
+    },
+    {
+      "id": "cc06-offline-20261010-02",
+      "classification": "TEMPORARY",
+      "status": "INTERRUPTED",
+      "exit_code": 1,
+      "counts": null,
+      "transcript": "docs/reports/nusantara-v1-autonomous-closure-20261010/runs/cc06-offline-20261010-02/console-transcript.txt",
+      "transcript_sha256": "9cd98ac32c1a7ffd2de74ae44a5cb8afe155250fb462970e36cd49d07f07a1bd",
+      "command": ".\\.venv\\Scripts\\python.exe -B -m pytest -c tests/pytest-evidence.ini -o addopts='' -p no:cacheprovider --basetemp <run>\\pytest-tmp --junitxml <run>\\results.xml -q tests/test_indobert_timeout.py tests/test_configuration_integration.py::test_adapter_constructs_existing_client_without_starting_worker 'tests/test_configuration_integration.py::test_incompatible_embedding_rejected_before_store_or_worker' tests/test_effective_rag_profile.py",
+      "observation": "26 progress dots; hung in later HTTP/TestClient case; manually interrupted, no result XML."
+    },
+    {
+      "id": "socketpair-isolation-20261010",
+      "classification": "TEMPORARY",
+      "status": "BLOCKED",
+      "exit_code": 1,
+      "counts": null,
+      "transcript": "docs/reports/nusantara-v1-autonomous-closure-20261010/runs/socketpair-isolation-20261010-01/console-transcript.txt",
+      "transcript_sha256": "61bb79b2e6e3a9efccde71b11ebb274670c7840033f6a1f37c1eb4c917021d06",
+      "command": ".\\.venv\\Scripts\\python.exe -B -c \"import faulthandler,socket; faulthandler.dump_traceback_later(5); print(\\'before\\',flush=True); a,b=socket.socketpair(); print(\\'socketpair-ok\\',flush=True); a.close(); b.close()\"",
+      "observation": "Standalone socketpair reproduced fallback accept hang after five seconds; manually interrupted."
+    }
+  ],
+  "registry_package": {
+    "package_id": "evp_sha256_36bb8d0cdb4ff24fc994d87f8713877caf5a53bfe674d23dd0c9519ddeb574b6",
+    "path": "docs/reports/nusantara-v1-autonomous-closure-20261010/runs/evidence-registry-package-20261010-01/package.json",
+    "sha256": "1D953A36E77D1F7B0464CDFEF1D67425CD0868BCDCA0AE901C6D5E0D650A1687",
+    "mapped_criteria": 15,
+    "not_verified": 15,
+    "pass_allowed": false,
+    "runtime_status": "NOT_VERIFIED",
+    "blocker": "Current manifest test-run evidence has source-hash drift; package is a HOLD snapshot and not a V1 acceptance package."
+  },
+  "candidate_runtime": {
+    "classification": "INACCESSIBLE",
+    "prior_evidence_source": "docs/reports/NUSANTARA-V1-AUTONOMOUS-CLOSURE-20261010.md",
+    "search_status": "historical HTTP 500 then timeout; embedding exception RuntimeError; model identity NOT_VERIFIED",
+    "chat_status": "historical HTTP 504",
+    "attestation_status": "NOT_VERIFIED",
+    "note": "Source says runtime attestation requires loopback URL port 8000; host-published port 18002 explains prior 403 more directly than missing-token theory.",
+    "prior_image_id": "2f591d4edb67 (historical baseline only)",
+    "prior_build_id": "sha256:5cd24f004b89f070b5510faf11fab6f89130a2dad7e310179436a579471597f3 (historical baseline only)"
+  }
+}
+

@@ -1,0 +1,77 @@
+import {render,screen,fireEvent,within} from '@testing-library/react';
+import {afterEach,describe,expect,it,vi} from 'vitest';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {resolve} from 'node:path';
+import {EngineeringConsole} from '../src/engineering-console';
+import {Page} from '../src/ui';
+import evidence from '../src/engineering-evidence';
+
+afterEach(()=>vi.unstubAllGlobals());
+function show(name:string){fireEvent.click(screen.getByRole('button',{name}));}
+describe('read-only engineering console',()=>{
+  it('uses the existing engineering overview without querying the application',()=>{
+    const fetch=vi.fn(()=>{throw new Error('Network forbidden')});vi.stubGlobal('fetch',fetch);
+    render(<Page name="Overview"/>);
+    expect(screen.getByRole('heading',{name:'Engineering Console'})).toBeInTheDocument();
+    expect(screen.getAllByText(/FAIL \/ HOLD/).length).toBeGreaterThan(0);
+    expect(screen.getByText(/snapshot bukti historis/)).toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+  it('renders all 22 phases without borrowing acceptance from WEIP',()=>{
+    render(<EngineeringConsole/>);show('Phase Manager 0–21');
+    const panel=screen.getByRole('region',{name:'Phase Manager 0–21'});
+    expect(within(panel).getAllByRole('article')).toHaveLength(22);
+    expect(within(panel).getAllByText('NOT_VERIFIED')).toHaveLength(22);
+    expect(within(panel).queryByText('PASS')).not.toBeInTheDocument();
+    expect(within(panel).getByRole('heading',{name:'Fase 21'})).toBeInTheDocument();
+  });
+  it('renders twelve gates and preserves the authorization boundary',()=>{
+    render(<EngineeringConsole/>);show('WEIP-01–12');
+    const panel=screen.getByRole('region',{name:'WEIP-01–12'});
+    expect(within(panel).getAllByRole('article')).toHaveLength(12);
+    expect(within(panel).getAllByText('REVIEW_REQUIRED')).toHaveLength(3);
+    expect(within(panel).getByText('NOT_AUTHORIZED')).toBeInTheDocument();
+    expect(within(panel).getByText('DEFERRED')).toBeInTheDocument();
+  });
+  it('preserves initial failure and counts exclusions separately from skip',()=>{
+    render(<EngineeringConsole/>);show('Test & Evidence');
+    const rows=screen.getAllByRole('row');
+    const failed=rows.find(r=>r.textContent?.includes('targeted-20261009-174413'))!;
+    expect(within(failed).getByText('FAIL')).toBeInTheDocument();
+    const regression=rows.find(r=>r.textContent?.includes('regression-20261009-174852'))!;
+    expect(within(regression).getByText('154')).toBeInTheDocument();
+    expect(within(regression).getByText('6')).toBeInTheDocument();
+    expect(screen.getByText(/Tidak dihitung sebagai PASS atau SKIP/)).toBeInTheDocument();
+  });
+  it('does not invent a preservation cause or loaded runtime identity',()=>{
+    render(<EngineeringConsole/>);
+    expect(screen.getByText(/Penyebab dan pelaku tidak terbukti/)).toBeInTheDocument();
+    expect(screen.getByText(/Database aktif tidak diperiksa/)).toBeInTheDocument();
+    expect(screen.getByText(evidence.diskFingerprint)).toBeInTheDocument();
+    expect(evidence.preservation.attribution).toBe('NOT_VERIFIED');
+    expect(evidence.runtimeIdentity).toBe('NOT_VERIFIED');
+  });
+  it('offers navigation only, with no persistence or runtime requests',()=>{
+    const fetch=vi.fn(()=>{throw new Error('Network forbidden')});vi.stubGlobal('fetch',fetch);
+    render(<EngineeringConsole/>);
+    for(const name of ['Phase Manager 0–21','WEIP-01–12','Test & Evidence','Keputusan manusia','Dashboard'])show(name);
+    show('Keputusan manusia');
+    expect(screen.getByRole('heading',{name:'Transaksi adapter dan rollback'})).toBeInTheDocument();
+    expect(screen.getAllByRole('button')).toHaveLength(5);
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+  it('binds displayed evidence to actual archive checksums and JUnit counts',()=>{
+    for(const s of evidence.sources){
+      const bytes=readFileSync(resolve('..',s.path));
+      expect(createHash('sha256').update(bytes).digest('hex')).toBe(s.sha256);
+    }
+    for(const t of evidence.tests){
+      const xml=readFileSync(resolve('..',t.reference),'utf8');
+      for(const attr of ['tests','failures','errors','skipped'] as const){
+        expect(xml).toContain(`${attr}="${t[attr]}"`);
+      }
+    }
+  });
+});

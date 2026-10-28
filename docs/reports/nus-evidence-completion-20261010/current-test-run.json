@@ -1,0 +1,196 @@
+{
+  "command": [
+    [
+      "C:\\users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+      "C:\\Users\\dmaza\\mcp-starter\\tests\\run_evidence_tests_isolated.py",
+      "C:\\Users\\dmaza\\mcp-starter\\artifacts\\evidence-runs\\run-20261015T102806-cb42cdc574\\python"
+    ],
+    [
+      "node",
+      "C:\\Users\\dmaza\\mcp-starter\\control-plane\\node_modules\\vitest\\vitest.mjs",
+      "run",
+      "tests/human.test.tsx",
+      "tests/acceptance.test.ts",
+      "tests/verification-pages.test.tsx",
+      "tests/assistant.test.tsx",
+      "--config",
+      "vitest.config.ts",
+      "--configLoader",
+      "native",
+      "--reporter=json",
+      "--outputFile=C:\\Users\\dmaza\\mcp-starter\\artifacts\\evidence-runs\\run-20261015T102806-cb42cdc574\\ui\\vitest-results.json"
+    ]
+  ],
+  "counts": {
+    "errors": 0,
+    "failed": 0,
+    "pytest_passed": 57,
+    "skipped": 0,
+    "vitest_passed": 60
+  },
+  "criteria": {
+    "AC1": {
+      "status": "PASS",
+      "test_ids": [
+        "test_registry_covers_all_acceptance_criteria"
+      ]
+    },
+    "AC10": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin",
+        "test_normal_plan_prepares_without_human_approval",
+        "test_normal_plan_requires_complete_context_and_safe_targets",
+        "test_execution_requires_exact_reviewed_plan_binding"
+      ]
+    },
+    "AC11": {
+      "status": "PASS",
+      "test_ids": [
+        "test_package_id_changes_when_evidence_changes"
+      ]
+    },
+    "AC12": {
+      "status": "PASS",
+      "test_ids": [
+        "test_audit_chain_detects_tampering_and_appends"
+      ]
+    },
+    "AC13": {
+      "status": "PASS",
+      "test_ids": [
+        "uses only PASS, FAIL and HOLD with optional notes and keeps PASS blocked",
+        "requires authentication, a valid timestamp, exact action and an unused decision",
+        "rechecks authentication when one nonempty token is replaced by another",
+        "test_requirement_quote_requires_matching_service_and_remains_guarded",
+        "test_followups_retrieve_fresh_evidence_in_same_session_and_do_not_guess_online",
+        "test_fact_selection_and_rewrite_are_not_specific_to_piak",
+        "shows a short source title and lets the reader open its supporting quotation"
+      ]
+    },
+    "AC14": {
+      "status": "PASS",
+      "test_ids": [
+        "test_legacy_snapshot_route_is_unchanged"
+      ]
+    },
+    "AC15": {
+      "status": "PASS",
+      "test_ids": [
+        "test_missing_test_run_blocks_pass",
+        "test_package_id_changes_when_evidence_changes",
+        "test_test_run_manifest_is_bound_to_result_hashes"
+      ]
+    },
+    "AC2": {
+      "status": "PASS",
+      "test_ids": [
+        "test_collector_records_real_artifact_references"
+      ]
+    },
+    "AC3": {
+      "status": "PASS",
+      "test_ids": [
+        "test_validator_distinguishes_all_statuses"
+      ]
+    },
+    "AC4": {
+      "status": "PASS",
+      "test_ids": [
+        "test_each_criterion_links_sources_and_tests"
+      ]
+    },
+    "AC5": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    },
+    "AC6": {
+      "status": "PASS",
+      "test_ids": [
+        "test_test_run_manifest_is_bound_to_result_hashes",
+        "test_finalized_results_mutation_is_rejected"
+      ]
+    },
+    "AC7": {
+      "status": "PASS",
+      "test_ids": [
+        "uses only PASS, FAIL and HOLD with optional notes and keeps PASS blocked"
+      ]
+    },
+    "AC8": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_rejects_stale_or_client_forged_package"
+      ]
+    },
+    "AC9": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    }
+  },
+  "exit_code": 0,
+  "isolation": {
+    "active_data_blocked": true,
+    "cache_isolated": true,
+    "exceptions": [
+      "Vitest exact worker and esbuild transformer; Python internal Windows socketpair only. Test process guards are installed; metadata publication runs outside those child guards."
+    ],
+    "filesystem_writes_scoped": true,
+    "network_blocked": true,
+    "subprocess_blocked": true
+  },
+  "results_path": "artifacts/evidence-runs/run-20261015T102806-cb42cdc574/results-bundle.json",
+  "results_sha256": "dc9537c195425e883622a4723ce8b695119f5cf6e93870f60d36ce44ef2f6e9c",
+  "run_id": "run-20261015T102806-cb42cdc574",
+  "schema_version": 1,
+  "scope": "offline evidence registry, decision API, isolated runner guards and Review UI; not operational runtime approval",
+  "source_sha256": {
+    ".developer_staging/NORMAL-718d7e134aa1ee32/docs/operational/published/NUSANTARA-V1-OPERATOR.md": "ac1882494fc2937de449e6b766fe3fccb05d52a593196a9217d6cb73c6096c1e",
+    "app/api/control_plane.py": "421b1a63a3617308d5706423156855e1d0e1f2b9d09c60e7379f9444d5e02345",
+    "app/core/evidence_registry.py": "ed9a3b99af9d85befba4db2e1b2f64b1850de9dce8f9249440e65577243f3253",
+    "app/core/gate_integration.py": "3763850b4f5423a0216c1946803a7dbed7d01fe321b345b2ae67fd470cbe44a6",
+    "app/developer_core/controlled_write.py": "fbed59cb922d626a583fa75e325ee9313a24b45fddef892ad37b4100e1f3070e",
+    "app/hermes/agent.py": "ac80fe059b6d45f1ea2123400c806aa961065e42ecb3f114d5cd949099347ec5",
+    "app/knowledge/grounding.py": "9615fceada03cac9642cb7b43e3e27a7f37a95d18863ae5dd1a7f11946fdc7db",
+    "app/knowledge/rag.py": "29935136ea71d8ab1ce42c9d2a01959c9382d3156b0100942e08b009f1e5fc03",
+    "app/language/engine.py": "07801db04a6e1bb0bd4136bf5a8f137b81220ab3989b5108542621ab6f6bae98",
+    "app/memory/engine.py": "2399aaf97a74c735bfe9d842209fd0253f7da5874c3d12aef81453aa3268c7f3",
+    "app/security/auth.py": "4d3105ba4d5c34d864392f0918dda797bf296a2987ec5964245949dbc55f7552",
+    "control-plane/evidence-requirements.json": "efc9c54db74e28cd6044ea877a03615319b7ff2d3a9d13489906bc0585c02485",
+    "control-plane/src/api.ts": "c6ea20e41afecece7f89583d1544612968317e3fd320a5e2b4ceed7ed04c34f1",
+    "control-plane/src/assistant.tsx": "8384dd6b48c69329eab651cff59885e849dfd1b529906993b6509166372912a2",
+    "control-plane/src/human.tsx": "5ab59f252bc45281fb73f3d0644bc4ffa8bd3a389ccf143ed5ce444fb95e9769",
+    "control-plane/src/readiness.ts": "c66d65cd3cf34d849df141e3bbfb013523f0c09d3148cdc638ff286d04206490",
+    "control-plane/src/router.tsx": "d46957a237bb424e6384c2dac2821f463414c741e32124024c6f351bf25bb2df",
+    "control-plane/src/verification.tsx": "f87b97f9b531f652494be9bbf0cf638512b5f2b7e23a885268107e35caa3cce4",
+    "control-plane/tests/acceptance.test.ts": "3d36accee4ac33362e89adecf961154269138de21881b6c2352957d74365f8b3",
+    "control-plane/tests/assistant.test.tsx": "5c024507711e21d28a8acca004a3b6bed62bf206d65c813d0bdfc70fbcee4e59",
+    "control-plane/tests/human.test.tsx": "236ca6029cbd9a1c4e1f40b7bb80797107de2a93b65fc5e7eca76680353de460",
+    "control-plane/tests/inspection-preview-network-guard.cjs": "539879794460f7c3300fe501b82b54b07de45e39503b79b7dd59dcef3020b7e4",
+    "control-plane/tests/verification-pages.test.tsx": "ab69927cc1c87706c02e2227aea9dc613ae37bf12739efe9160b626fee62d038",
+    "control-plane/vitest.config.ts": "5dd0ce20a3cec5ea7cc3a680d827022900f5e27a8f94e90c28183866e7e6253f",
+    "data/developer_core/change_plan.json": "3d53c39380782b20e301f4a0fcf56d80e637ea8e8317aa85d9798f234a88fdf1",
+    "docs/operational/NUSANTARA-V1-OPERATOR.md": "ac1882494fc2937de449e6b766fe3fccb05d52a593196a9217d6cb73c6096c1e",
+    "docs/operational/SOP-REVIEWED-EXCERPTS.json": "dba7d7fcfb7f2a4a8af70a974ae3045e3fe626e065fb012505927fb06b9e5797",
+    "docs/reports/nus-evidence-completion-20261010/EVIDENCE-WORK-INVENTORY.md": "e188cc864810436ad027bea324a5935e267fb158009ce14ec73a637a58f78cd0",
+    "docs/reports/nus-evidence-completion-20261010/MDA-E2-E3-OFFLINE-EVIDENCE-AND-MAPPING.md": "6d149a42ca1a49a7a4506653cb7bf45e6d154dab524b4cc368dee36650ef9083",
+    "pyproject.toml": "eb3aa8cb5a7b650253b9b7355804a1cb7a36840996cf4d427dc1795a01355b9f",
+    "scripts/ingest_v1_sops.py": "7f6aa1deb8ad5def37d54c8bca694fb616752f076a9c9a32890af5831b97a8c1",
+    "scripts/prepare_v1_operator_plan.py": "f5a956a59bde3bf48f844bb617372555130cf636752632d33ba3034f896f0f46",
+    "scripts/refresh_v1_evidence.py": "8055005a5e9efdd6ab7b2748d5967a6018b88e6205487fc0296338296a5caf81",
+    "tests/pytest-evidence.ini": "c14b489a30afe60312242394d2e54d37d23e99ccef8d68f203807b76e325c758",
+    "tests/run_evidence_tests_isolated.py": "97c17eb1942b8922dc0931affa13609dd0354b3ed9dcbe780bc19f9902addd12",
+    "tests/test_evidence_decision_api.py": "60bccc558b2f6f8f42547341a575615de6acbad5c8dbf5956b423bc78fd7157a",
+    "tests/test_evidence_finalization.py": "06bbf059ad011bf22f6e7055a85f4b3848c75292e4c45d8b53671d64c6ebb08d",
+    "tests/test_evidence_registry.py": "42e7cbff1c41031c222f3a8f38ada6d61dda07ceee12155b131fe14f18f56318",
+    "tests/test_normal_plan.py": "6a37af23d141d76aa1e886ef9acca0fdcbe10664336c3697f1cc8c245b6e7d28",
+    "tests/test_sop_ingestion.py": "f8ea276cfc0113b1b685b16e5f6059cfa23dc426b09bf713e55c9a6da90950d6",
+    "tests/test_v1_execution_evidence.py": "61c4b0b2e7206096c2ba0b1a5ae9c685f4d8854705f2f53ec7e2e0f6332a729f",
+    "tests/test_v1_service_dialogue.py": "531dc057c1cfb1ce1e1c43e8dcf8e80c2fc1aebc612777ec178f45ebfb27a2c6"
+  },
+  "timestamp": "2026-10-15T10:28:17.372959+00:00"
+}

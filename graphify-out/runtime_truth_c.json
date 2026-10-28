@@ -1,0 +1,76 @@
+{
+  "engine": "Nusantara Runtime Truth",
+  "version": "2.0.0",
+  "source_of_truth": "C:\\Users\\dmaza\\mcp-starter",
+  "python": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+  "all_modules_from_source_of_truth": true,
+  "results": [
+    {
+      "label": "routes",
+      "module": "app.api.routes",
+      "imported": true,
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\api\\routes.py",
+      "classes": [
+        "ChatRequest",
+        "DocumentIngestRequest",
+        "HealthResponse",
+        "HumanHandoffRequest",
+        "KnowledgeSearchRequest",
+        "ProblemAnalyzeRequest",
+        "WorkflowCreateRequest"
+      ],
+      "correct_root": true
+    },
+    {
+      "label": "core",
+      "module": "app.core",
+      "imported": true,
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\core\\__init__.py",
+      "classes": [],
+      "correct_root": true
+    },
+    {
+      "label": "language",
+      "module": "app.language.engine",
+      "imported": true,
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\language\\engine.py",
+      "classes": [
+        "Engine",
+        "LanguageDetection",
+        "LanguageEngine",
+        "NusantaraLanguageEngine"
+      ],
+      "correct_root": true
+    },
+    {
+      "label": "problem",
+      "module": "app.problem.engine",
+      "imported": true,
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\problem\\engine.py",
+      "classes": [
+        "ProblemEngine"
+      ],
+      "correct_root": true
+    },
+    {
+      "label": "knowledge",
+      "module": "app.knowledge.engine",
+      "imported": true,
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\knowledge\\engine.py",
+      "classes": [
+        "KnowledgeEngine"
+      ],
+      "correct_root": true
+    },
+    {
+      "label": "reasoning",
+      "module": "app.reasoning.engine",
+      "imported": true,
+      "file": "C:\\Users\\dmaza\\mcp-starter\\app\\reasoning\\engine.py",
+      "classes": [
+        "ReasoningEngine"
+      ],
+      "correct_root": true
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "run_id": "NUS-EVIDENCE-COMPLETION-003-20261010-POST-API-DIAGNOSTIC-03",
+  "timestamp": "2026-10-10T10:39:06.025640+00:00",
+  "command": [
+    "REUSED VERIFIED (2026-10-10 09:43 UTC): .venv\\Scripts\\python.exe -B tests\\run_evidence_tests_isolated.py docs/reports/nus-evidence-completion-20261010/runs/blocker-closure-20261010-02 (19 passed; original XML/hash retained)",
+    "FRESH (2026-10-10 17:35 local): npm run vitest -- --run tests/human.test.tsx --config vitest.config.ts --configLoader native --reporter=json --outputFile=docs/reports/nus-evidence-completion-20261010/runs/post-api-diagnostic-20261010-03/vitest-results.json (17 passed)",
+    "FRESH after authorized source change: npm run build (TypeScript check and Vite build succeeded; exit 0)"
+  ],
+  "exit_code": 0,
+  "scope": "offline evidence registry/API tests reused from preserved run plus freshly executed human decision UI tests and fresh frontend build/typecheck; no runtime attestation",
+  "isolation": {
+    "network_blocked": true,
+    "filesystem_writes_scoped": true,
+    "active_data_blocked": true,
+    "subprocess_blocked": true,
+    "cache_isolated": true,
+    "exceptions": [
+      "Reused Python report retains its original isolated-run provenance. Fresh Vitest used local projection snapshot and isolated cache/output under this run directory; test fetches are mocked. Build was a local frontend build."
+    ],
+    "python_output": "docs/reports/nus-evidence-completion-20261010/runs/blocker-closure-20261010-02/python-results.xml",
+    "ui_output": "docs/reports/nus-evidence-completion-20261010/runs/post-api-diagnostic-20261010-03/vitest-results.json",
+    "build_output": "control-plane/dist/"
+  },
+  "results_path": "docs/reports/nus-evidence-completion-20261010/runs/post-api-diagnostic-20261010-03/results-bundle.json",
+  "results_sha256": "29d3350a5188e24526880529e5dea72798742c65c7dda51930e9dffc390954be",
+  "counts": {
+    "pytest_passed": 19,
+    "vitest_passed": 17,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "typecheck_exit_code": 0
+  },
+  "source_sha256": {
+    "app/api/control_plane.py": "6d3abb0a499307651aff5b8622e56553d4bcbfb98e6b52ee56417ff1d78a7025",
+    "app/core/evidence_registry.py": "2cdf516a0c258e661d456e4de30450421d08f80d6a670cebc4d07816a780ed0a",
+    "app/security/auth.py": "4d3105ba4d5c34d864392f0918dda797bf296a2987ec5964245949dbc55f7552",
+    "control-plane/evidence-requirements.json": "f884ddd56f3b0431b7e83db3f4cccb12b5748d42edc59dac4431151030258e4a",
+    "control-plane/src/api.ts": "fe448ea353fbeb326a0838833c3885e17ed5de0466c1d5724651226f1f541748",
+    "control-plane/src/human.tsx": "a590278a9574b4948bfede5b61a6677e5cec360615eefb6e269e2ddd20e50f07",
+    "control-plane/tests/acceptance.test.ts": "3d36accee4ac33362e89adecf961154269138de21881b6c2352957d74365f8b3",
+    "control-plane/tests/human.test.tsx": "10e5866c924f031979489c754ac24deba4306b6b130429a638e0928055c9e2e1",
+    "control-plane/tests/inspection-preview-network-guard.cjs": "5ef717288c1af29c6a8e3cf35ad9004f481261ee16cbaf9d01344a9c58dc00cd",
+    "control-plane/vitest.config.ts": "5dd0ce20a3cec5ea7cc3a680d827022900f5e27a8f94e90c28183866e7e6253f",
+    "docs/reports/nus-evidence-completion-20261010/EVIDENCE-WORK-INVENTORY.md": "e188cc864810436ad027bea324a5935e267fb158009ce14ec73a637a58f78cd0",
+    "docs/reports/nus-evidence-completion-20261010/MDA-E2-E3-OFFLINE-EVIDENCE-AND-MAPPING.md": "6d149a42ca1a49a7a4506653cb7bf45e6d154dab524b4cc368dee36650ef9083",
+    "tests/pytest-evidence.ini": "c14b489a30afe60312242394d2e54d37d23e99ccef8d68f203807b76e325c758",
+    "tests/run_evidence_tests_isolated.py": "d883b5f355dc373159ac21e5ff21e88afefbd96dbff5621693e3e21f9eb15a08",
+    "tests/test_evidence_decision_api.py": "623c54c4c1ff491d5e87d23b9f39993e2ebce868f34981af585b691b2d4fe14a",
+    "tests/test_evidence_registry.py": "d6dc1e02252d948429d360b3c9a8955d316afbcdb057c602fd97c62e3504c506"
+  },
+  "criteria": {
+    "AC1": {
+      "status": "PASS",
+      "test_ids": [
+        "test_registry_covers_all_acceptance_criteria"
+      ]
+    },
+    "AC2": {
+      "status": "PASS",
+      "test_ids": [
+        "test_collector_records_real_artifact_references"
+      ]
+    },
+    "AC3": {
+      "status": "PASS",
+      "test_ids": [
+        "test_validator_distinguishes_all_statuses"
+      ]
+    },
+    "AC4": {
+      "status": "PASS",
+      "test_ids": [
+        "test_each_criterion_links_sources_and_tests"
+      ]
+    },
+    "AC5": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    },
+    "AC6": {
+      "status": "PASS",
+      "test_ids": [
+        "test_test_run_manifest_is_bound_to_result_hashes"
+      ]
+    },
+    "AC7": {
+      "status": "PASS",
+      "test_ids": [
+        "uses only PASS, FAIL and HOLD with optional notes and keeps PASS blocked"
+      ]
+    },
+    "AC8": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_rejects_stale_or_client_forged_package"
+      ]
+    },
+    "AC9": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    },
+    "AC10": {
+      "status": "PASS",
+      "test_ids": [
+        "test_decision_api_requires_authorized_admin"
+      ]
+    },
+    "AC11": {
+      "status": "PASS",
+      "test_ids": [
+        "test_package_id_changes_when_evidence_changes"
+      ]
+    },
+    "AC12": {
+      "status": "PASS",
+      "test_ids": [
+        "test_audit_chain_detects_tampering_and_appends"
+      ]
+    },
+    "AC13": {
+      "status": "PASS",
+      "test_ids": [
+        "uses only PASS, FAIL and HOLD with optional notes and keeps PASS blocked"
+      ]
+    },
+    "AC14": {
+      "status": "PASS",
+      "test_ids": [
+        "test_legacy_snapshot_route_is_unchanged"
+      ]
+    },
+    "AC15": {
+      "status": "PASS",
+      "test_ids": [
+        "test_missing_test_run_blocks_pass",
+        "test_package_id_changes_when_evidence_changes",
+        "test_test_run_manifest_is_bound_to_result_hashes"
+      ]
+    }
+  }
+}

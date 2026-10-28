@@ -1,0 +1,36 @@
+{"event": "loading", "engine": "indobert-worker", "model": "indobenchmark/indobert-base-p1"}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Traceback (most recent call last):
+  File "C:\Users\dmaza\mcp-starter\nusantara-models\indobert_worker.py", line 32, in <module>
+    model = AutoModel.from_pretrained(MODEL)
+  File "C:\Users\dmaza\mcp-starter\nusantara-models\.venv\Lib\site-packages\transformers\models\auto\auto_factory.py", line 402, in from_pretrained
+    return model_class.from_pretrained(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path, *model_args, config=config, **hub_kwargs, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\dmaza\mcp-starter\nusantara-models\.venv\Lib\site-packages\transformers\modeling_utils.py", line 4313, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(model, state_dict, checkpoint_files, load_config)
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dmaza\mcp-starter\nusantara-models\.venv\Lib\site-packages\transformers\modeling_utils.py", line 4452, in _load_pretrained_model
+    merged_state_dict.update(load_state_dict(ckpt_file, disable_mmap=load_config.disable_mmap))
+                             ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dmaza\mcp-starter\nusantara-models\.venv\Lib\site-packages\transformers\modeling_utils.py", line 366, in load_state_dict
+    return torch.load(checkpoint_path, map_location=map_location, weights_only=weights_only, **extra_args)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dmaza\mcp-starter\nusantara-models\.venv\Lib\site-packages\torch\serialization.py", line 1632, in load
+    return _legacy_load(
+        opened_file,
+    ...<3 lines>...
+        **pickle_load_args,
+    )
+  File "C:\Users\dmaza\mcp-starter\nusantara-models\.venv\Lib\site-packages\torch\serialization.py", line 1914, in _legacy_load
+    result = unpickler.load()
+  File "C:\Users\dmaza\mcp-starter\nusantara-models\.venv\Lib\site-packages\torch\_weights_only_unpickler.py", line 535, in load
+    self.append(self.persistent_load(pid))
+                ~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\dmaza\mcp-starter\nusantara-models\.venv\Lib\site-packages\torch\serialization.py", line 1847, in persistent_load
+    obj = cast(Storage, torch.UntypedStorage(nbytes))
+                        ~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+RuntimeError: [enforce fail at alloc_cpu.cpp:117] data. DefaultCPUAllocator: not enough memory: you tried to allocate 2359296 bytes.

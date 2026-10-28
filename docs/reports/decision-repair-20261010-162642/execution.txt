@@ -1,0 +1,76 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261010162643
+Username: DESKTOP-GJHS3LR\dmaza
+RunAs User: DESKTOP-GJHS3LR\dmaza
+Configuration Name: 
+Machine: DESKTOP-GJHS3LR (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+Process ID: 36316
+PSVersion: 5.1.26100.9444
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9444
+BuildVersion: 10.0.26100.9444
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+PS C:\Users\dmaza\mcp-starter> Write-Host "Output exists: $(Test-Path -LiteralPath $TestOut)"
+Output exists: True
+PS C:\Users\dmaza\mcp-starter> Write-Host "Output path: $TestOut"
+Output path: C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run
+PS C:\Users\dmaza\mcp-starter> Write-Host "Start: $(Get-Date -Format o)"
+Start: 2026-10-10T16:26:43.0496125+07:00
+PS C:\Users\dmaza\mcp-starter> if ((Test-Path $Py) -and (Test-Path $Runner) -and (Test-Path $TestOut -PathType Container)) {
+    & $Py -B $Runner $TestOut
+    $Code = $LASTEXITCODE
+    Write-Host "Runner exit code: $Code"
+} else {
+    $Code = 2
+    Write-Host 'BLOCKED: Python, runner, or output directory is missing.'
+}
+
+Runner exit code: 0
+PS C:\Users\dmaza\mcp-starter> [pscustomobject]@{
+    timestamp = (Get-Date).ToString('o')
+    command = "$Py -B $Runner $TestOut"
+    exit_code = $Code
+    output_directory = $TestOut
+} | ConvertTo-Json |
+    Set-Content (Join-Path $Out 'execution-summary.json') -Encoding utf8
+PS C:\Users\dmaza\mcp-starter> Write-Host "`n=== GENERATED FILES ==="
+
+=== GENERATED FILES ===
+PS C:\Users\dmaza\mcp-starter> Get-ChildItem $Out -File -Recurse |
+    Select-Object FullName, Length |
+    Format-Table -AutoSize
+
+FullName
+--------
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\execution-summary.json
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\execution.txt
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\guard-descriptor-check.txt
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\guard-reuse-check.txt
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\guard-write-check.txt
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest.log
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\python-results.xml
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_audit_chain_detects_tam...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_audit_chain_detects_tam...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_decision_api_requires_a...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_decision_api_requires_a...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_decision_api_requires_a...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_missing_test_run_blocks...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_package_id_changes_when...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_package_id_changes_when...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_test_run_manifest_is_bo...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_test_run_manifest_is_bo...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_test_run_manifest_is_bo...
+C:\Users\dmaza\mcp-starter\docs\reports\decision-repair-20261010-162642\python-run\pytest-tmp\test_validator_distinguishes...
+
+
+PS C:\Users\dmaza\mcp-starter> Stop-Transcript | Out-Null
+**********************
+Windows PowerShell transcript end
+End time: 20261010162643
+**********************

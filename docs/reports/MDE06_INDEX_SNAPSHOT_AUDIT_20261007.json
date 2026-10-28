@@ -1,0 +1,763 @@
+{
+  "phase": "MDE06",
+  "captured_at": "2026-10-07T04:32:39.534853+00:00",
+  "snapshot_consistency": "Original files matched hashes before/after copy and audit; copied SQLite+WAL quick_check recorded. This is a point-in-time file snapshot, not current live runtime proof.",
+  "databases": [
+    {
+      "source": "data/knowledge/nusantara_knowledge.db",
+      "snapshot": ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db",
+      "copies": [
+        {
+          "source": "data/knowledge/nusantara_knowledge.db",
+          "snapshot": ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db",
+          "sha256_at_copy": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+          "bytes": 49152
+        },
+        {
+          "source": "data/knowledge/nusantara_knowledge.db-wal",
+          "snapshot": ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db-wal",
+          "sha256_at_copy": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ],
+      "scope": "Read-only SQL on copied DB plus copied WAL, not original production DB connection",
+      "quick_check": [
+        "ok"
+      ],
+      "foreign_key_violation_count": 0,
+      "user_version": 0,
+      "schema": {
+        "chunks": [
+          {
+            "name": "chunk_id",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "document_id",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "content",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "chunk_index",
+            "type": "INTEGER",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "start_char",
+            "type": "INTEGER",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "end_char",
+            "type": "INTEGER",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "tokens_estimate",
+            "type": "INTEGER",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "metadata_json",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "embedding",
+            "type": "BLOB",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "embedding_dimension",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "embedding_model",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "stored_at",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "store_id",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          }
+        ],
+        "documents": [
+          {
+            "name": "document_id",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "title",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "source",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "content_type",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "chunks_count",
+            "type": "INTEGER",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "size_bytes",
+            "type": "INTEGER",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "metadata_json",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "created_at",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "updated_at",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          }
+        ]
+      },
+      "counts": {
+        "chunks": 5,
+        "documents": 5
+      },
+      "embedding_groups": [
+        {
+          "model": "indobenchmark/indobert-base-p1",
+          "dimension": 768,
+          "rows": 5
+        }
+      ],
+      "malformed_vector_rows": 0,
+      "nonfinite_vector_rows": 0,
+      "zero_vector_rows": 0,
+      "declared_profile_mismatch_rows": 0,
+      "index_format": "SQLite chunks.embedding little-endian float32 BLOB; dimensions/model per row",
+      "distance_metric": "cosine in source; query model name not filtered",
+      "index_version": "NOT_RECORDED",
+      "knowledge_version": "NOT_RECORDED",
+      "rebuild_marker": "NOT_RECORDED",
+      "content_hash_binding": "NOT_RECORDED; stale embedding/content cannot be established",
+      "generation_timestamp": "stored_at per row; no attested build manifest",
+      "index_status": "UNKNOWN",
+      "runtime_use": "BLOCKED_UNTIL_COMPATIBILITY_PROVEN",
+      "actual_embedding_model": "NOT_VERIFIED"
+    },
+    {
+      "source": "data/knowledge/production_knowledge.db",
+      "snapshot": ".dev/checkpoints/mde06-20261007/production_knowledge.db",
+      "copies": [
+        {
+          "source": "data/knowledge/production_knowledge.db",
+          "snapshot": ".dev/checkpoints/mde06-20261007/production_knowledge.db",
+          "sha256_at_copy": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+          "bytes": 208896
+        },
+        {
+          "source": "data/knowledge/production_knowledge.db-wal",
+          "snapshot": ".dev/checkpoints/mde06-20261007/production_knowledge.db-wal",
+          "sha256_at_copy": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ],
+      "scope": "Read-only SQL on copied DB plus copied WAL, not original production DB connection",
+      "quick_check": [
+        "ok"
+      ],
+      "foreign_key_violation_count": 0,
+      "user_version": 0,
+      "schema": {
+        "chunk_embeddings": [
+          {
+            "name": "chunk_id",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "document_id",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "model_name",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "embedding_version",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "dimension",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "vector",
+            "type": "BLOB",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "vector_norm",
+            "type": "REAL",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "text_hash",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "created_at",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          }
+        ],
+        "chunks": [
+          {
+            "name": "chunk_id",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "document_id",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "chunk_index",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "text",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "text_hash",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "token_estimate",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "created_at",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          }
+        ],
+        "chunks_fts": [
+          {
+            "name": "chunk_id",
+            "type": "",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "document_id",
+            "type": "",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "text",
+            "type": "",
+            "notnull": 0,
+            "pk": 0
+          }
+        ],
+        "chunks_fts_config": [
+          {
+            "name": "k",
+            "type": "",
+            "notnull": 1,
+            "pk": 1
+          },
+          {
+            "name": "v",
+            "type": "",
+            "notnull": 0,
+            "pk": 0
+          }
+        ],
+        "chunks_fts_content": [
+          {
+            "name": "id",
+            "type": "INTEGER",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "c0",
+            "type": "",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "c1",
+            "type": "",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "c2",
+            "type": "",
+            "notnull": 0,
+            "pk": 0
+          }
+        ],
+        "chunks_fts_data": [
+          {
+            "name": "id",
+            "type": "INTEGER",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "block",
+            "type": "BLOB",
+            "notnull": 0,
+            "pk": 0
+          }
+        ],
+        "chunks_fts_docsize": [
+          {
+            "name": "id",
+            "type": "INTEGER",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "sz",
+            "type": "BLOB",
+            "notnull": 0,
+            "pk": 0
+          }
+        ],
+        "chunks_fts_idx": [
+          {
+            "name": "segid",
+            "type": "",
+            "notnull": 1,
+            "pk": 1
+          },
+          {
+            "name": "term",
+            "type": "",
+            "notnull": 1,
+            "pk": 2
+          },
+          {
+            "name": "pgno",
+            "type": "",
+            "notnull": 0,
+            "pk": 0
+          }
+        ],
+        "documents": [
+          {
+            "name": "document_id",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "title",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "source_file",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "source_hash",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "source_type",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "domain",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "service",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "content_type",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "text_length",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "chunk_count",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "ingested_at",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "active",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "source_status",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "authority",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "verified",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          }
+        ],
+        "embedding_runs": [
+          {
+            "name": "run_id",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "model_name",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "embedding_version",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "started_at",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "finished_at",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "status",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "total_chunks",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "embedded_chunks",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "skipped_chunks",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "failed_chunks",
+            "type": "INTEGER",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "error_message",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          }
+        ],
+        "ingestion_log": [
+          {
+            "name": "id",
+            "type": "INTEGER",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "source_file",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "source_hash",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "status",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "message",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "created_at",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          }
+        ],
+        "source_registry": [
+          {
+            "name": "source_id",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 1
+          },
+          {
+            "name": "document_id",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "source_status",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "authority",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "source_url",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "effective_date",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "expiry_date",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "verification_note",
+            "type": "TEXT",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "registered_at",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          },
+          {
+            "name": "updated_at",
+            "type": "TEXT",
+            "notnull": 1,
+            "pk": 0
+          }
+        ],
+        "sqlite_sequence": [
+          {
+            "name": "name",
+            "type": "",
+            "notnull": 0,
+            "pk": 0
+          },
+          {
+            "name": "seq",
+            "type": "",
+            "notnull": 0,
+            "pk": 0
+          }
+        ]
+      },
+      "counts": {
+        "chunk_embeddings": 2,
+        "chunks": 27,
+        "chunks_fts": 27,
+        "chunks_fts_config": 1,
+        "chunks_fts_content": 27,
+        "chunks_fts_data": 10,
+        "chunks_fts_docsize": 27,
+        "chunks_fts_idx": 8,
+        "documents": 6,
+        "embedding_runs": 1,
+        "ingestion_log": 6,
+        "source_registry": 1,
+        "sqlite_sequence": 1
+      },
+      "embedding_groups": [
+        {
+          "model": "indobenchmark/indobert-base-p1",
+          "version": "indobert-base-p1-v1",
+          "dimension": 768,
+          "rows": 2
+        }
+      ],
+      "malformed_vector_rows": 0,
+      "nonfinite_vector_rows": 0,
+      "zero_vector_rows": 0,
+      "missing_embedding_chunks": 25,
+      "stale_embedding_text_hash_rows": 0,
+      "embedding_document_identity_mismatch": 0,
+      "declared_profile_mismatch_rows": 0,
+      "run_status_groups": [
+        {
+          "status": "success",
+          "runs": 1
+        }
+      ],
+      "generation_timestamp_bounds": {
+        "earliest": "2026-10-01T11:46:51.780527+00:00",
+        "latest": "2026-10-01T11:46:51.781190+00:00"
+      },
+      "index_format": "SQLite chunk_embeddings.vector native array float32 BLOB",
+      "distance_metric": "cosine in source; production search filters model/version, not dimension",
+      "index_version": "embedding_version per row; no independently attested index generation",
+      "knowledge_version": "Production manifest label 1.0.0; immutable build/source binding not proven",
+      "rebuild_marker": "embedding_runs records exist; not a complete generation/compatibility receipt",
+      "index_status": "PARTIAL",
+      "runtime_use": "BLOCKED_UNTIL_COMPATIBILITY_PROVEN",
+      "actual_embedding_model": "NOT_VERIFIED",
+      "active_chunks": 27,
+      "active_chunks_missing_embedding": 25
+    }
+  ],
+  "production_models_loaded": false,
+  "original_db_connections": false,
+  "rebuild_performed": false,
+  "snapshot_artifact_sha256": {
+    ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+    ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+    ".dev/checkpoints/mde06-20261007/nusantara_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".dev/checkpoints/mde06-20261007/production_knowledge.db": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+    ".dev/checkpoints/mde06-20261007/production_knowledge.db-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+    ".dev/checkpoints/mde06-20261007/production_knowledge.db-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "contract": "NUS-MDE-DEV-CURRENT-20261008",
+  "phase": "D2 — Isolated Reproduction",
+  "authorization": "User selected D2; fixture-only reproduction of the five D1 gaps, no application repair or live operations",
+  "disposition": "REPRODUCED_SCOPED",
+  "runtime_disposition": "NOT_VERIFIED",
+  "repository": {
+    "path": "C:/users/dmaza/mcp-starter",
+    "branch": "codex/fullroot-control-20261007",
+    "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab"
+  },
+  "evidence_start": "2026-10-08T20:20:00+07:00",
+  "final_test_timestamp": "2026-10-08T20:21:52.001535+07:00",
+  "test_environment": "Windows, Python 3.13.15, pytest 9.1.1; report-owned temporary workspaces; existing project virtual environment",
+  "tests": {
+    "total": 52,
+    "passed": 51,
+    "failed": 0,
+    "skipped": 1,
+    "new_gap_characterization_passed": 6,
+    "existing_regression_passed": 45,
+    "skip_reason": "Existing outside-workspace symlink test requires Windows symlink privilege",
+    "interpretation": "Characterization PASS proves the observed gap. It does not certify the behavior as safe.",
+    "first_attempt": "50 passed, 1 failed, 1 skipped. Windows text-write CRLF translation changed the byte-budget fixture. Corrected only the report-owned fixture to write exact UTF-8 bytes; preserved ATTEMPT_1 evidence."
+  },
+  "findings": [
+    {
+      "id": "D2-01",
+      "status": "REPRODUCED_SCOPED",
+      "source": "app/devcore/grounding.py:42; app/devcore/core.py:136",
+      "precondition": "Synthetic file x = 1; callback returns a negated clause followed by an unsupported positive storage claim in one sentence",
+      "expected_safety": "Unsupported positive storage claim rejected regardless of the adjacent negative clause",
+      "actual": "verification passed, no violations, unsupported claim retained in human answer",
+      "cause": "Sentence-wide negation check skips all claim checks",
+      "impact": "Grounding can accept unsupported positive behavior claims",
+      "control": "Standalone unsupported positive storage claim produces a violation"
+    },
+    {
+      "id": "D2-02",
+      "status": "REPRODUCED_SCOPED",
+      "source": "app/devcore/core.py:53; app/devcore/core.py:63; app/devcore/core.py:70",
+      "precondition": "Injected synthetic backend returns fabricated outside-workspace path/content for an allowed app/example.py request",
+      "expected_safety": "Successful result tied to approved requested path and workspace boundary",
+      "actual": "Foreign read result accepted for analysis; absolute outside find result survives sanitization",
+      "cause": "Read sanitation validates content type/binary/length but not returned identity; _rel retains outside paths",
+      "impact": "Conditional trust boundary gap when an external backend is used",
+      "control": "Direct outside-path request and subsequent outside-path read are blocked before backend invocation",
+      "limitation": "No actual outside file read; live backend adapter and deployed usage not verified"
+    },
+    {
+      "id": "D2-03",
+      "status": "REPRODUCED_SCOPED",
+      "source": "app/devcore/tools.py:42; app/devcore/workspace.py",
+      "precondition": "Synthetic secrets/visible.py inside fixture workspace",
+      "expected_safety": "Search excludes directory names denied by workspace policy",
+      "actual": "find_file returns secrets/visible.py",
+      "cause": "Walk pruning filters skip directories and root data but not sensitive directory names",
+      "impact": "Sensitive-directory filename metadata can be exposed",
+      "control": "read_file denies the path; root listing hides secrets; real secrets untouched"
+    },
+    {
+      "id": "D2-04",
+      "status": "REPRODUCED_SCOPED",
+      "source": "app/devcore/tools.py:42",
+      "precondition": "PermissionError injected at os.scandir for one synthetic child directory during real os.walk",
+      "expected_safety": "Incomplete search exposes traversal failure or uncertainty",
+      "actual": "success true, matches empty, error null, truncated false despite denied traversal",
+      "cause": "os.walk has no onerror handler; skipped directory is not reflected in response",
+      "impact": "An incomplete search can be interpreted as no matching file",
+      "control": "Removing injected denial reveals restricted/hidden.py",
+      "limitation": "Simulated access error; no Windows ACL changes or live filesystem correlation"
+    },
+    {
+      "id": "D2-05",
+      "status": "REPRODUCED_SCOPED",
+      "source": "app/devcore/core.py:136; app/devcore/core.py:160; app/devcore/tools.py:19",
+      "precondition": "158-byte read budget for a 192-byte fixture; print call lies beyond read prefix; callback claims no print",
+      "expected_safety": "Analysis discloses partial source and limits verification scope",
+      "actual": "Tool truncated true, verification passed, answer claims no print without truncation notice",
+      "cause": "Analysis ignores truncated flag; truncation notice exists only for verbatim response",
+      "impact": "Partial-source analysis can produce unqualified absence claims",
+      "control": "Full fixture read contains print and is not truncated",
+      "limitation": "Absence-claim acceptance also intersects D2-01; no isolated attribution to truncation alone"
+    }
+  ],
+  "evidence": ["test_d2_reproduction.py", "isolated_runner.py", "OBSERVATIONS.json", "BACKEND_RESULTS.xml", "BACKEND_GUARDS.json", "TEST_OUTPUT.txt", "FILES_BEFORE.json", "FILES_AFTER.json", "PRESERVATION.json", "GIT_BEFORE.txt", "GIT_AFTER.txt", "FINAL_VERIFICATION.json", "CONCURRENT_REPORT_METADATA.json", "ATTEMPT_1_*"],
+  "reproduction_command": ".venv\\Scripts\\python.exe -B docs\\reports\\d2-isolated-reproduction-20261008-9f4d2a61\\isolated_runner.py",
+  "effects": {
+    "guard_violations": 0,
+    "network": "Blocked except stdlib internal loopback socketpair needed by asyncio",
+    "provider_or_model": "Provider/model imports blocked; deterministic plain callback only",
+    "database": "sqlite connections and protected database paths blocked",
+    "persistence": "AuditTrail in-memory only; writes allowed only under this evidence directory",
+    "subprocess": "Blocked inside test process",
+    "application_source": "No edits",
+    "graph": "No edits; graph update intentionally not run under preservation scope",
+    "live_preview_chat_requests": "None",
+    "services_restarted": "None",
+    "governance_R2_R3_attestation_RAG": "No operations or mutation"
+  },
+  "limitations": [
+    "This is behavioral evidence for local source under fixture conditions; runtime identity, launch configuration, OpenAPI and live integration were not rechecked.",
+    "Prior source/runtime registration discrepancy remains unresolved; no restart or automatic repair authorized.",
+    "No real provider, model, database, RAG, protected persistence or source execution was used.",
+    "Backend-result finding is conditional on injected adapter behavior; it does not prove actual live data disclosure.",
+    "Isolation guards are scoped Python harness controls, not an OS sandbox certification.",
+    "3489 inventoried source/test/frontend/graph files retain their hashes. Existing Git entries remain, but four additional untracked NUSANTARA-LEVEL-B-RESULT reports appeared outside this D2 evidence directory during verification. This harness did not create them, their producer is unknown, and they were left untouched. Whole-tree identity is therefore not claimed.",
+    "Existing five inaccessible Git report directories remain untouched; full Git enumeration has inherited permission warnings.",
+    "Symlink runtime behavior remains untested because the existing test was skipped."
+  ],
+  "next_gate": {
+    "level": "LEVEL C — explicit scoped repair authorization required",
+    "proposed_scope": ["app/devcore/grounding.py: claim-local negation handling", "app/devcore/core.py: backend result path binding and partial-source verification disclosure", "app/devcore/tools.py: sensitive-directory pruning and explicit incomplete-search evidence", "Focused regression tests for these reproduced gaps"],
+    "required_acceptance": ["Mixed negation cannot hide an unsupported positive claim", "Foreign backend path/content rejected before analysis; valid matched backend results retained", "Sensitive directory metadata excluded while allowed search still works", "Traversal failures reported as incomplete/error rather than complete absence", "Truncated analysis visibly scoped and cannot claim full-file verification", "Existing DevCore regression suite retains behavior within the authorized scope"],
+    "implementation_performed": false,
+    "live_authorization_granted": false
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "phase": "PHASE_0_CONTROL_PLANE_PREFLIGHT",
+  "status": "DONE_SCOPED_AWAITING_APPROVAL",
+  "timestamp": "2026-10-07T04:24:36.064119+00:00",
+  "git_head": "c24aa1b0db391009af44682bf2f2eb091f4f0f75",
+  "branch": "codex/fullroot-control-20261007",
+  "command": "docs/commands/MDE-04 -09.md",
+  "baseline": ".dev/MDE_BASELINE_20261007T042435Z.json",
+  "changes": [
+    ".dev/MDE_BASELINE_20261007T042435Z.json",
+    "docs/reports/MDE_CONTROL_PLANE_GAP_MATRIX_20261007T042435Z.json",
+    "docs/reports/MDE_CONTROL_PLANE_PREFLIGHT_20261007T042435Z.md",
+    ".dev/MDE00_CHECKPOINT.json"
+  ],
+  "runtime_source_changed": [],
+  "test_source_changed": [],
+  "tests": {
+    "new_runs": 0,
+    "static_test_files": 45,
+    "static_test_functions": 287,
+    "syntax_errors": [],
+    "focused": {
+      "path": "reports/MDE04_FOCUSED_20261007.xml",
+      "sha256": "dfdfc1a70c1cf40e72aa111bd7ef5010b96cfd9e3a82e88da61acdfde4f0df61",
+      "tests": 71,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution": "HISTORICAL_REUSE; not rerun in Phase 0"
+    },
+    "full_regression": {
+      "path": "reports/MDE02_REGRESSION_20261007.xml",
+      "sha256": "8e03995a26172ddf9aa15d17522f4076a40e7372c2648c7052eabbd35dfbd665",
+      "tests": 409,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "execution": "HISTORICAL_REUSE; not rerun in Phase 0"
+    },
+    "historical_details": {
+      "execution": "NOT_RERUN_NO_SOURCE_CHANGE",
+      "previous_task": "MDE-02-20261007",
+      "evidence_reused": "reports/MDE02_REGRESSION_20261007.xml",
+      "passed": 380,
+      "subtests_passed": 28,
+      "skipped": 1,
+      "failures": 0,
+      "errors": 0,
+      "junit_hash_verified": true,
+      "reason": "MDE04 discovery/design-only permits existing focused evidence reuse; source-change full regression condition not triggered"
+    },
+    "limitations": [
+      "AST discovery is not pytest collection or execution.",
+      "Historical Windows symlink security test skipped."
+    ]
+  },
+  "runtime_verification": {
+    "startup": "NOT_RUN",
+    "health_endpoints": "NOT_RUN",
+    "worker": "NOT_RUN",
+    "production_service": "NOT_RUN",
+    "actual_model": null,
+    "identity_status": "NOT_VERIFIED"
+  },
+  "evidence_sha256": {
+    ".dev/MDE_BASELINE_20261007T042435Z.json": "3550d0f51ab14d45bd42ba03640e0fc49b7a82b1407a8912ada0bf9227fd105c",
+    "docs/reports/MDE_CONTROL_PLANE_GAP_MATRIX_20261007T042435Z.json": "060ddccf30c3b5fc022761846d206df5a27bf84741d86dd36ec0e0a05ae79e1b",
+    "docs/reports/MDE_CONTROL_PLANE_PREFLIGHT_20261007T042435Z.md": "0170625507b2041a8d8e764e91e14719e221dad54c038ea85465bd47faf7335e"
+  },
+  "protected_verification": {
+    "files_checked": 276,
+    "mismatches": []
+  },
+  "limitations": [
+    "Consumer/effective-value proof incomplete.",
+    "Health eligibility, key drift and failover open.",
+    "Selected identity does not attest actual execution.",
+    "Effective configuration consumption not live verified.",
+    "RAG audit requires MDE05 approval.",
+    "Byte hashes do not establish compatibility.",
+    "Declared capability does not prove available/ready.",
+    "Source graph exists; runtime dependency graph absent.",
+    "Historical evidence intact; invocation/production proof missing.",
+    "Section 34 requires explicit APPROVE MDE-05.",
+    "New contract calls MDE09 final; MDE_command1 defines MDE09 Runtime Dependency Graph and MDE10 Live Runtime Verification. Resolve before MDE09.",
+    "Target control tools and connected desktop session unproven.",
+    "Static rag_runtime.json min_score 0.35 differs from documented canonical cutoff 0.30; actual consumer/precedence unproven, no runtime contradiction asserted.",
+    "Historical reports/tmp directories denied listing; no ACL modification. Scoped authoritative docs/.dev/source inventory, not exhaustive archive coverage."
+  ],
+  "rollback": "Only new Phase0 artifacts after verifying paths/hashes; preserve pre-existing source/state/data.",
+  "next_phase": "MDE-05",
+  "next_action": "WAIT_FOR_EXPLICIT_APPROVE_MDE-05",
+  "approval_required": true,
+  "approval_source": {
+    "file": "docs/commands/MDE-04 -09.md",
+    "section": 34,
+    "quote": "Jangan menjalankan MDE-05 sebelum Project Owner memberikan: APPROVE MDE-05"
+  },
+  "completed_steps": [
+    "root/git",
+    "MDE01-04 checkpoints/reports",
+    "MDE05 embedded command discovery",
+    "state/tasks/decisions",
+    "MDE09 scope conflict",
+    "control plane/graph/DeveloperCore/runtime/MCP/test inventory",
+    "golden baseline",
+    "gap matrix",
+    "report",
+    "post-output integrity"
+  ],
+  "resume_instruction": "Verify evidence and protected baseline hashes. Do not repeat Phase0/MDE01-04. Await explicit APPROVE MDE-05, then only MDE05 and checkpoint/stop.",
+  "overall_status": "NOT_READY",
+  "overall_v1_acceptance": "FAIL/HOLD"
+}

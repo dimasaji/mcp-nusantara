@@ -1,0 +1,20 @@
+{
+  "processes": [
+    {
+      "ProcessId": 33040,
+      "ParentProcessId": 1268,
+      "Name": "python.exe",
+      "ExecutablePath": "C:\\Users\\dmaza\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "CommandLine": "\"C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1 ",
+      "CreationTimeUtc": "2026-10-08T06:30:22.5616560Z"
+    }
+  ],
+  "observed_at_utc": "2026-10-08T09:18:23.6308159Z",
+  "listeners": [
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 8000,
+      "OwningProcess": 33040
+    }
+  ]
+}

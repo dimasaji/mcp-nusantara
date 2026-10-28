@@ -1,0 +1,406 @@
+{
+  "timestamp": "2026-10-09T10:55:29.611550+07:00",
+  "repository": "C:\\Users\\dmaza\\mcp-starter",
+  "status": "BLOCKED",
+  "v1_acceptance": "HOLD",
+  "v2": "DEFERRED",
+  "rollback_verified": false,
+  "authorization": "INVESTIGATION_ONLY_NO_RUNTIME_REPLACEMENT",
+  "baseline": {
+    "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+    "candidate_disk_fingerprint": "sha256:9916a16a8411c1d892157fad11e3bfdf4200efe4e20a259ec23dd9de74b90fcd",
+    "expected_old_runtime_import_source_snapshot": "sha256:b7455ef0823df00d73a576147c6331ed69f9b74c145de39281819c3cad78d27f",
+    "old_identity_limitation": "Historical import-time disk snapshot, not full loaded closure. No current application GET or provider requests performed in this investigation. Current OS identity independently checked.",
+    "previous_report": {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-alignment-prerequisites-20261009-104217\\PREREQUISITE_ROLLBACK_REPORT.json",
+      "sha256": "1dbbba79e1ad7b5625b8da7e1bdfb422ffbd6c569bf009b80fe3132f80c8bf73"
+    }
+  },
+  "evidence_table": [
+    {
+      "artifact": "C:\\Users\\dmaza\\mcp-starter\\audit_reports\\staging-drill-20261006T025037193681Z\\backups\\backup-staging-20261006T025038Z.tar.gz",
+      "sha256": "e276e8842705f6f7c92b8471c9ec6956197b030900b07cc52e11db514fb12691",
+      "checksum": "VALID",
+      "historically_restored_source": "sha256:31ba51f69612bd49b6e2e83973fdf0c5d263afde362cacef6011b118e349d89b",
+      "dependencies_complete": "NOT_ESTABLISHED",
+      "historical_runnable_scope": "Staging local /v1/health PASS only; not business flow or production restore",
+      "matches_old_runtime": "NO_MATCH_ON_RECORDED_SOURCE_SNAPSHOT",
+      "missing": "Worker, frontend build, exact interpreter/stdlib/native dependencies, inherited configuration and recovery witness linked to PID33160",
+      "risk": "Health-only staging rollback could fail native production boot or restore wrong behavior/data",
+      "operator_action": "Locate complete prior artifact/provenance; separate approval for any new artifact or execution"
+    },
+    {
+      "artifact": "C:\\Users\\dmaza\\mcp-starter\\audit_reports\\staging-drill-20261006T025945053115Z\\backups\\backup-staging-20261006T025946Z.tar.gz",
+      "sha256": "b97df648a7889c62984bc4d9bc0f77147e1b3fb18a091b04c63e176f3c56bc7c",
+      "checksum": "VALID",
+      "historically_restored_source": "sha256:49431c39e13614b2301b5110795054c9272c79c2d341b79a3d5c4aff32d040a6",
+      "dependencies_complete": "NOT_ESTABLISHED",
+      "historical_runnable_scope": "Staging local /v1/health PASS only; not business flow or production restore",
+      "matches_old_runtime": "NO_MATCH_ON_RECORDED_SOURCE_SNAPSHOT",
+      "missing": "Worker, frontend build, exact interpreter/stdlib/native dependencies, inherited configuration and recovery witness linked to PID33160",
+      "risk": "Health-only staging rollback could fail native production boot or restore wrong behavior/data",
+      "operator_action": "Locate complete prior artifact/provenance; separate approval for any new artifact or execution"
+    },
+    {
+      "artifact": "C:\\Users\\dmaza\\mcp-starter.zip",
+      "sha256": "d4ab56264e4ddc74a15616328fb984eb9c790271ebeb74357dbd1bb8c31c2ab3",
+      "checksum": "NO_INDEPENDENT_SIDECAR",
+      "historically_restored_source": "NO_LINKED_RECOVERY_RECORD",
+      "source_identity": [
+        {
+          "root_prefix": "mcp-starter/",
+          "source_fingerprint_same_current_algorithm": "sha256:39df18598f5086ff8b6b820f4d71eb0f8737327fd1bb8a2dd57710b1d8d2e3a5",
+          "source_files_hashed": 190,
+          "skipped_large_members": [],
+          "matches_runtime_import_snapshot": false,
+          "worker_present": true,
+          "frontend_dist_members": [],
+          "dependency_lock_members": []
+        }
+      ],
+      "dependencies_complete": "NOT_ESTABLISHED despite bundled installed package metadata and venv launchers",
+      "historical_runnable_scope": "NOT_VERIFIED_FOR_THIS_ZIP",
+      "matches_old_runtime": false,
+      "missing": "Independent expected checksum/build manifest; matching old source; base interpreter/stdlib/native/model closure; frontend dist/lock; configuration and historical recovery linkage",
+      "risk": "Legacy ZIP can contain runnable fragments while depending on external mutable resources; no prior-runtime match",
+      "operator_action": "Provide authentic archive/build provenance; do not extract/run under current authorization"
+    },
+    {
+      "artifact": "E:\\AI\\mcp-starter",
+      "source_identity": "sha256:bda11ece6ec87f09f4050021008bc222e08f9b3607c9c7fe4ecc161f01490e93",
+      "checksum": "Per-file hashes in LOCAL_BACKUP_INVENTORY.json",
+      "historically_restored_source": "Existing relocated tree; restoration provenance UNKNOWN",
+      "dependencies_complete": "NOT_ESTABLISHED; mutable .venv metadata only",
+      "historical_runnable_scope": "NOT_VERIFIED",
+      "matches_old_runtime": false,
+      "missing": "Runtime build/source match, immutable provenance, full deps and exact config/load witness",
+      "risk": "Launching another checkout does not reproduce old loaded build",
+      "operator_action": "Identify its provenance; no startup or environment change"
+    },
+    {
+      "artifact": "Repository backup/, archive/, .developer_staging/, app_backup_before_openrouter/, backup_indobert_20261001_091633/, report/checkpoint snapshots",
+      "checksum": "Individual available file SHA256 recorded in LOCAL_BACKUP_INVENTORY.json",
+      "historically_restored_source": "Partial snapshots, not assembled",
+      "dependencies_complete": "NO_COMPLETE_BUILD_ESTABLISHED",
+      "historical_runnable_scope": "NOT_VERIFIED_AS_COMPLETE_BUILD",
+      "matches_old_runtime": "NOT_ESTABLISHED",
+      "missing": "A single immutable complete source/build manifest with resources, deps/config and old-process identity",
+      "risk": "Assembling fragments would invent an unverified build",
+      "operator_action": "Locate a genuine complete preserved artifact; no reconstruction authorized"
+    },
+    {
+      "artifact": "Unit-test archives and browser trace.zip files",
+      "checksum_counts": {
+        "NO_INDEPENDENT_SIDECAR": 15,
+        "MISMATCH_OR_INVALID_SIDECAR": 6,
+        "VALID": 24
+      },
+      "classification": "Test fixtures/trace evidence, not rollback builds. Intentional corrupted checksum cases and malicious traversal/link fixtures identified by tests/test_backup_restore.py; checksum VALID alone does not make a safe restore archive.",
+      "dependencies_complete": false,
+      "historical_runnable_scope": "NOT_APPLICABLE",
+      "matches_old_runtime": false,
+      "operator_action": "Do not restore these fixtures"
+    },
+    {
+      "artifact": "Existing knowledge backup DBs and manifests listed in DATA_BACKUP_INTEGRITY.json",
+      "checksum": "Newly computed SHA256; no independent sidecars observed on these files",
+      "historically_restored_source": "NOT_APPLICABLE",
+      "dependencies_complete": "NOT_APPLICABLE",
+      "historical_runnable_scope": "No linked current-production restore proof",
+      "matches_old_runtime": "No build/schema/recovery point linkage established",
+      "missing": "Common quiesced recovery point, DB/WAL/index consistency, schema compatibility, restore runbook and production recovery results",
+      "risk": "Source rollback alone cannot reverse database initialization/migration effects; incomplete data restore may lose or corrupt state",
+      "operator_action": "Provide existing consistency/restore records or approve separately scoped offline verification; no data restore now"
+    }
+  ],
+  "category_decisions": {
+    "valid_archive_checksum": "Two relevant staging archives match sidecars. Legacy ZIP only has newly computed hash; other valid archives include malicious test fixtures.",
+    "historically_restored_source": "Two existing staging restored trees and recorded staging recovery PASS; see preceding source fingerprints and result hashes.",
+    "complete_dependency_build": "NONE_ESTABLISHED",
+    "actually_runnable_build": "Historical staging health proves historical limited boot; not fresh run or native production coverage. Legacy ZIP and relocated E tree not executed.",
+    "identity_matching_old_runtime_rollback": "NONE_VERIFIED"
+  },
+  "configuration_origins": {
+    "launch": "Current OS flags and prior exact launch agree: venv uvicorn app.main:app,127.0.0.1:8000,workers1. Parent chain33160->37704->20228.",
+    "working_directory": "Repository confirmed by prior real runtime attestation; not re-probed via application in this investigation.",
+    "interpreter": "Actual Python313 process and venv launcher observed; pyvenv.cfg version3.13.15 points to installed base interpreter and historical E-path venv creation. Mutable paths do not freeze old dependency closure.",
+    "inherited_process_environment": "UNKNOWN",
+    "prior_effective_bootstrap_overrides": "UNKNOWN",
+    "dotenv": "Presence-only in CONFIGURATION_ORIGINS.json; no secret values copied. Absence of current file cannot prove absence at old startup.",
+    "configuration_file_selection": "UNKNOWN for old runtime; existing rag_runtime.json is not proof of explicit selection. Static current compose-layer order is evidence of current source only.",
+    "launcher_attribution": "Matching service script syntax is available, but parent flags do not prove service script/supervisor origin. Named scheduled task not returned; presence/ownership not asserted. Service start script can force-stop port owners and launch Ollama; excluded from safe execution plan.",
+    "operational_configuration_reproducibility": "NOT_VERIFIED"
+  },
+  "data_recovery": {
+    "verified": false,
+    "existing_backups": [
+      {
+        "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\production_knowledge_backup_20261001_181113.db",
+        "sha256": "830ad12f8a4e09b62532976f15575db70b711b8035bdfbe5ee279044f3063c09",
+        "bytes": 110592,
+        "sqlite_opened": false,
+        "content_copied": false,
+        "checksum_sidecar_exists": false,
+        "before_after_metadata_equal": true,
+        "consistent_restorable_snapshot": "NOT_ESTABLISHED: hash only; no SQLite/schema/WAL recovery or integrity check run"
+      },
+      {
+        "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\production_knowledge_backup_20261002_143947.db",
+        "sha256": "f36043927b307ad035ea5c1f64a7d15cb3618294303806e9a8a4f11bc34a6aed",
+        "bytes": 118784,
+        "sqlite_opened": false,
+        "content_copied": false,
+        "checksum_sidecar_exists": false,
+        "before_after_metadata_equal": true,
+        "consistent_restorable_snapshot": "NOT_ESTABLISHED: hash only; no SQLite/schema/WAL recovery or integrity check run"
+      },
+      {
+        "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\production_knowledge_backup_20261002_144417.db",
+        "sha256": "0a7d27554772bbf8a808d16e64778a0db131fd1729d5c8d1f7be4d6634e0595e",
+        "bytes": 118784,
+        "sqlite_opened": false,
+        "content_copied": false,
+        "checksum_sidecar_exists": false,
+        "before_after_metadata_equal": true,
+        "consistent_restorable_snapshot": "NOT_ESTABLISHED: hash only; no SQLite/schema/WAL recovery or integrity check run"
+      },
+      {
+        "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\production_manifest.json",
+        "sha256": "739046238d38d0b32870784530438c8b72bafe1454a15023470d00808304dc45",
+        "bytes": 733,
+        "sqlite_opened": false,
+        "content_copied": false,
+        "top_level_field_names": [
+          "name",
+          "version",
+          "generated_at",
+          "database",
+          "source_root",
+          "chunking",
+          "supported_extensions",
+          "stats"
+        ],
+        "values_recorded": false,
+        "checksum_sidecar_exists": false,
+        "before_after_metadata_equal": true,
+        "consistent_restorable_snapshot": "NOT_ESTABLISHED: hash only; no SQLite/schema/WAL recovery or integrity check run"
+      },
+      {
+        "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\manifest.json",
+        "sha256": "2cc3221ae56d8d09097b515040e8c2495121cbfaa694b1ecdd42e5daa6b34443",
+        "bytes": 3671,
+        "sqlite_opened": false,
+        "content_copied": false,
+        "top_level_field_names": [
+          "engine",
+          "dataset",
+          "domain",
+          "created_at",
+          "verification_policy",
+          "documents"
+        ],
+        "values_recorded": false,
+        "checksum_sidecar_exists": false,
+        "before_after_metadata_equal": true,
+        "consistent_restorable_snapshot": "NOT_ESTABLISHED: hash only; no SQLite/schema/WAL recovery or integrity check run"
+      },
+      {
+        "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\sop\\engine_manifest.json",
+        "sha256": "fabaa50ae52314ae47830c476ad0f408e1662b678e11d23abd9f7a1343595a99",
+        "bytes": 5939,
+        "sqlite_opened": false,
+        "content_copied": false,
+        "top_level_field_names": [
+          "engine",
+          "input",
+          "output",
+          "governance",
+          "documents",
+          "summary"
+        ],
+        "values_recorded": false,
+        "checksum_sidecar_exists": false,
+        "before_after_metadata_equal": true,
+        "consistent_restorable_snapshot": "NOT_ESTABLISHED: hash only; no SQLite/schema/WAL recovery or integrity check run"
+      },
+      {
+        "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\sop\\manifest.json",
+        "sha256": "569c68f0b5ce3a88a13de74f1f301f301f150828c3307c1dfc2f8b612f9f84bb",
+        "bytes": 4226,
+        "sqlite_opened": false,
+        "content_copied": false,
+        "top_level_field_names": [
+          "generated_at",
+          "root",
+          "documents"
+        ],
+        "values_recorded": false,
+        "checksum_sidecar_exists": false,
+        "before_after_metadata_equal": true,
+        "consistent_restorable_snapshot": "NOT_ESTABLISHED: hash only; no SQLite/schema/WAL recovery or integrity check run"
+      },
+      {
+        "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\sop\\semantic_master\\semantic_master_manifest.json",
+        "sha256": "5ec217e166c6d883f122d12ee283fc0089848c90f4e1cd9c0e808a8d6bfd8bf5",
+        "bytes": 1823,
+        "sqlite_opened": false,
+        "content_copied": false,
+        "top_level_field_names": [
+          "engine",
+          "documents"
+        ],
+        "values_recorded": false,
+        "checksum_sidecar_exists": false,
+        "before_after_metadata_equal": true,
+        "consistent_restorable_snapshot": "NOT_ESTABLISHED: hash only; no SQLite/schema/WAL recovery or integrity check run"
+      },
+      {
+        "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\sop\\semantic_output\\semantic_manifest.json",
+        "sha256": "0feccdfd399b07aac280e958c6c7aff256130196f05d4cb3fdad27dfc5daf26e",
+        "bytes": 3647,
+        "sqlite_opened": false,
+        "content_copied": false,
+        "top_level_field_names": [
+          "engine",
+          "documents",
+          "governance"
+        ],
+        "values_recorded": false,
+        "checksum_sidecar_exists": false,
+        "before_after_metadata_equal": true,
+        "consistent_restorable_snapshot": "NOT_ESTABLISHED: hash only; no SQLite/schema/WAL recovery or integrity check run"
+      }
+    ],
+    "limits": "Offline named backups hash-checked without SQLite open; active DB not inspected. No new backup, WAL checkpoint, migration, restoration or memory reads/writes. Existing knowledge manifests do not themselves prove recovery consistency/official oracle approval.",
+    "startup_effects": "KnowledgeStore startup may create dirs, set SQLite WAL and CREATE TABLE/INDEX IF NOT EXISTS. No backward-schema/data consistency or fully linked production recovery proof found."
+  },
+  "missing_specific_evidence": [
+    "Complete immutable prior application/build artifact matching runtime source snapshot and independently defined loaded/dependency closure",
+    "Authentic manifest/checksums and interpreter/stdlib/Python/native/model resource versions or bytes sufficient for offline recreation, with approved source provenance",
+    "Frontend bundle and worker/resources linked to that same build",
+    "Exact nonsecret effective prior configuration provenance and secure credential references supplied by operator; inherited environment remains UNKNOWN",
+    "Consistent production data/index/WAL recovery point, checksums, schema compatibility and tested restore runbook linked to build",
+    "Historical or separately authorized recovery execution covering health, routes/OpenAPI, Console, model control, actual /v1/chat and native RAG, beyond staging fixtures/health"
+  ],
+  "smallest_risk_next_stage": [
+    {
+      "step": 1,
+      "action": "Operator identifies an existing immutable full prior-build artifact/manifest and its origin, plus existing base interpreter/dependency/model records. No reconstruction from aggregate hash; current investigation is complete.",
+      "approval": "Provide evidence paths; read-only follow-up only"
+    },
+    {
+      "step": 2,
+      "action": "Operator supplies a redacted configuration provenance record for the original launch, including nonsecret settings and names/references for credentials stored separately. Explicitly mark unavailable settings UNKNOWN.",
+      "approval": "Operator evidence disclosure; no secret values in report"
+    },
+    {
+      "step": 3,
+      "action": "Locate existing quiesced data backup/restore records with schema/index/WAL consistency. If none exists, request separate bounded authorization for creating/verifying recovery artifacts and data-consistency handling.",
+      "approval": "New backups, artifact creation, environments, schema checks or recovery drills require a new scoped approval"
+    },
+    {
+      "step": 4,
+      "action": "Only after full provenance and approved data side-effect controls, propose an isolated recovery verification with target/resources/port/stop procedure and explicit acceptance checks. Do not replace PID33160 until rollback prerequisites and operator runtime-replacement authorization are both satisfied.",
+      "approval": "Separate execution authorization; none granted here"
+    }
+  ],
+  "actions_requiring_operator_approval": [
+    "Create/freeze/extract/restore a rollback artifact or assemble source fragments",
+    "Install packages or create/change an environment, dependency, model or configuration",
+    "Start application/native worker/model, run recovery drill or issue provider/chat/memory-mutating validation",
+    "Quiesce/backup/checkpoint/restore/alter active persistence or schema",
+    "Stop/restart/signal/replace user runtime or deploy/release"
+  ],
+  "preservation": {
+    "scoped_file_audit": "PASS_SCOPED",
+    "changes": {
+      "modified": [],
+      "removed": [],
+      "added": []
+    },
+    "pid_start_parent_and_listener_unchanged": true,
+    "runtime_signals": 0,
+    "application_startups": 0,
+    "new_tests": 0,
+    "provider_invocations": 0,
+    "application_config_data_modifications": 0,
+    "only_written_directory": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200",
+    "limits": "Scoped hashes unchanged; active runtime data immutability not asserted from metadata. No modifying operation issued. Five pre-existing inaccessible temp directories remain limitations. External backup source/hash evidence read-only; whole filesystem not audited."
+  },
+  "commands_and_operations": {
+    "read_only_inspector": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\investigate.py",
+    "legacy_zip_inspector": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\inspect_legacy_zip.py",
+    "report_consolidator": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\finish_report.py",
+    "executed_python_commands": [
+      "& 'C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe' -B 'docs/reports/v1-rollback-investigation-20261009-105200/investigate.py'",
+      "& 'C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe' -B 'docs/reports/v1-rollback-investigation-20261009-105200/inspect_legacy_zip.py'",
+      "& 'C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe' -B 'docs/reports/v1-rollback-investigation-20261009-105200/finish_report.py'"
+    ],
+    "git": [
+      "git.exe --no-optional-locks rev-parse HEAD",
+      "git.exe --no-optional-locks status --short"
+    ],
+    "runtime_metadata": [
+      "Get-CimInstance Win32_Process -Filter ProcessId=33160 OR ProcessId=37704 OR ProcessId=20228; safe fields only",
+      "Get-NetTCPConnection -LocalPort 8000 -State Listen",
+      "Get-ScheduledTask -TaskName Nusantara AI Service; task name/state only"
+    ],
+    "inspection": "Read existing backup/manifest/static launch files and archive member metadata; SHA256 available artifacts; installed METADATA Name/Version and RECORD hashes. Full inspection logic retained in new report scripts. No archive code or application import."
+  },
+  "evidence_references": [
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\ARCHIVE_CLASSIFICATION.json",
+      "sha256": "dc650380bfe106bc6ad7b3b92fcceebbbd51798bb7844758264d79ef479c27ff"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\BASELINE.json",
+      "sha256": "f2c5af64881d0beb276f139a3f69ec239526984f5d8a4251ece9fad03bfa7784"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\CHANGE_AUDIT.json",
+      "sha256": "fa2daaa87dd6e739c09c0f2b9b8542e00344f17f46d5574cbbcd4cd071f424a2"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\CONFIGURATION_ORIGINS.json",
+      "sha256": "1baf0eec1175fc71795e7b40234b79dafe69a1202763f58074832daba2c8e87e"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\DATA_BACKUP_INTEGRITY.json",
+      "sha256": "b47871156dbc641cae64e92a18b1dab6d4dd272d74b6595096bbe2fd43cb0221"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\DATA_BACKUP_SEARCH.json",
+      "sha256": "0b50f41776ec5c0b22933f1fc5041acd67dfcac0c3e5b0a992961291fabee6f0"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\DATA_RECOVERY_EVIDENCE.json",
+      "sha256": "1b2edff44f8b3cc89d29df56b24c743963b07f5897870142beff077cbf39add5"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\DEPENDENCY_EVIDENCE.json",
+      "sha256": "ae5f042227574b98e0e31b593167a5ba93bb66fa1ae80f8553556c6909c63403"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\LEGACY_ZIP_INSPECTION.json",
+      "sha256": "94e5b3f76c6ac7058d26fd98e1f1c9f2851538686c71d8726aa8af0f9e814ef9"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\LOCAL_BACKUP_INVENTORY.json",
+      "sha256": "2013f18ba6a20cd46583aeed679adadb90fd9f58b1ffae2c207454de127d70e4"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\PROCESS_AFTER.json",
+      "sha256": "d488ff7a8c44357323b342701f82b588836e3ab21fee810454e0e2461b0bb098"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\PROCESS_BEFORE.json",
+      "sha256": "67ec919af2302aca356f6e00b4f61c37f9a3711028f74273a121a2ba87958186"
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-rollback-investigation-20261009-105200\\SEARCH_LIMITATIONS.json",
+      "sha256": "a5d20b7e977e8d2b4b1dc01726c6bc25ed9ca6050d13a6abe718f579b19f65c5"
+    }
+  ],
+  "limitations_reference": "SEARCH_LIMITATIONS.json",
+  "decision": "No verified rollback found in inspected locations. Keep BLOCKED / V1 HOLD / V2 DEFERRED. Stop after this report and await operator authorization."
+}

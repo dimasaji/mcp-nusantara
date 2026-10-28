@@ -1,0 +1,252 @@
+{
+  "gate": "14.3",
+  "engine": "Developer Core Runtime Graph Connectivity",
+  "version": "14.3.0",
+  "source_of_truth": "C:\\Users\\dmaza\\mcp-starter",
+  "gate14_2": {
+    "gate": "14.2",
+    "engine": "Developer Core Runtime Graph Truth",
+    "version": "14.2.0",
+    "source_of_truth": "C:\\Users\\dmaza\\mcp-starter",
+    "graph": {
+      "nodes": 2768,
+      "edges": 0
+    },
+    "runtime": {
+      "modules": [
+        {
+          "module": "app.api.routes",
+          "file": "C:\\Users\\dmaza\\mcp-starter\\app\\api\\routes.py",
+          "objects": [
+            "LanguageEngine",
+            "ProblemEngine",
+            "KnowledgeEngine",
+            "GraphifyBridge",
+            "GateIntegration"
+          ]
+        },
+        {
+          "module": "app.language.engine",
+          "file": "C:\\Users\\dmaza\\mcp-starter\\app\\language\\engine.py",
+          "objects": [
+            "LanguageEngine"
+          ]
+        },
+        {
+          "module": "app.problem.engine",
+          "file": "C:\\Users\\dmaza\\mcp-starter\\app\\problem\\engine.py",
+          "objects": [
+            "ProblemEngine"
+          ]
+        },
+        {
+          "module": "app.knowledge.engine",
+          "file": "C:\\Users\\dmaza\\mcp-starter\\app\\knowledge\\engine.py",
+          "objects": [
+            "KnowledgeEngine",
+            "RAG"
+          ]
+        },
+        {
+          "module": "app.reasoning.engine",
+          "file": "C:\\Users\\dmaza\\mcp-starter\\app\\reasoning\\engine.py",
+          "objects": [
+            "ReasoningEngine"
+          ]
+        },
+        {
+          "module": "app.developer_core.graph_bridge",
+          "file": "C:\\Users\\dmaza\\mcp-starter\\app\\developer_core\\graph_bridge.py",
+          "objects": [
+            "GraphifyBridge"
+          ]
+        },
+        {
+          "module": "app.core.gate_integration",
+          "file": "C:\\Users\\dmaza\\mcp-starter\\app\\core\\gate_integration.py",
+          "objects": [
+            "ReasoningEngine",
+            "GateIntegration"
+          ]
+        }
+      ]
+    },
+    "e2e": {
+      "status": "PASS",
+      "http_status": 200,
+      "latency_ms": 6217.74
+    },
+    "runtime_graph_targets": {
+      "routes.py": [
+        {
+          "id": "app_api_routes",
+          "name": null,
+          "label": "routes.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        },
+        {
+          "id": "app_api_v2_routes",
+          "name": null,
+          "label": "v2_routes.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        },
+        {
+          "id": "tests_v2_test_devcore_routes",
+          "name": null,
+          "label": "test_devcore_routes.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        },
+        {
+          "id": "tests_v2_test_devcore_routes_rationale_1",
+          "name": null,
+          "label": "Uji routes.py LIVE (patched vs original) dengan STUB…",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        }
+      ],
+      "language/engine.py": [
+        {
+          "id": "app_language_engine",
+          "name": null,
+          "label": "language/engine.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        }
+      ],
+      "problem/engine.py": [
+        {
+          "id": "app_problem_engine",
+          "name": null,
+          "label": "problem/engine.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        }
+      ],
+      "knowledge/engine.py": [
+        {
+          "id": "app_knowledge_engine",
+          "name": null,
+          "label": "knowledge/engine.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        }
+      ],
+      "reasoning/engine.py": [
+        {
+          "id": "app_reasoning_engine",
+          "name": null,
+          "label": "reasoning/engine.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        }
+      ],
+      "graph_bridge.py": [
+        {
+          "id": "app_developer_core_graph_bridge",
+          "name": null,
+          "label": "graph_bridge.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        }
+      ],
+      "gate_integration.py": [
+        {
+          "id": "app_core_gate_integration",
+          "name": null,
+          "label": "gate_integration.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        },
+        {
+          "id": "tests_test_gate_integration",
+          "name": null,
+          "label": "test_gate_integration.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        }
+      ],
+      "rag.py": [
+        {
+          "id": "app_knowledge_production_hybrid_rag",
+          "name": null,
+          "label": "production_hybrid_rag.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        },
+        {
+          "id": "app_knowledge_rag",
+          "name": null,
+          "label": "rag.py",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        }
+      ],
+      "developer_core_engine.py": [
+        {
+          "id": "audit_reports_audit_2026_10_03_code_quality_1_developer_core_engine_py_root_49_kb_adalah_orphaned_dev_script",
+          "name": null,
+          "label": "1. `developer_core_engine.py` (root, 49 KB) adalah orphaned dev script",
+          "file": null,
+          "path": null,
+          "module": null,
+          "type": null
+        }
+      ]
+    },
+    "targets_total": 9,
+    "targets_resolved": 9,
+    "status": "PASS"
+  },
+  "connectivity": [
+    {
+      "source": "routes.py",
+      "target": "graph_bridge.py",
+      "status": "PASS",
+      "output": "Shortest path (1 hops):\n  routes.py --imports_from [EXTRACTED]--> graph_bridge.py"
+    },
+    {
+      "source": "routes.py",
+      "target": "gate_integration.py",
+      "status": "PASS",
+      "output": "Shortest path (1 hops):\n  routes.py --imports_from [EXTRACTED]--> gate_integration.py"
+    },
+    {
+      "source": "KnowledgeEngine",
+      "target": "RAG",
+      "status": "PASS",
+      "output": "Shortest path (1 hops):\n  KnowledgeEngine --uses [INFERRED]--> RAG"
+    }
+  ],
+  "checks_total": 3,
+  "checks_passed": 3,
+  "status": "PASS"
+}

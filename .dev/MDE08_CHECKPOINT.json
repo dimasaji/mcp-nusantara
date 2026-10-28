@@ -1,0 +1,90 @@
+{
+  "phase": "MDE08_CAPABILITY_GOVERNANCE",
+  "status": "DONE_SCOPED_KEEP_WITH_OPEN_LIMITATIONS",
+  "timestamp": "2026-10-07T04:44:03.287175+00:00",
+  "git_head": "c24aa1b0db391009af44682bf2f2eb091f4f0f75",
+  "branch": "codex/fullroot-control-20261007",
+  "baseline": ".dev/MDE08_BASELINE_20261007.json",
+  "previous_checkpoint": ".dev/MDE07_CHECKPOINT.json",
+  "authorization": "Human APPROVE MDE-08; audit/design/isolated tests only",
+  "decision": "KEEP_EXISTING_GOVERNANCE_EXTEND_DESIGN_ONLY",
+  "changes": [
+    ".dev/MDE08_BASELINE_20261007.json",
+    "docs/reports/MDE08_FOCUSED_20261007.xml",
+    "docs/reports/MDE08_ISOLATED_OBSERVATIONS_20261007.json",
+    "docs/reports/MDE08_CAPABILITY_GOVERNANCE_MATRIX_20261007.json",
+    "docs/MDE-08_CAPABILITY_GOVERNANCE_DESIGN.md",
+    "docs/reports/MDE08_INTEGRITY_20261007.json",
+    "docs/reports/MDE08_EXECUTION_REPORT_20261007.md",
+    ".dev/checkpoints/mde08-20261007/governance-fixture.jsonl",
+    ".dev/MDE08_CHECKPOINT.json"
+  ],
+  "tests": {
+    "focused_passed": 25,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "junit": "docs/reports/MDE08_FOCUSED_20261007.xml",
+    "isolated_observations_passed": 7,
+    "observations": "docs/reports/MDE08_ISOLATED_OBSERVATIONS_20261007.json",
+    "real_mcp_transport": "VERIFIED_FIXTURE_ONLY",
+    "full_regression": "Historical evidence reused, not rerun"
+  },
+  "runtime_verification": {
+    "actual_model": null,
+    "identity_status": "NOT_VERIFIED",
+    "capabilities_ready": "NOT_PROVEN",
+    "production_mcp_desktop_connection": "NOT_PROVEN",
+    "provider_worker_activation": false,
+    "production_index_rebuilt": false
+  },
+  "evidence_sha256": {
+    ".dev/MDE08_BASELINE_20261007.json": "e43cb198bd5f0fd3e16a2d214699d4f9bf1d650081c23905fd36bd350e6e66a6",
+    "docs/reports/MDE08_FOCUSED_20261007.xml": "cd109f2ee1f9fecf32a7487fc17df81ffe6c325631080c994157bb957c7ba095",
+    "docs/reports/MDE08_ISOLATED_OBSERVATIONS_20261007.json": "998a401b20f78364f71d5a7ca81a840c9c94c1c642bfff3bd169338d098dd933",
+    "docs/reports/MDE08_CAPABILITY_GOVERNANCE_MATRIX_20261007.json": "7d88c70d4f3a070d5bf60fd8254107433b9b4f1edb60a38c5b929c07e9c9e7a2",
+    "docs/MDE-08_CAPABILITY_GOVERNANCE_DESIGN.md": "423fa2db5827f42d2bfe4270a1726637d95741dc7987484bb801ccb37ebc6e8b",
+    "docs/reports/MDE08_INTEGRITY_20261007.json": "e921631b65091221755b61e66c41afd6a37e09655030d71c9c486f07502ca041",
+    "docs/reports/MDE08_EXECUTION_REPORT_20261007.md": "29a3d677e185660cf748ca6c23eff3bb2418606cad041f5e43b0cbecb559a20d",
+    ".dev/checkpoints/mde08-20261007/governance-fixture.jsonl": "854f5363cf5c71567f5a398d6ef82f4d2704689812fa5a416dbf917d08818719"
+  },
+  "protected_verification": {
+    "evidence": "docs/reports/MDE08_INTEGRITY_20261007.json",
+    "checked": 323,
+    "mismatches": []
+  },
+  "source_build_id": "sha256:920ad1d01be7c574ea0e5198fd306d27383c9490bb9ef40c7a821ddbcb9be976",
+  "source_security_changes": [],
+  "limitations": [
+    "Declared provider/structured capability not deployed readiness",
+    "Approval consume payload does not bind executor actor/role/kind",
+    "Legacy MCP permission metadata separate from governed enforcement",
+    "Optional callbacks do not prove universal governance",
+    "RAG/index PARTIAL/UNKNOWN and model identity NOT_VERIFIED retained",
+    "Historical Windows symlink skip",
+    "MDE09/MDE10 closure scope unresolved"
+  ],
+  "rollback": "Only new audit artifacts/fixtures if requested; production history/security/source rollback not performed",
+  "next_phase": "MDE09_DISCOVERY_CROSS_PHASE_CLOSURE",
+  "next_action": "WAIT_FOR_HUMAN_APPROVAL_MDE09_AND_RESOLVE_FINAL_SCOPE",
+  "approval_required": true,
+  "approval_source": {
+    "file": "docs/commands/MDE-04 -09.md",
+    "section": 34,
+    "quote": "STOP. GENERATE CHECKPOINT. WAIT FOR HUMAN APPROVAL."
+  },
+  "completed_steps": [
+    "checkpoint integrity",
+    "golden baseline",
+    "capability/governance source discovery",
+    "25 fresh focused tests including isolated real MCP stdio",
+    "7 isolated observations",
+    "capability matrix and safety design",
+    "integrity/impact/risk/self-audit",
+    "report/checkpoint"
+  ],
+  "resume_instruction": "Verify protected/evidence hashes; do not repeat MDE01-08. Await MDE09 audit approval; discover/resolve authoritative closure scope before final acceptance. Security/source/runtime/index changes separately gated.",
+  "capability_acceptance": "PARTIAL_NOT_READY",
+  "overall_status": "NOT_READY",
+  "overall_v1_acceptance": "FAIL/HOLD"
+}

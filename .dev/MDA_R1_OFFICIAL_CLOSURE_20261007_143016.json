@@ -1,0 +1,95 @@
+﻿{
+    "contract":  "MDA-MASTER-R1-MDE10-001",
+    "phase":  "R1",
+    "phase_name":  "Effective Configuration",
+    "status":  "CLOSED_PASS",
+    "closure_status":  "OFFICIAL_CLOSURE",
+    "validation":  {
+                       "test_file":  "tests/test_configuration_integration.py",
+                       "tests_collected":  13,
+                       "tests_passed":  13,
+                       "tests_failed":  0,
+                       "warnings":  2,
+                       "exit_code":  0
+                   },
+    "protected_database":  {
+                               "path":  "data/knowledge/nusantara_knowledge.db",
+                               "sha256":  "51C5445A43CAC61C7763D6AA24BCBB1401C0491CA83A2601E0E5814751325625",
+                               "expected_sha256":  "51C5445A43CAC61C7763D6AA24BCBB1401C0491CA83A2601E0E5814751325625",
+                               "unchanged":  true
+                           },
+    "source":  {
+                   "git_head":  "c24aa1b0db391009af44682bf2f2eb091f4f0f75",
+                   "branch":  "codex/fullroot-control-20261007"
+               },
+    "r1_scope":  [
+                     {
+                         "path":  "app\\core\\nusantara_config.py",
+                         "sha256":  "E9975AD02120CBE5D1ACEC67C0B92B4B32ECB895CDDD17A950C48FE944107840",
+                         "size":  15716
+                     },
+                     {
+                         "path":  "app\\core\\config.py",
+                         "sha256":  "5F928D799BF24126ADEFF3C14630182EFC4C472454BB9651A167EC7083299F71",
+                         "size":  2884
+                     },
+                     {
+                         "path":  "app\\main.py",
+                         "sha256":  "020AA9B079E989C24341308A415081EAD69E1DA35BFA812DC9ED4E4012D6D6A1",
+                         "size":  2377
+                     },
+                     {
+                         "path":  "app\\api\\routes.py",
+                         "sha256":  "336CA3C55E85B33E604F8494E4CEB89221DC0D8C79A0E98DB550634BD59E1B51",
+                         "size":  47988
+                     },
+                     {
+                         "path":  "app\\api\\v2_routes.py",
+                         "sha256":  "668FD8422FF90C0E365C6FB5A3D468E2E02121DD3E9819BD0A6281609BF9BAC8",
+                         "size":  13619
+                     },
+                     {
+                         "path":  "app\\models\\ollama.py",
+                         "sha256":  "A066E2930AA2D30BE82E2B54A1A159A2406F75090C85121DEC615AF043126892",
+                         "size":  8076
+                     },
+                     {
+                         "path":  "app\\knowledge\\engine.py",
+                         "sha256":  "E69DE06D5B304475082A035407BD5FAADC5A8C7078C4F2FAEC73082B7BD60C83",
+                         "size":  1686
+                     },
+                     {
+                         "path":  "tests\\test_configuration_contract.py",
+                         "sha256":  "AC62AFEDD9A406DA4DA1F3982C2525F6898FBD969B876AC0E4979EA0C1AEB842",
+                         "size":  12132
+                     },
+                     {
+                         "path":  "tests\\test_configuration_integration.py",
+                         "sha256":  "9C9B56B87358256D9F70DCD58096EC67EE564C6211BAE5819325A549FA1CCAF9",
+                         "size":  11990
+                     },
+                     {
+                         "path":  "tests\\test_model_router_configuration.py",
+                         "sha256":  "11A1029EE001BBBB9ED88D3C1B160E79A44AA03C03A78096FED52F826593685A",
+                         "size":  3014
+                     }
+                 ],
+    "workspace":  {
+                      "git_status_entries":  230,
+                      "protected_sidecars":  {
+                                                 "wal_exists":  true,
+                                                 "shm_exists":  true
+                                             }
+                  },
+    "next_gate":  "R2_PROVIDER_MODEL_RUNTIME_IDENTITY",
+    "restrictions":  [
+                         "NO_AUTOMATIC_R2",
+                         "NO_GRAPHIFY_REQUIRED_FOR_CLOSURE",
+                         "NO_DATABASE_WRITE",
+                         "NO_DATABASE_RESTORE",
+                         "NO_GIT_RESET",
+                         "NO_GIT_CLEAN",
+                         "NO_PRODUCTION_RUNTIME_CHANGE"
+                     ],
+    "created_at":  "2026-10-07T14:30:16.7659100+07:00"
+}

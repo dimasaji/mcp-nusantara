@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-10-09T13:15:35.275949+07:00",
+  "changes": {
+    "modified": [
+      "control-plane/src/api.ts",
+      "control-plane/tests/assistant.test.tsx"
+    ],
+    "removed": [],
+    "added": []
+  },
+  "unauthorized_modified": [],
+  "status": "PASS_SCOPED",
+  "before_hashes": {
+    "control-plane/src/api.ts": "027ed8e06fa8d6b2d58e3f01d32ec7dc0154ee20bab309837f2900ee89be1940",
+    "control-plane/tests/assistant.test.tsx": "9086fd625545c889b8910e8dc6a21b0e54cf2fac6311efd0af37d78343110683"
+  },
+  "after_hashes": {
+    "control-plane/src/api.ts": "6a2a5b94d805dc2046a4291dc6604c368874279e4a554fa9d6667cf8ce6d81d3",
+    "control-plane/tests/assistant.test.tsx": "0897334cee08818e116aadae8212809140c07983642f1c3f752c7db12573da14"
+  },
+  "errors": [],
+  "head_after": {
+    "stdout": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab\n",
+    "stderr": ""
+  },
+  "note": "Supersedes initial CHANGE_AUDIT.json decoded with Windows default cp1252. Apparent docs filename changes were decoding artifacts, not filesystem changes. Earlier diffs used CRLF/default decoding; authoritative diff is UI04_EXACT_LF.diff encoded UTF-8/LF. Failed checks preserved."
+}

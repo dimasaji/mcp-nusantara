@@ -1,0 +1,411 @@
+{
+  "created_at": "2026-10-07T04:24:35.126677+00:00",
+  "baseline": ".dev/MDE_BASELINE_20261007T042435Z.json",
+  "overall_status": "NOT_READY",
+  "components": [
+    {
+      "concept": "StateTracker",
+      "decision": "KEEP",
+      "status": "PARTIAL",
+      "evidence": [
+        {
+          "path": ".dev/PROJECT_STATE.json",
+          "exists": true,
+          "sha256": "8dccd0c3eba5b073aed79f5966ac2f65af319f5ae16f7928aadfe249c5762774"
+        },
+        {
+          "path": ".dev/TASKS.json",
+          "exists": true,
+          "sha256": "86e54c6c0badf6272ca202fc44a0f7fcf169fda2b86c4768597dca826138fa43"
+        },
+        {
+          "path": "developer.py",
+          "exists": true,
+          "sha256": "1b151904b162f90bc5d8c6a90cbe0cc09bc3ddd612913b7de4514e5834a7f2d5"
+        }
+      ],
+      "limitation": "State exists; complete formal state transitions not proven.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "EvidenceCollector",
+      "decision": "EXTEND",
+      "status": "PARTIAL",
+      "evidence": [
+        {
+          "path": "app/developer_core/execution_audit.py",
+          "exists": true,
+          "sha256": "bc6d19465762f5ce8471ccc79009cf2562112aed5887d6b95d0516a466ec6d94"
+        },
+        {
+          "path": "app/approval/audit_trail.py",
+          "exists": true,
+          "sha256": "75e28f8d8086e5f524548a6c80b3c910d3b5e78cf416dafe6bc76e615e9e1c64"
+        }
+      ],
+      "limitation": "Audit trail exists; same-invocation receipt not demonstrated.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "ImpactAnalyzer",
+      "decision": "KEEP",
+      "status": "PASS_SCOPED",
+      "evidence": [
+        {
+          "path": "app/developer_core/impact.py",
+          "exists": true,
+          "sha256": "1dd4a535c70a7aad91ce0a5c7d461eaefde836528ff3a0694ae8190466e54906"
+        }
+      ],
+      "limitation": "Bounded Graphify analysis is static evidence.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "RiskClassifier",
+      "decision": "EXTEND",
+      "status": "PARTIAL",
+      "evidence": [
+        {
+          "path": "app/developer_core/write_policy.py",
+          "exists": true,
+          "sha256": "b225b180af6c0eb5f34eb97ad928d11a3e0a5597a08a9234dc8ecaa512357880"
+        },
+        {
+          "path": "app/developer_core/change_plan_validator.py",
+          "exists": true,
+          "sha256": "afb53c67184634749a730eba31e19c7d2cc052441da77865dba7eb2fed9b9bb4"
+        }
+      ],
+      "limitation": "Complete Level A/B/C integration not demonstrated.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "DependencyMapper",
+      "decision": "KEEP",
+      "status": "PASS_SCOPED",
+      "evidence": [
+        {
+          "path": "app/developer_core/mapper.py",
+          "exists": true,
+          "sha256": "1d85b89d75fd3c8c36c4a0f0800824e3c7b94528d4006957a0dada4194f1f72b"
+        },
+        {
+          "path": "app/developer_core/engine.py",
+          "exists": true,
+          "sha256": "5f6bdc41cf7cd6960dcac84d5aea24a630952d54b6f323aa254c0d286c38e885"
+        }
+      ],
+      "limitation": "Source mapping exists; runtime graph unavailable.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "ConfigValidator",
+      "decision": "EXTEND",
+      "status": "PARTIAL",
+      "evidence": [
+        {
+          "path": "app/core/config.py",
+          "exists": true,
+          "sha256": "996bfaed79b989576ec31dd10f9d94f5bc419466dc67e4da5c54f7666e3af5b6"
+        },
+        {
+          "path": "app/core/nusantara_config.py",
+          "exists": true,
+          "sha256": "3d18304750d9b43e6cf33a19f5f1d73ea5b05bf2b22d9686deecd6fd4371911d"
+        }
+      ],
+      "limitation": "Configuration DoD NOT_COMPLETE.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "RuntimeVerifier",
+      "decision": "EXTEND",
+      "status": "UNKNOWN",
+      "evidence": [
+        {
+          "path": "developer.py",
+          "exists": true,
+          "sha256": "1b151904b162f90bc5d8c6a90cbe0cc09bc3ddd612913b7de4514e5834a7f2d5"
+        },
+        {
+          "path": "app/developer_core/runtime.py",
+          "exists": true,
+          "sha256": "b8b0b7ea6f5229c1ebe7d397e16c513e8bb176699f0ede4b8dde978e4716fa7a"
+        }
+      ],
+      "limitation": "Package metadata and caller labels do not prove actual runtime.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "HealthAggregator",
+      "decision": "EXTEND",
+      "status": "PARTIAL",
+      "evidence": [
+        {
+          "path": "app/developer_core/e2e_health_check.py",
+          "exists": true,
+          "sha256": "4bec872c2b8fb732a7ecc028d5c524d3e8a0de6e00be666cc98746d4635ee28d"
+        },
+        {
+          "path": "developer.py",
+          "exists": true,
+          "sha256": "1b151904b162f90bc5d8c6a90cbe0cc09bc3ddd612913b7de4514e5834a7f2d5"
+        }
+      ],
+      "limitation": "Source exists; no current live health execution.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "CheckpointManager",
+      "decision": "KEEP",
+      "status": "PASS_SCOPED",
+      "evidence": [
+        {
+          "path": ".dev/MDE04_CHECKPOINT.json",
+          "exists": true,
+          "sha256": "04128d6a14c29693b87efbf71df4a3dabc8770f4e6604ca6f923506b21884154"
+        },
+        {
+          "path": "developer.py",
+          "exists": true,
+          "sha256": "1b151904b162f90bc5d8c6a90cbe0cc09bc3ddd612913b7de4514e5834a7f2d5"
+        }
+      ],
+      "limitation": "Latest hashes validated; lifecycle automation not proven.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "PhaseManager",
+      "decision": "EXTEND",
+      "status": "PARTIAL",
+      "evidence": [
+        {
+          "path": ".dev/TASKS.json",
+          "exists": true,
+          "sha256": "86e54c6c0badf6272ca202fc44a0f7fcf169fda2b86c4768597dca826138fa43"
+        }
+      ],
+      "limitation": "Stored state; engine phase integration not proven.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "ApprovalManager",
+      "decision": "KEEP",
+      "status": "PARTIAL",
+      "evidence": [
+        {
+          "path": "app/approval/change_request.py",
+          "exists": true,
+          "sha256": "a77246823e1ee4be9617b41ee0f56d95217f79d09e479850bf525d85567f1ba8"
+        },
+        {
+          "path": "app/developer_core/approval_controller.py",
+          "exists": true,
+          "sha256": "8de27a727c1acd0551f3846e0612ced6decb66d74fcf56b1a280ee0b748daf24"
+        },
+        {
+          "path": "app/developer_core/execution_approval.py",
+          "exists": true,
+          "sha256": "df5e15c449570f00c689db5da9eb3b05b6f8a7ad1f387bb69e57bc1067dbdd2f"
+        }
+      ],
+      "limitation": "Components exist; no production action authorized/exercised.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "ChangeLedger",
+      "decision": "KEEP",
+      "status": "PASS_SCOPED",
+      "evidence": [
+        {
+          "path": ".dev/DECISIONS.jsonl",
+          "exists": true,
+          "sha256": "c15cd72269055145d45e1fdd659aaa2e93e7a747f90becb33d438937b8cbc68e"
+        },
+        {
+          "path": "app/developer_core/execution_audit.py",
+          "exists": true,
+          "sha256": "bc6d19465762f5ce8471ccc79009cf2562112aed5887d6b95d0516a466ec6d94"
+        }
+      ],
+      "limitation": "Prior decisions preserved; audit outputs only.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "RollbackManager",
+      "decision": "KEEP",
+      "status": "PARTIAL",
+      "evidence": [
+        {
+          "path": "app/developer_core/snapshot_manager.py",
+          "exists": true,
+          "sha256": "f223bc166b35144cd46f9c12ec5c7bb1f7c14f8e09fa8aa71709517b1c48cb17"
+        }
+      ],
+      "limitation": "Source exists; no production rollback validated.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "ExecutionReceiptBuilder",
+      "decision": "EXTEND",
+      "status": "BLOCKED",
+      "evidence": [
+        {
+          "path": "app/developer_core/runtime.py",
+          "exists": true,
+          "sha256": "b8b0b7ea6f5229c1ebe7d397e16c513e8bb176699f0ede4b8dde978e4716fa7a"
+        },
+        {
+          "path": "app/developer_core/execution_audit.py",
+          "exists": true,
+          "sha256": "bc6d19465762f5ce8471ccc79009cf2562112aed5887d6b95d0516a466ec6d94"
+        }
+      ],
+      "limitation": "actual_model and invocation identity lack live attestation.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "SelfAuditEngine",
+      "decision": "EXTEND",
+      "status": "PARTIAL",
+      "evidence": [
+        {
+          "path": "app/developer_core/engine.py",
+          "exists": true,
+          "sha256": "5f6bdc41cf7cd6960dcac84d5aea24a630952d54b6f323aa254c0d286c38e885"
+        },
+        {
+          "path": "developer.py",
+          "exists": true,
+          "sha256": "1b151904b162f90bc5d8c6a90cbe0cc09bc3ddd612913b7de4514e5834a7f2d5"
+        }
+      ],
+      "limitation": "Static analysis exists; cross-component claim validation incomplete.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    },
+    {
+      "concept": "MCPAdapter",
+      "decision": "EXTEND",
+      "status": "PARTIAL",
+      "evidence": [
+        {
+          "path": "app/mcp/stdio_server.py",
+          "exists": true,
+          "sha256": "5340ea4e7c1fc62f101d6c313f962d7afdc3c86f783e17a21aa24d39f238cf6e"
+        },
+        {
+          "path": "app/mcp/mcp.py",
+          "exists": true,
+          "sha256": "1c16486f63bd02bb71c0eb7ee9555488b6e019674b9b532a5237a6a1b1f06c8f"
+        }
+      ],
+      "limitation": "Two governed builtins; legacy API differs; desktop/control integration unverified.",
+      "basis": "Static inspection/prior scoped evidence, not new live verification"
+    }
+  ],
+  "invariants_and_gaps": [
+    {
+      "invariant": "I-01",
+      "component": "Configuration",
+      "status": "PARTIAL",
+      "gap": "Consumer/effective-value proof incomplete."
+    },
+    {
+      "invariant": "I-02",
+      "component": "Provider",
+      "status": "PARTIAL",
+      "gap": "Health eligibility, key drift and failover open."
+    },
+    {
+      "invariant": "I-03",
+      "component": "Model",
+      "status": "PARTIAL",
+      "gap": "Selected identity does not attest actual execution."
+    },
+    {
+      "invariant": "I-04",
+      "component": "Runtime",
+      "status": "UNKNOWN",
+      "gap": "Effective configuration consumption not live verified."
+    },
+    {
+      "invariant": "I-05",
+      "component": "RAG traceability",
+      "status": "UNKNOWN",
+      "gap": "RAG audit requires MDE05 approval."
+    },
+    {
+      "invariant": "I-06",
+      "component": "Embedding/index",
+      "status": "UNKNOWN",
+      "gap": "Byte hashes do not establish compatibility."
+    },
+    {
+      "invariant": "I-07",
+      "component": "Capability",
+      "status": "PARTIAL",
+      "gap": "Declared capability does not prove available/ready."
+    },
+    {
+      "invariant": "I-08",
+      "component": "Graph",
+      "status": "PARTIAL",
+      "gap": "Source graph exists; runtime dependency graph absent."
+    },
+    {
+      "invariant": "I-09",
+      "component": "Evidence",
+      "status": "PARTIAL",
+      "gap": "Historical evidence intact; invocation/production proof missing."
+    },
+    {
+      "id": "G-APPROVAL",
+      "status": "BLOCKED",
+      "gap": "Section 34 requires explicit APPROVE MDE-05."
+    },
+    {
+      "id": "G-MDE09-SCOPE",
+      "status": "BLOCKED",
+      "gap": "New contract calls MDE09 final; MDE_command1 defines MDE09 Runtime Dependency Graph and MDE10 Live Runtime Verification. Resolve before MDE09."
+    },
+    {
+      "id": "G-MCP",
+      "status": "PARTIAL",
+      "gap": "Target control tools and connected desktop session unproven."
+    },
+    {
+      "id": "G-RAG-CONFIG",
+      "status": "UNKNOWN",
+      "gap": "Static rag_runtime.json min_score 0.35 differs from documented canonical cutoff 0.30; actual consumer/precedence unproven, no runtime contradiction asserted."
+    },
+    {
+      "id": "G-COVERAGE",
+      "status": "PARTIAL",
+      "gap": "Historical reports/tmp directories denied listing; no ACL modification. Scoped authoritative docs/.dev/source inventory, not exhaustive archive coverage."
+    }
+  ],
+  "phase_discovery": {
+    "MDE-05": {
+      "status": "BLOCKED",
+      "definition": "DISCOVERED_EMBEDDED",
+      "sources": [
+        "docs/commands/MDE-04 -09.md section 18",
+        "docs/commands/MDE_command1.md section IX"
+      ],
+      "scope": "RAG profile parameters, retriever, reranker, knowledge/embedding profile and effective consumer trace",
+      "approval": "APPROVE MDE-05",
+      "executed": false
+    },
+    "MDE-09": {
+      "status": "DISCOVERED_WITH_SCOPE_CONFLICT",
+      "sources": [
+        "docs/commands/MDE-04 -09.md section 22",
+        "docs/commands/MDE_command1.md sections XIII/XIV"
+      ],
+      "standalone_command_design_report_checkpoint": "NOT_DISCOVERED in scoped docs/.dev search",
+      "resolved_scope": null,
+      "executed": false
+    }
+  },
+  "approval_required": true
+}

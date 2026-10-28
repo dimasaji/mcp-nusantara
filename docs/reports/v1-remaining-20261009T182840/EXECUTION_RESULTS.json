@@ -1,0 +1,176 @@
+{
+  "contract": "NUS-MDE-V1-REMAINING-20261009",
+  "changed_existing_source": [
+    "app\\knowledge\\web_evidence.py",
+    "app\\knowledge\\store.py",
+    "app\\knowledge\\rag.py"
+  ],
+  "new_test": "tests/test_weip_rag_adapter.py",
+  "unexpected_baseline_changes": [],
+  "hashes": [
+    {
+      "path": "app/knowledge/rag.py",
+      "before": "3AD2EE38C6C3A4C4BEE46C8B1E242CDC4CAE6BD753CF2EDD02143FA0A8EED21F",
+      "after": "237034b701d605103878bd701c1e075950f8d3da00c60bd06000337357e7b7d5"
+    },
+    {
+      "path": "app/knowledge/store.py",
+      "before": "09140F8D098A84696F4F34B153BFACD9E36EAD04652F0FD49B1CF89708ECF323",
+      "after": "04afb516c4dba247cbaecfc0c01b7b11258f64d329025d7de768c0b6ef8fbaf2"
+    },
+    {
+      "path": "app/knowledge/web_evidence.py",
+      "before": "CD258FCFB600FA4DB48DE150209519547A74FAA90FB2324BF562A8F752590F61",
+      "after": "b3533f800d1c9509cee4be000b0d61d6de30ec66ac4a5c0c7ee101499a5ca770"
+    }
+  ],
+  "fixture_manifest_hash_checks": [
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\manifest.json",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\tng-ktpel-001.md",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\tng-ktpel-002.md",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\tng-ktpel-003.md",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\official_sources\\ktp_el\\tng-ktpel-004.md",
+      "unchanged": true
+    }
+  ],
+  "runs": [
+    {
+      "run": "regression-20261009-183245",
+      "command": ".venv/Scripts/python.exe -B docs/reports/v1-remaining-20261009T182840/verify.py regression",
+      "exit_code": 1,
+      "counts": {
+        "tests": 205,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 204
+      },
+      "deselected": 6,
+      "guards": {
+        "pytest_exit": 1,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not actual_v2 and not dev_endpoint and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      }
+    },
+    {
+      "run": "regression-20261009-183418",
+      "command": ".venv/Scripts/python.exe -B docs/reports/v1-remaining-20261009T182840/verify.py regression",
+      "exit_code": 0,
+      "counts": {
+        "tests": 208,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 208
+      },
+      "deselected": 6,
+      "guards": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "not actual_v2 and not dev_endpoint and not consumers_correlation and not empty_result and not bootstrap_layers and not owner_reads"
+      }
+    },
+    {
+      "run": "targeted-20261009-183120",
+      "command": ".venv/Scripts/python.exe -B docs/reports/v1-remaining-20261009T182840/verify.py targeted",
+      "exit_code": 1,
+      "counts": {
+        "tests": 26,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 25
+      },
+      "deselected": 94,
+      "guards": {
+        "pytest_exit": 1,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "remaining_"
+      }
+    },
+    {
+      "run": "targeted-20261009-183201",
+      "command": ".venv/Scripts/python.exe -B docs/reports/v1-remaining-20261009T182840/verify.py targeted",
+      "exit_code": 0,
+      "counts": {
+        "tests": 26,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 26
+      },
+      "deselected": 94,
+      "guards": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "remaining_"
+      }
+    },
+    {
+      "run": "targeted-20261009-183345",
+      "command": ".venv/Scripts/python.exe -B docs/reports/v1-remaining-20261009T182840/verify.py targeted",
+      "exit_code": 0,
+      "counts": {
+        "tests": 29,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 29
+      },
+      "deselected": 94,
+      "guards": {
+        "pytest_exit": 0,
+        "violations": [],
+        "network": "BLOCKED_EXCEPT_STDLIB_SOCKETPAIR",
+        "sqlite": "TEMPORARY_TEST_DATABASES_ONLY",
+        "subprocess": "BLOCKED",
+        "writes": "NEW_RUN_DIRECTORY_ONLY",
+        "selection": "remaining_"
+      }
+    }
+  ],
+  "syntax": "PASS_NO_BYTECODE_UTF8_BOM_SUPPORTED",
+  "verifier_initial_error": "In-memory compile helper first read existing store.py BOM as utf-8 instead of utf-8-sig; corrected decoding only, source unchanged.",
+  "database_or_sidecar_access": false,
+  "runtime_operations": 0,
+  "V1": "FAIL / HOLD",
+  "V2": "DEFERRED",
+  "active_integration": "NOT_AUTHORIZED",
+  "limits": [
+    "Nonempty knowledge filter grammar remains unsupported/fail-closed pending owner policy.",
+    "Temporary adapter transaction is opt-in; direct legacy RAG ingest is not made globally atomic.",
+    "Native PDF isolation and production identity/provenance not verified.",
+    "Windows rename failure cause remains unestablished; failures retained, bounded retry tested.",
+    "Post-ingestion governance in an active runtime is not activated by this work.",
+    "WEIP-COMP-DB-01 remains REVIEW_REQUIRED."
+  ]
+}

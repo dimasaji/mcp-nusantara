@@ -1,0 +1,95 @@
+{
+  "existing_files": [
+    {
+      "path": "app/core/nusantara_config.py",
+      "before_sha256": "e9975ad02120cbe5d1acec67c0b92b4b32ecb895cddd17a950c48fe944107840",
+      "after_sha256": "946e11af91670ca8871c8e57db8395cef98f2ea0b8f484cdd78f5898b29e24fb",
+      "changed": true
+    },
+    {
+      "path": "app/main.py",
+      "before_sha256": "7f527d9d25e9756c70f2cbd60e9ba741211ae6ab5da34c47c96988f96cc4328b",
+      "after_sha256": "52fe449ceaabec3d0913ec4e7379b6cd16ac5ad33b9995854296c4825739d4d3",
+      "changed": true
+    },
+    {
+      "path": "app/core/runtime_attestation.py",
+      "before_sha256": "87285801446782494cb3cdebd2abee3a41bead92761219ed2b617301b5adfe28",
+      "after_sha256": "0f7799b849617dba1c43a30126b15eeb701b8cb807ac2ae87d650ebe2383e307",
+      "changed": true
+    },
+    {
+      "path": "app/models/ollama.py",
+      "before_sha256": "b964fbe2e6a72619191a090790e16caad6a40aeab0087a9c578dcae0c6aa5da8",
+      "after_sha256": "10d8a102da58e3aa7217f95a9a563989c014f6d3bfd16432506c825c362b5e3a",
+      "changed": true
+    },
+    {
+      "path": "tests/test_runtime_attestation.py",
+      "before_sha256": "557a90f3e050450fd1ee0daaef4535a8eee1b9c3fb3b9992a5568fc349de6513",
+      "after_sha256": "dfbf9a64ed21433480c8db557ce04a9b5f23fa01ccaac45d97e695c0bd147ef5",
+      "changed": true
+    },
+    {
+      "path": "app/api/routes.py",
+      "before_sha256": "a386c237028b782599ed51c22c2f9774f96ba82bb60b24c5ce437b1672b28982",
+      "after_sha256": "a386c237028b782599ed51c22c2f9774f96ba82bb60b24c5ce437b1672b28982",
+      "changed": false
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "before_sha256": "7ba30ca90841d5eb2810a7f734d0bdd77bb4d12bfb4894ed80512de7095bff9c",
+      "after_sha256": "7ba30ca90841d5eb2810a7f734d0bdd77bb4d12bfb4894ed80512de7095bff9c",
+      "changed": false
+    },
+    {
+      "path": "app/core/config.py",
+      "before_sha256": "5f928d799bf24126adeff3c14630182efc4c472454bb9651a167ec7083299f71",
+      "after_sha256": "5f928d799bf24126adeff3c14630182efc4c472454bb9651a167ec7083299f71",
+      "changed": false
+    },
+    {
+      "path": "app/core/runtime_identity.py",
+      "before_sha256": "37ea9d6992f6ce0df7ccf47a8ab2315a7e5b546190b38f9e37a6aa6b63160e8e",
+      "after_sha256": "37ea9d6992f6ce0df7ccf47a8ab2315a7e5b546190b38f9e37a6aa6b63160e8e",
+      "changed": false
+    },
+    {
+      "path": "app/api/control_plane.py",
+      "before_sha256": "eac872ce425e2af24880de70b19c25b10b5cea23fc08cf75c9c85adf5f7592c8",
+      "after_sha256": "eac872ce425e2af24880de70b19c25b10b5cea23fc08cf75c9c85adf5f7592c8",
+      "changed": false
+    },
+    {
+      "path": "app/core/control_plane_projection.py",
+      "before_sha256": "f764bd8ebf2c94b322ba76936d688e4b42f60fe11a4a72c09204f00856962c25",
+      "after_sha256": "f764bd8ebf2c94b322ba76936d688e4b42f60fe11a4a72c09204f00856962c25",
+      "changed": false
+    }
+  ],
+  "new_files": [
+    {
+      "path": "app/core/runtime_correlation.py",
+      "sha256": "4bdaedb2c80c7bc972e11e5b9683d6044bcc08473e4b1ae3073850c0e42ababe",
+      "action": "CREATED"
+    },
+    {
+      "path": "app/api/runtime_verification.py",
+      "sha256": "17c34e1004cfd83e6b99f2e3b15fa7e51c15abf6a973e0e200000fd84f815c94",
+      "action": "CREATED"
+    },
+    {
+      "path": "tests/test_runtime_correlation.py",
+      "sha256": "ab922fa692ee0c7a44fbec1418591525c231455a260139f9c56326451b5f8b2b",
+      "action": "CREATED"
+    },
+    {
+      "path": "tests/test_runtime_verification.py",
+      "sha256": "a6adfa40f314ddf533e057be74b2debaa3a402abf520530091c72ed017b77d62",
+      "action": "CREATED"
+    }
+  ],
+  "deleted_files": [],
+  "changed_count": 5,
+  "created_count": 4
+}

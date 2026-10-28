@@ -1,0 +1,39 @@
+{
+  "id": "R2-HEALTH-IDENTITY-001",
+  "status": "CLOSED_PASS",
+  "trigger": "MDA-R2-AUTH-001 sections 11, 21, 22; preserve-public-API constraint and unresolved public health verification projection",
+  "decision_requested": "Authorize an additive sanitized identity projection in /v1/health/detail, retaining all existing fields and semantics, or specify the accepted compatibility approach. No code change until owner decision.",
+  "proposed_scope": [
+    "app/api/routes.py",
+    "tests/test_provider_identity.py",
+    "R2 checkpoint/report artifacts"
+  ],
+  "proposed_fields": [
+    "service health",
+    "provider health",
+    "configured/effective/payload model distinction",
+    "actual model only from execution receipt",
+    "build identity",
+    "verification_state"
+  ],
+  "constraints": [
+    "No interpreter/local filesystem paths or secrets in public projection",
+    "No database/schema/security boundary changes",
+    "Never treat inventory health as executed-model verification",
+    "Do not extend authorization to R3 or MDE10"
+  ],
+  "additional_decisions": [
+    "Acknowledge Graphify coverage limitation for five unreadable inherited report directories or authorize a separate read-access resolution; no ACL changes attempted."
+  ],
+  "final_owner_acceptance": "APPROVED",
+  "authorization": "Human: Ya,,Lanjukan in response to R2-HEALTH-IDENTITY-001 authorization question",
+  "verified_scope": [
+    "app/api/routes.py",
+    "tests/test_provider_identity.py"
+  ],
+  "evidence": ".dev/checkpoints/r2-20261007/health-gate/integrity-after.json",
+  "public_projection": "Additive identity block on /v1/health/detail; old fields retained",
+  "owner_acceptance_record": ".dev/checkpoints/r2-20261007/FINAL_OWNER_ACCEPTANCE.json",
+  "administrative_acceptance_record": ".dev/checkpoints/r2-20261007/FINAL_OWNER_ACCEPTANCE_RECORD.json",
+  "administrative_acceptance_sha256": "bac54cbfb7182b3a1a0e133923777c52e04a9fc049c97bea3cdf7c4a094e8e6e"
+}

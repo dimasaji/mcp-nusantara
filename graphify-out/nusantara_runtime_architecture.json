@@ -1,0 +1,196 @@
+{
+  "engine": "Nusantara Runtime Architecture Map",
+  "version": "1.0.0",
+  "graph_nodes": 2935,
+  "graph_edges": 6791,
+  "layers": [
+    {
+      "layer": "API",
+      "component_count": 2,
+      "components": [
+        {
+          "id": "app_api_routes",
+          "name": "routes.py",
+          "consumer_count": 4,
+          "dependency_count": 56
+        },
+        {
+          "id": "app_api_v2_routes",
+          "name": "v2_routes.py",
+          "consumer_count": 2,
+          "dependency_count": 49
+        }
+      ]
+    },
+    {
+      "layer": "CORE",
+      "component_count": 2,
+      "components": [
+        {
+          "id": "app_devcore_core",
+          "name": "core.py",
+          "consumer_count": 2,
+          "dependency_count": 31
+        },
+        {
+          "id": "app_hermes_agent",
+          "name": "agent.py",
+          "consumer_count": 2,
+          "dependency_count": 16
+        }
+      ]
+    },
+    {
+      "layer": "LANGUAGE",
+      "component_count": 3,
+      "components": [
+        {
+          "id": "app_language_engine_languageengine",
+          "name": "LanguageEngine",
+          "consumer_count": 9,
+          "dependency_count": 34
+        },
+        {
+          "id": "app_language_engine",
+          "name": "language/engine.py",
+          "consumer_count": 5,
+          "dependency_count": 26
+        },
+        {
+          "id": "backup_indobert_20261001_091633_engine_languageengine",
+          "name": "LanguageEngine",
+          "consumer_count": 3,
+          "dependency_count": 28
+        }
+      ]
+    },
+    {
+      "layer": "PROBLEM",
+      "component_count": 2,
+      "components": [
+        {
+          "id": "app_problem_engine_problemengine",
+          "name": "ProblemEngine",
+          "consumer_count": 12,
+          "dependency_count": 21
+        },
+        {
+          "id": "app_problem_engine",
+          "name": "problem/engine.py",
+          "consumer_count": 4,
+          "dependency_count": 22
+        }
+      ]
+    },
+    {
+      "layer": "RAG",
+      "component_count": 3,
+      "components": [
+        {
+          "id": "app_knowledge_production_hybrid_rag_productionhybridrag",
+          "name": "ProductionHybridRAG",
+          "consumer_count": 14,
+          "dependency_count": 17
+        },
+        {
+          "id": "app_knowledge_rag_rag",
+          "name": "RAG",
+          "consumer_count": 8,
+          "dependency_count": 28
+        },
+        {
+          "id": "app_knowledge_rag",
+          "name": "rag.py",
+          "consumer_count": 4,
+          "dependency_count": 34
+        }
+      ]
+    },
+    {
+      "layer": "KNOWLEDGE",
+      "component_count": 2,
+      "components": [
+        {
+          "id": "app_knowledge_engine_knowledgeengine",
+          "name": "KnowledgeEngine",
+          "consumer_count": 11,
+          "dependency_count": 7
+        },
+        {
+          "id": "app_knowledge_engine",
+          "name": "knowledge/engine.py",
+          "consumer_count": 10,
+          "dependency_count": 6
+        }
+      ]
+    },
+    {
+      "layer": "REASONING",
+      "component_count": 2,
+      "components": [
+        {
+          "id": "app_reasoning_engine_reasoningengine",
+          "name": "ReasoningEngine",
+          "consumer_count": 9,
+          "dependency_count": 25
+        },
+        {
+          "id": "app_reasoning_engine",
+          "name": "reasoning/engine.py",
+          "consumer_count": 3,
+          "dependency_count": 16
+        }
+      ]
+    },
+    {
+      "layer": "WORKFLOW",
+      "component_count": 2,
+      "components": [
+        {
+          "id": "app_workflow_engine_workflowengine",
+          "name": "WorkflowEngine",
+          "consumer_count": 6,
+          "dependency_count": 5
+        },
+        {
+          "id": "app_workflow_workflow_schema",
+          "name": "workflow_schema.py",
+          "consumer_count": 2,
+          "dependency_count": 11
+        }
+      ]
+    },
+    {
+      "layer": "DEVELOPER_CORE",
+      "component_count": 1,
+      "components": [
+        {
+          "id": "developer_core_engine",
+          "name": "developer_core_engine.py",
+          "consumer_count": 0,
+          "dependency_count": 35
+        }
+      ]
+    }
+  ],
+  "layer_connections": {
+    "API": [
+      "CORE",
+      "KNOWLEDGE",
+      "LANGUAGE",
+      "PROBLEM",
+      "WORKFLOW"
+    ],
+    "CORE": [
+      "LANGUAGE",
+      "PROBLEM",
+      "REASONING"
+    ],
+    "KNOWLEDGE": [
+      "RAG"
+    ],
+    "DEVELOPER_CORE": [
+      "RAG"
+    ]
+  }
+}

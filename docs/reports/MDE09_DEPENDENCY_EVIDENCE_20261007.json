@@ -1,0 +1,526 @@
+{
+  "phase": "MDE09",
+  "graph_type": "STATIC_AND_TARGET_DEPENDENCY_EVIDENCE; NOT_ACTUAL_RUNTIME_DEPENDENCY_GRAPH",
+  "nodes": [
+    {
+      "id": "USER",
+      "source": null,
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": null,
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 0,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "HERMES",
+      "source": "app/hermes/agent.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "0f7a2d1c69aa38c49368d44931ea8069f5c9b1f57bf5e273777ba2c20dbe0ff8",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "EffectiveConfiguration",
+      "source": "docs/MDE02_EFFECTIVE_CONFIGURATION_CONTRACT.md",
+      "source_kind": "DESIGN_ONLY",
+      "evidence_sha256": "720223027d2c18edb129d937b6a3d3d932361b76a214320b0a3638347ec4511c",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "CompositionRoot",
+      "source": "app/main.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "40debcba1d369cc25838ae7ac46cb145a845d0e7170f3a25c016fb867e24743c",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "ProviderRegistry",
+      "source": "app/models/router.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "dd7e3a9da2aac5b9edc742f1bb6670ded6ed96f212079f720d2918fe9f9fbfff",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "Provider",
+      "source": "app/models/ollama.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "73f4f268d655ee425b25b0a4b399bd4c503c773d1a7d5949831e2fbb34ad904b",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "ModelRegistry",
+      "source": "docs/MDE-04_MODEL_REGISTRY_DESIGN.md",
+      "source_kind": "DESIGN_ONLY",
+      "evidence_sha256": "baad59e602ae14a89d20f8491bfb9075c3756aba3007c5debc683fd0ddd9bd8a",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "Model",
+      "source": "app/models/base.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "009297b09ddb3a56b4c038473d1839aa2f431409f7c9951a1cb94a40c2041892",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "RAGProfile",
+      "source": "docs/MDE-05_RAG_PROFILE_DESIGN.md",
+      "source_kind": "DESIGN_ONLY",
+      "evidence_sha256": "e0633c82a840d6b901a36fd0aba01cbe1fd390d8f43b1d95df01428072984bc5",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "Retriever",
+      "source": "app/knowledge/rag.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "Embedding",
+      "source": "app/knowledge/indobert_embedding.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "065202822c8ec152a692cf6eb47aaf221d4be1f29216e640b911183a53968fb9",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "Knowledge",
+      "source": "app/knowledge/store.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "09140f8d098a84696f4f34b153bfacd9e36ead04652f0fd49b1cf89708ecf323",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "Tools",
+      "source": "app/execution/native.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "f241ccedbff9de32b40d9a07e5fd617f74b27db2b398a8021db06069d47a45e3",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "Governance",
+      "source": "app/governance/tools.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "0a8806de8d85b996c3ffcb2bd40b8d0d51ea2cbeb54aa4a72fd74ae0fdfd3cf1",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "id": "Execution",
+      "source": "app/v2/orchestrator.py",
+      "source_kind": "SOURCE_OR_CALLER",
+      "evidence_sha256": "e0e421bdac53b5ec89a3f04ff6062d506c820348006d132c486823849d67f215",
+      "runtime_status": "NOT_VERIFIED",
+      "confidence": {
+        "static_evidence": 1,
+        "actual_runtime": 0
+      }
+    }
+  ],
+  "target_edges": [
+    {
+      "source": "USER",
+      "consumer": "HERMES",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "HERMES",
+      "consumer": "EffectiveConfiguration",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "EffectiveConfiguration",
+      "consumer": "CompositionRoot",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "CompositionRoot",
+      "consumer": "ProviderRegistry",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "ProviderRegistry",
+      "consumer": "Provider",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "Provider",
+      "consumer": "ModelRegistry",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "ModelRegistry",
+      "consumer": "Model",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "Model",
+      "consumer": "RAGProfile",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "RAGProfile",
+      "consumer": "Retriever",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "Retriever",
+      "consumer": "Embedding",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "Embedding",
+      "consumer": "Knowledge",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "Knowledge",
+      "consumer": "Tools",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "Tools",
+      "consumer": "Governance",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "Governance",
+      "consumer": "Execution",
+      "dependency_type": "OFFICIAL_TARGET_CHAIN_NOT_OBSERVED_RUNTIME",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        "docs/commands/MDE_command1.md section XIII"
+      ],
+      "confidence": {
+        "actual_runtime": 0
+      }
+    }
+  ],
+  "observed_source_edges": [
+    {
+      "source": "app/main.py",
+      "consumer": "app/api/routes.py",
+      "dependency_type": "import",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        {
+          "path": "app/main.py",
+          "sha256": "40debcba1d369cc25838ae7ac46cb145a845d0e7170f3a25c016fb867e24743c"
+        },
+        {
+          "path": "app/api/routes.py",
+          "sha256": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4"
+        }
+      ],
+      "confidence": {
+        "static": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "app/main.py",
+      "consumer": "app/api/v2_routes.py",
+      "dependency_type": "import",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        {
+          "path": "app/main.py",
+          "sha256": "40debcba1d369cc25838ae7ac46cb145a845d0e7170f3a25c016fb867e24743c"
+        },
+        {
+          "path": "app/api/v2_routes.py",
+          "sha256": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7"
+        }
+      ],
+      "confidence": {
+        "static": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "app/api/routes.py",
+      "consumer": "app/knowledge/engine.py",
+      "dependency_type": "default KnowledgeEngine constructor",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        {
+          "path": "app/api/routes.py",
+          "sha256": "ee5eceefbc479eaf4426f2f8d97bde674a6a951b139dc861dcd5f6701339c8a4"
+        },
+        {
+          "path": "app/knowledge/engine.py",
+          "sha256": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b"
+        }
+      ],
+      "confidence": {
+        "static": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "app/api/v2_routes.py",
+      "consumer": "app/knowledge/engine.py",
+      "dependency_type": "default KnowledgeEngine constructor",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        {
+          "path": "app/api/v2_routes.py",
+          "sha256": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7"
+        },
+        {
+          "path": "app/knowledge/engine.py",
+          "sha256": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b"
+        }
+      ],
+      "confidence": {
+        "static": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "app/knowledge/engine.py",
+      "consumer": "app/knowledge/rag.py",
+      "dependency_type": "factory/query call",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        {
+          "path": "app/knowledge/engine.py",
+          "sha256": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b"
+        },
+        {
+          "path": "app/knowledge/rag.py",
+          "sha256": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b"
+        }
+      ],
+      "confidence": {
+        "static": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "app/knowledge/rag.py",
+      "consumer": "app/knowledge/store.py",
+      "dependency_type": "default SQLite construction",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        {
+          "path": "app/knowledge/rag.py",
+          "sha256": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b"
+        },
+        {
+          "path": "app/knowledge/store.py",
+          "sha256": "09140f8d098a84696f4f34b153bfacd9e36ead04652f0fd49b1cf89708ecf323"
+        }
+      ],
+      "confidence": {
+        "static": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "app/knowledge/rag.py",
+      "consumer": "app/knowledge/indobert_embedding.py",
+      "dependency_type": "default embedding adapter",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        {
+          "path": "app/knowledge/rag.py",
+          "sha256": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b"
+        },
+        {
+          "path": "app/knowledge/indobert_embedding.py",
+          "sha256": "065202822c8ec152a692cf6eb47aaf221d4be1f29216e640b911183a53968fb9"
+        }
+      ],
+      "confidence": {
+        "static": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "app/api/v2_routes.py",
+      "consumer": "app/v2/orchestrator.py",
+      "dependency_type": "text generate and dictionary retrieve callbacks",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        {
+          "path": "app/api/v2_routes.py",
+          "sha256": "85548ab3f8573a0e5900e4f8650f499b7864782b16bc374f927a1589c62ca8a7"
+        },
+        {
+          "path": "app/v2/orchestrator.py",
+          "sha256": "e0e421bdac53b5ec89a3f04ff6062d506c820348006d132c486823849d67f215"
+        }
+      ],
+      "confidence": {
+        "static": 1,
+        "actual_runtime": 0
+      }
+    },
+    {
+      "source": "app/mcp/stdio_server.py",
+      "consumer": "app/governance/tools.py",
+      "dependency_type": "fixed builtin registry dispatch",
+      "runtime_status": "NOT_VERIFIED",
+      "evidence": [
+        {
+          "path": "app/mcp/stdio_server.py",
+          "sha256": "5340ea4e7c1fc62f101d6c313f962d7afdc3c86f783e17a21aa24d39f238cf6e"
+        },
+        {
+          "path": "app/governance/tools.py",
+          "sha256": "0a8806de8d85b996c3ffcb2bd40b8d0d51ea2cbeb54aa4a72fd74ae0fdfd3cf1"
+        }
+      ],
+      "confidence": {
+        "static": 1,
+        "actual_runtime": 0
+      }
+    }
+  ],
+  "source_graph": "graphify-out/graph.json",
+  "runtime_graph_acceptance": "NOT_PROVEN",
+  "live_identity_receipt": null
+}

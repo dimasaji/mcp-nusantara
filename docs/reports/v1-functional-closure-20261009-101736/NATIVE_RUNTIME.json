@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-10-09T10:25:31.1433075+07:00",
+  "socket_pid": 35788,
+  "process": {
+    "ProcessId": 35788,
+    "ParentProcessId": 22760,
+    "CreationDate": "2026-10-09T10:22:55.852414+07:00",
+    "CommandLine": "\"C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe\" -B docs/reports/v1-functional-closure-20261009-101736/native_candidate.py"
+  },
+  "status": {
+    "provider": "ollama",
+    "model": "llama3.2:1b",
+    "revision": 0,
+    "selected_at": null,
+    "selection_source": "BOOTSTRAP",
+    "consistency_scope": "CURRENT_PROCESS_ONLY",
+    "process_id": 35788,
+    "availability": "NOT_VERIFIED",
+    "status": "NOT_VERIFIED",
+    "selection_enabled": true,
+    "last_request": {
+      "revision": 0,
+      "model": "llama3.2:1b",
+      "provider_status": "ollama",
+      "grounded": false,
+      "stages": [
+        "HERMES_RUN",
+        "KNOWLEDGE",
+        "TRUST",
+        "GATES",
+        "GROUNDING",
+        "PUBLIC_PROJECTION"
+      ],
+      "timestamp": "2026-10-09T10:23:47.827344+07:00"
+    },
+    "source_build_id": "sha256:9916a16a8411c1d892157fad11e3bfdf4200efe4e20a259ec23dd9de74b90fcd",
+    "memory": "LEGACY_BEHAVIOR_PRESERVED_TEMPORARILY",
+    "memory_governance": "REVIEW_REQUIRED",
+    "knowledge": "NOT_VERIFIED",
+    "official_oracle": "REVIEW_REQUIRED",
+    "approval": "REVIEW_REQUIRED",
+    "execution_mode": "V1_DEFAULT"
+  },
+  "inventory": {
+    "models": [
+      "llama3.2:1b"
+    ],
+    "provider": "ollama",
+    "observed_revision": 0,
+    "availability": "INVENTORY_OBSERVED",
+    "consistency_scope": "CURRENT_PROCESS_ONLY"
+  }
+}

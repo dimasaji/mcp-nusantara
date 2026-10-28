@@ -1,0 +1,734 @@
+{
+  "date": "2026-10-06",
+  "scope": "V1",
+  "status": "FAIL",
+  "commit": "0adccd9d9e847b8329457879ae0aae394ca13ca7",
+  "working_tree": "DIRTY_PREEXISTING_CHANGES_PRESERVED",
+  "build_id": "sha256:1f6298a5c04d9a751cf3f16b461ba376429970669758a77cdd595f61d6d91b8d",
+  "contracts": {
+    "NUSANTARA-RUNTIME-EXECUTION-CONTRACT-V1.md": {
+      "path": "docs/contracts/NUSANTARA-RUNTIME-EXECUTION-CONTRACT-V1.md",
+      "status": "PARTIAL",
+      "implementation": "Route drives language/problem/knowledge/shadow gate/provider/response. Hermes members are used, Hermes.run and ModelRouter route are not called.",
+      "evidence": [
+        "app/api/routes.py:803",
+        "app/api/routes.py:812",
+        "app/api/routes.py:829",
+        "app/api/routes.py:965",
+        "app/api/routes.py:1086",
+        "reports/V1_CLOSURE_TARGETED.xml"
+      ],
+      "gap": "Actual execution ownership differs from the Architecture Contract diagram; production lifecycle/workload/rollback remains unverified.",
+      "risk": "HIGH",
+      "required_action": "Use observed execution addendum; obtain scoped proposal/approval before any runtime ownership change.",
+      "sha256": "32e3a9a91631076a4a5bc073f089414ad657f988adb85d60b5267336067b3667",
+      "requirements": [
+        {
+          "name": "Observed FastAPI stages and source build identity",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "name": "Hermes.run as main /v1 execution driver",
+          "status": "NOT_IMPLEMENTED"
+        },
+        {
+          "name": "Production lifecycle verification",
+          "status": "PARTIAL"
+        }
+      ]
+    },
+    "NUSANTARA-INTELLIGENCE-MODEL-CONTRACT-V1.md": {
+      "path": "docs/contracts/NUSANTARA-INTELLIGENCE-MODEL-CONTRACT-V1.md",
+      "status": "PARTIAL",
+      "implementation": "Local IndoBERT/Ollama wiring exists; external provider and research components are separate modules, not proven production paths.",
+      "evidence": [
+        "app/language/semantic/indobert_client.py:31",
+        "app/knowledge/indobert_embedding.py:8",
+        "app/api/routes.py:786",
+        "app/models/openai_compatible.py:21",
+        "app/research/knowledge_discovery.py",
+        "reports/V1_RECOVERY_RUNTIME.json"
+      ],
+      "gap": "External routing, official model quality and research-to-production integration not established.",
+      "risk": "MEDIUM",
+      "required_action": "Keep Local/External/Research distinctions; no new adapters or automatic research promotion.",
+      "sha256": "99f21caf8fadb9b965946e37cd23a6f8eee28b04fe907260b7b0d3b3e62dc877",
+      "requirements": [
+        {
+          "name": "Local intelligence wiring",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "name": "External intelligence production integration",
+          "status": "PARTIAL"
+        },
+        {
+          "name": "Research intelligence components",
+          "status": "PARTIAL"
+        },
+        {
+          "name": "Autonomous research-to-production capability",
+          "status": "NOT_IMPLEMENTED"
+        }
+      ]
+    },
+    "NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md": {
+      "path": "docs/contracts/NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md",
+      "status": "PARTIAL",
+      "implementation": "Parsing/chunking/IndoBERT/SQLite/hybrid retrieval/ranking/evidence and route grounding exist. Optional rerank is disabled by default and heuristic.",
+      "evidence": [
+        "app/knowledge/rag.py:210",
+        "app/knowledge/rag.py:407",
+        "app/knowledge/rag.py:494",
+        "app/knowledge/rag.py:544",
+        "app/knowledge/rag.py:634",
+        "app/knowledge/engine.py:31",
+        "app/knowledge/grounding.py:20",
+        "reports/V1_CLOSURE_ORACLE_AUDIT.json",
+        "reports/V1_RECOVERY_RAG.json"
+      ],
+      "gap": "Official source authority/region/version/effective-date enforcement is not proven; two REVIEW_REQUIRED, one MISSING; filter ignored; local-rule validator bypass.",
+      "risk": "HIGH",
+      "required_action": "Review official sources and provenance policy; preserve missing/review status and isolated verification, without DB promotion.",
+      "sha256": "e397ba79b677355aee1fbe59649f0ded09f7350a4a43551b61ee85b1ef77b39b",
+      "requirements": [
+        {
+          "name": "Ingest/retrieval/evidence pipeline",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "name": "Default neural reranker deployment",
+          "status": "NOT_IMPLEMENTED"
+        },
+        {
+          "name": "Oracle metadata specification",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "name": "Approved official production oracle and metadata enforcement",
+          "status": "PARTIAL"
+        }
+      ]
+    },
+    "NUSANTARA-AGENT-ORCHESTRATION-CONTRACT-V1.md": {
+      "path": "docs/contracts/NUSANTARA-AGENT-ORCHESTRATION-CONTRACT-V1.md",
+      "status": "NOT_IMPLEMENTED",
+      "implementation": "Proposed autonomous agent/registry runtime absent; existing HermesAgent and legacy orchestration helpers are not that proposed runtime.",
+      "evidence": [
+        "app/hermes/agent.py:11",
+        "app/core/gate_integration.py:12",
+        "app/developer_core/graph_bridge.py:8",
+        "docs/audit/NUSANTARA-V1-CONTRACT-COMPLIANCE-ADDENDUM-2026-10-06.md"
+      ],
+      "gap": "Boundary-only by design; future identity registry/global budget/lifecycle/human escalation not implemented.",
+      "risk": "BOUNDARY_ONLY_NOT_A_FAILURE",
+      "required_action": "Retain AGENT RUNTIME = NOT IMPLEMENTED IN V1; do not implement Agent/LangGraph/Graphify runtime.",
+      "sha256": "b14c4338fb95e08e9ec6d6008d2675afa722329ed9bdd1a85b23a7204d800c83",
+      "requirements": [
+        {
+          "name": "Documented restricted agent boundary",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "name": "Proposed agent registry/runtime/global budget",
+          "status": "NOT_IMPLEMENTED"
+        }
+      ]
+    },
+    "NUSANTARA-TOOL-MCP-API-CONTRACT-V1.md": {
+      "path": "docs/contracts/NUSANTARA-TOOL-MCP-API-CONTRACT-V1.md",
+      "status": "PARTIAL",
+      "implementation": "Official MCP stdio adapts existing governed tools with schemas/permissions/policy/approval/audit/error/timeout.",
+      "evidence": [
+        "app/mcp/stdio_server.py:18",
+        "app/governance/tools.py:38",
+        "app/governance/tools.py:111",
+        "app/governance/tools.py:138",
+        "tests/test_mcp_stdio.py:14",
+        "reports/V1_RECOVERY_MCP.xml",
+        "reports/V1_FINAL_CLOSURE.xml"
+      ],
+      "gap": "Chat-to-tool wiring and general per-tool TrustEngine assessment not shown; legacy MCP facade is direct-handler; mandatory filesystem test skipped.",
+      "risk": "HIGH",
+      "required_action": "Retain only existing two stdio tools; clarify permission vs output trust; verify symlink on capable runner without weakening tests.",
+      "sha256": "92678a8ba527e630c2d00fcbd91aa59ce26284a4f9a362ada4a824eb26aa0bd7",
+      "requirements": [
+        {
+          "name": "Governed stdio and registry components",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "name": "V1 chat automatic governed tool execution",
+          "status": "NOT_IMPLEMENTED"
+        },
+        {
+          "name": "General output trust assessment",
+          "status": "NOT_IMPLEMENTED"
+        },
+        {
+          "name": "Mandatory filesystem security verification",
+          "status": "PARTIAL"
+        }
+      ]
+    },
+    "NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md": {
+      "path": "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md",
+      "status": "PARTIAL",
+      "implementation": "Nested trust allowlist implemented; shadow policy, durable approval/payload/TTL/audit components present.",
+      "evidence": [
+        "app/api/routes.py:1203",
+        "app/api/routes.py:1213",
+        "app/core/gate_integration.py:90",
+        "app/approval/queue.py:44",
+        "app/approval/queue.py:90",
+        "app/approval/queue.py:118",
+        "reports/V1_CLOSURE_TARGETED.xml"
+      ],
+      "gap": "Top-level gate_pipeline exposes reasoning/policy/memory; shadow policy not full final-chat enforcement; human escalation not fully wired.",
+      "risk": "HIGH_BLOCKING",
+      "required_action": "Propose response projection and privacy/compatibility impact review; keep public allowlist and obtain approval before source/API changes.",
+      "sha256": "e3c262c45d2345f42ed9ab9f602d08eb261c389380f881e743391cd807e7e34b",
+      "requirements": [
+        {
+          "name": "Six public trust fields without issues/details in trust object",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "name": "ApprovalQueue/AuditTrail components",
+          "status": "IMPLEMENTED"
+        },
+        {
+          "name": "Whole-response internal reasoning/policy exclusion",
+          "status": "NOT_IMPLEMENTED"
+        },
+        {
+          "name": "Complete V1 approval/escalation wiring",
+          "status": "PARTIAL"
+        }
+      ]
+    },
+    "NUSANTARA-ARCHITECTURE-CONTRACT-V1.md": {
+      "path": "docs/contracts/NUSANTARA-ARCHITECTURE-CONTRACT-V1.md",
+      "status": "PARTIAL",
+      "implementation": "Architecture boundaries documented; existing Hermes and engines retained.",
+      "evidence": [
+        "docs/contracts/NUSANTARA-ARCHITECTURE-CONTRACT-V1.md:31",
+        "app/api/routes.py:803",
+        "app/api/routes.py:965",
+        "app/developer_core/graph_bridge.py:18"
+      ],
+      "gap": "Diagram overstates Hermes main execution ownership; memory governance incomplete; existing developer bridge omitted from six-contract runtime narrative.",
+      "risk": "HIGH",
+      "required_action": "Preserve original document; use observed-implementation addendum and require owner-reviewed architecture resolution.",
+      "sha256": "0a3447d4852efbd18cb5b590b1dbb0e5fe1a8d49cc505d1519d8631c559b8b78",
+      "requirements": []
+    },
+    "NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md": {
+      "path": "docs/contracts/NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md",
+      "status": "PARTIAL",
+      "implementation": "Evidence-before-acceptance, isolated recovery, backups and tests recorded; release still held.",
+      "evidence": [
+        "docs/contracts/NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md",
+        "reports/NUSANTARA-V1-FINAL-CLOSURE-REPORT-2026-10-06.md",
+        "reports/V1_RECOVERY_PROGRESS.json"
+      ],
+      "gap": "Mandatory skip, official oracle gaps, production lifecycle and response privacy contradiction prevent full compliance.",
+      "risk": "HIGH",
+      "required_action": "Continue only approved scoped future work; no administrative gate PASS or acceptance change.",
+      "sha256": "4c63ebac56483f52ed8dc147ee5c5b28fe828b90990584b227872fae75b385a7",
+      "requirements": []
+    }
+  },
+  "architecture_consistency": {
+    "status": "PARTIAL",
+    "actual_execution_driver": "app/api/routes.py::chat",
+    "hermes_run_called": false,
+    "new_duplicate_engine_created": false,
+    "existing_policy_interfaces": [
+      "app.policy.engine.PolicyEngine shadow gate",
+      "app.governance.tools.default_tool_policy registry",
+      "app.policy.policy_engine.PolicyEngine alternate module, not main V1 route policy"
+    ],
+    "single-global-policy-source-proven": false,
+    "legacy_developer_bridge_present": true,
+    "clarification_addendum": "docs/audit/NUSANTARA-V1-CONTRACT-COMPLIANCE-ADDENDUM-2026-10-06.md"
+  },
+  "runtime_consistency": {
+    "status": "PARTIAL",
+    "main_path": [
+      {
+        "call": "router.post",
+        "line": 752
+      },
+      {
+        "call": "OllamaProvider",
+        "line": 786
+      },
+      {
+        "call": "time.perf_counter",
+        "line": 797
+      },
+      {
+        "call": "HermesAgent",
+        "line": 803
+      },
+      {
+        "call": "_trust_engine.evaluate",
+        "line": 889
+      },
+      {
+        "call": "_extract_understanding_data",
+        "line": 899
+      },
+      {
+        "call": "_extract_intent",
+        "line": 905
+      },
+      {
+        "call": "_reconcile_problem_with_intent",
+        "line": 925
+      },
+      {
+        "call": "_extract_entities",
+        "line": 933
+      },
+      {
+        "call": "_get_problem_value",
+        "line": 942
+      },
+      {
+        "call": "_get_problem_value",
+        "line": 948
+      },
+      {
+        "call": "_build_evidence_text",
+        "line": 958
+      },
+      {
+        "call": "_gate_integration.process",
+        "line": 965
+      },
+      {
+        "call": "_deterministic_response",
+        "line": 980
+      },
+      {
+        "call": "_model_dump",
+        "line": 1170
+      },
+      {
+        "call": "_gate_integration.remember_response",
+        "line": 1179
+      },
+      {
+        "call": "_developer_core.runtime_snapshot",
+        "line": 1187
+      },
+      {
+        "call": "provider.health_check",
+        "line": 794
+      },
+      {
+        "call": "_run_sync_v1",
+        "line": 812
+      },
+      {
+        "call": "_run_sync_v1",
+        "line": 820
+      },
+      {
+        "call": "_run_sync_v1",
+        "line": 829
+      },
+      {
+        "call": "datetime.now(timezone.utc).isoformat",
+        "line": 1277
+      },
+      {
+        "call": "HTTPException",
+        "line": 1287
+      },
+      {
+        "call": "isinstance",
+        "line": 854
+      },
+      {
+        "call": "float",
+        "line": 857
+      },
+      {
+        "call": "_evidence_score",
+        "line": 884
+      },
+      {
+        "call": "_build_system_prompt",
+        "line": 1125
+      },
+      {
+        "call": "_build_user_prompt",
+        "line": 1135
+      },
+      {
+        "call": "bool",
+        "line": 1193
+      },
+      {
+        "call": "provider.close",
+        "line": 1297
+      },
+      {
+        "call": "float",
+        "line": 855
+      },
+      {
+        "call": "_evidence_score",
+        "line": 866
+      },
+      {
+        "call": "isinstance",
+        "line": 1030
+      },
+      {
+        "call": "int",
+        "line": 1051
+      },
+      {
+        "call": "_grounding_guard.validate",
+        "line": 1055
+      },
+      {
+        "call": "_build_system_prompt",
+        "line": 1069
+      },
+      {
+        "call": "_build_user_prompt",
+        "line": 1076
+      },
+      {
+        "call": "str(result.get('content', '')).strip",
+        "line": 1095
+      },
+      {
+        "call": "int",
+        "line": 1102
+      },
+      {
+        "call": "_grounding_guard.validate",
+        "line": 1106
+      },
+      {
+        "call": "_grounding_guard.build_system_instruction",
+        "line": 1132
+      },
+      {
+        "call": "getattr",
+        "line": 1249
+      },
+      {
+        "call": "getattr",
+        "line": 1254
+      },
+      {
+        "call": "getattr",
+        "line": 1259
+      },
+      {
+        "call": "getattr",
+        "line": 1264
+      },
+      {
+        "call": "getattr",
+        "line": 1269
+      },
+      {
+        "call": "datetime.now",
+        "line": 1277
+      },
+      {
+        "call": "getattr",
+        "line": 858
+      },
+      {
+        "call": "_evidence_score",
+        "line": 1025
+      },
+      {
+        "call": "(first_evidence.get('chunk') or first_evidence.get('source') or '').strip",
+        "line": 1031
+      },
+      {
+        "call": "(getattr(first_evidence, 'chunk', None) or getattr(first_evidence, 'source', None) or '').strip",
+        "line": 1037
+      },
+      {
+        "call": "_grounding_guard.build_system_instruction",
+        "line": 1073
+      },
+      {
+        "call": "provider.generate",
+        "line": 1086
+      },
+      {
+        "call": "gate_context.get('reasoning', {}).get",
+        "line": 1194
+      },
+      {
+        "call": "item.get",
+        "line": 855
+      },
+      {
+        "call": "str",
+        "line": 1095
+      },
+      {
+        "call": "time.perf_counter",
+        "line": 1052
+      },
+      {
+        "call": "result.get",
+        "line": 1096
+      },
+      {
+        "call": "time.perf_counter",
+        "line": 1103
+      },
+      {
+        "call": "gate_context.get",
+        "line": 1194
+      },
+      {
+        "call": "first_evidence.get",
+        "line": 1032
+      },
+      {
+        "call": "first_evidence.get",
+        "line": 1033
+      },
+      {
+        "call": "getattr",
+        "line": 1038
+      },
+      {
+        "call": "getattr",
+        "line": 1039
+      }
+    ],
+    "public_trust_fields_exact": true,
+    "runtime_changed": false,
+    "container_production": "NOT_RUN_HISTORICAL"
+  },
+  "knowledge_consistency": {
+    "status": "PARTIAL",
+    "oracle_status_counts": {
+      "PROJECT_FIXTURE": 3,
+      "REVIEW_REQUIRED": 2,
+      "MISSING": 1,
+      "NEGATIVE_CASE": 1
+    },
+    "production_promotion": false,
+    "database_changed": false,
+    "ranking": "semantic/lexical hybrid 0.70/0.30",
+    "default_rerank_enabled": false,
+    "effective_dates_not_invented": true
+  },
+  "security_consistency": {
+    "status": "FAIL",
+    "whole_response_internal_state_exclusion": false,
+    "nested_trust_issues_details_excluded": true,
+    "internal_paths": [
+      "gate_pipeline.reasoning",
+      "gate_pipeline.policy",
+      "gate_pipeline.memory",
+      "developer_core.observability.policy_decision"
+    ],
+    "mandatory_symlink": "SKIP_HISTORICAL",
+    "secret_values_exposure": "NOT_ESTABLISHED",
+    "source_proof": "reports/V1_CONTRACT_COMPLIANCE_SOURCE_EVIDENCE.json"
+  },
+  "intelligence_boundary": {
+    "local": "IMPLEMENTED",
+    "external": "PARTIAL",
+    "research": "PARTIAL",
+    "autonomous_research_production": "NOT_IMPLEMENTED"
+  },
+  "agent_boundary": {
+    "runtime_implemented": false,
+    "status": "NOT_IMPLEMENTED",
+    "boundary_implemented": true,
+    "not_a_failure": true,
+    "scope_note": "Proposed autonomous agent/registry runtime; existing HermesAgent and legacy helpers remain present."
+  },
+  "configuration_truth": {
+    "status": "PARTIAL",
+    "new_configuration_created": false,
+    "common_settings": "app/core/config.py::settings",
+    "component_knowledge_config": "app/knowledge/schemas.py::KnowledgeBaseConfig",
+    "effective_selector_gap": true
+  },
+  "v1_frozen": false,
+  "freeze_decision": "BLOCKED",
+  "freeze_reason": "CC-01 contradicts required public-response exclusion; documenting it does not make runtime compliant.",
+  "v1_acceptance": "FAIL / HOLD",
+  "acceptance_changed": false,
+  "gaps": [
+    {
+      "id": "CC-01",
+      "severity": "HIGH",
+      "blocking": true,
+      "title": "Internal reasoning/policy exposed outside nested trust",
+      "evidence": [
+        "app/api/routes.py:1213",
+        "app/core/gate_integration.py:90",
+        "app/core/gate_integration.py:91",
+        "app/core/gate_integration.py:92",
+        "app/reasoning/schemas.py:51",
+        "app/reasoning/schemas.py:52",
+        "app/reasoning/schemas.py:54"
+      ],
+      "status": "SOURCE_PROVEN",
+      "risk": "Gate context includes facts/inferences/explanation/policy and session memory; violates command response boundary. No secret-value leak claim is made.",
+      "required_action": "Scoped API projection/privacy proposal, owner approval, compatibility review and leakage tests before source change."
+    },
+    {
+      "id": "CC-02",
+      "severity": "MEDIUM",
+      "blocking": false,
+      "title": "Execution-path terminology mismatch",
+      "evidence": [
+        "docs/contracts/NUSANTARA-ARCHITECTURE-CONTRACT-V1.md:31",
+        "app/api/routes.py:803",
+        "app/api/routes.py:812",
+        "app/api/routes.py:1086"
+      ],
+      "status": "DOCUMENTED_IN_ADDENDUM",
+      "risk": "Readers may assume Hermes.run/ModelRouter owns chat although route drives stages.",
+      "required_action": "Use actual path in addendum; owner-reviewed future resolution without replacing Hermes."
+    },
+    {
+      "id": "CC-03",
+      "severity": "MEDIUM",
+      "blocking": false,
+      "title": "Configured defaults differ from active wiring",
+      "evidence": [
+        "app/core/config.py:12",
+        "app/core/config.py:19",
+        "app/core/config.py:20",
+        "app/knowledge/schemas.py:144",
+        "app/knowledge/schemas.py:146",
+        "app/knowledge/rag.py:210",
+        "app/knowledge/rag.py:220"
+      ],
+      "status": "DOCUMENTED_GAP",
+      "risk": "llm_provider/local-hash/memory defaults can be mistaken for effective selectors. Existing component config is separate from common settings.",
+      "required_action": "Map authoritative fields and effective configuration with impact/approval; introduce no duplicate settings source."
+    },
+    {
+      "id": "CC-04",
+      "severity": "MEDIUM",
+      "blocking": false,
+      "title": "Undocumented legacy developer snapshot boundary",
+      "evidence": [
+        "app/api/routes.py:43",
+        "app/api/routes.py:1187",
+        "app/api/routes.py:1201",
+        "app/developer_core/graph_bridge.py:18"
+      ],
+      "status": "DOCUMENTED_IN_ADDENDUM",
+      "risk": "No-new-runtime prohibition can be misread as absence of existing GraphifyBridge/DeveloperRuntime; snapshot includes policy observability.",
+      "required_action": "Review public projection and retain legacy read-only boundary; create no new runtime."
+    },
+    {
+      "id": "CC-05",
+      "severity": "HIGH",
+      "blocking": false,
+      "title": "V1 session memory governance incomplete",
+      "evidence": [
+        "app/core/gate_integration.py:33",
+        "app/core/gate_integration.py:92",
+        "app/memory/engine.py:13",
+        "app/memory/engine.py:36",
+        "app/api/routes.py:92"
+      ],
+      "status": "SOURCE_PROVEN_GAP",
+      "risk": "In-process memory keyed by caller session label is not proof of owner binding, TTL or total session cap; raw memory enters gate response.",
+      "required_action": "Include session privacy/ownership/retention in future approved response-boundary proposal; do not store additional production conversations."
+    },
+    {
+      "id": "CC-06",
+      "severity": "HIGH",
+      "blocking": false,
+      "title": "Official knowledge/oracle and deployment/security acceptance gaps retained",
+      "evidence": [
+        "reports/V1_CLOSURE_ORACLE_AUDIT.json",
+        "reports/V1_CLOSURE_FILESYSTEM.xml",
+        "reports/V1_CLOSURE_ENVIRONMENT.json"
+      ],
+      "status": "HISTORICAL_OPEN_GATES_UNCHANGED",
+      "risk": "Contract text or fixture success could be mistaken for production validity.",
+      "required_action": "Approved official review/sources, capable symlink runner, identified deployment target and verified workload/restart/rollback."
+    }
+  ],
+  "testing": {
+    "decision": "NO RUNTIME REGRESSION REQUIRED",
+    "reason": "Documentation/audit only; no protected runtime/config/test/database/contract file changed. Existing final regression and relevant test evidence reused.",
+    "new_runtime_test_runs": 0,
+    "new_baseline_runs": 0,
+    "new_final_regression_runs": 0,
+    "ast_source_checks": [
+      "app/api/routes.py",
+      "app/core/gate_integration.py",
+      "app/reasoning/schemas.py",
+      "app/core/config.py",
+      "app/knowledge/rag.py",
+      "app/knowledge/engine.py",
+      "app/knowledge/schemas.py",
+      "app/mcp/stdio_server.py",
+      "app/governance/tools.py",
+      "app/approval/queue.py",
+      "app/developer_core/graph_bridge.py",
+      "app/developer_core/runtime.py"
+    ],
+    "historical_evidence": {
+      "V1_CLOSURE_TARGETED.xml": {
+        "tests": 35,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "execution": "REUSED_HISTORICAL_NOT_RERUN"
+      },
+      "V1_FINAL_CLOSURE.xml": {
+        "tests": 269,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1,
+        "execution": "REUSED_HISTORICAL_NOT_RERUN"
+      },
+      "V1_RECOVERY_MCP.xml": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "execution": "REUSED_HISTORICAL_NOT_RERUN"
+      }
+    }
+  },
+  "change_control": {
+    "runtime_changes_authorized_here": false,
+    "future_sequence": [
+      "Proposal",
+      "Impact analysis",
+      "Approval",
+      "Implementation",
+      "Targeted test",
+      "Regression",
+      "Evidence"
+    ],
+    "rollback": "Remove only newly created addendum/report/results after later-change review; retain original contracts, backups and historical evidence. No runtime or production rollback executed."
+  },
+  "integrity": {
+    "protected_file_count": 297,
+    "changed_protected_files": [],
+    "all_eight_contract_hashes_unchanged": true,
+    "current_source_build_unchanged": true
+  }
+}

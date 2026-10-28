@@ -1,0 +1,79 @@
+--- before/app/devcore/core.py
++++ after/app/devcore/core.py
+@@ -150,9 +150,10 @@
+         ver = {"status": "failed" if v else "passed", "violations": [x.__dict__ for x in v]}
+         body = model_text
+         if v:
+-            body += ("\n\nPERINGATAN verifikasi grounding: klaim berikut tidak didukung source -> "
+-                     + "; ".join(f"[{x.rule}] \"{x.sentence[:80]}\"" for x in v)
+-                     + "\nGunakan fakta statis:\n" + "\n".join(f"- {f}" for f in facts))
++            # Rejected model text remains diagnostic evidence, not the answer.
++            body = ("PERINGATAN: analisis model tidak lolos pemeriksaan source. "
++                    "Berikut fakta statis dari source:\n"
++                    + "\n".join(f"- {f}" for f in facts))
+         return body, ver
+ 
+     async def handle(self, text: str, session_id: str = "default") -> dict[str, Any]:
+--- /dev/null
++++ tests/v2/test_devcore_grounding_response.py
+@@ -0,0 +1,60 @@
++"""Synthetic model text over temporary source files; no real model or service."""
++import asyncio
++import json
++
++from app.devcore import DevCore
++
++SOURCE = 'import urllib.request\nurllib.request.urlopen("http://127.0.0.1:8000/health", timeout=3)\n'
++UNSUPPORTED = 'Script ini menampilkan hasil ke layar dan melakukan retry dengan timeout 10 detik.'
++SUPPORTED = 'Tidak ada print(). Request HTTP ke localhost dengan timeout 3 detik. Tidak ada retry.'
++
++
++def workspace(tmp_path):
++    (tmp_path/'healthcheck.py').write_text(SOURCE, encoding='utf-8')
++    return tmp_path
++
++
++def test_rejected_model_analysis_is_not_the_human_answer(tmp_path):
++    root = workspace(tmp_path)
++    core = DevCore(str(root), generate=lambda _: UNSUPPORTED)
++    before = (root/'healthcheck.py').read_bytes()
++    result = asyncio.run(core.handle('Baca healthcheck.py dan jelaskan'))
++    assert result['verification']['status'] == 'failed'
++    assert {v['rule'] for v in result['verification']['violations']} >= {
++        'print/menampilkan hasil', 'retry/pengulangan', 'nilai timeout tidak sesuai source'}
++    assert UNSUPPORTED not in result['answer']
++    assert 'timeout 10' not in result['answer']
++    assert 'PERINGATAN' in result['answer']
++    assert 'timeout=3' in result['answer']
++    assert 'Tidak ada panggilan print()' in result['answer']
++    assert (root/'healthcheck.py').read_bytes() == before
++    assert core.audit.verify()
++    assert UNSUPPORTED not in json.dumps(core.audit.entries())
++
++
++def test_supported_model_analysis_is_preserved(tmp_path):
++    core = DevCore(str(workspace(tmp_path)), generate=lambda _: SUPPORTED)
++    result = asyncio.run(core.handle('Baca healthcheck.py dan jelaskan'))
++    assert result['verification'] == {'status': 'passed', 'violations': []}
++    assert SUPPORTED in result['answer']
++    assert 'PERINGATAN' not in result['answer']
++
++
++def test_missing_model_response_keeps_existing_static_fallback(tmp_path):
++    core = DevCore(str(workspace(tmp_path)))
++    result = asyncio.run(core.handle('Baca healthcheck.py dan jelaskan'))
++    assert result['verification'] == {'status': 'fallback_static_facts', 'violations': []}
++    assert 'timeout=3' in result['answer']
++    assert 'Analisis model tidak tersedia' in result['answer']
++
++
++def test_rejected_analysis_does_not_enable_requested_edits(tmp_path):
++    root = workspace(tmp_path)
++    core = DevCore(str(root), generate=lambda _: UNSUPPORTED)
++    result = asyncio.run(core.handle('Perbaiki healthcheck.py dan jelaskan'))
++    assert result['modify_blocked'] is True
++    assert result['verification']['status'] == 'failed'
++    assert UNSUPPORTED not in result['answer']
++    assert 'read-only' in result['answer']
++    assert {call['name'] for call in result['tool']['calls']} <= {'find_file', 'read_file'}
++    assert (root/'healthcheck.py').read_text(encoding='utf-8') == SOURCE

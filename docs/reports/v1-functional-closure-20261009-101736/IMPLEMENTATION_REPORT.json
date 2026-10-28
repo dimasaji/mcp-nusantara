@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-10-09T10:29:21.262559+07:00",
+  "status": "PASS",
+  "files_changed": [
+    "app/hermes/agent.py",
+    "control-plane/src/api.ts",
+    "control-plane/src/assistant.tsx",
+    "tests/test_v1_operator_control.py",
+    "control-plane/tests/assistant.test.tsx"
+  ],
+  "findings": [
+    {
+      "id": "GREETING",
+      "root_cause": "Hermes had no complete-input nonfactual greeting branch; deterministic helper always None; factual grounding rejects generated greeting without evidence",
+      "reproduction": "5 FAIL/43 PASS before patch",
+      "fix": "Whole-input greeting whitelist in existing Hermes; reuse existing local_rule after normal core/retrieval/trust/gate stages",
+      "preserves_contract": "No response field/type changes; nonfactual text only; trust/policy/gates unchanged; mixed questions remain provider/grounding controlled"
+    },
+    {
+      "id": "NEW-CHAT",
+      "root_cause": "Existing legacy root exposed + New Chat, but replacement React root omitted it",
+      "fix": "Restore client-only reset/new UUID using existing state, disabled in-flight; no server deletion or persistence",
+      "preserves_contract": "Same session_id request field, same legacy memory owner; no new endpoint"
+    },
+    {
+      "id": "MODEL-404",
+      "root_cause": "Frontend requests correct registered source routes; user active runtime OpenAPI has no model-control endpoints and a different fingerprint",
+      "fix": "Actionable model-endpoint-specific 404 error; no fabricated fallback or VERIFIED status",
+      "remaining": "Actual user-runtime service alignment BLOCKED without explicit restart/replacement authorization"
+    }
+  ],
+  "why_minimal": "Existing engine, owner, projector, trust/grounding and API preserved; only greeting routing, omitted client reset, and explicit error mapping changed",
+  "remaining_confirmed_gaps": [
+    "Model runtime registration mismatch on user process",
+    "Conversation memory context not consumed in prompt; requires governed memory-read decision",
+    "No durable personal chat persistence implemented"
+  ]
+}

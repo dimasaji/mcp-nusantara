@@ -1,0 +1,294 @@
+CHECKLIST SELURUH PHASE NUSANTARA
+Tanggal pemeriksaan: 2026-10-05
+
+CAKUPAN DAN CARA MEMBACA
+Repo memiliki dua penomoran: V1 Phase 0–18 dan V2 Phase 0–21. Keduanya
+dicatat terpisah agar, misalnya, Phase 8 Workflow V1 tidak tertukar dengan MCP V2.
+[x] = komponen atau bukti yang tersedia dalam lingkup yang disebutkan.
+[ ] = pekerjaan belum selesai menurut source atau roadmap; bukan berarti
+      seluruh phase tidak memiliki kode.
+[?] = kemampuan/hasil belum diverifikasi; perlu diperiksa atau diuji, bukan
+      langsung dianggap belum dibuat.
+Saran pengembangan diberi label USULAN, bukan kewajiban blueprint yang sudah ada.
+Tidak ada phase dinyatakan lengkap hanya karena file atau unit test tersedia.
+
+BUKTI DASAR
+- docs/v2/ROADMAP_STATUS.md: baseline phase V2, sebagian catatan historis usang.
+- docs/roadmap.md dan PROGRESS_REPORT.md: penomoran dan sasaran V1.
+- PHASE_GAP_AUDIT_2026-10-05.txt: gap integrasi yang diperiksa langsung.
+- AUDIT_DOCKER_2026-10-05.json: HTTP/auth, ingest IndoBERT, retrieval, audit,
+  Ollama, symlink Linux, dan persistensi RAG/audit setelah restart lulus.
+- PYTEST_DOCKER_FIX_FULL_2026-10-05.xml saat dibaca: 189 tes, 0 gagal,
+  0 error, 1 dilewati. Ini laporan tersimpan, bukan eksekusi ulang pada checklist.
+  Skip symlink Windows memiliki pemeriksaan nyata yang lulus di Linux container.
+
+CHECKLIST V2 PHASE 0–21
+
+PHASE 0 — DISCOVERY
+[x] Dokumen baseline, risiko, dan peta kode Graphify tersedia.
+[x] Aplikasi nyata dan Docker sudah memiliki bukti runtime terbatas.
+[ ] Rekonsiliasi status historis antar-roadmap menjadi satu status terkini.
+[?] Cocokkan seluruh persyaratan blueprint dengan fitur, bukti, dan batasnya.
+Selesai jika setiap persyaratan memiliki lokasi implementasi atau gap yang jelas.
+
+PHASE 1 — ARCHITECTURE
+[x] Dokumen target arsitektur dan pemisahan modul tersedia.
+[ ] Tuntaskan keputusan integrasi app/knowledge V1 dan app/rag V2 dalam roadmap.
+[?] Verifikasi kesesuaian arsitektur target dengan jalur HTTP yang benar-benar aktif.
+Selesai jika diagram, kontrak, penyimpanan, dan jalur eksekusi konsisten dengan kode.
+
+PHASE 2 — HARDENING
+[x] Retry, timeout, circuit breaker, validator, safe execution tersedia.
+[x] V2Orchestrator mengimpor dan memakai komponen hardening.
+[ ] Hubungkan cakupan hardening ke jalur provider/route V1 yang masih terpisah.
+[ ] Tangani batas timeout thread: fungsi macet tidak otomatis dihentikan.
+[?] Uji provider lambat/offline dan pemulihan circuit breaker melalui API nyata.
+Selesai jika kegagalan terkontrol, respons terbatas waktu, dan recovery terbukti.
+
+PHASE 3 — OBSERVABILITY
+[x] Request-ID middleware, JSON logging/redaksi, counter dan latency tersedia.
+[x] Endpoint /v2/metrics dan tes observability tersedia.
+[ ] Lengkapi pencatatan token usage serta trace lintas komponen menurut roadmap.
+[ ] Tentukan retensi log dan tampilan monitoring operasional.
+[?] Uji korelasi request/session/stage dari HTTP sampai provider/tool dalam runtime.
+Selesai jika satu kegagalan dapat ditelusuri tanpa membocorkan data sensitif.
+
+PHASE 4 — TRUST
+[x] TrustEngine V1 dan adapter V2 tersedia.
+[ ] Lengkapi provenance dan penilaian trust per sumber menurut roadmap.
+[?] Ukur penolakan klaim tanpa bukti, konflik sumber, dan salah kutip pada data nyata.
+Selesai jika keputusan trust dapat dijelaskan dengan bukti dan diuji kualitasnya.
+
+PHASE 5 — POLICY
+[x] PolicyEngine, governance dasar, admin-token, dan audit hash-chain tersedia.
+[x] Penolakan akses anonim pada endpoint istimewa yang diaudit terbukti.
+[ ] Lengkapi model permissions yang masih tercatat sebagai gap roadmap.
+[?] Verifikasi izin pengguna/sesi/tool/data pada semua jalur tindakan.
+Selesai jika tindakan memakai izin yang konsisten dan keputusan dapat diaudit.
+
+PHASE 6 — MEMORY
+[x] MemoryStore/LTM dan penyimpanan JSON dasar tersedia.
+[x] Orchestrator mempunyai hook memory_read dan memory_write.
+[ ] Pasang kedua hook pada /v2/chat; saat diperiksa route belum memasangnya.
+[ ] Lengkapi governance apa yang disimpan, alasan, retensi, dan penghapusan.
+[ ] Tinjau kebutuhan episodic/vector memory dan memory_manager dalam roadmap.
+[?] Uji percakapan lanjutan, isolasi sesi, penghapusan, dan restart melalui API.
+Selesai jika memory berguna, terisolasi, persisten sesuai kebijakan, dan bisa dihapus.
+
+PHASE 7 — RAG
+[x] Parser/chunker/retrieval, store V1, dan versioned store V2 tersedia.
+[x] Embedding IndoBERT nyata, ingest teks, retrieval, dan restart terbukti di Docker.
+[x] Parser PDF/DOCX tersedia di app/knowledge; bukan fitur yang sama sekali kosong.
+[ ] Selesaikan penyelarasan pipeline app/rag V2 dengan app/knowledge V1.
+[ ] Reranker berbasis model masih dicatat sebagai pekerjaan roadmap.
+[?] Buktikan ingest PDF/DOCX asli melalui alur pengguna, termasuk upload dan batas ukuran.
+[?] Benchmark akurasi retrieval, sitasi, konflik versi, dan pembatasan akses dokumen.
+Selesai jika dokumen pengguna menjadi jawaban bersitasi dengan kualitas terukur.
+
+PHASE 8 — MCP
+[x] Registry, handler lokal, manifest validation, dan tool bawaan tersedia.
+[ ] Bangun koneksi client/server MCP melalui transport nyata.
+[ ] Hubungkan discovery dan tool call eksternal ke policy, trust, dan audit.
+[ ] Ubah panel informasi MCP menjadi alur koneksi/status/pemanggilan yang berfungsi.
+[?] Uji schema salah, izin ditolak, koneksi putus, dan tool gagal dari client nyata.
+Selesai jika satu integrasi MCP nyata bekerja dan tetap tunduk pada governance.
+
+PHASE 9 — TOOL GOVERNANCE
+[x] GovernedToolRegistry, approval, allowlist, dan timeout subprocess tersedia.
+[x] Pengamanan akses path/symlink memiliki bukti tes.
+[ ] Lengkapi isolasi OS/container untuk tool/kode tak tepercaya sesuai kebutuhan.
+    Container API yang sudah berjalan tidak otomatis mengisolasi setiap tool.
+[?] Uji pembatasan sumber daya, filesystem, jaringan, dan output tool secara menyeluruh.
+Selesai jika tool hanya mempunyai kemampuan yang diizinkan dan gagal secara aman.
+
+PHASE 10 — EXPERIENCE
+[x] EventRecorder, event lifecycle, redaksi, dan endpoint analisis tersedia.
+[ ] Lengkapi analytics/dashboard pengguna atau operator menurut roadmap.
+[?] Validasi kelengkapan event dan korelasi lintas request dengan trafik nyata.
+Selesai jika pengalaman pengguna dapat dianalisis dari data yang konsisten.
+
+PHASE 11 — FEEDBACK
+[x] FeedbackStore dan endpoint /v2/feedback tersedia.
+[ ] Tambahkan UI feedback terhubung ke backend.
+[?] Uji feedback jawaban tertentu sampai masuk ke analisis kegagalan/gap.
+Selesai jika feedback dapat dikirim pengguna dan ditelusuri ke tindak lanjutnya.
+
+PHASE 12 — EVALUATION
+[x] Evaluator, penyimpanan baseline, perbandingan, dan smoke dataset tersedia.
+[ ] Ganti pemanggilan mock scripts/run_eval.py dengan API/model nyata.
+[ ] Buat dataset representatif dan baseline kualitas V1/V2 nyata.
+[ ] Lengkapi ukuran kualitas jawaban/evidence di luar heuristik leksikal.
+[?] Tetapkan ambang lulus bersama kebutuhan produk, lalu buktikan deteksi regresi.
+Selesai jika perubahan dapat dibandingkan terhadap baseline kualitas yang nyata.
+
+PHASE 13 — FAILURE ANALYSIS
+[x] Analisis kategori, pola, severity, dan tahap penyebab tersedia.
+[ ] Lengkapi korelasi lintas request dan analisis log tak terstruktur sesuai roadmap.
+[?] Validasi hasil terhadap insiden nyata dan feedback pengguna.
+Selesai jika analisis menunjukkan penyebab yang dapat ditindaklanjuti dengan bukti.
+
+PHASE 14 — GAP DETECTION
+[x] Kandidat gap dan klasifikasi tersedia.
+[ ] Kalibrasi confidence; nilai saat ini dinyatakan sebagai heuristik dalam source.
+[?] Validasi false positive, pengelompokan, dan prioritas gap pada data nyata.
+Selesai jika gap yang dilaporkan berulang, berbukti, dan prioritasnya dapat dipercaya.
+
+PHASE 15 — KNOWLEDGE DISCOVERY
+[x] Validasi sumber, kandidat, review, dan promosi dengan approval tersedia.
+[ ] Tambahkan fetch sumber yang diizinkan; saat ini raw_content disuplai pemanggil.
+[ ] Untuk fetch tersebut, lengkapi batas ukuran/waktu dan perlindungan akses internal.
+[?] Uji source -> candidate -> approval -> knowledge -> retrieval secara nyata.
+Selesai jika pengetahuan baru masuk dengan provenance dan persetujuan yang sah.
+
+PHASE 16 — EXPERIMENT
+[x] Definisi eksperimen, perbandingan baseline/candidate, dan pencatatan hasil tersedia.
+[ ] Siapkan dataset lebih representatif; penjadwal masih tercatat sebagai gap roadmap.
+[?] Jalankan eksperimen terhadap sistem nyata, bukan hanya fungsi contoh/mock.
+Selesai jika hasil dapat diulang dan perubahan yang regresi dapat ditolak.
+
+PHASE 17 — IMPROVEMENT PROPOSAL
+[x] Proposal dengan evidence, risiko, test plan, rollback plan, dan wajib approval tersedia.
+[x] Proposal hasil eksperimen regresi ditolak oleh modul.
+[ ] USULAN: persistensikan proposal; ProposalEngine yang diperiksa memakai dict memori.
+[?] Buktikan alur gap nyata -> eksperimen -> proposal -> review melalui aplikasi.
+Selesai pada lingkup modul sudah memiliki dasar; integrasi menyeluruh belum disertifikasi.
+
+PHASE 18 — HUMAN APPROVAL
+[x] Antrean, hash payload, TTL, keputusan, konsumsi approval, audit dan endpoint tersedia.
+[ ] Tambahkan UI review dan identitas/izin reviewer sesuai kebutuhan penggunaan.
+[ ] Persistensikan antrean aktif; ApprovalQueue yang diperiksa menyimpan _items di memori.
+[?] Uji approval setelah restart, reviewer, kedaluwarsa, dan keputusan sekali pakai via API.
+Selesai jika persetujuan tidak hilang saat restart dan tindakan sesuai keputusan reviewer.
+
+PHASE 19 — V1.x DEVELOPMENT
+[x] Gate change request, registri versi, dan rencana branch tersedia.
+[ ] Implementasikan workflow Git nyata; modul sekarang hanya memberi daftar perintah.
+[?] Buktikan perubahan terisolasi -> tes -> evaluasi -> review -> candidate release.
+Selesai jika satu perubahan approved menghasilkan candidate yang dapat ditinjau.
+
+PHASE 20 — REGRESSION DAN SECURITY
+[x] Tes regresi, secret scan, auth, path boundary, dan prompt injection tersedia.
+[x] Laporan pytest tersimpan lulus; pemeriksaan Docker yang diaudit lulus.
+[ ] Perbarui release_check agar membaca kondisi dependensi dan bukti terkini,
+    bukan mengulang kesimpulan NOT_RUN historis yang sudah tidak berlaku.
+[ ] Tambahkan benchmark kualitas nyata dan harness performance/load test.
+[?] Lengkapi bukti batas kapasitas, concurrency, kebocoran data, dan failure recovery.
+Selesai jika gate rilis konsisten dengan bukti dan risiko tersisa dinyatakan jelas.
+
+PHASE 21 — RELEASE DAN ROLLBACK
+[x] Docker build/start, healthcheck, non-root, readonly root, dan volume data terbukti.
+[x] Modul backup, release checklist, notes, dan transisi registry tersedia.
+[ ] Buat eksekusi release staging dan rollback layanan/data yang dapat dijalankan.
+    rollback() saat ini mengembalikan instruksi, bukan memulihkan layanan.
+[?] Uji restore backup, migrasi, health setelah rollback, dan monitoring pascarilis.
+[ ] Catat hasil rilis/rollback nyata; jangan mengganti bukti dengan status registry.
+Selesai jika rilis dan pemulihan berhasil dipraktikkan dalam lingkungan staging.
+
+CHECKLIST BLUEPRINT V1 PHASE 0–18
+Bagian ini melengkapi cakupan semua phase pada blueprint lama. Tanda [?] di sini
+adalah pemeriksaan terhadap target blueprint; bukan temuan bahwa fitur pasti hilang.
+
+V1 PHASE 0 — ENVIRONMENT DAN ARCHITECTURE
+[x] Repo, dokumentasi, Ollama, Docker, dan peta kode tersedia.
+[?] Selaraskan versi/runtime dan konfigurasi aktual dengan dokumentasi lama.
+
+V1 PHASE 1 — PROJECT FOUNDATION
+[x] Struktur aplikasi, konfigurasi, dan /health tersedia serta API sudah diuji.
+[?] Verifikasi semua dependency dan prosedur instalasi pada lingkungan bersih.
+
+V1 PHASE 2 — LLM PROVIDER
+[x] Interface/provider/mock/router tersedia; Ollama nyata terbukti di Docker.
+[?] Uji structured output, fallback, routing, timeout, dan provider offline secara nyata.
+
+V1 PHASE 3 — LANGUAGE ENGINE
+[x] Normalizer, intent, entity, dan engine tersedia.
+[?] Buktikan akurasi pada bahasa informal, typo, ambigu, serta campuran Indonesia-Inggris.
+
+V1 PHASE 4 — CONTEXT ENGINE
+[x] Session dan context engine tersedia.
+[?] Uji isolasi, truncation, deduplikasi, sesi lanjutan, dan persistensi sesuai target.
+
+V1 PHASE 5 — PROBLEM ENGINE
+[x] Detector/classifier/engine dan smoke endpoint tersedia.
+[?] Ukur ekstraksi tujuan/kendala dan klarifikasi pada skenario representatif.
+
+V1 PHASE 6 — KNOWLEDGE/RAG
+[x] Pipeline nyata, IndoBERT, SQLite retrieval, dan persistensi restart terbukti.
+[?] Uji PDF/DOCX nyata, akurasi evidence, sitasi, reranking, dan izin dokumen.
+[?] Rekonsiliasi pilihan SQLite dengan alternatif Chroma/Qdrant dalam blueprint lama;
+    tidak otomatis wajib mengganti database jika kebutuhan terpenuhi.
+
+V1 PHASE 7 — REASONING CORE
+[x] Planner, evaluator, schemas, dan engine tersedia.
+[?] Buktikan alur masalah -> rencana -> tindakan -> verifikasi, termasuk kegagalan.
+
+V1 PHASE 8 — WORKFLOW ENGINE
+[x] State machine, engine, create/get workflow, dan UI dasar tersedia.
+[?] Buktikan contoh workflow lengkap, resume setelah restart, dan recovery kegagalan.
+
+V1 PHASE 9 — POLICY ENGINE
+[x] Keputusan kebijakan dan pengamanan endpoint yang diaudit tersedia.
+[?] Ukur cakupan ALLOW/CONFIRM/HUMAN/DENY untuk seluruh jenis tindakan penting.
+
+V1 PHASE 10 — TRUST ENGINE
+[x] Penilaian evidence, confidence, risiko, dan adapter tersedia.
+[ ] Lengkapi gap trust per sumber yang dicatat pada V2 Phase 4.
+[?] Buktikan klaim tanpa dukungan tidak disajikan sebagai fakta terverifikasi.
+
+V1 PHASE 11 — MEMORY ENGINE
+[x] Memory dasar tersedia.
+[?] Verifikasi TTL, delete/clear_session, privasi, isolation, dan runtime V1.
+[ ] Tuntaskan integrasi memory chat V2 sesuai V2 Phase 6.
+
+V1 PHASE 12 — TOOL ENGINE
+[x] Definisi tool, calculator/date-time, dan governance dasar tersedia.
+[?] Buktikan alur registry -> policy -> executor -> trust melalui layanan nyata.
+[ ] Lengkapi isolasi tool sesuai V2 Phase 9.
+
+V1 PHASE 13 — MCP READY
+[x] Registry/server lokal dan manifest tersedia.
+[ ] Tuntaskan transport/client/server nyata sesuai V2 Phase 8.
+
+V1 PHASE 14 — HUMAN HANDOFF
+[x] Handoff engine dan schemas tersedia.
+[?] Uji eskalasi, preservation context, tindak lanjut reviewer, dan resume workflow.
+
+V1 PHASE 15 — API GATEWAY
+[x] Endpoint V1/V2, validasi dasar, Request-ID, dan pengujian HTTP tersedia.
+[?] Audit cakupan auth, rate limiting, error handling, dan kontrak seluruh endpoint.
+[?] Tinjau pemindahan business logic route ke service layer sesuai target blueprint.
+
+V1 PHASE 16 — UI
+[x] Dashboard dasar berjalan di browser.
+[ ] Tambahkan alur feedback, approval, dan MCP nyata yang belum selesai.
+[?] Verifikasi voice/photo/upload, klarifikasi, evidence, progress, handoff,
+    aksesibilitas, dan tampilan mobile sesuai kebutuhan blueprint.
+
+V1 PHASE 17 — EVALUATION DAN OBSERVABILITY
+[x] Test suite, logging, Request-ID, metrics, dan latency tersedia.
+[ ] Tuntaskan dataset/benchmark nyata, token usage, trace, retensi, dan monitoring.
+[?] Pastikan target 100+ skenario produk terpenuhi; jumlah pytest bukan otomatis
+    jumlah skenario evaluasi kualitas jawaban yang diminta blueprint.
+
+V1 PHASE 18 — DOCKER DAN PRODUCTION
+[x] Docker image dan compose sudah dijalankan serta diverifikasi dalam audit.
+[ ] Tuntaskan performance/load test, release staging, backup restore, dan rollback.
+[?] Verifikasi kebutuhan migrasi, secrets operasional, resource limits,
+    network isolation, dan dokumentasi deployment/troubleshooting aktual.
+
+URUTAN PENGERJAAN
+1. Rekonsiliasi roadmap dan definisi selesai; buat benchmark API nyata (V2 0/12).
+2. Integrasi memory chat dan uji isolasi/persistensi (V2 6).
+3. MCP nyata beserta izin dan isolasi tool (V2 8/9).
+4. UI feedback/approval dan persistensi antrean (V2 11/18).
+5. Hubungkan analisis -> gap -> discovery/eksperimen -> proposal (V2 13–17).
+6. Tuntaskan observability, load test, dan gate rilis (V2 2–5/20).
+7. Latihan release/restore/rollback staging (V2 19/21).
+
+UNTUK MENUTUP SATU PHASE
+[ ] Tetapkan ruang lingkup dan kriteria penerimaan yang disepakati.
+[ ] Implementasi terhubung ke alur aplikasi yang benar-benar digunakan.
+[ ] Uji perilaku penting, termasuk kegagalan dan batas izin bila relevan.
+[ ] Simpan bukti demonstrasi/pengujian dengan tanggal dan lingkungan.
+[ ] Perbarui roadmap dengan batas yang masih tersisa.
+Checklist ini mendokumentasikan pekerjaan; tidak mengimplementasikan fitur baru.

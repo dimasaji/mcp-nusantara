@@ -1,0 +1,56 @@
+{
+  "status": "CONDITIONAL",
+  "seconds": 35.742,
+  "checks": [
+    {
+      "name": "api_authorization",
+      "status": "PASS",
+      "detail": "Both privileged endpoints returned 403 without credentials",
+      "seconds": 0.019
+    },
+    {
+      "name": "api_ingest_real_indobert",
+      "status": "PASS",
+      "detail": {
+        "chunks_stored": 1
+      },
+      "seconds": 10.043
+    },
+    {
+      "name": "api_semantic_retrieval",
+      "status": "PASS",
+      "detail": {
+        "document_id": "audit-runtime-fixture",
+        "score": 0.666138206289028
+      },
+      "seconds": 0.061
+    },
+    {
+      "name": "sqlite_process_restart",
+      "status": "PASS",
+      "detail": "Separate Python process retrieved the persisted fixture",
+      "seconds": 8.513
+    },
+    {
+      "name": "audit_persistence",
+      "status": "PASS",
+      "detail": "Hash chain verified before and after reopening and appending",
+      "seconds": 0.014
+    },
+    {
+      "name": "ollama_real_generation",
+      "status": "PASS",
+      "detail": {
+        "model": "llama3.2:1b",
+        "tokens_used": 39
+      },
+      "seconds": 15.916
+    },
+    {
+      "name": "docker_build_health_persistence",
+      "status": "NOT_RUN",
+      "detail": "Docker deployment still requires build and container tests",
+      "docker_cli_found": false
+    }
+  ]
+}

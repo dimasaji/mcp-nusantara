@@ -1,0 +1,97 @@
+{
+  "status": "COMPLETE_PHASE7_SCOPED",
+  "result": "PASS_SCOPED",
+  "integration_mode": "EXPLICIT_SNAPSHOT_INJECTION",
+  "default_API_startup_activation": "NOT_DONE",
+  "phase7_scope": [
+    "app/models/ollama.py",
+    "app/knowledge/indobert_embedding.py",
+    "app/knowledge/rag.py",
+    "app/knowledge/engine.py",
+    "tests/test_configuration_integration.py"
+  ],
+  "backup": "reports/configuration/phase7-backup-20261006-182914",
+  "backup_matches_before": true,
+  "protected_checked": 296,
+  "protected_unchanged": 292,
+  "protected_changed": [
+    "app/knowledge/engine.py",
+    "app/knowledge/indobert_embedding.py",
+    "app/knowledge/rag.py",
+    "app/models/ollama.py"
+  ],
+  "current_source_hashes": {
+    "app/models/ollama.py": "73f4f268d655ee425b25b0a4b399bd4c503c773d1a7d5949831e2fbb34ad904b",
+    "app/knowledge/indobert_embedding.py": "065202822c8ec152a692cf6eb47aaf221d4be1f29216e640b911183a53968fb9",
+    "app/knowledge/rag.py": "838826e0c9db8def85dbfeb78fa2f6e6653f7e43731b83eca6e30b1930508a4b",
+    "app/knowledge/engine.py": "eb7836d0edf858303bbc14cce30cdfe007fd7f22fa9521489a71c2447c26a43b",
+    "tests/test_configuration_integration.py": "2becf4883d6eccc9cd364c64a7b9be1638f5a8cd04136d8d4229e8399f2d680b"
+  },
+  "source_build_id": "sha256:487ace8eb2a8ba4d8c979fdc7728cefe7802eb0b3f8f01d3f6462d9c83e9492a",
+  "targeted": {
+    "passed": 93,
+    "failures": 0,
+    "seconds": 0.83
+  },
+  "regression_runs": 2,
+  "initial_regression": {
+    "passed": 352,
+    "failures": 1,
+    "skipped": 1,
+    "subtests_passed": 28,
+    "seconds": 96.83,
+    "failure": "existing SessionMemory write: Windows WinError 5 at os.replace; memory source unchanged",
+    "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_20261006.xml"
+  },
+  "memory_diagnosis": {
+    "passed": 1,
+    "seconds": 0.12,
+    "evidence": "reports/configuration/CONFIGURATION_PHASE7_MEMORY_DIAGNOSIS_20261006.xml"
+  },
+  "final_regression": {
+    "passed": 353,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "subtests_passed": 28,
+    "seconds": 108.26,
+    "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml"
+  },
+  "security": "PASS_SCOPED_ZERO_FINDINGS",
+  "graphify": {
+    "mode": "AST_ONLY",
+    "nodes": 5891,
+    "edges": 9691,
+    "communities": 1304,
+    "HTML": "AGGREGATED"
+  },
+  "remaining_integration": [
+    "default API/startup activation",
+    "runtime controls",
+    "provider switching",
+    "ModelRouter model literals",
+    "governance/feature enforcement",
+    "production profiles",
+    "batch size/auth reference resolution",
+    "per-field consumed runtime diagnostics"
+  ],
+  "remaining_phases": [
+    8,
+    9,
+    10
+  ],
+  "phase9_note": "Full tests already run as Phase7 compatibility evidence; final phase9 audit/signoff not yet complete",
+  "overall_v1_acceptance": "FAIL/HOLD",
+  "production_changes": "NONE",
+  "evidence_sha256": {
+    "reports/configuration/CONFIGURATION_PHASE7_TARGETED_20261006.xml": "e044245ef98e142b45acf9aa54ce32869fb09f098a946b26d1f9950d2d74df23",
+    "reports/configuration/CONFIGURATION_PHASE7_TARGETED_FIXED_20261006.xml": "c4993bbbee7d9bf94533823303d3c149612b7b8294b3f9944380c144964f0faa",
+    "reports/configuration/CONFIGURATION_PHASE7_TARGETED_FINAL_20261006.xml": "63ea621181b1cf4c4f1febb54b6891081e4da896cf3be5f0a5c228ffa64299a8",
+    "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_20261006.xml": "e230833401141d0ade37cf24b21a281169e9d30d337c21469abc0263764a54ba",
+    "reports/configuration/CONFIGURATION_PHASE7_MEMORY_DIAGNOSIS_20261006.xml": "07421abd077d8acdafc82d115d9b5535a0bbe6775c0201cd59b6684a8c3a0c1b",
+    "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml": "44976b72408fb65e3bfe9cce8a49fe135b91208bb75ab45eaf463bb18dd2e082",
+    "reports/configuration/CONFIGURATION_PHASE7_SECURITY_20261006.json": "95f74f18f7ef685c09bb69400c28f64f63eea94d45bd733b4bd7c5d9e3bdcdb1",
+    "reports/configuration/CONFIGURATION_PHASE7_INTEGRATION_20261006.md": "0ede7cc868fbb8612fa63252dc23af0b676b0d9235d275b30df5ab73c68f6bc1"
+  },
+  "completed_at": "2026-10-06T11:40:17.241261+00:00"
+}

@@ -1,0 +1,54 @@
+{
+  "document_id": "WEIP-23b35bf591c8d34bb28528f6b8a86b71578afc47bd46244d7e700be279b92ad6",
+  "source_id": "fixture",
+  "original_url": "https://example.org/allowed/doc",
+  "final_url": "https://example.org/allowed/doc",
+  "redirects": [],
+  "retrieved_at": "2026-10-09T11:32:46.369118+00:00",
+  "content_type": "application/json",
+  "content_hash": "85eee1ec8c934034fa557b72376e798678056074f4dbdfcf9e65f7d537aeff08",
+  "version": "sha256:85eee1ec8c934034fa557b72376e798678056074f4dbdfcf9e65f7d537aeff08",
+  "version_conflict": false,
+  "metadata": {
+    "title": "Fixture",
+    "publisher": "Fixture Publisher",
+    "agency": "Fixture Agency",
+    "domain": "example.org",
+    "jurisdiction": "FIXTURE_ONLY",
+    "service": "fixture-service",
+    "publication_date": null,
+    "effective_date": null,
+    "expiry_date": null,
+    "risk": "HIGH",
+    "source_verification_status": "UNVERIFIED",
+    "source_verification_reference": null,
+    "source_assurance": "OWNER_DECLARED_NOT_INDEPENDENTLY_AUTHENTICATED",
+    "registry_fingerprint": "b62f459276e0e7d7599fde40d39c74773d761182bd015b40441c866f2f503501",
+    "validation_status": "PENDING",
+    "chunk_reference": "FULL_PARSED_DOCUMENT"
+  },
+  "text": null,
+  "status": "QUARANTINED",
+  "audit": [
+    {
+      "at": "2026-10-09T11:32:46.370929+00:00",
+      "from": "DISCOVERED",
+      "to": "FETCHED",
+      "reason": "FETCH_SUCCEEDED",
+      "actor": "pipeline",
+      "previous_hash": "",
+      "content_hash": "85eee1ec8c934034fa557b72376e798678056074f4dbdfcf9e65f7d537aeff08",
+      "event_hash": "99e4fec382439349a77a139b1a999edb8da225bf49ab50a363b773dc9bc2f54e"
+    },
+    {
+      "at": "2026-10-09T11:32:46.373494+00:00",
+      "from": "FETCHED",
+      "to": "QUARANTINED",
+      "reason": "PARSE_UNSAFE_OR_UNAVAILABLE",
+      "actor": "pipeline",
+      "previous_hash": "99e4fec382439349a77a139b1a999edb8da225bf49ab50a363b773dc9bc2f54e",
+      "content_hash": "85eee1ec8c934034fa557b72376e798678056074f4dbdfcf9e65f7d537aeff08",
+      "event_hash": "7279cfaf6c94b3ead4b83a75c959c2cc3a56164f2ff49c402a77b76b9a6f69ca"
+    }
+  ]
+}

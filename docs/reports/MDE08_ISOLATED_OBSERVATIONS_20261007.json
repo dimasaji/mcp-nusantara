@@ -1,0 +1,81 @@
+{
+  "asserted": 7,
+  "passed": 7,
+  "observations": [
+    {
+      "name": "visible_does_not_mean_executable",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "visible": true,
+        "status": "pending_approval",
+        "handler_called": false
+      },
+      "scope": "Isolated registry/MCP/MockProvider fixtures; not deployed authorization verification"
+    },
+    {
+      "name": "approval_payload_binding_not_requester_binding",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "original_requester": "actor-A",
+        "executor_requester": "actor-B",
+        "outcome": "executed",
+        "payload": "same tool/args",
+        "permission_policy_rechecked": true
+      },
+      "scope": "Isolated registry/MCP/MockProvider fixtures; not deployed authorization verification"
+    },
+    {
+      "name": "approval_single_use",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "status": "pending_approval",
+        "handler_calls": 1
+      },
+      "scope": "Isolated registry/MCP/MockProvider fixtures; not deployed authorization verification"
+    },
+    {
+      "name": "critical_denied_before_handler",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "status": "denied",
+        "handler_called": false
+      },
+      "scope": "Isolated registry/MCP/MockProvider fixtures; not deployed authorization verification"
+    },
+    {
+      "name": "payload_cannot_grant_permission",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "status": "denied",
+        "handler_called": false
+      },
+      "scope": "Isolated registry/MCP/MockProvider fixtures; not deployed authorization verification"
+    },
+    {
+      "name": "legacy_mcp_permissions_are_metadata",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "declared_permission": [
+          "admin"
+        ],
+        "handler_result": {
+          "fixture": true
+        },
+        "governed_registry_used": false
+      },
+      "scope": "Isolated registry/MCP/MockProvider fixtures; not deployed authorization verification"
+    },
+    {
+      "name": "provider_capability_is_declaration",
+      "status": "PASS_SCOPED_OBSERVATION",
+      "observed": {
+        "max_context": 128000,
+        "supports_structured": true,
+        "health_or_structured_execution_performed": false
+      },
+      "scope": "Isolated registry/MCP/MockProvider fixtures; not deployed authorization verification"
+    }
+  ],
+  "audit_chain_verified": true,
+  "production_mutation": false
+}

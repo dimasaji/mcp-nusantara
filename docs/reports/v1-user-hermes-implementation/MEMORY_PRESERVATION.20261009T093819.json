@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-10-09T09:38:19.061274+07:00",
+  "status": "PASS_SCOPED",
+  "observed_evidence": [
+    "Memory engine and gate integration unchanged from baseline",
+    "Existing user/assistant memory writes asserted in actual V1/Hermes guarded regression",
+    "No migration, deletion, format change or V2 memory import"
+  ],
+  "files_changed": [
+    "app/hermes/agent.py",
+    "app/api/routes.py",
+    "tests/test_v1_operator_control.py"
+  ],
+  "reason": "Preserve approved legacy behavior while moving execution ownership",
+  "tests_run": [
+    "regression-20261009-090953/results.xml",
+    "regression-20261009-090953/guards.json",
+    "targeted-20261009-093732/results.xml",
+    "FINAL_CHECKS.json"
+  ],
+  "limitations": [
+    "User write still precedes answer policy; client session ownership/retention not solved",
+    "UI history is component lifetime only; navigating away resets client history"
+  ],
+  "remaining_blockers": [
+    "CC05 consent/session ownership/retention remains open under approved temporary legacy preservation"
+  ]
+}

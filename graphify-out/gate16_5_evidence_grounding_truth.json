@@ -1,0 +1,313 @@
+{
+  "gate": "16.5",
+  "name": "Evidence & Grounding Truth",
+  "status": "PASS",
+  "timestamp": "2026-10-05T13:49:51.437944",
+  "database": "C:\\Users\\dmaza\\mcp-starter\\data\\knowledge\\production_knowledge.db",
+  "tables": [
+    "documents",
+    "chunks",
+    "chunks_fts",
+    "chunks_fts_data",
+    "chunks_fts_idx",
+    "chunks_fts_content",
+    "chunks_fts_docsize",
+    "chunks_fts_config",
+    "ingestion_log",
+    "sqlite_sequence",
+    "source_registry",
+    "chunk_embeddings",
+    "embedding_runs"
+  ],
+  "counts": {
+    "documents": 6,
+    "chunks": 27,
+    "source_registry": 1,
+    "chunk_embeddings": 2
+  },
+  "schema": {
+    "documents": [
+      {
+        "name": "document_id",
+        "type": "TEXT"
+      },
+      {
+        "name": "title",
+        "type": "TEXT"
+      },
+      {
+        "name": "source_file",
+        "type": "TEXT"
+      },
+      {
+        "name": "source_hash",
+        "type": "TEXT"
+      },
+      {
+        "name": "source_type",
+        "type": "TEXT"
+      },
+      {
+        "name": "domain",
+        "type": "TEXT"
+      },
+      {
+        "name": "service",
+        "type": "TEXT"
+      },
+      {
+        "name": "content_type",
+        "type": "TEXT"
+      },
+      {
+        "name": "text_length",
+        "type": "INTEGER"
+      },
+      {
+        "name": "chunk_count",
+        "type": "INTEGER"
+      },
+      {
+        "name": "ingested_at",
+        "type": "TEXT"
+      },
+      {
+        "name": "active",
+        "type": "INTEGER"
+      },
+      {
+        "name": "source_status",
+        "type": "TEXT"
+      },
+      {
+        "name": "authority",
+        "type": "TEXT"
+      },
+      {
+        "name": "verified",
+        "type": "INTEGER"
+      }
+    ],
+    "chunks": [
+      {
+        "name": "chunk_id",
+        "type": "TEXT"
+      },
+      {
+        "name": "document_id",
+        "type": "TEXT"
+      },
+      {
+        "name": "chunk_index",
+        "type": "INTEGER"
+      },
+      {
+        "name": "text",
+        "type": "TEXT"
+      },
+      {
+        "name": "text_hash",
+        "type": "TEXT"
+      },
+      {
+        "name": "token_estimate",
+        "type": "INTEGER"
+      },
+      {
+        "name": "created_at",
+        "type": "TEXT"
+      }
+    ],
+    "source_registry": [
+      {
+        "name": "source_id",
+        "type": "TEXT"
+      },
+      {
+        "name": "document_id",
+        "type": "TEXT"
+      },
+      {
+        "name": "source_status",
+        "type": "TEXT"
+      },
+      {
+        "name": "authority",
+        "type": "TEXT"
+      },
+      {
+        "name": "source_url",
+        "type": "TEXT"
+      },
+      {
+        "name": "effective_date",
+        "type": "TEXT"
+      },
+      {
+        "name": "expiry_date",
+        "type": "TEXT"
+      },
+      {
+        "name": "verification_note",
+        "type": "TEXT"
+      },
+      {
+        "name": "registered_at",
+        "type": "TEXT"
+      },
+      {
+        "name": "updated_at",
+        "type": "TEXT"
+      }
+    ],
+    "chunk_embeddings": [
+      {
+        "name": "chunk_id",
+        "type": "TEXT"
+      },
+      {
+        "name": "document_id",
+        "type": "TEXT"
+      },
+      {
+        "name": "model_name",
+        "type": "TEXT"
+      },
+      {
+        "name": "embedding_version",
+        "type": "TEXT"
+      },
+      {
+        "name": "dimension",
+        "type": "INTEGER"
+      },
+      {
+        "name": "vector",
+        "type": "BLOB"
+      },
+      {
+        "name": "vector_norm",
+        "type": "REAL"
+      },
+      {
+        "name": "text_hash",
+        "type": "TEXT"
+      },
+      {
+        "name": "created_at",
+        "type": "TEXT"
+      }
+    ]
+  },
+  "provenance_fields": {
+    "documents": [
+      "document_id",
+      "title",
+      "source_file",
+      "source_hash",
+      "source_type",
+      "chunk_count",
+      "source_status"
+    ],
+    "chunks": [
+      "chunk_id",
+      "document_id",
+      "chunk_index"
+    ],
+    "source_registry": [
+      "source_id",
+      "document_id",
+      "source_status",
+      "source_url"
+    ],
+    "chunk_embeddings": [
+      "chunk_id",
+      "document_id"
+    ]
+  },
+  "grounding_patterns": [
+    "evidence",
+    "ground",
+    "source"
+  ],
+  "rag_evidence_patterns": [
+    "evidence",
+    "source",
+    "chunk",
+    "retriev"
+  ],
+  "chunk_samples": [
+    {
+      "chunk_id": "CHUNK-2C0963AA2C88F73B0A6F",
+      "document_id": "DOC-F5F5DC66112324C1",
+      "chunk_index": 0,
+      "text": "============================================================\nNUSANTARA AI - TEST KNOWLEDGE FIXTURE\n============================================================\nIMPORTANT:\nDokumen ini adalah DATA PENGUJIAN ENGINE.\nDokumen ini BUKAN sumber resmi persyaratan pelayanan.\nJangan gunakan isi file ini sebag",
+      "text_hash": "44826d7120378a9d289fae72e9570f2b29df8caee267c41fddd05407f120dfef",
+      "token_estimate": 93,
+      "created_at": "2026-10-01T11:11:13.597553+00:00"
+    },
+    {
+      "chunk_id": "CHUNK-4D41889311137EBE31B6",
+      "document_id": "DOC-F5F5DC66112324C1",
+      "chunk_index": 1,
+      "text": "rounding, requirement detection, dan generation.\nSUMBER RESMI:\nBelum diisi.\n============================================================\nEND TEST FIXTURE\n============================================================",
+      "text_hash": "fa91a4fa6d71ad931b75b420909a70e4b544084ef741167adfdab83f6de27cbb",
+      "token_estimate": 14,
+      "created_at": "2026-10-01T11:11:13.597553+00:00"
+    },
+    {
+      "chunk_id": "CHUNK-18BB0E44D57078EB4C77",
+      "document_id": "DOC-DEAB51351A68FFFB",
+      "chunk_index": 0,
+      "text": "# KTP-el ? Knowledge Resmi untuk Pengujian Engine\nDOCUMENT_ID: KTP-EL-OFFICIAL-TEST-001\nTITLE: Informasi KTP-el\nSERVICE: ktp_el\nCONTENT_TYPE: requirements\nSOURCE_STATUS: official\nAUTHORITY: official\nSOURCE_TYPE: government\nSOURCE_NAME: Pemerintah\nVERIFIED: true\nCatatan:\nDokumen ini adalah sumber res",
+      "text_hash": "d87079bd80ec9bc16d6518c417937202a86f45e64db32a793cce042d31dd2e84",
+      "token_estimate": 62,
+      "created_at": "2026-10-02T07:39:47.298789+00:00"
+    },
+    {
+      "chunk_id": "CHUNK-4DFEA7AF85B2A1115B13",
+      "document_id": "DOC-8AEBCDBF09964B9B",
+      "chunk_index": 0,
+      "text": "---\nDOCUMENT_ID: TNG-KTPEL-001\nTITLE: Perekaman KTP-el Pemula - Dukcapil Nyaba Kelurahan\nSERVICE: ktp_el\nCONTENT_TYPE: requirements\nSOURCE_STATUS: official\nAUTHORITY: official\nSOURCE_TYPE: government\nSOURCE_NAME: tangerangkota.go.id\nSOURCE_URL: https://disdukcapil.tangerangkota.go.id/berita/dukcapil",
+      "text_hash": "05d0fe780549df6e11a31c92418e6cd8e5daac0fe9cd2b1983acf1aaebb620f5",
+      "token_estimate": 86,
+      "created_at": "2026-10-02T09:59:15.115105+00:00"
+    },
+    {
+      "chunk_id": "CHUNK-37784B62A34166BBC18E",
+      "document_id": "DOC-8AEBCDBF09964B9B",
+      "chunk_index": 1,
+      "text": "rofil\nTentang\nProfil Pejabat Struktural\nTugas dan Fungsi\nStruktur Organisasi\nSekertariat\nBerita\nProgram\nProgram SKPD\nInformasi Publik\nPerencanaan\nLaporan Keuangan\nLaporan Kinerja\nPendidikan dan Pelatihan\nPengadaan Barang dan Jasa\nKerjasama Daerah\nPermohonan Informasi\nRegulasi\nProfil Kependudukan\nDaf",
+      "text_hash": "10ce729846db8ea4f0cc50925b913808449174f298db6c610e56f2621ddb367b",
+      "token_estimate": 121,
+      "created_at": "2026-10-02T09:59:15.115105+00:00"
+    }
+  ],
+  "checks": {
+    "passed": 12,
+    "total": 12,
+    "results": {
+      "documents_table": true,
+      "chunks_table": true,
+      "source_registry_table": true,
+      "documents_nonempty": true,
+      "chunks_nonempty": true,
+      "source_registry_nonempty": true,
+      "provenance_documents": true,
+      "provenance_chunks": true,
+      "provenance_source_registry": true,
+      "grounding_implementation": true,
+      "rag_evidence_support": true,
+      "chunk_samples_available": true
+    }
+  },
+  "contract": {
+    "documents_required": true,
+    "chunks_required": true,
+    "source_registry_required": true,
+    "provenance_required": true,
+    "grounding_required": true,
+    "rag_evidence_required": true,
+    "llm_required": false
+  }
+}

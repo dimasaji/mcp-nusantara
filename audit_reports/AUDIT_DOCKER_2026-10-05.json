@@ -1,0 +1,113 @@
+{
+  "scope": "audited fixes and isolated Linux container verification",
+  "status": "PASS",
+  "initial": {
+    "phase": "initial",
+    "status": "PASS",
+    "checks": [
+      {
+        "name": "container_http_health",
+        "status": "PASS",
+        "detail": "API responds from inside Linux container",
+        "seconds": 0.046
+      },
+      {
+        "name": "container_authorization",
+        "status": "PASS",
+        "detail": "Anonymous privileged requests rejected",
+        "seconds": 0.022
+      },
+      {
+        "name": "container_ingest_real_indobert",
+        "status": "PASS",
+        "detail": {
+          "chunks_stored": 1,
+          "health_during_ingest_seconds": 0.003
+        },
+        "seconds": 17.52
+      },
+      {
+        "name": "container_retrieval",
+        "status": "PASS",
+        "detail": {
+          "document_id": "docker-audit-fixture-20261005",
+          "score": 0.6661381733841352
+        },
+        "seconds": 0.286
+      },
+      {
+        "name": "container_audit",
+        "status": "PASS",
+        "detail": {
+          "entries": 6,
+          "hash_chain_valid": true
+        },
+        "seconds": 0.099
+      },
+      {
+        "name": "container_to_host_ollama",
+        "status": "PASS",
+        "detail": {
+          "model": "llama3.2:1b",
+          "tokens": 4
+        },
+        "seconds": 6.987
+      },
+      {
+        "name": "linux_symlink_boundary",
+        "status": "PASS",
+        "detail": "Real Linux symlink outside workspace rejected",
+        "seconds": 0.972
+      }
+    ]
+  },
+  "restart": {
+    "phase": "restart",
+    "status": "PASS",
+    "checks": [
+      {
+        "name": "container_http_health",
+        "status": "PASS",
+        "detail": "API responds from inside Linux container",
+        "seconds": 0.155
+      },
+      {
+        "name": "container_authorization",
+        "status": "PASS",
+        "detail": "Anonymous privileged requests rejected",
+        "seconds": 0.008
+      },
+      {
+        "name": "retrieval_after_container_restart",
+        "status": "PASS",
+        "detail": {
+          "document_id": "docker-audit-fixture-20261005",
+          "score": 0.6661381733841352
+        },
+        "seconds": 18.101
+      },
+      {
+        "name": "audit_after_container_restart",
+        "status": "PASS",
+        "detail": {
+          "entries": 6,
+          "hash_chain_valid": true
+        },
+        "seconds": 0.08
+      }
+    ]
+  },
+  "dashboard": "http://127.0.0.1:8001/",
+  "project": "nusantara-audit-20261005",
+  "root_readonly": true,
+  "user": "appuser",
+  "windows_dashboard_http": 200,
+  "original_local_health_http": 200,
+  "tests": {
+    "passed": 168,
+    "failed": 0,
+    "skipped": 1,
+    "warnings": 2
+  },
+  "production_readiness": "Representative document QA, capacity, and operational configuration still required"
+}

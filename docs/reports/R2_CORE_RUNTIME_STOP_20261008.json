@@ -1,0 +1,109 @@
+{
+  "timestamp_utc": "2026-10-08T02:01:07.0196868Z",
+  "client_date": "2026-10-08",
+  "timezone": "Asia/Jakarta",
+  "phase": "R2",
+  "gate": "R2-A0",
+  "verification_type": "PRE_FLIGHT_STOP",
+  "execution_status": "BLOCKED",
+  "runtime_identity": "NOT_VERIFIED",
+  "branch_observed": "codex/fullroot-control-20261007",
+  "loose_ref_head_observed": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "git_audit_complete": false,
+  "blockers": [
+    "Git unavailable in execution PATH",
+    "Process inventory Access denied",
+    "Listening port ownership Access denied",
+    "Baseline incomplete"
+  ],
+  "graphify_error": "uv trampoline failed to canonicalize script path",
+  "token_availability": "UNDETERMINED: token type unspecified",
+  "live_request_performed": false,
+  "source_modified": false,
+  "protected_mutation_attempted": false,
+  "protected_observations": [
+    {
+      "state": "PRESENT",
+      "sha256": "1386f7277a3e2caf582e7e7f92096dda28b69a6eb76f1c52514b0a910d1da35b",
+      "path": "docs\\commands\\R2CORERUNTIME&DEVELOPER-EXECUTION-AUTHORIZATION-CONTRACT.md"
+    },
+    {
+      "state": "PRESENT",
+      "sha256": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+      "path": "data\\knowledge\\nusantara_knowledge.db"
+    },
+    {
+      "state": "ABSENT",
+      "sha256": null,
+      "path": "data\\knowledge\\nusantara_knowledge.db-wal"
+    },
+    {
+      "state": "ABSENT",
+      "sha256": null,
+      "path": "data\\knowledge\\nusantara_knowledge.db-shm"
+    },
+    {
+      "state": "PRESENT",
+      "sha256": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+      "path": "data\\knowledge\\production_knowledge.db"
+    },
+    {
+      "state": "PRESENT",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "data\\knowledge\\production_knowledge.db-wal"
+    },
+    {
+      "state": "PRESENT",
+      "sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "path": "data\\knowledge\\production_knowledge.db-shm"
+    },
+    {
+      "state": "PRESENT",
+      "sha256": "8d15c9a7bf99bbdb6341ee1442a7ba051e07535d89e009e301e9444e7569e067",
+      "path": "control-plane\\CPLANE_OWNER_AUTHORIZATION.json"
+    }
+  ],
+  "report_sha256": "d5d22dc94f8e593dc38557fc276ad478a443cfd62b14f1402194e31e11a9691d",
+  "post_checkpoint_integrity": [
+    {
+      "after_sha256": "1386f7277a3e2caf582e7e7f92096dda28b69a6eb76f1c52514b0a910d1da35b",
+      "unchanged": true,
+      "path": "docs\\commands\\R2CORERUNTIME&DEVELOPER-EXECUTION-AUTHORIZATION-CONTRACT.md"
+    },
+    {
+      "after_sha256": "51c5445a43cac61c7763d6aa24bcbb1401c0491ca83a2601e0e5814751325625",
+      "unchanged": true,
+      "path": "data\\knowledge\\nusantara_knowledge.db"
+    },
+    {
+      "after_sha256": null,
+      "unchanged": true,
+      "path": "data\\knowledge\\nusantara_knowledge.db-wal"
+    },
+    {
+      "after_sha256": null,
+      "unchanged": true,
+      "path": "data\\knowledge\\nusantara_knowledge.db-shm"
+    },
+    {
+      "after_sha256": "5bcc81673366f89960849c6ae787a45a0d48540a16c25e6ea4e242e2942c4bc8",
+      "unchanged": true,
+      "path": "data\\knowledge\\production_knowledge.db"
+    },
+    {
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "unchanged": true,
+      "path": "data\\knowledge\\production_knowledge.db-wal"
+    },
+    {
+      "after_sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "unchanged": true,
+      "path": "data\\knowledge\\production_knowledge.db-shm"
+    },
+    {
+      "after_sha256": "8d15c9a7bf99bbdb6341ee1442a7ba051e07535d89e009e301e9444e7569e067",
+      "unchanged": true,
+      "path": "control-plane\\CPLANE_OWNER_AUTHORIZATION.json"
+    }
+  ]
+}

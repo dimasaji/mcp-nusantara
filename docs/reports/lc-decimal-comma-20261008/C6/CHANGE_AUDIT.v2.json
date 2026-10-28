@@ -1,0 +1,50 @@
+{
+  "contract": "NUS-MDE-LC-20261008-DECIMAL-COMMA",
+  "timestamp": "2026-10-08T20:57:38.143753+07:00",
+  "disposition": "IMPLEMENTED_VERIFIED_SCOPED",
+  "files_before": "../CURRENT_BEFORE.json",
+  "files_after": "../FILES_FINAL.json",
+  "files_changed": [
+    "app/devcore/grounding.py",
+    "tests/v2/test_devcore_grounding_response.py"
+  ],
+  "diff": "../PATCH_DIFF.patch",
+  "diff_integrity_matches": true,
+  "tests_added": [
+    "test_decimal_comma_fix_preserves_integer_and_dot_decimal",
+    "test_decimal_comma_fix_preserves_local_and_clause_negation",
+    "test_decimal_comma_matching_value_is_retained_in_human_answer",
+    "test_decimal_comma_mismatch_is_rejected_in_human_answer",
+    "test_decimal_comma_mixed_supported_value_and_unsupported_claim",
+    "test_decimal_comma_timeout_value_is_preserved"
+  ],
+  "tests_changed": [],
+  "tests_removed": [],
+  "unauthorized_changes": [],
+  "unauthorized_source_changes": 0,
+  "unauthorized_test_changes": 0,
+  "baseline_filesystem_changes": [
+    "graphify-out/cache/last_query_stamp"
+  ],
+  "baseline_status": "BASELINE_ATTRIBUTED_PRE_EXISTING",
+  "cache_preserved_since_pre_patch": true,
+  "unexpected_changes_since_stop": [],
+  "missing": [],
+  "files_inventoried": 3493,
+  "static_python_parse": "PASS",
+  "scoped_whitespace": "PASS",
+  "targeted": {
+    "passed": 20,
+    "skipped": 0
+  },
+  "regression": {
+    "passed": 78,
+    "skipped": 1
+  },
+  "runtime_identity": "NOT_VERIFIED",
+  "live_integration": "NOT_VERIFIED",
+  "v1_acceptance": "HOLD",
+  "scope_limitation": "3493 recorded files; no whole-filesystem claim",
+  "prior_evidence": "Original stopped CHANGE_AUDIT.json remains unchanged; this is the final C6 revision",
+  "revision_note": "Relative evidence references corrected in a new revision; C6/CHANGE_AUDIT.json and original stopped audit remain preserved."
+}

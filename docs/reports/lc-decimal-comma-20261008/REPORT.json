@@ -1,0 +1,99 @@
+{
+  "contract": "NUS-MDE-LC-20261008-DECIMAL-COMMA",
+  "finding": "LC-DECIMAL-001",
+  "disposition": "IMPLEMENTED_VERIFIED_SCOPED",
+  "completed_at": "2026-10-08T20:57:38.143753+07:00",
+  "repository": {
+    "root": "C:/users/dmaza/mcp-starter",
+    "branch": "codex/fullroot-control-20261007",
+    "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+    "commit_or_stage_performed": false
+  },
+  "authorization": [
+    "APPROVE LEVEL C — LC-DECIMAL-001 ONLY",
+    "User subsequently authorized attribution/scope audit, then C4 and regression if pre-patch cache attribution was proven"
+  ],
+  "baseline_attribution": {
+    "status": "BASELINE_ATTRIBUTED_PRE_EXISTING",
+    "evidence": "BASELINE_ATTRIBUTION.json",
+    "pre_patch_timestamp": "2026-10-08T20:51:17.7393722+07:00",
+    "post_patch_audit_timestamp": "2026-10-08T20:53:00.378516+07:00",
+    "result": "Cache hash was already changed in CURRENT_BEFORE while both source/test hashes still matched their preserved .before files; cache hash remains identical after patch and testing",
+    "classification": "Earlier graph-query cache side effect, pre-existing relative to this patch; distinct from causal remediation changes",
+    "causal_source_test_changes": ["app/devcore/grounding.py", "tests/v2/test_devcore_grounding_response.py"],
+    "cache_deleted_reverted_or_restored": false,
+    "graph_query_during_attribution_or_testing": false
+  },
+  "reproduction": {
+    "evidence": "REPRODUCTION_BEFORE.json",
+    "source": "request(timeout=3)",
+    "claim": "Request menggunakan timeout 3,5 detik.",
+    "before": "Claim split into timeout 3 and unassociated 5; no violation",
+    "after": "Mismatch yields nilai timeout tidak sesuai source; unsupported claim removed from human answer"
+  },
+  "root_cause": "Unconditional comma separator in _CLAUSES discarded the fractional portion before the existing numeric matcher and comma-to-dot normalization ran.",
+  "minimal_patch": {
+    "diff": "PATCH_DIFF.patch",
+    "source_change": "One regex line: preserve commas between digits, continue splitting ordinary clause commas, semicolons, colons and existing conjunctions",
+    "unchanged_logic": "Numeric normalization, source numeric representation, negation handling and grounding architecture",
+    "tests": "Six added test functions, 18 parameterized cases; existing test functions unchanged and none removed"
+  },
+  "required_behavior_evidence": [
+    {"case": "3,5 against source 3", "result": "PASS — mismatch rejected"},
+    {"case": "Exact integer 3", "result": "PASS — accepted"},
+    {"case": "Dot decimal 3.5", "result": "PASS — matching dot decimal accepted"},
+    {"case": "1,5; 3,5; 10,25; 0,75", "result": "PASS — each full decimal preserved; mismatching integer rejected"},
+    {"case": "Matching comma decimal against dot-decimal source", "result": "PASS — all four values match"},
+    {"case": "Existing local negation", "result": "PASS — negated integer/decimal claims retain existing treatment"},
+    {"case": "Existing clause negation", "result": "PASS — negation does not exempt unsupported neighboring numeric claim"},
+    {"case": "Mixed supported and unsupported claims", "result": "PASS — supported decimal retained in checking; unsupported storage still rejected"},
+    {"case": "Human-answer preservation", "result": "PASS — mismatch replaced with verified static facts; matching decimal answer retained"}
+  ],
+  "tests": {
+    "targeted": {"passed": 20, "failed": 0, "skipped": 0, "evidence": "TARGETED_TEST.json"},
+    "regression": {"passed": 78, "failed": 0, "skipped": 1, "evidence": "REGRESSION_TEST.json"},
+    "test_files": ["tests/v2/test_devcore_grounding_response.py", "tests/v2/test_devcore.py", "tests/v2/test_devcore_inspection.py", "tests/v2/test_devcore_integration.py"],
+    "skip": "Existing outside-workspace symlink test: Windows requires symlink privilege; ENVIRONMENT_LIMITED, not promoted to PASS",
+    "integration_classification": "Copied local integration fixtures with stub dependencies; no live integration",
+    "guards": "TARGETED_GUARDS.json and REGRESSION_GUARDS.json: violations empty, pytest exit 0",
+    "process_controls": "No protected environment variable changes; pytest plugin autoload disabled via command option, bytecode disabled via -B, tempfile location scoped in test process. Guarded writes confined to this report directory.",
+    "reproduce_targeted": ".venv\\Scripts\\python.exe -B docs\\reports\\lc-decimal-comma-20261008\\isolated_runner.py TARGETED -k 'decimal_comma or mixed_negation or negation_after'",
+    "reproduce_regression": ".venv\\Scripts\\python.exe -B docs\\reports\\lc-decimal-comma-20261008\\isolated_runner.py REGRESSION",
+    "reproduction_note": "Evidence output labels identify immutable recorded runs; future reruns should use a fresh evidence directory to preserve these results."
+  },
+  "final_c6": {
+    "latest_change_audit": "C6/CHANGE_AUDIT.v2.json",
+    "files_before": "CURRENT_BEFORE.json",
+    "files_after": "FILES_FINAL.json",
+    "unauthorized_source_changes": 0,
+    "unauthorized_test_changes": 0,
+    "unexpected_changes_since_stop": 0,
+    "inventory_files": 3493,
+    "patch_diff_integrity": "PASS — current diff matches preserved PATCH_DIFF.patch",
+    "static_syntax": "PASS",
+    "scoped_whitespace": "PASS",
+    "unattributed_reports": "Four protected unattributed reports remain byte-identical in recorded inventory",
+    "preservation": "All inventoried files outside the two causal patch files unchanged relative to immediate pre-patch baseline",
+    "previous_evidence": "Original stopped CHANGE_AUDIT.json and C6/CHANGE_AUDIT.json retained; final revision corrects relative references without overwriting them"
+  },
+  "limitations": [
+    "Attribution and preservation conclusions cover the recorded 3493-file inventory and available tool history; no whole-filesystem attribution claim.",
+    "The earlier cache update was a real tool side effect. Classifying it as pre-existing to the patch does not retroactively authorize it.",
+    "Existing inaccessible Git report directories remain untouched; Git enumeration carries inherited permission warnings.",
+    "Grounding remains lexical and heuristic; this patch changes only treatment of decimal commas in the existing numeric grammar.",
+    "Local fixture evidence does not verify active runtime identity, live providers, or live integration."
+  ],
+  "protected_boundaries": {
+    "source_test_scope": "Only grounding.py and test_devcore_grounding_response.py",
+    "configuration_or_environment_mutation": 0,
+    "provider_real_model_invocation": 0,
+    "database_RAG_WAL_SHM_mutation": 0,
+    "runtime_restart_or_promotion": 0,
+    "live_request_deployment_release": 0,
+    "governance_contract_mutation": 0
+  },
+  "runtime_identity": "NOT_VERIFIED",
+  "live_integration": "NOT_VERIFIED",
+  "v1_acceptance": "HOLD",
+  "handoff": "STOP — ready for D4 independent verification; no acceptance or release decision made"
+}

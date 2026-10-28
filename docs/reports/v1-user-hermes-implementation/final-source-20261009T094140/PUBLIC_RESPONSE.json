@@ -1,0 +1,47 @@
+{
+  "http_status": 200,
+  "headers": {
+    "date": "Fri, 09 Oct 2026 02:45:52 GMT",
+    "server": "uvicorn",
+    "content-length": "740",
+    "content-type": "application/json",
+    "vary": "Origin",
+    "x-request-id": "final_source_20261009_094140",
+    "connection": "close"
+  },
+  "body": {
+    "session_id": "final-source-verification-20261009-094140",
+    "response": "Informasi tersebut belum tersedia secara cukup dalam knowledge base.",
+    "trust": {
+      "supports_claim": true,
+      "confidence": 0.9,
+      "risk_level": "low",
+      "requires_human": false,
+      "evidence_count": 1,
+      "evidence_available": true
+    },
+    "model": "llama3.2:1b",
+    "provider_status": "ollama",
+    "latency_ms": 7084,
+    "grounding": {
+      "enabled": true,
+      "grounded": false,
+      "reason": "possible_unsupported_content"
+    },
+    "understanding": {
+      "intent": "ask_general_info"
+    },
+    "problem": {
+      "goal": "Memberikan informasi umum berdasarkan knowledge base."
+    },
+    "evidence": [
+      {
+        "document_id": "FIXTURE-NOT-OFFICIAL",
+        "title": "Isolated fixture",
+        "chunk": "KTP-el adalah dokumen identitas penduduk.",
+        "score": 0.9
+      }
+    ],
+    "timestamp": "2026-10-09T02:45:59.957000+00:00"
+  }
+}

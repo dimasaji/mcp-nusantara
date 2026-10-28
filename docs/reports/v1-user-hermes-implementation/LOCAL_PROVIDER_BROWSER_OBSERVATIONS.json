@@ -1,0 +1,79 @@
+{
+  "timestamp": "2026-10-09T09:36:53.821008+07:00",
+  "status": "PASS_SCOPED",
+  "url": "http://127.0.0.1:18011/",
+  "provider": "ACTUAL_LOCAL_OLLAMA",
+  "model": "llama3.2:1b",
+  "model_revision": 1,
+  "identity_matches": true,
+  "process_id": 29356,
+  "receipt": {
+    "failed": false,
+    "request_id": "req_d590316aef574326",
+    "timestamp": "2026-10-09T02:32:52.223385+00:00",
+    "build_id": "sha256:f8999910e31d8a2b52357e02e4227aec203412d460a55a76faae188884b33963",
+    "process_id": 29356,
+    "executable": "C:\\Users\\dmaza\\mcp-starter\\.venv\\Scripts\\python.exe",
+    "provider_id": "ollama",
+    "configured_model": "llama3.2:1b",
+    "effective_model": "llama3.2:1b",
+    "configuration_source": "EXPLICIT",
+    "configuration_fingerprint": "612387756a02fe377f769b3e0f7e1c0194dd02017f80043523053773af568549",
+    "selected_model": "llama3.2:1b",
+    "requested_model": null,
+    "override_source": "CONFIGURATION",
+    "payload_model": "llama3.2:1b",
+    "invocation_id": "a0695f262e4d4c35ae3ede40a8a68610",
+    "runtime_instance_id": "fcb8b19d15ea4271ac62d5faf56e0633",
+    "instance_captured_at": "2026-10-09T02:32:04.516856+00:00",
+    "working_directory": "C:\\Users\\dmaza\\mcp-starter",
+    "request_id_source": "REQUEST_CONTEXT",
+    "actual_model": "llama3.2:1b",
+    "identity_status": "RUNTIME_CONFIRMED",
+    "confirmation_source": "PROVIDER_RESPONSE",
+    "fallback_status": "NOT_ATTEMPTED"
+  },
+  "source_identity": {
+    "candidate_import_source": "sha256:f8999910e31d8a2b52357e02e4227aec203412d460a55a76faae188884b33963",
+    "current_source": "sha256:f8999910e31d8a2b52357e02e4227aec203412d460a55a76faae188884b33963",
+    "match": true,
+    "limits": "Disk/source identity only; fixture overrides are explicit; no full transitive loaded-build verification"
+  },
+  "semantic": "EXPLICIT_FIXTURE",
+  "retrieval": "EXPLICIT_NON_OFFICIAL_FIXTURE",
+  "observed": [
+    "Authenticated real inventory and selection acknowledgement",
+    "UI sent question to V1 handler; actual existing Hermes executed",
+    "Actual installed model invocation returned matching provider-reported identity",
+    "Grounding rejected unsupported content and public abstention displayed in UI",
+    "No browser error logs after corrected observer"
+  ],
+  "grounded": false,
+  "stages": [
+    "HERMES_RUN",
+    "KNOWLEDGE",
+    "TRUST",
+    "GATES",
+    "GROUNDING",
+    "PUBLIC_PROJECTION"
+  ],
+  "initial_failure": "Receipt observer incorrectly passed self to a static function; wrapper fixed, app source unchanged. Initial error evidence retained.",
+  "limits": [
+    "One installed model only; no switch between distinct actual models",
+    "Model name returned by provider is not loaded-weight attestation",
+    "Semantic and retrieval fixtures do not prove native semantic/RAG production integration",
+    "Current-source identity is app disk fingerprint, not full transitive loaded closure",
+    "Port-8000 attestation endpoint refused candidate port with 403; boundary not bypassed; initial null attestation artifact retained"
+  ],
+  "screenshots": [
+    "LOCAL_PROVIDER_BROWSER.jpg",
+    "LOCAL_PROVIDER_INITIAL_ERROR.jpg"
+  ],
+  "cleanup": {
+    "timestamp": "2026-10-09T09:33:49.2940183+07:00",
+    "candidate_pid": 29356,
+    "candidate_stopped": true,
+    "user_backend_pid": 33160,
+    "user_backend_untouched": true
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "last_reindex": "2026-10-02T14:30:25",
+  "result": {
+    "success": true,
+    "duration_seconds": 8.09,
+    "graphify": {
+      "returncode": 0,
+      "stdout": "[graphify extract] --force --code-only: full AST re-scan, existing semantic layer preserved (no semantic pass this run)\n[graphify extract] --force: full re-scan, semantic cache reads skipped\n[graphify extract] scanning C:\\Users\\dmaza\\mcp-starter\n[graphify extract] --code-only: skipping 38 non-code file(s) (38 docs, 0 papers, 0 images) â€” no LLM extraction\n[graphify extract] found 231 code, 0 docs, 0 papers, 0 images\n[graphify extract] 41 file(s) not classified (no supported extension or shebang), skipped: .dockerignore, .env.example, .gitignore, .graphify_version, .graphifyignore, Dockerfile (+35 more)\n[graphify extract] AST extraction on 231 code files...\n  AST extraction: 2/2 uncached files (100%)\n[graphify extract] wrote C:\\Users\\dmaza\\mcp-starter\\graphify-out\\graph.json â€” 2935 nodes, 6791 edges (no clustering)\n",
+      "stderr": ""
+    },
+    "analyzer": {
+      "returncode": 0,
+      "stdout": "\n==============================================\n     NUSANTARA GRAPH ANALYZER\n==============================================\n\nGraph file:\nC:\\Users\\dmaza\\mcp-starter\\graphify-out\\graph.json\n\nNODES : 2935\nEDGES : 6791\n\nMenganalisis architecture...\nMenganalisis dependency...\nMenganalisis workflow...\nMenganalisis impact...\nMenganalisis candidates...\nMenganalisis engine summary...\nMembuat graph report...\n\n==============================================\n ANALYSIS SELESAI\n==============================================\n\nNodes          : 2935\nEdges          : 6761\nInvalid edges  : 30\n\nOutput:\n  C:\\Users\\dmaza\\mcp-starter\\graphify-out\\architecture.json\n  C:\\Users\\dmaza\\mcp-starter\\graphify-out\\dependency.json\n  C:\\Users\\dmaza\\mcp-starter\\graphify-out\\workflow.json\n  C:\\Users\\dmaza\\mcp-starter\\graphify-out\\impact.json\n  C:\\Users\\dmaza\\mcp-starter\\graphify-out\\candidates.json\n  C:\\Users\\dmaza\\mcp-starter\\graphify-out\\engine_summary.json\n  C:\\Users\\dmaza\\mcp-starter\\graphify-out\\graph_report.json\n  C:\\Users\\dmaza\\mcp-starter\\graphify-out\\invalid_edges.json\n\nNusantara Graph Analyzer selesai.\n\n",
+      "stderr": ""
+    },
+    "source_documents": 250,
+    "summary": {
+      "nodes": 2935,
+      "edges": 6791,
+      "valid_edges": 6761,
+      "invalid_edges": 30,
+      "graph_file": "C:\\Users\\dmaza\\mcp-starter\\graphify-out\\graph.json",
+      "graph_exists": true
+    }
+  }
+}

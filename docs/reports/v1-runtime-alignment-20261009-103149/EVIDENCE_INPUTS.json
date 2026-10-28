@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-10-09T10:35:22.304616+07:00",
+  "files": {
+    "BASELINE.json": {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-functional-closure-20261009-101736\\BASELINE.json",
+      "sha256": "db2cde770bb95e1b6bd1d1efa8e07987849862741844a83013b3665cdab0203b",
+      "status": null
+    },
+    "CAPABILITY_MATRIX.json": {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-functional-closure-20261009-101736\\CAPABILITY_MATRIX.json",
+      "sha256": "e862704af274fbcc92ae8e8d2ebe007f8d35474f353d6b6f8b6f44a51c758fd1",
+      "status": null
+    },
+    "IMPLEMENTATION_REPORT.json": {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-functional-closure-20261009-101736\\IMPLEMENTATION_REPORT.json",
+      "sha256": "ae956b9b47ab270edc0c0fce3da2319fe6f3dc095b58412c8cbcfbeac76a7f63",
+      "status": "PASS"
+    },
+    "REGRESSION.json": {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-functional-closure-20261009-101736\\REGRESSION.json",
+      "sha256": "453b8bfd722f20635d1df40bd1840e12fe4865643433942d2c8caa11c0d0f986",
+      "status": "PASS"
+    },
+    "RUNTIME_EVIDENCE.json": {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-functional-closure-20261009-101736\\RUNTIME_EVIDENCE.json",
+      "sha256": "9fafec4a1b5c07e33a2c2ab00d17888fca6e2f0ab65f12a609bc2d52edaaaa77",
+      "status": "PASS"
+    },
+    "CHANGE_AUDIT.json": {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-functional-closure-20261009-101736\\CHANGE_AUDIT.json",
+      "sha256": "9070fe3a53f56b486cd8571650f204a65b073b99040da3ea3df886cf17b7bd97",
+      "status": "PASS"
+    },
+    "REMAINING_GATES.json": {
+      "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\v1-functional-closure-20261009-101736\\REMAINING_GATES.json",
+      "sha256": "ec43e8ca0dae362d85f17c3091be672b61bb2eb43d1bb9f3c2527dddbcf3152c",
+      "status": null
+    }
+  },
+  "baseline": {
+    "timestamp": "2026-10-09T10:18:52.139248+07:00",
+    "branch": "codex/fullroot-control-20261007",
+    "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+    "approved_decisions": [
+      "LEGACY_BEHAVIOR_PRESERVED_TEMPORARILY",
+      "OPERATOR_GLOBAL_MODEL_SELECTION",
+      "EXISTING_HERMES_CORE",
+      "V1_ONLY"
+    ]
+  },
+  "candidate_fingerprint": "sha256:9916a16a8411c1d892157fad11e3bfdf4200efe4e20a259ec23dd9de74b90fcd",
+  "candidate_pid": 35788,
+  "candidate_limitations": [
+    "Greeting is nonfactual local_rule, not a model-generated answer; mixed substantive question has actual provider receipt",
+    "Provider model name is not loaded-weight attestation",
+    "App fingerprint is disk/import source snapshot, not all transitive loaded code or frontend bundle; separate bundle hashes recorded",
+    "No official knowledge or native semantic/production RAG verified; no port attestation bypass",
+    "Current user runtime remains different build with missing model-control endpoints"
+  ],
+  "historical_tests": {
+    "backend": {
+      "evidence": "regression-20261009-102112/results.xml",
+      "pass": 257,
+      "fail": 0,
+      "skip": 0,
+      "deselected": 1
+    },
+    "frontend": {
+      "evidence": "FRONTEND_REGRESSION.json",
+      "pass": 10,
+      "fail": 0,
+      "skip": 0
+    }
+  }
+}

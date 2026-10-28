@@ -1,0 +1,232 @@
+{
+  "phase": "R2",
+  "status": "CLOSED_PASS",
+  "closure_gate": "CLOSED",
+  "timestamp": "2026-10-07T08:55:41.516071+00:00",
+  "authorization": "R2 AUTHORIZATION GRANTED in current human turn; contract MDA-R2-AUTH-001; controlled implementation only",
+  "baseline": ".dev/checkpoints/r2-20261007/BASELINE.json",
+  "baseline_sha256": "215325dc7d6999ae3f85f5ca9a1102970965aad8cdc18fab9eb899a8b85c5657",
+  "source_scope": [
+    "app/api/routes.py",
+    "app/api/v2_routes.py",
+    "app/core/runtime_identity.py",
+    "app/models/base.py",
+    "app/models/gateway.py",
+    "app/models/ollama.py",
+    "app/models/openai_compatible.py",
+    "app/models/router.py",
+    "tests/test_provider_identity.py"
+  ],
+  "implementation": "VERIFIED",
+  "before_after_source_hashes": [
+    {
+      "path": "app/core/runtime_identity.py",
+      "before_sha256": "3ec47b16c5cf9c4d56210db854e5c460a4f714d292665719ccabf15b7ebae791",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/core/runtime_identity.py",
+      "after_sha256": "13eeb4b0dc2286bcc0f635cea840f4a1ab7d49ae85a96580c5461078f6b9c7fa"
+    },
+    {
+      "path": "app/models/base.py",
+      "before_sha256": "009297b09ddb3a56b4c038473d1839aa2f431409f7c9951a1cb94a40c2041892",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/base.py",
+      "after_sha256": "ebce1420ea29cc2604fa552bc855568755b5190fe53ca1c090fb20179599136e"
+    },
+    {
+      "path": "app/models/ollama.py",
+      "before_sha256": "a066e2930aa2d30be82e2b54a1a159a2406f75090c85121dec615af043126892",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/ollama.py",
+      "after_sha256": "d52921a64f0e18eea3990d0b560d474799f92e5afeae164c174543585662eaa9"
+    },
+    {
+      "path": "app/models/openai_compatible.py",
+      "before_sha256": "2832989348208b0d3706660d3dfe30d04590e83c11ab6f1662cc18806e23981a",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/openai_compatible.py",
+      "after_sha256": "8c906eac626234335447340611d27e69eaa46d6c1deaea90e9a37f887d4ca492"
+    },
+    {
+      "path": "app/models/router.py",
+      "before_sha256": "dd7e3a9da2aac5b9edc742f1bb6670ded6ed96f212079f720d2918fe9f9fbfff",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/router.py",
+      "after_sha256": "81c6c84339dc6d1a1aa3a466d14fe97bbb8bbd4cccc242689e021ce9c65f8cfd"
+    },
+    {
+      "path": "app/models/gateway.py",
+      "before_sha256": "a79fbaa0f3b9a1e3f386e33646e8cbda934168146f5213b4aab860092c3991e3",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/models/gateway.py",
+      "after_sha256": "c0e31d563675e4b81be24c74c27b76a2b9447f23f5401374b77b5a7ed7d7a2cd"
+    },
+    {
+      "path": "app/api/routes.py",
+      "before_sha256": "336ca3c55e85b33e604f8494e4ceb89221dc0d8c79a0e98db550634bd59e1b51",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/api/routes.py",
+      "after_sha256": "868ceb4b07564c5ec7bcf29efdbfbcf428e627d3db93f961f4fe9f3ed9b677ed"
+    },
+    {
+      "path": "app/api/v2_routes.py",
+      "before_sha256": "668fd8422ff90c0e365c6fb5a3d468e2e02121dd3e9819bd0a6281609bf9bac8",
+      "existed": true,
+      "backup": ".dev/checkpoints/r2-20261007/source-before/app/api/v2_routes.py",
+      "after_sha256": "65b2c77d795aff6094634a22d09c1c82292d6c2a993d968e11bdc2c40eab992b"
+    },
+    {
+      "path": "tests/test_provider_identity.py",
+      "before_sha256": null,
+      "existed": false,
+      "after_sha256": "492e2c3e288c425941031ce9ff97dee95f431c6d8a5775ff0c423d1cda2bbc43"
+    }
+  ],
+  "tests": {
+    "focused-regression.xml": {
+      "tests": 93,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "c4953d116839700c8902dadf9927c979a532a090ca14cb5c26e19154c25fcfb0"
+    },
+    "r1-after.xml": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "032e8688539811227248b7d5d01a88a36fe0d7425031df7838c451ef390137cd"
+    },
+    "api-after.xml": {
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "005289fcd71f4ca32096decdec6d6566942158eb812f59a80958667ac3b46294"
+    }
+  },
+  "gates": {
+    "R2.1": {
+      "status": "PASS",
+      "evidence": "Canonical provider identity captured; configured Ollama mismatch remains rejected; legacy wrappers not promoted to verified.",
+      "validation_scope": "Configured canonical Nusantara path and isolated regression fixtures; no production deployment claim"
+    },
+    "R2.2": {
+      "status": "PASS",
+      "evidence": "Existing R1 composition owner and llm.model provenance retained; configuration regressions pass."
+    },
+    "R2.3": {
+      "status": "PASS",
+      "evidence": "Immutable effective configuration fingerprint separated from selected/payload model and explicit overrides."
+    },
+    "R2.4": {
+      "status": "PASS",
+      "evidence": "Actual Ollama response model llama3.2:1b and done=true; absent/incomplete/mismatched reports classified honestly. Provider report, not weight attestation.",
+      "validation_scope": "Configured canonical Nusantara path and isolated regression fixtures; no production deployment claim"
+    },
+    "R2.5": {
+      "status": "PASS",
+      "evidence": "Runtime PID/interpreter/source build correlation matches; no claim about a deployed API process.",
+      "validation_scope": "Configured canonical Nusantara path and isolated regression fixtures; no production deployment claim"
+    },
+    "R2.6": {
+      "status": "PASS",
+      "evidence": "Existing deterministic router remains sole registry; frozen selection/name/model binding and gateway receipt checks."
+    },
+    "R2.7": {
+      "status": "PASS",
+      "evidence": "Omitted model and explicit legacy-default model have distinct provenance; V1/V2 request overrides tagged; empty model retains previous fallback."
+    },
+    "R2.8": {
+      "status": "NOT_APPLICABLE",
+      "evidence": "Canonical router/gateway does not perform provider failover; provider failures propagate, no silent substitution; OpenAI text-JSON format fallback explicitly distinguished from provider failover.",
+      "validation_scope": "Canonical provider router/gateway path; no automatic provider failover added"
+    },
+    "R2.9": {
+      "status": "PASS",
+      "evidence": "Authorized additive /v1/health/detail identity projection separates service/provider/model/build and verification; legacy fields identical for available, missing-model and unavailable states; secrets/private paths and fabricated private receipts excluded. Live controlled endpoint health returns NOT_VERIFIED, not execution claims."
+    },
+    "R2.10": {
+      "status": "PASS",
+      "evidence": "Fresh actual endpoint handler in isolated FastAPI harness plus canonical Nusantara gateway -> Ollama generation in same process; current build/process/provider/actual model correlate. No production app service startup.",
+      "validation_scope": "CONTROLLED_RUNTIME_ONLY"
+    }
+  },
+  "integrity_status": "PASS",
+  "evidence_sha256": {
+    ".dev/checkpoints/r2-20261007/api-after.xml": "dc7b2f370f527cc391fd7fc918965d440c5a8aa07177fce855bb1a4ba4f58a6e",
+    ".dev/checkpoints/r2-20261007/api-before.xml": "0592829368a7322b8514289ed2458ed973dd5e0527fecd34908e8af1855d07c8",
+    ".dev/checkpoints/r2-20261007/BASELINE.json": "215325dc7d6999ae3f85f5ca9a1102970965aad8cdc18fab9eb899a8b85c5657",
+    ".dev/checkpoints/r2-20261007/CLOSURE.json": "bde0c644628f911d20caebdf87583a17e0adb146c7980eaf72b09cbf01ba3f93",
+    ".dev/checkpoints/r2-20261007/diff-review.json": "bfba63360e422073e9d2c09212c7e804af48019557a907f3a80d1da6c782ac87",
+    ".dev/checkpoints/r2-20261007/GATE_REQUEST.json": "a1a8bda1eb8da8c99a95ef820dba11f2931d82eede115e4e2f35ec2d5222f102",
+    ".dev/checkpoints/r2-20261007/git-diff-after.txt": "88041bbd60cf63d1f18080aa06ccaaa4eb2b822cbd30919a85bcae5e7468069f",
+    ".dev/checkpoints/r2-20261007/git-diff-before.txt": "d485c54e481a2ea1f86accd4094a916a0ba9a0f3d92fc21e83a9b3ecdffadcfc",
+    ".dev/checkpoints/r2-20261007/git-diff-check.txt": "8311150a779a4c2f4eefbe19aa477cc07a4cfd45f722b91144aba248da30a8d7",
+    ".dev/checkpoints/r2-20261007/git-staged-after.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".dev/checkpoints/r2-20261007/git-staged-before.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".dev/checkpoints/r2-20261007/git-status-after.txt": "2d486d8ffd593f3d00cff9963f85502e5e6457d3f8624cb7d977beaa827b9940",
+    ".dev/checkpoints/r2-20261007/git-status-before.txt": "76d65b3474a68dfbd839106daee3c016093115cbad35737d33da3751ca91f5a5",
+    ".dev/checkpoints/r2-20261007/graph-before.json": "3aade9302197f35945d50d41193567a43a79100ce28cdc7e2acb7362794c6f3e",
+    ".dev/checkpoints/r2-20261007/graphify-update.log": "bbd4a6b27b9ea6bfacd7af55f45de13dd488d2c2867cff375a767112576889b9",
+    ".dev/checkpoints/r2-20261007/identity.xml": "fecb0cca4c10b3fdff99beb78e879ef4d11fc1d81cf7631a828841a682edf84a",
+    ".dev/checkpoints/r2-20261007/IMPLEMENTATION.diff": "9413076cd1d5389a86568ffef3a4070a26282471a251d5a23ca063b6d1d1483c",
+    ".dev/checkpoints/r2-20261007/integrity-after.json": "3fa85a3ddbfa82d129e981ab953f90df9f0ae04950787dda51ebf06605a0e900",
+    ".dev/checkpoints/r2-20261007/pre-runtime-verification.json": "00f4ae2d55f8e413db3a55bcd4d7f6e7be5bbb41fae004c6f70397126092564f",
+    ".dev/checkpoints/r2-20261007/r1-after.xml": "8966032d6904bc0b5083b04cb23642612027c42e698519fb42576ddd8482d364",
+    ".dev/checkpoints/r2-20261007/r1-before.xml": "990f2787a81a66f3fb3036ca94480c44669cf0e017d6f4dc81a8c535fd7948de",
+    ".dev/checkpoints/r2-20261007/regression.xml": "bebe0c554dbb934a4b4c083d0d433881ffa396a81d844c14ca2783babcae4c3e",
+    ".dev/checkpoints/r2-20261007/runtime-verification.json": "f33c40d1703d452e354743ac36913f0b3dfec6de4ae937302496a09372bb48ea",
+    ".dev/checkpoints/r2-20261007/health-gate/api-after.xml": "005289fcd71f4ca32096decdec6d6566942158eb812f59a80958667ac3b46294",
+    ".dev/checkpoints/r2-20261007/health-gate/BASELINE.json": "e22774201b48a96a63d98688bf80d631da75c8699b10a9a8d4ef233a0a000904",
+    ".dev/checkpoints/r2-20261007/health-gate/focused-regression.xml": "c4953d116839700c8902dadf9927c979a532a090ca14cb5c26e19154c25fcfb0",
+    ".dev/checkpoints/r2-20261007/health-gate/git-diff-after.txt": "4c863cee0ad8c1deb50e91c82320be3dae16663d2742a6c4b1e0020b25b9eb4c",
+    ".dev/checkpoints/r2-20261007/health-gate/git-diff-check.txt": "66fb380d2a4d250f49389198ff1a4886ea4b4f6014f2d088f0f40ecd1b79b5a9",
+    ".dev/checkpoints/r2-20261007/health-gate/git-staged-after.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".dev/checkpoints/r2-20261007/health-gate/git-status-after.txt": "2d486d8ffd593f3d00cff9963f85502e5e6457d3f8624cb7d977beaa827b9940",
+    ".dev/checkpoints/r2-20261007/health-gate/graph-before.json": "ee61dec1b43a4552c17aa657a8e2a49a2cf834ceaa872921292fac235972e30a",
+    ".dev/checkpoints/r2-20261007/health-gate/graphify-update.log": "ab2a6af842d218cb3e0963c872d9267e380c9ca3380770974587dc0c3a6334a8",
+    ".dev/checkpoints/r2-20261007/health-gate/IMPLEMENTATION.diff": "2fbdc01b420ecd3933dba4770dbcff03749a0130958399b324149fd2ee0d2dc0",
+    ".dev/checkpoints/r2-20261007/health-gate/integrity-after.json": "fed0b46432d35ed123521846a2d8d60028728d56ccf5a33cc5e8036c94b04009",
+    ".dev/checkpoints/r2-20261007/health-gate/parent-checkpoint.json": "3565a4bb7ac9d54fb03838b5c91b8d9ed445e189c4d59ab55b14ebddebf4cf25",
+    ".dev/checkpoints/r2-20261007/health-gate/parent-closure.json": "feef2c65b8681fb115b9ff2cc9e57e0a193ef31d7a1baa7dee95fb2f03677617",
+    ".dev/checkpoints/r2-20261007/health-gate/parent-gate-request.json": "dc1e41dc20162d623f65c4a216d80626ead393c2355186d5ebb4163f6e668ebd",
+    ".dev/checkpoints/r2-20261007/health-gate/parent-report.md": "96eba5b7f0a7b9fdabcc0abda3f088ec1c9f2a4d5e9cccc91b7fa9c3f32b2d27",
+    ".dev/checkpoints/r2-20261007/health-gate/r1-after.xml": "032e8688539811227248b7d5d01a88a36fe0d7425031df7838c451ef390137cd",
+    ".dev/checkpoints/r2-20261007/health-gate/runtime-verification.json": "4272046f80d09e48a80b72052f8ebcaa29d2cf8e3770f1dc9b9bd56811f69bf9",
+    "docs/reports/MDA_R2_CLOSURE_20261007.md": "63e7a3839dfa9818a7505911738b380c6a3a0a94562de26a2f775337f1e1c7d9",
+    "graphify-out/graph.json": "b86ecc19aafaebd28d64a2094b1d313a10b0c5df6db2a43403759f97152eb347",
+    ".dev/checkpoints/r2-20261007/FINAL_OWNER_ACCEPTANCE_RECORD.json": "bac54cbfb7182b3a1a0e133923777c52e04a9fc049c97bea3cdf7c4a094e8e6e",
+    ".dev/checkpoints/r2-20261007/ADMIN_METADATA_BASELINE.json": "526391f1b5b1dcdf92eff221e5d38e81d3b89fbc838ec7d87e1905596442ecf8",
+    ".dev/checkpoints/r2-20261007/ADMIN_FINAL_VERIFICATION.json": "acdbac1655d3014db757b54bf93735f5f5dffb5016435a236d40407970a7db9c",
+    ".dev/checkpoints/r2-20261007/FINAL_OWNER_ACCEPTANCE.json": "a04b53d59d820b102792899538c8bba3778427675099bec704de0fa872593501",
+    ".dev/checkpoints/r2-20261007/ACCEPTANCE_RECORDING_HOLD.json": "68bbcba8acc595d8210dcc00af33b7174f71d356e6e8f4d191279918b725e4c5",
+    ".dev/checkpoints/r2-20261007/pre-final-acceptance/CHECKPOINT.json": "dccb0f9b9387c3212f61e949998ccfba1f7a80564de509b4ad0754ac4c3cd426",
+    ".dev/checkpoints/r2-20261007/pre-final-acceptance/CLOSURE.json": "77d01c0dca59a3038d829b3f7f3e603c6399913d1450f8cbdb24419f62a9541d",
+    ".dev/checkpoints/r2-20261007/pre-final-acceptance/GATE_REQUEST.json": "c63543c908afac97fda3e0ff030e546e1551215272b405c5ffb32a5a178143cb",
+    ".dev/checkpoints/r2-20261007/pre-final-acceptance/REPORT.md": "e5f00283552552ffbe3535340172ed50e7a51ede60d926562b21b554d39a9cc3"
+  },
+  "closure_report": "docs/reports/MDA_R2_CLOSURE_20261007.md",
+  "rollback": {
+    "status": "AVAILABLE_NOT_EXECUTED",
+    "source_backups": "source-before/",
+    "owned_patch": "IMPLEMENTATION.diff",
+    "procedure": "Verify latest after-hashes. Reverse the health-gate owned patch first, then the initial R2 patch if full R2 rollback is authorized. Exact bytes are retained at both checkpoints. Preserve later human changes, staged state, DB/WAL/SHM; no reset/clean/global restore. Graph rollback uses the corresponding snapshot only after authorization.",
+    "staged_changes_preserved": true,
+    "health_gate_backup": ".dev/checkpoints/r2-20261007/health-gate/source-before",
+    "health_gate_patch": ".dev/checkpoints/r2-20261007/health-gate/IMPLEMENTATION.diff",
+    "health_gate_baseline": ".dev/checkpoints/r2-20261007/health-gate/BASELINE.json"
+  },
+  "final_owner_acceptance": "APPROVED",
+  "next_action": "STOP_R2_CLOSED_PASS; R3_MDE10_PRODUCTION_AND_SCOPE_EXPANSION_REQUIRE_SEPARATE_AUTHORIZATION",
+  "protected_baseline_rewritten": false,
+  "health_gate_authorization": "Human: Ya,,Lanjukan in response to R2-HEALTH-IDENTITY-001 authorization question",
+  "health_gate_status": "CLOSED_PASS",
+  "health_gate_baseline": ".dev/checkpoints/r2-20261007/health-gate/BASELINE.json",
+  "health_gate_baseline_sha256": "e22774201b48a96a63d98688bf80d631da75c8699b10a9a8d4ef233a0a000904",
+  "owner_acceptance_record": ".dev/checkpoints/r2-20261007/FINAL_OWNER_ACCEPTANCE.json",
+  "owner_acceptance_sha256": "a04b53d59d820b102792899538c8bba3778427675099bec704de0fa872593501",
+  "administrative_acceptance_record": ".dev/checkpoints/r2-20261007/FINAL_OWNER_ACCEPTANCE_RECORD.json",
+  "administrative_acceptance_sha256": "bac54cbfb7182b3a1a0e133923777c52e04a9fc049c97bea3cdf7c4a094e8e6e",
+  "administrative_sync_status": "COMPLETED",
+  "administrative_sync_at_utc": "2026-10-07T09:09:06.783822+00:00",
+  "administrative_change_log": ".dev/checkpoints/r2-20261007/ADMIN_CLOSURE_CHANGE_LOG.json",
+  "limitations_accepted_by_owner": true
+}

@@ -1,0 +1,127 @@
+{
+  "timestamp": "2026-10-09T13:16:58.190917+07:00",
+  "contract": "NUS-V1-MDE-WORK-CONTRACT-001 / UI04_CHAT_TIMEOUT_30_SECONDS",
+  "status": "IMPLEMENTED_VERIFIED_SCOPED",
+  "v1_acceptance": "HOLD",
+  "v2": "DEFERRED",
+  "activated_in_running_runtime": false,
+  "repository": "C:\\Users\\dmaza\\mcp-starter",
+  "head_before": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "head_after": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "authorized_files": [
+    "control-plane/src/api.ts",
+    "control-plane/tests/assistant.test.tsx"
+  ],
+  "before_sha256": {
+    "control-plane/src/api.ts": "027ed8e06fa8d6b2d58e3f01d32ec7dc0154ee20bab309837f2900ee89be1940",
+    "control-plane/tests/assistant.test.tsx": "9086fd625545c889b8910e8dc6a21b0e54cf2fac6311efd0af37d78343110683"
+  },
+  "after_sha256": {
+    "control-plane/src/api.ts": "6a2a5b94d805dc2046a4291dc6604c368874279e4a554fa9d6667cf8ce6d81d3",
+    "control-plane/tests/assistant.test.tsx": "0897334cee08818e116aadae8212809140c07983642f1c3f752c7db12573da14"
+  },
+  "implementation": {
+    "symbol": "control-plane/src/api.ts sendUserChat",
+    "deadline_ms": 30000,
+    "scope": "Chat only, shared runtimeFetch and all model-control functions unchanged",
+    "mechanism": "Race complete transport/body-read promise against deadline; reject honest timeout first, then abort browser fetch. finally clears timer for success, ordinary failure, validation failure or timeout. Each request gets a new controller. Existing UserChat finally releases pending; catch retains question/session.",
+    "message": "Batas waktu 30 detik tercapai. Backend mungkin masih memproses permintaan ini; pembatalan di browser tidak menjamin pembatalan di server. Coba lagi hanya secara manual.",
+    "retry": "Manual only; no replay, memory deletion or backend/provider cancellation claim.",
+    "browser_cancellation_limit": "AbortController only attempts browser transport cancellation. Backend may continue processing and recording memory; a manual retry can create another server request. No server cancellation/undo guarantee."
+  },
+  "actual_tests": {
+    "command": "& 'C:\\Users\\dmaza\\AppData\\Local\\hermes\\node\\node.exe' --require '../docs/reports/ui04-chat-timeout-20261009-130937/test-write-guard.cjs' 'node_modules/vitest/vitest.mjs' run 'tests/assistant.test.tsx' --configLoader runner --no-cache --pool=threads --maxWorkers=1 --minWorkers=1 --reporter=json --outputFile='../docs/reports/ui04-chat-timeout-20261009-130937/TEST_RESULTS_02.json'",
+    "working_directory": "C:\\Users\\dmaza\\mcp-starter\\control-plane",
+    "exit_code": 0,
+    "total": 17,
+    "pass": 17,
+    "fail": 0,
+    "pending": 0,
+    "success": true,
+    "evidence": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\ui04-chat-timeout-20261009-130937\\TEST_RESULTS_02.json",
+    "coverage": [
+      "Never-resolving fetch with and without abort cooperation: pending at29999ms, honest timeout and released UI at30000ms",
+      "Question retained, New Chat/send enabled, no automatic replay after another60000ms",
+      "Manual retry retains original question and session and uses new nonaborted controller",
+      "Only chat/model-status requests; no memory deletion request",
+      "Success/HTTP503/network error/invalid public response clear all timers; no delayed abort",
+      "Model status/inventory/selection have no deadline signal/timer even after60000ms",
+      "All ten pre-existing assistant cases still pass: New Chat, same-session followup, multiline, public response, unavailable/private-field error and model control"
+    ],
+    "provider_and_storage": "Mocked fetch/fixture UI responses; no real provider generation or server conversation memory writes"
+  },
+  "typecheck": {
+    "command": "& 'C:\\Users\\dmaza\\AppData\\Local\\hermes\\node\\node.exe' --require '../docs/reports/ui04-chat-timeout-20261009-130937/test-write-guard.cjs' 'node_modules/typescript/bin/tsc' --noEmit",
+    "working_directory": "C:\\Users\\dmaza\\mcp-starter\\control-plane",
+    "exit_code": 0,
+    "status": "PASS",
+    "emitted_files": 0
+  },
+  "guards": {
+    "network": "Existing guard blocks network connect/listen and default fetch; tests explicitly mock fetch",
+    "production_data": "Existing guard blocks DB/WAL/SHM and /data file access",
+    "processes": "Existing guard permits esbuild transform only; no app/native worker/provider server",
+    "writes": "Supplemental guard confines test writes to new evidence directory",
+    "tooling": "configLoader runner + --no-cache avoids altering dependencies/cache/config; no dependency installation or frontend bundle rebuild"
+  },
+  "exact_diff": {
+    "path": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\ui04-chat-timeout-20261009-130937\\UI04_EXACT_LF.diff",
+    "sha256": "8a0da36d41e1672702b44e14fb93a27c3fd108d3913413c683f0c7073f322128",
+    "baseline": "Captured byte-for-byte pre-task files; target files pre-existed within untracked control-plane directory. No comparison/revert to Git HEAD used.",
+    "changed_symbols": "sendUserChat only in API; assistant test imports/cleanup and new timeout/model isolation cases. Existing ten tests retained."
+  },
+  "preservation": {
+    "status": "PASS_SCOPED",
+    "changes": {
+      "modified": [
+        "control-plane/src/api.ts",
+        "control-plane/tests/assistant.test.tsx"
+      ],
+      "removed": [],
+      "added": []
+    },
+    "unauthorized_existing_file_changes": 0,
+    "runtime_pid33160_unchanged": true,
+    "runtime_signals": 0,
+    "provider_invocations": 0,
+    "new_application_servers": 0,
+    "database_memory_config_dependency_model_bundle_changes_by_task": 0,
+    "commit_push_deployment": false,
+    "evidence_only_additions": "C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\ui04-chat-timeout-20261009-130937",
+    "limitations": "Scoped hashes cover source, tests, existing docs/reports/cache/config/service/bundle; new evidence excluded. Five pre-existing unreadable test-temp directories retained as limits. Live database/environment secret values not inspected. No full-filesystem immutability claim."
+  },
+  "rollback": {
+    "performed": false,
+    "reverse_check_status": "PASS",
+    "reverse_check_exit_code": 0,
+    "precondition": "Verify current target hashes still equal after_sha256; if later user edits exist, stop for hunk review. Never copy complete before files over current files or reset/checkout/discard.",
+    "commands_after_separate_operator_decision": [
+      "Set-Location -LiteralPath 'C:\\Users\\dmaza\\mcp-starter'",
+      "& 'C:\\Users\\dmaza\\AppData\\Local\\hermes\\git\\cmd\\git.exe' --no-optional-locks apply --reverse --check 'C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\ui04-chat-timeout-20261009-130937\\UI04_EXACT_LF.diff'",
+      "& 'C:\\Users\\dmaza\\AppData\\Local\\hermes\\git\\cmd\\git.exe' --no-optional-locks apply --reverse 'C:\\Users\\dmaza\\mcp-starter\\docs\\reports\\ui04-chat-timeout-20261009-130937\\UI04_EXACT_LF.diff'"
+    ],
+    "effect": "Reverse only this task diff; preserve all pre-existing file contents/user changes. Rehash against before_sha256 afterwards. This is local hunk rollback, not runtime rollback; do not stop or replace PID33160."
+  },
+  "verification_setup_failures_preserved": [
+    "Initial test launch failed before execution because evidence guard require path had one extra parent segment; corrected guard, subsequent narrow test run17PASS.",
+    "An auxiliary report read used repository-relative path from control-plane cwd and failed; corrected actual JSON report read. Typecheck still ran and exit0.",
+    "Initial audit/default Windows text decoding produced false mojibake filename differences, and initial CRLF diff failed reverse check; no filesystem rename occurred. Explicit UTF-8/LF final audit shows only two authorized modifications and reverse check passes.",
+    "Evidence-only final helper import initially lacked argv; fixed evidence helper invocation, no source change or test failure."
+  ],
+  "authoritative_evidence": [
+    "BASELINE.json",
+    "HASHES_BEFORE.json",
+    "HASHES_AFTER.json",
+    "TEST_RESULTS_02.json",
+    "CHANGE_AUDIT_UTF8.json",
+    "UI04_EXACT_LF.diff",
+    "PROCESS_BEFORE.json",
+    "PROCESS_AFTER.json"
+  ],
+  "superseded_evidence": [
+    "CHANGE_AUDIT.json",
+    "UI04_TASK_ONLY.diff",
+    "UI04_EXACT_UTF8.diff"
+  ],
+  "stop": "Local patch complete and verified scoped. No build/activation/runtime replacement, native integration or production acceptance claimed."
+}

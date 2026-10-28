@@ -1,0 +1,407 @@
+"""Validated snapshots used by the existing configuration owner and consumers.
+
+Use load_nusantara_config as the validation/error boundary. No dotenv loading,
+credential resolution, engine imports, filesystem writes, or command execution.
+"""
+from __future__ import annotations
+
+import json
+import math
+import os
+import re
+from collections.abc import Mapping
+from dataclasses import dataclass
+from pathlib import Path
+from types import MappingProxyType
+from typing import Any, Literal
+from urllib.parse import urlsplit
+
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
+
+MAX_CONFIG_BYTES = 1024 * 1024
+MAX_DEPTH = 12
+
+
+class ConfigurationError(ValueError):
+    """Safe error: identifiers/codes only; never retain input or raw errors."""
+
+    def __init__(self, code: str):
+        self.code = code
+        super().__init__(f"Configuration error: {code}")
+
+
+class _Frozen(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid", strict=True,
+                              allow_inf_nan=False, hide_input_in_errors=True)
+
+
+class _System(_Frozen):
+    environment: Literal["development", "test", "production"] = "development"
+    debug: bool = False
+    application_name: str = Field(default="Nusantara Core + Hermes", min_length=1, max_length=256)
+    version: str = Field(default="0.1.0", min_length=1, max_length=128)
+    timezone: str = "Asia/Jakarta"
+
+
+class _Runtime(_Frozen):
+    profile: Literal["NORMAL", "ATTESTATION"] = "NORMAL"
+    host: str = Field(default="127.0.0.1", min_length=1, max_length=256)
+    port: int = Field(default=8000, ge=1, le=65535)
+    workers: int = Field(default=1, ge=1)
+    stage_timeout_s: float = Field(default=30.0, gt=0)
+    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    request_limit: int | None = Field(default=None, gt=0)
+
+
+class _Generation(_Frozen):
+    temperature: float | None = Field(default=None, ge=0)
+    top_p: float | None = Field(default=None, gt=0, le=1)
+    max_tokens: int = Field(default=512, gt=0)
+    context_length: int = Field(default=4096, ge=512, le=131072)
+
+    @model_validator(mode="after")
+    def bounds(self):
+        if self.max_tokens > self.context_length:
+            raise ValueError("generation_bounds")
+        return self
+
+
+class _LLM(_Frozen):
+    provider: Literal["ollama"] = "ollama"
+    base_url: str = Field(default="http://localhost:11434", max_length=2048)
+    model: str = Field(default="llama3.2:1b", min_length=1, max_length=256)
+    auth_env_ref: str | None = Field(default=None, pattern=r"^[A-Z_][A-Z0-9_]{0,127}$", repr=False, exclude=True)
+    connection_timeout_s: float = Field(default=120.0, gt=0)
+    generation: _Generation = Field(default_factory=_Generation)
+
+    @model_validator(mode="after")
+    def address(self):
+        url = urlsplit(self.base_url)
+        port = url.port  # invalid port syntax raises a safe loader error
+        if (url.scheme not in {"http", "https"} or not url.hostname or
+                url.username is not None or url.password is not None or url.query or url.fragment or
+                port == 0):
+            raise ValueError("provider_address")
+        if not self.model.strip():
+            raise ValueError("model_required")
+        return self
+
+
+class _Embedding(_Frozen):
+    provider: Literal["indobert"] = "indobert"
+    model: str = Field(default="indobenchmark/indobert-base-p1", min_length=1, max_length=256)
+    dimension: int = Field(default=768, gt=0)
+    batch_size: int | None = Field(default=None, gt=0)
+    timeout_s: float = Field(default=60.0, gt=0)
+
+
+class _RAG(_Frozen):
+    top_k: int = Field(default=5, gt=0)
+    chunk_size: int = Field(default=512, gt=0)
+    chunk_overlap: int = Field(default=64, ge=0)
+    semantic_weight: float | None = Field(default=None, ge=0, le=1)
+    lexical_weight: float | None = Field(default=None, ge=0, le=1)
+    reranker_enabled: bool = False
+    reranker_model: str | None = None
+    similarity_threshold: float | None = Field(default=None, ge=0, le=1)
+
+    @model_validator(mode="after")
+    def bounds(self):
+        if self.chunk_overlap >= self.chunk_size:
+            raise ValueError("chunk_bounds")
+        if (self.semantic_weight is None) != (self.lexical_weight is None):
+            raise ValueError("weight_pair")
+        if self.semantic_weight is not None and not math.isclose(
+                self.semantic_weight + self.lexical_weight, 1.0, abs_tol=1e-9):
+            raise ValueError("weight_sum")
+        if self.reranker_enabled and not self.reranker_model:
+            raise ValueError("reranker_model_required")
+        return self
+
+
+class _Knowledge(_Frozen):
+    root: Path
+    database: Path
+    document_root: Path | None = None
+    index: Path | None = None
+    cache: Path | None = None
+    store_backend: Literal["sqlite"] = "sqlite"
+
+
+class _Paths(_Frozen):
+    project_root: Path
+    worker: Path
+    worker_python: Path
+
+
+class _Governance(_Frozen):
+    trust_contract_ref: str = "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md"
+    policy_contract_ref: str = "docs/contracts/NUSANTARA-TRUST-POLICY-APPROVAL-CONTRACT-V1.md"
+    grounding_contract_ref: str = "docs/contracts/NUSANTARA-KNOWLEDGE-RAG-CONTRACT-V1.md"
+    evidence_requirement_ref: str = "docs/contracts/NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md"
+
+
+class _Features(_Frozen):
+    semantic_search: bool | None = None
+    reranker: bool = False
+    graph_context: bool | None = None
+    developer_core: bool | None = None
+    experimental_features: bool = False
+
+
+class _Legacy(_Frozen):
+    embedding_model: str = "local-hash"
+    vector_store_type: str = "memory"
+    privacy_filter_enabled: bool = True
+    context_window_size: int = Field(default=10, gt=0)
+    session_timeout_minutes: int = Field(default=30, gt=0)
+
+
+class _Snapshot(_Frozen):
+    system: _System = Field(default_factory=_System)
+    runtime: _Runtime = Field(default_factory=_Runtime)
+    llm: _LLM = Field(default_factory=_LLM)
+    embedding: _Embedding = Field(default_factory=_Embedding)
+    rag: _RAG = Field(default_factory=_RAG)
+    knowledge: _Knowledge
+    paths: _Paths
+    governance: _Governance = Field(default_factory=_Governance)
+    features: _Features = Field(default_factory=_Features)
+    legacy_declarations: _Legacy = Field(default_factory=_Legacy)
+
+
+@dataclass(frozen=True)
+class Provenance:
+    field: str
+    source: Literal["DEFAULT", "FILE", "DOTENV", "ENV", "EXPLICIT"]
+    status: Literal["UNWIRED", "DECLARED_ONLY"]
+
+
+@dataclass(frozen=True, repr=False)
+class NusantaraConfig:
+    """Validated immutable snapshot returned only by the loader; no global singleton."""
+    _snapshot: _Snapshot
+    provenance: tuple[Provenance, ...]
+
+    def with_operator_model(self, model: str) -> 'NusantaraConfig':
+        """Replace only the validated LLM leaf; retain the frozen bootstrap context."""
+        from dataclasses import replace
+        llm = self.llm.model_copy(update={'model': model})
+        llm = type(llm).model_validate(llm.model_dump() | {'auth_env_ref': self.llm.auth_env_ref})
+        snapshot = self._snapshot.model_copy(update={'llm': llm})
+        provenance = tuple(replace(p, source='EXPLICIT') if p.field == 'llm.model' else p
+                           for p in self.provenance)
+        return replace(self, _snapshot=snapshot, provenance=provenance)
+
+    @property
+    def system(self) -> _System:
+        return self._snapshot.system
+
+    @property
+    def runtime(self) -> _Runtime:
+        return self._snapshot.runtime
+
+    @property
+    def llm(self) -> _LLM:
+        return self._snapshot.llm
+
+    @property
+    def embedding(self) -> _Embedding:
+        return self._snapshot.embedding
+
+    @property
+    def rag(self) -> _RAG:
+        return self._snapshot.rag
+
+    @property
+    def knowledge(self) -> _Knowledge:
+        return self._snapshot.knowledge
+
+    @property
+    def paths(self) -> _Paths:
+        return self._snapshot.paths
+
+    @property
+    def governance(self) -> _Governance:
+        return self._snapshot.governance
+
+    @property
+    def features(self) -> _Features:
+        return self._snapshot.features
+
+    @property
+    def legacy_declarations(self) -> _Legacy:
+        return self._snapshot.legacy_declarations
+
+    def __repr__(self) -> str:
+        return "NusantaraConfig(profile='current_v1_rag', integration='UNWIRED')"
+
+    def safe_dump(self) -> dict[str, Any]:
+        # The auth reference is excluded by the schema. Credential values are
+        # never stored, but public metadata fields must not be used as secrets.
+        return self._snapshot.model_dump(mode="json")
+
+    def canonical_json(self) -> str:
+        return json.dumps(self.safe_dump(), sort_keys=True, separators=(",", ":"), allow_nan=False)
+
+
+_ALIASES = MappingProxyType({
+    "NUSANTARA_RUNTIME_PROFILE": "runtime.profile",
+    "APP_NAME": "system.application_name", "APP_VERSION": "system.version",
+    "DEBUG": "system.debug", "HOST": "runtime.host", "PORT": "runtime.port",
+    "LOG_LEVEL": "runtime.log_level", "LLM_PROVIDER": "llm.provider",
+    "LLM_BASE_URL": "llm.base_url", "LLM_MODEL": "llm.model",
+    "LLM_CONTEXT_TOKENS": "llm.generation.context_length",
+    "EMBEDDING_MODEL": "legacy_declarations.embedding_model",
+    "VECTOR_STORE_TYPE": "legacy_declarations.vector_store_type",
+    "PRIVACY_FILTER_ENABLED": "legacy_declarations.privacy_filter_enabled",
+    "CONTEXT_WINDOW_SIZE": "legacy_declarations.context_window_size",
+    "SESSION_TIMEOUT_MINUTES": "legacy_declarations.session_timeout_minutes",
+    "CHUNK_SIZE": "rag.chunk_size", "CHUNK_OVERLAP": "rag.chunk_overlap",
+    "RETRIEVAL_TOP_K": "rag.top_k", "NUSANTARA_RAG_TOP_K": "rag.top_k",
+    "NUSANTARA_KNOWLEDGE_DB": "knowledge.database",
+    "NUSANTARA_INDOBERT_PYTHON": "paths.worker_python",
+    "NUSANTARA_INDOBERT_WORKER": "paths.worker",
+    "NUSANTARA_LLM_MODEL": "llm.model", "NUSANTARA_RUNTIME_PORT": "runtime.port",
+})
+_NUMERIC_ENV = frozenset({"runtime.port", "llm.generation.context_length",
+    "legacy_declarations.context_window_size", "legacy_declarations.session_timeout_minutes",
+    "rag.chunk_size", "rag.chunk_overlap", "rag.top_k"})
+_BOOL_ENV = frozenset({"system.debug", "legacy_declarations.privacy_filter_enabled"})
+
+
+def _leaves(data: Mapping, prefix: str = "", depth: int = 0) -> dict[str, Any]:
+    if depth > MAX_DEPTH:
+        raise ConfigurationError("DEPTH_LIMIT")
+    result = {}
+    for key, value in data.items():
+        if not isinstance(key, str) or not re.fullmatch(r"[a-z_]+", key):
+            raise ConfigurationError("INVALID_FIELD")
+        path = f"{prefix}.{key}" if prefix else key
+        if isinstance(value, Mapping):
+            nested = _leaves(value, path, depth + 1)
+            if not nested:
+                result[path] = {}  # rejected as an unknown/invalid leaf
+            result.update(nested)
+        else:
+            result[path] = value
+    return result
+
+
+def _set(data: dict, path: str, value: Any) -> None:
+    parts = path.split(".")
+    target = data
+    for part in parts[:-1]:
+        target = target[part]
+    target[parts[-1]] = value
+
+
+def _pairs(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ConfigurationError("DUPLICATE_JSON_KEY")
+        result[key] = value
+    return result
+
+
+def _reject_constant(_value):
+    raise ConfigurationError("NONFINITE_JSON")
+
+
+def load_nusantara_config(*, config_file: str | Path | None = None,
+                         dotenv_environment: Mapping[str, str] | None = None,
+                         environment: Mapping[str, str] | None = None,
+                         overrides: Mapping[str, Any] | None = None,
+                         project_root: str | Path | None = None) -> NusantaraConfig:
+    """DEFAULT < explicit JSON FILE < selected DOTENV < ENV < EXPLICIT.
+
+    Environment defaults to empty. Provide os.environ explicitly to opt in.
+    Path resolution is lexical; no existence check, symlink traversal or mkdir.
+    Consumer preflight, provider health and execution belong to a later phase.
+    """
+    try:
+        return _load(config_file, dotenv_environment, environment, overrides, project_root)
+    except ConfigurationError:
+        raise
+    except (ValidationError, ValueError, TypeError, OSError, RecursionError, OverflowError):
+        # Do not attach raw Pydantic errors/input to the public exception.
+        raise ConfigurationError("INVALID_CONFIGURATION") from None
+
+
+def _load(config_file, dotenv_environment, environment, overrides, project_root) -> NusantaraConfig:
+    root = Path(os.path.abspath(project_root if project_root is not None else Path.cwd()))
+    worker_root = root if project_root is not None else Path(__file__).absolute().parents[2]
+    snapshot = _Snapshot(knowledge=_Knowledge(root=root / "data/knowledge",
+                        database=root / "data/knowledge/nusantara_knowledge.db"),
+                        paths=_Paths(project_root=root,
+                        worker=worker_root / "nusantara-models/indobert_worker.py",
+                        worker_python=worker_root / "nusantara-models/.venv" /
+                        ("Scripts/python.exe" if os.name == "nt" else "bin/python")))
+    data = snapshot.model_dump(exclude_none=False)
+    # Excluded secret references still have a known field for explicit input.
+    data["llm"]["auth_env_ref"] = None
+    known = _leaves(data)
+    provenance = {key: "DEFAULT" for key in known}
+
+    def merge(layer, source):
+        if not isinstance(layer, Mapping):
+            raise ConfigurationError("OBJECT_REQUIRED")
+        for key, value in _leaves(layer).items():
+            if key not in known:
+                raise ConfigurationError("UNKNOWN_FIELD")
+            _set(data, key, value)
+            provenance[key] = source
+
+    if config_file is not None:
+        path = Path(config_file)
+        if not path.is_absolute():
+            path = root / path
+        if path.stat().st_size > MAX_CONFIG_BYTES:
+            raise ConfigurationError("FILE_SIZE_LIMIT")
+        with path.open("rb") as stream:
+            raw = stream.read(MAX_CONFIG_BYTES + 1)
+        if len(raw) > MAX_CONFIG_BYTES:
+            raise ConfigurationError("FILE_SIZE_LIMIT")
+        merge(json.loads(raw.decode("utf-8-sig"), object_pairs_hook=_pairs,
+                         parse_constant=_reject_constant), "FILE")
+    for environment_layer, source in ((dotenv_environment, "DOTENV"), (environment, "ENV")):
+        if environment_layer is None:
+            continue
+        if not isinstance(environment_layer, Mapping):
+            raise ConfigurationError("ENV_OBJECT_REQUIRED")
+        selected = {}
+        for name, value in environment_layer.items():
+            if not isinstance(name, str):
+                raise ConfigurationError("ENV_IDENTIFIER_REQUIRED")
+            field = _ALIASES.get(name.upper())
+            if field is None:
+                continue  # includes API-key/credential values: never copied
+            if field in selected:
+                raise ConfigurationError("ENV_ALIAS_CONFLICT")
+            if not isinstance(value, str):
+                raise ConfigurationError("ENV_STRING_REQUIRED")
+            if field in _NUMERIC_ENV or field in _BOOL_ENV:
+                value = json.loads(value, parse_constant=_reject_constant)
+            selected[field] = value
+        for key, value in selected.items():
+            _set(data, key, value)
+            provenance[key] = source
+    if overrides is not None:
+        merge(overrides, "EXPLICIT")
+    for group, fields in {"knowledge": ("root", "database", "document_root", "index", "cache"),
+                          "paths": ("project_root", "worker", "worker_python")}.items():
+        for field in fields:
+            value = data[group][field]
+            if value is not None:
+                path = Path(value)
+                data[group][field] = Path(os.path.abspath(path if path.is_absolute() else root / path))
+    if data["paths"]["project_root"] != root:
+        raise ConfigurationError("ROOT_CONFLICT")
+    result = _Snapshot.model_validate(data)
+    if result.features.reranker != result.rag.reranker_enabled:
+        raise ConfigurationError("RERANKER_FLAG_CONFLICT")
+    records = tuple(Provenance(key, provenance[key], "DECLARED_ONLY" if
+                    key.startswith(("legacy_declarations.", "governance.")) else "UNWIRED")
+                    for key in sorted(provenance))
+    return NusantaraConfig(result, records)

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="63" failures="0" errors="0" time="2.931638">
+    <testsuite name="tests/acceptance.test.ts" timestamp="2026-10-08T12:42:19.132Z" hostname="DESKTOP-GJHS3LR" tests="11" failures="0" errors="0" skipped="0" time="0.0144541">
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; never copies engineering PASS to human tests" time="0.0092382">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; requires complete human PASS, acknowledgements and inspected sources" time="0.0010473">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; does not approve incomplete or hash-unverified gate evidence" time="0.0007016">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; ignores refresh timestamps but detects material evidence drift" time="0.0007881">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="human authority boundary &gt; keeps runtime and protected-file limitations visible" time="0.0005055">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; unlocks exactly one next stage after each completion" time="0.0005118">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Evidence cannot bypass upstream prerequisites even with stale downstream flags" time="0.0001329">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Test cannot bypass upstream prerequisites even with stale downstream flags" time="0.0000747">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Review cannot bypass upstream prerequisites even with stale downstream flags" time="0.0001812">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; Decision cannot bypass upstream prerequisites even with stale downstream flags" time="0.0000853">
+        </testcase>
+        <testcase classname="tests/acceptance.test.ts" name="sequential stage invariants &gt; invalid and missing results do not count as explicit human completion" time="0.0001318">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/api.test.ts" timestamp="2026-10-08T12:42:19.134Z" hostname="DESKTOP-GJHS3LR" tests="3" failures="0" errors="0" skipped="0" time="0.0080307">
+        <testcase classname="tests/api.test.ts" name="typed read-only API &gt; rejects malformed evidence before rendering" time="0.0050413">
+        </testcase>
+        <testcase classname="tests/api.test.ts" name="typed read-only API &gt; exposes failure instead of healthy dashboard" time="0.00042">
+        </testcase>
+        <testcase classname="tests/api.test.ts" name="typed read-only API &gt; uses one allowlisted GET without credentials" time="0.0017964">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/attestation.test.tsx" timestamp="2026-10-08T12:42:19.135Z" hostname="DESKTOP-GJHS3LR" tests="15" failures="0" errors="0" skipped="0" time="0.3609445">
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; accepts actual guarded in-process backend projection and intention" time="0.0053588">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; accepts ATTESTATION and preserves NORMAL without masquerading" time="0.0094735">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status PASS" time="0.0005057">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status READY" time="0.0002971">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status AUTHORIZED" time="0.0004768">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status ACTIVE" time="0.0002331">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects invented status VERIFIED" time="0.0003315">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; uses the typed snapshot fetch and fixed intention body only" time="0.0020597">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects authorization responses, stale binding and failure without retry" time="0.00122">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; invalidates material changes but not capture time" time="0.0004027">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; renders scoped evidence in every engineering view without historical gates" time="0.0293386">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; blocks bypass, separates observations and only submits on an explicit click" time="0.1211817">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; uses the existing router, snapshot API and scoped navigation end to end in jsdom" time="0.1419801">
+            <system-err>
+Error: Not implemented: window.scrollTo
+    at module.exports (C:\Users\dmaza\mcp-starter\control-plane\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at C:\Users\dmaza\mcp-starter\control-plane\node_modules\jsdom\lib\jsdom\browser\Window.js:960:7
+    at Object.fn (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/scroll-restoration.ts:361:13)
+    at RouterCore.emit (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/router.ts:1444:20)
+    at file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1908:16
+    at Router.batch (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/store/src/atom.ts:73:5)
+    at file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1901:12
+    at runClientTransaction (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1860:3)
+    at loadClientRoute (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:2053:3)
+    at RouterCore.load (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/router.ts:2433:5) undefined
+
+Error: Not implemented: window.scrollTo
+    at module.exports (C:\Users\dmaza\mcp-starter\control-plane\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at C:\Users\dmaza\mcp-starter\control-plane\node_modules\jsdom\lib\jsdom\browser\Window.js:960:7
+    at Object.fn (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/scroll-restoration.ts:361:13)
+    at RouterCore.emit (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/router.ts:1444:20)
+    at file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1908:16
+    at Router.batch (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/store/src/atom.ts:73:5)
+    at file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1901:12
+    at runClientTransaction (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:1860:3)
+    at loadClientRoute (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/load-client.ts:2053:3)
+    at RouterCore.load (file:///C:/Users/dmaza/mcp-starter/control-plane/node_modules/@tanstack/router-core/src/router.ts:2433:5) undefined
+
+            </system-err>
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; clears reviewed context on drift" time="0.0444155">
+        </testcase>
+        <testcase classname="tests/attestation.test.tsx" name="separate scoped ATTESTATION integration &gt; rejects opening Decision without observations" time="0.0024707">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/human.test.tsx" timestamp="2026-10-08T12:42:19.137Z" hostname="DESKTOP-GJHS3LR" tests="19" failures="0" errors="0" skipped="0" time="2.2851254">
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; opening a PASS gate alone does not fabricate human inspection" time="0.1453615">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; accepts explicit System checklist clicks during background refresh without skipping the transition guard" time="0.0330438">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; provides an explicit alternate System acknowledgement without assigning human PASS" time="0.0637318">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; counts source inspection during unchanged background refresh while acknowledgement waits" time="0.1817042">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Evidence entry without System acknowledgement" time="0.0095253">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Test entry without System acknowledgement" time="0.0099354">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Review entry without System acknowledgement" time="0.0079214">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; blocks direct Decision entry without System acknowledgement" time="0.0086184">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; locks shortcuts and displays evidence-derived runtime without promotion" time="0.0192096">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; requires all 14 inspected sources and separate acknowledgement before Test" time="0.1574851">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; missing source cannot be counted as inspected" time="0.0739915">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; seven explicit results do not unlock Review; FAIL/BLOCKED do not become PASS" time="0.1767527">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; requires Review acknowledgement even when all tests PASS" time="0.1512054">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; preserves unchecked approval and explicit second confirmation" time="0.2918059">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; REJECT follows completed review and requires a reason" time="0.1967304">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; HOLD follows completed review and requires a reason" time="0.1612252">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; invalidates Review and Decision when a human result changes" time="0.1886025">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; relocks all downstream stages when System acknowledgement is withdrawn" time="0.1479537">
+        </testcase>
+        <testcase classname="tests/human.test.tsx" name="strict sequential human workflow &gt; preserves unchanged refresh and locks everything after material evidence drift" time="0.259063">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/inspection-preview.test.tsx" timestamp="2026-10-08T12:42:19.140Z" hostname="DESKTOP-GJHS3LR" tests="11" failures="0" errors="0" skipped="0" time="0.1981301">
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; sends one bounded request without redirects or token persistence" time="0.0071593">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; exposes HTTP 403 without retry" time="0.0012633">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; exposes HTTP 422 without retry" time="0.0004215">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; exposes HTTP 503 without retry" time="0.0002923">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; makes no request without token or bounded goal" time="0.0004362">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; rejects wrong goal and unverifiable/authority-bearing responses" time="0.0019531">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="authenticated preview transport &gt; uses an exact preview-only proxy" time="0.0115031">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="separate inspection panel &gt; requests only on explicit click, clears token and displays bounded evidence" time="0.0938463">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="separate inspection panel &gt; displays refusal without successful preview or retained credentials" time="0.0251999">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="separate inspection panel &gt; cancels pending request when the panel closes" time="0.0074272">
+        </testcase>
+        <testcase classname="tests/inspection-preview.test.tsx" name="separate inspection panel &gt; does not acknowledge System or alter engineering evidence after success" time="0.0474724">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/ui.test.tsx" timestamp="2026-10-08T12:42:19.141Z" hostname="DESKTOP-GJHS3LR" tests="4" failures="0" errors="0" skipped="0" time="0.0649532">
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; renders source-derived phase state" time="0.0531612">
+        </testcase>
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; never promotes unknown state" time="0.002387">
+        </testcase>
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; keeps runtime evidence historical" time="0.0043706">
+        </testcase>
+        <testcase classname="tests/ui.test.tsx" name="evidence projection &gt; renders actual fixture receipt without production claim" time="0.0041005">
+        </testcase>
+    </testsuite>
+</testsuites>

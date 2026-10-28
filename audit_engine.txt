@@ -1,0 +1,1328 @@
+﻿"""
+Nusantara Core - Language Engine
+================================
+
+Canonical NLP orchestration layer.
+
+Pipeline:
+
+    raw text
+        â†“
+    normalization
+        â†“
+    language detection
+        â†“
+    intent classification
+        â†“
+    entity extraction
+        â†“
+    StructuredUnderstanding
+        â†“
+    PipelineResult
+
+Design:
+- TextNormalizer tetap menjadi authority normalisasi.
+- IntentClassifier tetap menjadi authority intent.
+- EntityExtractor tetap menjadi authority entity.
+- Engine hanya melakukan orchestration dan schema adaptation.
+- Tidak melakukan network call.
+- Tidak melakukan LLM call.
+- Intent Fusion menggabungkan rule-based intent dan IndoBERT semantic intent.
+- IndoBERT bersifat optional.
+"""
+
+from __future__ import annotations
+
+import re
+import time
+from dataclasses import dataclass
+from typing import Any, Callable, Mapping, Sequence
+
+try:
+    from .normalizer import TextNormalizer
+except ImportError:
+    TextNormalizer = None  # type: ignore
+
+try:
+    from .intent import IntentClassifier
+except ImportError:
+    IntentClassifier = None  # type: ignore
+
+try:
+    from .semantic.fusion import IntentFusion
+except ImportError:
+    IntentFusion = None  # type: ignore
+
+try:
+    from .entity import EntityExtractor
+except ImportError:
+    EntityExtractor = None  # type: ignore
+
+try:
+    from .schemas import (
+        NormalizeResult,
+        NormalizationResult,
+        LanguageDetectionResult,
+        IntentResult,
+        Entity,
+        EntityResult,
+        EntityType,
+        StructuredUnderstanding,
+        PipelineResult,
+    )
+except ImportError:
+    NormalizeResult = None  # type: ignore
+    NormalizationResult = None  # type: ignore
+    LanguageDetectionResult = None  # type: ignore
+    IntentResult = None  # type: ignore
+    Entity = None  # type: ignore
+    EntityResult = None  # type: ignore
+    EntityType = None  # type: ignore
+    StructuredUnderstanding = None  # type: ignore
+    PipelineResult = None  # type: ignore
+
+
+@dataclass(frozen=True)
+class LanguageDetection:
+    """Internal language detection result."""
+
+    language: str
+    confidence: float
+    is_mixed: bool
+    languages: dict[str, float]
+
+
+class LanguageEngine:
+    """
+    Main orchestrator for Nusantara Language Engine.
+    """
+
+    VERSION = "1.3.0-semantic-fusion"
+
+    DOMAIN_TERMS = frozenset(
+        {
+            "KTP",
+            "KK",
+            "NIK",
+            "NPWP",
+            "SIM",
+            "NIB",
+            "KIA",
+            "STNK",
+            "SKCK",
+            "BPJS",
+            "AKTA",
+            "AKTA KEMATIAN",
+            "AKTA KELAHIRAN",
+            "KTP-EL",
+            "KTP EL",
+            "DUKCAPIL",
+            "DISDUKCAPIL",
+            "SOBAT DUKCAPIL",
+        }
+    )
+
+    ID_WORDS = frozenset(
+        {
+            "saya",
+            "aku",
+            "kami",
+            "kita",
+            "anda",
+            "kamu",
+            "dia",
+            "mau",
+            "ingin",
+            "bisa",
+            "tidak",
+            "sudah",
+            "belum",
+            "bagaimana",
+            "kenapa",
+            "mengapa",
+            "dimana",
+            "di",
+            "ke",
+            "dari",
+            "untuk",
+            "dengan",
+            "yang",
+            "ini",
+            "itu",
+            "cek",
+            "buat",
+            "mengurus",
+            "urus",
+            "status",
+            "cara",
+            "tolong",
+            "mohon",
+            "terima",
+            "kasih",
+            "apakah",
+            "berapa",
+            "kapan",
+            "hari",
+            "dokumen",
+            "data",
+            "pelayanan",
+            "layanan",
+            "aplikasi",
+            "login",
+            "pengajuan",
+            "permohonan",
+            "kartu",
+	    "tidak",
+	    "jangan",
+            "sudah",
+            "belum",
+        }
+    )
+
+    EN_WORDS = frozenset(
+        {
+            "the",
+            "a",
+            "an",
+            "is",
+            "are",
+            "am",
+            "can",
+            "could",
+            "would",
+            "please",
+            "how",
+            "what",
+            "why",
+            "where",
+            "when",
+            "check",
+            "document",
+            "documents",
+            "help",
+            "need",
+            "want",
+            "make",
+            "create",
+            "update",
+            "delete",
+            "error",
+        }
+    )
+
+    ID_MARKERS = (
+        "yang",
+        "dan",
+        "atau",
+        "saya",
+        "aku",
+        "kami",
+        "kamu",
+        "mau",
+        "ingin",
+        "bisa",
+        "tidak",
+        "belum",
+        "sudah",
+        "tolong",
+        "bagaimana",
+        "kenapa",
+        "mengapa",
+        "cek",
+        "buat",
+        "urus",
+        "status",
+    )
+
+    def __init__(
+        self,
+        *,
+        normalizer: Any | None = None,
+        intent_classifier: Any | None = None,
+        entity_extractor: Any | None = None,
+        language_detector: Callable[[str], Any] | None = None,
+        indo_bert: Any | None = None,
+    ) -> None:
+
+        self.normalizer = (
+            normalizer
+            if normalizer is not None
+            else self._build_component(TextNormalizer)
+        )
+
+        self.intent_classifier = (
+            intent_classifier
+            if intent_classifier is not None
+            else self._build_component(IntentClassifier)
+        )
+
+        self.entity_extractor = (
+            entity_extractor
+            if entity_extractor is not None
+            else self._build_component(EntityExtractor)
+        )
+
+        self.language_detector = language_detector
+        self.indo_bert = indo_bert
+
+        # ------------------------------------------------------
+        # INTENT FUSION
+        # ------------------------------------------------------
+        # Fusion menggabungkan:
+        #   1. Rule-based IntentClassifier
+        #   2. IndoBERT SemanticIntentEngine
+        #
+        # IndoBERT bersifat optional.
+        # Jika gagal, LanguageEngine tetap menggunakan
+        # Rule Intent sebagai fallback.
+        # ------------------------------------------------------
+
+        self.intent_fusion = None
+
+        if IntentFusion is not None:
+            try:
+                self.intent_fusion = IntentFusion(
+                    rule_classifier=self.intent_classifier,
+                )
+            except Exception:
+                self.intent_fusion = None
+
+    # ==========================================================
+    # PUBLIC API
+    # ==========================================================
+
+    def process(self, text: str) -> Any:
+        """
+        Execute complete NLP pipeline.
+
+        Returns PipelineResult when canonical schemas are available.
+        """
+
+        started = time.perf_counter()
+
+        raw_text = self._validate_input(text)
+        steps: list[str] = []
+
+        # ------------------------------------------------------
+        # 1. NORMALIZATION
+        # ------------------------------------------------------
+
+        normalization = self._normalize(raw_text)
+        normalized_text = self._extract_normalized_text(
+            normalization,
+            fallback=raw_text,
+        )
+
+        steps.append("normalization")
+
+        # ------------------------------------------------------
+        # 2. LANGUAGE DETECTION
+        # ------------------------------------------------------
+
+        language = self._detect_language(normalized_text)
+        steps.append("language_detection")
+
+        # ------------------------------------------------------
+        # 3. INTENT
+        # ------------------------------------------------------
+
+        intent = self._classify_intent(
+            normalized_text,
+            language=language,
+        )
+
+        intent_model = self._adapt_intent(intent)
+        steps.append("intent_classification")
+
+        # ------------------------------------------------------
+        # 4. ENTITY
+        # ------------------------------------------------------
+
+        entities = self._extract_entities(
+            normalized_text,
+            language=language,
+        )
+
+        entity_model = self._adapt_entities(
+            entities,
+            normalized_text,
+        )
+
+        steps.append("entity_extraction")
+
+        # ------------------------------------------------------
+        # 5. STRUCTURED UNDERSTANDING
+        # ------------------------------------------------------
+
+        structured = self._build_structured(
+            normalized_text=normalized_text,
+            language=language,
+            intent=intent_model,
+            entities=entity_model,
+            normalization=normalization,
+            raw_text=raw_text,
+        )
+
+        steps.append("structured_understanding")
+
+        duration_ms = max(
+            0,
+            int((time.perf_counter() - started) * 1000),
+        )
+
+        # ------------------------------------------------------
+        # 6. PIPELINE RESULT
+        # ------------------------------------------------------
+
+        if PipelineResult is not None:
+            try:
+                return PipelineResult(
+                    input=raw_text,
+                    output=structured,
+                    steps=steps,
+                    duration_ms=duration_ms,
+                )
+            except Exception:
+                pass
+
+        # Conservative fallback.
+        return {
+            "input": raw_text,
+            "output": self._to_serializable(structured),
+            "steps": steps,
+            "duration_ms": duration_ms,
+        }
+
+    def understand(self, text: str) -> Any:
+        return self.process(text)
+
+    def analyze(self, text: str) -> Any:
+        return self.process(text)
+
+    def run(self, text: str) -> Any:
+        return self.process(text)
+
+    # ==========================================================
+    # NORMALIZATION
+    # ==========================================================
+
+    def _normalize(self, text: str) -> Any:
+
+        if self.normalizer is None:
+            return {
+                "original": text,
+                "normalized": re.sub(r"\s+", " ", text.strip()),
+                "changes": [],
+            }
+
+        for method_name in (
+            "normalize_text",
+            "normalize",
+            "process",
+        ):
+            method = getattr(
+                self.normalizer,
+                method_name,
+                None,
+            )
+
+            if callable(method):
+                try:
+                    return method(text)
+                except TypeError:
+                    continue
+
+        if callable(self.normalizer):
+            try:
+                return self.normalizer(text)
+            except TypeError:
+                pass
+
+        return {
+            "original": text,
+            "normalized": text,
+            "changes": [],
+        }
+
+    @classmethod
+    def _extract_normalized_text(
+        cls,
+        result: Any,
+        *,
+        fallback: str,
+    ) -> str:
+
+        if result is None:
+            return fallback
+
+        if isinstance(result, str):
+            return result.strip() or fallback
+
+        data = cls._to_dict(result)
+
+        for key in (
+            "normalized",
+            "normalized_text",
+            "text",
+            "output",
+            "value",
+        ):
+            value = data.get(key)
+
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+
+        return fallback
+
+    # ==========================================================
+    # LANGUAGE DETECTION
+    # ==========================================================
+
+    def _detect_language(
+        self,
+        text: str,
+    ) -> LanguageDetection:
+
+        if self.language_detector is not None:
+            try:
+                result = self.language_detector(text)
+                parsed = self._parse_language_result(result)
+
+                if parsed is not None:
+                    return parsed
+            except Exception:
+                pass
+
+        tokens = self._tokenize(text)
+
+        if not tokens:
+            return LanguageDetection(
+                language="unknown",
+                confidence=0.0,
+                is_mixed=False,
+                languages={},
+            )
+
+        id_count = sum(
+            token in self.ID_WORDS
+            for token in tokens
+        )
+
+        en_count = sum(
+            token in self.EN_WORDS
+            for token in tokens
+        )
+
+        total = len(tokens)
+
+        id_ratio = id_count / total
+        en_ratio = en_count / total
+
+        # Indonesian dominant.
+        if id_count > 0 and en_count == 0:
+            return LanguageDetection(
+                language="id",
+                confidence=round(id_ratio, 3),
+                is_mixed=False,
+                languages={
+                    "id": round(id_ratio, 3),
+                },
+            )
+
+        # English dominant.
+        if en_count > 0 and id_count == 0:
+            return LanguageDetection(
+                language="en",
+                confidence=round(en_ratio, 3),
+                is_mixed=False,
+                languages={
+                    "en": round(en_ratio, 3),
+                },
+            )
+
+        # Mixed language.
+        if id_count > 0 and en_count > 0:
+            dominant = "id" if id_count >= en_count else "en"
+            dominant_ratio = max(
+                id_ratio,
+                en_ratio,
+            )
+
+            return LanguageDetection(
+                language=dominant,
+                confidence=round(dominant_ratio, 3),
+                is_mixed=True,
+                languages={
+                    "id": round(id_ratio, 3),
+                    "en": round(en_ratio, 3),
+                },
+            )
+
+        # Domain/Indonesian markers.
+        lower = text.lower()
+
+        marker_hits = sum(
+            1
+            for marker in self.ID_MARKERS
+            if re.search(
+                rf"(?<!\w){re.escape(marker)}(?!\w)",
+                lower,
+            )
+        )
+
+        if marker_hits:
+            ratio = min(
+                marker_hits / max(total, 1),
+                1.0,
+            )
+
+            return LanguageDetection(
+                language="id",
+                confidence=round(ratio, 3),
+                is_mixed=False,
+                languages={
+                    "id": round(ratio, 3),
+                },
+            )
+
+        return LanguageDetection(
+            language="unknown",
+            confidence=0.0,
+            is_mixed=False,
+            languages={},
+        )
+
+    @classmethod
+    def _parse_language_result(
+        cls,
+        result: Any,
+    ) -> LanguageDetection | None:
+
+        if result is None:
+            return None
+
+        if isinstance(result, LanguageDetection):
+            return result
+
+        data = cls._to_dict(result)
+
+        if not data:
+            return None
+
+        language = (
+            data.get("language")
+            or data.get("lang")
+            or data.get("detected_language")
+        )
+
+        if not language:
+            return None
+
+        confidence = cls._safe_float(
+            data.get("confidence")
+        )
+
+        if confidence is None:
+            confidence = 0.0
+
+        is_mixed = bool(
+            data.get(
+                "is_mixed",
+                data.get("mixed", False),
+            )
+        )
+
+        languages = data.get("languages")
+
+        if not isinstance(languages, Mapping):
+            languages = {
+                str(language): confidence,
+            }
+
+        parsed_languages: dict[str, float] = {}
+
+        for key, value in languages.items():
+            number = cls._safe_float(value)
+
+            if number is not None:
+                parsed_languages[str(key)] = number
+
+        return LanguageDetection(
+            language=str(language),
+            confidence=max(
+                0.0,
+                min(confidence, 1.0),
+            ),
+            is_mixed=is_mixed,
+            languages=parsed_languages,
+        )
+
+    # ==========================================================
+    # INTENT
+    # ==========================================================
+
+    def _classify_intent(
+        self,
+        text: str,
+        *,
+        language: LanguageDetection,
+    ) -> Any:
+
+        # ======================================================
+        # PRIMARY: INTENT FUSION
+        # ======================================================
+
+        if self.intent_fusion is not None:
+
+            try:
+
+                fusion_result = (
+                    self.intent_fusion.classify(text)
+                )
+
+                if (
+                    isinstance(fusion_result, Mapping)
+                    and fusion_result.get("ok")
+                ):
+
+                    return fusion_result
+
+            except Exception:
+                # IndoBERT/Fusion tidak boleh membuat
+                # LanguageEngine berhenti.
+                pass
+
+        # ======================================================
+        # FALLBACK: RULE INTENT
+        # ======================================================
+
+        if self.intent_classifier is None:
+            return {
+                "intent": "unknown",
+                "confidence": 0.0,
+                "category": None,
+                "parent_intent": None,
+                "engine": "rule-fallback",
+                "decision": "no_intent_classifier",
+            }
+
+        for method_name in (
+            "classify",
+            "predict",
+            "process",
+            "detect",
+            "classify_intent",
+        ):
+
+            method = getattr(
+                self.intent_classifier,
+                method_name,
+                None,
+            )
+
+            if callable(method):
+
+                try:
+                    result = method(text)
+
+                    if isinstance(result, Mapping):
+                        result = dict(result)
+
+                        result.setdefault(
+                            "engine",
+                            "rule-intent",
+                        )
+
+                        result.setdefault(
+                            "decision",
+                            "rule_fallback",
+                        )
+
+                    return result
+
+                except TypeError:
+                    continue
+
+                except Exception:
+                    break
+
+        # ======================================================
+        # CALLABLE FALLBACK
+        # ======================================================
+
+        if callable(self.intent_classifier):
+
+            try:
+
+                result = self.intent_classifier(text)
+
+                if isinstance(result, Mapping):
+                    result = dict(result)
+
+                    result.setdefault(
+                        "engine",
+                        "rule-intent",
+                    )
+
+                    result.setdefault(
+                        "decision",
+                        "rule_fallback",
+                    )
+
+                return result
+
+            except TypeError:
+                pass
+
+            except Exception:
+                pass
+
+        # ======================================================
+        # FINAL SAFE FALLBACK
+        # ======================================================
+
+        return {
+            "intent": "unknown",
+            "confidence": 0.0,
+            "category": None,
+            "parent_intent": None,
+            "engine": "rule-fallback",
+            "decision": "unknown",
+        }
+
+    @classmethod
+    def _adapt_intent(
+        cls,
+        value: Any,
+    ) -> Any:
+
+        data = cls._to_dict(value)
+
+        intent = str(
+            data.get("intent")
+            or "unknown"
+        )
+
+        confidence = cls._safe_float(
+            data.get("confidence")
+        )
+
+        if confidence is None:
+            confidence = 0.0
+
+        confidence = max(
+            0.0,
+            min(confidence, 1.0),
+        )
+
+        payload = {
+            "intent": intent,
+            "confidence": confidence,
+            "category": data.get("category"),
+            "parent_intent": data.get("parent_intent"),
+        }
+
+        if IntentResult is not None:
+            try:
+                return IntentResult(**payload)
+            except Exception:
+                pass
+
+        return payload
+
+    # ==========================================================
+    # ENTITY
+    # ==========================================================
+
+    def _extract_entities(
+        self,
+        text: str,
+        *,
+        language: LanguageDetection,
+    ) -> Any:
+
+        if self.entity_extractor is None:
+            return {
+                "entities": [],
+                "confidence": 0.0,
+                "raw_matches": [],
+                "doc_id": None,
+                "text": text,
+            }
+
+        for method_name in (
+            "extract",
+            "extract_entities",
+            "process",
+            "find",
+        ):
+            method = getattr(
+                self.entity_extractor,
+                method_name,
+                None,
+            )
+
+            if callable(method):
+                try:
+                    return method(text)
+                except TypeError:
+                    continue
+
+        if callable(self.entity_extractor):
+            try:
+                return self.entity_extractor(text)
+            except TypeError:
+                pass
+
+        return {
+            "entities": [],
+            "confidence": 0.0,
+            "raw_matches": [],
+            "doc_id": None,
+            "text": text,
+        }
+
+    @classmethod
+    def _adapt_entities(
+        cls,
+        value: Any,
+        text: str,
+    ) -> Any:
+
+        data = cls._to_dict(value)
+
+        raw_entities = data.get(
+            "entities",
+            [],
+        )
+
+        if not isinstance(raw_entities, Sequence) or isinstance(
+            raw_entities,
+            (str, bytes, bytearray),
+        ):
+            raw_entities = []
+
+        canonical_entities: list[Any] = []
+
+        for item in raw_entities:
+            item_data = cls._to_dict(item)
+
+            entity_text = (
+                item_data.get("text")
+                or item_data.get("value")
+                or ""
+            )
+
+            entity_type = (
+                item_data.get("type")
+                or item_data.get("entity_type")
+                or "unknown"
+            )
+
+            entity_type = str(entity_type).lower()
+
+            start = cls._safe_int(
+                item_data.get("start")
+            )
+
+            end = cls._safe_int(
+                item_data.get("end")
+            )
+
+            confidence = cls._safe_float(
+                item_data.get("confidence")
+            )
+
+            if confidence is None:
+                confidence = 1.0
+
+            confidence = max(
+                0.0,
+                min(confidence, 1.0),
+            )
+
+            payload = {
+                "text": str(entity_text),
+                "type": cls._canonical_entity_type(
+                    entity_type
+                ),
+                "start": start,
+                "end": end,
+                "confidence": confidence,
+            }
+
+            if Entity is not None:
+                try:
+                    canonical_entities.append(
+                        Entity(**payload)
+                    )
+                    continue
+                except Exception:
+                    pass
+
+            canonical_entities.append(payload)
+
+        confidence = cls._safe_float(
+            data.get("confidence")
+        )
+
+        if confidence is None:
+            if canonical_entities:
+                values = [
+                    cls._safe_float(
+                        cls._to_dict(item).get(
+                            "confidence"
+                        )
+                    ) or 0.0
+                    for item in canonical_entities
+                ]
+                confidence = sum(values) / len(values)
+            else:
+                confidence = 0.0
+
+        payload = {
+            "entities": canonical_entities,
+            "confidence": round(
+                max(0.0, min(confidence, 1.0)),
+                3,
+            ),
+            "raw_matches": data.get(
+                "raw_matches",
+                [],
+            ),
+            "doc_id": data.get("doc_id"),
+            "text": text,
+        }
+
+        if EntityResult is not None:
+            try:
+                return EntityResult(**payload)
+            except Exception:
+                pass
+
+        return payload
+
+    @staticmethod
+    def _canonical_entity_type(
+        entity_type: str,
+    ) -> str:
+
+        allowed = {
+            "nik",
+            "document",
+            "name",
+            "date",
+            "phone",
+            "location",
+            "unknown",
+            "number",
+            "person",
+            "organization",
+            "email",
+            "id",
+        }
+
+        if entity_type in allowed:
+            return entity_type
+
+        if entity_type == "doc":
+            return "document"
+
+        return "unknown"
+
+    # ==========================================================
+    # STRUCTURED UNDERSTANDING
+    # ==========================================================
+
+    def _build_structured(
+        self,
+        *,
+        normalized_text: str,
+        language: LanguageDetection,
+        intent: Any,
+        entities: Any,
+        normalization: Any,
+        raw_text: str,
+    ) -> Any:
+
+        language_payload = {
+            "language": language.language,
+            "confidence": language.confidence,
+            "is_mixed": language.is_mixed,
+            "languages": language.languages,
+        }
+
+        metadata = {
+            "engine": "nusantara-language-engine",
+            "version": self.VERSION,
+            "domain_terms_detected": (
+                self._domain_terms_detected(
+                    normalized_text
+                )
+            ),
+            "raw_text": raw_text,
+            "normalization": self._to_serializable(
+                normalization
+            ),
+            "confidence_source": (
+                "lexical_heuristic"
+                if self.language_detector is None
+                else "external_detector"
+            ),
+        }
+
+        payload = {
+            "text": normalized_text,
+            "language": language_payload,
+            "intent": intent,
+            "entities": entities,
+            "metadata": metadata,
+        }
+
+        if StructuredUnderstanding is not None:
+            try:
+                return StructuredUnderstanding.model_validate(
+                    payload
+                )
+            except AttributeError:
+                try:
+                    return StructuredUnderstanding.parse_obj(
+                        payload
+                    )
+                except Exception:
+                    pass
+            except Exception:
+                pass
+
+        return payload
+
+    # ==========================================================
+    # UTILITIES
+    # ==========================================================
+
+    @staticmethod
+    def _build_component(
+        component_cls: Any,
+    ) -> Any:
+
+        if component_cls is None:
+            return None
+
+        try:
+            return component_cls()
+        except TypeError:
+            return None
+
+    @staticmethod
+    def _validate_input(
+        text: str,
+    ) -> str:
+
+        if text is None:
+            raise ValueError(
+                "text must not be None"
+            )
+
+        if not isinstance(text, str):
+            raise TypeError(
+                "text must be a string"
+            )
+
+        cleaned = text.strip()
+
+        if not cleaned:
+            raise ValueError(
+                "text must not be empty"
+            )
+
+        return cleaned
+
+    @staticmethod
+    def _tokenize(
+        text: str,
+    ) -> list[str]:
+
+        if text is None:
+            return []
+
+        if not isinstance(text, str):
+            text = str(text)
+
+        text = text.lower().strip()
+
+        if not text:
+            return []
+
+        return re.findall(
+            r"[^\W_]+",
+            text,
+            flags=re.UNICODE,
+        )
+
+    @staticmethod
+    def _to_dict(
+        value: Any,
+    ) -> dict[str, Any]:
+
+        if value is None:
+            return {}
+
+        if isinstance(value, Mapping):
+            return dict(value)
+
+        try:
+            if hasattr(value, "model_dump"):
+                result = value.model_dump()
+
+                if isinstance(result, Mapping):
+                    return dict(result)
+        except Exception:
+            pass
+
+        try:
+            if hasattr(value, "dict"):
+                result = value.dict()
+
+                if isinstance(result, Mapping):
+                    return dict(result)
+        except Exception:
+            pass
+
+        try:
+            result = vars(value)
+
+            if isinstance(result, dict):
+                return dict(result)
+        except Exception:
+            pass
+
+        return {}
+
+    @classmethod
+    def _to_serializable(
+        cls,
+        value: Any,
+    ) -> Any:
+
+        if value is None:
+            return None
+
+        if isinstance(
+            value,
+            (str, int, float, bool),
+        ):
+            return value
+
+        if isinstance(value, Mapping):
+            return {
+                str(key): cls._to_serializable(item)
+                for key, item in value.items()
+            }
+
+        if isinstance(value, Sequence) and not isinstance(
+            value,
+            (str, bytes, bytearray),
+        ):
+            return [
+                cls._to_serializable(item)
+                for item in value
+            ]
+
+        data = cls._to_dict(value)
+
+        if data:
+            return {
+                str(key): cls._to_serializable(item)
+                for key, item in data.items()
+            }
+
+        return str(value)
+
+    @staticmethod
+    def _safe_float(
+        value: Any,
+    ) -> float | None:
+
+        if value is None:
+            return None
+
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return None
+
+    @staticmethod
+    def _safe_int(
+        value: Any,
+    ) -> int | None:
+
+        if value is None:
+            return None
+
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+
+    @classmethod
+    def _domain_terms_detected(
+        cls,
+        text: str,
+    ) -> list[str]:
+
+        found: list[str] = []
+
+        for term in sorted(
+            cls.DOMAIN_TERMS,
+            key=len,
+            reverse=True,
+        ):
+            if re.search(
+                rf"(?<!\w){re.escape(term)}(?!\w)",
+                text,
+                re.IGNORECASE,
+            ):
+                found.append(term)
+
+        return found
+
+
+# ==============================================================
+# FACTORY
+# ==============================================================
+
+def create_language_engine(
+    *,
+    normalizer: Any | None = None,
+    intent_classifier: Any | None = None,
+    entity_extractor: Any | None = None,
+    language_detector: Callable[[str], Any] | None = None,
+    indo_bert: Any | None = None,
+) -> LanguageEngine:
+
+    return LanguageEngine(
+        normalizer=normalizer,
+        intent_classifier=intent_classifier,
+        entity_extractor=entity_extractor,
+        language_detector=language_detector,
+        indo_bert=indo_bert,
+    )
+
+
+# ==============================================================
+# BACKWARD COMPATIBILITY
+# ==============================================================
+
+Engine = LanguageEngine
+NusantaraLanguageEngine = LanguageEngine
+
+
+__all__ = [
+    "LanguageDetection",
+    "LanguageEngine",
+    "NusantaraLanguageEngine",
+    "Engine",
+    "create_language_engine",
+]
+
+

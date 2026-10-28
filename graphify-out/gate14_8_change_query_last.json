@@ -1,0 +1,175 @@
+{
+  "status": "PASS",
+  "query": "impact KnowledgeEngine",
+  "target_query": "KnowledgeEngine",
+  "target": {
+    "id": "app_knowledge_engine_knowledgeengine",
+    "label": "KnowledgeEngine",
+    "name": null,
+    "module": null,
+    "path": null,
+    "file": null
+  },
+  "analysis": {
+    "direction": "SOURCE -> TARGET",
+    "max_depth": 3,
+    "allowed_relations": [
+      "calls",
+      "depends_on",
+      "imports",
+      "imports_from",
+      "indirect_call",
+      "inherits",
+      "re_exports",
+      "uses"
+    ],
+    "impact_count": 20
+  },
+  "impact": [
+    {
+      "target": "app_knowledge_rag_rag",
+      "label": "RAG",
+      "name": null,
+      "relation": "uses",
+      "depth": 1
+    },
+    {
+      "target": "app_knowledge_schemas_documentingestrequest",
+      "label": "DocumentIngestRequest",
+      "name": null,
+      "relation": "uses",
+      "depth": 1
+    },
+    {
+      "target": "app_knowledge_schemas_documentmetadata",
+      "label": "DocumentMetadata",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_schemas_textchunk",
+      "label": "TextChunk",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_schemas_storedchunk",
+      "label": "StoredChunk",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_schemas_evidence",
+      "label": "Evidence",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_schemas_evidencepack",
+      "label": "EvidencePack",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_schemas_documentingestresponse",
+      "label": "DocumentIngestResponse",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_schemas_documentinfo",
+      "label": "DocumentInfo",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_schemas_documentlistresponse",
+      "label": "DocumentListResponse",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_schemas_knowledgebaseconfig",
+      "label": "KnowledgeBaseConfig",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_schemas_retrievalresult",
+      "label": "RetrievalResult",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_chunker_chunker",
+      "label": "Chunker",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_parser_documentparser",
+      "label": "DocumentParser",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_indobert_embedding_indobertembeddingadapter",
+      "label": "IndoBERTEmbeddingAdapter",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_store_sqlitevectorstore",
+      "label": "SQLiteVectorStore",
+      "name": null,
+      "relation": "uses",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_schemas_py_basemodel",
+      "label": "BaseModel",
+      "name": null,
+      "relation": "inherits",
+      "depth": 2
+    },
+    {
+      "target": "app_knowledge_parser_textparser",
+      "label": "TextParser",
+      "name": null,
+      "relation": "inherits",
+      "depth": 3
+    },
+    {
+      "target": "app_language_semantic_indobert_client_indobertclient",
+      "label": "IndoBERTClient",
+      "name": null,
+      "relation": "uses",
+      "depth": 3
+    },
+    {
+      "target": "app_knowledge_schemas_embeddingresult",
+      "label": "EmbeddingResult",
+      "name": null,
+      "relation": "uses",
+      "depth": 3
+    }
+  ],
+  "source": {
+    "graph": "C:\\Users\\dmaza\\mcp-starter\\graphify-out\\graph.json",
+    "deterministic": true,
+    "llm_used": false
+  }
+}

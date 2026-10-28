@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "timestamp": "2026-10-08T00:00:00Z",
+  "status": "NOT_VERIFIED",
+  "system": "SYNTHETIC TEST ONLY",
+  "current_phase": "R3",
+  "phases": [
+    {
+      "id": "R4",
+      "name": "Synthetic proposal",
+      "status": "NOT_VERIFIED",
+      "evidence": [
+        "r3"
+      ],
+      "kind": "PROPOSED"
+    }
+  ],
+  "contract": {
+    "id": "synthetic",
+    "status": "NOT_VERIFIED",
+    "evidence": [
+      "r3"
+    ]
+  },
+  "gates": [
+    {
+      "id": "R3.1",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.2",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.3",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.4",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.5",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.6",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.7",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.8",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.9",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.10",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.11",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.12",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.13",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    },
+    {
+      "id": "R3.14",
+      "status": "PASS",
+      "evidence": [
+        "r3"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "r3",
+      "reference": "synthetic fixture only",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "VERIFIED_ARTIFACT"
+    }
+  ],
+  "verification": [],
+  "runtime": {
+    "configured_model": "fixture",
+    "effective_model": "fixture",
+    "selected_provider": "fixture",
+    "actual_model": "fixture",
+    "build_id": "fixture",
+    "process_id": 123,
+    "identity_status": "FIXTURE_EVIDENCE",
+    "scope": "HISTORICAL_CONTROLLED_RUNTIME",
+    "current_status": "NOT_VERIFIED",
+    "evidence": [
+      "r3"
+    ]
+  },
+  "rag": {
+    "status": "FIXTURE_EVIDENCE",
+    "evidence": [
+      "r3"
+    ],
+    "profile": {
+      "profile_id": "fixture",
+      "profile_version": 1,
+      "invocation_id": "fixture",
+      "timestamp": "fixture",
+      "consumer": "fixture",
+      "correlation": {
+        "request_id": "fixture",
+        "session_id": "fixture",
+        "execution_id": "fixture"
+      },
+      "retrieval_strategy": "fixture",
+      "effective_values": {
+        "top_k": 1,
+        "candidate_count": 1,
+        "semantic_weight": 0.5,
+        "lexical_weight": 0.5,
+        "rerank_requested": false,
+        "rerank_enabled": false,
+        "actual_reranker": "fixture",
+        "embedding_identity": {},
+        "knowledge_source": {}
+      },
+      "thresholds": {},
+      "reranker_identity": {},
+      "provenance": {},
+      "execution_outcome": {}
+    }
+  },
+  "worktree": {
+    "status": "UNKNOWN",
+    "files": []
+  },
+  "protected_assets": [
+    {
+      "path": "synthetic-0",
+      "status": "UNCHANGED",
+      "evidence": []
+    },
+    {
+      "path": "synthetic-1",
+      "status": "UNCHANGED",
+      "evidence": []
+    }
+  ],
+  "warnings": [
+    "Synthetic test data; not engineering evidence."
+  ],
+  "blockers": [
+    "NOT_VERIFIED"
+  ],
+  "governance": {
+    "read_only": true,
+    "commit": "NOT_AUTHORIZED",
+    "push": "NOT_AUTHORIZED",
+    "acceptance": {
+      "R2": "NOT_VERIFIED",
+      "R3": "NOT_VERIFIED"
+    },
+    "scope": "SYNTHETIC TEST ONLY",
+    "rollback": "No deployment",
+    "r3_integrity": {},
+    "evidence": [
+      "r3"
+    ]
+  }
+}

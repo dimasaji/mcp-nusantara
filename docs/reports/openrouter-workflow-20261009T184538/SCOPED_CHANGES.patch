@@ -1,0 +1,1094 @@
+--- a/app/api/routes.py
++++ b/app/api/routes.py
+@@ -23,6 +23,7 @@
+ from app.knowledge.schemas import DocumentIngestRequest as RAGIngestRequest
+ from app.knowledge.schemas import capture_retrieval
+ from app.models.ollama import OllamaProvider
++from app.models.openrouter import OpenRouterProvider
+ from app.problem.classifier import ProblemClassifier
+ from app.problem.detector import ProblemDetector
+ from app.problem.engine import ProblemEngine
+@@ -144,7 +145,7 @@
+     response: str
+     trust: _PublicChatTrust
+     model: str = Field(max_length=256)
+-    provider_status: Literal["local_rule", "evidence_fast_path", "ollama", "offline"]
++    provider_status: Literal["local_rule", "evidence_fast_path", "ollama", "openrouter", "offline"]
+     latency_ms: int = Field(ge=0)
+     grounding: _PublicChatGrounding
+     understanding: _PublicChatUnderstanding
+@@ -902,7 +903,7 @@
+     Response
+     """
+ 
+-    provider: OllamaProvider | None = None
++    provider: OllamaProvider | OpenRouterProvider | None = None
+ 
+     try:
+ 
+@@ -913,7 +914,8 @@
+         configuration, revision = settings.configuration_snapshot()
+         if request.model and request.model != configuration.llm.model:
+             raise HTTPException(409, 'Model dikendalikan operator; perbarui status model aktif.')
+-        provider = OllamaProvider(nusantara_config=configuration)
++        provider_type = OpenRouterProvider if configuration.llm.provider == "openrouter" else OllamaProvider
++        provider = provider_type(nusantara_config=configuration)
+ 
+         agent = HermesAgent(provider=provider, language_engine=_language)
+         core = await agent.execute_v1(request, knowledge=_knowledge, gates=_gate_integration,
+--- a/app/core/nusantara_config.py
++++ b/app/core/nusantara_config.py
+@@ -67,7 +67,7 @@
+ 
+ 
+ class _LLM(_Frozen):
+-    provider: Literal["ollama"] = "ollama"
++    provider: Literal["ollama", "openrouter"] = "ollama"
+     base_url: str = Field(default="http://localhost:11434", max_length=2048)
+     model: str = Field(default="llama3.2:1b", min_length=1, max_length=256)
+     auth_env_ref: str | None = Field(default=None, pattern=r"^[A-Z_][A-Z0-9_]{0,127}$", repr=False, exclude=True)
+@@ -84,6 +84,13 @@
+             raise ValueError("provider_address")
+         if not self.model.strip():
+             raise ValueError("model_required")
++        if self.provider == "openrouter":
++            if self.base_url != "https://openrouter.ai/api/v1":
++                raise ValueError("openrouter_official_endpoint_required")
++            if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:/-]{0,255}", self.model):
++                raise ValueError("openrouter_model_invalid")
++            if self.auth_env_ref not in (None, "OPENROUTER_API_KEY"):
++                raise ValueError("openrouter_key_reference_invalid")
+         return self
+ 
+ 
+@@ -147,6 +154,7 @@
+     graph_context: bool | None = None
+     developer_core: bool | None = None
+     experimental_features: bool = False
++    langgraph_workflow: bool = False
+ 
+ 
+ class _Legacy(_Frozen):
+@@ -251,6 +259,9 @@
+     "DEBUG": "system.debug", "HOST": "runtime.host", "PORT": "runtime.port",
+     "LOG_LEVEL": "runtime.log_level", "LLM_PROVIDER": "llm.provider",
+     "LLM_BASE_URL": "llm.base_url", "LLM_MODEL": "llm.model",
++    "LLM_TIMEOUT_SECONDS": "llm.connection_timeout_s",
++    "LLM_MAX_TOKENS": "llm.generation.max_tokens",
++    "LANGGRAPH_WORKFLOW_ENABLED": "features.langgraph_workflow",
+     "LLM_CONTEXT_TOKENS": "llm.generation.context_length",
+     "EMBEDDING_MODEL": "legacy_declarations.embedding_model",
+     "VECTOR_STORE_TYPE": "legacy_declarations.vector_store_type",
+@@ -265,9 +276,11 @@
+     "NUSANTARA_LLM_MODEL": "llm.model", "NUSANTARA_RUNTIME_PORT": "runtime.port",
+ })
+ _NUMERIC_ENV = frozenset({"runtime.port", "llm.generation.context_length",
++    "llm.connection_timeout_s", "llm.generation.max_tokens",
+     "legacy_declarations.context_window_size", "legacy_declarations.session_timeout_minutes",
+     "rag.chunk_size", "rag.chunk_overlap", "rag.top_k"})
+-_BOOL_ENV = frozenset({"system.debug", "legacy_declarations.privacy_filter_enabled"})
++_BOOL_ENV = frozenset({"system.debug", "legacy_declarations.privacy_filter_enabled",
++                       "features.langgraph_workflow"})
+ 
+ 
+ def _leaves(data: Mapping, prefix: str = "", depth: int = 0) -> dict[str, Any]:
+@@ -389,6 +402,14 @@
+             provenance[key] = source
+     if overrides is not None:
+         merge(overrides, "EXPLICIT")
++    # Provider-dependent defaults are resolved on this same owner, never from
++    # credentials. Explicit FILE/ENV/EXPLICIT values still take precedence.
++    if data["llm"]["provider"] == "openrouter":
++        for field, value in {"base_url": "https://openrouter.ai/api/v1",
++                             "model": "openai/gpt-4o-mini",
++                             "connection_timeout_s": 30.0}.items():
++            if provenance["llm." + field] == "DEFAULT":
++                data["llm"][field] = value
+     for group, fields in {"knowledge": ("root", "database", "document_root", "index", "cache"),
+                           "paths": ("project_root", "worker", "worker_python")}.items():
+         for field in fields:
+--- a/app/hermes/agent.py
++++ b/app/hermes/agent.py
+@@ -447,7 +447,7 @@
+                     result.get("content", "")
+                 ).strip()
+ 
+-                model_status = "ollama"
++                model_status = getattr(provider, 'name', 'ollama')
+                 model_used = provider.model
+ 
+                 latency_ms = int(
+@@ -507,6 +507,8 @@
+                 f"Pastikan model '{provider.model}' "
+                 "tersedia di Ollama."
+             )
++            if getattr(provider, 'name', 'ollama') == 'openrouter':
++                response_text = "Provider OpenRouter belum siap. Periksa konfigurasi melalui operator."
+ 
+             model_status = "offline"
+ 
+--- a/app/models/base.py
++++ b/app/models/base.py
+@@ -20,9 +20,13 @@
+     """Response dari generate."""
+     content: str
+     model: str
+-    tokens_used: int
++    tokens_used: int | None
+     latency_ms: int
+     execution_identity: NotRequired[Dict[str, Any]]
++    usage: NotRequired[Dict[str, Any]]
++    requested_model: NotRequired[str]
++    reported_model: NotRequired[str | None]
++    provider_status: NotRequired[str]
+ 
+ 
+ class StructuredGenerateRequest(TypedDict, total=False):
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -33,6 +33,7 @@
+ 
+ [project.optional-dependencies]
+ mcp = ["mcp>=1.30,<2"]
++workflow = ["langgraph==1.2.14"]
+ dev = [
+     "pytest>=8.3.0",
+     "pytest-asyncio>=0.23.0",
+--- a/tests/test_provider_identity.py
++++ b/tests/test_provider_identity.py
+@@ -365,6 +365,18 @@
+     for name in ['app/api/routes.py', 'app/api/v2_routes.py']:
+         def surface(path):
+             module = ast.parse(path.read_text(encoding='utf-8-sig'))
++            # HDR-OPENROUTER-01 choice A authorizes exactly one enum member.
++            # Normalize only that additive delta; every other public schema and
++            # route signature still has to match the original baseline.
++            for node in module.body:
++                if isinstance(node, ast.ClassDef) and node.name == '_PublicChatResponse':
++                    for field in node.body:
++                        if (isinstance(field, ast.AnnAssign) and isinstance(field.target, ast.Name)
++                            and field.target.id == 'provider_status'
++                            and isinstance(field.annotation, ast.Subscript)
++                            and isinstance(field.annotation.slice, ast.Tuple)):
++                            field.annotation.slice.elts = [value for value in field.annotation.slice.elts
++                                if not (isinstance(value, ast.Constant) and value.value == 'openrouter')]
+             classes = [ast.dump(node) for node in module.body if isinstance(node, ast.ClassDef)]
+             routes = [(node.name, ast.dump(node.args), [ast.dump(d) for d in node.decorator_list])
+                       for node in module.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+--- /dev/null
++++ b/app/models/openrouter.py
+@@ -0,0 +1,171 @@
++"""Explicitly selected cloud adapter; no fallback, retries or eager secrets.
++
++Usage and response model are provider-reported, never weight attestation.
++Cancellation stops browser/client waiting, not necessarily server-side work.
++"""
++from __future__ import annotations
++
++import asyncio
++import json
++import math
++import os
++import time
++from typing import Callable
++
++import httpx
++
++from app.core.nusantara_config import ConfigurationError, NusantaraConfig
++from app.core.runtime_identity import capture_model_identity
++from app.models.base import LLMProvider
++
++
++class OpenRouterError(RuntimeError):
++    """Identifiers only: never attach raw HTTP bodies, headers or exceptions."""
++
++    def __init__(self, code: str):
++        self.code = code
++        super().__init__(f"OpenRouter: {code}")
++
++
++class OpenRouterProvider(LLMProvider):
++    provider_name = "openrouter"
++
++    def __init__(self, *, nusantara_config: NusantaraConfig,
++                 http_client: httpx.AsyncClient | None = None,
++                 key_resolver: Callable[[], str | None] | None = None):
++        if nusantara_config.llm.provider != self.name:
++            raise ConfigurationError("PROVIDER_MISMATCH")
++        self.configuration = nusantara_config
++        self.model_name = nusantara_config.llm.model
++        self.base_url = nusantara_config.llm.base_url
++        self.timeout = nusantara_config.llm.connection_timeout_s
++        self._client = http_client
++        self._owns_client = http_client is None
++        # Only evaluated on explicit generation. No key is stored on the object.
++        self._key_resolver = key_resolver or (lambda: os.environ.get("OPENROUTER_API_KEY"))
++
++    def _key(self):
++        try:
++            key = self._key_resolver()
++        except Exception:
++            raise OpenRouterError("KEY_UNAVAILABLE") from None
++        if not isinstance(key, str) or not key.strip() or "\r" in key or "\n" in key:
++            raise OpenRouterError("KEY_UNAVAILABLE")
++        return key
++
++    async def generate(self, request):
++        if request.get("stream"):
++            raise OpenRouterError("STREAM_UNSUPPORTED")
++        prompt = request.get("prompt")
++        if not isinstance(prompt, str) or not prompt.strip():
++            raise OpenRouterError("INVALID_REQUEST")
++        maximum = request.get("max_tokens")
++        if maximum is None:
++            maximum = self.configuration.llm.generation.max_tokens
++        if type(maximum) is not int or maximum <= 0:
++            raise OpenRouterError("INVALID_REQUEST")
++        messages = []
++        if request.get("system") is not None:
++            if not isinstance(request["system"], str):
++                raise OpenRouterError("INVALID_REQUEST")
++            messages.append({"role": "system", "content": request["system"]})
++        messages.append({"role": "user", "content": prompt})
++        payload = {"model": self.model, "messages": messages, "stream": False,
++                   "max_tokens": min(maximum, self.configuration.llm.generation.max_tokens)}
++        for name in ("temperature", "top_p"):
++            value = request.get(name)
++            if value is not None:
++                if type(value) not in (int, float) or not math.isfinite(value) or value < 0:
++                    raise OpenRouterError("INVALID_REQUEST")
++                if name == "temperature" and value > 2:
++                    raise OpenRouterError("INVALID_REQUEST")
++                if name == "top_p" and not 0 < value <= 1:
++                    raise OpenRouterError("INVALID_REQUEST")
++                payload[name] = value
++        key = self._key()
++        if self._client is None:
++            self._client = httpx.AsyncClient(timeout=self.timeout, follow_redirects=False,
++                                             trust_env=False)
++        identity = capture_model_identity(provider_id=self.name, selected_model=self.model,
++                                           configuration=self.configuration)
++        started = time.perf_counter()
++        # HTTPX enforces per-I/O deadlines; asyncio bounds the entire operation.
++        try:
++            async with asyncio.timeout(self.timeout):
++                async with self._client.stream("POST", self.base_url + "/chat/completions",
++                        json=payload, headers={"Authorization": "Bearer " + key},
++                        timeout=self.timeout, follow_redirects=False) as response:
++                    if response.status_code != 200:
++                        raise OpenRouterError("HTTP_" + str(response.status_code))
++                    raw = bytearray()
++                    async for chunk in response.aiter_bytes():
++                        raw.extend(chunk)
++                        if len(raw) > 2 * 1024 * 1024:
++                            raise OpenRouterError("RESPONSE_TOO_LARGE")
++                    data = json.loads(raw)
++        except OpenRouterError:
++            raise
++        except (httpx.TimeoutException, TimeoutError):
++            raise OpenRouterError("TIMEOUT") from None
++        except Exception:
++            raise OpenRouterError("REQUEST_FAILED") from None
++        # CancelledError is deliberately not caught: no retry or fallback.
++        try:
++            if not isinstance(data, dict) or "error" in data:
++                raise ValueError()
++            choices = data["choices"]
++            if not isinstance(choices, list) or not choices:
++                raise ValueError()
++            content = choices[0]["message"]["content"]
++            if not isinstance(content, str) or not content.strip():
++                raise ValueError()
++            actual = data.get("model")
++            if actual is not None and (not isinstance(actual, str) or not actual.strip() or
++                    len(actual) > 256):
++                raise ValueError()
++        except (KeyError, IndexError, TypeError, ValueError):
++            raise OpenRouterError("INVALID_RESPONSE") from None
++        usage = data.get("usage")
++        usage = usage if isinstance(usage, dict) else {}
++        def count(name):
++            value = usage.get(name)
++            return value if type(value) is int and value >= 0 else None
++        cost = usage.get("cost")
++        cost = cost if type(cost) in (int, float) and math.isfinite(cost) and cost >= 0 else None
++        reported_usage = {"input_tokens": count("prompt_tokens"),
++                          "output_tokens": count("completion_tokens"),
++                          "total_tokens": count("total_tokens"), "cost": cost,
++                          "source": "PROVIDER_REPORTED",
++                          "status": "AVAILABLE" if all(count(name) is not None for name in
++                              ("prompt_tokens", "completion_tokens", "total_tokens")) else "UNKNOWN"}
++        return {"content": content.strip(), "model": self.model,
++                "requested_model": self.model, "reported_model": actual,
++                "tokens_used": reported_usage["total_tokens"], "usage": reported_usage,
++                "latency_ms": int((time.perf_counter() - started) * 1000),
++                "provider_status": self.name,
++                "execution_identity": identity.with_response(actual).safe_dump()}
++
++    async def generate_structured(self, request):
++        # The existing abstraction exposes structured output. Fail closed rather
++        # than silently claiming schema validation for an unsupported capability.
++        raise OpenRouterError("STRUCTURED_UNSUPPORTED")
++
++    async def health_check(self):
++        # No model-list request or paid probe: configuration readiness only.
++        try:
++            self._key()
++        except OpenRouterError:
++            return {"status": "KEY_UNAVAILABLE", "available": False,
++                    "model": self.model, "latency_ms": 0}
++        return {"status": "NOT_VERIFIED", "available": True,
++                "model": self.model, "latency_ms": 0}
++
++    def get_model_info(self):
++        return {"provider": self.name, "model": self.model, "supports_structured": False,
++                "availability": "NOT_VERIFIED", "loaded_weights": "NOT_VERIFIED",
++                "hard_budget_enforcement": False}
++
++    async def close(self):
++        if self._client is not None and self._owns_client:
++            await self._client.aclose()
++            self._client = None
+--- /dev/null
++++ b/app/workflow/v1_langgraph.py
+@@ -0,0 +1,133 @@
++"""Opt-in, in-memory V1 wrapper. Never imported by the existing HTTP route.
++
++Hermes owns language/problem classification, policy, retrieval and grounding.
++The classify node declares that delegation instead of invoking those engines
++twice. No checkpoints, autonomous tools, retries, or cloud fallback.
++"""
++from __future__ import annotations
++
++import asyncio
++from typing import Any, Callable, TypedDict
++
++from app.core.nusantara_config import NusantaraConfig
++from app.hermes.agent import HermesAgent, V1CoreResult
++
++
++class V1WorkflowError(RuntimeError):
++    def __init__(self, code: str):
++        self.code = code
++        super().__init__(f"V1 workflow: {code}")
++
++
++class _State(TypedDict, total=False):
++    request: Any
++    capability: str
++    executions: int
++    core: V1CoreResult
++    public: dict
++
++
++class V1LangGraphWorkflow:
++    """Requires existing Hermes, its existing services and public projector.
++
++    Build this adapter only in an explicitly opted-in caller. Configuration
++    selects the sole allowed provider. The default snapshot denies the wrapper
++    and cloud. Services passed here remain the caller's existing V1 owners.
++    """
++
++    def __init__(self, *, configuration: NusantaraConfig, agent: HermesAgent,
++                 services: dict, project_response: Callable[..., dict]):
++        if not configuration.features.langgraph_workflow:
++            raise V1WorkflowError("DISABLED")
++        if not isinstance(agent, HermesAgent):
++            raise V1WorkflowError("EXISTING_HERMES_REQUIRED")
++        self.configuration, self.agent = configuration, agent
++        self.services, self.project_response = dict(services), project_response
++        self._binding()
++        try:
++            from langgraph.graph import END, START, StateGraph
++        except ImportError:
++            raise V1WorkflowError("LANGGRAPH_UNAVAILABLE") from None
++        graph = StateGraph(_State)
++        nodes = {"validate": self._validate, "classify": self._classify,
++                 "select": self._select, "execute": self._execute,
++                 "evidence": self._evidence, "project": self._project}
++        previous = START
++        for name, fn in nodes.items():
++            graph.add_node(name, fn)  # no retry_policy
++            graph.add_edge(previous, name)
++            previous = name
++        graph.add_edge(previous, END)
++        self._graph = graph.compile(checkpointer=None)
++
++    def _binding(self):
++        provider = self.agent.provider
++        if (provider.name != self.configuration.llm.provider or
++                provider.model != self.configuration.llm.model):
++            raise V1WorkflowError("PROVIDER_NOT_APPROVED")
++
++    def _validate(self, state):
++        request = state["request"]
++        user_input, session = getattr(request, "user_input", None), getattr(request, "session_id", None)
++        if (not isinstance(user_input, str) or not user_input.strip() or len(user_input) > 20000 or
++                not isinstance(session, str) or not 1 <= len(session) <= 128 or
++                getattr(request, "stream", False)):
++            raise V1WorkflowError("INVALID_INPUT")
++        model = getattr(request, "model", None)
++        if model is not None and model != self.configuration.llm.model:
++            raise V1WorkflowError("MODEL_CONFLICT")
++        return {"executions": 0}
++
++    def _classify(self, state):
++        # Intent classification happens exactly once, inside execute_v1.
++        return {"capability": "HERMES_V1_CHAT"}
++
++    def _select(self, state):
++        self._binding()
++        return {}
++
++    async def _execute(self, state):
++        self._binding()
++        if state["executions"] != 0:
++            raise V1WorkflowError("EXECUTION_LIMIT")
++        core = await self.agent.execute_v1(state["request"], **self.services)
++        return {"core": core, "executions": 1}
++
++    def _evidence(self, state):
++        # Existing Hermes has already applied trust/policy and grounding. Verify
++        # that contract rather than creating a second grounding implementation.
++        core = state["core"]
++        if not isinstance(core, V1CoreResult):
++            raise V1WorkflowError("INVALID_CORE_RESULT")
++        assessment = core.payload.get("grounding", {})
++        if (assessment.get("enabled") is not True or
++                type(assessment.get("grounded")) is not bool):
++            raise V1WorkflowError("GROUNDING_NOT_EVALUATED")
++        if not assessment["grounded"] and core.payload.get("provider_status") != "offline":
++            # Reject an ungrounded core result unless Hermes returned its safe
++            # abstention. Never promote unsupported generated text.
++            if core.payload.get("response") != (
++                    "Informasi tersebut belum tersedia secara cukup dalam knowledge base."):
++                raise V1WorkflowError("UNGROUNDED_RESULT")
++        return {}
++
++    def _project(self, state):
++        core = state["core"]
++        return {"public": self.project_response(core.payload, intent_name=core.intent_name)}
++
++    async def execute(self, request):
++        try:
++            # Disable optional LangSmith tracing without reading or changing
++            # environment secrets. No callback/checkpoint persistence is used.
++            from langsmith import tracing_context
++            with tracing_context(enabled=False):
++                async with asyncio.timeout(self.configuration.runtime.stage_timeout_s):
++                    state = await self._graph.ainvoke({"request": request},
++                        config={"recursion_limit": 8, "callbacks": []})
++            return state["public"]
++        except V1WorkflowError:
++            raise
++        except TimeoutError:
++            raise V1WorkflowError("TIMEOUT") from None
++        except Exception:
++            raise V1WorkflowError("EXECUTION_FAILED") from None
+--- /dev/null
++++ b/tests/test_openrouter_provider.py
+@@ -0,0 +1,289 @@
++"""Offline cloud adapter contracts; keys are synthetic and transport is mocked."""
++import asyncio
++import ast
++import json
++from pathlib import Path
++
++import httpx
++import pytest
++
++from app.core.nusantara_config import ConfigurationError, load_nusantara_config
++from app.models.openrouter import OpenRouterError, OpenRouterProvider
++from app.models.ollama import OllamaProvider
++from app.models.router import ModelRouter
++
++
++def config(**values):
++    return load_nusantara_config(overrides={"llm": {"provider": "openrouter", **values}})
++
++
++def result(**changes):
++    return {"model": "reported/fixture", "choices": [{"message": {"content": "fixture answer"}}], **changes}
++
++
++def invoke(handler, request=None, configuration=None):
++    async def run():
++        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
++            adapter = OpenRouterProvider(nusantara_config=configuration or config(),
++                http_client=client, key_resolver=lambda: "synthetic-test-credential")
++            return await adapter.generate(request or {"prompt": "offline fixture"})
++    return asyncio.run(run())
++
++
++def test_defaults_and_explicit_selection():
++    local = load_nusantara_config()
++    assert local.llm.provider == "ollama" and local.llm.model == "llama3.2:1b"
++    assert not local.features.langgraph_workflow
++    provider = OllamaProvider(nusantara_config=local)
++    assert ModelRouter().register(provider).route().provider is provider
++    cloud = config()
++    assert cloud.llm.model == "openai/gpt-4o-mini"
++    assert cloud.llm.base_url == "https://openrouter.ai/api/v1"
++    assert cloud.llm.connection_timeout_s == 30.
++    explicit = load_nusantara_config(environment={"LLM_PROVIDER": "openrouter",
++        "LLM_MODEL": "approved/model", "LLM_TIMEOUT_SECONDS": "4.0", "LLM_MAX_TOKENS": "100"})
++    assert explicit.llm.model == "approved/model" and explicit.llm.connection_timeout_s == 4.
++
++
++@pytest.mark.parametrize("values", [{"base_url": "http://evil.invalid"},
++    {"model": "invalid model"}, {"auth_env_ref": "OTHER_SECRET"}, {"connection_timeout_s": 0.}])
++def test_configuration_rejects_unsafe_selection(values):
++    with pytest.raises(ConfigurationError):
++        config(**values)
++
++
++def test_missing_key_is_lazy_and_never_sends():
++    calls = []
++    async def run():
++        provider = OpenRouterProvider(nusantara_config=config(),
++            key_resolver=lambda: calls.append("resolved") or None)
++        assert calls == [] and provider._client is None
++        with pytest.raises(OpenRouterError, match="KEY_UNAVAILABLE"):
++            await provider.generate({"prompt": "fixture"})
++        assert provider._client is None
++        assert not (await provider.health_check())["available"]
++    asyncio.run(run())
++    assert len(calls) == 2
++
++
++def test_success_usage_output_cap_and_distinct_identity():
++    calls = []
++    def respond(request):
++        calls.append(json.loads(request.content))
++        assert str(request.url) == "https://openrouter.ai/api/v1/chat/completions"
++        return httpx.Response(200, json=result(usage={"prompt_tokens": 8, "completion_tokens": 3,
++            "total_tokens": 11, "cost": .0002}))
++    response = invoke(respond, {"prompt": "fixture", "max_tokens": 9999, "temperature": 0.})
++    assert len(calls) == 1 and calls[0]["max_tokens"] == 512
++    assert calls[0]["temperature"] == 0.
++    assert response["model"] == response["requested_model"] == "openai/gpt-4o-mini"
++    assert response["reported_model"] == "reported/fixture"
++    assert response["execution_identity"]["identity_status"] == "MISMATCH"
++    assert response["provider_status"] == "openrouter"
++    assert response["tokens_used"] == 11 and response["usage"]["cost"] == .0002
++
++
++@pytest.mark.parametrize("usage", [None, {}, {"total_tokens": "12", "cost": float("nan")},
++                                       {"prompt_tokens": -1, "completion_tokens": True}])
++def test_missing_or_invalid_usage_is_not_fabricated(usage):
++    # NaN fixture bypasses HTTP JSON encoder to test defensive metadata parsing.
++    response = invoke(lambda request: httpx.Response(200, content=json.dumps(result(usage=usage))))
++    assert response["tokens_used"] is None and response["usage"]["cost"] is None
++    assert response["usage"]["input_tokens"] is None
++
++
++@pytest.mark.parametrize("data", [{}, {"error": {"message": "synthetic-private-body"}},
++    result(choices=[]), result(choices=[{"message": {"content": " "}}]),
++    result(choices=[{"message": {"content": []}}]), result(model={"bad": "value"})])
++def test_invalid_response_fails_closed(data):
++    with pytest.raises(OpenRouterError, match="INVALID_RESPONSE"):
++        invoke(lambda request: httpx.Response(200, json=data))
++
++
++@pytest.mark.parametrize("status", [302, 401, 429, 500])
++def test_http_errors_do_not_retry_follow_redirect_or_expose_body(status, caplog):
++    calls = []
++    def respond(request):
++        calls.append(request)
++        return httpx.Response(status, text="synthetic-test-credential", headers={"Location": "https://evil.invalid"})
++    with pytest.raises(OpenRouterError) as failure:
++        invoke(respond)
++    assert str(failure.value) == "OpenRouter: HTTP_" + str(status)
++    assert len(calls) == 1
++    assert "synthetic-test-credential" not in caplog.text
++
++
++def test_transport_timeout_sanitized_without_retry(caplog):
++    calls = []
++    def fail(request):
++        calls.append(1)
++        raise httpx.ReadTimeout("synthetic-test-credential", request=request)
++    with pytest.raises(OpenRouterError, match="TIMEOUT") as failure:
++        invoke(fail)
++    assert len(calls) == 1 and "synthetic-test-credential" not in str(failure.value) + caplog.text
++
++
++def test_total_deadline_and_cancellation_do_not_replay():
++    calls = []
++    async def stall(request):
++        calls.append(1)
++        await asyncio.sleep(60)
++    with pytest.raises(OpenRouterError, match="TIMEOUT"):
++        invoke(stall, configuration=config(connection_timeout_s=.01))
++    async def cancel():
++        async with httpx.AsyncClient(transport=httpx.MockTransport(stall)) as client:
++            adapter = OpenRouterProvider(nusantara_config=config(), http_client=client,
++                                         key_resolver=lambda: "synthetic")
++            task = asyncio.create_task(adapter.generate({"prompt": "fixture"}))
++            await asyncio.sleep(.01)
++            task.cancel()
++            with pytest.raises(asyncio.CancelledError):
++                await task
++    asyncio.run(cancel())
++    assert len(calls) == 2
++
++
++def test_bounded_response_and_invalid_json():
++    with pytest.raises(OpenRouterError, match="RESPONSE_TOO_LARGE"):
++        invoke(lambda request: httpx.Response(200, content=b"x" * (2*1024*1024 + 1)))
++    with pytest.raises(OpenRouterError, match="REQUEST_FAILED"):
++        invoke(lambda request: httpx.Response(200, content=b"not json"))
++
++
++@pytest.mark.parametrize("generation_request", [{"prompt": " "}, {"prompt": "x", "max_tokens": 0},
++    {"prompt": "x", "max_tokens": True}, {"prompt": "x", "temperature": 3.},
++    {"prompt": "x", "top_p": 0.}, {"prompt": "x", "system": []}])
++def test_invalid_generation_request_never_sends(generation_request):
++    def prohibited(_):
++        raise AssertionError("must not send")
++    with pytest.raises(OpenRouterError, match="INVALID_REQUEST"):
++        invoke(prohibited, generation_request)
++
++
++@pytest.mark.parametrize("reported,expected", [("openai/gpt-4o-mini", "RUNTIME_CONFIRMED"),
++                                               (None, "NOT_VERIFIED")])
++def test_reported_identity_is_not_loaded_weight_attestation(reported, expected):
++    response = invoke(lambda request: httpx.Response(200, json=result(model=reported)))
++    assert response["execution_identity"]["identity_status"] == expected
++    assert response["reported_model"] == reported
++
++
++def test_key_failure_and_transport_failure_are_sanitized(caplog):
++    def fail(request):
++        raise RuntimeError("synthetic-test-credential")
++    with pytest.raises(OpenRouterError, match="REQUEST_FAILED") as error:
++        invoke(fail)
++    assert "synthetic-test-credential" not in str(error.value) + caplog.text
++
++
++def test_health_is_only_readiness_and_does_not_call_network():
++    async def run():
++        adapter = OpenRouterProvider(nusantara_config=config(), key_resolver=lambda: "synthetic")
++        health = await adapter.health_check()
++        assert health["available"] and health["status"] == "NOT_VERIFIED"
++        assert adapter._client is None
++        assert not adapter.get_model_info()["hard_budget_enforcement"]
++        with pytest.raises(OpenRouterError, match="STRUCTURED_UNSUPPORTED"):
++            await adapter.generate_structured({"prompt": "fixture"})
++        await adapter.close()
++    asyncio.run(run())
++
++
++def test_existing_chat_projection_contract_without_importing_application():
++    # Extract the actual pure response projection instead of bootstrapping DB,
++    # worker or application. This verifies schema, not live /v1 registration.
++    import typing
++    from pydantic import BaseModel, ConfigDict, Field
++    tree = ast.parse(Path("app/api/routes.py").read_text(encoding="utf-8-sig"))
++    targets = {"_project_v1_chat_response"}
++    targets.update(node.name for node in tree.body if isinstance(node, ast.ClassDef) and
++                   node.name.startswith("_Public"))
++    nodes = [node for node in tree.body if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and node.name in targets]
++    namespace = {"BaseModel": BaseModel, "ConfigDict": ConfigDict, "Field": Field,
++                 "Any": typing.Any, "Literal": typing.Literal}
++    exec(compile(ast.Module(body=nodes, type_ignores=[]), "projection-only", "exec"), namespace)
++    payload = {"session_id": "fixture", "response": "answer", "model": "requested/model",
++        "provider_status": "openrouter", "latency_ms": 1, "timestamp": "fixture",
++        "trust": {"supports_claim": False, "confidence": 0., "risk_level": "low",
++                  "requires_human": True, "evidence_count": 0, "evidence_available": False},
++        "grounding": {"enabled": True, "grounded": False, "reason": "no_evidence"},
++        "understanding": {}, "problem": {}, "evidence": [], "gate_pipeline": {"secret": "private"}}
++    public = namespace["_project_v1_chat_response"](payload, intent_name="ask_general_info")
++    assert set(public) == {"session_id", "response", "trust", "model", "provider_status", "latency_ms",
++        "grounding", "understanding", "problem", "evidence", "timestamp"}
++    assert public["provider_status"] == "openrouter" and "private" not in json.dumps(public)
++
++
++@pytest.mark.parametrize("chosen", ["ollama", "openrouter"])
++def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen):
++    """Execute actual endpoint AST, without application/DB/worker startup."""
++    import typing
++    from types import SimpleNamespace
++    from fastapi import HTTPException
++    from pydantic import BaseModel, ConfigDict, Field
++    from app.hermes.agent import V1CoreResult
++    from app.exceptions import ProviderUnavailableError
++    tree = ast.parse(Path("app/api/routes.py").read_text(encoding="utf-8-sig"))
++    selected = [node for node in tree.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
++                and (node.name in {"chat", "ChatRequest", "_project_v1_chat_response"} or
++                     node.name.startswith("_Public"))]
++    next(node for node in selected if node.name == "chat").decorator_list = []
++    calls = {"ollama": 0, "openrouter": 0, "closed": 0, "recorded": 0}
++    configuration = load_nusantara_config(overrides={"llm": {"provider": chosen}})
++    class LocalFixture:
++        model = configuration.llm.model
++        async def generate(self, request):
++            return {"content": "fixture answer"}
++        async def close(self):
++            calls["closed"] += 1
++    def local_factory(**kwargs):
++        calls["ollama"] += 1
++        assert kwargs["nusantara_config"] is configuration
++        return LocalFixture()
++    def cloud_factory(**kwargs):
++        calls["openrouter"] += 1
++        return OpenRouterProvider(**kwargs, http_client=client, key_resolver=lambda: "synthetic")
++    class ExistingCapabilityFixture:
++        def __init__(self, **kwargs):
++            self.provider = kwargs["provider"]
++        async def execute_v1(self, req, **services):
++            generated = await self.provider.generate({"prompt": req.user_input})
++            payload = {"session_id": req.session_id, "response": generated["content"],
++                "trust": {"supports_claim": True, "confidence": .8, "risk_level": "low",
++                    "requires_human": False, "evidence_count": 1, "evidence_available": True},
++                "model": self.provider.model, "provider_status": chosen, "latency_ms": 1,
++                "grounding": {"enabled": True, "grounded": True, "reason": "grounded"},
++                "problem": {}, "evidence": [], "timestamp": "fixture"}
++            return V1CoreResult(payload=payload, intent_name="ask_general_info")
++    def record(**kwargs):
++        calls["recorded"] += 1
++        assert kwargs["provider_status"] == chosen
++    namespace = {"BaseModel": BaseModel, "ConfigDict": ConfigDict, "Field": Field,
++        "Any": typing.Any, "Literal": typing.Literal, "HTTPException": HTTPException,
++        "ProviderUnavailableError": ProviderUnavailableError,
++        "OllamaProvider": local_factory, "OpenRouterProvider": cloud_factory,
++        "HermesAgent": ExistingCapabilityFixture,
++        "settings": SimpleNamespace(configuration_snapshot=lambda: (configuration, 0), record_v1_execution=record)}
++    for name in ("_language", "_knowledge", "_gate_integration", "_trust_engine", "_grounding_guard",
++        "_developer_core", "_run_sync_v1", "_extract_understanding_data", "_extract_intent",
++        "_reconcile_problem_with_intent", "_extract_entities", "_get_problem_value", "_build_evidence_text",
++        "_deterministic_response", "_build_system_prompt", "_build_user_prompt", "_model_dump"):
++        namespace[name] = None  # core dependencies owned by separate Hermes regression tests
++    module = ast.fix_missing_locations(ast.Module(body=[ast.ImportFrom(module="__future__",
++        names=[ast.alias(name="annotations")], level=0), *selected], type_ignores=[]))
++    exec(compile(module, "chat-only", "exec"), namespace)
++    for name, model_type in namespace.copy().items():
++        if name.startswith("_Public") or name == "ChatRequest":
++            model_type.model_rebuild(_types_namespace=namespace)
++    async def run():
++        nonlocal client
++        async with httpx.AsyncClient(transport=httpx.MockTransport(lambda request:
++                httpx.Response(200, json=result()))) as client:
++            public = await namespace["chat"](SimpleNamespace(user_input="fixture question", session_id="fixture", model=None))
++            assert public["provider_status"] == chosen
++            assert set(public) == {"session_id", "response", "trust", "model", "provider_status", "latency_ms",
++                "grounding", "understanding", "problem", "evidence", "timestamp"}
++    client = None
++    asyncio.run(run())
++    assert calls[chosen] == 1 and calls["openrouter" if chosen == "ollama" else "ollama"] == 0
++    assert calls["recorded"] == 1
+--- /dev/null
++++ b/tests/test_v1_langgraph.py
+@@ -0,0 +1,232 @@
++"""Real optional StateGraph, existing Hermes, synthetic offline V1 services."""
++import asyncio
++import ast
++import importlib.util
++import json
++from pathlib import Path
++from types import SimpleNamespace
++import typing
++
++import pytest
++from pydantic import BaseModel, ConfigDict, Field
++
++from app.core.nusantara_config import load_nusantara_config
++from app.hermes.agent import HermesAgent
++from app.knowledge.grounding import EvidenceGroundingGuard
++from app.trust.engine import TrustEngine
++from app.workflow.v1_langgraph import V1LangGraphWorkflow, V1WorkflowError
++
++
++def projection_and_helpers():
++    tree = ast.parse(Path("app/api/routes.py").read_text(encoding="utf-8-sig"))
++    helpers = {"_extract_understanding_data", "_extract_intent", "_reconcile_problem_with_intent",
++        "_extract_entities", "_get_problem_value", "_build_evidence_text", "_deterministic_response",
++        "_build_system_prompt", "_build_user_prompt", "_model_dump"}
++    names = helpers | {"_project_v1_chat_response"}
++    nodes = [node for node in tree.body if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and
++             (node.name in names or node.name.startswith("_Public"))]
++    namespace = {"BaseModel": BaseModel, "ConfigDict": ConfigDict, "Field": Field,
++                 "Any": typing.Any, "Literal": typing.Literal, "Dict": typing.Dict}
++    exec(compile(ast.Module(body=nodes, type_ignores=[]), "v1-pure-helpers", "exec"), namespace)
++    return namespace["_project_v1_chat_response"], {name: namespace[name] for name in helpers}
++
++
++class FixtureProvider:
++    def __init__(self, configuration, failure=None, answer=None):
++        self.name, self.model = configuration.llm.provider, configuration.llm.model
++        self.calls, self.failure = 0, failure
++        self.answer = answer or "KTP-el adalah identitas penduduk."
++
++    async def health_check(self):
++        return {"available": True}
++
++    async def generate(self, request):
++        self.calls += 1
++        if self.failure == "timeout":
++            await asyncio.sleep(60)
++        if self.failure == "error":
++            raise RuntimeError("synthetic-private-payload")
++        return {"content": self.answer}
++
++
++def fixture(*, enabled=True, provider="ollama", empty=False, failure=None, answer=None):
++    configuration = load_nusantara_config(overrides={"features": {"langgraph_workflow": enabled},
++        "llm": {"provider": provider}, "runtime": {"stage_timeout_s": .05 if failure == "timeout" else 10.}})
++    model = FixtureProvider(configuration, failure, answer)
++    # Constructor is avoided to keep native LanguageEngine/worker startup out
++    # of this offline test. execute_v1 is the actual unchanged Hermes method.
++    agent = HermesAgent.__new__(HermesAgent)
++    agent.provider = model
++    observed = {"classified": 0, "searched": 0, "remembered": 0, "gated": 0}
++    def understand(*args, **kwargs):
++        observed["classified"] += 1
++        return {"understanding": {"output": {"intent": {"intent": "ask_general_info", "confidence": .95},
++                    "entities": []}}, "problem": {"goal": "Memahami KTP-el", "situation": "Pertanyaan"}}
++    agent.run = understand
++    citation = SimpleNamespace(document_id="fixture-ktp", title="Fixture KTP-el",
++        chunk="KTP-el adalah identitas penduduk.", source="offline fixture", score=.9)
++    def search(*args, **kwargs):
++        observed["searched"] += 1
++        return [] if empty else [citation]
++    def process(**kwargs):
++        observed["gated"] += 1
++        return {"reasoning": {"status": "grounded"}}
++    def remember(**kwargs):
++        observed["remembered"] += 1
++    async def run_sync(fn, *args, **kwargs):
++        return fn(*args, **kwargs)
++    projector, helpers = projection_and_helpers()
++    services = {"knowledge": SimpleNamespace(search_knowledge=search),
++        "gates": SimpleNamespace(process=process, remember_response=remember),
++        "trust": TrustEngine(), "grounding": EvidenceGroundingGuard(),
++        "developer_core": SimpleNamespace(runtime_snapshot=lambda **kwargs: {}),
++        "run_sync": run_sync, "helpers": helpers}
++    return configuration, agent, services, projector, model, observed
++
++
++def workflow(parts):
++    configuration, agent, services, projector, _, _ = parts
++    return V1LangGraphWorkflow(configuration=configuration, agent=agent,
++        services=services, project_response=projector)
++
++
++def request(**updates):
++    return SimpleNamespace(user_input="Apa itu KTP-el?", session_id="fixture-session",
++                           model=None, stream=False, **updates)
++
++
++def test_disabled_flag_does_not_import_langgraph_or_execute(monkeypatch):
++    import builtins
++    original = builtins.__import__
++    def guarded(name, *args, **kwargs):
++        if name.startswith("langgraph"):
++            raise AssertionError("must not import optional dependency")
++        return original(name, *args, **kwargs)
++    parts = fixture(enabled=False)
++    monkeypatch.setattr(builtins, "__import__", guarded)
++    with pytest.raises(V1WorkflowError, match="DISABLED"):
++        workflow(parts)
++    assert parts[4].calls == 0
++
++
++def test_unavailable_dependency_fails_closed(monkeypatch):
++    import builtins
++    original = builtins.__import__
++    def unavailable(name, *args, **kwargs):
++        if name.startswith("langgraph"):
++            raise ImportError("not installed")
++        return original(name, *args, **kwargs)
++    parts = fixture()
++    monkeypatch.setattr(builtins, "__import__", unavailable)
++    with pytest.raises(V1WorkflowError, match="LANGGRAPH_UNAVAILABLE"):
++        workflow(parts)
++    assert parts[4].calls == 0
++
++
++def test_cloud_binding_is_rejected_before_graph_import():
++    parts = fixture()
++    parts[4].name = "openrouter"
++    with pytest.raises(V1WorkflowError, match="PROVIDER_NOT_APPROVED"):
++        workflow(parts)
++    assert parts[4].calls == 0
++
++
++graph_available = pytest.mark.skipif(importlib.util.find_spec("langgraph") is None,
++                                    reason="Optional LangGraph not installed in this interpreter")
++
++
++@graph_available
++@pytest.mark.parametrize("provider", ["ollama", "openrouter"])
++def test_real_stategraph_executes_existing_hermes_once_and_projects(provider):
++    parts = fixture(provider=provider)
++    public = asyncio.run(workflow(parts).execute(request()))
++    assert public["session_id"] == "fixture-session"
++    assert public["provider_status"] == provider
++    assert public["grounding"]["grounded"] is True
++    assert public["response"] == "KTP-el adalah identitas penduduk."
++    assert parts[4].calls == 1
++    assert parts[5] == {"classified": 1, "searched": 1, "remembered": 1, "gated": 1}
++    assert "gate_pipeline" not in public and "developer_core" not in public
++
++
++@graph_available
++@pytest.mark.parametrize("updates", [{"user_input": " "}, {"session_id": ""},
++    {"model": "unapproved/model"}, {"stream": True}, {"user_input": "x" * 20001}])
++def test_invalid_input_does_not_reach_provider(updates):
++    parts = fixture()
++    req = request()
++    for name, value in updates.items():
++        setattr(req, name, value)
++    with pytest.raises(V1WorkflowError):
++        asyncio.run(workflow(parts).execute(req))
++    assert parts[4].calls == 0 and parts[5]["searched"] == 0
++
++
++@graph_available
++@pytest.mark.parametrize("failure,code", [("error", "EXECUTION_FAILED"), ("timeout", "TIMEOUT")])
++def test_failure_and_timeout_never_retry_or_expose_private_exception(failure, code, caplog):
++    parts = fixture(failure=failure)
++    with pytest.raises(V1WorkflowError, match=code) as observed:
++        asyncio.run(workflow(parts).execute(request()))
++    assert parts[4].calls == 1 and parts[5]["remembered"] == 0
++    assert "synthetic-private-payload" not in str(observed.value) + caplog.text
++
++
++@graph_available
++@pytest.mark.parametrize("empty,answer", [(True, None), (False, "Wajib membayar biaya 900 rupiah.")])
++def test_existing_grounding_rejects_missing_evidence_and_unsupported_claim(empty, answer):
++    parts = fixture(empty=empty, answer=answer)
++    public = asyncio.run(workflow(parts).execute(request()))
++    assert public["grounding"]["grounded"] is False
++    assert public["response"] == "Informasi tersebut belum tersedia secara cukup dalam knowledge base."
++    assert parts[4].calls == 1 and parts[5]["gated"] == 1
++
++
++@graph_available
++def test_greeting_and_legacy_core_match_without_paid_request():
++    wrapped, legacy = fixture(), fixture(enabled=False)
++    req = request()
++    req.user_input = "Halo"
++    output = asyncio.run(workflow(wrapped).execute(req))
++    configuration, agent, services, projector, model, observed = legacy
++    core = asyncio.run(agent.execute_v1(req, **services))
++    direct = projector(core.payload, intent_name=core.intent_name)
++    for field in output.keys() - {"timestamp"}:
++        assert output[field] == direct[field]
++    assert wrapped[4].calls == model.calls == 0
++    assert output["provider_status"] == "local_rule"
++
++
++@graph_available
++def test_provider_mutation_is_rejected_before_execution():
++    parts = fixture()
++    graph = workflow(parts)
++    parts[4].name = "openrouter"
++    with pytest.raises(V1WorkflowError, match="PROVIDER_NOT_APPROVED"):
++        asyncio.run(graph.execute(request()))
++    assert parts[4].calls == 0
++
++
++@graph_available
++def test_graph_has_no_loop_checkpointer_or_retry_policy():
++    parts = fixture()
++    graph = workflow(parts)._graph
++    assert graph.checkpointer is None
++    structure = graph.get_graph()
++    assert len(structure.nodes) == 8 and len(structure.edges) == 7
++    assert all(not node.retry_policy for node in graph.nodes.values())
++
++
++@graph_available
++def test_cancellation_does_not_replay_paid_request():
++    parts = fixture(failure="timeout")
++    async def run():
++        task = asyncio.create_task(workflow(parts).execute(request()))
++        async with asyncio.timeout(1):
++            while parts[4].calls == 0:
++                await asyncio.sleep(0)
++        task.cancel()
++        with pytest.raises(asyncio.CancelledError):
++            await task
++    asyncio.run(run())
++    assert parts[4].calls == 1 and parts[5]["remembered"] == 0
+--- /dev/null
++++ b/docs/OPENROUTER_LANGGRAPH.md
+@@ -0,0 +1,77 @@
++# Optional V1 OpenRouter and LangGraph
++
++Ollama remains the default. No cloud fallback or automatic request retry is
++implemented. The current user runtime has not been restarted or activated.
++
++## Configuration (operator actions, not executed by this change)
++
++The existing NusantaraConfig/Settings owner resolves these values at bootstrap:
++
++```powershell
++$env:LLM_PROVIDER = 'openrouter'
++$env:LLM_MODEL = 'openai/gpt-4o-mini' # replace with the operator-approved model ID
++$env:LLM_TIMEOUT_SECONDS = '30'
++$env:LLM_MAX_TOKENS = '512'
++```
++
++Supply `OPENROUTER_API_KEY` through the operator's existing secret mechanism.
++Do not put it in source, a transcript, reports or test commands. The adapter
++resolves that reference lazily and uses only the official HTTPS endpoint.
++Explicit custom endpoints and custom secret references are rejected. Defaults
++when OpenRouter is explicitly selected: the above model, 30 seconds, 512 tokens.
++Leaving `LLM_PROVIDER` unset keeps Ollama; provider-dependent defaults never
++register a cloud fallback. Existing local model inventory/selection endpoints
++remain Ollama-specific; cloud selection is bootstrap configuration only.
++
++`provider_status` adds `openrouter` under owner decision HDR-OPENROUTER-01 A;
++all existing response fields and enum values remain. Internal generation results
++separate requested/reported model and provider-reported usage. Public chat does
++not expose the API key, internal identity receipts or additional usage fields.
++Reported identity does not attest loaded weights. Missing usage/cost is unknown
++(`None`), not zero. Cost is a reported value, not independent billing verification.
++
++HTTPX enforces I/O timeouts, an overall deadline bounds the full request, output
++is capped and responses above 2 MiB are rejected. Client cancellation propagates
++without retry; it does not guarantee cancellation or avoidance of charges on the
++server. Set an API-key credit limit in the OpenRouter dashboard as an additional
++operator safeguard. No hard budget enforcement is claimed.
++
++## Optional workflow
++
++`app.workflow.v1_langgraph.V1LangGraphWorkflow` is a separate adapter, never wired
++into `/v1/chat`. `features.langgraph_workflow` / `LANGGRAPH_WORKFLOW_ENABLED`
++defaults to false. Enabling the flag alone does not route any HTTP traffic into
++the wrapper. An opted-in caller supplies the existing Hermes instance, existing
++V1 services and `_project_v1_chat_response`; it must not instantiate replacement
++knowledge or policy engines. Intent classification remains inside Hermes once.
++
++The acyclic graph has six nodes, recursion limit 8, no retry/checkpointer, an
++overall stage deadline, binding checks and explicit grounding-result checks.
++LangSmith tracing is disabled inside execution. The caller retains ownership of
++providers and services. Missing optional dependency fails closed before execution.
++
++HTTPX is reused. The optional `workflow` dependency pins `langgraph==1.2.14`.
++For this verification only, packages were installed under the new evidence
++directory with `pip --target`; the shared `.venv` was not changed. The native
++runtime's compatibility with the optional dependency is not established.
++
++## Offline tests
++
++From the repository root, using the existing interpreter:
++
++```powershell
++.venv/Scripts/python.exe -B docs/reports/openrouter-workflow-20261009T184538/verify.py regression
++```
++
++This runner adds the isolated dependency directory to its own import path and
++blocks real network, subprocess/model startup, secrets files and active data.
++It writes evidence only under a new run subdirectory. Without the optional
++dependency, workflow tests are SKIP, never counted as PASS.
++
++Rollback: review `SCOPED_CHANGES.patch` and reverse only its newly added hunks.
++Do not restore entire tracked files or discard pre-existing changes. The
++`.before` snapshots are reference evidence, not a whole-repository rollback.
++
++Reference contracts: [OpenRouter Chat API](https://openrouter.ai/docs/api/api-reference/chat/send-chat-completion-request)
++and [LangGraph StateGraph](https://reference.langchain.com/python/langgraph/graph/state/StateGraph).
++V1 acceptance remains HOLD; V2 remains DEFERRED.

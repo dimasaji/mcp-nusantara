@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-10-09T10:35:25.397164+07:00",
+  "filter": {
+    "status": "BLOCKED_DECISION",
+    "current_behavior": "Nonempty filter rejected before retrieval; empty/default query preserved",
+    "metadata_fields": [
+      "document_id",
+      "title",
+      "source",
+      "content_type",
+      "size_bytes",
+      "created_at",
+      "updated_at",
+      "checksum",
+      "custom_metadata"
+    ],
+    "missing_decisions": [
+      "Supported filter keys/operators/types and combination semantics",
+      "Authority and jurisdiction vocabulary with trust/approval source",
+      "Validity/version/conflict rules and missing-metadata fail-closed behavior",
+      "Enforcement before ranking/top-k and test oracles"
+    ],
+    "implementation_defect": "No new confirmed filter implementation defect; approved nonempty filter grammar is absent"
+  },
+  "oracle": {
+    "status": "BLOCKED_DATA_AND_AUTHORIZATION",
+    "case_counts": {
+      "PROJECT_FIXTURE": 3,
+      "REVIEW_REQUIRED": 2,
+      "MISSING": 1,
+      "NEGATIVE_CASE": 1
+    },
+    "unresolved_cases": [
+      {
+        "id": "tangerang-ktp-pemula-snapshot",
+        "oracle_status": "REVIEW_REQUIRED",
+        "source": "data/knowledge/official_sources/ktp_el/tng-ktpel-001.md",
+        "source_authority": "official_as_declared_in_snapshot",
+        "service_region": "Kota Tangerang",
+        "effective_date": null,
+        "effective_date_status": "NOT_ESTABLISHED_BY_SNAPSHOT",
+        "metadata_review_status": "REVIEW_REQUIRED",
+        "authoritative_status": "DECLARED_OFFICIAL_PENDING_GOVERNANCE_REVIEW"
+      },
+      {
+        "id": "tangerang-sop-data-pribadi-snapshot",
+        "oracle_status": "REVIEW_REQUIRED",
+        "source": "data/knowledge/sop/extracted/PERMOHONAN_DATA_PRIBADI.md",
+        "source_authority": "official_as_declared_in_snapshot",
+        "service_region": "Kota Tangerang",
+        "effective_date": null,
+        "effective_date_status": "NOT_ESTABLISHED_BY_SNAPSHOT",
+        "metadata_review_status": "REVIEW_REQUIRED",
+        "authoritative_status": "DECLARED_OFFICIAL_PENDING_GOVERNANCE_REVIEW"
+      },
+      {
+        "id": "paspor-requirements-missing",
+        "oracle_status": "MISSING",
+        "source": null,
+        "source_authority": null,
+        "service_region": null,
+        "effective_date": null,
+        "effective_date_status": "UNKNOWN",
+        "metadata_review_status": "MISSING",
+        "authoritative_status": "UNAVAILABLE"
+      }
+    ],
+    "required_evidence": [
+      "Approved issuer and jurisdiction",
+      "Source snapshot and content hash with provenance",
+      "Valid-from/valid-to evidence, not inferred publication date",
+      "Ingest authorization and approved expected answers/required evidence"
+    ],
+    "implementation_defect": "Missing or unapproved authority/oracle data is not repaired by fabricating source requirements"
+  },
+  "memory": {
+    "durable_personal_history": "NOT_IMPLEMENTED",
+    "prompt_memory_integration": "NOT_IMPLEMENTED",
+    "current_owner": "Existing MemoryEngine process-local bounded deque, client session_id",
+    "implemented": "Legacy user/assistant capture plus transient client turn history/New Chat; no server deletion by New Chat",
+    "blocked_decisions": [
+      "Consent and authenticated ownership of sessions",
+      "Read/write authority and sensitive-content policy",
+      "Retention/deletion and rejected-answer capture",
+      "Which contextual turns may be used in prompts and what remains evidence-only"
+    ],
+    "no_changes": "Legacy preservation disposition retained; no new memory persistence or prompt injection"
+  },
+  "missing_security_evidence": [
+    "Current-source native Windows symlink/path boundary execution with required privileges",
+    "Operational enforcement of approval/policy before sensitive side effects",
+    "Current user/session isolation and memory authorization contract",
+    "Operational auth/local-origin configuration on intended target"
+  ],
+  "missing_deployment_evidence": [
+    "Native full semantic-worker/RAG/store integration from final source; candidate used explicit fixtures",
+    "Target dependency/model/embedding availability and verified configuration provenance",
+    "Single-worker launch topology and cross-process consistency constraints",
+    "Startup/load/resource limits, graceful shutdown and restart verification",
+    "Immutable rollback artifact for old user runtime; current working tree cannot reconstruct old loaded build",
+    "Controlled deployment target and operational credentials; no deployment performed"
+  ]
+}

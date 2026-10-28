@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-10-09T09:38:19.061274+07:00",
+  "status": "PASS_SCOPED",
+  "observed_evidence": [
+    "Existing admin authentication retained; missing/bad token/external origin/evidence mode rejected",
+    "CAS and immutable request capture avoid stale/racing selection",
+    "Public response schema/error sanitation asserted; no production credential writes",
+    "Guarded backend: no network/SQLite/arbitrary subprocess/production writes",
+    "Local-provider candidate allows only loopback Ollama 11434 and new evidence writes"
+  ],
+  "files_changed": [
+    "app/api/control_plane.py",
+    "app/api/routes.py",
+    "control-plane/src/api.ts",
+    "tests/test_v1_operator_control.py"
+  ],
+  "reason": "Enforce existing authorization and safe transport on new controls",
+  "tests_run": [
+    "regression-20261009-090953/results.xml",
+    "regression-20261009-090953/guards.json",
+    "targeted-20261009-093732/results.xml",
+    "FINAL_CHECKS.json",
+    "FRONTEND_REGRESSION.json",
+    "OPERATOR_ERROR_BROWSER.jpg"
+  ],
+  "limitations": [
+    "Scoped control/response security; not complete production security certification",
+    "Existing legacy memory governance risk remains open"
+  ],
+  "remaining_blockers": [
+    "CC05 consent/session ownership/retention remains open under approved temporary legacy preservation",
+    "Native Windows symlink privilege/security operational enforcement not reverified",
+    "Production deployment, provisioned credentials/resources and launch-worker consistency unverified; no deployment authorized"
+  ]
+}

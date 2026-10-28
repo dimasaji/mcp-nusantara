@@ -1,0 +1,136 @@
+{
+  "dataset": "app\\evaluation\\datasets\\v1_recovery_oracle.json",
+  "dataset_sha256": "c9dfa60346ad3668875ea83e7aca189093483a008600e07a623b349afc2afbd9",
+  "mode": "real_indobert_snapshot_retrieval",
+  "records": [
+    {
+      "id": "ktp-definition-local",
+      "status": "PASS",
+      "checks": {
+        "expected_document_retrieved": true,
+        "required_evidence_present": true,
+        "unrelated_documents_not_authoritative": true,
+        "source_answer_passes_guard": true
+      },
+      "authoritative_document_ids": [
+        "DOC-FC9058E1-1a08",
+        "API-TEST-001"
+      ],
+      "wrong_domain_document_ids": [],
+      "retrieved": [
+        {
+          "document_id": "DOC-FC9058E1-1a08",
+          "score": 0.653646
+        },
+        {
+          "document_id": "API-TEST-001",
+          "score": 0.584317
+        }
+      ]
+    },
+    {
+      "id": "paspor-definition-local",
+      "status": "PASS",
+      "checks": {
+        "expected_document_retrieved": true,
+        "required_evidence_present": true,
+        "unrelated_documents_not_authoritative": true,
+        "source_answer_passes_guard": true
+      },
+      "authoritative_document_ids": [
+        "BENCH-PASPOR-001"
+      ],
+      "wrong_domain_document_ids": [],
+      "retrieved": [
+        {
+          "document_id": "BENCH-PASPOR-001",
+          "score": 0.55323
+        }
+      ]
+    },
+    {
+      "id": "nasi-goreng-local",
+      "status": "PASS",
+      "checks": {
+        "expected_document_retrieved": true,
+        "required_evidence_present": true,
+        "unrelated_documents_not_authoritative": true,
+        "source_answer_passes_guard": true
+      },
+      "authoritative_document_ids": [
+        "BENCH-MASAK-001"
+      ],
+      "wrong_domain_document_ids": [],
+      "retrieved": [
+        {
+          "document_id": "BENCH-MASAK-001",
+          "score": 0.707606
+        }
+      ]
+    },
+    {
+      "id": "tangerang-ktp-pemula-snapshot",
+      "status": "REVIEW_REQUIRED",
+      "runtime_knowledge_status": "MISSING_FROM_V1_DEFAULT_DATABASE",
+      "reason": "Human source/version review and approved V1 knowledge are required"
+    },
+    {
+      "id": "tangerang-sop-data-pribadi-snapshot",
+      "status": "REVIEW_REQUIRED",
+      "runtime_knowledge_status": "MISSING_FROM_V1_DEFAULT_DATABASE",
+      "reason": "Human source/version review and approved V1 knowledge are required"
+    },
+    {
+      "id": "paspor-requirements-missing",
+      "status": "MISSING",
+      "runtime_knowledge_status": null,
+      "reason": "Only a passport definition fixture exists; approved official requirements and service region are absent"
+    },
+    {
+      "id": "unknown-service-negative",
+      "status": "PASS",
+      "checks": {
+        "unrelated_documents_not_authoritative": true,
+        "no_evidence_claim_rejected": true
+      },
+      "authoritative_document_ids": [],
+      "wrong_domain_document_ids": [],
+      "retrieved": [
+        {
+          "document_id": "DOC-FC9058E1-1a08",
+          "score": 0.451705
+        },
+        {
+          "document_id": "API-TEST-001",
+          "score": 0.313289
+        }
+      ]
+    }
+  ],
+  "adversarial": [
+    {
+      "answer": "Biaya paspor Rp 999999.",
+      "rejected": true,
+      "reason": "possible_unsupported_content"
+    },
+    {
+      "answer": "KTP selesai dalam 99 hari.",
+      "rejected": true,
+      "reason": "possible_unsupported_content"
+    },
+    {
+      "answer": "Persyaratan wajib membawa surat rahasia.",
+      "rejected": true,
+      "reason": "possible_unsupported_content"
+    },
+    {
+      "answer": "Datang ke kantor ZYX di Jalan Fiktif 999.",
+      "rejected": true,
+      "reason": "possible_unsupported_content"
+    }
+  ],
+  "failures": 0,
+  "missing_or_review_required": 3,
+  "limitations": "Fixture retrieval and source-answer validation; no generated-answer correctness or production approval inferred",
+  "status": "VERIFY"
+}

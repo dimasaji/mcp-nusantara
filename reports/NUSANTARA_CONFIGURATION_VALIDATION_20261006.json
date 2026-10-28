@@ -1,0 +1,182 @@
+{
+  "date": "2026-10-06",
+  "phase": 8,
+  "status": "COMPLETE",
+  "result": "PASS_SCOPED",
+  "authorization": "User: Phase 8 Lanjutkan",
+  "source_build_id": "sha256:487ace8eb2a8ba4d8c979fdc7728cefe7802eb0b3f8f01d3f6462d9c83e9492a",
+  "source_changes_this_phase": false,
+  "protected_source_checks": 296,
+  "source_changed_since_phase7": [],
+  "evidence_reuse": "Phase7 test results reused only after hash verification and matching source build; no baseline/targeted/full suite rerun",
+  "requirements": [
+    {
+      "requirement": "Configuration loads",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "test_defaults_preserve_declared_and_effective_source_profiles",
+        "test_leaf_precedence_and_input_not_mutated"
+      ]
+    },
+    {
+      "requirement": "Configuration validates",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "test_invalid_configuration_rejected_with_safe_error",
+        "test_weights_and_reranker_valid_pair",
+        "test_credential_url_safe_error"
+      ]
+    },
+    {
+      "requirement": "Default values work",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "test_defaults_preserve_declared_and_effective_source_profiles",
+        "test_legacy_provider_and_explicit_nondefault_arguments"
+      ]
+    },
+    {
+      "requirement": "Environment override works",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "test_leaf_precedence_and_input_not_mutated",
+        "test_environment_opt_in_and_no_dotenv_loading",
+        "test_alias_conflict_is_order_independent"
+      ]
+    },
+    {
+      "requirement": "Invalid configuration rejected",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "test_invalid_environment",
+        "test_invalid_configuration_rejected_with_safe_error",
+        "test_file_errors_bounded_and_safe",
+        "test_unwired_rag_parameters_not_silently_accepted"
+      ]
+    },
+    {
+      "requirement": "Missing required configuration reported",
+      "status": "PASS_SCOPED_CONDITIONAL",
+      "tests": [
+        "test_missing_and_oversized_file",
+        "test_invalid_configuration_rejected_with_safe_error"
+      ],
+      "additional_checks": [
+        "explicit_null_required_model_rejected",
+        "explicit_null_required_worker_path_rejected"
+      ],
+      "note": "No mandatory external file/env input: defaults populate required snapshot fields. Explicit requested missing file/null/blank mandatory field rejected."
+    },
+    {
+      "requirement": "Existing API still works",
+      "status": "PASS_SCOPED_MOCKED_RUNTIME",
+      "tests": [
+        "test_projection_excludes_internal_mirrors_unknown_fields_and_never_mutates[None]",
+        "test_projection_excludes_internal_mirrors_unknown_fields_and_never_mutates[context1]",
+        "test_projection_excludes_internal_mirrors_unknown_fields_and_never_mutates[context2]",
+        "test_projection_excludes_internal_mirrors_unknown_fields_and_never_mutates[context3]",
+        "test_unknown_grounding_reason_and_non_scalar_goal_fail_closed_without_stringifying",
+        "test_malformed_public_assessment_is_not_silently_coerced[nan]",
+        "test_malformed_public_assessment_is_not_silently_coerced[inf]",
+        "test_malformed_public_assessment_is_not_silently_coerced[-0.1]",
+        "test_malformed_public_assessment_is_not_silently_coerced[1.1]",
+        "test_malformed_public_assessment_is_not_silently_coerced[0.8]",
+        "test_oversized_citation_is_not_returned_or_silently_truncated",
+        "test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[local_rule]",
+        "test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[fast]",
+        "test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[ollama]",
+        "test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[offline]",
+        "test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[unsupported]",
+        "test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[missing]",
+        "test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[requires_human]",
+        "test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state[policy_sensitive]",
+        "test_http_partial_context_never_becomes_a_public_dump[None-200]",
+        "test_http_partial_context_never_becomes_a_public_dump[context1-200]",
+        "test_http_partial_context_never_becomes_a_public_dump[context2-500]",
+        "test_http_generic_exception_does_not_echo_internal_exception",
+        "test_http_stage_statuses_remain_safe[503]",
+        "test_http_stage_statuses_remain_safe[504]",
+        "test_http_provider_unavailable_preserves_existing_shared_handler",
+        "test_http_validation_stays_outside_chat_pipeline",
+        "test_phase4_v1_chat_exposes_trust_assessment",
+        "test_phase4_v1_chat_trust_confidence_is_bounded",
+        "test_phase4_v1_trust_receives_canonical_score_evidence",
+        "test_phase4_v1_trust_rejects_weak_evidence",
+        "test_phase4_v1_trust_flags_mixed_evidence",
+        "test_phase4_v1_trust_is_not_policy",
+        "test_phase4_v1_trust_preserves_provenance_outside_scoring"
+      ],
+      "note": "Existing API test evidence; not live deployment/default snapshot activation proof."
+    },
+    {
+      "requirement": "Existing tests still pass",
+      "status": "PASS_SCOPED_WITH_EXISTING_SKIP",
+      "regression": {
+        "passed": 353,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1,
+        "subtests_passed": 28,
+        "seconds": 108.26,
+        "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml"
+      },
+      "note": "Mandatory existing symlink Windows skip remains; initial WinError5 and diagnosis retained."
+    }
+  ],
+  "test_evidence": {
+    "configuration_cases": 52,
+    "integration_cases": 12,
+    "DeveloperCore_cases": 22,
+    "Gate14_cases": 10,
+    "CC01_projection_cases": 27,
+    "phase4_v1_cases": 7,
+    "v2_cases": 90,
+    "regression": {
+      "passed": 353,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "subtests_passed": 28,
+      "seconds": 108.26,
+      "evidence": "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml"
+    }
+  },
+  "additional_checks": {
+    "explicit_null_required_model_rejected": true,
+    "explicit_null_required_worker_path_rejected": true,
+    "required_fields_have_documented_defaults": true,
+    "provenance_does_not_claim_activation": true
+  },
+  "path_preflight": {
+    "worker_file_present": true,
+    "worker_interpreter_present": true,
+    "knowledge_database_present": true,
+    "paths_checked_read_only": true,
+    "worker_executed": false,
+    "database_opened": false,
+    "provider_live_health": "NOT_RUN",
+    "stored_index_dimension_compatibility": "NOT_PROVEN_BY_PHASE8"
+  },
+  "runtime_activation": "NOT_DONE",
+  "scope": "isolated immutable loader and explicit snapshot consumer integrations; compatibility tests with isolated dependencies",
+  "not_proven": [
+    "live provider/worker health",
+    "stored index dimension compatibility",
+    "default API/startup snapshot activation",
+    "production/runtime/governance/feature enforcement",
+    "provider switching and ModelRouter migration",
+    "external-client compatibility beyond existing tests"
+  ],
+  "security": "existing zero-finding static scan reused; no new source changes; not full security certification",
+  "overall_v1_acceptance": "FAIL/HOLD unchanged",
+  "configuration_architecture_DoD": "NOT_COMPLETE; scoped validation does not close remaining integration or acceptance gaps",
+  "next_phase": 9,
+  "next_step": "Phase9 audit existing regression evidence before deciding whether new checks are needed; do not repeat successful runs without changes/failures",
+  "evidence_sha256": {
+    "reports/configuration/CONFIGURATION_PHASE7_REGRESSION_FINAL_20261006.xml": "44976b72408fb65e3bfe9cce8a49fe135b91208bb75ab45eaf463bb18dd2e082",
+    "reports/configuration/phase-08-validation/ADDITIONAL_CHECKS_20261006.json": "5b01535f697ddc7ed353c84e981534bc3d5149ff420cd77dfccc880fdc1c1db7",
+    "reports/configuration/CONFIGURATION_PHASE7_SECURITY_20261006.json": "95f74f18f7ef685c09bb69400c28f64f63eea94d45bd733b4bd7c5d9e3bdcdb1",
+    "reports/configuration/phase-07-integration/RESULT_20261006.json": "e1f57f875523afb1a624f2aedb1fd84cbe486be084b872d4bfd726db5388ac2d"
+  },
+  "completed_at": "2026-10-06T11:45:31.019028+00:00"
+}

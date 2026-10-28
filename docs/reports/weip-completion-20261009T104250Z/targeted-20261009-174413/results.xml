@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="9" skipped="0" tests="9" time="0.375" timestamp="2026-10-09T17:44:13.987434+07:00" hostname="DESKTOP-GJHS3LR"><testcase classname="tests.test_web_evidence_pipeline" name="test_completion_default_pdf_never_uses_in_process_parser" time="0.017"><failure message="AssertionError: assert 'REVIEW_REQUIRED' == 'QUARANTINED'&#10;  &#10;  - QUARANTINED&#10;  + REVIEW_REQUIRED">tests\test_web_evidence_pipeline.py:349: in test_completion_default_pdf_never_uses_in_process_parser
+    assert record["status"] == "QUARANTINED"
+E   AssertionError: assert 'REVIEW_REQUIRED' == 'QUARANTINED'
+E     
+E     - QUARANTINED
+E     + REVIEW_REQUIRED</failure></testcase><testcase classname="tests.test_web_evidence_pipeline" name="test_completion_oversized_pdf_rejected_before_fixture_parser" time="0.004"><failure message="Failed: DID NOT RAISE EvidenceRejected">tests\test_web_evidence_pipeline.py:357: in test_completion_oversized_pdf_rejected_before_fixture_parser
+    with pytest.raises(EvidenceRejected):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE EvidenceRejected</failure></testcase><testcase classname="tests.test_web_evidence_pipeline" name="test_completion_declared_reviewer_cannot_approve" time="0.019"><failure message="Failed: DID NOT RAISE EvidenceRejected">tests\test_web_evidence_pipeline.py:366: in test_completion_declared_reviewer_cannot_approve
+    with pytest.raises(EvidenceRejected, match="APPROVAL_IDENTITY_REQUIRED"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE EvidenceRejected</failure></testcase><testcase classname="tests.test_web_evidence_pipeline" name="test_completion_expired_deadline_after_read_is_rejected" time="0.012"><failure message="Failed: DID NOT RAISE EvidenceRejected">tests\test_web_evidence_pipeline.py:380: in test_completion_expired_deadline_after_read_is_rejected
+    with pytest.raises(EvidenceRejected, match="FETCH_DEADLINE"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE EvidenceRejected</failure></testcase><testcase classname="tests.test_web_evidence_pipeline" name="test_completion_malformed_http_error_is_redacted" time="0.005"><failure message="http.client.BadStatusLine: private-response-token">tests\test_web_evidence_pipeline.py:395: in test_completion_malformed_http_error_is_redacted
+    collect(p)
+tests\test_web_evidence_pipeline.py:77: in collect
+    return pipe.collect("fixture", URL, title="Fixture", service="fixture-service",
+app\knowledge\web_evidence.py:466: in collect
+    fetched = self.fetcher.fetch(source_id, url)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app\knowledge\web_evidence.py:203: in fetch
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+tests\test_web_evidence_pipeline.py:390: in getresponse
+    raise http.client.BadStatusLine('private-response-token')
+E   http.client.BadStatusLine: private-response-token</failure></testcase><testcase classname="tests.test_web_evidence_pipeline" name="test_completion_pending_dns_thread_is_bounded" time="0.030"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'DNS_BUSY'&#10;  Actual message: 'DNS_DEADLINE'">tests\test_web_evidence_pipeline.py:411: in test_completion_pending_dns_thread_is_bounded
+    with pytest.raises(EvidenceRejected, match="DNS_BUSY"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'DNS_BUSY'
+E     Actual message: 'DNS_DEADLINE'</failure></testcase><testcase classname="tests.test_web_evidence_pipeline" name="test_completion_fetch_budget_types_and_caps[limits0]" time="0.001"><failure message="Failed: DID NOT RAISE EvidenceRejected">tests\test_web_evidence_pipeline.py:420: in test_completion_fetch_budget_types_and_caps
+    with pytest.raises(EvidenceRejected, match="FETCH_LIMITS"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE EvidenceRejected</failure></testcase><testcase classname="tests.test_web_evidence_pipeline" name="test_completion_fetch_budget_types_and_caps[limits1]" time="0.001"><failure message="Failed: DID NOT RAISE EvidenceRejected">tests\test_web_evidence_pipeline.py:420: in test_completion_fetch_budget_types_and_caps
+    with pytest.raises(EvidenceRejected, match="FETCH_LIMITS"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE EvidenceRejected</failure></testcase><testcase classname="tests.test_web_evidence_pipeline" name="test_completion_fetch_budget_types_and_caps[limits2]" time="0.001"><failure message="Failed: DID NOT RAISE EvidenceRejected">tests\test_web_evidence_pipeline.py:420: in test_completion_fetch_budget_types_and_caps
+    with pytest.raises(EvidenceRejected, match="FETCH_LIMITS"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE EvidenceRejected</failure></testcase></testsuite></testsuites>
