@@ -30,7 +30,7 @@ Upstream baseline: `47448958068b0b2f17bac170f638df125d10561e`.
 - Final `npm test`: **190 passed, 4 failed, 194 total**. A pristine baseline worktree using the same dependencies returned **187 passed, the same 4 failed, 191 total**. Three engineering-console tests require historical report archives not materialized in this frontend snapshot. The existing Workspace test expects `Ollama · fixture-local`, which is absent in the baseline UI as well. No additional failure was introduced.
 - `npm run build`: TypeScript and Vite production build pass; existing bundle-size and dependency annotation warnings remain.
 - `git diff --check`: pass.
-- Browser verification could not run: no installed Chromium executable; `npx playwright install chromium` repeatedly received an empty/truncated download. No browser screenshot or live-backend claim is made.
+- Initial browser verification was blocked by a missing Chromium executable and truncated Playwright downloads. Follow-up preview succeeded using a separately installed bundled Chromium. Actual dashboard, approval and collapsed technical pages were rendered with explicitly labeled fixture responses. Visual QA found inherited column navigation; scoped CSS overrides now keep the navigation horizontal. This preview does not verify the live backend or local operator machine.
 - Graphify query/update: not run successfully; CLI missing and graph unchanged. Run `graphify update .` in a full development checkout before treating the graph as current.
 
 This change does not implement login, Google authentication, roles or Super User accounts. It does not claim to repair the local SOP question that has no observed network trace.
