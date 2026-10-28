@@ -28,6 +28,23 @@ beforeEach(()=>{
  vi.mocked(api.fetchChatHistory).mockResolvedValue({session_id:'fixture',turns:[]});
  vi.mocked(api.saveEvidenceDecision).mockImplementation(async input=>({...input,package_id:input.packageId,decision_id:'dec_'+'a'.repeat(32),reviewer_principal:'test',authentication:'TEST_ONLY',timestamp:new Date().toISOString(),notes:input.notes,test_evidence:[],blockers:[],record_hash:'a'.repeat(64)}));
 });
+it('explains the backend work origin and approval sequence without executing',async()=>{
+ vi.mocked(api.fetchExecutionContext).mockResolvedValue({...plan,plan_origin:{kind:'DEVELOPER_OPERATION',actor_identity:'NOT_RECORDED'},workflow:{
+  version:'nusantara.controlled-work.v1',scope:'CONTROLLED_FILE_WRITE',source:'Developer Core / change_plan.json',approval_validity_seconds:3600,approval_executes_work:false,
+  steps:[['PREPARE','Siapkan rencana'],['VERIFY','Periksa bukti'],['DECIDE','Keputusan operator'],['AUTHORIZE','Periksa izin'],['EXECUTE','Jalankan'],['AUDIT','Catat hasil']].map(([id,label])=>({id:id as api.WorkApprovalWorkflow['steps'][number]['id'],label,actor:'Penanggung jawab contoh',description:'Keterangan dari backend'})),
+  decisions:[{code:'PASS',label:'Setujui',description:'Terima rencana; jalankan terpisah.'},{code:'FAIL',label:'Tolak',description:'Eksekusi tidak diizinkan.'},{code:'HOLD',label:'Tunda',description:'Lengkapi bukti terlebih dahulu.'}]
+ }});
+ mount(<ExecutionReview title="Human Control"/>);
+ const flow=await screen.findByRole('region',{name:'Alur persetujuan pekerjaan'});
+ const steps=await within(flow).findByRole('list');
+ expect(within(steps).getByText('Siapkan rencana')).toBeVisible();
+ expect(within(steps).getByText('Catat hasil')).toBeVisible();
+ expect(flow).toHaveTextContent('Developer Core / change_plan.json');
+ expect(flow).toHaveTextContent('Identitas personal pembuat belum tercatat');
+ expect(flow).toHaveTextContent('Setujui tidak langsung menjalankan pekerjaan');
+ expect(api.saveEvidenceDecision).not.toHaveBeenCalled();
+ expect(api.executeReviewedAction).not.toHaveBeenCalled();
+});
 it.each(['PASS','FAIL','HOLD'] as const)('saves %s only after explicit selection and submission, retaining backend binding',async decision=>{
  mount(<ExecutionReview title="Human Control"/>);
  await screen.findAllByText('Tinjau pekerjaan uji');
@@ -80,3 +97,4 @@ it('shows honest empty and failed states for workspace data and blocker history'
  expect(screen.getByText(/Riwayat penyelesaian blocker belum tersedia/)).toBeVisible();
  expect(api.saveEvidenceDecision).not.toHaveBeenCalled();
 });
+

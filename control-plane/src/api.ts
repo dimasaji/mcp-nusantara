@@ -316,10 +316,20 @@ export async function saveEvidenceDecision(input:{packageId:string;decision:'PAS
 }
 
 
-export type ExecutionContext={change_id:string;expected_change:string;target_files:string[];operation:string;plan_binding:PlanBinding;objective:string;risk:string;tests_required:string[];rollback:string;checked_at:string;source:string;completed?:boolean;completed_at?:string|null};
+const WorkApprovalWorkflowSchema=z.object({version:z.literal('nusantara.controlled-work.v1'),scope:z.literal('CONTROLLED_FILE_WRITE'),source:z.string(),
+ approval_validity_seconds:z.number().int().positive().max(86400),approval_executes_work:z.literal(false),
+ steps:z.array(z.object({id:z.enum(['PREPARE','VERIFY','DECIDE','AUTHORIZE','EXECUTE','AUDIT']),label:z.string(),actor:z.string(),description:z.string()}).strict()).length(6),
+ decisions:z.array(z.object({code:z.enum(['PASS','FAIL','HOLD']),label:z.string(),description:z.string()}).strict()).length(3)}).strict().superRefine((value,ctx)=>{
+ if(value.steps.map(step=>step.id).join(',')!=='PREPARE,VERIFY,DECIDE,AUTHORIZE,EXECUTE,AUDIT')ctx.addIssue({code:'custom',path:['steps'],message:'Urutan alur persetujuan tidak didukung.'});
+ if(value.decisions.map(decision=>decision.code).sort().join(',')!=='FAIL,HOLD,PASS')ctx.addIssue({code:'custom',path:['decisions'],message:'Pilihan keputusan tidak lengkap.'});
+});
+export type WorkApprovalWorkflow=z.infer<typeof WorkApprovalWorkflowSchema>;
+export type ExecutionContext={workflow?:WorkApprovalWorkflow;plan_origin?:{kind:'DEVELOPER_OPERATION'|'UNKNOWN';actor_identity:'NOT_RECORDED'};change_id:string;expected_change:string;target_files:string[];operation:string;plan_binding:PlanBinding;objective:string;risk:string;tests_required:string[];rollback:string;checked_at:string;source:string;completed?:boolean;completed_at?:string|null};
 export type ExecutionHistory={decisions:DecisionRecord[];executions:{timestamp:string;change_id:string;package_id:string|null;decision_id:string|null;result:string;files_changed:string[];reason:string|null}[];decision_audit:string;execution_audit:string};
 export async function fetchExecutionContext(token:string):Promise<ExecutionContext>{
- return runtimeFetch('/v1/control-plane/execution-context',{headers:{'X-Admin-Token':token}}) as Promise<ExecutionContext>;
+ const context=await runtimeFetch('/v1/control-plane/execution-context',{headers:{'X-Admin-Token':token}}) as ExecutionContext;
+ if(context.workflow!==undefined)context.workflow=WorkApprovalWorkflowSchema.parse(context.workflow);
+ return context;
 }
 export async function fetchExecutionHistory(token:string):Promise<ExecutionHistory>{
  const result=await runtimeFetch('/v1/control-plane/history',{headers:{'X-Admin-Token':token}}) as ExecutionHistory;
@@ -330,3 +340,4 @@ export async function executeReviewedAction(token:string,packageId:string,decisi
  return runtimeFetch('/v1/control-plane/execute-reviewed',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Token':token},
  body:JSON.stringify({package_id:packageId,decision_id:decisionId})}) as Promise<{status:string;files_changed:string[]}>;
 }
+
