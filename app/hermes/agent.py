@@ -1090,9 +1090,21 @@ class HermesAgent:
             )
 
         if scoped_document_ids and grounding_result is not None and not grounding_result.grounded:
-            response_text = ('Jawaban model belum dapat dipastikan sesuai SOP ini. Periksa sumber atau coba pertanyaan yang lebih spesifik.'
-                             if pilot_chat and grounding_result.reason != 'no_evidence' else
-                             'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.')
+            if pilot_chat and service_facts is not None and service_facts.get('fallback') and not service_facts.get('unknown'):
+                response_text = service_facts['fallback']
+                grounding_result = GroundingResult(response_text, True, 'grounded', [])
+            else:
+                response_text = ('Jawaban model belum dapat dipastikan sesuai SOP ini. Periksa sumber atau coba pertanyaan yang lebih spesifik.'
+                                 if pilot_chat and grounding_result.reason != 'no_evidence' else
+                                 'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.')
+        # Pilot SOP: for missing-contact questions, ensure the answer is an
+        # abstention; otherwise fall back to the verified abstention text.
+        if (pilot_chat and service_facts is not None and service_facts.get('facet') == 'missing'
+                and grounding_result is not None and grounding_result.grounded):
+            abstention_markers = ('belum tercantum', 'tidak menyebutkan', 'tidak mencantumkan', 'belum ditemukan')
+            if not any(m in response_text.casefold() for m in abstention_markers):
+                response_text = service_facts['fallback']
+                grounding_result = GroundingResult(response_text, True, 'grounded', [])
         remember_kwargs={'session_id':request.session_id,'response':response_text}
         if service_context is not None:remember_kwargs['service_context']=service_context
         _gate_integration.remember_response(**remember_kwargs)
