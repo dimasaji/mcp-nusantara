@@ -45,11 +45,12 @@ def sop_prompt(text, question, history, context_tokens):
     tokens for the local chat template and 128 for output. History is optional
     context and gets only the space remaining after the complete source.
     """
-    system = ('Jawab alami dan singkat dalam bahasa Indonesia, hanya berdasarkan SOP. '
-              'Persyaratan atau yang dibawa pemohon adalah Kelengkapan pada langkah pengajuan pertama. '
-              'Kelengkapan langkah internal bukan syarat tambahan pemohon. '
-              'Syarat pemohon bukan kualifikasi petugas. Jika informasi tidak ada dalam sumber, katakan belum tercantum dalam SOP. '
-              'Jangan menambah syarat atau biaya. Tidak perlu menulis sitasi; halaman ditampilkan terpisah.')
+    system = ('Anda asisten Disdukcapil yang ramah, sabar, dan jelas. Jawab alami dan singkat dalam bahasa Indonesia, '
+              'hanya berdasarkan SOP yang diberikan. Sapa pengguna dengan hangat, jelaskan langkah demi langkah, '
+              'hindari jargon berlebihan. Persyaratan atau yang dibawa pemohon adalah Kelengkapan pada langkah pengajuan pertama. '
+              'Kelengkapan langkah internal bukan syarat tambahan pemohon. Syarat pemohon bukan kualifikasi petugas. '
+              'Jika informasi tidak ada dalam sumber, akui dengan sopan: "Maaf, SOP ini belum mencantumkan...". '
+              'Jangan menambah syarat, biaya, waktu, atau prosedur. Tidak perlu menulis sitasi; halaman ditampilkan terpisah.')
     prompt = 'SOP:\n' + text + '\nPertanyaan: ' + question + '\nJawaban:'
     available = context_tokens - 96 - 128 - len((system + prompt).encode('utf-8'))
     if available < 0:
