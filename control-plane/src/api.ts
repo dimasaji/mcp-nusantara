@@ -47,6 +47,15 @@ export async function fetchRuntimeHealth(){
   if(!parsed.success)throw new Error(`GET /health gagal (HTTP ${response.status}): respons Backend tidak sesuai format health.`);
   return {...parsed.data,httpStatus:response.status};
 }
+const RuntimeReadinessSchema=z.object({status:z.enum(['BLOCKED','PREREQUISITES_READY','CONFIGURATION_CHANGED']),
+  provider:z.string(),model:z.string(),configuration_revision:z.number().int(),process_id:z.number().int(),
+  build_id:z.string(),checked_at:z.string(),checks:z.record(z.string(),z.object({status:z.string()})),
+  operational_acceptance:z.literal('NOT_VERIFIED')});
+export async function fetchRuntimeReadiness(token:string){
+  if(!token.trim())throw new Error('Token operator diperlukan untuk memeriksa kesiapan.');
+  return RuntimeReadinessSchema.parse(await runtimeFetch('/v1/runtime/readiness',{
+    headers:{'X-Admin-Token':token},signal:AbortSignal.timeout(20000)}));
+}
 export type CostSummary={status:'AVAILABLE'|'UNAVAILABLE';source:string;reason:string;checked_at:string;
   currency?:string;period?:{scope:string;start:string|null;end:string|null};actual_usd?:string;
   reserved_usd?:string;remaining_budget_usd?:string;budget_usd?:string;per_request_cap_usd?:string;

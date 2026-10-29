@@ -49,10 +49,14 @@ it('forwards document bytes, operator auth and pipeline History through the Cont
   const reviewBody=JSON.stringify({version_id:'a'.repeat(64),action:'content_ok'});
   const ratingBody=JSON.stringify({version_id:'a'.repeat(64),ok:false,note:'Perlu diperiksa'});
   const processBody=JSON.stringify({version_id:'a'.repeat(64)});
-  for(const [path,body] of [[`${reviewBase}/process`,processBody],[`${reviewBase}/decision`,reviewBody],[`${reviewBase}/trials/trial-fixture/rating`,ratingBody]]){
+  const metadataBody=JSON.stringify({version_id:'a'.repeat(64),metadata:{logical_sop_id:'fixture'}});
+  for(const [path,body] of [[`${reviewBase}/metadata`,metadataBody],[`${reviewBase}/process`,processBody],[`${reviewBase}/decision`,reviewBody],[`${reviewBase}/trials/trial-fixture/rating`,ratingBody]]){
     const response=await fetch(origin+path,{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Token':'isolated-fixture'},body});
     expect(await response.json()).toEqual({status:'READY'});
   }
+  const readiness=await fetch(origin+'/v1/runtime/readiness?document_id=DOC-fixture',{headers:{'X-Admin-Token':'isolated-fixture'}});
+  expect(readiness.status).toBe(200);
+  expect(await readiness.json()).toEqual({runs:[{status:'READY'}]});
   const watch = await fetch(`${origin}/v1/knowledge/pipeline/watch?enabled=true`, {method: 'POST',
     headers: {'X-Admin-Token': 'isolated-fixture'}});
   expect(watch.status).toBe(200);
@@ -61,9 +65,12 @@ it('forwards document bytes, operator auth and pipeline History through the Cont
     {method: 'GET', url: '/v1/knowledge/pipeline/status', token: 'isolated-fixture', name: undefined, body: Buffer.alloc(0)},
     {method:'GET',url:reviewBase,token:'isolated-fixture',name:undefined,body:Buffer.alloc(0)},
     {method:'GET',url:`${reviewBase}/source?version_id=${'a'.repeat(64)}`,token:'isolated-fixture',name:undefined,body:Buffer.alloc(0)},
+    {method:'POST',url:`${reviewBase}/metadata`,token:'isolated-fixture',name:undefined,body:Buffer.from(metadataBody)},
     {method:'POST',url:`${reviewBase}/process`,token:'isolated-fixture',name:undefined,body:Buffer.from(processBody)},
     {method:'POST',url:`${reviewBase}/decision`,token:'isolated-fixture',name:undefined,body:Buffer.from(reviewBody)},
     {method:'POST',url:`${reviewBase}/trials/trial-fixture/rating`,token:'isolated-fixture',name:undefined,body:Buffer.from(ratingBody)},
+    {method:'GET',url:'/v1/runtime/readiness?document_id=DOC-fixture',token:'isolated-fixture',name:undefined,body:Buffer.alloc(0)},
     {method: 'POST', url: '/v1/knowledge/pipeline/watch?enabled=true', token: 'isolated-fixture', name: undefined, body: Buffer.alloc(0)},
   ]);
 }, 20000);
+

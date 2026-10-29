@@ -637,7 +637,7 @@ class HermesAgent:
         # ==========================================================
         # GATE 8-13 LIVE INTEGRATION â€” SHADOW MODE
         # ==========================================================
-        gate_context = _gate_integration.process(
+        gate_context = await _run_sync_v1(_gate_integration.process,
             session_id=request.session_id,
             user_input=request.user_input,
             evidence=evidence,
@@ -1107,12 +1107,12 @@ class HermesAgent:
                 grounding_result = GroundingResult(response_text, True, 'grounded', [])
         remember_kwargs={'session_id':request.session_id,'response':response_text}
         if service_context is not None:remember_kwargs['service_context']=service_context
-        _gate_integration.remember_response(**remember_kwargs)
+        await _run_sync_v1(_gate_integration.remember_response, **remember_kwargs)
 
         # ==============================================================
         # GATE 14 - DEVELOPER CORE RUNTIME SNAPSHOT
         # ==============================================================
-        developer_runtime = _developer_core.runtime_snapshot(
+        developer_runtime = await _run_sync_v1(_developer_core.runtime_snapshot,
             session_id=request.session_id,
             user_input=request.user_input,
             gate_pipeline=gate_context,
@@ -1240,3 +1240,4 @@ class HermesAgent:
         }, intent_name=intent_name, response_policy=(
             "repeat" if repeated_text is not None else "conversation" if conversation else "evidence"
         ))
+

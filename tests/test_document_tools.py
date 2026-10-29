@@ -48,6 +48,7 @@ def test_conversion_cache_page_provenance_and_approval_are_independent(tmp_path,
         return SimpleNamespace(returncode=0)
 
     monkeypatch.setattr('app.knowledge.worker_process.run_worker', worker)
+    monkeypatch.setattr('app.knowledge.document_tools.effective_config', lambda: {'fixture': True})
     tools = DocumentTools(engine, operator=True)
     tools.process(run['document_id'], detail['version_id'])
     deadline = time.monotonic() + 3
@@ -83,3 +84,4 @@ def test_conversion_cache_page_provenance_and_approval_are_independent(tmp_path,
     assert tools.inspect(run['document_id'], detail['version_id'])['status'] == 'FAILED'
     with engine._pipeline_db() as conn:
         assert conn.execute("SELECT COUNT(*) FROM document_extractions WHERE status='COMPLETE'").fetchone()[0] == 1
+

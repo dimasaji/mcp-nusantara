@@ -6,8 +6,15 @@ No production metadata/index migration is needed to fail closed.
 """
 import hashlib
 import json
+import re
 
 from fastapi import HTTPException
+
+CHAT_SESSION_PATTERN = r'^web-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$'
+
+
+def valid_chat_session(value: str) -> bool:
+    return isinstance(value, str) and re.fullmatch(CHAT_SESSION_PATTERN, value) is not None
 
 
 def v1_session_id(session_id: str, *, operator: bool) -> str:
@@ -138,3 +145,4 @@ class V1KnowledgeBoundary:
                     citation.score = item.score
                 result.extend(extracted)
         return self._remember(result, review)
+

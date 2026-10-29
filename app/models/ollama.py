@@ -5,6 +5,7 @@ Tidak boleh ada direct Ollama call di luar provider ini.
 import asyncio
 import json
 import time
+import math
 from typing import Any, Dict, List, Optional
 
 import httpx
@@ -53,6 +54,7 @@ class OllamaProvider(LLMProvider):
             'CONFIGURATION' if nusantara_config is not None else 'DEFAULT')
         self.last_health_identity = None
         self.last_execution_identity = None
+        self.generation_started = False
         if nusantara_config is not None:
             if nusantara_config.llm.provider != self.provider_name:
                 raise ConfigurationError("PROVIDER_MISMATCH")
@@ -128,6 +130,7 @@ class OllamaProvider(LLMProvider):
         request: GenerateRequest,
     ) -> GenerateResponse:
         """Generate teks dari Ollama API."""
+        self.generation_started = True
         identity = self._capture_identity()
         client = await self._get_client()
 
@@ -197,11 +200,29 @@ class OllamaProvider(LLMProvider):
             self._emit_identity(receipt)
             self.last_execution_identity = receipt.safe_dump()
 
+            timings = {}
+            for key in ('total_duration', 'load_duration', 'prompt_eval_duration', 'eval_duration'):
+                value = result.get(key)
+                if type(value) in (int, float) and math.isfinite(value) and value >= 0:
+                    timings[key.removesuffix('_duration') + '_ms'] = value / 1_000_000
+            for key in ('prompt_eval_count', 'eval_count'):
+                value = result.get(key)
+                if type(value) is int and value >= 0:
+                    timings[key] = value
+            try:
+                from app.observability import metrics
+                for key, value in timings.items():
+                    if key.endswith('_ms'):
+                        metrics.observe('provider.ollama.' + key, value)
+            except Exception:
+                pass
+
             return GenerateResponse(
                 content=content,
                 model=identity.payload_model,
                 execution_identity=receipt.safe_dump(),
                 tokens_used=result.get("eval_count", 0) + result.get("prompt_eval_count", 0),
+                timings=timings,
                 latency_ms=int((time.time() - start_time) * 1000),
             )
         except httpx.HTTPStatusError as e:
@@ -226,6 +247,7 @@ class OllamaProvider(LLMProvider):
         request: StructuredGenerateRequest,
     ) -> StructuredGenerateResponse:
         """Generate dengan output terstruktur (JSON schema)."""
+        self.generation_started = True
         identity = self._capture_identity()
         client = await self._get_client()
         

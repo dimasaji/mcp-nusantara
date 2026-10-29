@@ -141,7 +141,7 @@ def send(api, text='Halo', *, operator=False, stream=False, request_id=None, doc
 
 
 def test_ordinary_active_pilot_receives_the_same_version_bound_model_path(api, tmp_path):
-    from test_sop_review import engine_at
+    from test_sop_review import engine_at, confirm_fixture_metadata
     from app.knowledge.sop_review import SOPReview
     engine = engine_at(tmp_path / 'active-pilot.db')
     run = engine.process_knowledge_source('sop.txt', b'Persyaratan layanan adalah surat permohonan. Prosedur pelayanan menurut sumber ini.')
@@ -152,6 +152,7 @@ def test_ordinary_active_pilot_receives_the_same_version_bound_model_path(api, t
     for case in doc['required_cases']:
         trial = review.record_trial(doc['document_id'], doc['version_id'], case, 'Question', {'response': 'Fixture'}, 'fixture')
         review.rate(doc['document_id'], doc['version_id'], trial['trial_id'], True, '', 'fixture')
+    confirm_fixture_metadata(review, review.detail(doc['document_id']))
     review.decide(doc['document_id'], doc['version_id'], 'approve', 'fixture')
     api.ns['_knowledge'] = engine
     response = send(api, 'Berapa waktu layanan?', operator=True, document_ids=[doc['document_id']])
@@ -364,3 +365,4 @@ def test_operator_http_search_still_works_with_explicit_authorization(api):
             assert api.calls['search'] == 1
             assert response.json()['results'][0]['document_id'] == 'internal-source'
     asyncio.run(exercise())
+

@@ -73,9 +73,9 @@ test('real stored SOP: PDF, extraction, nine chat turns, citations and unchanged
   const results:unknown[]=[];
   for(const [question,kind,expected,pages] of cases){
     console.log(`Testing UI: ${question}`);
-    await expect(panel.locator('select')).toBeEnabled({timeout:90000});
-    await panel.locator('select').selectOption(kind);
-    await panel.locator('textarea').first().fill(question);
+    await expect(panel.getByLabel('Jenis percobaan',{exact:true})).toBeEnabled({timeout:90000});
+    await panel.getByLabel('Jenis percobaan',{exact:true}).selectOption(kind);
+    await panel.getByLabel('Pertanyaan SOP',{exact:true}).fill(question);
     const pending=page.waitForResponse(r=>r.url()===origin+'/v1/chat'&&r.request().method()==='POST',{timeout:240000});
     await panel.getByRole('button',{name:'Kirim pertanyaan SOP',exact:true}).click();
     const response=await pending;expect(response.ok()).toBeTruthy();
@@ -88,7 +88,7 @@ test('real stored SOP: PDF, extraction, nine chat turns, citations and unchanged
     expect(answer.evidence.every((e:{block_ids?:string[]})=>e.block_ids?.length)).toBeTruthy();
     const trial=panel.locator('article').filter({has:page.getByText(question,{exact:true})}).last();
     await expect(trial).toContainText(answer.response,{timeout:30000});
-    await expect(panel.locator('select')).toBeEnabled({timeout:90000});
+    await expect(panel.getByLabel('Jenis percobaan',{exact:true})).toBeEnabled({timeout:90000});
     await expect(panel.getByRole('alert')).toHaveCount(0);
     console.log(`PASS live UI: ${question} | ${answer.provider_status} | pages ${pages.join(',')}`);
   }
@@ -102,3 +102,4 @@ test('real stored SOP: PDF, extraction, nine chat turns, citations and unchanged
   expect(after.extraction.job_id).toBe(converted.extraction.job_id);
   expect(after.content_ok).toBe(before.content_ok);expect(after.approval).toEqual(before.approval);
 });
+

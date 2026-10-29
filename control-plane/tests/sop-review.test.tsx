@@ -19,6 +19,14 @@ beforeEach(()=>{
   URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();
 });
 afterEach(()=>{cleanup();vi.unstubAllGlobals();});
+it('allows recording revocation of a prior approval while metadata is pending',async()=>{
+  state.status='Menunggu metadata resmi';state.publication_decision={kind:'approve'};
+  render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+  fireEvent.click(await screen.findByRole('button',{name:'Cabut dari Chat'}));
+  fireEvent.change(screen.getByLabelText('Alasan keputusan'),{target:{value:'Penggunaan dihentikan sambil memeriksa metadata'}});
+  fireEvent.click(screen.getByRole('button',{name:'Simpan keputusan'}));
+  await waitFor(()=>expect(vi.mocked(fetch).mock.calls.some(([,options])=>options?.method==='POST'&&JSON.parse(String(options.body)).action==='revoke')).toBe(true));
+});
 it.each([
   ['Tolak dokumen','reject','Ditolak'],
   ['Tunda keputusan','defer','Ditunda'],

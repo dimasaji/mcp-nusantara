@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request
 from pydantic import BaseModel, Field
 
 from app.knowledge.sop_review import SOPReview
+from app.knowledge.sop_metadata import SOPMetadata
 from app.security.auth import require_admin
 
 CorrectionCategory = Literal['unknown', 'extraction', 'retrieval', 'context', 'answer', 'claim_check', 'citation_viewer']
@@ -28,6 +29,12 @@ class TrialRating(BaseModel):
 
 class ExtractionRequest(BaseModel):
     version_id: str = Field(pattern=r'^[a-f0-9]{64}$')
+
+
+class MetadataConfirmation(BaseModel):
+    version_id: str = Field(pattern=r'^[a-f0-9]{64}$')
+    expected_event_id: str | None = Field(default=None, pattern=r'^[a-f0-9]{32}$')
+    metadata: SOPMetadata
 
 
 def get_knowledge_engine():
@@ -56,14 +63,12 @@ def create_knowledge_pipeline_router(run_sync):
                       x_admin_token: str | None = Header(default=None),
                       knowledge=Depends(get_knowledge_engine), memory=Depends(get_chat_memory),
                       provider=Depends(get_chat_source_provider)):
-        import re
-
         from fastapi.responses import Response
 
-        from app.security.v1_knowledge import V1KnowledgeBoundary, v1_session_id
+        from app.security.v1_knowledge import V1KnowledgeBoundary, v1_session_id, valid_chat_session
 
         require_admin(x_admin_token)
-        if not re.fullmatch(r'web-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}', x_chat_session):
+        if not valid_chat_session(x_chat_session):
             raise HTTPException(403, 'CHAT_SESSION_CAPABILITY_REQUIRED')
         session = v1_session_id(x_chat_session, operator=True)
         turn = next((item for item in memory.chat_history(session)
@@ -139,6 +144,15 @@ def create_knowledge_pipeline_router(run_sync):
         from app.knowledge.document_tools import DocumentTools
         try:
             return DocumentTools(knowledge, operator=True).process(document_id, body.version_id, force=True)
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from None
+
+    @router.post('/reviews/{document_id}/metadata')
+    def confirm_metadata(document_id: str, body: MetadataConfirmation, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
+        require_admin(x_admin_token)
+        try:
+            return SOPReview(knowledge).confirm_metadata(document_id, body.version_id,
+                body.metadata.model_dump(), 'shared-admin-token', expected_event_id=body.expected_event_id)
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from None
 
