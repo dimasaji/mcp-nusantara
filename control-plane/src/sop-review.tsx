@@ -1,15 +1,16 @@
-import {useEffect,useState} from 'react';
+import {useEffect,useMemo,useState} from 'react';
 import {Link} from '@tanstack/react-router';
 import {sendUserChat,type PublicChat} from './api';
+import {SOPMetadataForm,type OfficialMetadata} from './sop-metadata';
 
 type ReviewEvent={event_id:string;kind:string;note?:string;created_at:string;principal:string;problem_id?:string;category?:string};
 type Trial={trial_id:string;case_id:string;question:string;answer:PublicChat;principal?:string;created_at?:string;rating?:{ok:boolean;note:string;principal?:string;created_at?:string}|null};
 type ApprovalRequirement={key:string;satisfied:boolean};
 type VersionComparison={previous_version_id:string;version_id:string;changed_blocks:number;omitted_blocks:number;changes:{block_id:string;kind:string;pages:number[];before:string;after:string;excerpt_truncated:boolean}[]};
-export type Review={comparison?:VersionComparison|null;publication_decision?:ReviewEvent|null;document_id:string;title:string;version_id:string;status:string;source_available:boolean;source_type:string|null;text:string;pages:{page:number;start:number;end:number}[];content_ok:boolean;can_approve:boolean;problems:ReviewEvent[];events:ReviewEvent[];trials:Trial[];required_cases:string[];approval_requirements:ApprovalRequirement[];extraction?:{status:string;error?:string;warnings?:string[]};extracted_blocks?:{block_id:string;type:string;content:string;page_numbers:number[];related_pages?:number[];table_data?:{headers?:string[];rows?:string[][]};flowchart_nodes?:{row_number:string;column_header:string;bbox:number[]}[]}[]};
+export type Review={official_metadata?:OfficialMetadata|null;metadata_event_id?:string|null;metadata_confirmed?:boolean;suggested_title?:string;comparison?:VersionComparison|null;publication_decision?:ReviewEvent|null;document_id:string;title:string;version_id:string;status:string;source_available:boolean;source_type:string|null;text:string;pages:{page:number;start:number;end:number}[];content_ok:boolean;can_approve:boolean;problems:ReviewEvent[];events:ReviewEvent[];trials:Trial[];required_cases:string[];approval_requirements:ApprovalRequirement[];extraction?:{status:string;error?:string;warnings?:string[]};extracted_blocks?:{block_id:string;type:string;content:string;page_numbers:number[];related_pages?:number[];table_data?:{headers?:string[];rows?:string[][]};flowchart_nodes?:{row_number:string;column_header:string;bbox:number[]}[]}[]};
 const cases:Record<string,{label:string;question:string}>={
-  requirements:{label:'Persyaratan',question:'Apa persyaratan permohonan data pribadi dalam SOP ini?'},
-  procedure:{label:'Prosedur',question:'Bagaimana prosedur permohonan data pribadi dalam SOP ini?'},
+  requirements:{label:'Persyaratan',question:'Apa persyaratan menurut SOP ini?'},
+  procedure:{label:'Prosedur',question:'Bagaimana prosedur menurut SOP ini?'},
   time_cost:{label:'Waktu dan biaya',question:'Berapa waktu penyelesaian dan biaya menurut SOP ini? Jika tidak tercantum, jelaskan keterbatasannya.'},
   followup:{label:'Ringkasan lanjutan',question:'Ringkas penjelasan sebelumnya dengan bahasa sederhana, tetap berdasarkan SOP ini.'},
   missing:{label:'Informasi yang tidak ada',question:'Apakah SOP ini menyebutkan nomor WhatsApp petugas? Jika tidak ada, katakan belum ditemukan dalam SOP.'},
@@ -17,8 +18,11 @@ const cases:Record<string,{label:string;question:string}>={
 const publicationActions={reject:'Tolak dokumen',defer:'Tunda keputusan',revoke:'Cabut dari Chat'};
 type PublicationAction=keyof typeof publicationActions;
 const correctionCategories:Record<string,string>={unknown:'Belum diketahui',extraction:'Pembacaan dokumen',retrieval:'Pencarian sumber',context:'Konteks percakapan',answer:'Penyusunan jawaban',claim_check:'Pemeriksaan klaim',citation_viewer:'Tampilan sitasi'};
-const eventLabels:Record<string,string>={content_ok:'Isi dinyatakan sesuai',problem:'Masalah dilaporkan',resolve:'Masalah diselesaikan',rating:'Jawaban dinilai',approve:'Disetujui untuk digunakan',reject:'Dokumen ditolak',defer:'Keputusan ditunda',revoke:'Penggunaan di Chat dicabut'};
+const eventLabels:Record<string,string>={official_metadata:'Metadata resmi diperiksa',content_ok:'Isi dinyatakan sesuai',problem:'Masalah dilaporkan',resolve:'Masalah diselesaikan',rating:'Jawaban dinilai',approve:'Disetujui untuk digunakan',reject:'Dokumen ditolak',defer:'Keputusan ditunda',revoke:'Penggunaan di Chat dicabut'};
 const approvalLabels:Record<string,string>={
+  metadata_revision_valid:'Hubungan revisi sesuai identitas layanan',
+  metadata_checked:'Metadata resmi sudah diperiksa',
+  metadata_publication_allowed:'Metadata tidak menunjukkan masa berlaku terlarang',
   source_available:'File sumber tersedia',
   extraction_complete:'Ekstraksi Docling selesai',
   content_checked:'Pemeriksaan isi ditandai sesuai',
@@ -64,7 +68,8 @@ export function SOPReviewPanel({documentId,token}:{documentId:string;token:strin
   const [category,setCategory]=useState('unknown');
   const [sourceError,setSourceError]=useState(''),[sourceRevision,setSourceRevision]=useState(0);
   const [note,setNote]=useState(''),[report,setReport]=useState<string|null>(null),[caseId,setCaseId]=useState('requirements');
-  const [question,setQuestion]=useState(cases.requirements.question),[session]=useState(()=>`sop-${crypto.randomUUID()}`);
+  const [question,setQuestion]=useState(cases.requirements.question);
+  const session=useMemo(()=>`web-${crypto.randomUUID()}`,[documentId,token,review?.version_id]);
   const id=encodeURIComponent(documentId);
   async function load(){setReview(await requestReview(id,token) as Review);}
   function openReport(value:string){setPublicationAction(null);setNote('');setCategory('unknown');setReport(value);}
@@ -96,7 +101,7 @@ export function SOPReviewPanel({documentId,token}:{documentId:string;token:strin
   }
   function decide(action:string,problem_id?:string){return requestReview(`${id}/decision`,token,{version_id:review!.version_id,action,note,problem_id,...(action==='problem'?{category}:{})});}
   async function ask(){
-    await sendUserChat(question,`${session}-${review!.version_id.slice(0,12)}`,undefined,undefined,90000,
+    await sendUserChat(question,session,undefined,undefined,90000,
       {token,documentIds:[documentId],sopVersion:review!.version_id,sopCase:caseId});
   }
   if(!review)return <section className="panel" aria-label="Pemeriksaan SOP">{error?<p role="alert">{error}</p>:<p role="status">Memuat pemeriksaan SOP...</p>}<button onClick={()=>void act(load)} disabled={busy}>Muat ulang pemeriksaan</button></section>;
@@ -105,6 +110,8 @@ export function SOPReviewPanel({documentId,token}:{documentId:string;token:strin
   const unverifiedRatingCount=review.trials.filter(t=>t.rating?.principal==='shared-admin-token').length;
   return <section className="panel" aria-label="Pemeriksaan SOP">
     <h2>{review.title}</h2><p><strong>{review.status}</strong></p>
+    {!review.metadata_confirmed&&<p>Judul di atas masih petunjuk; konfirmasikan judul resmi dari sumber.</p>}
+    <SOPMetadataForm key={`${session}:${review.metadata_event_id??"new"}`} documentId={documentId} metadata={review.official_metadata} eventId={review.metadata_event_id} pdf={review.source_type==='.pdf'} busy={busy||!review.source_available||(review.source_type==='.pdf'&&review.extraction?.status!=='COMPLETE')} onSave={(metadata,expected_event_id)=>void act(()=>requestReview(`${id}/metadata`,token,{version_id:review.version_id,expected_event_id,metadata}))}/>
     {review.extraction&&<><p role="status">Pembacaan dokumen: <strong>{review.extraction.status==='COMPLETE'?'Selesai':review.extraction.status==='PROCESSING'||review.extraction.status==='QUEUED'?'Sedang diproses':'Perlu diperiksa'}</strong></p>{review.extraction.error&&<p role="alert">Masalah pembacaan SOP: {review.extraction.error}</p>}<details><summary>Perbaikan pembacaan dan detail teknis</summary><p>Ekstraksi Docling: {review.extraction.status}</p><p>Proses ulang diperlukan jika hasil pembacaan keliru. Mengajukan pertanyaan tidak memerlukan proses ulang.</p><button disabled={busy||['QUEUED','PROCESSING'].includes(review.extraction.status)} onClick={()=>void act(()=>requestReview(`${id}/process`,token,{version_id:review.version_id}))}>Proses ulang dengan Docling</button></details></>}
     <details><summary>Identitas dan versi</summary><p>ID: {documentId}</p><p>Versi isi: {review.version_id}</p><p>Reviewer menggunakan token admin bersama; nama pribadi tidak tersedia.</p></details>
     <button disabled={busy} onClick={()=>void act(load)}>Muat ulang pemeriksaan</button>
@@ -144,7 +151,7 @@ export function SOPReviewPanel({documentId,token}:{documentId:string;token:strin
         {unverifiedRatingCount>0&&<p role="note">{unverifiedRatingCount} rating tersimpan memakai token admin bersama; identitas penilainya tidak tercatat. Periksa kembali dan nilai ulang secara manual sebelum menyetujui.</p>}
       </section>
       <button disabled={busy||!review.can_approve||review.status==='Aktif'} onClick={()=>void act(()=>decide('approve'))}>Setujui untuk digunakan</button>
-      <div role="group" aria-label="Keputusan penggunaan dokumen">{(Object.keys(publicationActions) as PublicationAction[]).filter(action=>action!=='revoke'||review.status==='Aktif').map(action=><button key={action} disabled={busy} onClick={()=>{setPublicationAction(action);setReport(null);setNote('');}}>{publicationActions[action]}</button>)}</div>
+      <div role="group" aria-label="Keputusan penggunaan dokumen">{(Object.keys(publicationActions) as PublicationAction[]).filter(action=>action!=='revoke'||review.publication_decision?.kind==='approve'||review.status==='Aktif').map(action=><button key={action} disabled={busy} onClick={()=>{setPublicationAction(action);setReport(null);setNote('');}}>{publicationActions[action]}</button>)}</div>
       {publicationAction&&<section aria-label="Alasan keputusan operator"><p>{publicationActions[publicationAction]}: dokumen tidak akan dipakai untuk jawaban baru di Chat utama. Pratinjau pemeriksaan tetap tersedia.</p><label>Alasan keputusan<textarea autoFocus value={note} maxLength={2000} disabled={busy} onChange={e=>setNote(e.target.value)}/></label><button disabled={busy||!note.trim()} onClick={()=>void act(()=>requestReview(`${id}/decision`,token,{version_id:review.version_id,action:publicationAction,note}))}>Simpan keputusan</button><button disabled={busy} onClick={()=>{setPublicationAction(null);setNote('');}}>Batal keputusan</button></section>}
       {review.publication_decision?.note&&<p>Alasan: {review.publication_decision.note}</p>}
       {!review.can_approve&&<p>Persetujuan menunggu pemeriksaan isi, penilaian seluruh jawaban, lima jenis percobaan terbaru yang dinilai sesuai, dan penyelesaian masalah terbuka. Jawaban lama yang salah tetap tercatat; lakukan percobaan pengganti lalu catat penyelesaiannya.</p>}

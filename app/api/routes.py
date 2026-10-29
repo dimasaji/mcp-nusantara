@@ -14,6 +14,7 @@ from fastapi import APIRouter, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.knowledge_pipeline import create_knowledge_pipeline_router
+from app.api.runtime_readiness import router as runtime_readiness_router
 from app.policy.policy_engine import PolicyEngine, PolicyDecision
 from app.handoff.engine import HandoffEngine, HandoffLevel
 from app.mcp.mcp import MCPServer, create_server
@@ -22,7 +23,7 @@ from app.core.runtime_identity import BUILD_ID
 from app.observability import metrics
 from app.exceptions import ProviderUnavailableError
 from app.security.auth import require_admin
-from app.security.v1_knowledge import V1KnowledgeBoundary, v1_session_id
+from app.security.v1_knowledge import CHAT_SESSION_PATTERN, V1KnowledgeBoundary, v1_session_id, valid_chat_session
 from app.core.gate_integration import GateIntegration
 from app.developer_core.graph_bridge import GraphifyBridge
 from app.knowledge.engine import KnowledgeEngine
@@ -132,6 +133,7 @@ class ChatRequest(BaseModel):
         default_factory=lambda: f"web-{uuid4()}",
         min_length=1,
         max_length=128,
+        pattern=CHAT_SESSION_PATTERN,
     )
     user_input: str = Field(
         ...,
@@ -1041,8 +1043,7 @@ async def health_detail():
 @router.get('/chat/history')
 def chat_history(x_chat_session: str = Header(default=''),
                  x_admin_token: str | None = Header(default=None)):
-    import re
-    if not re.fullmatch(r'web-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}', x_chat_session):
+    if not valid_chat_session(x_chat_session):
         raise HTTPException(403,'CHAT_SESSION_CAPABILITY_REQUIRED')
     operator = isinstance(x_admin_token, str) and bool(x_admin_token)
     if operator:
@@ -1271,7 +1272,6 @@ async def _chat_completed(request: ChatRequest, *, operator: bool = False):
             provider = OllamaProvider(nusantara_config=configuration)
 
         agent = HermesAgent(provider=provider, language_engine=_language)
-        agent = HermesAgent(provider=provider, language_engine=_language)
         core = await agent.execute_v1(request, knowledge=knowledge, gates=_gate_integration,
             trust=_trust_engine, grounding=_grounding_guard, developer_core=_developer_core,
             policy=_policy_engine, handoff=_handoff_engine, mcp=_mcp_server,
@@ -1309,8 +1309,14 @@ async def _chat_completed(request: ChatRequest, *, operator: bool = False):
 
     except (HTTPException, ProviderUnavailableError) as exc:
         status_code = getattr(exc, 'status_code', 503)
+        if provider is not None and getattr(provider, 'generation_started', False):
+            # Once generation starts, subsequent stage timeouts cannot grant
+            # a fresh dispatch. This also overrides worker timeout headers.
+            headers = dict(getattr(exc, 'headers', None) or {})
+            headers.pop('X-Chat-Retry-Safe', None)
+            exc.headers = headers
         if request_id:
-            if status_code == 504:
+            if status_code == 504 and not (provider is not None and getattr(provider, 'generation_started', False)):
                 headers = dict(getattr(exc, 'headers', None) or {})
                 headers.setdefault('X-Chat-Retry-Safe', 'pre-provider')
                 exc.headers = headers
@@ -1471,6 +1477,7 @@ async def ingest_document(
 
 
 router.include_router(create_knowledge_pipeline_router(_run_sync_v1))
+router.include_router(runtime_readiness_router)
 
 
 @router.post("/knowledge/search")

@@ -13,6 +13,21 @@ def engine_at(path):
         vector_store=SQLiteVectorStore(str(path)), embedding_func=lambda text: [1., 0., 0.]))
 
 
+def confirm_fixture_metadata(review, detail):
+    """Synthetic operator review for fixtures only; never used in runtime."""
+    if detail.get('metadata_confirmed'):
+        return detail
+    absent = {'status': 'not_stated', 'note': 'Tidak tercantum pada sumber fixture.'}
+    title = {'status': 'present', 'value': detail['title']}
+    if detail['source_type'] == '.pdf':
+        title['page_number'] = 1
+    data = {'logical_sop_id': detail['document_id'], 'official_title': title,
+            **{key: dict(absent) for key in ('institution', 'unit', 'sop_number', 'jurisdiction',
+                'issued_on', 'effective_on', 'expires_on', 'revision')},
+            'validity': 'not_confirmed', 'validity_note': 'Fixture; bukan konfirmasi hukum.'}
+    return review.confirm_metadata(detail['document_id'], detail['version_id'], data, 'fixture-reviewer')
+
+
 def test_approval_requires_content_and_every_required_trial_and_survives_restart(tmp_path):
     engine = engine_at(tmp_path / 'chat.db')
     run = engine.process_knowledge_source('sop.txt', b'Persyaratan: Surat Permohonan. Prosedur: serahkan berkas. Waktu: 3 hari kerja.')
@@ -25,6 +40,7 @@ def test_approval_requires_content_and_every_required_trial_and_survives_restart
     for case in doc['required_cases']:
         trial = review.record_trial(doc['document_id'], version, case, 'Pertanyaan', {'response': 'Jawaban fixture'}, 'admin-token')
         review.rate(doc['document_id'], version, trial['trial_id'], True, '', 'admin-token')
+    confirm_fixture_metadata(review, review.detail(doc['document_id']))
     approved = review.decide(doc['document_id'], version, 'approve', 'admin-token', '')
     assert approved['status'] == 'Aktif'
     assert SOPReview(engine_at(tmp_path / 'chat.db')).detail(doc['document_id'])['status'] == 'Aktif'
@@ -102,6 +118,7 @@ def test_publication_decision_blocks_retrieval_and_cached_answer_until_new_appro
     for case in doc['required_cases']:
         trial = review.record_trial(identifier, version, case, 'Pertanyaan uji', {'response': 'Jawaban uji'}, 'operator')
         review.rate(identifier, version, trial['trial_id'], True, '', 'operator')
+    confirm_fixture_metadata(review, review.detail(identifier))
     approved = review.decide(identifier, version, 'approve', 'operator')
     boundary = V1KnowledgeBoundary(engine, operator=True, provider='ollama', document_ids=[identifier])
     assert boundary.search_knowledge('Persyaratan')

@@ -46,6 +46,7 @@ class OpenRouterProvider(LLMProvider):
         self._key_resolver = key_resolver or (lambda: os.environ.get("OPENROUTER_API_KEY"))
         self._cost_ledger = cost_ledger
         self._cost_estimator = cost_estimator
+        self.generation_started = False
 
     def _key(self):
         try:
@@ -107,6 +108,7 @@ class OpenRouterProvider(LLMProvider):
             # HTTPX enforces per-I/O deadlines; asyncio bounds the entire operation.
             try:
                 async with asyncio.timeout(self.timeout):
+                    self.generation_started = True
                     async with self._client.stream("POST", self.base_url + "/chat/completions",
                             json=payload, headers={"Authorization": "Bearer " + key},
                             timeout=self.timeout, follow_redirects=False) as response:
@@ -192,4 +194,5 @@ class OpenRouterProvider(LLMProvider):
         if self._client is not None and self._owns_client:
             await self._client.aclose()
             self._client = None
+
 

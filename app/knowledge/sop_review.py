@@ -6,11 +6,14 @@ not a named person. Every decision keeps that limitation explicit.
 import hashlib
 import json
 import re
+import sqlite3
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
 from .schemas import Evidence, RetrievalEvidenceList
+from .sop_metadata import SOPMetadata
 
 REQUIRED_CASES = ['requirements', 'procedure', 'time_cost', 'followup', 'missing']
 PUBLICATION_BLOCKS = {'reject': 'Ditolak', 'defer': 'Ditunda', 'revoke': 'Dicabut'}
@@ -66,8 +69,11 @@ def sop_prompt(text, question, history, context_tokens):
 
 
 class SOPReview:
-    def __init__(self, engine):
+    def __init__(self, engine, *, read_only=False):
         self.engine = engine
+        self._read_only = read_only
+        if read_only:
+            return
         with engine._pipeline_db() as conn:
             conn.executescript('''
                 CREATE TABLE IF NOT EXISTS sop_review_events (
@@ -82,6 +88,20 @@ class SOPReview:
                 CREATE TABLE IF NOT EXISTS sop_review_pilots (document_id TEXT PRIMARY KEY);
             ''')
 
+    @contextmanager
+    def _db(self):
+        if not self._read_only:
+            with self.engine._pipeline_db() as conn:
+                yield conn
+            return
+        path = Path(self.engine.rag._store.db_path).resolve()
+        conn = sqlite3.connect(path.as_uri() + '?mode=ro', uri=True, timeout=1)
+        conn.row_factory = sqlite3.Row
+        try:
+            yield conn
+        finally:
+            conn.close()
+
     def _document(self, document_id):
         doc = self.engine.rag.get_document_info(document_id)
         if doc is None:
@@ -93,7 +113,7 @@ class SOPReview:
         digest = doc.metadata.get('source_sha256')
         folder = (Path(self.engine.rag._store.db_path).resolve().parent / 'source-documents').resolve()
         candidates = []
-        with self.engine._pipeline_db() as conn:
+        with self._db() as conn:
             candidates.extend((row['source_path'], row['source_sha256']) for row in conn.execute(
                 'SELECT source_path,source_sha256 FROM knowledge_pipeline_runs WHERE document_id=? ORDER BY created_at DESC',
                 (document_id,)) if row['source_path'])
@@ -121,7 +141,7 @@ class SOPReview:
         # Keep extraction storage anchored to the immutable original-source
         # version. Review IDs additionally bind extracted content; no migration
         # or rewrite of existing review events/extraction rows is necessary.
-        with self.engine._pipeline_db() as conn:
+        with self._db() as conn:
             if not conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='document_extractions'").fetchone():
                 return {'status': 'NOT_PROCESSED', 'version': source_version, 'job_id': None}
             latest = conn.execute('SELECT job_id,status FROM document_extractions '
@@ -142,7 +162,7 @@ class SOPReview:
         return {'status': latest['status'] if latest else 'NOT_PROCESSED',
                 'version': version, 'job_id': latest['job_id'] if latest else None}
 
-    def detail(self, document_id):
+    def detail(self, document_id, *, check_lineage=True):
         doc = self._document(document_id)
         path, _, digest = self.source(document_id)
         source_version = hashlib.sha256(json.dumps([doc.title, doc.source, digest, doc.metadata.get('source_pages', [])],
@@ -150,7 +170,7 @@ class SOPReview:
         is_pdf = bool(path and path.suffix.lower() == '.pdf')
         extraction = self._extraction_state(document_id, source_version) if is_pdf else None
         version = extraction['version'] if extraction else source_version
-        with self.engine._pipeline_db() as conn:
+        with self._db() as conn:
             events = [{**dict(row), **json.loads(row['payload'])} for row in conn.execute(
                 'SELECT * FROM sop_review_events WHERE document_id=? AND version_id=? ORDER BY rowid', (document_id, version))]
             trials = [{**dict(row), 'answer': json.loads(row['answer'])} for row in conn.execute(
@@ -170,11 +190,23 @@ class SOPReview:
         # issue after a replacement succeeds, without rewriting the old verdict.
         all_ok = bool(trials) and all(t['rating'] and (t['rating']['ok'] or t['rating']['event_id'] in resolved) for t in trials)
         extraction_ready = not is_pdf or extraction['status'] == 'COMPLETE'
-        ready = bool(path and extraction_ready and content_ok and complete and all_ok and not problems)
+        metadata_event = next((e for e in reversed(events) if e['kind'] == 'official_metadata'), None)
+        metadata = SOPMetadata.model_validate(metadata_event['metadata']) if metadata_event else None
+        lineage_ok = metadata is not None
+        if metadata and check_lineage:
+            try:
+                self._validate_revision_links(document_id, metadata)
+            except ValueError:
+                lineage_ok = False
+        metadata_allowed = bool(metadata and metadata.publication_allowed() and lineage_ok)
+        ready = bool(path and extraction_ready and content_ok and complete and all_ok and not problems and metadata_allowed)
         approval_requirements = [
             {'key': 'source_available', 'satisfied': bool(path)},
             {'key': 'extraction_complete', 'satisfied': extraction_ready},
             {'key': 'content_checked', 'satisfied': content_ok},
+            {'key': 'metadata_checked', 'satisfied': metadata is not None},
+            {'key': 'metadata_publication_allowed', 'satisfied': metadata_allowed},
+            {'key': 'metadata_revision_valid', 'satisfied': lineage_ok},
             *[{'key': f'case:{case}', 'satisfied': bool(
                 latest_trials.get(case) and latest_trials[case]['rating'] and latest_trials[case]['rating']['ok'])}
               for case in REQUIRED_CASES],
@@ -193,9 +225,15 @@ class SOPReview:
         status = (blocked_status if blocked_status else
                   'File sumber belum ditemukan' if not path else 'Ada masalah' if problems else
                   'Menunggu ekstraksi' if not extraction_ready else
-                  'Menunggu pemeriksaan isi' if not content_ok else 'Aktif' if ready and approval_current else
+                  'Menunggu pemeriksaan isi' if not content_ok else
+                  'Menunggu metadata resmi' if metadata is None else
+                  'Hubungan revisi perlu diperiksa' if not lineage_ok else
+                  'Keberlakuan perlu diperiksa' if not metadata_allowed else 'Aktif' if ready and approval_current else
                   'Siap disetujui' if ready else 'Isi sudah diperiksa')
-        return {'document_id': document_id, 'title': doc.title, 'version_id': version,
+        return {'document_id': document_id, 'title': metadata.official_title.value if metadata else doc.title, 'version_id': version,
+                'suggested_title': doc.title, 'metadata_confirmed': metadata is not None,
+                'official_metadata': metadata.model_dump() if metadata else None,
+                'metadata_event_id': metadata_event['event_id'] if metadata_event else None,
                 'source_version_id': source_version, 'source_sha256': digest,
                 'extraction_status': extraction['status'] if extraction else None,
                 'extraction_job_id': extraction['job_id'] if extraction else None,
@@ -208,6 +246,54 @@ class SOPReview:
                 'trial_binding': trial_binding,
                 'review_binding': review_binding,
                 'principal_description': 'Pemegang token admin bersama; identitas pribadi tidak tersedia.'}
+
+    def confirm_metadata(self, document_id, version, metadata, principal, *, expected_event_id=None):
+        """Append a complete review snapshot, using a lease to avoid lost edits.
+
+        Existing extraction/review records and vector data are never rewritten.
+        A new event invalidates the previous approval through review_binding.
+        """
+        record = SOPMetadata.model_validate(metadata)
+        with self._db() as conn:
+            conn.execute('BEGIN IMMEDIATE')
+            detail = self._check(document_id, version)
+            if detail['metadata_event_id'] != expected_event_id:
+                raise ValueError('Metadata berubah. Muat ulang sebelum menyimpan.')
+            if detail['source_type'] == '.pdf':
+                if detail['extraction_status'] != 'COMPLETE':
+                    raise ValueError('Selesaikan ekstraksi sebelum mengonfirmasi metadata PDF.')
+                from pypdf import PdfReader
+                import io
+                _, raw, _ = self.source(document_id)
+                pages = len(PdfReader(io.BytesIO(raw)).pages)
+                for fact in record.facts().values():
+                    if fact.status == 'present' and fact.page_number is None:
+                        raise ValueError('Halaman sumber wajib untuk metadata yang tercantum dalam PDF.')
+                    if fact.page_number is not None and fact.page_number > pages:
+                        raise ValueError('Halaman metadata tidak tersedia pada PDF asli.')
+            # Preserve identities used by historical links as well as active
+            # ones. A later extraction must not silently retag their ancestor.
+            for row in conn.execute("SELECT payload FROM sop_review_events WHERE kind='official_metadata' AND document_id!=?", (document_id,)):
+                incoming = json.loads(row['payload'])['metadata']
+                if (incoming.get('replaces_document_id') == document_id
+                        and incoming['logical_sop_id'] != record.logical_sop_id):
+                    raise ValueError('Identitas layanan sudah dirujuk revisi lain dan tidak dapat diganti.')
+            self._validate_revision_links(document_id, record)
+            self._event(conn, document_id, version, 'official_metadata', {'metadata': record.model_dump()}, principal)
+        return self.detail(document_id)
+
+    def _validate_revision_links(self, document_id, record):
+        visited = {document_id}
+        predecessor = record.replaces_document_id
+        while predecessor:
+            if predecessor in visited:
+                raise ValueError('Hubungan revisi SOP tidak boleh melingkar.')
+            visited.add(predecessor)
+            previous = self.detail(predecessor, check_lineage=False)
+            older = previous['official_metadata']
+            if not older or older['logical_sop_id'] != record.logical_sop_id:
+                raise ValueError('Revisi sebelumnya harus memiliki identitas layanan yang sama dan metadata terkonfirmasi.')
+            predecessor = older.get('replaces_document_id')
 
     def _check(self, document_id, version):
         detail = self.detail(document_id)
@@ -228,14 +314,22 @@ class SOPReview:
     def decide(self, document_id, version, action, principal, note='', problem_id=None, category='unknown'):
         if category not in CORRECTION_CATEGORIES:
             raise ValueError('Kategori masalah tidak dikenal.')
-        with self.engine._pipeline_db() as conn:
+        with self._db() as conn:
             conn.execute('BEGIN IMMEDIATE')
             detail = self._check(document_id, version)
             if action == 'approve':
                 if not detail['can_approve']:
-                    raise ValueError('Periksa isi, nilai lima percobaan wajib dan selesaikan semua masalah sebelum menyetujui.')
+                    raise ValueError('Periksa isi dan metadata resmi, nilai lima percobaan wajib dan selesaikan semua masalah sebelum menyetujui.')
                 if detail['status'] == 'Aktif':
                     return detail
+                logical_id = detail['official_metadata']['logical_sop_id']
+                for document in self.engine.list_documents().documents:
+                    if document.document_id == document_id or not self.is_pilot(document.document_id):
+                        continue
+                    other = self.detail(document.document_id)
+                    if (other['status'] == 'Aktif' and other['official_metadata']
+                            and other['official_metadata']['logical_sop_id'] == logical_id):
+                        raise ValueError('SOP layanan yang sama masih aktif. Cabut dokumen sebelumnya sebelum menyetujui revisi ini.')
             elif action == 'problem':
                 if not note.strip():
                     raise ValueError('Catatan masalah wajib diisi.')
@@ -245,7 +339,7 @@ class SOPReview:
             elif action in PUBLICATION_BLOCKS:
                 if not note.strip():
                     raise ValueError('Alasan keputusan wajib diisi.')
-                if action == 'revoke' and detail['status'] != 'Aktif':
+                if action == 'revoke' and (not detail['publication_decision'] or detail['publication_decision']['kind'] != 'approve'):
                     raise ValueError('Hanya dokumen aktif yang dapat dicabut.')
             elif action != 'content_ok':
                 raise ValueError('Tindakan tidak dikenal.')
@@ -260,14 +354,14 @@ class SOPReview:
     def bind_session(self, session_id, document_id, version):
         self._check(document_id, version)
         self.enroll(document_id)
-        with self.engine._pipeline_db() as conn:
+        with self._db() as conn:
             conn.execute('INSERT OR IGNORE INTO sop_review_sessions VALUES (?,?,?)', (session_id, document_id, version))
             row = conn.execute('SELECT * FROM sop_review_sessions WHERE session_id=?', (session_id,)).fetchone()
             if (row['document_id'], row['version_id']) != (document_id, version):
                 raise ValueError('Sesi terikat pada SOP atau versi lain. Mulai sesi baru.')
 
     def session_binding(self, session_id):
-        with self.engine._pipeline_db() as conn:
+        with self._db() as conn:
             row = conn.execute('SELECT * FROM sop_review_sessions WHERE session_id=?', (session_id,)).fetchone()
         return dict(row) if row else None
 
@@ -276,7 +370,7 @@ class SOPReview:
             raise ValueError('Jenis percobaan tidak dikenal.')
         self._check(document_id, version)
         trial_id = uuid4().hex
-        with self.engine._pipeline_db() as conn:
+        with self._db() as conn:
             conn.execute('INSERT INTO sop_review_trials VALUES (?,?,?,?,?,?,?,?)',
                 (trial_id, document_id, version, case, question, json.dumps(answer, ensure_ascii=False), principal,
                  datetime.now(UTC).isoformat()))
@@ -285,7 +379,7 @@ class SOPReview:
     def rate(self, document_id, version, trial_id, ok, note, principal, category='unknown'):
         if category not in CORRECTION_CATEGORIES:
             raise ValueError('Kategori masalah tidak dikenal.')
-        with self.engine._pipeline_db() as conn:
+        with self._db() as conn:
             conn.execute('BEGIN IMMEDIATE')
             detail = self._check(document_id, version)
             if trial_id not in {t['trial_id'] for t in detail['trials']}:
@@ -302,7 +396,7 @@ class SOPReview:
         Membership must not depend on whether someone opened the review page.
         Existing event/pilot membership also keeps legacy reviewed sources gated.
         """
-        with self.engine._pipeline_db() as conn:
+        with self._db() as conn:
             enrolled = conn.execute('SELECT 1 FROM sop_review_pilots WHERE document_id=? UNION ALL SELECT 1 FROM sop_review_events WHERE document_id=? LIMIT 1', (document_id, document_id)).fetchone()
         if enrolled is not None:
             return True
@@ -318,7 +412,7 @@ class SOPReview:
 
     def enroll(self, document_id):
         self._document(document_id)
-        with self.engine._pipeline_db() as conn:
+        with self._db() as conn:
             conn.execute('INSERT OR IGNORE INTO sop_review_pilots VALUES (?)', (document_id,))
 
     def evidence(self, document_id, version, query=''):

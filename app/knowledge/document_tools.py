@@ -179,7 +179,7 @@ class DocumentTools:
         configuration = configuration or CONFIG
         output = self.root / (job + '.json')
         project = Path(__file__).resolve().parents[2]
-        python = project / '.venv-docling/Scripts/python.exe'
+        python = project / '.venv-docling' / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
         try:
             self.root.mkdir(parents=True, exist_ok=True)
             with self.engine._pipeline_db() as conn:
@@ -242,7 +242,7 @@ class DocumentTools:
         omitted = sorted(set(omitted + [b['block_id'] for b in doc['blocks'] if b['block_id'] not in {b['block_id'] for b in included}]))
         if any(b.get('selected_columns') for b in included):
             text = 'Konteks tabel dipilih menurut pertanyaan; kolom/baris lain tersedia pada pembacaan dokumen lengkap.\n' + text
-        return RetrievalEvidenceList([Evidence(document_id=document_id, title=doc['title'], source=text, chunk=text,
+        return RetrievalEvidenceList([Evidence(document_id=document_id, title=self._identity(document_id, version)['title'], source=text, chunk=text,
             chunk_id=version, chunk_index=0, start_char=0, end_char=len(text), score=1.,
             metadata={'version_id': version, 'citation_pages': sorted({p for b in included for p in b['page_numbers']}),
                       'docling_blocks': included, 'omitted_block_ids': omitted,

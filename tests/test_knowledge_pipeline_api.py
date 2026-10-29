@@ -42,6 +42,24 @@ UPLOAD = '/v1/knowledge/pipeline/documents'
 STATUS = '/v1/knowledge/pipeline/status'
 
 
+def test_metadata_http_is_authenticated_typed_version_bound_and_persistent(client):
+    from test_sop_metadata import metadata_payload
+    run = upload(client, b'Nama SOP: PERMOHONAN DATA PRIBADI\nPersyaratan surat permohonan.', 'source.txt').json()
+    url = '/v1/knowledge/pipeline/reviews/' + run['document_id']
+    detail = client.get(url, headers=AUTH).json()
+    body = {'version_id': detail['version_id'], 'metadata': metadata_payload()}
+    assert client.post(url + '/metadata', json=body).status_code == 403
+    assert client.post(url + '/metadata', headers=AUTH, json={**body, 'version_id': '0' * 64}).status_code == 409
+    invalid = {**body, 'metadata': {**metadata_payload(), 'institution': {'status': 'not_stated'}}}
+    assert client.post(url + '/metadata', headers=AUTH, json=invalid).status_code == 422
+    saved = client.post(url + '/metadata', headers=AUTH, json=body)
+    assert saved.status_code == 200, saved.text
+    refreshed = client.get(url, headers=AUTH).json()
+    assert refreshed['official_metadata']['official_title']['value'] == 'PERMOHONAN DATA PRIBADI'
+    assert refreshed['events'][-1]['principal'] == 'shared-admin-token'
+    assert client.post(url + '/metadata', headers=AUTH, json=body).status_code == 409
+
+
 @pytest.mark.parametrize('action,status', [('reject', 'Ditolak'), ('defer', 'Ditunda'), ('revoke', 'Dicabut')])
 def test_publication_decisions_are_authenticated_version_bound_and_persistent(client, action, status):
     from app.knowledge.sop_review import SOPReview
@@ -58,6 +76,8 @@ def test_publication_decisions_are_authenticated_version_bound_and_persistent(cl
         for case in detail['required_cases']:
             trial = review.record_trial(identifier, version, case, 'Pertanyaan', {'response': 'Jawaban'}, 'fixture')
             review.rate(identifier, version, trial['trial_id'], True, '', 'fixture')
+        from test_sop_review import confirm_fixture_metadata
+        confirm_fixture_metadata(review, review.detail(identifier))
         review.decide(identifier, version, 'approve', 'fixture')
     body = {'version_id': version, 'action': action, 'note': 'Periksa kembali sumber'}
     assert client.post(url + '/decision', json=body).status_code == 403

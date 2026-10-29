@@ -27,6 +27,7 @@ class GenerateResponse(TypedDict):
     requested_model: NotRequired[str]
     reported_model: NotRequired[str | None]
     provider_status: NotRequired[str]
+    timings: NotRequired[Dict[str, int | float]]
 
 
 class StructuredGenerateRequest(TypedDict, total=False):
@@ -153,3 +154,4 @@ __all__ = [
     "StructuredGenerateResponse",
     "HealthCheckResponse",
 ]
+

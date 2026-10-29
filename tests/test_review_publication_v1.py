@@ -1,5 +1,5 @@
 """Publication gates at the existing V1 review/retrieval interfaces."""
-from test_sop_review import engine_at
+from test_sop_review import engine_at, confirm_fixture_metadata
 
 from app.knowledge.sop_review import SOPReview
 from app.security.v1_knowledge import V1KnowledgeBoundary
@@ -23,6 +23,7 @@ def _approve_fixture(review, detail):
         trial = review.record_trial(identifier,version,case,'Pertanyaan fixture',
                                     {'response':'Jawaban fixture'},'test-reviewer')
         review.rate(identifier,version,trial['trial_id'],True,'','test-reviewer')
+    confirm_fixture_metadata(review, review.detail(identifier))
     return review.decide(identifier,version,'approve','test-reviewer')
 
 
