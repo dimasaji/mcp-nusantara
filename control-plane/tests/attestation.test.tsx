@@ -85,14 +85,18 @@ describe('separate scoped ATTESTATION integration',()=>{
     const s=fixture(),fetch=vi.fn().mockResolvedValue({ok:true,json:async()=>s});vi.stubGlobal('fetch',fetch);
     const router=createRouter({routeTree:existingRouter.routeTree,history:createMemoryHistory({initialEntries:['/overview']})});
     render(<QueryClientProvider client={new QueryClient({defaultOptions:{queries:{retry:false}}})}><RouterProvider router={router}/></QueryClientProvider>);
+    fireEvent.click(await screen.findByRole('button',{name:'Buka detail teknis'}));
     await waitFor(()=>expect(screen.getByText('SCOPED_IN_PROCESS')).toBeInTheDocument());
     fireEvent.click(screen.getByLabelText('I have read the ATTESTATION scope and limitations.'));
     fireEvent.click(screen.getByRole('button',{name:'Continue to Evidence'}));
+    await waitFor(()=>expect(router.state.location.pathname).toBe('/evidence'));
+    fireEvent.click(await screen.findByRole('button',{name:'Buka detail teknis'}));
     await waitFor(()=>expect(screen.getByText('Evidence boundary')).toBeInTheDocument());
     expect(router.state.location.pathname).toBe('/evidence');
     // Technical pages remain reachable from the operator shell, but a direct
     // route must still enforce the scoped review prerequisites.
     await router.navigate({to:'/test'});
+    fireEvent.click(await screen.findByRole('button',{name:'Buka detail teknis'}));
     await waitFor(()=>expect(screen.getByRole('region',{name:'Locked stage'})).toBeInTheDocument());
     expect(fetch.mock.calls.every(call=>!call[1].method||call[1].method==='GET')).toBe(true);
   });

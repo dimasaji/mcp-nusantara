@@ -80,7 +80,8 @@ export function readiness(input:ReadinessInput):Readiness{
     activeDecision.plan_binding.version===context.plan_binding.version&&
     activeDecision.plan_binding.plan_id===context.change_id&&activeDecision.plan_binding.action===context.plan_binding.action;
   const age=activeDecision?Date.now()-Date.parse(activeDecision.timestamp):NaN;
-  const expired=!Number.isFinite(age)||age<0||age>3_600_000;
+  const validitySeconds=context?.workflow?.approval_validity_seconds??3600;
+  const expired=!Number.isFinite(age)||age<0||age>validitySeconds*1000;
   const consumed=!!activeDecision&&!!history?.executions.some(e=>e.decision_id===activeDecision.decision_id&&['AUTHORIZED_ATTEMPT','PASS'].includes(e.result));
   const executionReady=authenticated&&!!activeDecision&&activeDecision.decision==='PASS'&&evidenceValid&&planReady&&planMatches&&!expired&&!consumed;
 
@@ -121,7 +122,7 @@ export function readiness(input:ReadinessInput):Readiness{
         :!authenticated?'Autentikasi dan audit keputusan diperlukan'
         :executionReady?'Siap diperiksa ulang oleh backend'
         :activeDecision?.decision==='PASS'&&!planMatches?'PASS tersimpan tetapi tidak cocok dengan versi rencana sekarang'
-        :activeDecision?.decision==='PASS'&&expired?'PASS kedaluwarsa (>60 menit); tinjau ulang'
+        :activeDecision?.decision==='PASS'&&expired?`PASS kedaluwarsa (>${validitySeconds/60} menit); tinjau ulang`
         :activeDecision?`Keputusan terakhir: ${activeDecision.decision}`:'Belum ada keputusan PASS',
       why:executionReady?'Backend akan memeriksa ulang bukti, keputusan dan rencana sebelum menulis.'
         :'Eksekusi hanya berjalan setelah PASS manusia yang cocok dengan rencana saat ini dan belum kedaluwarsa.'},
