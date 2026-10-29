@@ -154,6 +154,7 @@ class OllamaProvider(LLMProvider):
             payload["system"] = request["system"]
         
         start_time = time.time()
+        metrics_started = time.perf_counter()
 
         try:
             from app.models.streaming import stream_observer
@@ -212,6 +213,13 @@ class OllamaProvider(LLMProvider):
         except Exception as e:
             self._emit_identity(identity, failed=True)
             raise ProviderUnavailableError(self.provider_name) from e
+        finally:
+            from app.observability import metrics
+
+            try:
+                metrics.observe('provider.ollama.generate', (time.perf_counter() - metrics_started) * 1000)
+            except Exception:
+                pass  # Preserve model output/errors if optional telemetry fails.
 
     async def generate_structured(
         self,
@@ -328,3 +336,4 @@ class OllamaProvider(LLMProvider):
         response = await client.get("/api/tags")
         response.raise_for_status()
         return response.json().get("models", [])
+

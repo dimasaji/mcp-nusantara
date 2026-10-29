@@ -3,9 +3,9 @@ import ast
 import os
 from pathlib import Path
 
-from fastapi import FastAPI
 import httpx
 import pytest
+from fastapi import FastAPI
 
 from app.api.inspection_preview import router
 
@@ -19,10 +19,10 @@ def app(monkeypatch):
     monkeypatch.setenv("NUSANTARA_ADMIN_TOKEN", "fixture-only-token")
     instance = FastAPI()
     instance.state.runtime_profile = "NORMAL"
-    instance.include_router(router, prefix="/v2")
+    instance.include_router(router, prefix="/v1")
+    from app.approval import AuditTrail
     from app.devcore import DevCore
     from app.devcore.workspace import Workspace
-    from app.approval import AuditTrail
     def no_construction(*args, **kwargs):
         raise AssertionError("Preview must not construct execution or persistence owners")
     for owner in (DevCore, Workspace, AuditTrail):
@@ -39,7 +39,7 @@ async def post(app, body, token=_DEFAULT_TOKEN):
     headers = {"X-Admin-Token": token} if token is not None else {}
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app),
                                  base_url="http://fixture.invalid") as client:
-        return await client.post("/v2/dev/inspection-preview", json=body, headers=headers)
+        return await client.post("/v1/dev/inspection-preview", json=body, headers=headers)
 
 
 @pytest.mark.parametrize("goal", GOALS)
@@ -49,7 +49,7 @@ async def test_supported_goals(app, goal):
     assert response.headers["cache-control"] == "no-store"
     value = response.json()
     assert value["profile"] == "NORMAL" and value["scope"] == "inspection-preview"
-    assert value["source"] == "/v2/dev/inspection-preview" and value["captured_at"]
+    assert value["source"] == "/v1/dev/inspection-preview" and value["captured_at"]
     for name in ("runtime_identity", "active_process_build", "provider_model_correlation"):
         assert value[name] == "NOT_VERIFIED"
     preview = value["inspection_preview"]
@@ -98,27 +98,20 @@ async def test_strict_payload(app, body):
 async def test_other_methods_and_paths_unavailable(app):
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app),
                                  base_url="http://fixture.invalid") as client:
-        assert (await client.get("/v2/dev/inspection-preview")).status_code == 405
-        assert (await client.post("/v2/dev/inspection-preview/execute")).status_code == 404
+        assert (await client.get("/v1/dev/inspection-preview")).status_code == 405
+        assert (await client.post("/v1/dev/inspection-preview/execute")).status_code == 404
 
 
-def test_registration_and_existing_dev_preserved():
+def test_preview_is_registered_in_v1_without_loading_v2():
     root = Path(__file__).resolve().parents[1]
-    current = ast.parse((root / "app/api/v2_routes.py").read_text(encoding="utf-8"))
-    archived = root / ".dev/checkpoints/r2-20261007/source-before/app/api/v2_routes.py"
-    before = ast.parse(Path(os.environ.get("PREVIEW_V2_BEFORE", archived)).read_text(encoding="utf-8-sig"))
-    for name in ("DevRequest", "dev_chat"):
-        old = next(n for n in before.body if getattr(n, "name", None) == name)
-        new = next(n for n in current.body if getattr(n, "name", None) == name)
-        assert ast.dump(old) == ast.dump(new)
-    # Execute only the router declaration/registration; never import v2 composition.
-    selected = [n for n in current.body if (
-        isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "router" for t in n.targets)
-    ) or (isinstance(n, ast.Expr) and isinstance(n.value, ast.Call)
-          and isinstance(n.value.func, ast.Attribute) and n.value.func.attr == "include_router")]
-    from fastapi import APIRouter
-    namespace = {"APIRouter": APIRouter, "inspection_preview_router": router}
-    exec(compile(ast.Module(body=selected, type_ignores=[]), "router-registration", "exec"), namespace)
-    mounted = FastAPI()
-    mounted.include_router(namespace["router"])
-    assert list(mounted.openapi()["paths"]) == ["/v2/dev/inspection-preview"]
+    tree = ast.parse((root / "app/main.py").read_text(encoding="utf-8-sig"))
+    imports = [node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom)]
+    assert "app.api.inspection_preview" in imports
+    assert "app.api.v2_routes" not in imports
+    calls = [node for node in ast.walk(tree) if isinstance(node, ast.Call)
+             and isinstance(node.func, ast.Attribute) and node.func.attr == "include_router"]
+    assert any(call.args and isinstance(call.args[0], ast.Name)
+               and call.args[0].id == "inspection_preview_router"
+               and any(keyword.arg == "prefix" and isinstance(keyword.value, ast.Constant)
+                       and keyword.value.value == "/v1" for keyword in call.keywords)
+               for call in calls)

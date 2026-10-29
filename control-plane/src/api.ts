@@ -187,7 +187,7 @@ export async function sendUserChat(user_input:string,session_id:string,request_i
 
 const InspectionPreviewSchema = z.object({
   scope:z.literal('inspection-preview'),profile:z.literal('NORMAL'),
-  source:z.literal('/v2/dev/inspection-preview'),captured_at:z.string().datetime({offset:true}),
+  source:z.literal('/v1/dev/inspection-preview'),captured_at:z.string().datetime({offset:true}),
   runtime_identity:z.literal('NOT_VERIFIED'),active_process_build:z.literal('NOT_VERIFIED'),
   provider_model_correlation:z.literal('NOT_VERIFIED'),
   inspection_preview:z.object({
@@ -210,7 +210,7 @@ export async function fetchInspectionPreview(goal:string,adminToken:string,signa
   if(!adminToken.trim())throw new Error('Admin token required. Preview was not requested.');
   const input=goal.trim();
   if(!input||input.length>4000)throw new Error('Enter a goal of 1–4000 characters.');
-  const response=await fetch('/v2/dev/inspection-preview',{method:'POST',credentials:'omit',cache:'no-store',
+  const response=await fetch('/v1/dev/inspection-preview',{method:'POST',credentials:'omit',cache:'no-store',
     redirect:'error',signal,headers:{'Content-Type':'application/json','X-Admin-Token':adminToken},
     body:JSON.stringify({user_input:input})});
   if(!response.ok)throw new Error(response.status===403?'Preview rejected (403). Check authorization and preview scope.':
@@ -340,3 +340,4 @@ export async function executeReviewedAction(token:string,packageId:string,decisi
  return runtimeFetch('/v1/control-plane/execute-reviewed',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Token':token},
  body:JSON.stringify({package_id:packageId,decision_id:decisionId})}) as Promise<{status:string;files_changed:string[]}>;
 }
+

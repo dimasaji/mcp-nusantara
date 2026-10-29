@@ -1,5 +1,5 @@
 """Authenticated NORMAL planning only; no DevCore, tools or persistence."""
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException, Request, Response
@@ -31,8 +31,9 @@ def preview(body: InspectionPreviewRequest, request: Request, response: Response
     response.headers.update(_NO_STORE)
     return {
         "scope": "inspection-preview", "profile": "NORMAL",
-        "source": "/v2/dev/inspection-preview",
-        "captured_at": datetime.now(timezone.utc).isoformat(),
+        "source": "/v1/dev/inspection-preview",
+        "captured_at": datetime.now(UTC).isoformat(),
         "runtime_identity": "NOT_VERIFIED", "active_process_build": "NOT_VERIFIED",
         "provider_model_correlation": "NOT_VERIFIED", "inspection_preview": result,
     }
+
