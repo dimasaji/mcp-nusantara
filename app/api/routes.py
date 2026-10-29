@@ -1028,6 +1028,7 @@ def chat_history(x_chat_session: str = Header(default=''),
     for turn in _gate_integration.memory.chat_history(session):
         safe = dict(turn)
         safe.pop('source_versions', None)
+        safe.pop('source_access', None)
         if isinstance(safe.get('answer'), dict):
             answer = safe['answer']
             safe['answer'] = {**answer, 'session_id': x_chat_session,
@@ -1176,6 +1177,8 @@ async def _chat_completed(request: ChatRequest, *, operator: bool = False):
             try:
                 reservation = _gate_integration.memory.begin_chat(
                     request.session_id, request_id, request.user_input, retry_of=request.retry_of,
+                    source_access=({'mode': 'review_trial', 'version': request.sop_version}
+                        if getattr(request, 'sop_case', None) else {'mode': 'approved'}),
                     **({'document_ids': request.document_ids} if request.document_ids else {}))
             except Exception:
                 raise HTTPException(503, 'HISTORY_PERSISTENCE_FAILED') from None
@@ -1587,6 +1590,7 @@ __all__ = [
 async def developer_core_status():
     """Read-only Developer Core / Graphify runtime inspection."""
     return _developer_core.inspect()
+
 
 
 

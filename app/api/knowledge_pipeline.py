@@ -1,25 +1,29 @@
 """Knowledge operations HTTP boundary with an overridable storage owner."""
+from typing import Literal
 from urllib.parse import unquote
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Request
-
-from app.security.auth import require_admin
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request
 from pydantic import BaseModel, Field
-from typing import Literal
+
 from app.knowledge.sop_review import SOPReview
+from app.security.auth import require_admin
+
+CorrectionCategory = Literal['unknown', 'extraction', 'retrieval', 'context', 'answer', 'claim_check', 'citation_viewer']
 
 
 class ReviewDecision(BaseModel):
     version_id: str = Field(min_length=64, max_length=64)
-    action: Literal['content_ok', 'problem', 'resolve', 'approve']
+    action: Literal['content_ok', 'problem', 'resolve', 'approve', 'reject', 'defer', 'revoke']
     note: str = Field(default='', max_length=2000)
     problem_id: str | None = None
+    category: CorrectionCategory = 'unknown'
 
 
 class TrialRating(BaseModel):
     version_id: str = Field(min_length=64, max_length=64)
     ok: bool
     note: str = Field(default='', max_length=2000)
+    category: CorrectionCategory = 'unknown'
 
 
 class ExtractionRequest(BaseModel):
@@ -33,15 +37,72 @@ def get_knowledge_engine():
     return _knowledge
 
 
+def get_chat_memory():
+    from app.api.routes import _gate_integration
+    return _gate_integration.memory
+
+
+def get_chat_source_provider():
+    from app.core.config import settings
+    return settings.configuration_snapshot()[0].llm.provider
+
+
 def create_knowledge_pipeline_router(run_sync):
     router = APIRouter(prefix='/knowledge/pipeline')
+
+    @router.get('/reviews/{document_id}/citation')
+    def chat_citation(document_id: str, request_id: str = Query(pattern=r'^[a-f0-9]{32}$'),
+                      page_number: int = Query(ge=1), x_chat_session: str = Header(default=''),
+                      x_admin_token: str | None = Header(default=None),
+                      knowledge=Depends(get_knowledge_engine), memory=Depends(get_chat_memory),
+                      provider=Depends(get_chat_source_provider)):
+        import re
+
+        from fastapi.responses import Response
+
+        from app.security.v1_knowledge import V1KnowledgeBoundary, v1_session_id
+
+        require_admin(x_admin_token)
+        if not re.fullmatch(r'web-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}', x_chat_session):
+            raise HTTPException(403, 'CHAT_SESSION_CAPABILITY_REQUIRED')
+        session = v1_session_id(x_chat_session, operator=True)
+        turn = next((item for item in memory.chat_history(session)
+                     if item.get('request_id') == request_id and item.get('status') == 'SUCCEEDED'), None)
+        answer = turn.get('answer') if turn else None
+        if not isinstance(answer, dict) or not any(
+                item.get('document_id') == document_id and page_number in item.get('pages', [])
+                for item in answer.get('evidence', [])):
+            raise HTTPException(404, 'CHAT_CITATION_NOT_FOUND')
+        review = SOPReview(knowledge)
+        access = turn.get('source_access', {'mode': 'approved'})
+        if not isinstance(access, dict) or access.get('mode') not in {'approved', 'review_trial'}:
+            raise HTTPException(409, 'CHAT_SOURCE_ACCESS_CHANGED')
+        trial = access['mode'] == 'review_trial'
+        boundary = V1KnowledgeBoundary(knowledge, operator=True, provider=provider,
+            review_trial=trial, sop_version=access.get('version') if trial else None)
+        versions = turn.get('source_versions')
+        boundary.validate_response(answer, versions)
+        path, raw, _ = review.source(document_id)
+        if path is None:
+            raise HTTPException(404, 'File sumber belum ditemukan')
+        if path.suffix.lower() != '.pdf':
+            raise HTTPException(415, 'Sitasi halaman hanya tersedia untuk PDF')
+        import pymupdf
+
+        with pymupdf.open(stream=raw, filetype='pdf') as pdf:
+            if page_number > len(pdf):
+                raise HTTPException(422, 'DOCUMENT_PAGE_INVALID')
+        boundary.validate_response(answer, versions)
+        return Response(raw, media_type='application/pdf', headers={'Cache-Control': 'no-store',
+            'X-Content-Type-Options': 'nosniff', 'X-Source-Page': str(page_number),
+            'Content-Disposition': 'inline; filename="source.pdf"'})
 
     @router.get('/reviews/{document_id}')
     def review_detail(document_id: str, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
         require_admin(x_admin_token)
         try:
             review = SOPReview(knowledge)
-            from app.knowledge.document_tools import DocumentTools, DocumentReadError
+            from app.knowledge.document_tools import DocumentReadError, DocumentTools
             tools = DocumentTools(knowledge, operator=True)
             for _ in range(3):
                 detail = review.detail(document_id)
@@ -63,6 +124,8 @@ def create_knowledge_pipeline_router(run_sync):
                     continue
                 current['extraction'] = status
                 current['extracted_blocks'] = extracted['blocks'] if extracted else []
+                current['comparison'] = (tools.compare_previous(document_id, detail['version_id'])
+                    if extracted and extracted['status'] == 'COMPLETE' else None)
                 if extracted:
                     current['extraction']['warnings'] = extracted.get('warnings', [])
                 return current
@@ -111,7 +174,8 @@ def create_knowledge_pipeline_router(run_sync):
     def review_decision(document_id: str, body: ReviewDecision, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
         require_admin(x_admin_token)
         try:
-            return SOPReview(knowledge).decide(document_id, body.version_id, body.action, 'shared-admin-token', body.note, body.problem_id)
+            return SOPReview(knowledge).decide(document_id, body.version_id, body.action,
+                'shared-admin-token', body.note, body.problem_id, category=body.category)
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from None
 
@@ -119,7 +183,8 @@ def create_knowledge_pipeline_router(run_sync):
     def trial_rating(document_id: str, trial_id: str, body: TrialRating, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
         require_admin(x_admin_token)
         try:
-            return SOPReview(knowledge).rate(document_id, body.version_id, trial_id, body.ok, body.note, 'shared-admin-token')
+            return SOPReview(knowledge).rate(document_id, body.version_id, trial_id,
+                body.ok, body.note, 'shared-admin-token', category=body.category)
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from None
 
@@ -176,3 +241,4 @@ def create_knowledge_pipeline_router(run_sync):
         return knowledge.set_knowledge_watch(enabled)
 
     return router
+
