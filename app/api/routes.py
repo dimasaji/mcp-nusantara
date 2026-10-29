@@ -83,19 +83,35 @@ async def _run_sync_v1(fn, *args, timeout_s=30.0, **kwargs):
     Timed-out work keeps its capacity slot until its worker actually exits.
     Worker process timeouts remain responsible for ending subprocess work.
     """
+    from app.observability import metrics as stage_metrics
+
+    stage_name = 'v1.stage.' + getattr(fn, '__name__', 'callable')
     if not _sync_slots.acquire(blocking=False):
+        try:
+            stage_metrics.incr('v1.sync.rejected_busy')
+        except Exception:
+            pass  # Telemetry must not replace the intended HTTP result.
         raise HTTPException(status_code=503, detail="layanan sedang sibuk; coba lagi")
+    started = time.perf_counter()
     def run():
         try:
             return fn(*args, **kwargs)
         finally:
             _sync_slots.release()
+            try:
+                stage_metrics.observe(stage_name, (time.perf_counter() - started) * 1000)
+            except Exception:
+                pass
     task = asyncio.create_task(asyncio.to_thread(run))
     # Observe background exceptions after a timeout; don't leak task warnings.
     task.add_done_callback(lambda finished: finished.exception() if not finished.cancelled() else None)
     try:
         return await asyncio.wait_for(asyncio.shield(task), timeout=timeout_s)
     except TimeoutError:
+        try:
+            stage_metrics.incr(stage_name + '.timeouts')
+        except Exception:
+            pass
         import logging
         logging.getLogger(__name__).warning('V1 stage timeout: stage=%s', getattr(fn, '__qualname__', type(fn).__name__))
         raise HTTPException(status_code=504, detail="batas waktu pemrosesan terlampaui",
@@ -185,6 +201,14 @@ def _project_v1_chat_response(payload: dict, *, intent_name: str) -> dict:
     Trust values remain the existing assessment. Citation projection does not
     certify authority or implement knowledge access control.
     """
+    from fastapi import HTTPException
+
+    from app.core.hardening import validate_output
+
+    try:
+        response_text = validate_output(payload.get('response'), truncate=False)
+    except ValueError:
+        raise HTTPException(502, 'MODEL_OUTPUT_INVALID') from None
     trust = payload["trust"]
     grounding = payload["grounding"]
     public_reasons = {
@@ -202,7 +226,7 @@ def _project_v1_chat_response(payload: dict, *, intent_name: str) -> dict:
         goal = None
     public = _PublicChatResponse(
         session_id=payload["session_id"],
-        response=payload["response"],
+        response=response_text,
         trust=_PublicChatTrust(
             supports_claim=trust["supports_claim"], confidence=trust["confidence"],
             risk_level=trust["risk_level"], requires_human=trust["requires_human"],
@@ -1055,6 +1079,13 @@ async def chat(
     request: ChatRequest,
     x_admin_token: str | None = Header(default=None),
 ):
+    from app.core.hardening import InputRejected, sanitize_text
+
+    try:
+        cleaned_input = sanitize_text(request.user_input)
+    except InputRejected:
+        raise HTTPException(422, 'CHAT_INPUT_INVALID') from None
+    request = request.model_copy(update={'user_input': cleaned_input})
     operator = isinstance(x_admin_token, str) and bool(x_admin_token)
     if operator:
         require_admin(x_admin_token)

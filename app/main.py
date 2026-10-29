@@ -20,8 +20,10 @@ if not _READ_ONLY_EVIDENCE:
     _configuration = settings.effective_configuration
     _ATTESTATION = _configuration.runtime.profile == 'ATTESTATION'
     if not _ATTESTATION:
+        from app.api.inspection_preview import router as inspection_preview_router
         from app.api.routes import router as api_router
-        from app.api.v2_routes import router as v2_router
+        # V1-only runtime: keep V2 code archived in place without importing its
+        # model/index services or registering any /v2 endpoints.
 from app.api.control_plane import router as control_plane_router
 from app.observability import configure_logging, request_context, metrics
 from app.exceptions import register_exception_handlers
@@ -76,7 +78,7 @@ app.add_middleware(
 register_exception_handlers(app)
 if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
     app.include_router(api_router)
-    app.include_router(v2_router)
+    app.include_router(inspection_preview_router, prefix='/v1')
 app.include_router(control_plane_router)
 if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
     configure_logging(_configuration.runtime.log_level)
@@ -137,3 +139,4 @@ if _ATTESTATION:
     install_authorization_foundation(app, controller)
 
 install_runtime_attestation(app, entrypoint='app.main:app')
+

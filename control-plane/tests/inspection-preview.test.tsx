@@ -9,7 +9,7 @@ import {SystemHealthSchema} from '../src/schemas';
 
 const goal='Perbaiki RAG Nusantara.';
 function evidence(input=goal){return {
-  scope:'inspection-preview',profile:'NORMAL',source:'/v2/dev/inspection-preview',
+  scope:'inspection-preview',profile:'NORMAL',source:'/v1/dev/inspection-preview',
   captured_at:'2026-10-08T12:00:00Z',runtime_identity:'NOT_VERIFIED',active_process_build:'NOT_VERIFIED',
   provider_model_correlation:'NOT_VERIFIED',inspection_preview:{
     goal:input,understanding:'Petakan retrieval sebelum menentukan perbaikan.',intent:'INSPECT',target:'RAG',
@@ -28,7 +28,7 @@ describe('authenticated preview transport',()=>{
     const local=vi.spyOn(Storage.prototype,'setItem');
     await fetchInspectionPreview(goal,'fixture-only-token');
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith('/v2/dev/inspection-preview',expect.objectContaining({
+    expect(fetch).toHaveBeenCalledWith('/v1/dev/inspection-preview',expect.objectContaining({
       method:'POST',credentials:'omit',cache:'no-store',redirect:'error',
       headers:{'Content-Type':'application/json','X-Admin-Token':'fixture-only-token'},
       body:JSON.stringify({user_input:goal}),
@@ -65,8 +65,8 @@ describe('authenticated preview transport',()=>{
     }
     visit(source);
     const matches=(url:string)=>rules.filter(rule=>rule.startsWith('^')?new RegExp(rule).test(url):url.startsWith(rule));
-    expect(matches('/v2/dev/inspection-preview')).toHaveLength(1);
-    for(const url of ['/v2/dev','/v2/chat','/v2/dev/inspection-preview/execute','/v2/dev/inspection-preview-extra']){
+    expect(matches('/v1/dev/inspection-preview')).toHaveLength(1);
+    for(const url of ['/v2/dev','/v2/chat','/v1/dev/inspection-preview/execute','/v1/dev/inspection-preview-extra']){
       expect(matches(url)).toHaveLength(0);
     }
   });
@@ -113,3 +113,4 @@ describe('separate inspection panel',()=>{
     expect(JSON.stringify(state)).toBe(before);
   });
 });
+

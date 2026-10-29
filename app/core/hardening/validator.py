@@ -27,10 +27,12 @@ def sanitize_text(text: Any, *, max_len: int = 20000) -> str:
     return cleaned
 
 
-def validate_output(text: Any, *, max_len: int = 50000) -> str:
+def validate_output(text: Any, *, max_len: int = 50000, truncate: bool = True) -> str:
     """Pastikan output model berupa teks tidak kosong dan dalam batas ukuran."""
     if not isinstance(text, str) or not text.strip():
         raise ValueError("output model kosong atau bukan teks")
+    if len(text) > max_len and not truncate:
+        raise ValueError("output model melebihi batas ukuran")
     return text[:max_len]
 
 
@@ -58,3 +60,4 @@ def validate_schema(data: Any, schema: dict[str, Any], path: str = "$") -> list[
         for i, item in enumerate(data):
             errors.extend(validate_schema(item, schema["items"], f"{path}[{i}]"))
     return errors
+
