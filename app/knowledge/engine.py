@@ -68,6 +68,7 @@ class KnowledgeEngine:
         scope = self.document_scope(filter)
         result = self.rag.query(query_text=query, top_k=top_k,
                                 **({'document_ids': scope} if scope is not None else {}))
+        query_terms = {w for w in re.findall(r'\w+', (query or '').casefold()) if len(w) > 2}
         for evidence in result.evidence_pack.evidence:
             info = self.rag.get_document_info(evidence.document_id)
             metadata = info.metadata if info else {}
@@ -80,6 +81,14 @@ class KnowledgeEngine:
                 end = start + len(evidence.chunk)
                 evidence.metadata['citation_pages'] = [p['page'] for p in metadata.get('source_pages', [])
                     if p['start'] < end and p['end'] > start]
+            # Hybrid boost: combine vector score with keyword overlap so exact
+            # term matches are not drowned by semantic-only neighbours.
+            if query_terms:
+                haystack = (getattr(evidence, 'chunk', '') or '').casefold()
+                overlap = sum(1 for t in query_terms if t in haystack)
+                if overlap:
+                    base = float(getattr(evidence, 'score', 0.0) or 0.0)
+                    evidence.score = min(1.0, base + 0.05 * overlap)
         return RetrievalEvidenceList(result.evidence_pack.evidence, getattr(result, 'effective_profile', None))
 
     def search(self, query: str, top_k: int | None = None):
