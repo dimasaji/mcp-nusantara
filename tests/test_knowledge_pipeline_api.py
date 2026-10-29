@@ -42,6 +42,36 @@ UPLOAD = '/v1/knowledge/pipeline/documents'
 STATUS = '/v1/knowledge/pipeline/status'
 
 
+@pytest.mark.parametrize('action,status', [('reject', 'Ditolak'), ('defer', 'Ditunda'), ('revoke', 'Dicabut')])
+def test_publication_decisions_are_authenticated_version_bound_and_persistent(client, action, status):
+    from app.knowledge.sop_review import SOPReview
+
+    run = upload(client, b'Persyaratan: surat permohonan. Prosedur: serahkan berkas.', 'sop.txt').json()
+    identifier = run['document_id']
+    url = '/v1/knowledge/pipeline/reviews/' + identifier
+    detail = client.get(url, headers=AUTH).json()
+    version = detail['version_id']
+    if action == 'revoke':
+        engine = client.app.dependency_overrides[get_knowledge_engine]()
+        review = SOPReview(engine)
+        review.decide(identifier, version, 'content_ok', 'fixture')
+        for case in detail['required_cases']:
+            trial = review.record_trial(identifier, version, case, 'Pertanyaan', {'response': 'Jawaban'}, 'fixture')
+            review.rate(identifier, version, trial['trial_id'], True, '', 'fixture')
+        review.decide(identifier, version, 'approve', 'fixture')
+    body = {'version_id': version, 'action': action, 'note': 'Periksa kembali sumber'}
+    assert client.post(url + '/decision', json=body).status_code == 403
+    assert client.post(url + '/decision', headers=AUTH, json={**body, 'note': ''}).status_code == 409
+    assert client.post(url + '/decision', headers=AUTH, json={**body, 'version_id': '0' * 64}).status_code == 409
+    assert client.post(url + '/decision', headers=AUTH, json={**body, 'category': 'invalid'}).status_code == 422
+    saved = client.post(url + '/decision', headers=AUTH, json=body)
+    assert saved.status_code == 200, saved.text
+    refreshed = client.get(url, headers=AUTH).json()
+    assert refreshed['status'] == status
+    assert refreshed['publication_decision']['kind'] == action
+    assert refreshed['publication_decision']['note'] == 'Periksa kembali sumber'
+
+
 def pdf_bytes():
     output = io.BytesIO()
     writer = PdfWriter()
@@ -91,6 +121,9 @@ def test_review_source_access_notes_and_server_approval_gate(client, monkeypatch
             'blocks':[{'block_id':'#/texts/0','type':'text','content':text,'page_numbers':[1]}]}),encoding='utf-8')
         return SimpleNamespace(returncode=0)
     monkeypatch.setattr('app.knowledge.worker_process.run_worker',worker)
+    # The worker is a fixture; fingerprinting Windows OCR assets would make
+    # this HTTP contract test depend on an unrelated local installation.
+    monkeypatch.setattr('app.knowledge.document_tools.effective_config', lambda: {'fixture': True})
     assert client.post(url+'/process',headers=AUTH,json={'version_id':version}).status_code==200
     deadline=time.monotonic()+10
     while time.monotonic()<deadline:
@@ -191,8 +224,8 @@ def test_retry_failed_source_after_reopening_history_requires_auth(client):
 
 
 def test_history_remains_readable_while_embedding_is_running(client,tmp_path):
-    from threading import Event
     from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
     started,release=Event(),Event()
     def embed(text):
         started.set()
@@ -228,3 +261,4 @@ def test_retry_recovers_committed_index_after_interrupted_finalization(client,tm
     assert result['status']=='READY',result
     assert result['document_id']==uploaded['document_id']
     assert client.get(STATUS,headers=AUTH).json()['documents_indexed']==1
+

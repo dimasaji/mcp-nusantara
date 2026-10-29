@@ -5,13 +5,12 @@ import hashlib
 import json
 import os
 import re
-import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from uuid import uuid4
 
-from .sop_review import SOPReview
 from .docling_config import CONFIG, effective_config
+from .sop_review import SOPReview
 
 PARSER_VERSION = 'docling-2.142.1/adapter-8-validated-grid'
 _executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='docling')
@@ -112,6 +111,46 @@ class DocumentTools:
         return {'document_id': document_id, 'version': version, 'page_number': page_number,
                 'blocks': blocks, 'related_pages': sorted({p for b in blocks for p in b.get('related_pages', b['page_numbers']) if p != page_number})}
 
+    def compare_previous(self, document_id, version):
+        """Compare stored extraction revisions without processing or approving them.
+
+        Block IDs and physical pages remain visible. Excerpts are bounded and
+        explicitly marked; the original PDFs remain the verification source.
+        """
+        current = self.baca_dokumen(document_id, version)
+        previous_version = None
+        with self.engine._pipeline_db() as conn:
+            rows = conn.execute("SELECT version,payload FROM document_extractions "
+                "WHERE document_id=? AND status='COMPLETE' ORDER BY rowid DESC",
+                (document_id,))
+            for row in rows:
+                payload = json.loads(row['payload'])
+                candidate = self.review.extracted_version(row['version'], payload)
+                if candidate != version:
+                    previous_version = candidate
+                    break
+        if previous_version is None:
+            return None
+        previous = self.baca_dokumen(document_id, previous_version)
+        before = {block['block_id']: block for block in previous['blocks']}
+        after = {block['block_id']: block for block in current['blocks']}
+        changes = []
+        for identifier in sorted(before.keys() | after.keys()):
+            old, new = before.get(identifier), after.get(identifier)
+            if old == new:
+                continue
+            old_text, new_text = (old or {}).get('content', ''), (new or {}).get('content', '')
+            changes.append({'block_id': identifier,
+                'kind': 'added' if old is None else 'removed' if new is None else 'changed',
+                'pages': sorted(set((old or {}).get('page_numbers', []) + (new or {}).get('page_numbers', []))),
+                'before': old_text[:1000], 'after': new_text[:1000],
+                'excerpt_truncated': len(old_text) > 1000 or len(new_text) > 1000})
+        if self.review.detail(document_id)['version_id'] != version:
+            raise DocumentReadError('DOCUMENT_VERSION_CHANGED: muat ulang perbandingan versi terbaru')
+        return {'document_id': document_id, 'version_id': version,
+                'previous_version_id': previous_version, 'changed_blocks': len(changes),
+                'changes': changes[:20], 'omitted_blocks': max(0, len(changes) - 20)}
+
     def process(self, document_id, version, *, force=False):
         detail = self._identity(document_id, version)
         self.status(document_id, version)
@@ -185,8 +224,8 @@ class DocumentTools:
                              (status, str(exc)[-3500:], job))
 
     def evidence(self, document_id, version, query=''):
+        from .document_context import project_activity_blocks, select_blocks
         from .schemas import Evidence, RetrievalEvidenceList
-        from .document_context import select_blocks, project_activity_blocks
         doc = self.baca_dokumen(document_id, version)
         config = getattr(self.engine, 'configuration', None)
         context_tokens = config.llm.generation.context_length if config else 4096
@@ -210,3 +249,4 @@ class DocumentTools:
                       'all_document_blocks': doc['blocks'],
                       'sop_rows': doc.get('activity_rows', []),
                       'full_document_text': doc.get('full_document_text', doc.get('markdown', ''))})])
+

@@ -1,7 +1,8 @@
 """Publication gates at the existing V1 review/retrieval interfaces."""
+from test_sop_review import engine_at
+
 from app.knowledge.sop_review import SOPReview
 from app.security.v1_knowledge import V1KnowledgeBoundary
-from test_sop_review import engine_at
 
 
 def _pdf():
@@ -56,6 +57,7 @@ def test_changed_extracted_content_requires_a_new_review_and_approval(tmp_path, 
     import json
     from pathlib import Path
     from types import SimpleNamespace
+
     from app.knowledge.document_tools import DocumentTools
     engine = engine_at(tmp_path/'chat.db')
     uploaded = engine.process_knowledge_source('SOP.pdf',_pdf())
@@ -69,8 +71,10 @@ def test_changed_extracted_content_requires_a_new_review_and_approval(tmp_path, 
             'blocks':[{'block_id':'#/texts/0','type':'text','content':text,'page_numbers':[1]}]}),encoding='utf-8')
         return SimpleNamespace(returncode=0)
     monkeypatch.setattr('app.knowledge.worker_process.run_worker',worker)
+    monkeypatch.setattr('app.knowledge.document_tools.effective_config', lambda: {'fixture': True})
     tools = DocumentTools(engine,operator=True)
     first = _convert(tools,review,identifier)
+    assert tools.compare_previous(identifier, first['version_id']) is None
     approved = _approve_fixture(review,first)
     assert approved['status']=='Aktif'
     normal = V1KnowledgeBoundary(engine,operator=True,provider='ollama',document_ids=[identifier])
@@ -79,6 +83,13 @@ def test_changed_extracted_content_requires_a_new_review_and_approval(tmp_path, 
     assert second['version_id']!=first['version_id']
     assert second['content_ok'] is False
     assert second['approval'] is None
+    comparison = tools.compare_previous(identifier, second['version_id'])
+    assert comparison['previous_version_id'] == first['version_id']
+    assert comparison['version_id'] == second['version_id']
+    assert comparison['changed_blocks'] == 1
+    assert comparison['changes'][0]['before'] == 'Persyaratan: Surat Permohonan.'
+    assert comparison['changes'][0]['after'] == 'Persyaratan: Surat Pengantar.'
+    assert comparison['changes'][0]['pages'] == [1]
     assert normal.search_knowledge('Persyaratan')==[]
     import pytest
     with pytest.raises(ValueError,match='Versi berubah'):
@@ -110,7 +121,8 @@ def test_concurrent_conversion_cannot_label_new_content_with_old_version(tmp_pat
     import time
     from pathlib import Path
     from types import SimpleNamespace
-    from app.knowledge.document_tools import DocumentTools, DocumentReadError
+
+    from app.knowledge.document_tools import DocumentReadError, DocumentTools
     engine = engine_at(tmp_path/'chat.db')
     identifier = engine.process_knowledge_source('SOP.pdf',_pdf())['document_id']
     review = SOPReview(engine)
@@ -126,6 +138,7 @@ def test_concurrent_conversion_cannot_label_new_content_with_old_version(tmp_pat
             'blocks':[{'block_id':'#/texts/0','type':'text','content':text,'page_numbers':[1]}]}),encoding='utf-8')
         return SimpleNamespace(returncode=0)
     monkeypatch.setattr('app.knowledge.worker_process.run_worker',worker)
+    monkeypatch.setattr('app.knowledge.document_tools.effective_config', lambda: {'fixture': True})
     tools = DocumentTools(engine,operator=True)
     first = _convert(tools,review,identifier)
     job = tools.process(identifier,first['version_id'],force=True)
@@ -140,7 +153,8 @@ def test_concurrent_conversion_cannot_label_new_content_with_old_version(tmp_pat
             while time.monotonic()<deadline:
                 with connect(tmp_path/'chat.db') as db:
                     row=db.execute('SELECT status FROM document_extractions WHERE job_id=?',(job['job_id'],)).fetchone()
-                if row[0]=='COMPLETE':return
+                if row[0]=='COMPLETE':
+                    return
                 time.sleep(.01)
             raise AssertionError('Concurrent conversion did not complete')
     def controlled_connect(*args, **kwargs):
@@ -158,3 +172,4 @@ def test_concurrent_conversion_cannot_label_new_content_with_old_version(tmp_pat
     finally:
         release.set()
     assert triggered
+

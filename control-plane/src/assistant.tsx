@@ -2,6 +2,7 @@ import {memo,useEffect,useState,useRef} from 'react';
 import {Link} from '@tanstack/react-router';
 import {ChatSendError,fetchChatHistory,fetchModelStatus,fetchAvailableModels,selectOperatorModel,sendUserChat,fetchKnowledgePipelineStatus,uploadKnowledgeDocument,type ModelStatus,type PublicChat} from './api';
 import {useAdminAuth} from './auth';
+import {ChatCitation} from './chat-citation';
 
 function InlineMarkdown({text}:{text:string}){
   return <>{text.split(/(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g).map((part,i)=>part.startsWith('`')?<code key={i}>{part.slice(1,-1)}</code>:part.startsWith('**')?<strong key={i}>{part.slice(2,-2)}</strong>:part.startsWith('*')?<em key={i}>{part.slice(1,-1)}</em>:part)}</>;
@@ -30,7 +31,7 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
   const currentSession=useRef(session);currentSession.current=session;
   const [model,setModel]=useState<ModelStatus|null>(null);
   const [question,setQuestion]=useState('');
-  const [messages,setMessages]=useState<{question:string;answer:PublicChat}[]>([]);
+  const [messages,setMessages]=useState<{question:string;answer:PublicChat;requestId?:string}[]>([]);
   const [pending,setPending]=useState(false);
   const [partial,setPartial]=useState('');
   const [documents,setDocuments]=useState<{document_id:string;title:string}[]>([]);
@@ -49,7 +50,7 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
   async function refreshHistory(active=()=>true){
     const requestedSession=session;
     try{const history=await fetchChatHistory(session,selectedDocument?token:'');if(active()&&currentSession.current===requestedSession){
-      const restored=history.turns.filter(t=>t.answer!==null).map(t=>({question:t.question,answer:t.answer!}));
+      const restored=history.turns.filter(t=>t.answer!==null).map(t=>({question:t.question,answer:t.answer!,requestId:t.request_id}));
       if(restored[0]?.question&&!titles[session])setTitles(old=>{const next={...old,[session]:restored[0].question.trim().replace(/\s+/g,' ').slice(0,60)};if(!token)localStorage.setItem(storagePrefix+'-titles',JSON.stringify(next));return next;});
       setMessages(current=>[...restored,...current.filter(t=>!restored.some(r=>r.answer.timestamp===t.answer.timestamp&&r.question===t.question))]);
       setHistoryFailures(history.turns.filter(t=>t.status==='FAILED'&&!(t.request_id&&history.turns.some(retry=>retry.status==='SUCCEEDED'&&retry.retry_of===t.request_id))));setHistoryError('');
@@ -85,7 +86,7 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
       logicalRequest.current={question:submitted,session,id:crypto.randomUUID().replaceAll('-','')};
     }
     const request=logicalRequest.current;
-    try{const answer=await sendUserChat(submitted,session,request.id,request.retryOf,model?.provider==='ollama'?270000:90000,{signal:controller.signal,onDelta:text=>setPartial(old=>old+text),documentIds:selectedDocument?[selectedDocument]:undefined,token:selectedDocument?token:undefined,...(trialVersion?{sopVersion:trialVersion,sopCase:'followup'}:{})});setMessages(old=>[...old,{question:submitted,answer}]);setQuestion('');logicalRequest.current=null;
+    try{const answer=await sendUserChat(submitted,session,request.id,request.retryOf,model?.provider==='ollama'?270000:90000,{signal:controller.signal,onDelta:text=>setPartial(old=>old+text),documentIds:selectedDocument?[selectedDocument]:undefined,token:selectedDocument?token:undefined,...(trialVersion?{sopVersion:trialVersion,sopCase:'followup'}:{})});setMessages(old=>[...old,{question:submitted,answer,requestId:request.id}]);setQuestion('');logicalRequest.current=null;
       void fetchModelStatus().then(setModel).catch(()=>setModel(null));
     }catch(e){
       if(e instanceof ChatSendError&&e.retrySafe){logicalRequest.current={...request,id:crypto.randomUUID().replaceAll('-',''),retryOf:request.id};}
@@ -120,7 +121,7 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
   const Sidebar=!embedded&&<aside className="chat-sidebar"><button className="drawer-close" type="button" aria-label="Tutup sidebar" onClick={()=>setSidebarOpen(false)}>×</button><Link className="chat-brand" to="/"><span className="mark">N</span><span className="sidebar-brand-label">NUSANTARA<small>AI WORKSPACE</small></span></Link><button className="chat-new" type="button" aria-label="Chat baru" disabled={pending} onClick={newChat}><span aria-hidden="true">＋</span><span className="sidebar-label">Chat baru</span></button><div className="chat-history"><div className="chat-history-head"><p className="nav-caption">RIWAYAT CHAT</p><button type="button" className="history-refresh" aria-label="Muat ulang History" title="Muat ulang History" disabled={pending} onClick={()=>void refreshHistory()}>↻</button></div><nav aria-label="Riwayat Chat">{[...sessions].reverse().map((id,i)=><button type="button" key={id} title={titles[id]??('Percakapan '+(sessions.length-i))} aria-current={id===session?'page':undefined} onClick={()=>{if(pending)return;logicalRequest.current=null;setSession(id);setMessages([]);setHistoryFailures([]);setError('');setSidebarOpen(false);}}><span>{titles[id]??('Percakapan '+(sessions.length-i))}</span></button>)}</nav></div><Link className="chat-control-link" aria-label="Pengaturan" to="/settings"><span aria-hidden="true">⚙</span><span className="sidebar-label">Pengaturan</span></Link></aside>;
   return <div className={(embedded?'chat-embedded':'chat-workspace')+(!sidebarOpen?' sidebar-collapsed':'')+(sidebarOpen?' sidebar-open':'')}>{Sidebar}{!embedded&&sidebarOpen&&<button className="chat-backdrop" aria-label="Tutup sidebar" onClick={()=>setSidebarOpen(false)}/>}<section className={'assistant chat-main '+(messages.length?'has-messages':'empty-chat')}>{Header}
     {messages.length===0?<div className="empty-chat-content"><div className="conversation"><section className="welcome"><h2>Mau dibantu apa hari ini?</h2></section></div>{(error||historyError)&&<p role={error?'alert':'status'} className="chat-notice">{error||historyError}</p>}{Composer}</div>:<div className="chat-thread"><div className="conversation" ref={conversationRef} aria-live="polite">{messages.map((turn,index)=><article key={index} className="turn"><p className="question">{turn.question}</p><div className="answer"><MarkdownAnswer text={turn.answer.response}/>{!['not_evaluated','deterministic_response','general_knowledge_fallback'].includes(turn.answer.grounding.reason)&&(turn.answer.trust.requires_human||!turn.answer.grounding.grounded)&&<small className="verification-note">Jawaban dokumen belum cukup didukung sumber atau memerlukan peninjauan.</small>}
-      {uniqueEvidence(turn.answer.evidence).length>0&&<details className="chat-sources"><summary>Sumber ({uniqueEvidence(turn.answer.evidence).length})</summary>{uniqueEvidence(turn.answer.evidence).map((e,i)=><details className="citation" key={e.document_id+'-'+i}><summary>{e.title}</summary>{e.pages?.length?<p>Halaman: {e.pages.join(', ')}</p>:<p>Halaman sumber belum tersedia.</p>}</details>)}</details>}
+      {uniqueEvidence(turn.answer.evidence).length>0&&<details className="chat-sources"><summary>Sumber ({uniqueEvidence(turn.answer.evidence).length})</summary>{uniqueEvidence(turn.answer.evidence).map((e,i)=><ChatCitation key={e.document_id+'-'+i} evidence={e} requestId={turn.requestId} session={session} token={token}/>)}</details>}
       <details className="answer-meta"><summary>Detail jawaban</summary><small>{turn.answer.provider_status==='evidence_fast_path'?'Jawaban disusun dari informasi dalam sumber.':'Model yang menjawab: '+turn.answer.model}</small><small>{turn.answer.evidence.length?'Dukungan isi sumber tidak berarti dokumen resmi telah disahkan.':'Jawaban percakapan; tidak dinilai sebagai validasi dokumen resmi.'}</small><small>Jalur: {turn.answer.provider_status}</small><small>Latensi: {turn.answer.latency_ms} ms</small><small>Waktu: {turn.answer.timestamp}</small></details></div></article>)}{pending&&<p role="status">Nusantara sedang memproses pertanyaan…</p>}{(error||historyError)&&<p role={error?'alert':'status'} className="chat-notice">{error||historyError}</p>}{historyFailures.length>0&&<details className="chat-failures"><summary>{historyFailures.length} pesan gagal</summary>{historyFailures.map((turn,i)=><p key={i}>{turn.question} · Permintaan belum berhasil. Detail tersimpan di log layanan.</p>)}</details>}</div>{Composer}</div>}</section></div>;
 }
 
@@ -160,3 +161,4 @@ export function OperatorConsole({title='Developer Console'}:{title?:string}){
       <details><summary>Request terakhir dan identitas source</summary><pre>{JSON.stringify({process:status?.process_id,source:status?.source_build_id,revision:status?.revision,last_request:status?.last_request},null,2)}</pre><p>Fingerprint source saat import belum membuktikan seluruh loaded build atau model weights.</p></details>
       <p><Link to="/overview">Evidence dan acceptance</Link> · <Link to="/verification">Regression evidence</Link> · <Link to="/knowledge">Knowledge diagnostics</Link></p></section></>;
 }
+

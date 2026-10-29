@@ -6,13 +6,15 @@ not a named person. Every decision keeps that limitation explicit.
 import hashlib
 import json
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
 from .schemas import Evidence, RetrievalEvidenceList
 
 REQUIRED_CASES = ['requirements', 'procedure', 'time_cost', 'followup', 'missing']
+PUBLICATION_BLOCKS = {'reject': 'Ditolak', 'defer': 'Ditunda', 'revoke': 'Dicabut'}
+CORRECTION_CATEGORIES = {'unknown', 'extraction', 'retrieval', 'context', 'answer', 'claim_check', 'citation_viewer'}
 
 
 def contact_absence_statement(answer):
@@ -34,7 +36,8 @@ def sop_wording_supported(answer, source, *, full_source=None):
             and not re.search(r'\b(?:tetapi|namun|harus|wajib|dilarang|tidak boleh)\b', answer, re.I)):
         return True
     framing = set('berikut menurut berdasarkan sop ini itu adalah yaitu sebagai dengan untuk dalam dari dan atau pada oleh yang dapat anda silakan siapkan persyaratan prosedur waktu biaya jawaban informasi tersebut hanya secara telah sudah akan perlu mengenai tentang permohonan pemohon sumber pribadi data disebutkan atas hasil layanannya'.split())
-    words = lambda value: {word for word in re.findall(r'\w+', value.casefold()) if len(word) > 2}
+    def words(value):
+        return {word for word in re.findall(r'\w+', value.casefold()) if len(word) > 2}
     return not (words(answer) - words(source) - framing)
 
 
@@ -179,11 +182,16 @@ class SOPReview:
             {'key': 'no_open_problems', 'satisfied': not problems},
         ]
         approval = next((e for e in reversed(events) if e['kind'] == 'approve'), None)
+        publication_decision = next((e for e in reversed(events)
+                                     if e['kind'] == 'approve' or e['kind'] in PUBLICATION_BLOCKS), None)
         trial_binding = [[t['trial_id'], t['rating']['event_id'] if t['rating'] else None] for t in trials]
         review_binding = [e['event_id'] for e in events if e['kind'] != 'approve']
         approval_current = (approval and approval.get('trial_binding') == trial_binding
                             and approval.get('review_binding') == review_binding)
-        status = ('File sumber belum ditemukan' if not path else 'Ada masalah' if problems else
+        blocked_status = PUBLICATION_BLOCKS.get(
+            publication_decision['kind'] if publication_decision else None)
+        status = (blocked_status if blocked_status else
+                  'File sumber belum ditemukan' if not path else 'Ada masalah' if problems else
                   'Menunggu ekstraksi' if not extraction_ready else
                   'Menunggu pemeriksaan isi' if not content_ok else 'Aktif' if ready and approval_current else
                   'Siap disetujui' if ready else 'Isi sudah diperiksa')
@@ -195,6 +203,7 @@ class SOPReview:
                 'text': doc.source, 'pages': doc.metadata.get('source_pages', []), 'status': status,
                 'content_ok': content_ok, 'required_cases': REQUIRED_CASES, 'trials': trials,
                 'events': events, 'problems': problems, 'can_approve': ready, 'approval': approval,
+                'publication_decision': publication_decision,
                 'approval_requirements': approval_requirements,
                 'trial_binding': trial_binding,
                 'review_binding': review_binding,
@@ -214,9 +223,11 @@ class SOPReview:
             (event_id, document_id, version_id, kind, payload, principal, created_at)
             VALUES (?,?,?,?,?,?,?)''',
             (uuid4().hex, document_id, version, kind, json.dumps(payload, ensure_ascii=False), principal,
-             datetime.now(timezone.utc).isoformat()))
+             datetime.now(UTC).isoformat()))
 
-    def decide(self, document_id, version, action, principal, note='', problem_id=None):
+    def decide(self, document_id, version, action, principal, note='', problem_id=None, category='unknown'):
+        if category not in CORRECTION_CATEGORIES:
+            raise ValueError('Kategori masalah tidak dikenal.')
         with self.engine._pipeline_db() as conn:
             conn.execute('BEGIN IMMEDIATE')
             detail = self._check(document_id, version)
@@ -231,12 +242,18 @@ class SOPReview:
             elif action == 'resolve':
                 if not note.strip() or problem_id not in {p['event_id'] for p in detail['problems']}:
                     raise ValueError('Pilih masalah terbuka dan isi catatan penyelesaiannya.')
+            elif action in PUBLICATION_BLOCKS:
+                if not note.strip():
+                    raise ValueError('Alasan keputusan wajib diisi.')
+                if action == 'revoke' and detail['status'] != 'Aktif':
+                    raise ValueError('Hanya dokumen aktif yang dapat dicabut.')
             elif action != 'content_ok':
                 raise ValueError('Tindakan tidak dikenal.')
             if action == 'content_ok' and detail['source_type'] == '.pdf' and detail['extraction_status'] != 'COMPLETE':
                 raise ValueError('Selesaikan ekstraksi Docling sebelum memeriksa isi PDF.')
             self._event(conn, document_id, version, action,
                 {'note': note.strip(), 'problem_id': problem_id,
+                 **({'category': category} if action == 'problem' else {}),
                  **({'trial_binding': detail['trial_binding'], 'review_binding': detail['review_binding']} if action == 'approve' else {})}, principal)
         return self.detail(document_id)
 
@@ -262,10 +279,12 @@ class SOPReview:
         with self.engine._pipeline_db() as conn:
             conn.execute('INSERT INTO sop_review_trials VALUES (?,?,?,?,?,?,?,?)',
                 (trial_id, document_id, version, case, question, json.dumps(answer, ensure_ascii=False), principal,
-                 datetime.now(timezone.utc).isoformat()))
+                 datetime.now(UTC).isoformat()))
         return {'trial_id': trial_id}
 
-    def rate(self, document_id, version, trial_id, ok, note, principal):
+    def rate(self, document_id, version, trial_id, ok, note, principal, category='unknown'):
+        if category not in CORRECTION_CATEGORIES:
+            raise ValueError('Kategori masalah tidak dikenal.')
         with self.engine._pipeline_db() as conn:
             conn.execute('BEGIN IMMEDIATE')
             detail = self._check(document_id, version)
@@ -273,7 +292,8 @@ class SOPReview:
                 raise ValueError('Percobaan tidak ditemukan pada versi ini.')
             if not ok and not note.strip():
                 raise ValueError('Catatan masalah wajib diisi.')
-            self._event(conn, document_id, version, 'rating', {'trial_id': trial_id, 'ok': ok, 'note': note.strip()}, principal)
+            self._event(conn, document_id, version, 'rating',
+                {'trial_id': trial_id, 'ok': ok, 'note': note.strip(), 'category': category}, principal)
         return self.detail(document_id)
 
     def is_pilot(self, document_id):
@@ -304,8 +324,9 @@ class SOPReview:
     def evidence(self, document_id, version, query=''):
         detail = self._check(document_id, version)
         if detail['source_type'] == '.pdf':
-            from .document_tools import DocumentTools, DocumentReadError
             from fastapi import HTTPException
+
+            from .document_tools import DocumentReadError, DocumentTools
             try:
                 return DocumentTools(self.engine, operator=True).evidence(document_id, version, query)
             except DocumentReadError as exc:
@@ -317,3 +338,4 @@ class SOPReview:
         return RetrievalEvidenceList([Evidence(document_id=document_id, title=detail['title'], source=text, chunk=text,
             chunk_id=version, chunk_index=0, start_char=0, end_char=len(text), score=1.,
             metadata={'source_pages': detail['pages'], 'citation_pages': [p['page'] for p in detail['pages']], 'version_id': version})])
+

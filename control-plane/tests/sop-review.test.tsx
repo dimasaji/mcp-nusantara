@@ -19,6 +19,32 @@ beforeEach(()=>{
   URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();
 });
 afterEach(()=>{cleanup();vi.unstubAllGlobals();});
+it.each([
+  ['Tolak dokumen','reject','Ditolak'],
+  ['Tunda keputusan','defer','Ditunda'],
+  ['Cabut dari Chat','revoke','Dicabut'],
+])('saves %s with a reason and keeps its decision after remount',async(label,action,status)=>{
+  state.status='Aktif';state.content_ok=true;state.can_approve=true;
+  vi.stubGlobal('fetch',vi.fn(async(url:string,options?:RequestInit)=>{
+    if(String(url).includes('/source?'))return {ok:true,blob:async()=>new Blob(['PDF'])};
+    if(options?.method==='POST'){
+      const body=JSON.parse(String(options.body));
+      state={...state,status,publication_decision:{kind:body.action,note:body.note},events:[{event_id:'decision',kind:body.action,note:body.note,principal:'shared-admin-token',created_at:'2026-10-29'}]};
+    }
+    return {ok:true,json:async()=>state};
+  }));
+  render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+  fireEvent.click(await screen.findByRole('button',{name:label}));
+  expect(screen.getByRole('button',{name:'Simpan keputusan'})).toBeDisabled();
+  fireEvent.change(screen.getByLabelText('Alasan keputusan'),{target:{value:'Periksa ulang isi dokumen'}});
+  fireEvent.click(screen.getByRole('button',{name:'Simpan keputusan'}));
+  await screen.findByText(status);
+  const write=vi.mocked(fetch).mock.calls.find(([,options])=>options?.method==='POST');
+  expect(JSON.parse(String(write?.[1]?.body))).toEqual({version_id:'a'.repeat(64),action,note:'Periksa ulang isi dokumen'});
+  cleanup();render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+  await screen.findByText(status);
+  expect(screen.getByText('Alasan: Periksa ulang isi dokumen')).toBeVisible();
+});
 it('persists the content check after reload without approving the SOP',async()=>{
   render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
   fireEvent.click(await screen.findByRole('button',{name:'Isi sudah sesuai'}));
@@ -32,6 +58,14 @@ it('persists the content check after reload without approving the SOP',async()=>
   render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
   await screen.findByText(/Isi sudah Anda nyatakan sesuai/);
   expect(state.content_ok).toBe(true);
+  expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
+});
+it('shows revision differences without treating them as approval',async()=>{
+  state.comparison={previous_version_id:'b'.repeat(64),version_id:'a'.repeat(64),changed_blocks:1,omitted_blocks:0,changes:[{block_id:'requirements',kind:'changed',pages:[1],before:'Surat Permohonan',after:'Surat Pengantar',excerpt_truncated:false}]};
+  render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+  fireEvent.click(await screen.findByText('Perubahan dari hasil baca sebelumnya'));
+  expect(screen.getByText('Sebelumnya: Surat Permohonan')).toBeVisible();
+  expect(screen.getByText('Sekarang: Surat Pengantar')).toBeVisible();
   expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
 });
 it('shows the exact missing approval case and unverified shared-token rating origin',async()=>{
@@ -94,6 +128,16 @@ it('requires notes and releases busy state after a failed write',async()=>{
   await screen.findByRole('alert');
   await waitFor(()=>expect(screen.getByRole('button',{name:'Simpan catatan'})).toBeEnabled());
 });
+it('saves a correction category with the operator problem',async()=>{
+  render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+  fireEvent.click(await screen.findByRole('button',{name:'Laporkan kesalahan'}));
+  fireEvent.change(screen.getByLabelText('Kategori masalah'),{target:{value:'extraction'}});
+  fireEvent.change(screen.getByLabelText('Catatan wajib'),{target:{value:'Tabel belum terbaca'}});
+  fireEvent.click(screen.getByRole('button',{name:'Simpan catatan'}));
+  await waitFor(()=>expect(screen.queryByRole('region',{name:'Catatan masalah'})).not.toBeInTheDocument());
+  const write=vi.mocked(fetch).mock.calls.find(([,options])=>options?.method==='POST');
+  expect(JSON.parse(String(write?.[1]?.body))).toMatchObject({action:'problem',category:'extraction',note:'Tabel belum terbaca'});
+});
 it('explains a missing extracted page instead of leaving a blank comparison',async()=>{
   state.extraction={status:'PARTIAL'};state.pages=[{page:1,start:0,end:20},{page:2,start:21,end:40}];
   state.extracted_blocks=[{block_id:'one',type:'text',content:'Isi halaman satu',page_numbers:[1]}];
@@ -109,3 +153,4 @@ it('ends source loading on failure and offers a working retry',async()=>{
   sourceFail=false;fireEvent.click(screen.getByRole('button',{name:'Coba muat sumber lagi'}));
   await screen.findByTitle('PDF asli SOP');
 });
+

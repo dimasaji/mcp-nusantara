@@ -4,8 +4,8 @@ import pytest
 from app.knowledge.engine import KnowledgeEngine
 from app.knowledge.rag import RAG
 from app.knowledge.schemas import KnowledgeBaseConfig
-from app.knowledge.store import SQLiteVectorStore
 from app.knowledge.sop_review import SOPReview
+from app.knowledge.store import SQLiteVectorStore
 
 
 def engine_at(path):
@@ -87,6 +87,59 @@ def test_pilot_is_private_to_trial_before_first_human_decision(tmp_path):
     assert trial.search_knowledge('Persyaratan')[0].source == doc['text']
 
 
+@pytest.mark.parametrize('action,status', [('reject', 'Ditolak'), ('defer', 'Ditunda'), ('revoke', 'Dicabut')])
+def test_publication_decision_blocks_retrieval_and_cached_answer_until_new_approval(tmp_path, action, status):
+    from fastapi import HTTPException
+
+    from app.security.v1_knowledge import V1KnowledgeBoundary
+
+    engine = engine_at(tmp_path / 'chat.db')
+    run = engine.process_knowledge_source('sop.txt', b'Persyaratan: surat permohonan. Prosedur: serahkan berkas.')
+    review = SOPReview(engine)
+    doc = review.detail(run['document_id'])
+    identifier, version = doc['document_id'], doc['version_id']
+    review.decide(identifier, version, 'content_ok', 'operator')
+    for case in doc['required_cases']:
+        trial = review.record_trial(identifier, version, case, 'Pertanyaan uji', {'response': 'Jawaban uji'}, 'operator')
+        review.rate(identifier, version, trial['trial_id'], True, '', 'operator')
+    approved = review.decide(identifier, version, 'approve', 'operator')
+    boundary = V1KnowledgeBoundary(engine, operator=True, provider='ollama', document_ids=[identifier])
+    assert boundary.search_knowledge('Persyaratan')
+    answer = {'evidence': [{'document_id': identifier}]}
+    bindings = boundary.source_versions(answer)
+    boundary.validate_response(answer, bindings)
+
+    with pytest.raises(ValueError, match='Alasan'):
+        review.decide(identifier, version, action, 'operator', '   ')
+    result = review.decide(identifier, version, action, 'operator', 'Keputusan pemeriksaan uji')
+    assert result['status'] == status
+    reopened = SOPReview(engine_at(tmp_path / 'chat.db'))
+    assert reopened.detail(identifier)['status'] == status
+    assert reopened.detail(identifier)['publication_decision']['principal'] == 'operator'
+    assert boundary.search_knowledge('Persyaratan') == []
+    assert V1KnowledgeBoundary(engine, operator=True, provider='ollama').search_knowledge('Persyaratan') == []
+    with pytest.raises(HTTPException) as error:
+        boundary.validate_response(answer, bindings)
+    assert error.value.status_code == 409
+    with pytest.raises(ValueError, match='Versi berubah'):
+        review.decide(identifier, '0' * 64, 'approve', 'operator')
+
+    reapproved = reopened.decide(identifier, version, 'approve', 'operator', 'Diperiksa kembali')
+    assert reapproved['status'] == 'Aktif'
+    assert reapproved['approval']['event_id'] != approved['approval']['event_id']
+    assert any(event['kind'] == action for event in reapproved['events'])
+    assert boundary.search_knowledge('Persyaratan')
+
+
+def test_unapproved_document_cannot_be_revoked(tmp_path):
+    engine = engine_at(tmp_path / 'chat.db')
+    run = engine.process_knowledge_source('sop.txt', b'Persyaratan: surat permohonan. Prosedur: serahkan berkas.')
+    review = SOPReview(engine)
+    doc = review.detail(run['document_id'])
+    with pytest.raises(ValueError, match='aktif'):
+        review.decide(doc['document_id'], doc['version_id'], 'revoke', 'operator', 'Cabut sumber')
+
+
 def test_content_check_event_persists_with_optional_trial_id_column(tmp_path):
     engine = engine_at(tmp_path / 'chat.db')
     run = engine.process_knowledge_source('sop.txt', b'Persyaratan: surat permohonan. Prosedur: serahkan berkas.')
@@ -104,3 +157,43 @@ def test_content_check_event_persists_with_optional_trial_id_column(tmp_path):
     assert saved['content_ok'] is True
     assert refreshed['content_ok'] is True
     assert any(event['kind'] == 'content_ok' for event in refreshed['events'])
+
+
+def test_deferred_document_stays_blocked_after_reload_and_content_check(tmp_path):
+    from app.security.v1_knowledge import V1KnowledgeBoundary
+
+    engine = engine_at(tmp_path / 'chat.db')
+    run = engine.process_knowledge_source('sop.txt', b'Persyaratan: surat permohonan. Prosedur: serahkan berkas.')
+    review = SOPReview(engine)
+    doc = review.detail(run['document_id'])
+    result = review.decide(doc['document_id'], doc['version_id'], 'defer', 'operator', 'Periksa tabel biaya')
+    assert result['status'] == 'Ditunda'
+    reopened = SOPReview(engine_at(tmp_path / 'chat.db'))
+    assert reopened.detail(doc['document_id'])['status'] == 'Ditunda'
+    checked = reopened.decide(doc['document_id'], doc['version_id'], 'content_ok', 'operator')
+    assert checked['status'] == 'Ditunda'
+    assert checked['publication_decision']['note'] == 'Periksa tabel biaya'
+    assert V1KnowledgeBoundary(engine, operator=True, provider='ollama').search_knowledge('Persyaratan') == []
+
+
+def test_correction_retains_category_question_answer_revision_and_resolution(tmp_path):
+    engine = engine_at(tmp_path / 'chat.db')
+    run = engine.process_knowledge_source('sop.txt', b'Persyaratan: surat permohonan. Prosedur: serahkan berkas.')
+    review = SOPReview(engine)
+    doc = review.detail(run['document_id'])
+    identifier, version = doc['document_id'], doc['version_id']
+    trial = review.record_trial(identifier, version, 'requirements', 'Apa berkasnya?',
+        {'response': 'Surat lain', 'evidence': [{'document_id': identifier, 'pages': [1]}]}, 'operator')
+    result = review.rate(identifier, version, trial['trial_id'], False, 'Sumber salah dipilih', 'operator', category='retrieval')
+    problem = result['problems'][0]
+    assert problem['category'] == 'retrieval'
+    reopened = SOPReview(engine_at(tmp_path / 'chat.db'))
+    saved = reopened.detail(identifier)
+    assert saved['trials'][0]['question'] == 'Apa berkasnya?'
+    assert saved['trials'][0]['answer']['response'] == 'Surat lain'
+    assert saved['trials'][0]['rating']['category'] == 'retrieval'
+    fixed = reopened.decide(identifier, version, 'resolve', 'operator', 'Sumber telah diperbaiki', problem['event_id'])
+    assert fixed['problems'] == []
+    assert fixed['trials'][0]['rating']['ok'] is False
+    assert fixed['trials'][0]['rating']['category'] == 'retrieval'
+

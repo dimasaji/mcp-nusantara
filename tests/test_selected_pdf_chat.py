@@ -1,10 +1,10 @@
 """Selected PDF scope must survive short follow-ups and expose real page citations."""
 import asyncio
 from types import SimpleNamespace
-import pytest
 
-from test_v1_langgraph import fixture
+import pytest
 from test_sop_review import engine_at
+from test_v1_langgraph import fixture
 
 
 def table_pdf():
@@ -34,9 +34,11 @@ def approved_pdf(tmp_path, monkeypatch):
     """Exercise the existing review lifecycle before ordinary document Chat."""
     import json
     from pathlib import Path
+
+    from test_review_publication_v1 import _approve_fixture, _convert
+
     from app.knowledge.document_tools import DocumentTools
     from app.knowledge.sop_review import SOPReview
-    from test_review_publication_v1 import _approve_fixture, _convert
     engine = engine_at(tmp_path/'chat.db')
     identifier = engine.process_knowledge_source('table.pdf',table_pdf())['document_id']
     def worker(args, **kwargs):
@@ -44,6 +46,7 @@ def approved_pdf(tmp_path, monkeypatch):
             'page_count':2,'markdown':'','blocks':[],'docling_json':{'fixture':True}}),encoding='utf-8')
         return SimpleNamespace(returncode=0)
     monkeypatch.setattr('app.knowledge.worker_process.run_worker',worker)
+    monkeypatch.setattr('app.knowledge.document_tools.effective_config', lambda: {'fixture': True})
     review = SOPReview(engine)
     detail = _convert(DocumentTools(engine,operator=True),review,identifier)
     assert _approve_fixture(review,detail)['status']=='Aktif'
@@ -124,3 +127,4 @@ def test_pdf_procedure_preserves_source_row_order(approved_pdf):
     answer = parts[3](core.payload, intent_name=core.intent_name)
     assert answer['grounding']['grounded']
     assert answer['response'].index('Menyampaikan') < answer['response'].index('Memeriksa') < answer['response'].index('Pelayanan selesai')
+

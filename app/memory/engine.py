@@ -61,7 +61,7 @@ class MemoryEngine:
                 'timestamp':datetime.now(timezone.utc).isoformat()}])[-self.max_items:]
             self._save(session_id)
 
-    def begin_chat(self, session_id, request_id, question, *, retry_of=None, document_ids=None):
+    def begin_chat(self, session_id, request_id, question, *, retry_of=None, document_ids=None, source_access=None):
         """Reserve a chat turn before work starts and replay it by request ID.
 
         PROCESSING turns survive restart as UNKNOWN, which prevents a retry from
@@ -72,6 +72,11 @@ class MemoryEngine:
             raise ValueError('CHAT_REQUEST_ID_INVALID')
         if not isinstance(question, str) or not question:
             raise ValueError('CHAT_QUESTION_INVALID')
+        access = dict(source_access) if source_access is not None else {'mode': 'approved'}
+        if (access.get('mode') not in {'approved', 'review_trial'}
+                or (access.get('mode') == 'review_trial'
+                    and not re.fullmatch(r'[a-f0-9]{64}', str(access.get('version', ''))))):
+            raise ValueError('CHAT_SOURCE_ACCESS_INVALID')
         now = datetime.now(timezone.utc).isoformat()
         with self.lock:
             self._restore(session_id)
@@ -79,6 +84,8 @@ class MemoryEngine:
             existing = next((turn for turn in turns if turn.get('request_id') == request_id), None)
             if existing is not None:
                 if existing.get('question') != question or existing.get('document_ids', []) != (document_ids or []):
+                    return {'state': 'CONFLICT'}
+                if existing.get('source_access', {'mode': 'approved'}) != access:
                     return {'state': 'CONFLICT'}
                 if existing.get('status') == 'SUCCEEDED':
                     return {'state': 'SUCCEEDED', 'answer': existing.get('answer'),
@@ -99,6 +106,7 @@ class MemoryEngine:
             if retry_of is not None:
                 prior = next((turn for turn in turns if turn.get('request_id') == retry_of), None)
                 if (prior is None or prior.get('question') != question or prior.get('document_ids', []) != (document_ids or []) or
+                        prior.get('source_access', {'mode': 'approved'}) != access or
                         prior.get('status') != 'FAILED' or
                         prior.get('error') not in {'HTTP_504_PRE_PROVIDER', 'HTTP_503_PRE_PROVIDER'}):
                     return {'state': 'RETRY_NOT_SAFE'}
@@ -108,6 +116,7 @@ class MemoryEngine:
                 'error': None, 'status': 'PROCESSING', 'timestamp': now,
                 'instance_id': self._chat_instance_id,
                 'document_ids': document_ids or [],
+                'source_access': access,
                 **({'retry_of': retry_of} if retry_of else {}),
             })
             self._save(session_id)
@@ -180,3 +189,4 @@ class MemoryEngine:
             value=item.get('metadata',{}).get('service_context')
             if isinstance(value,dict):return dict(value)
         return {}
+
