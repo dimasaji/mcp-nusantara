@@ -7,6 +7,7 @@ import hashlib
 from datetime import datetime, timezone
 from dataclasses import dataclass
 from contextvars import ContextVar
+from app.core.work_approval_contract import workflow_contract
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "data" / "developer_core"
@@ -329,6 +330,10 @@ def execution_context(paths=None):
         completed = next((row for row in reversed(execution_history(_paths()))
                           if row.get('change_id') == plan['change_id'] and row.get('result') == 'PASS'), None)
         return {'change_id': plan['change_id'], 'expected_change': plan.get('expected_change', ''),
+                'workflow': workflow_contract(),
+                'plan_origin': {'kind': 'DEVELOPER_OPERATION' if isinstance(plan.get('origin'), dict)
+                                and plan['origin'].get('kind') == 'DEVELOPER_OPERATION' else 'UNKNOWN',
+                                'actor_identity': 'NOT_RECORDED'},
                 'completed': completed is not None, 'completed_at': completed.get('timestamp') if completed else None,
                 'plan_binding': plan_identity(plan, staging, files),
                 'objective': plan.get('objective', plan.get('expected_change', '')),
@@ -366,6 +371,7 @@ def prepare_normal_plan(paths, *, objective, expected_change, documents, risk, t
     from app.core.evidence_registry import _cross_process_lock
     identity = hashlib.sha256(json.dumps({'objective': objective, 'documents': documents}, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:16]
     plan = {'schema': 'nusantara.normal-plan.v1', 'change_id': 'NORMAL-' + identity,
+            'origin': {'kind': 'DEVELOPER_OPERATION', 'actor_identity': 'NOT_RECORDED'},
             'status': 'PREPARED', 'objective': objective, 'expected_change': expected_change,
             'risk': risk, 'tests_required': tests_required, 'rollback': rollback,
             'allowed_files': sorted(documents), 'write_scope': {'enabled': True},
@@ -489,4 +495,3 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -35,6 +35,10 @@
 .settings-shell main{background:#fff;padding:24px 36px;min-width:0}
 .settings-breadcrumb{font-size:13px;margin:0 0 14px;color:#68786e}
 .settings-navigation nav{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 14px}
+.settings-shell .settings-navigation nav{flex-direction:row;align-items:center}
+.settings-shell .panel nav.op-button-row{flex-direction:row;justify-content:flex-start;flex-wrap:wrap;gap:16px}
+.work-approval-flow{display:flex;flex-wrap:wrap;gap:12px 32px;padding-left:24px;margin:20px 0}
+.work-approval-flow li{padding:8px 12px;color:#224b32;background:#edf3ef;border-radius:8px}
 .settings-navigation nav a{display:block;padding:10px 12px;border-radius:8px;font-size:13px;color:#4c6153;min-height:40px}
 .settings-navigation nav a.active,.settings-navigation nav a:hover{background:#edf3ef;color:#224b32}
 .settings-shell .operator-topbar{border-bottom:1px solid #e5ebe7;padding:4px 0 14px;font-size:12px}

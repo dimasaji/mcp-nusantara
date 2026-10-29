@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import threading
 from uuid import uuid4
+from app.core.work_approval_contract import APPROVAL_VALIDITY_SECONDS
 
 
 VALIDATION_STATUSES = frozenset({"VALID", "INVALID", "MISSING", "BLOCKED", "NOT_VERIFIED"})
@@ -422,6 +423,6 @@ def require_execution_approval(root: Path, audit_path: Path, *, package_id: str,
         age = ((now or datetime.now(timezone.utc)) - created).total_seconds()
     except (ValueError, TypeError, KeyError):
         raise EvidenceRegistryError('EXECUTION_DECISION_TIMESTAMP_INVALID') from None
-    if not 0 <= age <= 3600:
+    if not 0 <= age <= APPROVAL_VALIDITY_SECONDS:
         raise EvidenceRegistryError('EXECUTION_APPROVAL_EXPIRED')
     return decision
