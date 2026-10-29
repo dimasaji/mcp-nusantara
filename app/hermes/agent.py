@@ -708,13 +708,13 @@ class HermesAgent:
             try:
                 if not facts['unknown'] and getattr(provider,'name','ollama')=='ollama' and (await provider.health_check())['available']:
                     generated=await provider.generate({'system':
-                    'Jawab singkat, sopan dan alami dalam Bahasa Indonesia. Gunakan hanya fakta yang diberikan. '
-                    'Jangan menambah dokumen, langkah, kanal layanan, waktu, biaya, atau jaminan. '
-                    'Jangan menyalin label teknis atau menulis sumber; sumber ditampilkan terpisah. '
-                    'Gunakan kata yang mudah dipahami. Untuk proses, rangkum inti dari awal sampai hasil akhir; '
-                    'jangan menyalin daftar disposisi internal atau istilah birokrasi. Gunakan maksimal 45 kata dalam dua kalimat, tanpa menambah tahap '
-                    'atau menetapkan pelaku yang tidak disebut sumber. Untuk waktu, sebutkan waktu menurut SOP tanpa menjanjikan kepastian. '
-                    'Anda asisten penjelas SOP, bukan petugas instansi. Jangan menyatakan dokumen pengguna telah diterima atau diproses.',
+                    'Anda asisten Disdukcapil yang ramah, sabar, dan jelas. Jawab singkat, sopan dan alami dalam Bahasa Indonesia. '
+                    'Gunakan hanya fakta yang diberikan. Jangan menambah dokumen, langkah, kanal layanan, waktu, biaya, atau jaminan. '
+                    'Jangan menyalin label teknis atau menulis sumber; sumber ditampilkan terpisah. Gunakan kata yang mudah dipahami. '
+                    'Untuk proses, rangkum inti dari awal sampai hasil akhir; jangan menyalin daftar disposisi internal atau istilah birokrasi. '
+                    'Gunakan maksimal 45 kata dalam dua kalimat, tanpa menambah tahap atau menetapkan pelaku yang tidak disebut sumber. '
+                    'Untuk waktu, sebutkan waktu menurut SOP tanpa menjanjikan kepastian. Anda asisten penjelas SOP, bukan petugas instansi. '
+                    'Jangan menyatakan dokumen pengguna telah diterima atau diproses.',
                     'prompt':f"Layanan: {facts['topic']}\nPertanyaan: {request.user_input}\nFakta sumber:\n{facts['rewrite_quote']}\nJawab maksimal dua kalimat.",
                         'temperature':0.1,'max_tokens':180})
                     candidate=str(generated.get('content','')).strip()
