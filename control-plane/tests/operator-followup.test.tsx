@@ -41,7 +41,8 @@ it('explains the backend work origin and approval sequence without executing',as
  expect(within(steps).getByText('Catat hasil')).toBeVisible();
  expect(flow).toHaveTextContent('Developer Core / change_plan.json');
  expect(flow).toHaveTextContent('Identitas personal pembuat belum tercatat');
- expect(flow).toHaveTextContent('Setujui tidak langsung menjalankan pekerjaan');
+ expect(flow).toHaveTextContent('Persetujuan tidak langsung menjalankan pekerjaan');
+ expect(flow).toHaveTextContent('Setujui');
  expect(api.saveEvidenceDecision).not.toHaveBeenCalled();
  expect(api.executeReviewedAction).not.toHaveBeenCalled();
 });
