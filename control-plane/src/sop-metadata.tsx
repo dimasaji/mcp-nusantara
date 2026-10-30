@@ -44,6 +44,27 @@ function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
       }
     }
   }
+  if(key==='official_title'){
+    const lines=blocks.flatMap(block=>block.content.split(/\\r?\\n/).map(line=>({line:line.trim(),page:block.page_numbers[0]??null})))
+      .filter(item=>item.page===null||item.page<=2);
+    for(let i=0;i<lines.length;i++){
+      const heading=lines[i].line;
+      const inline=heading.match(/^\\s*(?:standar operasional prosedur|s\\.?o\\.?p\\.?)\\s*[:：-]?\\s+(.+)$/i);
+      if(inline?.[1]&&inline[1].trim().length>=8){
+        return {status:'present',value:cleanValue(inline[1]),page_number:lines[i].page,note:''};
+      }
+      if(/standar operasional prosedur|^s\\.?o\\.?p\\.?$/i.test(heading)){
+        for(let j=i+1;j<Math.min(lines.length,i+5);j++){
+          const candidate=lines[j].line;
+          if(candidate.length<8||candidate.length>180||/^(?:PEMERINTAH|DINAS|KECAMATAN|KELURAHAN|NOMOR|TANGGAL|HALAMAN)\\b/i.test(candidate))continue;
+          const letters=candidate.replace(/[^A-Za-zÀ-ÿ]/g,'');
+          if(letters.length>=8&&letters===letters.toLocaleUpperCase('id')){
+            return {status:'present',value:cleanValue(candidate),page_number:lines[j].page,note:''};
+          }
+        }
+      }
+    }
+  }
   return {status:'not_stated',value:null,page_number:null,note:'Belum ditemukan otomatis pada hasil ekstraksi. Periksa hanya jika sumber asli menampilkan informasi ini.'};
 }
 function suggestMetadata(documentId:string,blocks:ExtractedBlock[]):OfficialMetadata{
