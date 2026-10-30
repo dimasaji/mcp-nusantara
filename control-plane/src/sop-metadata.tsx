@@ -21,9 +21,9 @@ function cleanValue(value:string){return value.replace(/\s{2,}/g,' ').replace(/[
 function normalizeDate(value:string){
   const text=value.trim();
   const months:Record<string,string>={januari:'01',februari:'02',maret:'03',april:'04',mei:'05',juni:'06',juli:'07',agustus:'08',september:'09',oktober:'10',november:'11',desember:'12'};
-  const iso=text.match(/\\b(\\d{4})-(\\d{1,2})-(\\d{1,2})\\b/);
-  const local=text.match(/\\b(\\d{1,2})[./-](\\d{1,2})[./-](\\d{4})\\b/);
-  const named=text.match(/\\b(\\d{1,2})\\s+(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\\s+(\\d{4})\\b/i);
+  const iso=text.match(/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/);
+  const local=text.match(/\b(\d{1,2})[./-](\d{1,2})[./-](\d{4})\b/);
+  const named=text.match(/\b(\d{1,2})\s+(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\s+(\d{4})\b/i);
   const result=iso?`${iso[1]}-${iso[2].padStart(2,'0')}-${iso[3].padStart(2,'0')}`:
     local?`${local[3]}-${local[2].padStart(2,'0')}-${local[1].padStart(2,'0')}`:
     named?`${named[3]}-${months[named[2].toLocaleLowerCase('id')]}-${named[1].padStart(2,'0')}`:null;
@@ -45,18 +45,18 @@ function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
     }
   }
   if(key==='official_title'){
-    const lines=blocks.flatMap(block=>block.content.split(/\\r?\\n/).map(line=>({line:line.trim(),page:block.page_numbers[0]??null})))
+    const lines=blocks.flatMap(block=>block.content.split(/\r?\n/).map(line=>({line:line.trim(),page:block.page_numbers[0]??null})))
       .filter(item=>item.page===null||item.page<=2);
     for(let i=0;i<lines.length;i++){
       const heading=lines[i].line;
-      const inline=heading.match(/^\\s*(?:standar operasional prosedur|s\\.?o\\.?p\\.?)\\s*[:：-]?\\s+(.+)$/i);
+      const inline=heading.match(/^\s*(?:standar operasional prosedur|s\\.?o\\.?p\\.?)\s*[:：-]?\s+(.+)$/i);
       if(inline?.[1]&&inline[1].trim().length>=8){
         return {status:'present',value:cleanValue(inline[1]),page_number:lines[i].page,note:''};
       }
       if(/standar operasional prosedur|^s\\.?o\\.?p\\.?$/i.test(heading)){
         for(let j=i+1;j<Math.min(lines.length,i+5);j++){
           const candidate=lines[j].line;
-          if(candidate.length<8||candidate.length>180||/^(?:PEMERINTAH|DINAS|KECAMATAN|KELURAHAN|NOMOR|TANGGAL|HALAMAN)\\b/i.test(candidate))continue;
+          if(candidate.length<8||candidate.length>180||/^(?:PEMERINTAH|DINAS|KECAMATAN|KELURAHAN|NOMOR|TANGGAL|HALAMAN)\b/i.test(candidate))continue;
           const letters=candidate.replace(/[^A-Za-zÀ-ÿ]/g,'');
           if(letters.length>=8&&letters===letters.toLocaleUpperCase('id')){
             return {status:'present',value:cleanValue(candidate),page_number:lines[j].page,note:''};
