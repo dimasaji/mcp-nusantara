@@ -19,7 +19,7 @@ it('prefills SOP metadata from extracted text and saves without manual re-entry'
   render(<SOPMetadataForm documentId="DOC-fixture" pdf busy={false} extractedBlocks={extractedBlocks} onSave={save}/>);
   expect(screen.getByLabelText('Judul resmi SOP',{exact:true})).toHaveValue('PERMOHONAN DATA PRIBADI');
   expect(screen.getByLabelText('Halaman judul')).toHaveValue(1);
-  expect(screen.getByLabelText('Identitas layanan SOP')).toHaveValue(expect.stringContaining('SOP:'));
+  expect((screen.getByLabelText('Identitas layanan SOP') as HTMLInputElement).value).toMatch(/^SOP:/);
   expect(screen.getByRole('button',{name:'Simpan pemeriksaan metadata'})).toBeEnabled();
   expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).toHaveTextContent('Nomor SOP');
   fireEvent.click(screen.getByRole('button',{name:'Simpan pemeriksaan metadata'}));
