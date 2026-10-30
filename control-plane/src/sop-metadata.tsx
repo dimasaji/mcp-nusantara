@@ -49,11 +49,11 @@ function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
       .filter(item=>item.page===null||item.page<=2);
     for(let i=0;i<lines.length;i++){
       const heading=lines[i].line;
-      const inline=heading.match(/^\s*(?:standar operasional prosedur|s\\.?o\\.?p\\.?)\s*[:：-]?\s+(.+)$/i);
+      const inline=heading.match(/^\s*(?:standar operasional prosedur|s\.?o\.?p\.?)\s*[:：-]?\s+(.+)$/i);
       if(inline?.[1]&&inline[1].trim().length>=8){
         return {status:'present',value:cleanValue(inline[1]),page_number:lines[i].page,note:''};
       }
-      if(/standar operasional prosedur|^s\\.?o\\.?p\\.?$/i.test(heading)){
+      if(/standar operasional prosedur|^s\.?o\.?p\.?$/i.test(heading)){
         for(let j=i+1;j<Math.min(lines.length,i+5);j++){
           const candidate=lines[j].line;
           if(candidate.length<8||candidate.length>180||/^(?:PEMERINTAH|DINAS|KECAMATAN|KELURAHAN|NOMOR|TANGGAL|HALAMAN)\b/i.test(candidate))continue;
@@ -67,12 +67,20 @@ function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
   }
   return {status:'not_stated',value:null,page_number:null,note:'Belum ditemukan otomatis pada hasil ekstraksi. Periksa hanya jika sumber asli menampilkan informasi ini.'};
 }
+function makeLogicalId(facts:Record<FieldName,Fact>,documentId:string){
+  const number=facts.sop_number.value;
+  const anchors=number?[facts.institution.value,facts.unit.value,number]:[facts.institution.value,facts.unit.value,facts.official_title.value];
+  const slug=anchors.filter((value):value is string=>!!value?.trim()).join('-')
+    .normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,120);
+  return slug?`SOP:${slug}`:documentId;
+}
 function suggestMetadata(documentId:string,blocks:ExtractedBlock[]):OfficialMetadata{
+  const facts=Object.fromEntries((Object.keys(fields) as FieldName[]).map(key=>[key,findFact(key,blocks)])) as Record<FieldName,Fact>;
   return {
-    schema_version:1,logical_sop_id:documentId,replaces_document_id:null,
+    schema_version:1,logical_sop_id:makeLogicalId(facts,documentId),replaces_document_id:null,
     validity:'not_confirmed',validity_note:'Belum dikonfirmasi dari sumber resmi; pemeriksaan isi dokumen tetap dapat dilanjutkan.',
-    ...Object.fromEntries((Object.keys(fields) as FieldName[]).map(key=>[key,findFact(key,blocks)])),
-  } as OfficialMetadata;
+    ...facts,
+  };
 }
 
 export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,extractedBlocks=[],onSave}:{documentId:string;metadata?:OfficialMetadata|null;eventId?:string|null;pdf:boolean;busy:boolean;extractedBlocks?:ExtractedBlock[];onSave:(metadata:OfficialMetadata,eventId:string|null)=>void}){
@@ -87,11 +95,11 @@ export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,extractedB
     <p>AI menyiapkan {detected} dari {Object.keys(fields).length} usulan dari hasil baca PDF. Halaman sumber terisi otomatis. Periksa ringkasan dan ubah hanya jika ada yang keliru.</p>
     <p>Persetujuan isi mengizinkan penggunaan dokumen; keberlakuan hukum tetap terpisah dan tidak disimpulkan oleh AI.</p>
     <fieldset disabled={busy}><legend>Ringkasan metadata</legend>
-      <label>Judul resmi SOP<input value={draft.official_title.value??''} maxLength={1024} placeholder="AI akan mengisi jika judul terbaca jelas pada PDF" onChange={e=>update('official_title',{status:'present',value:e.target.value||null})}/></label>
+      <label>Judul resmi SOP<input value={draft.official_title.value??''} maxLength={1024} placeholder="AI akan mengisi jika judul terbaca jelas pada PDF" onChange={e=>setDraft(old=>{const next={...old,official_title:{...old.official_title,status:'present' as const,value:e.target.value||null}};if(!metadata&&(old.logical_sop_id===documentId||old.logical_sop_id.startsWith('SOP:')))next.logical_sop_id=makeLogicalId(next,documentId);return next;})}/></label>
       {pdf&&<label>Halaman judul<input type="number" min={1} step={1} value={draft.official_title.page_number??''} onChange={e=>update('official_title',{page_number:e.target.value?Number(e.target.value):null})}/></label>}
       {draft.official_title.status!=='present'&&<p>Judul belum dapat dikenali otomatis. Isi judul resmi dari PDF; tidak perlu menyalin metadata lainnya.</p>}
       <p>Identitas layanan SOP dibuat otomatis: <strong>{draft.logical_sop_id}</strong></p>
-      <label>Keberlakuan SOP<select value={draft.validity} onChange={e=>setDraft({...draft,validity:e.target.value as OfficialMetadata['validity']})}>
+      <label>Keberlakuan SOP<select value={draft.validity} onChange={e=>{const validity=e.target.value as OfficialMetadata['validity'];setDraft({...draft,validity,validity_note:validity==='not_confirmed'?'Belum dikonfirmasi dari sumber resmi; pemeriksaan isi dokumen tetap dapat dilanjutkan.':''});}}> 
         <option value="not_confirmed">Belum dikonfirmasi</option><option value="confirmed_current">Dikonfirmasi masih berlaku oleh operator</option><option value="withdrawn">Sudah dicabut</option><option value="superseded">Sudah digantikan</option>
       </select></label>
       {draft.validity==='not_confirmed'?<p>AI tidak meminta operator mengetik alasan. Status hukum tetap belum dikonfirmasi.</p>:<label>Dasar konfirmasi keberlakuan<textarea value={draft.validity_note} maxLength={2000} onChange={e=>setDraft({...draft,validity_note:e.target.value})}/></label>}
