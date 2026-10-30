@@ -15,7 +15,7 @@ it('prefills SOP metadata from extracted text and saves without manual re-entry'
     'Tanggal Mulai Berlaku: 2025-11-01',
     'Tanggal Akhir Berlaku: 2026-10-31',
     'Nomor Revisi: 2',
-  ].join('\\n')}];
+  ].join('\n')}];
   render(<SOPMetadataForm documentId="DOC-fixture" pdf busy={false} extractedBlocks={extractedBlocks} onSave={save}/>);
   expect(screen.getByLabelText('Judul resmi SOP',{exact:true})).toHaveValue('PERMOHONAN DATA PRIBADI');
   expect(screen.getByLabelText('Halaman judul')).toHaveValue(1);
