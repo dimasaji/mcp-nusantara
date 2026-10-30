@@ -65,13 +65,13 @@ function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
       }
     }
   }
-  return {status:'not_stated',value:null,page_number:null,note:'Belum ditemukan otomatis pada hasil ekstraksi. Periksa hanya jika sumber asli menampilkan informasi ini.'};
+  return {status:'unreadable',value:null,page_number:null,note:'Belum terdeteksi otomatis pada hasil ekstraksi. AI tidak menyimpulkan informasi ini tidak tercantum.'};
 }
 function makeLogicalId(facts:Record<FieldName,Fact>,documentId:string){
   const number=facts.sop_number.value;
   const anchors=number?[facts.institution.value,facts.unit.value,number]:[facts.institution.value,facts.unit.value,facts.official_title.value];
   const slug=anchors.filter((value):value is string=>!!value?.trim()).join('-')
-    .normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,120);
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,120);
   return slug?`SOP:${slug}`:documentId;
 }
 function suggestMetadata(documentId:string,blocks:ExtractedBlock[]):OfficialMetadata{
