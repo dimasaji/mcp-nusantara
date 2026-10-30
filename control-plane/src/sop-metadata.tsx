@@ -117,7 +117,7 @@ export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,extractedB
         <p>Gunakan identitas layanan yang sama untuk PDF revisi SOP yang sama.</p>
       </details>
       <button disabled={!complete} onClick={()=>onSave(draft,eventId??null)}>Konfirmasi metadata yang disarankan</button>
-      {!complete&&<p>Judul resmi belum tersedia. Isi atau koreksi judul dan halaman sumbernya.</p>}
+      {!complete&&<p>{draft.official_title.status!=='present'||!draft.official_title.value?'Isi judul resmi dari PDF.':pdf&&!draft.official_title.page_number?'Tambahkan halaman PDF yang menjadi sumber judul.':'Lengkapi metadata yang belum valid.'}</p>}
     </fieldset>
   </details>;
 }
