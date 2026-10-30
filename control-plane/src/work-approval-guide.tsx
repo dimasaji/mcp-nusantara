@@ -9,6 +9,8 @@ export function WorkApprovalGuide({context}:{context?:ExecutionContext}){
       <ol>{workflow.steps.map(step=><li key={step.id}>
         <strong>{step.label}</strong> · {step.actor}<p>{step.description}</p>
       </li>)}</ol>
+      <p>Sumber rencana: {workflow.source}</p>
+      {context?.plan_origin&&<p>Asal tindakan: {context.plan_origin.kind==='DEVELOPER_OPERATION'?'Developer Core':'Belum diketahui'} · Identitas personal pembuat belum tercatat.</p>}
       <p>Persetujuan tidak langsung menjalankan pekerjaan. Backend memeriksa kembali izin sebelum eksekusi.</p>
       <p>Masa berlaku persetujuan: {workflow.approval_validity_seconds} detik.</p>
       <dl>{workflow.decisions.map(decision=><div key={decision.code}>
