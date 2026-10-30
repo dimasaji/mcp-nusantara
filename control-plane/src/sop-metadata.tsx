@@ -92,8 +92,10 @@ export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,extractedB
   })&&draft.official_title.status==='present';
   function update(key:FieldName,change:Partial<Fact>){setDraft(old=>({...old,[key]:{...old[key],...change}}));}
   return <details open={!metadata}><summary>Metadata resmi SOP — {metadata?'sudah diperiksa':'siap ditinjau'}</summary>
-    <p>Sistem menyarankan {detected} dari {Object.keys(fields).length} usulan dari hasil baca PDF. Halaman sumber terisi otomatis. Periksa ringkasan dan ubah hanya jika ada yang keliru.</p>
-    <p>Persetujuan isi mengizinkan penggunaan dokumen; keberlakuan hukum tetap terpisah dan tidak disimpulkan oleh AI.</p>
+    <p>Sistem mendeteksi {detected} dari {Object.keys(fields).length} metadata pada hasil baca PDF. Setiap usulan menampilkan halaman sumber agar mudah dicocokkan.</p>
+    <p>Persetujuan isi mengizinkan penggunaan dokumen; keberlakuan hukum tetap terpisah dan tidak disimpulkan oleh sistem.</p>
+    <ul aria-label="Usulan metadata hasil baca">{(Object.entries(fields) as [FieldName,string][]).filter(([key])=>draft[key].status==='present').map(([key,label])=><li key={key}><strong>{label}:</strong> {draft[key].value} {pdf&&draft[key].page_number&&('· halaman '+draft[key].page_number)}</li>)}</ul>
+    {detected<Object.keys(fields).length&&<p>{Object.keys(fields).length-detected} metadata belum terdeteksi otomatis. Statusnya ditandai “belum terbaca”, bukan disimpulkan tidak tercantum.</p>}
     <fieldset disabled={busy}><legend>Ringkasan metadata</legend>
       <label>Judul resmi SOP<input value={draft.official_title.value??''} maxLength={1024} placeholder="Sistem mengisi jika judul terbaca jelas pada PDF" onChange={e=>setDraft(old=>{const next={...old,official_title:{...old.official_title,status:'present' as const,value:e.target.value||null}};if(!metadata&&(old.logical_sop_id===documentId||old.logical_sop_id.startsWith('SOP:')))next.logical_sop_id=makeLogicalId(next,documentId);return next;})}/></label>
       {pdf&&<label>Halaman judul<input type="number" min={1} step={1} value={draft.official_title.page_number??''} onChange={e=>update('official_title',{page_number:e.target.value?Number(e.target.value):null})}/></label>}
