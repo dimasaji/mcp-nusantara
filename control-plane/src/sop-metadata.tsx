@@ -20,10 +20,17 @@ const labelPatterns:Partial<Record<FieldName,RegExp[]>>={
 function cleanValue(value:string){return value.replace(/\s{2,}/g,' ').replace(/[;|]+$/,'').trim().slice(0,1024);}
 function normalizeDate(value:string){
   const text=value.trim();
-  const iso=text.match(/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/);
-  if(iso)return `${iso[1]}-${iso[2].padStart(2,'0')}-${iso[3].padStart(2,'0')}`;
-  const local=text.match(/\b(\d{1,2})[./-](\d{1,2})[./-](\d{4})\b/);
-  return local?`${local[3]}-${local[2].padStart(2,'0')}-${local[1].padStart(2,'0')}`:text;
+  const months:Record<string,string>={januari:'01',februari:'02',maret:'03',april:'04',mei:'05',juni:'06',juli:'07',agustus:'08',september:'09',oktober:'10',november:'11',desember:'12'};
+  const iso=text.match(/\\b(\\d{4})-(\\d{1,2})-(\\d{1,2})\\b/);
+  const local=text.match(/\\b(\\d{1,2})[./-](\\d{1,2})[./-](\\d{4})\\b/);
+  const named=text.match(/\\b(\\d{1,2})\\s+(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\\s+(\\d{4})\\b/i);
+  const result=iso?`${iso[1]}-${iso[2].padStart(2,'0')}-${iso[3].padStart(2,'0')}`:
+    local?`${local[3]}-${local[2].padStart(2,'0')}-${local[1].padStart(2,'0')}`:
+    named?`${named[3]}-${months[named[2].toLocaleLowerCase('id')]}-${named[1].padStart(2,'0')}`:null;
+  if(!result)return '';
+  const [year,month,day]=result.split('-').map(Number);
+  const parsed=new Date(Date.UTC(year,month-1,day));
+  return parsed.getUTCFullYear()===year&&parsed.getUTCMonth()===month-1&&parsed.getUTCDate()===day?result:'';
 }
 function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
   for(const block of blocks){
