@@ -65,7 +65,7 @@ function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
       }
     }
   }
-  return {status:'unreadable',value:null,page_number:null,note:'Belum terdeteksi otomatis pada hasil ekstraksi. AI tidak menyimpulkan informasi ini tidak tercantum.'};
+  return {status:'unreadable',value:null,page_number:null,note:'Belum terdeteksi otomatis pada hasil ekstraksi. Sistem tidak menyimpulkan informasi ini tidak tercantum.'};
 }
 function makeLogicalId(facts:Record<FieldName,Fact>,documentId:string){
   const number=facts.sop_number.value;
@@ -92,17 +92,17 @@ export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,extractedB
   })&&draft.official_title.status==='present';
   function update(key:FieldName,change:Partial<Fact>){setDraft(old=>({...old,[key]:{...old[key],...change}}));}
   return <details open={!metadata}><summary>Metadata resmi SOP — {metadata?'sudah diperiksa':'siap ditinjau'}</summary>
-    <p>AI menyiapkan {detected} dari {Object.keys(fields).length} usulan dari hasil baca PDF. Halaman sumber terisi otomatis. Periksa ringkasan dan ubah hanya jika ada yang keliru.</p>
+    <p>Sistem menyarankan {detected} dari {Object.keys(fields).length} usulan dari hasil baca PDF. Halaman sumber terisi otomatis. Periksa ringkasan dan ubah hanya jika ada yang keliru.</p>
     <p>Persetujuan isi mengizinkan penggunaan dokumen; keberlakuan hukum tetap terpisah dan tidak disimpulkan oleh AI.</p>
     <fieldset disabled={busy}><legend>Ringkasan metadata</legend>
-      <label>Judul resmi SOP<input value={draft.official_title.value??''} maxLength={1024} placeholder="AI akan mengisi jika judul terbaca jelas pada PDF" onChange={e=>setDraft(old=>{const next={...old,official_title:{...old.official_title,status:'present' as const,value:e.target.value||null}};if(!metadata&&(old.logical_sop_id===documentId||old.logical_sop_id.startsWith('SOP:')))next.logical_sop_id=makeLogicalId(next,documentId);return next;})}/></label>
+      <label>Judul resmi SOP<input value={draft.official_title.value??''} maxLength={1024} placeholder="Sistem mengisi jika judul terbaca jelas pada PDF" onChange={e=>setDraft(old=>{const next={...old,official_title:{...old.official_title,status:'present' as const,value:e.target.value||null}};if(!metadata&&(old.logical_sop_id===documentId||old.logical_sop_id.startsWith('SOP:')))next.logical_sop_id=makeLogicalId(next,documentId);return next;})}/></label>
       {pdf&&<label>Halaman judul<input type="number" min={1} step={1} value={draft.official_title.page_number??''} onChange={e=>update('official_title',{page_number:e.target.value?Number(e.target.value):null})}/></label>}
       {draft.official_title.status!=='present'&&<p>Judul belum dapat dikenali otomatis. Isi judul resmi dari PDF; tidak perlu menyalin metadata lainnya.</p>}
       <p>Identitas layanan SOP dibuat otomatis: <strong>{draft.logical_sop_id}</strong></p>
       <label>Keberlakuan SOP<select value={draft.validity} onChange={e=>{const validity=e.target.value as OfficialMetadata['validity'];setDraft({...draft,validity,validity_note:validity==='not_confirmed'?'Belum dikonfirmasi dari sumber resmi; pemeriksaan isi dokumen tetap dapat dilanjutkan.':''});}}> 
         <option value="not_confirmed">Belum dikonfirmasi</option><option value="confirmed_current">Dikonfirmasi masih berlaku oleh operator</option><option value="withdrawn">Sudah dicabut</option><option value="superseded">Sudah digantikan</option>
       </select></label>
-      {draft.validity==='not_confirmed'?<p>AI tidak meminta operator mengetik alasan. Status hukum tetap belum dikonfirmasi.</p>:<label>Dasar konfirmasi keberlakuan<textarea value={draft.validity_note} maxLength={2000} onChange={e=>setDraft({...draft,validity_note:e.target.value})}/></label>}
+      {draft.validity==='not_confirmed'?<p>Sistem tidak meminta operator mengetik alasan. Status hukum tetap belum dikonfirmasi.</p>:<label>Dasar konfirmasi keberlakuan<textarea value={draft.validity_note} maxLength={2000} onChange={e=>setDraft({...draft,validity_note:e.target.value})}/></label>}
       <details><summary>Periksa atau koreksi rincian metadata ({detected} ditemukan otomatis)</summary>
         <label>ID dokumen revisi sebelumnya, jika ada<input value={draft.replaces_document_id??''} maxLength={256} onChange={e=>setDraft({...draft,replaces_document_id:e.target.value||null})}/></label>
         <p>Biarkan kosong jika bukan revisi. Sistem tidak mencabut SOP lama secara otomatis.</p>
@@ -116,7 +116,7 @@ export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,extractedB
         </fieldset>)}
         <p>Gunakan identitas layanan yang sama untuk PDF revisi SOP yang sama.</p>
       </details>
-      <button disabled={!complete} onClick={()=>onSave(draft,eventId??null)}>Konfirmasi metadata hasil AI</button>
+      <button disabled={!complete} onClick={()=>onSave(draft,eventId??null)}>Konfirmasi metadata yang disarankan</button>
       {!complete&&<p>Judul resmi belum tersedia. Isi atau koreksi judul dan halaman sumbernya.</p>}
     </fieldset>
   </details>;
