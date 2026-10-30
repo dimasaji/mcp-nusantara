@@ -62,7 +62,7 @@ describe('Operator contract boundaries',()=>{
   expect(screen.getByLabelText('Pertanyaan Anda')).toBeEnabled();
   expect(screen.getByRole('tab',{name:'Aktivitas tugas'})).toBeInTheDocument();
   expect(screen.queryByRole('button',{name:'Kirim tugas'})).toBeNull();
-  await screen.findByText('Ollama · fixture-local');
+  expect(await screen.findByText('Mau dibantu apa hari ini?')).toBeInTheDocument();
   expect(api.sendUserChat).not.toHaveBeenCalled();
   expect(api.fetchExecutionContext).not.toHaveBeenCalled();
  });
