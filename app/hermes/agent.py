@@ -420,8 +420,10 @@ class HermesAgent:
         #
         # Evidence tersebut tidak boleh diteruskan sebagai dasar jawaban.
         #
-        # Threshold 0.50 dipilih sebagai initial production gate dan
-        # tetap mempertahankan evidence kuat seperti score 0.60-0.70.
+        # Canonical RAG already applies absolute + relative relevance gates.
+        # Keep its accepted sources; a second fixed floor can erase them all.
+        # Uninstrumented adapters retain the conservative 0.50 floor, and every
+        # path still rejects malformed scores and validates the answer's facts.
         # --------------------------------------------------------------
 
         def _evidence_score(item):
@@ -453,7 +455,7 @@ class HermesAgent:
             if (
                 _evidence_math.isfinite(_evidence_score(item))
                 and 0.0 <= _evidence_score(item) <= 1.0
-                and _evidence_score(item) >= 0.50
+                and (retrieval_capture.canonical_gate_applied or _evidence_score(item) >= 0.50)
             )
         ]
 
@@ -469,7 +471,7 @@ class HermesAgent:
             f"invalid_score_count={_invalid_scores} "
             f"max_score={max(_valid_scores) if _valid_scores else 'NONE'} "
             f"min_score={min(_valid_scores) if _valid_scores else 'NONE'} "
-            f"threshold=0.50 "
+            f"threshold={'canonical' if retrieval_capture.canonical_gate_applied else '0.50'} "
             f"accepted_count={len(evidence)}",
             flush=True,
         )
@@ -1077,25 +1079,17 @@ class HermesAgent:
             if source_blocks and not citations_supported(response_text, source_blocks):
                 grounding_result = GroundingResult(response_text, False, 'document_citation_not_supplied', [response_text])
 
-        # Re-evaluasi Trust dengan grounding final agar API publik
-        # tidak menampilkan kontradiksi ``supports_claim=True`` ketika
-        # ``grounded=False``. Pemanggilan awal ``trust_assessment``
-        # hanya mengetahui skor retrieval (bukan konten); kita
-        # informasikan hasil Grounding Guard di sini.
-        if grounding_result is not None:
-            trust_assessment = _trust_engine.evaluate(
-                evidence=trust_input,
-                claim=request.user_input,
-                grounded=grounding_result.grounded,
-            )
-
         if scoped_document_ids and grounding_result is not None and not grounding_result.grounded:
+            recovered = None
             if pilot_chat and service_facts is not None and service_facts.get('fallback') and not service_facts.get('unknown'):
+                recovered = _grounding_guard.validate_service_rewrite(service_facts['fallback'], service_facts)
+            if recovered is not None and recovered.grounded:
                 response_text = service_facts['fallback']
-                grounding_result = GroundingResult(response_text, True, 'grounded', [])
+                grounding_result = recovered
+                model_status = 'evidence_fast_path'
             else:
-                response_text = ('Jawaban model belum dapat dipastikan sesuai SOP ini. Periksa sumber atau coba pertanyaan yang lebih spesifik.'
-                                 if pilot_chat and grounding_result.reason != 'no_evidence' else
+                response_text = ('Sumber dokumen tersedia, tetapi jawaban belum dapat dipastikan sesuai isinya.'
+                                 if evidence and grounding_result.reason != 'no_evidence' else
                                  'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.')
         # Pilot SOP: for missing-contact questions, ensure the answer is an
         # abstention; otherwise fall back to the verified abstention text.
@@ -1105,6 +1099,12 @@ class HermesAgent:
             if not any(m in response_text.casefold() for m in abstention_markers):
                 response_text = service_facts['fallback']
                 grounding_result = GroundingResult(response_text, True, 'grounded', [])
+                model_status = 'evidence_fast_path'
+        # Recovery can change the grounding decision. Assess the final answer,
+        # so trust and provider attribution agree with the text actually shown.
+        if grounding_result is not None:
+            trust_assessment = _trust_engine.evaluate(
+                evidence=trust_input, claim=request.user_input, grounded=grounding_result.grounded)
         remember_kwargs={'session_id':request.session_id,'response':response_text}
         if service_context is not None:remember_kwargs['service_context']=service_context
         await _run_sync_v1(_gate_integration.remember_response, **remember_kwargs)
@@ -1240,4 +1240,5 @@ class HermesAgent:
         }, intent_name=intent_name, response_policy=(
             "repeat" if repeated_text is not None else "conversation" if conversation else "evidence"
         ))
+
 
