@@ -39,8 +39,9 @@ def sop_wording_supported(answer, source, *, full_source=None):
             and not re.search(r'\b(?:tetapi|namun|harus|wajib|dilarang|tidak boleh)\b', answer, re.I)):
         return True
     framing = set('berikut menurut berdasarkan sop ini itu adalah yaitu sebagai dengan untuk dalam dari dan atau pada oleh yang dapat anda silakan siapkan persyaratan prosedur waktu biaya jawaban informasi tersebut hanya secara telah sudah akan perlu mengenai tentang permohonan pemohon sumber pribadi data disebutkan atas hasil layanannya'.split())
+    from .grounding import canonical_action_tokens
     def words(value):
-        return {word for word in re.findall(r'\w+', value.casefold()) if len(word) > 2}
+        return canonical_action_tokens(word for word in re.findall(r'\w+', value.casefold()) if len(word) > 2)
     return not (words(answer) - words(source) - framing)
 
 
@@ -432,4 +433,5 @@ class SOPReview:
         return RetrievalEvidenceList([Evidence(document_id=document_id, title=detail['title'], source=text, chunk=text,
             chunk_id=version, chunk_index=0, start_char=0, end_char=len(text), score=1.,
             metadata={'source_pages': detail['pages'], 'citation_pages': [p['page'] for p in detail['pages']], 'version_id': version})])
+
 

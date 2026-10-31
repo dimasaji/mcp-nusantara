@@ -95,11 +95,28 @@ class RetrievalCapture:
         self.request_top_k_source = request_top_k_source
         self.receipts: list[EffectiveRAGProfile] = []
 
+    @property
+    def canonical_gate_applied(self) -> bool:
+        """Only completed canonical retrievals own relevance decisions.
+
+        An uninstrumented adapter or a failed retrieval still uses the caller's
+        conservative score floor. Receipts are internal, request-local data.
+        """
+        if not self.receipts:
+            return False
+        for receipt in self.receipts:
+            outcome = json.loads(receipt.outcome_json)
+            if (receipt.consumer != self.consumer or outcome.get('status') != 'COMPLETED'
+                    or outcome.get('gate_status') not in {'EXECUTED', 'NOT_APPLICABLE_EMPTY'}):
+                return False
+        return True
+
     def post_filter(self, before: int, after: int) -> None:
         if not self.receipts:
             return
         receipt = self.receipts[-1]
-        stage = {'threshold': self.consumer_post_filter, 'before': before, 'after': after,
+        stage = {'threshold': None if self.canonical_gate_applied else self.consumer_post_filter,
+                 'canonical_gate_applied': self.canonical_gate_applied, 'before': before, 'after': after,
                  'status': 'EXECUTED', 'source_location': 'app/api/routes.py:chat',
                  'source_layer': 'CONSUMER', 'precedence': 'after canonical RAG gate'}
         receipt = replace(receipt, consumer_filter_json=json.dumps(stage, sort_keys=True))
@@ -320,5 +337,6 @@ class Document(BaseModel):
 
 Chunks = TextChunk
 Chunk = TextChunk
+
 
 

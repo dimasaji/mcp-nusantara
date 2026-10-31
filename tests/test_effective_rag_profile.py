@@ -275,12 +275,13 @@ def test_actual_v1_chat_retrieval_and_filter_block(tmp_path):
     ns['_run_sync_v1'] = run_sync
     exec(compile(ast.fix_missing_locations(ast.Module(body=[fixture], type_ignores=[])), '<v1-source-fixture>', 'exec'), ns)
     evidence, capture = asyncio.run(ns['fixture']())
-    assert len(evidence) == 1
+    assert len(evidence) == 2
     data = capture.receipts[0].snapshot()
     assert data['consumer'] == 'V1_CHAT'
-    assert data['thresholds']['consumer_post_filter']['threshold'] == .5
+    assert data['thresholds']['consumer_post_filter']['threshold'] is None
+    assert data['thresholds']['consumer_post_filter']['canonical_gate_applied'] is True
     assert data['thresholds']['consumer_post_filter']['before'] == 2
-    assert data['thresholds']['consumer_post_filter']['after'] == 1
+    assert data['thresholds']['consumer_post_filter']['after'] == 2
     assert data['thresholds']['absolute_relevance_gate'] == .3
 
 
@@ -339,4 +340,5 @@ def test_unwired_r1_settings_still_rejected(tmp_path, overrides):
     config = load_nusantara_config(project_root=tmp_path, environment={}, dotenv_environment={}, overrides={'rag': overrides})
     with pytest.raises(ConfigurationError, match='RAG_PARAMETER_NOT_INTEGRATED'):
         RAG(nusantara_config=config, vector_store=FakeStore(), embedding_func=lambda text: [1])
+
 
