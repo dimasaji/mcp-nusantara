@@ -100,7 +100,6 @@ describe('V1 user and operator surfaces',()=>{
     fireEvent.click(source);
     await waitFor(()=>expect(details).toHaveAttribute('open'));
     expect(screen.queryByText(evidence[0].chunk)).not.toBeInTheDocument();
-    expect(screen.getByText('Referensi: sop-private')).toBeVisible();
     expect(screen.getByText('Silakan siapkan Surat Permohonan.')).toBeInTheDocument();
   });
   it.each([false,true])('releases a stalled chat at 90 seconds and preserves manual retry when fetch honors abort: %s',async(honorsAbort)=>{

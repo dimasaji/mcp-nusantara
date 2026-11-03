@@ -30,7 +30,6 @@ export function ChatCitation({evidence,requestId,session,token}:{evidence:Public
     finally{clearTimeout(timer);if(active.current===controller){active.current=null;setBusy(false);}}
   }
   return <details className="citation"><summary>{evidence.title}</summary>
-    <small>Referensi: {evidence.document_id}</small>
     {evidence.pages?.length?<><p>Halaman: {evidence.pages.join(', ')}</p>{evidence.pages.map(page=><button key={page} type="button" disabled={busy||!requestId||!token} onClick={()=>void open(page)}>Buka halaman {page}</button>)}</>:<p>Halaman sumber belum tersedia.</p>}
     {(evidence.pages?.length??0)>0&&(!requestId||!token)&&<p>Akses operator dan riwayat jawaban yang tersimpan diperlukan untuk membuka sumber.</p>}
     {busy&&<p role="status">Memeriksa versi dan membuka sumber…</p>}{error&&<p role="alert">{error}</p>}
