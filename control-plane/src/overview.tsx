@@ -168,7 +168,7 @@ export function KnowledgeOperationsPage(){
   const currentDocument=documents.find(doc=>doc.document_id===reviewDocument)??documents.find(doc=>doc.review_status)??documents[0];
   return <div className="knowledge-workspace">
     <header><div><div className="eyebrow">DOKUMEN SOP</div><h1>Pemeriksaan SOP</h1><p>Periksa sumber, coba jawaban, lalu tentukan apakah SOP dapat digunakan.</p></div><button onClick={()=>void query.refetch()} disabled={!token.trim()||query.isFetching}>Muat ulang</button></header>
-    <section className="panel" aria-label="Akses upload"><details open={!query.isSuccess}><summary>Akses operator</summary>
+    <section className="panel" aria-label="Akses upload"><details open={!token.trim()||!query.isSuccess}><summary>Akses operator</summary>
       <p>Masukkan token operator untuk membuka dokumen tersimpan. Setelah refresh, verifikasi kembali.</p>
       <form onSubmit={e=>{e.preventDefault();setMessage('');if(tokenDraft.trim()===token)void query.refetch();else setToken(tokenDraft.trim());}}>
         <label htmlFor="knowledge-operator-token">Token operator</label>
