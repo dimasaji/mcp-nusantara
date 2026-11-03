@@ -9,6 +9,20 @@ from typing import Any, Iterable
 logger = logging.getLogger(__name__)
 
 
+def canonical_action_tokens(tokens: Iterable[str]) -> set[str]:
+    """Normalize bounded action equivalents without adding factual aliases.
+
+    Documents, destinations, channels, amounts and negations stay distinct.
+    Handing in a document is deliberately not equated with uploading it.
+    """
+    equivalents = {
+        'menyampaikan': 'menyerahkan', 'sampaikan': 'menyerahkan',
+        'serahkan': 'menyerahkan',
+        'mengecek': 'memeriksa', 'cek': 'memeriksa', 'periksa': 'memeriksa',
+    }
+    return {equivalents.get(token, token) for token in tokens}
+
+
 def extract_requirement_statement(question: str, evidence: Any) -> str | None:
     """Quote an explicit, service-matched requirement statement; never infer a list.
 
@@ -398,7 +412,8 @@ class EvidenceGroundingGuard:
                          'dibutuhkan','membutuhkan','memerlukan','harap','cukup',
                          'persyaratannya','syaratnya','berikut','menurut','sop',
                          'tercantum','berdasarkan','yaitu','terima','kasih','baik'}
-                novel=self._content_tokens(sentence)-self._content_tokens(combined_evidence)-framing
+                novel=(canonical_action_tokens(self._content_tokens(sentence))
+                       - canonical_action_tokens(self._content_tokens(combined_evidence)) - framing)
                 if novel:
                     unsupported.append(sentence)
                     continue
@@ -505,7 +520,8 @@ class EvidenceGroundingGuard:
         if facts['facet']=='requirements':
             value=quote.split(':',1)[-1]
             # A fluent sentence that omits the requested documents is not an answer.
-            invalid=invalid or not self._meaningful_tokens(value).issubset(self._content_tokens(answer))
+            invalid=invalid or not canonical_action_tokens(self._meaningful_tokens(value)).issubset(
+                canonical_action_tokens(self._content_tokens(answer)))
         if facts['facet']=='duration':
             expected=re.search(r'\b\d+\s+(?:hari|jam|menit)(?:\s+kerja)?\b',quote,re.I)
             invalid=invalid or expected is None or expected[0].casefold() not in answer.casefold()
@@ -1033,8 +1049,8 @@ class EvidenceGroundingGuard:
         if not self._evidence_contains_procedure_claim(evidence):
             return False
 
-        sentence_tokens = self._meaningful_tokens(sentence)
-        evidence_tokens = self._meaningful_tokens(evidence)
+        sentence_tokens = canonical_action_tokens(self._meaningful_tokens(sentence))
+        evidence_tokens = canonical_action_tokens(self._meaningful_tokens(evidence))
 
         if not sentence_tokens or not evidence_tokens:
             return False
@@ -1219,3 +1235,4 @@ class EvidenceGroundingGuard:
 # Backward-compatible alias if other modules import
 # the class using a different name.
 GroundingGuard = EvidenceGroundingGuard
+

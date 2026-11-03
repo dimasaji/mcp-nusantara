@@ -15,6 +15,23 @@ def document_answer_facts(question, evidence):
     metadata = getattr(item, 'metadata', {})
     rows = metadata.get('sop_rows', [])
     if not rows:
+        # Recover an explicit prose requirement as well as table cells. Only a
+        # complete, single-line labelled block is eligible; never infer a list
+        # from arbitrary prose, join different blocks, or read omitted context.
+        if re.search(r'persyaratan|syarat|bawa', question, re.I):
+            blocks = metadata.get('docling_blocks', [])
+            if len(blocks) > 1 or metadata.get('omitted_block_ids'):
+                return None  # A heading may continue in another/omitted block.
+            candidates = [(b['content'], b['page_numbers']) for b in blocks] if blocks else [
+                (getattr(item, 'chunk', ''), metadata.get('citation_pages', []))]
+            labelled = [(text.strip(), pages) for text, pages in candidates
+                        if re.fullmatch(r'[ \t]*Persyaratan[ \t]*:[ \t]*\S[^\r\n]*[ \t]*', text, re.I)]
+            if len(labelled) == 1:
+                quote, pages = labelled[0]
+                return {'topic': item.title, 'title': item.title, 'document_id': item.document_id,
+                        'source': quote, 'quote': quote, 'rewrite_quote': quote, 'fallback': quote,
+                        'facet': 'requirements', 'unknown': False, 'score': item.score,
+                        'pages': pages, 'proof': [{'title': item.title, 'chunk': quote, 'score': item.score}]}
         return None
     facet = ('requirements' if re.search(r'persyaratan|syarat|bawa', question, re.I) else
              'duration' if re.search(r'berapa lama|waktu|durasi', question, re.I) else
@@ -46,3 +63,4 @@ def document_answer_facts(question, evidence):
     if contact and full and not re.search(r'\b(?:whatsapp|wa|w\.a|telepon|telp|hp|kontak|hubungi|email|e-mail)\b|\b0[8-9]\d{6,}', full, re.I):
         return make(full, f'Informasi {contact[0]} belum tercantum dalam SOP ini.', 'missing', rows, True)
     return None
+
