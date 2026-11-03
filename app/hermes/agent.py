@@ -564,7 +564,8 @@ class HermesAgent:
             service_facts = document_answer_facts(request.user_input, evidence)
         answer_evidence=evidence
         service_context={} if conversation or (turn.get('facet') and turn.get('topic_hint')) else None
-        # ==============================================================
+        if _cari_handled:
+            service_context = previous        # ==============================================================
         # PHASE 4 - TRUST ASSESSMENT
         # ==============================================================
         #
