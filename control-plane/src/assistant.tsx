@@ -86,7 +86,7 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
       logicalRequest.current={question:submitted,session,id:crypto.randomUUID().replaceAll('-','')};
     }
     const request=logicalRequest.current;
-    try{const answer=await sendUserChat(submitted,session,request.id,request.retryOf,model?.provider==='ollama'?270000:90000,{signal:controller.signal,onDelta:text=>setPartial(old=>old+text),documentIds:selectedDocument?[selectedDocument]:undefined,token:selectedDocument?token:undefined,...(trialVersion?{sopVersion:trialVersion,sopCase:'followup'}:{})});setMessages(old=>[...old,{question:submitted,answer,requestId:request.id}]);setQuestion('');logicalRequest.current=null;
+    try{const answer=await sendUserChat(submitted,session,request.id,request.retryOf,model?.provider==='ollama'?270000:90000,{signal:controller.signal,onDelta:text=>setPartial(old=>old+text),documentIds:selectedDocument?[selectedDocument]:undefined,token:token||undefined,...(trialVersion?{sopVersion:trialVersion,sopCase:'followup'}:{})});setMessages(old=>[...old,{question:submitted,answer,requestId:request.id}]);setQuestion('');logicalRequest.current=null;
       void fetchModelStatus().then(setModel).catch(()=>setModel(null));
     }catch(e){
       if(e instanceof ChatSendError&&e.retrySafe){logicalRequest.current={...request,id:crypto.randomUUID().replaceAll('-',''),retryOf:request.id};}

@@ -17,6 +17,9 @@ const labelPatterns:Partial<Record<FieldName,RegExp[]>>={
   expires_on:[/^\s*(?:tanggal akhir berlaku|berlaku sampai|berlaku hingga|tanggal berakhir)\s*[:：-]\s*(.+?)\s*$/i],
   revision:[/^\s*(?:nomor revisi|revisi(?: ke)?|revisi)\s*[:：-]\s*(.+?)\s*$/i],
 };
+labelPatterns.official_title=[...(labelPatterns.official_title??[]),/^\s*nama\s+s\.?\s*o\.?\s*p\.?\s+(.+?)\s*$/i];
+labelPatterns.sop_number=[...(labelPatterns.sop_number??[]),/^\s*(?:nomor|no\.?)\s*s\.?\s*o\.?\s*p\.?\s+(.+?)(?=\s+tgl\b|\s*$)/i];
+labelPatterns.issued_on=[...(labelPatterns.issued_on??[]),/^\s*tgl\.?\s*pengesahan\s+(\d{1,2}[- ][a-z]{3,9}[- ]\d{4})(?=\s|$)/i];
 function cleanValue(value:string){return value.replace(/\s{2,}/g,' ').replace(/[;|]+$/,'').trim().slice(0,1024);}
 function normalizeDate(value:string){
   const text=value.trim();
@@ -27,10 +30,14 @@ function normalizeDate(value:string){
   const result=iso?`${iso[1]}-${iso[2].padStart(2,'0')}-${iso[3].padStart(2,'0')}`:
     local?`${local[3]}-${local[2].padStart(2,'0')}-${local[1].padStart(2,'0')}`:
     named?`${named[3]}-${months[named[2].toLocaleLowerCase('id')]}-${named[1].padStart(2,'0')}`:null;
-  if(!result)return '';
-  const [year,month,day]=result.split('-').map(Number);
+  const englishMonths:Record<string,string>={jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
+  const english=text.match(/\b(\d{1,2})[- ](jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[- ](\d{2}|\d{4})\b/i);
+  const englishDate=english&&english[3].length===4?`${english[3]}-${englishMonths[english[2].toLowerCase()]}-${english[1].padStart(2,'0')}`:null;
+  const normalized=result??englishDate;
+  if(!normalized)return '';
+  const [year,month,day]=normalized.split('-').map(Number);
   const parsed=new Date(Date.UTC(year,month-1,day));
-  return parsed.getUTCFullYear()===year&&parsed.getUTCMonth()===month-1&&parsed.getUTCDate()===day?result:'';
+  return parsed.getUTCFullYear()===year&&parsed.getUTCMonth()===month-1&&parsed.getUTCDate()===day?normalized:'';
 }
 function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
   for(const block of blocks){
@@ -41,6 +48,16 @@ function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
           const value=cleanValue(key.endsWith('_on')?normalizeDate(match[1]):match[1]);
           if(value)return {status:'present',value,page_number:block.page_numbers[0]??null,note:''};
         }
+      }
+    }
+  }
+  if(key==='institution'||key==='unit'){
+    for(const block of blocks){
+      for(const line of block.content.split(/\r?\n/)){
+        const match=key==='institution'
+          ?line.match(/\bDINAS\s+(.+?)(?=\s+BIDANG\b|$)/i)
+          :line.match(/\bBIDANG\s+(.+?)(?=\s+(?:DASAR HUKUM|KETERKAITAN|PERINGATAN|KUALIFIKASI PELAKSANA)\b|$)/i);
+        if(match?.[1])return {status:'present',value:cleanValue(match[1]),page_number:block.page_numbers[0]??null,note:''};
       }
     }
   }
@@ -65,7 +82,7 @@ function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
       }
     }
   }
-  return {status:'unreadable',value:null,page_number:null,note:'Belum terdeteksi otomatis pada hasil ekstraksi. Sistem tidak menyimpulkan informasi ini tidak tercantum.'};
+  return {status:'not_stated',value:null,page_number:null,note:'Tidak tercantum dalam dokumen; operator dapat mengoreksi jika sumber menyebutkannya.'};
 }
 function makeLogicalId(facts:Record<FieldName,Fact>,documentId:string){
   const number=facts.sop_number.value;
@@ -91,7 +108,7 @@ export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,extractedB
     return fact.status==='present'?!!fact.value?.trim()&&(!pdf||!!fact.page_number):!!fact.note.trim();
   })&&draft.official_title.status==='present';
   function update(key:FieldName,change:Partial<Fact>){setDraft(old=>({...old,[key]:{...old[key],...change}}));}
-  return <details open={!metadata}><summary>Metadata resmi SOP — {metadata?'sudah diperiksa':'siap ditinjau'}</summary>
+  return <details open={!metadata}><summary>Metadata resmi SOP — {metadata?'sudah disimpan dan dikonfirmasi operator':'usulan otomatis, siap ditinjau'}</summary>
     <p>Sistem mendeteksi {detected} dari {Object.keys(fields).length} metadata pada hasil baca PDF. Setiap usulan menampilkan halaman sumber agar mudah dicocokkan.</p>
     <p>Persetujuan isi mengizinkan penggunaan dokumen; keberlakuan hukum tetap terpisah dan tidak disimpulkan oleh sistem.</p>
     <ul aria-label="Usulan metadata hasil baca">{(Object.entries(fields) as [FieldName,string][]).filter(([key])=>draft[key].status==='present').map(([key,label])=><li key={key}><strong>{label}:</strong> {draft[key].value} {pdf&&draft[key].page_number&&('· halaman '+draft[key].page_number)}</li>)}</ul>

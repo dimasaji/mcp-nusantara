@@ -33,6 +33,22 @@ it('prefills SOP metadata from extracted text and saves without manual re-entry'
   }),null);
 });
 
+it('recognizes SOP cover metadata when labels have no colon and share an extracted line',()=>{
+  const extractedBlocks=[{page_numbers:[1],content:[
+    'PEMERINTAH KOTA CONTOH DINAS PELAYANAN CONTOH BIDANG LAYANAN DATA',
+    'Nomor SOP PEL-03 Tgl Pembuatan 21-Sep-15 Tgl Revisi Agustus 2018 Tgl Pengesahan 21-Sep-15',
+    'Nama S.O.P PERMOHONAN DATA CONTOH',
+  ].join('\n')}];
+  render(<SOPMetadataForm documentId="DOC-fixture" pdf busy={false} extractedBlocks={extractedBlocks} onSave={vi.fn()}/>);
+  expect(screen.getByLabelText('Judul resmi SOP',{exact:true})).toHaveValue('PERMOHONAN DATA CONTOH');
+  expect(screen.getByLabelText('Halaman judul')).toHaveValue(1);
+  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).toHaveTextContent('Instansi: PELAYANAN CONTOH');
+  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).toHaveTextContent('Unit kerja: LAYANAN DATA');
+  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).toHaveTextContent('Nomor SOP: PEL-03');
+  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).not.toHaveTextContent('Tanggal penetapan');
+  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).not.toHaveTextContent('Nomor revisi');
+});
+
 it('disables metadata controls while a save is in flight',()=>{
   render(<SOPMetadataForm documentId="DOC-fixture" pdf busy onSave={vi.fn()}/>);
   expect(screen.getByLabelText('Identitas layanan SOP')).toBeDisabled();

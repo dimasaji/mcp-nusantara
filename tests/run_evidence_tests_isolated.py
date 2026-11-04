@@ -8,7 +8,7 @@ from pathlib import Path
 import socket
 import sys
 
-output = Path(os.environ.get("EVIDENCE_TEST_OUTPUT", Path(__file__).resolve().parent)).resolve()
+output = Path(sys.argv[1] if len(sys.argv) > 1 else os.environ.get("EVIDENCE_TEST_OUTPUT", Path(__file__).resolve().parent / "test_output")).resolve()
 if any((parent/'FINALIZED.json').exists() for parent in (output,*output.parents)):
     raise SystemExit('FINALIZED_RUN_IMMUTABLE: choose a new run directory')
 if not output.is_dir():
@@ -43,12 +43,7 @@ def within_output(value: object) -> bool:
 
     path = normalize(value)
     allowed = normalize(output)
-    # Allow pytest cache directory to be accessible by pytest itself
-    if ".pytest_cache" in str(path):
-        return True
-    # Allow parent directories (project root, tests dir) to be opened directly
-    parent = allowed.parent
-    return path == allowed or allowed in path.parents or path == parent or parent in path.parents
+    return path == allowed or allowed in path.parents
 
 
 def writing(flags: object) -> bool:
@@ -166,20 +161,17 @@ def remember_open_file(file, mode, result):
     return result
 
 
-def guarded_io_open(file, mode="r", *args, **kwargs):
+def guarded_open(file, mode="r", *args, **kwargs):
     check_database(file, for_write=writing(mode))
     if isinstance(file, int):
         authorize_file_descriptor(file, mode)
     elif writing(mode) and not within_output(file):
-        _p = str(file)
-        if ".pytest_cache" in _p or "pytest-of-dmaza" in _p or "pytest-" in _p:
-            return original_io_open(file, mode, *args, **kwargs)
-        blocked("io_open", file, "outside_output_directory")
-    return remember_open_file(file, mode, original_io_open(file, mode, *args, **kwargs))
+        blocked("open", file, "outside_output_directory")
+    return remember_open_file(file, mode, original_open(file, mode, *args, **kwargs))
 
 
 original_open = builtins.open
-builtins.open = guarded_io_open
+builtins.open = guarded_open
 original_io_open = __import__("io").open
 
 
@@ -188,9 +180,6 @@ def guarded_io_open(file, mode="r", *args, **kwargs):
     if isinstance(file, int):
         authorize_file_descriptor(file, mode)
     elif writing(mode) and not within_output(file):
-        _p = str(file)
-        if ".pytest_cache" in _p or "pytest-of-dmaza" in _p or "pytest-" in _p:
-            return original_io_open(file, mode, *args, **kwargs)
         blocked("io_open", file, "outside_output_directory")
     return remember_open_file(file, mode, original_io_open(file, mode, *args, **kwargs))
 
@@ -203,10 +192,7 @@ def guarded_os_open(file, flags, *args, **kwargs):
     check_database(file, for_write=writing(flags))
     if isinstance(file, int):
         unauthorized_descriptor()
-    elif writing(flags) and not within_output(file):
-        _p = str(file)
-        if ".pytest_cache" in _p or "pytest-of-dmaza" in _p or "pytest-" in _p:
-            return original_os_open(file, flags, *args, **kwargs)
+    if writing(flags) and not within_output(file):
         blocked("os_open", file, "outside_output_directory")
     descriptor = original_os_open(file, flags, *args, **kwargs)
     if writing(flags):
@@ -217,30 +203,26 @@ def guarded_os_open(file, flags, *args, **kwargs):
 os.open = guarded_os_open
 for name in ("mkdir", "makedirs", "remove", "unlink", "rmdir", "removedirs", "truncate"):
     original = getattr(os, name)
-    def make_guard(function, _op_name=name):
+    op_name = name
+
+    def make_guard(function, _op_name=op_name):
         def guard(path, *args, **kwargs):
-            _p = str(path)
-            if ".pytest_cache" in _p or "pytest-of-dmaza" in _p or "pytest-" in _p:
-                return function(path, *args, **kwargs)
             if not within_output(path):
-                blocked(f"_{_op_name} {path}" if False else _op_name, path, "outside_output_directory")
+                blocked(_op_name, path, "outside_output_directory")
             return function(path, *args, **kwargs)
         return guard
+
     setattr(os, name, make_guard(original))
 for name in ("rename", "replace"):
     original = getattr(os, name)
     op_name = name
 
-    def make_move_guard(function, _op_name=name):
-            def guard(source, target, *args, **kwargs):
-                _s = str(source)
-                _t = str(target)
-                if ".pytest_cache" in _s or "pytest-of-dmaza" in _s or "pytest-" in _s or ".pytest_cache" in _t or "pytest-of-dmaza" in _t or "pytest-" in _t:
-                    return function(source, target, *args, **kwargs)
-                if not within_output(source) or not within_output(target):
-                    blocked(_op_name, source, "outside_output_directory")
-                return function(source, target, *args, **kwargs)
-            return guard
+    def make_move_guard(function, _op_name=op_name):
+        def guard(source, target, *args, **kwargs):
+            if not within_output(source) or not within_output(target):
+                blocked(_op_name, source, "outside_output_directory")
+            return function(source, target, *args, **kwargs)
+        return guard
 
     setattr(os, name, make_move_guard(original))
 os.environ["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
@@ -248,22 +230,6 @@ os.environ["TMP"] = str(output)
 os.environ["TEMP"] = str(output)
 os.environ["TMPDIR"] = str(output)
 import pytest
-import sys
-# Skip os patching for pytest cache directory to avoid interference with pytest cleanup
-_pth = str(Path(__file__).resolve().parent)
-for _name in ("mkdir", "makedirs", "remove", "unlink", "rmdir", "removedirs", "truncate"):
-    _orig = getattr(os, _name)
-    def _make_guard(function, _op_name=_name, _orig=original):
-        def guard(path, *args, **kwargs):
-            if _src := str(path).startswith(str(Path(__file__).resolve().parent)):
-                pass
-            else:
-                if _src and ".pytest" in _src or ".pytest" in str(path):
-                    return function(path, *args, **kwargs)
-                blocked(f"_{_op_name} {path}" if False else _op_name, path, "outside_output_directory")
-            return function(path, *args, **kwargs)
-        return guard
-    setattr(os, _name, make_guard(_orig))
 
 original_connect = socket.socket.connect
 original_connect_ex = socket.socket.connect_ex

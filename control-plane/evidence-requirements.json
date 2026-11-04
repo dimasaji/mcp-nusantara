@@ -60,7 +60,9 @@
         "tests/run_evidence_tests_isolated.py",
         "tests/pytest-evidence.ini",
         "tests/test_evidence_decision_api.py",
-        "scripts/refresh_v1_evidence.py"
+        "scripts/refresh_v1_evidence.py",
+        "tests/test_evidence_runner_guards.py",
+        "artifacts/prepare_approval_uji.py"
       ],
       "tests": [
         "test_decision_api_requires_authorized_admin"
@@ -128,7 +130,10 @@
         "scripts/prepare_v1_operator_plan.py",
         "data/developer_core/change_plan.json",
         ".developer_staging/NORMAL-718d7e134aa1ee32/docs/operational/published/NUSANTARA-V1-OPERATOR.md",
-        "tests/test_v1_execution_evidence.py"
+        "tests/test_v1_execution_evidence.py",
+        ".developer_staging/NORMAL-ca7f83d923b395ac/artifacts/approval-uji/20261030T020747Z/controlled-target.txt",
+        ".developer_staging/NORMAL-4e3a0a43a9008e8b/artifacts/approval-uji/20261030T021323Z/controlled-target.txt",
+        ".developer_staging/NORMAL-f430a78df2af7a32/artifacts/approval-uji/20261030T021607Z/controlled-target.txt"
       ],
       "tests": [
         "test_decision_api_requires_authorized_admin",
@@ -201,7 +206,7 @@
         "test_requirement_quote_requires_matching_service_and_remains_guarded",
         "test_followups_retrieve_fresh_evidence_in_same_session_and_do_not_guess_online",
         "test_fact_selection_and_rewrite_are_not_specific_to_piak",
-        "shows a short source title and lets the reader open its supporting quotation",
+        "shows citation metadata without exposing the supporting raw quotation",
         "shows real pipeline summary, failure reason and source authority boundary",
         "activates the configured inbox with operator authentication and refreshes status",
         "test_pipeline_deduplicates_and_never_promotes_authority",
