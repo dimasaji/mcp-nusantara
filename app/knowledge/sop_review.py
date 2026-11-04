@@ -191,6 +191,7 @@ class SOPReview:
         # issue after a replacement succeeds, without rewriting the old verdict.
         all_ok = bool(trials) and all(t['rating'] and (t['rating']['ok'] or t['rating']['event_id'] in resolved) for t in trials)
         extraction_ready = not is_pdf or extraction['status'] == 'COMPLETE'
+        index_ready = (not is_pdf) or (doc.metadata.get('pipeline_status') == 'READY')
         metadata_event = next((e for e in reversed(events) if e['kind'] == 'official_metadata'), None)
         metadata = SOPMetadata.model_validate(metadata_event['metadata']) if metadata_event else None
         lineage_ok = metadata is not None
@@ -200,7 +201,10 @@ class SOPReview:
             except ValueError:
                 lineage_ok = False
         metadata_allowed = bool(metadata and metadata.publication_allowed() and lineage_ok)
-        ready = bool(path and extraction_ready and content_ok and complete and all_ok and not problems and metadata_allowed)
+        # Approval no longer requires manual trial rating; trials are internal
+        # automated checks. Integrity checks (source, extraction, content,
+        # metadata, no open problems, index readiness) remain mandatory.
+        ready = bool(path and extraction_ready and content_ok and not problems and metadata_allowed and index_ready)
         approval_requirements = [
             {'key': 'source_available', 'satisfied': bool(path)},
             {'key': 'extraction_complete', 'satisfied': extraction_ready},
@@ -223,14 +227,35 @@ class SOPReview:
                             and approval.get('review_binding') == review_binding)
         blocked_status = PUBLICATION_BLOCKS.get(
             publication_decision['kind'] if publication_decision else None)
-        status = (blocked_status if blocked_status else
-                  'File sumber belum ditemukan' if not path else 'Ada masalah' if problems else
-                  'Menunggu ekstraksi' if not extraction_ready else
-                  'Menunggu pemeriksaan isi' if not content_ok else
-                  'Menunggu metadata resmi' if metadata is None else
-                  'Hubungan revisi perlu diperiksa' if not lineage_ok else
-                  'Keberlakuan perlu diperiksa' if not metadata_allowed else 'Aktif' if ready and approval_current else
-                  'Siap disetujui' if ready else 'Isi sudah diperiksa')
+        if blocked_status:
+            status = blocked_status
+        elif not path:
+            status = 'File sumber belum ditemukan'
+        elif problems:
+            status = 'Ada masalah'
+        elif not extraction_ready:
+            status = 'Menunggu ekstraksi'
+        elif not content_ok:
+            status = 'Menunggu pemeriksaan isi'
+        elif metadata is None:
+            status = 'Menunggu metadata resmi'
+        elif not lineage_ok:
+            status = 'Hubungan revisi perlu diperiksa'
+        elif not metadata_allowed:
+            status = 'Keberlakuan perlu diperiksa'
+        elif not complete:
+            missing_cases = [case for case in REQUIRED_CASES if case not in latest_trials or not (latest_trials[case].get('rating') and latest_trials[case]['rating'].get('ok'))]
+            status = 'Menunggu penilaian percobaan: ' + ', '.join(missing_cases) if missing_cases else 'Isi sudah diperiksa'
+        elif not all_ok:
+            status = 'Ada percobaan yang belum sesuai; periksa dan selesaikan masalahnya'
+        elif ready and approval is not None and not approval_current:
+            status = 'Siap disetujui (approval perlu diperbarui)'
+        elif ready and approval_current:
+            status = 'Aktif'
+        elif ready:
+            status = 'Siap disetujui'
+        else:
+            status = 'Isi sudah diperiksa'
         return {'document_id': document_id, 'title': metadata.official_title.value if metadata else doc.title, 'version_id': version,
                 'suggested_title': doc.title, 'metadata_confirmed': metadata is not None,
                 'official_metadata': metadata.model_dump() if metadata else None,

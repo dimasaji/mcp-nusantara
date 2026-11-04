@@ -33,7 +33,7 @@ def document_answer_facts(question, evidence):
                         'facet': 'requirements', 'unknown': False, 'score': item.score,
                         'pages': pages, 'proof': [{'title': item.title, 'chunk': quote, 'score': item.score}]}
         return None
-    facet = ('requirements' if re.search(r'persyaratan|syarat|bawa', question, re.I) else
+    facet = ('requirements' if re.search(r'persyaratan|syarat|bawa|dokumen(?:nya)?|kelengkapan|(?:dokumen|kelengkapan).{0,40}(?:langkah|tahap) pertama', question, re.I) else
              'duration' if re.search(r'berapa lama|waktu|durasi', question, re.I) else
              'procedure' if re.search(r'proses|prosedur|bagaimana|lalu|lanjut', question, re.I) else None)
     if facet:

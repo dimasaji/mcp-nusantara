@@ -52,7 +52,7 @@ def test_approval_requires_content_and_every_required_trial_and_survives_restart
     replacement = review.record_trial(doc['document_id'], version, 'requirements', 'Pertanyaan koreksi', {'response': 'Koreksi'}, 'admin-token')
     review.rate(doc['document_id'], version, replacement['trial_id'], True, '', 'admin-token')
     result = review.decide(doc['document_id'], version, 'resolve', 'admin-token', 'Jawaban pengganti telah diperiksa', problem['event_id'])
-    assert result['status'] == 'Siap disetujui'
+    assert result['status'] == 'Siap disetujui (approval perlu diperbarui)'
     assert next(t for t in result['trials'] if t['trial_id'] == failed['trial_id'])['rating']['ok'] is False
 
 

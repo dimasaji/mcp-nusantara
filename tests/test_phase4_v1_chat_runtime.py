@@ -11,7 +11,6 @@ def test_phase4_v1_chat_exposes_trust_assessment():
     response = client.post(
         "/v1/chat",
         json={
-            "session_id": "phase4-trust-test",
             "user_input": "Apa itu KTP-el?",
             "stream": False,
         },
@@ -37,7 +36,6 @@ def test_phase4_v1_chat_trust_confidence_is_bounded():
     response = client.post(
         "/v1/chat",
         json={
-            "session_id": "phase4-trust-bound",
             "user_input": "Apa itu KTP-el?",
             "stream": False,
         },

@@ -11,9 +11,9 @@ def table_pdf():
     import pymupdf
     pdf = pymupdf.open()
     rows = [
-        [['No.', 'Uraian Kegiatan', 'Kelengkapan', 'Waktu', 'Output', 'Keterangan'],
+        [['No.', 'Uraian Kegiatan', 'Mutu Baku / Kelengkapan', 'Mutu Baku / Waktu', 'Mutu Baku / Output', 'Keterangan'],
          ['1', 'Menyampaikan Surat Pengantar', 'Surat Pengantar', '', 'Surat Pengantar', '']],
-        [['No.', 'Uraian Kegiatan', 'Kelengkapan', 'Waktu', 'Output', 'Keterangan'],
+        [['No.', 'Uraian Kegiatan', 'Mutu Baku / Kelengkapan', 'Mutu Baku / Waktu', 'Mutu Baku / Output', 'Keterangan'],
          ['2', 'Memeriksa permohonan', 'Surat Pengantar', '5 menit', 'Hasil pemeriksaan', ''],
          ['3', 'Pelayanan selesai', '', '', '', '7 Hari Kerja']]]
     for page_rows in rows:
@@ -85,8 +85,20 @@ def test_selected_pdf_followup_cannot_escape_to_conversation_or_clarification():
     assert '7 hari kerja' in answer['response']
 
 
+def test_pilot_chat_answers_first_step_document_question_from_table_cells():
+    from app.knowledge.document_answers import document_answer_facts
+    evidence = SimpleNamespace(document_id='selected-pdf', title='Layanan contoh', score=1., metadata={
+        'sop_rows':[{'number':1,'activity':'Menyampaikan Surat Permohonan','kelengkapan':'Surat Permohonan','page':1}]
+    })
+    facts = document_answer_facts('Dokumen apa yang harus disampaikan pada langkah pertama?', [evidence])
+    assert facts is not None
+    assert facts['fallback'] == 'Siapkan Surat Permohonan.'
+    assert facts['pages'] == [1]
+
+
 @pytest.mark.parametrize('question,expected,pages', [
     ('Apa persyaratan menurut SOP layanan contoh?', 'Surat Pengantar', [1]),
+    ('Dokumen apa yang harus disampaikan pada langkah pertama?', 'Surat Pengantar', [1]),
     ('Berapa lama waktu penyelesaiannya?', '7 Hari Kerja', [2]),
     ('Bagaimana prosedurnya?', 'Memeriksa permohonan', [1, 2]),
 ])

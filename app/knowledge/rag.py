@@ -630,16 +630,23 @@ class RAG:
         # ============================================================
         # 1. SEMANTIC RETRIEVAL
         # ============================================================
-        query_embedding = self._embedding(query_text)
-
-        trace['stage'] = 'semantic_search'
-
-        semantic_candidates = self._store.search_similarity(
-            query_embedding,
-            candidate_k,
-            **({'document_ids': document_ids} if document_ids is not None else {}),
-        )
-        trace['semantic_count'] = 0
+        # Semantic retrieval (IndoBERT). If the embedding worker is unavailable
+        # (e.g. insufficient memory), fall back to lexical-only retrieval
+        # instead of failing the whole query.
+        semantic_candidates = []
+        try:
+            query_embedding = self._embedding(query_text)
+            trace['stage'] = 'semantic_search'
+            semantic_candidates = self._store.search_similarity(
+                query_embedding,
+                candidate_k,
+                **({'document_ids': document_ids} if document_ids is not None else {}),
+            )
+        except Exception as exc:
+            import logging
+            logging.getLogger(__name__).warning('IndoBERT embedding unavailable; using lexical-only retrieval: %s', type(exc).__name__)
+            semantic_candidates = []
+        trace['semantic_count'] = len(semantic_candidates)
         trace['stage'] = 'lexical_search'
 
         # ============================================================
@@ -650,7 +657,7 @@ class RAG:
             candidate_k,
             **({'document_ids': document_ids} if document_ids is not None else {}),
         )
-        trace['lexical_count'] = 0
+        trace['lexical_count'] = len(lexical_candidates)
         trace['stage'] = 'fusion'
 
         # ============================================================
