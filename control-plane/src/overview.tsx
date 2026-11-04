@@ -121,7 +121,7 @@ export function KnowledgeOperationsPage(){
   const query=useQuery({queryKey:['knowledge-pipeline',authKey],queryFn:()=>fetchKnowledgePipelineStatus(token),enabled:!!token.trim(),retry:false,refetchInterval:busy?2000:30000,gcTime:0});
   async function retryRun(id:string){
     setBusy(true);setMessage('');
-    try{const run=await retryKnowledgeDocument(id,token);setMessage(run.status==='FAILED'?explainUploadFailure(run.reason):'Dokumen telah diproses ulang.');await query.refetch();}
+    try{const run=await retryKnowledgeDocument(id,token);setMessage(run.status==='FAILED'?explainUploadFailure(run.reason):'Dokumen telah diproses ulang.');if(run.document_id&&['READY','DUPLICATE'].includes(run.status))setReviewDocument(run.document_id);await query.refetch();}
     catch(e){setMessage(e instanceof Error?e.message:'Pemrosesan ulang gagal.');}
     finally{setBusy(false);}
   }
@@ -135,12 +135,12 @@ export function KnowledgeOperationsPage(){
         const hash=Array.from(new Uint8Array(digest),byte=>byte.toString(16).padStart(2,'0')).join('');
         const existing=query.data?.documents?.find(doc=>doc.status==='READY'&&doc.source_sha256===hash);
         if(existing){
-          setExistingFile({authKey,documentId:existing.document_id});
+          setExistingFile({authKey,documentId:existing.document_id});setReviewDocument(existing.document_id);
           setMessage('File identik sudah tersedia. Gunakan dokumen tersimpan; tidak perlu unggah ulang.');
           setSelected(null);if(fileInput.current)fileInput.current.value='';return;
         }
       }
-      const run=await uploadKnowledgeDocument(selected,token);const status=run.status==='READY'?'Dokumen berhasil disimpan dan diproses.':run.status==='DUPLICATE'?'File tersimpan; isinya sudah ada di index Chat.':explainUploadFailure(run.reason);setMessage(`${status}${run.status==='READY'?' Sumber belum disahkan sebagai revisi resmi.':''}`);const failed=run.status==='FAILED';setUploadFailed(failed);if(!failed){setSelected(null);if(fileInput.current)fileInput.current.value='' ;}await query.refetch();}
+      const run=await uploadKnowledgeDocument(selected,token);if(run.document_id&&['READY','DUPLICATE'].includes(run.status))setReviewDocument(run.document_id);const status=run.status==='READY'?'Dokumen berhasil disimpan dan diproses.':run.status==='DUPLICATE'?'File tersimpan; isinya sudah ada di index Chat.':explainUploadFailure(run.reason);setMessage(`${status}${run.status==='READY'?' Sumber belum disahkan sebagai revisi resmi.':''}`);const failed=run.status==='FAILED';setUploadFailed(failed);if(!failed){setSelected(null);if(fileInput.current)fileInput.current.value='' ;}await query.refetch();}
     catch(e){setUploadFailed(true);const message=e instanceof Error?e.message:'Terjadi kesalahan saat mengirim dokumen.';const lower=message.toLowerCase();setMessage(lower.includes('di luar cakupan')||lower.includes('out_of_scope')?'Akun operator tidak memiliki izin untuk menambahkan dokumen. Hubungi administrator.':lower.includes('403')||lower.includes('401')?'Autentikasi operator gagal. Periksa token operator lalu coba lagi.':message);}
     finally{setBusy(false);uploadInFlight.current=false;}
   }
@@ -185,7 +185,7 @@ export function KnowledgeOperationsPage(){
         <div><p className="eyebrow">DOKUMEN TERPILIH</p><h2>{currentDocument.title}</h2><p>Dokumen sudah tersimpan. Anda tidak perlu mengunggah ulang.</p><p>Status pemeriksaan: <strong>{currentDocument.review_status??'Belum diperiksa'}</strong></p></div>
         <button className="primary" onClick={()=>setReviewDocument(currentDocument.document_id)}>Periksa isi</button>
       </section>
-      {reviewDocument&&<SOPReviewPanel key={`${reviewDocument}-${authKey}`} documentId={reviewDocument} token={token}/>}
+      {reviewDocument&&<SOPReviewPanel key={`${reviewDocument}-${authKey}`} documentId={reviewDocument} token={token} autoProcess/>}
       <details className="panel"><summary>Pilih dokumen lain ({documents.length})</summary><p>Pilih berdasarkan judul dan file sumbernya. Versi atau salinan tetap disimpan terpisah.</p><div className="sop-document-list">{documents.map(doc=><article key={doc.document_id}><div><h3>{doc.title}</h3><small>{doc.review_status??'Belum diperiksa'} · {new Date(doc.updated_at).toLocaleDateString('id-ID')}</small><details><summary>Identitas dokumen</summary><p>{doc.document_id}</p></details></div><button onClick={()=>setReviewDocument(doc.document_id)} disabled={doc.document_id===reviewDocument}>Pilih dokumen</button></article>)}</div></details>
     </>:<section className="panel"><h2>Belum ada dokumen</h2><p>Buka Tambahkan dokumen baru di bawah untuk memasukkan SOP pertama.</p></section>}
     <details className="panel sop-optional"><summary>Tambahkan dokumen baru</summary><p>Gunakan hanya untuk dokumen yang belum tersedia atau revisi dengan isi berbeda.</p>

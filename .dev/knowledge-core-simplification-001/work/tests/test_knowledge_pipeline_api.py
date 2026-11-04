@@ -1,0 +1,284 @@
+"""HTTP tests: no live application import, store, token or embedding worker."""
+import asyncio
+import io
+from pathlib import Path
+from urllib.parse import quote
+
+import pytest
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+from pypdf import PdfWriter
+from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
+
+from app.api.knowledge_pipeline import create_knowledge_pipeline_router, get_knowledge_engine
+from app.knowledge.engine import KnowledgeEngine
+from app.knowledge.rag import RAG
+from app.knowledge.schemas import KnowledgeBaseConfig
+from app.knowledge.store import SQLiteVectorStore
+
+
+@pytest.fixture
+def client(tmp_path, monkeypatch):
+    monkeypatch.setenv('NUSANTARA_ADMIN_TOKEN', 'isolated-upload-fixture')
+    engine = KnowledgeEngine(rag=RAG(
+        config=KnowledgeBaseConfig(embedding_model='fixture', embedding_dimension=3),
+        vector_store=SQLiteVectorStore(str(tmp_path / 'chat.db')),
+        embedding_func=lambda text: [1.0, 0.0, 0.0],
+    ))
+
+    async def run_sync(function, *args, timeout_s):
+        return await asyncio.wait_for(asyncio.to_thread(function, *args), timeout_s)
+
+    app = FastAPI()
+    app.include_router(create_knowledge_pipeline_router(run_sync), prefix='/v1')
+    app.dependency_overrides[get_knowledge_engine] = lambda: engine
+    with TestClient(app) as http:
+        yield http
+    app.dependency_overrides.clear()
+
+
+AUTH = {'X-Admin-Token': 'isolated-upload-fixture'}
+UPLOAD = '/v1/knowledge/pipeline/documents'
+STATUS = '/v1/knowledge/pipeline/status'
+
+
+def test_metadata_http_is_authenticated_typed_version_bound_and_persistent(client):
+    from test_sop_metadata import metadata_payload
+    run = upload(client, b'Nama SOP: PERMOHONAN DATA PRIBADI\nPersyaratan surat permohonan.', 'source.txt').json()
+    url = '/v1/knowledge/pipeline/reviews/' + run['document_id']
+    detail = client.get(url, headers=AUTH).json()
+    body = {'version_id': detail['version_id'], 'metadata': metadata_payload()}
+    assert client.post(url + '/metadata', json=body).status_code == 403
+    assert client.post(url + '/metadata', headers=AUTH, json={**body, 'version_id': '0' * 64}).status_code == 409
+    invalid = {**body, 'metadata': {**metadata_payload(), 'institution': {'status': 'present'}}}
+    assert client.post(url + '/metadata', headers=AUTH, json=invalid).status_code == 422
+    saved = client.post(url + '/metadata', headers=AUTH, json=body)
+    assert saved.status_code == 200, saved.text
+    refreshed = client.get(url, headers=AUTH).json()
+    assert refreshed['official_metadata']['official_title']['value'] == 'PERMOHONAN DATA PRIBADI'
+    assert refreshed['events'][-1]['principal'] == 'shared-admin-token'
+    assert client.post(url + '/metadata', headers=AUTH, json=body).status_code == 409
+
+
+@pytest.mark.parametrize('action,status', [('reject', 'Ditolak'), ('defer', 'Ditunda'), ('revoke', 'Dicabut')])
+def test_publication_decisions_are_authenticated_version_bound_and_persistent(client, action, status):
+    from app.knowledge.sop_review import SOPReview
+
+    run = upload(client, b'Persyaratan: surat permohonan. Prosedur: serahkan berkas.', 'sop.txt').json()
+    identifier = run['document_id']
+    url = '/v1/knowledge/pipeline/reviews/' + identifier
+    detail = client.get(url, headers=AUTH).json()
+    version = detail['version_id']
+    if action == 'revoke':
+        engine = client.app.dependency_overrides[get_knowledge_engine]()
+        review = SOPReview(engine)
+        review.decide(identifier, version, 'content_ok', 'fixture')
+        for case in detail['required_cases']:
+            trial = review.record_trial(identifier, version, case, 'Pertanyaan', {'response': 'Jawaban'}, 'fixture')
+            review.rate(identifier, version, trial['trial_id'], True, '', 'fixture')
+        from test_sop_review import confirm_fixture_metadata
+        confirm_fixture_metadata(review, review.detail(identifier))
+        review.decide(identifier, version, 'approve', 'fixture')
+    body = {'version_id': version, 'action': action, 'note': 'Periksa kembali sumber'}
+    assert client.post(url + '/decision', json=body).status_code == 403
+    assert client.post(url + '/decision', headers=AUTH, json={**body, 'note': ''}).status_code == 409
+    assert client.post(url + '/decision', headers=AUTH, json={**body, 'version_id': '0' * 64}).status_code == 409
+    assert client.post(url + '/decision', headers=AUTH, json={**body, 'category': 'invalid'}).status_code == 422
+    saved = client.post(url + '/decision', headers=AUTH, json=body)
+    assert saved.status_code == 200, saved.text
+    refreshed = client.get(url, headers=AUTH).json()
+    assert refreshed['status'] == status
+    assert refreshed['publication_decision']['kind'] == action
+    assert refreshed['publication_decision']['note'] == 'Periksa kembali sumber'
+
+
+def pdf_bytes():
+    output = io.BytesIO()
+    writer = PdfWriter()
+    page = writer.add_blank_page(width=600, height=800)
+    font = DictionaryObject({NameObject('/Type'): NameObject('/Font'),
+        NameObject('/Subtype'): NameObject('/Type1'), NameObject('/BaseFont'): NameObject('/Helvetica')})
+    page[NameObject('/Resources')] = DictionaryObject({NameObject('/Font'):
+        DictionaryObject({NameObject('/F1'): font})})
+    stream = DecodedStreamObject()
+    stream.set_data(b'BT /F1 12 Tf 50 750 Td '
+        b'(Persyaratan layanan: Surat Permohonan. Waktu layanan adalah 3 Hari Kerja.) Tj ET')
+    page[NameObject('/Contents')] = stream
+    writer.write(output)
+    return output.getvalue()
+
+
+def upload(client, payload, filename='Petunjuk layanan.pdf'):
+    return client.post(UPLOAD, content=payload, headers={**AUTH,
+        'Content-Type': 'application/octet-stream', 'X-Document-Name': quote(filename)})
+
+
+def test_review_source_access_notes_and_server_approval_gate(client, monkeypatch):
+    raw = pdf_bytes()
+    doc = upload(client, raw).json()['document_id']
+    url = '/v1/knowledge/pipeline/reviews/' + doc
+    assert client.get(url).status_code == 403
+    detail = client.get(url, headers=AUTH).json()
+    assert detail['status'] == 'Menunggu ekstraksi'
+    assert 'Surat Permohonan' in detail['text']
+    assert client.get(url + '/source', headers=AUTH).content == raw
+    assert client.get(url + '/source').status_code == 403
+    version = detail['version_id']
+    assert client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'approve'}).status_code == 422
+    assert client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'problem'}).status_code == 409
+    response = client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'problem', 'note': 'Teks perlu diperiksa'})
+    assert response.status_code == 200
+    assert client.get(url, headers=AUTH).json()['problems'][0]['note'] == 'Teks perlu diperiksa'
+    assert client.post(url + '/decision', headers=AUTH, json={'version_id': 'a'*64, 'action': 'content_ok'}).status_code == 409
+    assert client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'content_ok'}).status_code == 409
+    import json
+    import time
+    from types import SimpleNamespace
+    def worker(args, **kwargs):
+        text = 'Persyaratan layanan: Surat Permohonan. Waktu layanan adalah 3 Hari Kerja.'
+        Path(args[-1]).write_text(json.dumps({'status':'COMPLETE','warnings':[],
+            'page_count':1,'markdown':text,'docling_json':{'fixture':True},
+            'blocks':[{'block_id':'#/texts/0','type':'text','content':text,'page_numbers':[1]}]}),encoding='utf-8')
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr('app.knowledge.worker_process.run_worker',worker)
+    # The worker is a fixture; fingerprinting Windows OCR assets would make
+    # this HTTP contract test depend on an unrelated local installation.
+    monkeypatch.setattr('app.knowledge.document_tools.effective_config', lambda: {'fixture': True})
+    assert client.post(url+'/process',headers=AUTH,json={'version_id':version}).status_code==200
+    deadline=time.monotonic()+10
+    while time.monotonic()<deadline:
+        poll=client.get(url,headers=AUTH)
+        assert poll.status_code==200, poll.text
+        extracted=poll.json()
+        if extracted['extraction']['status'] not in {'QUEUED','PROCESSING'}:
+            break
+        time.sleep(.01)
+    assert extracted['extraction']['status']=='COMPLETE'
+    assert extracted['version_id']!=version
+    assert client.post(url+'/decision',headers=AUTH,json={'version_id':version,'action':'content_ok'}).status_code==409
+    version=extracted['version_id']
+    # Match the live operator schema extension; content checks must not use a
+    # positional INSERT that assumes the original seven-column table.
+    engine = client.app.dependency_overrides[get_knowledge_engine]()
+    with engine._pipeline_db() as conn:
+        conn.execute('ALTER TABLE sop_review_events ADD COLUMN trial_id TEXT')
+    saved = client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'content_ok'})
+    assert saved.status_code == 200, saved.text
+    assert saved.json()['content_ok'] is True
+    reloaded = client.get(url, headers=AUTH)
+    assert reloaded.status_code == 200
+    assert reloaded.json()['content_ok'] is True
+    assert reloaded.json()['events'][-1]['kind'] == 'content_ok'
+    requirements = {item['key']: item['satisfied'] for item in reloaded.json()['approval_requirements']}
+    assert requirements['source_available'] is True
+    assert requirements['extraction_complete'] is True
+    assert requirements['content_checked'] is True
+    assert requirements['case:missing'] is False
+    assert requirements['all_trials_reviewed'] is False
+    assert requirements['no_open_problems'] is True
+    assert reloaded.json()['can_approve'] is False
+
+
+def test_pdf_upload_processing_history_and_duplicate(client, tmp_path):
+    before = client.get(STATUS, headers=AUTH)
+    assert before.status_code == 200
+    assert before.json()['runs'] == []
+    raw = pdf_bytes()
+    response = upload(client, raw)
+    assert response.status_code == 200, response.text
+    ready = response.json()
+    assert ready['status'] == 'READY', ready
+    assert ready['filename'] == 'Petunjuk layanan.pdf'
+    assert ready['chunks_stored'] > 0
+    assert ready['reason'] is None
+    source = Path(ready['source_path'])
+    assert source.is_relative_to(tmp_path)
+    assert source.read_bytes() == raw
+    history = client.get(STATUS, headers=AUTH).json()
+    assert history['database'] == str((tmp_path / 'chat.db').resolve())
+    assert history['documents_indexed'] == history['pipeline_ready_documents'] == 1
+    assert history['runs'][0]['run_id'] == ready['run_id']
+    duplicate = upload(client, raw, 'Salinan.pdf').json()
+    assert duplicate['status'] == 'DUPLICATE'
+    assert duplicate['document_id'] == ready['document_id']
+    assert duplicate['run_id'] != ready['run_id']
+    history = client.get(STATUS, headers=AUTH).json()
+    assert [run['status'] for run in history['runs']] == ['DUPLICATE', 'READY']
+    assert history['documents_indexed'] == history['pipeline_ready_documents'] == 1
+    assert len(list((tmp_path / 'source-documents').iterdir())) == 1
+
+
+def test_failed_pdf_is_recorded_and_does_not_hide_ready_history(client):
+    ready = upload(client, pdf_bytes()).json()
+    failed = upload(client, b'not a PDF', 'broken.pdf')
+    assert failed.status_code == 200
+    assert failed.json()['status'] == 'FAILED'
+    assert failed.json()['reason']
+    assert failed.json()['document_id'] is None
+    history = client.get(STATUS, headers=AUTH).json()
+    assert [run['status'] for run in history['runs']] == ['FAILED', 'READY']
+    assert history['runs'][1]['document_id'] == ready['document_id']
+    assert history['documents_indexed'] == history['pipeline_ready_documents'] == 1
+
+
+def test_upload_and_history_require_admin_and_empty_document_is_rejected(client, tmp_path):
+    assert client.post(UPLOAD, content=pdf_bytes()).status_code == 403
+    assert client.get(STATUS).status_code == 403
+    assert client.get(STATUS, headers={'X-Admin-Token': 'wrong'}).status_code == 403
+    empty = upload(client, b'')
+    assert empty.status_code == 422
+    assert empty.json() == {'detail': 'DOCUMENT_EMPTY'}
+    assert client.get(STATUS, headers=AUTH).json()['runs'] == []
+    assert not (tmp_path / 'source-documents').exists()
+
+
+def test_retry_failed_source_after_reopening_history_requires_auth(client):
+    failed=upload(client,b'not a PDF','retry.pdf').json()
+    path=f"/v1/knowledge/pipeline/runs/{failed['run_id']}/retry"
+    assert client.post(path).status_code==403
+    retry=client.post(path,headers=AUTH)
+    assert retry.status_code==200
+    assert retry.json()['status']=='FAILED'
+    assert retry.json()['run_id']!=failed['run_id']
+    assert len(client.get(STATUS,headers=AUTH).json()['runs'])==2
+
+
+def test_history_remains_readable_while_embedding_is_running(client,tmp_path):
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+    started,release=Event(),Event()
+    def embed(text):
+        started.set()
+        assert release.wait(12)
+        return [1.,0.,0.]
+    engine=KnowledgeEngine(rag=RAG(config=KnowledgeBaseConfig(embedding_model='fixture',embedding_dimension=3),
+        vector_store=SQLiteVectorStore(str(tmp_path/'concurrent.db')),embedding_func=embed))
+    client.app.dependency_overrides[get_knowledge_engine]=lambda:engine
+    assert client.get(STATUS,headers=AUTH).status_code==200
+    with ThreadPoolExecutor() as pool:
+        pending=pool.submit(upload,client,pdf_bytes())
+        assert started.wait(3)
+        try:
+            response=client.get(STATUS,headers=AUTH)
+            assert response.status_code==200
+            assert response.json()['runs'][0]['status']=='PROCESSING'
+        finally:
+            release.set()
+        assert pending.result().json()['status']=='READY'
+
+
+def test_retry_recovers_committed_index_after_interrupted_finalization(client,tmp_path):
+    import sqlite3
+    uploaded=upload(client,pdf_bytes()).json()
+    # Fault injection: crash window after index commit, before final run status.
+    with sqlite3.connect(tmp_path/'chat.db') as db:
+        db.execute("UPDATE knowledge_pipeline_runs SET status='PROCESSING' WHERE run_id=?",(uploaded['run_id'],))
+    reopened=KnowledgeEngine(rag=RAG(config=KnowledgeBaseConfig(embedding_model='fixture',embedding_dimension=3),
+        vector_store=SQLiteVectorStore(str(tmp_path/'chat.db')),embedding_func=lambda text:[1.,0.,0.]))
+    client.app.dependency_overrides[get_knowledge_engine]=lambda:reopened
+    assert client.get(STATUS,headers=AUTH).json()['runs'][0]['status']=='FAILED'
+    result=client.post(f"/v1/knowledge/pipeline/runs/{uploaded['run_id']}/retry",headers=AUTH).json()
+    assert result['status']=='READY',result
+    assert result['document_id']==uploaded['document_id']
+    assert client.get(STATUS,headers=AUTH).json()['documents_indexed']==1
+

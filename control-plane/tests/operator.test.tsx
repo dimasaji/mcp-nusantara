@@ -52,8 +52,11 @@ describe('Operator contract boundaries',()=>{
   expect(operatorMenus).toHaveLength(4);expect(new Set(operatorMenus.map(([to])=>to)).size).toBe(4);
   mount(<OperatorHome/>);
   for(const name of ['Apa yang sedang dikerjakan?','Apa masalahnya?','Apa yang perlu saya setujui?','Berapa biayanya?'])expect(screen.getByRole('heading',{name})).toBeInTheDocument();
-  expect(await screen.findByText(/1 blocker dalam paket/)).toBeInTheDocument();
-  expect(screen.getByText(/jumlah tugas aktif dan progres global belum disediakan/)).toBeInTheDocument();
+  expect(screen.getByRole('link',{name:'Kelola dokumen'})).toBeInTheDocument();
+  expect(screen.getByText('Kondisi sistem dan aktivitas teknis').closest('details')).not.toHaveAttribute('open');
+  fireEvent.click(screen.getByText('Pemeriksaan sistem lanjutan'));
+  expect(await screen.findByText(/1 masalah tercatat dalam paket/)).toBeInTheDocument();
+  expect(screen.queryByText(/jumlah tugas aktif dan progres global belum disediakan/)).not.toBeInTheDocument();
   expect(api.fetchExecutionHistory).not.toHaveBeenCalled();
  });
  it('provides existing Chat in Workspace without enabling autonomous task execution',async()=>{

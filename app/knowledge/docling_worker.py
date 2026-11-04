@@ -27,6 +27,9 @@ def convert(source: Path, output: Path):
         accelerator_options=AcceleratorOptions(num_threads=configuration['threads'], device=AcceleratorDevice.CPU),
         ocr_options=TesseractCliOcrOptions(lang=configuration['languages'], force_full_page_ocr=configuration['force_full_page_ocr'],
                                          tesseract_cmd=command, path=configuration['tessdata_path']))
+    # Raster-grid candidates can precede OCR cell assignment. Keep the table
+    # region so Docling's subsequent stages can reconstruct it from the image.
+    options.layout_options.keep_empty_clusters = configuration['keep_empty_clusters']
     converter = DocumentConverter(format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=options, pipeline_cls=ruled_grid_pipeline())})
     result = converter.convert(source)
     doc = result.document
@@ -47,8 +50,8 @@ def convert(source: Path, output: Path):
             block['table_data'] = item.data.model_dump(mode='json')
         blocks.append(block)
     covered = {p for b in blocks for p in b['page_numbers']}
-    from .docling_layout import activity_grid_regions
-    for page_number in activity_grid_regions(source):
+    from .docling_layout import layout_grid_regions
+    for page_number in layout_grid_regions(source):
         tables = [b for b in blocks if b['type'] == 'table' and page_number in b['page_numbers']]
         if not tables:
             warnings.append(f'DOCLING_GRID_NOT_RECONSTRUCTED: halaman {page_number}')

@@ -1,6 +1,29 @@
 from test_selected_pdf_chat import table_pdf
 
 
+def test_scanned_grid_is_detected_without_native_text(tmp_path):
+    import pymupdf
+    from app.knowledge.docling_layout import layout_grid_regions
+    vector = pymupdf.open()
+    page = vector.new_page(width=600, height=500)
+    for x in range(30, 571, 60):
+        page.draw_line((x, 50), (x, 450), color=(0, 0, 0), width=2)
+    for y in range(50, 451, 50):
+        page.draw_line((30, y), (570, y), color=(0, 0, 0), width=2)
+    raster = pymupdf.open()
+    scanned = raster.new_page(width=600, height=500)
+    scanned.insert_image(scanned.rect, stream=page.get_pixmap().tobytes('png'))
+    path = tmp_path / 'scan.pdf'
+    raster.save(path)
+    vector.close()
+    raster.close()
+    regions = layout_grid_regions(path)
+    assert 1 in regions
+    x0, y0, x1, y1 = regions[1][0]
+    assert abs(x0 - 30) < 5 and abs(y0 - 50) < 5
+    assert abs(x1 - 570) < 5 and abs(y1 - 450) < 5
+
+
 def test_activity_grid_regions_use_physical_pdf_pages(tmp_path):
     from app.knowledge.docling_layout import activity_grid_regions
     source = tmp_path / 'table.pdf'

@@ -67,6 +67,10 @@ class IndoBERTClient:
             text=True,
             encoding="utf-8",
             bufsize=1,
+            # Parent pipe encoding does not configure the child interpreter.
+            # Windows otherwise decodes UTF-8 PDF text using its ANSI codepage,
+            # which can create surrogates rejected by the tokenizer.
+            env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"},
             creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
         )
 

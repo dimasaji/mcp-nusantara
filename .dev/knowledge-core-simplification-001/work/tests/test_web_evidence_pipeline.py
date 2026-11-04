@@ -1,0 +1,608 @@
+"""WEIP fixtures only: no government verification or live network/model requests."""
+import io
+import json
+import socket
+import threading
+import http.client
+from dataclasses import replace
+from pathlib import Path
+from datetime import datetime, timedelta, timezone
+
+import pytest
+
+from app.knowledge.web_evidence import (
+    ApprovalPrincipal, EvidenceFetcher, EvidenceRejected, FetchResult, SourceEntry, SourceRegistry,
+    StagingStore, WebEvidencePipeline, parse_document,
+)
+
+
+URL = "https://example.org/allowed/doc"
+FINAL = "https://example.org/allowed/final"
+
+
+def source(**changes):
+    entry = SourceEntry("fixture", "Fixture Publisher", "Fixture Agency", "example.org",
+                        "https://example.org/allowed", (URL, FINAL), "WEB", "FIXTURE_ONLY",
+                        ("fixture-service",), min_interval_s=0)
+    return replace(entry, **changes)
+
+
+def verified(**changes):
+    return source(verification_status="VERIFIED", verification_reference="fixture-review-001",
+                  last_checked="2020-01-01T00:00:00+00:00", **changes)
+
+
+def dns(address="93.184.216.34"):
+    return lambda *a, **k: [(socket.AF_INET, socket.SOCK_STREAM, 6, "", (address, 443))]
+
+
+class Response:
+    def __init__(self, body=b"Evidence fixture. No official authority.", status=200, headers=None):
+        self.status = status
+        self.headers = {"Content-Type": "text/plain", **(headers or {})}
+        self.stream = io.BytesIO(body)
+
+    def getheader(self, name, default=""):
+        return self.headers.get(name, default)
+
+    def read(self, size):
+        return self.stream.read(size)
+
+
+def transport(responses, calls):
+    class Connection:
+        def __init__(self, host, address, timeout):
+            calls.append({"host": host, "address": address, "timeout": timeout, "closed": False})
+            self.call = calls[-1]
+
+        def request(self, method, path, headers):
+            self.call.update(method=method, path=path, headers=headers)
+
+        def getresponse(self):
+            return responses.pop(0)
+
+        def close(self):
+            self.call["closed"] = True
+    return Connection
+
+
+def pipeline(tmp_path, *, entry=None, responses=None, **fetch_options):
+    registry = SourceRegistry([entry or source()])
+    calls = []
+    fetcher = EvidenceFetcher(registry, resolver=dns(),
+                              connection=transport(responses or [Response()], calls), **fetch_options)
+    # Explicit offline authentication fixture; no claim about a real operator.
+    authorizer = lambda reviewer, reference, binding: ApprovalPrincipal(
+        reviewer, "fixture-auth-record", binding, ("v1_request_projection",),
+        "2099-01-01T00:00:00+00:00", provenance_reference="fixture-provenance-only",
+        approval_status="APPROVED")
+    return WebEvidencePipeline(registry, fetcher, StagingStore(tmp_path / "staging"),
+                               review_authorizer=authorizer), calls
+
+
+def collect(pipe, **kwargs):
+    return pipe.collect("fixture", URL, title="Fixture", service="fixture-service",
+                        jurisdiction="FIXTURE_ONLY", **kwargs)
+
+
+def approved(pipe):
+    record = collect(pipe, publication_date="2020-01-01", effective_date="2020-01-01", expiry_date="2099-01-01")
+    assert record["status"] == "REVIEW_REQUIRED"
+    return pipe.approve(record["document_id"], reviewer="fixture-reviewer", review_reference="fixture-decision")
+
+
+@pytest.mark.parametrize("address", ["127.0.0.1", "10.0.0.1", "169.254.169.254", "::1", "::ffff:127.0.0.1",
+                                      "192.168.1.1", "0.0.0.0", "224.0.0.1", "100.64.0.1", "2001:db8::1"])
+def test_ssrf_all_nonpublic_addresses_rejected(address):
+    f = EvidenceFetcher(SourceRegistry([source()]), resolver=dns(address),
+                        connection=lambda *a: pytest.fail("connection must not run"))
+    with pytest.raises(EvidenceRejected, match="SSRF_ADDRESS"):
+        f.fetch("fixture", URL)
+
+
+@pytest.mark.parametrize("url", ["http://example.org/allowed/doc", "https://example.org/other",
+                                  "https://sub.example.org/allowed/doc", "https://user:pass@example.org/allowed/doc",
+                                  "https://example.org:8443/allowed/doc", URL+"?token=secret", URL+"#fragment",
+                                  "https://example.org/allowed/../private", "https://example.org/allowed/%2e%2e/private"])
+def test_exact_url_scope_before_dns(url):
+    f = EvidenceFetcher(SourceRegistry([source()]), resolver=lambda *a, **k: pytest.fail("DNS must not run"))
+    with pytest.raises(EvidenceRejected):
+        f.fetch("fixture", url)
+
+
+def test_mixed_dns_answer_rejected():
+    f = EvidenceFetcher(SourceRegistry([source()]), resolver=lambda *a, **k: dns()()+dns("10.0.0.1")(),
+                        connection=lambda *a: pytest.fail("connect"))
+    with pytest.raises(EvidenceRejected):
+        f.fetch("fixture", URL)
+
+
+def test_source_verification_and_status_records(tmp_path):
+    with pytest.raises(EvidenceRejected, match="VERIFICATION_RECORD_REQUIRED"):
+        source(verification_status="VERIFIED")
+    registry = SourceRegistry([source()])
+    with pytest.raises(EvidenceRejected):
+        registry.register(source(), actor="owner", reason="duplicate")
+    registry.replace(source(status="REVOKED"), actor="owner", reason="source-revoked")
+    with pytest.raises(EvidenceRejected):
+        registry.require("fixture", URL)
+    assert registry.audit[-1]["source"]["status"] == "REVOKED"
+
+
+def test_pinned_redirect_validation_and_no_credentials(tmp_path):
+    p, calls = pipeline(tmp_path, responses=[Response(status=302, headers={"Location": "/allowed/final"}), Response()])
+    record = collect(p)
+    assert record["final_url"] == FINAL
+    assert record["redirects"] == [FINAL]
+    assert all(c["address"] == "93.184.216.34" and c["closed"] for c in calls)
+    assert all(set(c["headers"]) == {"Accept", "Accept-Encoding", "User-Agent"} for c in calls)
+    assert list(p.staging.root.glob("registry-*.json"))
+
+
+@pytest.mark.parametrize("location", ["https://127.0.0.1/private", "https://elsewhere.org/doc", "/not-approved", URL])
+def test_redirect_escape_and_loop_rejected(tmp_path, location):
+    p, calls = pipeline(tmp_path, responses=[Response(status=302, headers={"Location": location})])
+    with pytest.raises(EvidenceRejected):
+        collect(p)
+    assert len(calls) == 1 and calls[0]["closed"]
+
+
+def test_redirect_dns_rebinding_rejected(tmp_path):
+    p, calls = pipeline(tmp_path, responses=[Response(status=302, headers={"Location": FINAL})])
+    answers = iter([dns()(), dns("169.254.169.254")()])
+    p.fetcher.resolver = lambda *a, **k: next(answers)
+    with pytest.raises(EvidenceRejected, match="SSRF_ADDRESS"):
+        collect(p)
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("headers,body,code", [({"Content-Type": "application/octet-stream"}, b"x", "CONTENT_TYPE"),
+                                              ({"Content-Encoding": "gzip"}, b"x", "ENCODING_REJECTED"),
+                                              ({}, b"x"*30, "CONTENT_TOO_LARGE")])
+def test_content_controls(tmp_path, headers, body, code):
+    p, calls = pipeline(tmp_path, responses=[Response(body=body, headers=headers)], max_bytes=20)
+    with pytest.raises(EvidenceRejected, match=code):
+        collect(p)
+    assert calls[0]["closed"]
+
+
+def test_retry_bounded_and_rate_limited(tmp_path):
+    p, calls = pipeline(tmp_path, responses=[Response(status=503), Response()])
+    assert collect(p)["status"] == "REVIEW_REQUIRED"
+    assert len(calls) == 2
+    p.registry.replace(source(min_interval_s=60), actor="owner", reason="rate-policy")
+    with pytest.raises(EvidenceRejected, match="RATE_LIMITED"):
+        collect(p)
+
+
+def test_total_deadline(tmp_path):
+    p, calls = pipeline(tmp_path)
+    times = iter([0, 0, 0, 0, 0, 100])
+    p.fetcher.clock = lambda: next(times, 100)
+    with pytest.raises(EvidenceRejected, match="FETCH_DEADLINE"):
+        collect(p)
+
+
+@pytest.mark.parametrize("kind,content_type,body,expected", [
+    ("API", "application/json", b'{"service":"fixture","items":[1]}', '"service": "fixture"'),
+    ("WEB", "text/html", b'<h1>Fixture</h1><script>unsafe()</script><p>Public text</p>', "Public text"),
+    ("PDF", "application/pdf", b'%PDF-1.4\nfixture only', "Parsed PDF fixture"),
+])
+def test_api_web_pdf_fixture_parsing(tmp_path, kind, content_type, body, expected):
+    p, _ = pipeline(tmp_path, entry=source(kind=kind), responses=[Response(body=body, headers={"Content-Type": content_type})])
+    if kind == "PDF":
+        p.pdf_parser = lambda raw: "Parsed PDF fixture"
+    record = collect(p)
+    assert record["status"] == "REVIEW_REQUIRED"
+    assert expected in record["text"] and "unsafe()" not in record["text"]
+
+
+@pytest.mark.parametrize("kind,content_type,body", [("API", "application/json", b'{invalid'),
+                                                 ("API", "application/json", b'{"number":NaN}'),
+                                                 ("WEB", "text/plain", b'\xff'),
+                                                 ("PDF", "application/pdf", b'not pdf'),
+                                                 ("PDF", "application/pdf", b'%PDF-1.4 /JavaScript')])
+def test_invalid_parsing_quarantines(tmp_path, kind, content_type, body):
+    p, _ = pipeline(tmp_path, entry=source(kind=kind), responses=[Response(body=body, headers={"Content-Type": content_type})])
+    record = collect(p)
+    assert record["status"] == "QUARANTINED"
+    assert record["audit"][-1]["reason"] == "PARSE_UNSAFE_OR_UNAVAILABLE"
+
+
+def test_unavailable_pdf_parser_quarantines(tmp_path, monkeypatch):
+    from app.knowledge.parser import PDFParser
+    monkeypatch.setattr(PDFParser, "parse", lambda *a: (_ for _ in ()).throw(RuntimeError("private-parser-details")))
+    p, _ = pipeline(tmp_path, entry=source(kind="PDF"), responses=[Response(body=b'%PDF-1.4 fixture', headers={"Content-Type": "application/pdf"})])
+    r = collect(p)
+    assert r["status"] == "QUARANTINED"
+    assert "private-parser-details" not in json.dumps(r)
+
+
+def test_review_required_even_verified_missing_dates(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = collect(p)
+    assert r["status"] == "REVIEW_REQUIRED"
+    with pytest.raises(EvidenceRejected, match="DOCUMENT_REVIEW_REQUIRED"):
+        p.approve(r["document_id"], reviewer="owner", review_reference="decision")
+    with pytest.raises(EvidenceRejected):
+        p.to_v1_request(r["document_id"])
+
+
+def test_unverified_source_cannot_be_approved(tmp_path):
+    p, _ = pipeline(tmp_path)
+    r = collect(p, publication_date="2020-01-01", effective_date="2020-01-01", expiry_date="2099-01-01")
+    with pytest.raises(EvidenceRejected, match="SOURCE_REVIEW_REQUIRED"):
+        p.approve(r["document_id"], reviewer="owner", review_reference="decision")
+
+
+def test_expired_and_scope_mismatch_rejected(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    with pytest.raises(EvidenceRejected, match="DOCUMENT_SCOPE"):
+        p.collect("fixture", URL, title="x", service="other", jurisdiction="FIXTURE_ONLY")
+    r = collect(p, publication_date="2000-01-01", effective_date="2000-01-01", expiry_date="2001-01-01")
+    with pytest.raises(EvidenceRejected):
+        p.approve(r["document_id"], reviewer="owner", review_reference="decision")
+
+
+def test_dedup_and_changed_version_review(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified(), responses=[Response(), Response(), Response(body=b'New version')])
+    one, same, two = collect(p), collect(p), collect(p)
+    assert one["document_id"] == same["document_id"] != two["document_id"]
+    assert len(p.staging.list()) == 2
+    assert two["version_conflict"] and two["status"] == "REVIEW_REQUIRED"
+
+
+def test_lifecycle_and_integrity(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = approved(p)
+    assert [a["to"] for a in r["audit"]] == ["FETCHED", "PARSED", "VALIDATION_PENDING", "REVIEW_REQUIRED", "APPROVED_FOR_INGESTION"]
+    assert p.to_v1_request(r["document_id"]).metadata["web_evidence"]["content_hash"] == r["content_hash"]
+    with pytest.raises(EvidenceRejected, match="INTEGRATION_GATE"):
+        p.staging.transition(r["document_id"], "INGESTED", reason="forbidden")
+    p.registry.replace(verified(status="SUSPENDED"), actor="owner", reason="suspend")
+    with pytest.raises(EvidenceRejected):
+        p.to_v1_request(r["document_id"])
+
+
+def test_raw_and_approval_tampering_detected(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = approved(p)
+    r["metadata"]["title"] = "changed after approval"
+    p.staging._save(r)
+    with pytest.raises(EvidenceRejected, match="APPROVAL_BINDING"):
+        p.to_v1_request(r["document_id"])
+    (p.staging.root / (r["document_id"]+".bin")).write_bytes(b'changed bytes')
+    with pytest.raises(EvidenceRejected, match="STAGING_INTEGRITY"):
+        p.staging.get(r["document_id"])
+
+
+def test_staging_refuses_active_store_and_existing_user_directory(tmp_path):
+    repo = Path(__file__).resolve().parents[1]
+    with pytest.raises(EvidenceRejected):
+        StagingStore(repo / "data/knowledge")
+    user = tmp_path / "user"; user.mkdir(); (user / "important.txt").write_text("keep")
+    with pytest.raises(EvidenceRejected):
+        StagingStore(user)
+    assert (user / "important.txt").read_text() == "keep"
+
+
+def test_adapter_actual_v1_store_compatibility_only_in_temp_db(tmp_path):
+    from app.knowledge.store import SQLiteVectorStore
+    from app.knowledge.rag import RAG
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = approved(p); request = p.to_v1_request(r["document_id"])
+    store = SQLiteVectorStore(str(tmp_path / "isolated.db"))
+    rag = RAG(vector_store=store, embedding_func=lambda _: [1.0]+[0.0]*767)
+    assert rag.ingest_document(request).success
+    assert rag.ingest_document(request).success
+    assert len(store.list_documents()) == 1
+    doc = store.get_document_info(request.document_id)
+    chunks = store.get_chunks_by_document(request.document_id)
+    assert doc.metadata["web_evidence"]["content_hash"] == r["content_hash"]
+    assert doc.metadata["provenance"]["source_verification_reference"] == "fixture-review-001"
+    assert len(chunks) == 1 and chunks[0].document_id == request.document_id
+    assert chunks[0].chunk_id == request.document_id+"-0"
+    assert p.staging.get(r["document_id"])["status"] == "APPROVED_FOR_INGESTION"
+
+
+def test_dns_timeout_cannot_open_connection():
+    release = threading.Event()
+    calls = []
+    def slow_dns(*a, **k):
+        release.wait(1)
+        return dns()()
+    fetcher = EvidenceFetcher(SourceRegistry([source()]), resolver=slow_dns, timeout_s=.01,
+                              connection=lambda *a: calls.append(a))
+    try:
+        with pytest.raises(EvidenceRejected, match="DNS_DEADLINE"):
+            fetcher.fetch("fixture", URL)
+        assert calls == []
+    finally:
+        release.set()
+
+
+def test_new_conflicting_version_blocks_previous_approval(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified(), responses=[Response(), Response(body=b'Conflicting changed version')])
+    first = approved(p)
+    second = collect(p)
+    assert second["version_conflict"]
+    with pytest.raises(EvidenceRejected, match="VERSION_CONFLICT_REVIEW"):
+        p.to_v1_request(first["document_id"])
+
+
+def test_audit_tampering_detected(tmp_path):
+    p, _ = pipeline(tmp_path)
+    r = collect(p)
+    r["audit"][-1]["reason"] = "changed"
+    p.staging._save(r)
+    with pytest.raises(EvidenceRejected, match="AUDIT_INTEGRITY"):
+        p.staging.get(r["document_id"])
+
+
+def test_registry_metadata_change_invalidates_projection(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = approved(p)
+    p.registry.replace(replace(verified(), publisher="different"), actor="owner", reason="metadata-change")
+    with pytest.raises(EvidenceRejected, match="SOURCE_REVIEW_REQUIRED"):
+        p.to_v1_request(r["document_id"])
+
+
+def test_completion_default_pdf_never_uses_in_process_parser(tmp_path, monkeypatch):
+    from app.knowledge.parser import PDFParser
+    calls = []
+    monkeypatch.setattr(PDFParser, "parse", lambda *a: calls.append(True) or "native text")
+    p, _ = pipeline(tmp_path, entry=source(kind="PDF"), responses=[Response(body=b'%PDF-1.4 fixture', headers={"Content-Type": "application/pdf"})])
+    record = collect(p)
+    assert record["status"] == "QUARANTINED"
+    assert calls == []
+
+
+def test_completion_oversized_pdf_rejected_before_fixture_parser():
+    calls = []
+    fetched = FetchResult("fixture", URL, URL, "application/pdf", b'%PDF-'+b'x'*2_000_000,
+                          "2026-10-09T00:00:00+00:00", ())
+    with pytest.raises(EvidenceRejected):
+        parse_document(fetched, pdf_parser=lambda raw: calls.append(True) or "text")
+    assert calls == []
+
+
+def test_completion_declared_reviewer_cannot_approve(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    p.review_authorizer = None
+    r = collect(p, publication_date="2020-01-01", effective_date="2020-01-01", expiry_date="2099-01-01")
+    with pytest.raises(EvidenceRejected, match="APPROVAL_IDENTITY_REQUIRED"):
+        p.approve(r["document_id"], reviewer="owner", review_reference="declared-only")
+    assert p.staging.get(r["document_id"])["status"] == "REVIEW_REQUIRED"
+
+
+def test_completion_expired_deadline_after_read_is_rejected(tmp_path):
+    p, _ = pipeline(tmp_path)
+    elapsed = [0.0]
+    class LateEOF(Response):
+        def read(self, size):
+            elapsed[0] = 100
+            return b''
+    p.fetcher.clock = lambda: elapsed[0]
+    p.fetcher.connection = transport([LateEOF()], [])
+    with pytest.raises(EvidenceRejected, match="FETCH_DEADLINE"):
+        collect(p)
+
+
+def test_completion_malformed_http_error_is_redacted(tmp_path):
+    p, _ = pipeline(tmp_path)
+    class BrokenConnection:
+        def request(self, *a, **k):
+            pass
+        def getresponse(self):
+            raise http.client.BadStatusLine('private-response-token')
+        def close(self):
+            pass
+    p.fetcher.connection = lambda *a: BrokenConnection()
+    with pytest.raises(EvidenceRejected) as caught:
+        collect(p)
+    assert 'private-response-token' not in str(caught.value)
+
+
+def test_completion_pending_dns_thread_is_bounded():
+    release = threading.Event()
+    calls = []
+    def slow_dns(*a, **k):
+        calls.append(True)
+        release.wait(2)
+        return dns()()
+    f = EvidenceFetcher(SourceRegistry([source()]), resolver=slow_dns, timeout_s=.01,
+                        connection=lambda *a: pytest.fail('network must not run'))
+    try:
+        with pytest.raises(EvidenceRejected):
+            f.fetch('fixture', URL)
+        with pytest.raises(EvidenceRejected, match="DNS_BUSY"):
+            f.fetch('fixture', URL)
+        assert len(calls) == 1
+    finally:
+        release.set()
+
+
+@pytest.mark.parametrize('limits', [{'max_redirects':.5}, {'retries':.5}, {'max_bytes':3_000_000}])
+def test_completion_fetch_budget_types_and_caps(limits):
+    with pytest.raises(EvidenceRejected, match="FETCH_LIMITS"):
+        EvidenceFetcher(SourceRegistry([source()]), **limits)
+
+
+@pytest.mark.parametrize("failure", ["denied", "wrong_subject", "wrong_binding"])
+def test_completion_host_authorization_must_match_payload(tmp_path, failure):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = collect(p, publication_date="2020-01-01", effective_date="2020-01-01", expiry_date="2099-01-01")
+    def authorize(reviewer, reference, binding):
+        if failure == "denied":
+            raise PermissionError("private-auth-detail")
+        return ApprovalPrincipal("other" if failure == "wrong_subject" else reviewer,
+                                 "fixture-auth", "wrong" if failure == "wrong_binding" else binding)
+    p.review_authorizer = authorize
+    with pytest.raises(EvidenceRejected, match="APPROVAL_IDENTITY_REQUIRED"):
+        p.approve(r["document_id"], reviewer="owner", review_reference="fixture")
+    assert p.staging.get(r["document_id"])["status"] == "REVIEW_REQUIRED"
+
+
+def test_completion_legacy_declared_approval_cannot_export(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = approved(p)
+    r["approval"]["identity_status"] = "DECLARED_NOT_AUTHENTICATED"
+    p.staging._save(r)
+    with pytest.raises(EvidenceRejected, match="APPROVAL_IDENTITY_REQUIRED"):
+        p.to_v1_request(r["document_id"])
+
+
+def test_completion_owner_registry_is_not_source_authentication(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = approved(p)
+    request = p.to_v1_request(r["document_id"])
+    assert request.metadata["provenance"]["source_assurance"] == "OWNER_DECLARED_NOT_INDEPENDENTLY_AUTHENTICATED"
+    assert request.metadata["approval"]["identity_reference"] == "fixture-auth-record"
+
+
+def test_completion_deadline_interrupts_response_and_releases_timer(tmp_path):
+    release = threading.Event()
+    closed = []
+    class BlockedConnection:
+        def request(self, *a, **k):
+            pass
+        def getresponse(self):
+            assert release.wait(1), "deadline failed to close transport"
+            raise OSError("fixture closed")
+        def close(self):
+            closed.append(True)
+            release.set()
+    p, _ = pipeline(tmp_path, timeout_s=.02)
+    p.fetcher.connection = lambda *a: BlockedConnection()
+    before = set(threading.enumerate())
+    with pytest.raises(EvidenceRejected, match="FETCH_DEADLINE"):
+        collect(p)
+    assert closed
+    assert not any(isinstance(t, threading.Timer) for t in set(threading.enumerate()) - before)
+
+
+def test_completion_success_releases_deadline_timer(tmp_path):
+    before = set(threading.enumerate())
+    p, calls = pipeline(tmp_path)
+    assert collect(p)["status"] == "REVIEW_REQUIRED"
+    assert calls[0]["closed"]
+    assert not any(isinstance(t, threading.Timer) for t in set(threading.enumerate()) - before)
+
+
+@pytest.mark.parametrize("number", [1, 2, 3, 4])
+def test_remediation_four_manifest_text_representations(number):
+    from app.knowledge.web_evidence import verify_fixture_checksum
+    folder = Path(__file__).resolve().parents[1] / "data/knowledge/official_sources/ktp_el"
+    manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8-sig"))
+    entry = manifest["documents"][number-1]
+    raw = (folder / f"tng-ktpel-{number:03d}.md").read_bytes()
+    result = verify_fixture_checksum(raw, entry["sha256"])
+    assert result["integrity"] == "INTEGRITY_PASS"
+    assert result["file_sha256"] != result["normalized_sha256"]
+    assert result["usage_authorization"] == "NOT_AUTHORIZED"
+    assert result["source_authentication"] == "NOT_VERIFIED"
+    lf = raw.decode("utf-8-sig").replace("\r\n", "\n")
+    # Metadata and outer whitespace are outside this checksum representation.
+    metadata = lf.replace("VERIFIED: true", "VERIFIED: false")
+    for changed in (metadata, lf+" \n\t", lf.replace("\n", "\r\n")):
+        assert verify_fixture_checksum(changed.encode(), entry["sha256"])["integrity"] == "INTEGRITY_PASS"
+    prefix, body = lf.split("## Isi Sumber\n\n", 1)
+    changed = (prefix+"## Isi Sumber\n\n"+body.strip()+" changed").encode()
+    assert verify_fixture_checksum(changed, entry["sha256"])["integrity"] == "INTEGRITY_FAIL"
+    changed = (prefix+"## Isi Sumber\n\n"+body.strip().replace(" ", "  ", 1)).encode()
+    assert verify_fixture_checksum(changed, entry["sha256"])["integrity"] == "INTEGRITY_FAIL"
+
+
+@pytest.mark.parametrize("raw", [b"missing marker", b"\xff", b"## Isi Sumber\n\n \n"])
+def test_remediation_checksum_invalid_representation_rejected(raw):
+    from app.knowledge.web_evidence import verify_fixture_checksum
+    with pytest.raises(EvidenceRejected):
+        verify_fixture_checksum(raw, "0"*64)
+
+
+def test_remediation_valid_approval_reuse_without_repeat_consent(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    p.now = lambda: datetime(2026, 10, 9, tzinfo=timezone.utc)
+    auth = p.review_authorizer
+    calls = []
+    p.review_authorizer = lambda *args: calls.append(args) or auth(*args)
+    r = approved(p)
+    for _ in range(2):
+        assert p.to_v1_request(r["document_id"]).document_id == r["document_id"]
+    assert len(calls) == 3  # One approval, two noninteractive validity checks.
+    assert p.staging.get(r["document_id"])["audit"] == r["audit"]
+    assert r["approval"]["approved_at"] == "2026-10-09T00:00:00+00:00"
+
+
+@pytest.mark.parametrize("offset,allowed", [(-1, True), (0, False), (1, False)])
+def test_remediation_expiry_exact_boundary(tmp_path, offset, allowed):
+    p, _ = pipeline(tmp_path, entry=verified())
+    moment = [datetime(2026, 10, 9, tzinfo=timezone.utc)]
+    expiry = moment[0]+timedelta(seconds=10)
+    p.now = lambda: moment[0]
+    auth = p.review_authorizer
+    p.review_authorizer = lambda *a: replace(auth(*a), expires_at=expiry.isoformat())
+    r = approved(p)
+    moment[0] = expiry+timedelta(microseconds=offset)
+    if allowed:
+        assert p.to_v1_request(r["document_id"])
+    else:
+        with pytest.raises(EvidenceRejected, match="APPROVAL_EXPIRED_OR_INVALID"):
+            p.to_v1_request(r["document_id"])
+
+
+@pytest.mark.parametrize("changes,code", [
+    ({"revoked":True}, "APPROVAL_REVOKED"),
+    ({"purposes":("other",)}, "APPROVAL_SCOPE"),
+    ({"approval_status":"REJECTED"}, "APPROVAL_NOT_VALID"),
+    ({"approval_status":"PENDING_APPROVAL"}, "APPROVAL_NOT_VALID"),
+    ({"subject":"untrusted"}, "APPROVAL_IDENTITY_REQUIRED"),
+    ({"expires_at":None}, "APPROVAL_EXPIRED_OR_INVALID"),
+    ({"expires_at":"2099-01-01T00:00:00"}, "APPROVAL_EXPIRED_OR_INVALID"),
+    ({"provenance_reference":None}, "PROVENANCE_REVIEW_REQUIRED"),
+])
+def test_remediation_reuse_requires_current_host_authorization(tmp_path, changes, code):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = approved(p)
+    auth = p.review_authorizer
+    p.review_authorizer = lambda *a: replace(auth(*a), **changes)
+    with pytest.raises(EvidenceRejected, match=code):
+        p.to_v1_request(r["document_id"])
+
+
+def test_remediation_purpose_and_unavailable_authorizer_rejected(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = approved(p)
+    with pytest.raises(EvidenceRejected, match="APPROVAL_SCOPE"):
+        p.to_v1_request(r["document_id"], purpose="production_ingest")
+    p.review_authorizer = None
+    with pytest.raises(EvidenceRejected, match="APPROVAL_IDENTITY_REQUIRED"):
+        p.to_v1_request(r["document_id"])
+
+
+@pytest.mark.parametrize("tamper", ["version", "raw", "status", "reference"])
+def test_remediation_document_version_and_consent_binding(tmp_path, tamper):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = approved(p)
+    if tamper == "version":
+        r["version"] = "sha256:"+"0"*64
+    elif tamper == "raw":
+        (p.staging.root/(r["document_id"]+".bin")).write_bytes(b'changed')
+    elif tamper == "status":
+        r["approval"]["status"] = "REJECTED"
+    else:
+        r["approval"]["reference"] = ""
+    p.staging._save(r)
+    with pytest.raises(EvidenceRejected):
+        p.to_v1_request(r["document_id"])
+
+
+def test_remediation_missing_reference_and_invalid_clock_fail_closed(tmp_path):
+    p, _ = pipeline(tmp_path, entry=verified())
+    r = collect(p, publication_date="2020-01-01", effective_date="2020-01-01", expiry_date="2099-01-01")
+    with pytest.raises(EvidenceRejected, match="IDENTIFIER_REQUIRED"):
+        p.approve(r["document_id"], reviewer="fixture-reviewer", review_reference="")
+    assert p.staging.get(r["document_id"])["status"] == "REVIEW_REQUIRED"
+    p.now = lambda: datetime(2026, 10, 9)  # Ambiguous clock cannot validate consent.
+    with pytest.raises(EvidenceRejected, match="APPROVAL_CLOCK_INVALID"):
+        p.approve(r["document_id"], reviewer="fixture-reviewer", review_reference="fixture")

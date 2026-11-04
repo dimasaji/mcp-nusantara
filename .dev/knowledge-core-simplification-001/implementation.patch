@@ -1,0 +1,1204 @@
+--- a/app/api/knowledge_pipeline.py
++++ b/app/api/knowledge_pipeline.py
+@@ -13,6 +13,7 @@
+ 
+ 
+ class ReviewDecision(BaseModel):
++    material_binding: str | None = Field(default=None, pattern=r'^[a-f0-9]{64}$')
+     version_id: str = Field(min_length=64, max_length=64)
+     action: Literal['content_ok', 'problem', 'resolve', 'approve', 'reject', 'defer', 'revoke']
+     note: str = Field(default='', max_length=2000)
+@@ -138,6 +139,16 @@
+         except ValueError as exc:
+             raise HTTPException(409, str(exc)) from None
+ 
++    @router.post('/reviews/{document_id}/prepare')
++    async def prepare_review(document_id: str, body: ExtractionRequest,
++                             x_admin_token: str | None = Header(default=None),
++                             knowledge=Depends(get_knowledge_engine)):
++        require_admin(x_admin_token)
++        try:
++            return await run_sync(SOPReview(knowledge).prepare, document_id, body.version_id, timeout_s=60)
++        except ValueError as exc:
++            raise HTTPException(409, str(exc)) from None
++
+     @router.post('/reviews/{document_id}/process')
+     def process_review(document_id: str, body: ExtractionRequest, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
+         require_admin(x_admin_token)
+@@ -187,9 +198,12 @@
+     @router.post('/reviews/{document_id}/decision')
+     def review_decision(document_id: str, body: ReviewDecision, x_admin_token: str | None = Header(default=None), knowledge=Depends(get_knowledge_engine)):
+         require_admin(x_admin_token)
++        if body.action == 'approve' and body.material_binding is None:
++            raise HTTPException(422, 'Snapshot metadata yang diperiksa diperlukan untuk persetujuan.')
+         try:
+             return SOPReview(knowledge).decide(document_id, body.version_id, body.action,
+-                'shared-admin-token', body.note, body.problem_id, category=body.category)
++                'shared-admin-token', body.note, body.problem_id, category=body.category,
++                expected_material_binding=body.material_binding)
+         except ValueError as exc:
+             raise HTTPException(409, str(exc)) from None
+ 
+--- a/app/api/routes.py
++++ b/app/api/routes.py
+@@ -127,6 +127,7 @@
+ 
+ 
+ class ChatRequest(BaseModel):
++    document_version: str | None = Field(default=None, pattern=r'^[a-f0-9]{64}$')
+     sop_version: str | None = Field(default=None, pattern=r'^[a-f0-9]{64}$')
+     sop_case: Literal['requirements', 'procedure', 'time_cost', 'followup', 'missing'] | None = None
+     session_id: str = Field(
+@@ -1098,6 +1099,14 @@
+                                              'sop_case': request.sop_case or 'followup'})
+     if binding and (request.sop_version != binding['version_id'] or request.document_ids != [binding['document_id']]):
+         raise HTTPException(409, 'Sesi terikat pada SOP dan versi percobaan. Gunakan sesi baru untuk chat biasa.')
++    if request.document_version:
++        if not operator or len(request.document_ids) != 1 or request.sop_version or request.sop_case:
++            raise HTTPException(422, 'CHAT_SOURCE_HANDOFF_INVALID')
++        detail = review.detail(request.document_ids[0])
++        if detail['version_id'] != request.document_version:
++            raise HTTPException(409, 'CHAT_SOURCE_VERSION_CHANGED')
++        if detail['status'] != 'Aktif':
++            raise HTTPException(409, 'CHAT_SOURCE_NOT_APPROVED')
+     if request.sop_version:
+         if not operator or len(request.document_ids) != 1 or not request.sop_case:
+             raise HTTPException(403, 'Percobaan memerlukan operator, satu SOP, versi dan jenis pertanyaan.')
+@@ -1123,7 +1132,7 @@
+     scoped = request.model_copy(update={
+         'session_id': v1_session_id(request.session_id, operator=operator), 'stream': False})
+     if review and not request.sop_version and len(request.document_ids) == 1 and review.is_pilot(request.document_ids[0]):
+-        scoped = scoped.model_copy(update={'sop_version': review.detail(request.document_ids[0])['version_id']})
++        scoped = scoped.model_copy(update={'sop_version': request.document_version or review.detail(request.document_ids[0])['version_id']})
+     import asyncio
+     import json
+     from fastapi.responses import StreamingResponse
+--- /dev/null
++++ b/app/knowledge/metadata_detection.py
+@@ -0,0 +1,66 @@
++"""Conservative metadata detection from stored extraction, never from a filename."""
++import re
++import unicodedata
++from datetime import date
++
++from .sop_metadata import SOPMetadata
++
++
++PATTERNS = {
++    'official_title': r'(?:judul(?: resmi)?(?: sop)?|nama\s+s\.?\s*o\.?\s*p\.?)',
++    'institution': r'(?:instansi|nama instansi|kementerian|lembaga|perangkat daerah)',
++    'unit': r'(?:unit kerja|unit organisasi|unit pelaksana|bidang|bagian)',
++    'sop_number': r'(?:nomor|no\.?)\s*(?:s\.?o\.?p\.?)',
++    'jurisdiction': r'(?:wilayah kewenangan|wilayah kerja|cakupan wilayah)',
++    'issued_on': r'(?:tanggal penetapan|ditetapkan pada|tanggal ditetapkan|tgl\.? pengesahan)',
++    'effective_on': r'(?:tanggal mulai berlaku|mulai berlaku|berlaku mulai|tanggal berlaku)',
++    'expires_on': r'(?:tanggal akhir berlaku|berlaku sampai|berlaku hingga|tanggal berakhir)',
++    'revision': r'(?:nomor revisi|revisi(?: ke)?)',
++}
++
++
++def _date(value):
++    months = dict(zip(('januari februari maret april mei juni juli agustus september oktober november desember').split(), range(1, 13)))
++    try:
++        if re.fullmatch(r'\d{4}-\d{2}-\d{2}', value):
++            return date.fromisoformat(value).isoformat()
++        found = re.fullmatch(r'(\d{1,2})\s+([a-z]+)\s+(\d{4})', value.casefold())
++        if found:
++            return date(int(found[3]), months[found[2]], int(found[1])).isoformat()
++    except (ValueError, KeyError):
++        pass
++    return None
++
++
++def detect_metadata(document_id, blocks):
++    facts = {}
++    for key, label in PATTERNS.items():
++        fact = {'status': 'unreadable', 'value': None, 'page_number': None,
++                'note': 'Tidak terdeteksi otomatis; ketiadaan dalam sumber belum dapat dipastikan.'}
++        for block in blocks:
++            for line in block['content'].splitlines():
++                match = re.match(r'^\s*' + label + r'(?:\s*[:：-]\s*|\s+)(.+?)\s*$', line, re.I)
++                if not match and key in {'institution', 'unit'}:
++                    match = re.search(r'\b' + ('DINAS' if key == 'institution' else 'BIDANG') +
++                        r'\s+(.+?)(?=\s+(?:BIDANG|DASAR HUKUM|KUALIFIKASI PELAKSANA)\b|$)', line, re.I)
++                if not match:
++                    continue
++                value = re.split(r'\s+Tgl\b', match[1], flags=re.I)[0].strip()
++                if key.endswith('_on'):
++                    value = _date(value)
++                if value:
++                    fact = {'status': 'present', 'value': value[:1024],
++                            'page_number': next(iter(block.get('page_numbers', [])), None), 'note': ''}
++                    break
++            if fact['status'] == 'present':
++                break
++        facts[key] = fact
++    if facts['official_title']['status'] != 'present':
++        return None
++    anchors = [facts[k]['value'] for k in ('institution', 'unit', 'sop_number')]
++    if not anchors[-1]:
++        anchors[-1] = facts['official_title']['value']
++    slug = unicodedata.normalize('NFKD', '-'.join(v for v in anchors if v)).encode('ascii', 'ignore').decode().lower()
++    slug = re.sub(r'[^a-z0-9]+', '-', slug).strip('-')[:120]
++    return SOPMetadata.model_validate({**facts, 'logical_sop_id': 'SOP:' + slug if slug else document_id,
++        'validity': 'not_confirmed', 'validity_note': 'Deteksi sistem; tidak menyimpulkan keberlakuan hukum.'})
+--- a/app/knowledge/sop_metadata.py
++++ b/app/knowledge/sop_metadata.py
+@@ -16,8 +16,8 @@
+     def explicit_value_or_absence(self):
+         if self.status == 'present' and not self.value:
+             raise ValueError('Nilai metadata wajib diisi jika tercantum.')
+-        if self.status != 'present' and (self.value is not None or not self.note):
+-            raise ValueError('Metadata yang tidak tersedia memerlukan alasan dan nilai kosong.')
++        if self.status != 'present' and self.value is not None:
++            raise ValueError('Metadata yang tidak tersedia harus memiliki nilai kosong.')
+         return self
+ 
+ 
+--- a/app/knowledge/sop_review.py
++++ b/app/knowledge/sop_review.py
+@@ -190,7 +190,7 @@
+         # issue after a replacement succeeds, without rewriting the old verdict.
+         all_ok = bool(trials) and all(t['rating'] and (t['rating']['ok'] or t['rating']['event_id'] in resolved) for t in trials)
+         extraction_ready = not is_pdf or extraction['status'] == 'COMPLETE'
+-        metadata_event = next((e for e in reversed(events) if e['kind'] == 'official_metadata'), None)
++        metadata_event = next((e for e in reversed(events) if e['kind'] in {'official_metadata', 'metadata_detected'}), None)
+         metadata = SOPMetadata.model_validate(metadata_event['metadata']) if metadata_event else None
+         lineage_ok = metadata is not None
+         if metadata and check_lineage:
+@@ -199,7 +199,7 @@
+             except ValueError:
+                 lineage_ok = False
+         metadata_allowed = bool(metadata and metadata.publication_allowed() and lineage_ok)
+-        ready = bool(path and extraction_ready and content_ok and complete and all_ok and not problems and metadata_allowed)
++        ready = bool(path and extraction_ready and metadata_allowed and not any(p['kind'] == 'problem' for p in problems))
+         approval_requirements = [
+             {'key': 'source_available', 'satisfied': bool(path)},
+             {'key': 'extraction_complete', 'satisfied': extraction_ready},
+@@ -218,41 +218,44 @@
+                                      if e['kind'] == 'approve' or e['kind'] in PUBLICATION_BLOCKS), None)
+         trial_binding = [[t['trial_id'], t['rating']['event_id'] if t['rating'] else None] for t in trials]
+         review_binding = [e['event_id'] for e in events if e['kind'] != 'approve']
+-        approval_current = (approval and approval.get('trial_binding') == trial_binding
+-                            and approval.get('review_binding') == review_binding)
++        material_binding = hashlib.sha256(json.dumps(
++            [document_id, digest, version, metadata.model_dump() if metadata else None],
++            sort_keys=True, ensure_ascii=False).encode()).hexdigest()
++        # Legacy approvals already bind this extraction version. Compare their
++        # metadata snapshot, never their diagnostic/trial event count.
++        approved_metadata = next((e.get('metadata') for e in reversed(events)
++            if approval and e['kind'] in {'official_metadata', 'metadata_detected'} and e['created_at'] <= approval['created_at']), None)
++        approval_current = bool(approval and (
++            approval.get('material_binding') == material_binding if 'material_binding' in approval
++            else approved_metadata == (metadata.model_dump() if metadata else None)))
++        summary_event = next((e for e in reversed(events) if e['kind'] == 'system_check'
++            and e.get('summary', {}).get('material_binding') == material_binding), None)
++        summary = summary_event['summary'] if summary_event else None
++        system_ok = bool(summary and summary['passed'])
++        ready = ready and system_ok
+         blocked_status = PUBLICATION_BLOCKS.get(
+             publication_decision['kind'] if publication_decision else None)
+         if blocked_status:
+             status = blocked_status
+         elif not path:
+             status = 'File sumber belum ditemukan'
+-        elif problems:
++        elif any(p['kind'] == 'problem' for p in problems):
+             status = 'Ada masalah'
+         elif not extraction_ready:
+             status = 'Menunggu ekstraksi'
+-        elif not content_ok:
+-            status = 'Menunggu pemeriksaan isi'
+         elif metadata is None:
+             status = 'Menunggu metadata resmi'
+         elif not lineage_ok:
+             status = 'Hubungan revisi perlu diperiksa'
+         elif not metadata_allowed:
+             status = 'Keberlakuan perlu diperiksa'
+-        elif not complete:
+-            missing_cases = [case for case in REQUIRED_CASES if case not in latest_trials or not (latest_trials[case].get('rating') and latest_trials[case]['rating'].get('ok'))]
+-            status = 'Menunggu penilaian percobaan: ' + ', '.join(missing_cases) if missing_cases else 'Isi sudah diperiksa'
+-        elif not all_ok:
+-            status = 'Ada percobaan yang belum sesuai; periksa dan selesaikan masalahnya'
+-        elif ready and approval is not None and not approval_current:
+-            status = 'Siap disetujui (approval perlu diperbarui)'
+-        elif ready and approval_current:
+-            status = 'Aktif'
+-        elif ready:
+-            status = 'Siap disetujui'
++        elif not system_ok:
++            status = 'Perlu perbaikan sistem'
+         else:
+-            status = 'Isi sudah diperiksa'
++            status = 'Aktif' if ready and approval_current else 'Siap disetujui'
+         return {'document_id': document_id, 'title': metadata.official_title.value if metadata else doc.title, 'version_id': version,
+-                'suggested_title': doc.title, 'metadata_confirmed': metadata is not None,
++                'suggested_title': doc.title, 'metadata_confirmed': bool(metadata_event and (metadata_event['kind'] == 'official_metadata' or (approval_current and system_ok))),
++                'metadata_origin': ('operator' if metadata_event and metadata_event['kind'] == 'official_metadata' else 'system'),
+                 'official_metadata': metadata.model_dump() if metadata else None,
+                 'metadata_event_id': metadata_event['event_id'] if metadata_event else None,
+                 'source_version_id': source_version, 'source_sha256': digest,
+@@ -265,8 +268,97 @@
+                 'publication_decision': publication_decision,
+                 'approval_requirements': approval_requirements,
+                 'trial_binding': trial_binding,
+-                'review_binding': review_binding,
++                'review_binding': review_binding, 'material_binding': material_binding,
++                'system_summary': summary,
++                'operator_status': ('Aktif untuk Chat' if status == 'Aktif' else
++                    'Perlu koreksi' if blocked_status or metadata is None or not metadata_allowed or not lineage_ok or any(p['kind'] == 'problem' for p in problems) else
++                    'Diproses sistem' if not extraction_ready and extraction and extraction['status'] in {'QUEUED', 'PROCESSING'} else
++                    'Perlu perbaikan sistem' if not path or not extraction_ready or not system_ok else 'Siap disetujui'),
++                'next_action': (summary.get('primary_issue') if summary and not system_ok else
++                    'Periksa judul resmi pada sumber.' if metadata is None else
++                    'Selesaikan koreksi yang dilaporkan.' if any(p['kind'] == 'problem' for p in problems) else
++                    'Periksa metadata yang membatasi penggunaan sumber.' if not metadata_allowed or not lineage_ok else
++                    'Buka Chat dengan SOP ini.' if status == 'Aktif' else 'Periksa ringkasan lalu setujui penggunaan versi ini di Chat.'),
+                 'principal_description': 'Pemegang token admin bersama; identitas pribadi tidak tersedia.'}
++
++    def prepare(self, document_id, version):
++        """Persist source-bound system findings; never create a human approval.
++
++        This explicit preparation is also used after extraction and before a
++        decision. No OCR, embedding, model call or reindexing runs here.
++        """
++        from .metadata_detection import detect_metadata
++        detail = self._check(document_id, version)
++        blocks = []
++        if detail['source_type'] == '.pdf':
++            with self._db() as conn:
++                row = conn.execute('SELECT payload FROM document_extractions WHERE job_id=?',
++                                   (detail['extraction_job_id'],)).fetchone()
++            payload = json.loads(row['payload']) if row and row['payload'] else {}
++            blocks = payload.get('blocks', [])
++        else:
++            blocks = [{'content': detail['text'], 'page_numbers': []}]
++        if not detail['official_metadata']:
++            detected = detect_metadata(document_id, blocks)
++            if detected:
++                with self._db() as conn:
++                    conn.execute('BEGIN IMMEDIATE')
++                    current = self._check(document_id, version)
++                    if current['metadata_event_id'] is None:
++                        self._event(conn, document_id, version, 'metadata_detected',
++                                    {'metadata': detected.model_dump()}, 'system:metadata')
++                detail = self.detail(document_id)
++        checks = []
++        def check(name, ok, action):
++            checks.append({'name': name, 'status': 'PASS' if ok else 'FAIL', 'action': action})
++        check('source', detail['source_available'], 'Pulihkan file sumber dengan hash yang sesuai.')
++        check('extraction', detail['source_type'] != '.pdf' or detail['extraction_status'] == 'COMPLETE',
++              'Pengelola perlu memeriksa hasil pembacaan dokumen.')
++        check('index', bool(self.engine.rag._store.get_chunks_by_document(document_id)),
++              'Pengelola perlu memulihkan indeks dokumen ini.')
++        if detail['source_type'] == '.pdf':
++            check('source_hash', payload.get('pdf_sha256') == detail['source_sha256'],
++                  'Pengelola perlu menyamakan versi sumber dan hasil ekstraksi.')
++            tables = [b for b in blocks if b.get('type') == 'table']
++            check('table_structure', all(b.get('table_data', {}).get('headers') and
++                  all(len(r) == len(b['table_data']['headers']) for r in b['table_data'].get('rows', [])) for b in tables),
++                  'Pengelola perlu memulihkan hubungan baris dan kolom tabel.')
++        try:
++            evidence = self.evidence(document_id, version, 'Apa kelengkapan menurut SOP ini?')
++            check('retrieval_version', bool(evidence) and all(e.metadata.get('version_id') == version for e in evidence),
++                  'Pengelola perlu menyambungkan sumber versi ini ke Chat.')
++            check('citation', bool(evidence) and (detail['source_type'] != '.pdf' or
++                  all(e.metadata.get('citation_pages') for e in evidence)),
++                  'Pengelola perlu memulihkan halaman sitasi.')
++            # These probes exercise source-backed scenarios and safe abstention;
++            # they do not claim to have evaluated the live model's wording.
++            from .document_answers import document_answer_facts
++            scenarios = []
++            for name, question in [('requirements', 'Apa kelengkapannya?'), ('procedure', 'Bagaimana prosedurnya?'),
++                    ('time_cost', 'Berapa waktu penyelesaiannya?'), ('cost', 'Berapa biaya?'),
++                    ('followup', 'Bagaimana proses selanjutnya?'), ('missing', 'Apakah ada nomor WhatsApp?')]:
++                facts = document_answer_facts(question, evidence)
++                scenarios.append({'name': name, 'result': 'SUPPORTED' if facts else 'ABSTAIN',
++                                  'pages': facts.get('pages', []) if facts else []})
++        except (ValueError, KeyError, TypeError) as exc:
++            check('retrieval_version', False, 'Pengelola perlu memeriksa sambungan pembacaan sumber.')
++            scenarios = []
++        except Exception:
++            # Fail closed; avoid persisting source paths or provider details.
++            check('retrieval_version', False, 'Pengelola perlu memeriksa sambungan pembacaan sumber.')
++            scenarios = []
++        summary = {'material_binding': detail['material_binding'], 'version_id': version,
++                   'origin': 'system', 'scope': 'stored_source_checks; live_model_not_evaluated',
++                   'checks': checks, 'scenarios': scenarios, 'passed': all(c['status'] == 'PASS' for c in checks),
++                   'primary_issue': next((c['action'] for c in checks if c['status'] == 'FAIL'), None)}
++        with self._db() as conn:
++            conn.execute('BEGIN IMMEDIATE')
++            current = self._check(document_id, version)
++            if current['material_binding'] != detail['material_binding']:
++                raise ValueError('Metadata berubah. Muat ulang sebelum melanjutkan.')
++            if current['system_summary'] != summary:
++                self._event(conn, document_id, version, 'system_check', {'summary': summary}, 'system:checks')
++        return self.detail(document_id)
+ 
+     def confirm_metadata(self, document_id, version, metadata, principal, *, expected_event_id=None):
+         """Append a complete review snapshot, using a lease to avoid lost edits.
+@@ -332,15 +424,19 @@
+             (uuid4().hex, document_id, version, kind, json.dumps(payload, ensure_ascii=False), principal,
+              datetime.now(UTC).isoformat()))
+ 
+-    def decide(self, document_id, version, action, principal, note='', problem_id=None, category='unknown'):
++    def decide(self, document_id, version, action, principal, note='', problem_id=None, category='unknown', *, expected_material_binding=None):
+         if category not in CORRECTION_CATEGORIES:
+             raise ValueError('Kategori masalah tidak dikenal.')
++        if action == 'approve':
++            self.prepare(document_id, version)
+         with self._db() as conn:
+             conn.execute('BEGIN IMMEDIATE')
+             detail = self._check(document_id, version)
+             if action == 'approve':
++                if expected_material_binding is not None and expected_material_binding != detail['material_binding']:
++                    raise ValueError('Metadata berubah. Muat ulang dan periksa ringkasan terbaru sebelum menyetujui.')
+                 if not detail['can_approve']:
+-                    raise ValueError('Periksa isi dan metadata resmi, nilai lima percobaan wajib dan selesaikan semua masalah sebelum menyetujui.')
++                    raise ValueError('Periksa ringkasan sumber dan selesaikan masalah utama sebelum menyetujui penggunaan di Chat.')
+                 if detail['status'] == 'Aktif':
+                     return detail
+                 logical_id = detail['official_metadata']['logical_sop_id']
+@@ -369,7 +465,7 @@
+             self._event(conn, document_id, version, action,
+                 {'note': note.strip(), 'problem_id': problem_id,
+                  **({'category': category} if action == 'problem' else {}),
+-                 **({'trial_binding': detail['trial_binding'], 'review_binding': detail['review_binding']} if action == 'approve' else {})}, principal)
++                 **({'material_binding': detail['material_binding'], 'trial_binding': detail['trial_binding'], 'review_binding': detail['review_binding']} if action == 'approve' else {})}, principal)
+         return self.detail(document_id)
+ 
+     def bind_session(self, session_id, document_id, version):
+--- a/control-plane/src/api.ts
++++ b/control-plane/src/api.ts
+@@ -132,7 +132,7 @@
+ export class ChatSendError extends Error{
+   constructor(message:string,readonly status:number,readonly retrySafe:boolean){super(message);this.name='ChatSendError';}
+ }
+-export type ChatOptions={signal?:AbortSignal;onDelta?:(text:string)=>void;documentIds?:string[];token?:string;sopVersion?:string;sopCase?:string};
++export type ChatOptions={documentVersion?:string;signal?:AbortSignal;onDelta?:(text:string)=>void;documentIds?:string[];token?:string;sopVersion?:string;sopCase?:string};
+ export async function sendUserChat(user_input:string,session_id:string,request_id:string=crypto.randomUUID().replaceAll('-',''),retry_of?:string,timeoutMs=90000,options:ChatOptions={}){
+   const controller=new AbortController();
+   const abort=()=>controller.abort();
+@@ -148,12 +148,12 @@
+       },timeoutMs);
+     });
+     const response=await Promise.race([fetch('/v1/chat',{method:'POST',signal:controller.signal,credentials:'omit',cache:'no-store',redirect:'error',
+-        headers:{'Content-Type':'application/json',...(options.token&&options.documentIds?.length?{'X-Admin-Token':options.token}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{}),...(options.sopVersion?{sop_version:options.sopVersion,sop_case:options.sopCase}:{})})}),deadline]);
++        headers:{'Content-Type':'application/json',...(options.token&&options.documentIds?.length?{'X-Admin-Token':options.token}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{}),...(options.documentVersion?{document_version:options.documentVersion}:{}),...(options.sopVersion?{sop_version:options.sopVersion,sop_case:options.sopCase}:{})})}),deadline]);
+     if(!response.ok){
+       let body:{detail?:unknown}|null=null;
+       try{body=await response.json() as {detail?:unknown};}catch{/* HTTP status remains authoritative when the body is unreadable. */}
+       const detail=typeof body?.detail==='string'?body.detail:'';
+-      const message=response.status===409&&detail==='CHAT_REQUEST_IN_PROGRESS'?'Permintaan sebelumnya masih diproses. Muat ulang History; request tidak dikirim ulang.':
++      const message=detail==='CHAT_SOURCE_VERSION_CHANGED'?'Versi sumber SOP berubah. Buka kembali dokumen dan periksa versi terbaru.':detail==='CHAT_SOURCE_NOT_APPROVED'?'SOP ini belum disetujui untuk Chat. Buka pemeriksaan dokumen.':detail==='CHAT_SOURCE_HANDOFF_INVALID'?'Sumber SOP belum tersambung ke Chat. Buka kembali dari dokumen.':response.status===409&&detail==='CHAT_REQUEST_IN_PROGRESS'?'Permintaan sebelumnya masih diproses. Muat ulang History; request tidak dikirim ulang.':
+         response.status===409&&detail.startsWith('SOP belum aktif.')?detail:
+         response.status===409&&detail.startsWith('Masalah pembacaan SOP:')?detail:
+         response.status===409&&detail==='CHAT_REQUEST_OUTCOME_UNKNOWN'?'Hasil permintaan sebelumnya belum dapat dipastikan setelah proses berhenti. Request tidak dikirim ulang.':
+--- a/control-plane/src/assistant.tsx
++++ b/control-plane/src/assistant.tsx
+@@ -37,8 +37,9 @@
+   const [documents,setDocuments]=useState<{document_id:string;title:string}[]>([]);
+   const [selectedDocument,setSelectedDocument]=useState('');
+   const [trialVersion,setTrialVersion]=useState('');
++  const [approvedVersion,setApprovedVersion]=useState('');
+   const [activeDocument,setActiveDocument]=useState<{title:string;status:string;version_id:string;source_type?:string|null;extraction?:{status:string}}|null>(null);
+-  const documentBlocked=!!selectedDocument&&(!activeDocument||(activeDocument.status!=='Aktif'&&!trialVersion));
++  const documentBlocked=!!selectedDocument&&(!activeDocument||(activeDocument.status!=='Aktif'&&!trialVersion)||(!!approvedVersion&&activeDocument.version_id!==approvedVersion));
+   const activeRequest=useRef<AbortController|null>(null);
+   const [error,setError]=useState('');
+   const [historyError,setHistoryError]=useState('');
+@@ -62,23 +63,24 @@
+   useEffect(()=>{void fetchModelStatus().then(setModel).catch(()=>setModel(null));},[]);
+   useEffect(()=>{let live=true;setActiveDocument(null);if(selectedDocument&&token)void fetch(`/v1/knowledge/pipeline/reviews/${encodeURIComponent(selectedDocument)}`,{headers:{'X-Admin-Token':token},cache:'no-store'}).then(async r=>{if(!r.ok)throw new Error('Status dokumen tidak dapat dibaca');return r.json();}).then(d=>{if(live)setActiveDocument(d);}).catch(e=>{if(live)setError(e.message);});return()=>{live=false;};},[selectedDocument,token]);
+   useEffect(()=>{
+-    if(!token){setSelectedDocument('');setTrialVersion('');return;}
++    if(!token){const source=sessionStorage.getItem('nusantara-chat-document-pending');if(source){setSelectedDocument(source);setError('Sumber SOP belum tersambung: verifikasi akses operator lalu buka kembali Chat dari dokumen.');}else{setSelectedDocument('');}setTrialVersion('');setApprovedVersion('');return;}
+     const pendingDocument=sessionStorage.getItem('nusantara-chat-document-pending');
+     if(pendingDocument){
+       const pendingVersion=sessionStorage.getItem('nusantara-chat-sop-version-pending')??'';
+-      sessionStorage.removeItem('nusantara-chat-document-pending');sessionStorage.removeItem('nusantara-chat-sop-version-pending');
+-      openDocumentSession(pendingDocument,pendingVersion);return;
++      const pendingApprovedVersion=sessionStorage.getItem('nusantara-chat-approved-version-pending')??'';
++      sessionStorage.removeItem('nusantara-chat-document-pending');sessionStorage.removeItem('nusantara-chat-sop-version-pending');sessionStorage.removeItem('nusantara-chat-approved-version-pending');
++      openDocumentSession(pendingDocument,pendingVersion,pendingApprovedVersion);return;
+     }
+     const selected=sessionStorage.getItem(storagePrefix+'-document-'+session)??'';
+     const version=sessionStorage.getItem(storagePrefix+'-sop-version-'+session);
+-    setSelectedDocument(selected);setTrialVersion(version&&/^[a-f0-9]{64}$/.test(version)?version:'');
++    setSelectedDocument(selected);setTrialVersion(version&&/^[a-f0-9]{64}$/.test(version)?version:'');setApprovedVersion(sessionStorage.getItem(storagePrefix+'-approved-version-'+session)??'');
+   },[session]);
+   useEffect(()=>{if(conversationRef.current)conversationRef.current.scrollTop=conversationRef.current.scrollHeight;},[messages,pending,partial]);
+   useEffect(()=>()=>activeRequest.current?.abort(),[]);
+   async function send(){
+     if(activeRequest.current||!question.trim())return;
+     if(selectedDocument&&!token.trim()){setError('Token operator diperlukan untuk chat dokumen. Verifikasi akses melalui Lampirkan dokumen.');return;}
+-    if(documentBlocked){setError('SOP belum disetujui. Pilih Uji SOP ini (belum disetujui) untuk percobaan operator.');return;}
++    if(documentBlocked){setError('Sumber SOP belum tersambung atau versinya berubah. Buka kembali pemeriksaan dokumen.');return;}
+     const controller=new AbortController();activeRequest.current=controller;
+     const submitted=question.trim();setPartial('');setPending(true);setError('');
+     if(!titles[session])setTitles(old=>{const next={...old,[session]:submitted.replace(/\s+/g,' ').slice(0,60)};if(!token)localStorage.setItem(storagePrefix+'-titles',JSON.stringify(next));return next;});
+@@ -86,7 +88,7 @@
+       logicalRequest.current={question:submitted,session,id:crypto.randomUUID().replaceAll('-','')};
+     }
+     const request=logicalRequest.current;
+-    try{const answer=await sendUserChat(submitted,session,request.id,request.retryOf,model?.provider==='ollama'?270000:90000,{signal:controller.signal,onDelta:text=>setPartial(old=>old+text),documentIds:selectedDocument?[selectedDocument]:undefined,token:selectedDocument?token:undefined,...(trialVersion?{sopVersion:trialVersion,sopCase:'followup'}:{})});setMessages(old=>[...old,{question:submitted,answer,requestId:request.id}]);setQuestion('');logicalRequest.current=null;
++    try{const answer=await sendUserChat(submitted,session,request.id,request.retryOf,model?.provider==='ollama'?270000:90000,{signal:controller.signal,onDelta:text=>setPartial(old=>old+text),documentIds:selectedDocument?[selectedDocument]:undefined,documentVersion:selectedDocument&&!trialVersion?(approvedVersion||activeDocument?.version_id):undefined,token:selectedDocument?token:undefined,...(trialVersion?{sopVersion:trialVersion,sopCase:'followup'}:{})});setMessages(old=>[...old,{question:submitted,answer,requestId:request.id}]);setQuestion('');logicalRequest.current=null;
+       void fetchModelStatus().then(setModel).catch(()=>setModel(null));
+     }catch(e){
+       if(e instanceof ChatSendError&&e.retrySafe){logicalRequest.current={...request,id:crypto.randomUUID().replaceAll('-',''),retryOf:request.id};}
+@@ -97,10 +99,12 @@
+   function stop(){activeRequest.current?.abort();logicalRequest.current=null;}
+   function newChat(){if(pending)return;logicalRequest.current=null;setSession(`web-${crypto.randomUUID()}`);setMessages([]);setHistoryFailures([]);setQuestion('');setError('');setSidebarOpen(false);}
+   async function verifyUpload(){setUploadBusy(true);setUploadError('');setUploadStatus('');try{const pipeline=await fetchKnowledgePipelineStatus(token);setDocuments(pipeline.documents??[]);setUploadReady(true);setUploadStatus('Knowledge siap. Pilih dokumen untuk diunggah atau ditanyakan.');}catch(e){setUploadReady(false);setUploadError(e instanceof Error?e.message:'Knowledge belum dapat dibaca.');}finally{setUploadBusy(false);}}
+-  function openDocumentSession(id:string,version=''){
++  function openDocumentSession(id:string,version='',approved=''){
+     const next=`web-${crypto.randomUUID()}`;
+     sessionStorage.setItem(storagePrefix+'-document-'+next,id);
+     if(/^[a-f0-9]{64}$/.test(version))sessionStorage.setItem(storagePrefix+'-sop-version-'+next,version);
++    if(/^[a-f0-9]{64}$/.test(approved))sessionStorage.setItem(storagePrefix+'-approved-version-'+next,approved);
++    setApprovedVersion(approved);
+     logicalRequest.current=null;setMessages([]);setHistoryFailures([]);setError('');setSelectedDocument(id);setTrialVersion(/^[a-f0-9]{64}$/.test(version)?version:'');setSession(next);
+   }
+   function chooseDocument(id:string){if(id!==selectedDocument)openDocumentSession(id);}
+--- a/control-plane/src/sop-metadata.tsx
++++ b/control-plane/src/sop-metadata.tsx
+@@ -6,115 +6,20 @@
+ export type OfficialMetadata={schema_version:1;logical_sop_id:string;replaces_document_id:string|null;validity:'not_confirmed'|'confirmed_current'|'withdrawn'|'superseded';validity_note:string}&Record<FieldName,Fact>;
+ type ExtractedBlock={content:string;page_numbers:number[]};
+ 
+-const labelPatterns:Partial<Record<FieldName,RegExp[]>>={
+-  official_title:[/^\s*(?:judul(?: resmi)?(?: sop)?|nama sop)\s*[:：-]\s*(.+?)\s*$/i],
+-  institution:[/^\s*(?:instansi|nama instansi|kementerian|lembaga|perangkat daerah|pemerintah daerah)\s*[:：-]\s*(.+?)\s*$/i],
+-  unit:[/^\s*(?:unit kerja|unit organisasi|unit pelaksana|bidang|bagian)\s*[:：-]\s*(.+?)\s*$/i],
+-  sop_number:[/^\s*(?:nomor|no\.?|nomor dokumen)\s*(?:sop|standar operasional prosedur)\s*[:：-]\s*(.+?)\s*$/i,/^\s*(?:nomor|no\.?)\s*[:：-]\s*(.+?)\s*$/i],
+-  jurisdiction:[/^\s*(?:wilayah kewenangan|wilayah kerja|cakupan wilayah)\s*[:：-]\s*(.+?)\s*$/i],
+-  issued_on:[/^\s*(?:tanggal penetapan|ditetapkan pada|tanggal ditetapkan)\s*[:：-]\s*(.+?)\s*$/i],
+-  effective_on:[/^\s*(?:tanggal mulai berlaku|mulai berlaku|berlaku mulai|tanggal berlaku)\s*[:：-]\s*(.+?)\s*$/i],
+-  expires_on:[/^\s*(?:tanggal akhir berlaku|berlaku sampai|berlaku hingga|tanggal berakhir)\s*[:：-]\s*(.+?)\s*$/i],
+-  revision:[/^\s*(?:nomor revisi|revisi(?: ke)?|revisi)\s*[:：-]\s*(.+?)\s*$/i],
+-};
+-labelPatterns.official_title=[...(labelPatterns.official_title??[]),/^\s*nama\s+s\.?\s*o\.?\s*p\.?\s+(.+?)\s*$/i];
+-labelPatterns.sop_number=[...(labelPatterns.sop_number??[]),/^\s*(?:nomor|no\.?)\s*s\.?\s*o\.?\s*p\.?\s+(.+?)(?=\s+tgl\b|\s*$)/i];
+-labelPatterns.issued_on=[...(labelPatterns.issued_on??[]),/^\s*tgl\.?\s*pengesahan\s+(\d{1,2}[- ][a-z]{3,9}[- ]\d{4})(?=\s|$)/i];
+-function cleanValue(value:string){return value.replace(/\s{2,}/g,' ').replace(/[;|]+$/,'').trim().slice(0,1024);}
+-function normalizeDate(value:string){
+-  const text=value.trim();
+-  const months:Record<string,string>={januari:'01',februari:'02',maret:'03',april:'04',mei:'05',juni:'06',juli:'07',agustus:'08',september:'09',oktober:'10',november:'11',desember:'12'};
+-  const iso=text.match(/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/);
+-  const local=text.match(/\b(\d{1,2})[./-](\d{1,2})[./-](\d{4})\b/);
+-  const named=text.match(/\b(\d{1,2})\s+(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\s+(\d{4})\b/i);
+-  const result=iso?`${iso[1]}-${iso[2].padStart(2,'0')}-${iso[3].padStart(2,'0')}`:
+-    local?`${local[3]}-${local[2].padStart(2,'0')}-${local[1].padStart(2,'0')}`:
+-    named?`${named[3]}-${months[named[2].toLocaleLowerCase('id')]}-${named[1].padStart(2,'0')}`:null;
+-  const englishMonths:Record<string,string>={jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
+-  const english=text.match(/\b(\d{1,2})[- ](jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[- ](\d{2}|\d{4})\b/i);
+-  const englishDate=english&&english[3].length===4?`${english[3]}-${englishMonths[english[2].toLowerCase()]}-${english[1].padStart(2,'0')}`:null;
+-  const normalized=result??englishDate;
+-  if(!normalized)return '';
+-  const [year,month,day]=normalized.split('-').map(Number);
+-  const parsed=new Date(Date.UTC(year,month-1,day));
+-  return parsed.getUTCFullYear()===year&&parsed.getUTCMonth()===month-1&&parsed.getUTCDate()===day?normalized:'';
+-}
+-function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
+-  for(const block of blocks){
+-    for(const line of block.content.split(/\r?\n/)){
+-      for(const pattern of labelPatterns[key]??[]){
+-        const match=line.match(pattern);
+-        if(match?.[1]){
+-          const value=cleanValue(key.endsWith('_on')?normalizeDate(match[1]):match[1]);
+-          if(value)return {status:'present',value,page_number:block.page_numbers[0]??null,note:''};
+-        }
+-      }
+-    }
+-  }
+-  if(key==='institution'||key==='unit'){
+-    for(const block of blocks){
+-      for(const line of block.content.split(/\r?\n/)){
+-        const match=key==='institution'
+-          ?line.match(/\bDINAS\s+(.+?)(?=\s+BIDANG\b|$)/i)
+-          :line.match(/\bBIDANG\s+(.+?)(?=\s+(?:DASAR HUKUM|KETERKAITAN|PERINGATAN|KUALIFIKASI PELAKSANA)\b|$)/i);
+-        if(match?.[1])return {status:'present',value:cleanValue(match[1]),page_number:block.page_numbers[0]??null,note:''};
+-      }
+-    }
+-  }
+-  if(key==='official_title'){
+-    const lines=blocks.flatMap(block=>block.content.split(/\r?\n/).map(line=>({line:line.trim(),page:block.page_numbers[0]??null})))
+-      .filter(item=>item.page===null||item.page<=2);
+-    for(let i=0;i<lines.length;i++){
+-      const heading=lines[i].line;
+-      const inline=heading.match(/^\s*(?:standar operasional prosedur|s\.?o\.?p\.?)\s*[:：-]?\s+(.+)$/i);
+-      if(inline?.[1]&&inline[1].trim().length>=8){
+-        return {status:'present',value:cleanValue(inline[1]),page_number:lines[i].page,note:''};
+-      }
+-      if(/standar operasional prosedur|^s\.?o\.?p\.?$/i.test(heading)){
+-        for(let j=i+1;j<Math.min(lines.length,i+5);j++){
+-          const candidate=lines[j].line;
+-          if(candidate.length<8||candidate.length>180||/^(?:PEMERINTAH|DINAS|KECAMATAN|KELURAHAN|NOMOR|TANGGAL|HALAMAN)\b/i.test(candidate))continue;
+-          const letters=candidate.replace(/[^A-Za-zÀ-ÿ]/g,'');
+-          if(letters.length>=8&&letters===letters.toLocaleUpperCase('id')){
+-            return {status:'present',value:cleanValue(candidate),page_number:lines[j].page,note:''};
+-          }
+-        }
+-      }
+-    }
+-  }
+-  return {status:'not_stated',value:null,page_number:null,note:'Tidak tercantum dalam dokumen; operator dapat mengoreksi jika sumber menyebutkannya.'};
+-}
+-function makeLogicalId(facts:Record<FieldName,Fact>,documentId:string){
+-  const number=facts.sop_number.value;
+-  const anchors=number?[facts.institution.value,facts.unit.value,number]:[facts.institution.value,facts.unit.value,facts.official_title.value];
+-  const slug=anchors.filter((value):value is string=>!!value?.trim()).join('-')
+-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,120);
+-  return slug?`SOP:${slug}`:documentId;
+-}
+-function suggestMetadata(documentId:string,blocks:ExtractedBlock[]):OfficialMetadata{
+-  const facts=Object.fromEntries((Object.keys(fields) as FieldName[]).map(key=>[key,findFact(key,blocks)])) as Record<FieldName,Fact>;
+-  return {
+-    schema_version:1,logical_sop_id:makeLogicalId(facts,documentId),replaces_document_id:null,
+-    validity:'not_confirmed',validity_note:'Belum dikonfirmasi dari sumber resmi; pemeriksaan isi dokumen tetap dapat dilanjutkan.',
+-    ...facts,
+-  };
+-}
+-
+-export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,extractedBlocks=[],onSave}:{documentId:string;metadata?:OfficialMetadata|null;eventId?:string|null;pdf:boolean;busy:boolean;extractedBlocks?:ExtractedBlock[];onSave:(metadata:OfficialMetadata,eventId:string|null)=>void}){
+-  const [draft,setDraft]=useState<OfficialMetadata>(()=>metadata??suggestMetadata(documentId,extractedBlocks));
++export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,origin,onSave}:{documentId:string;origin?:'system'|'operator';metadata?:OfficialMetadata|null;eventId?:string|null;pdf:boolean;busy:boolean;extractedBlocks?:ExtractedBlock[];onSave:(metadata:OfficialMetadata,eventId:string|null)=>void}){
++  const [draft,setDraft]=useState<OfficialMetadata>(()=>metadata??{schema_version:1,logical_sop_id:documentId,replaces_document_id:null,validity:'not_confirmed',validity_note:'Keberlakuan hukum tidak disimpulkan oleh sistem.',...Object.fromEntries(Object.keys(fields).map(key=>[key,{status:'unreadable',value:null,page_number:null,note:''}]))} as OfficialMetadata);
+   const detected=(Object.keys(fields) as FieldName[]).filter(key=>draft[key].status==='present').length;
+   const complete=!!draft.logical_sop_id.trim()&&!!draft.validity_note.trim()&&(Object.keys(fields) as FieldName[]).every(key=>{
+     const fact=draft[key];
+-    return fact.status==='present'?!!fact.value?.trim()&&(!pdf||!!fact.page_number):!!fact.note.trim();
++    return fact.status==='present'?!!fact.value?.trim()&&(!pdf||!!fact.page_number):true;
+   })&&draft.official_title.status==='present';
+   function update(key:FieldName,change:Partial<Fact>){setDraft(old=>({...old,[key]:{...old[key],...change}}));}
+-  return <details open={!metadata}><summary>Metadata resmi SOP — {metadata?'sudah disimpan dan dikonfirmasi operator':'usulan otomatis, siap ditinjau'}</summary>
+-    <p>Sistem mendeteksi {detected} dari {Object.keys(fields).length} metadata pada hasil baca PDF. Setiap usulan menampilkan halaman sumber agar mudah dicocokkan.</p>
+-    <p>Persetujuan isi mengizinkan penggunaan dokumen; keberlakuan hukum tetap terpisah dan tidak disimpulkan oleh sistem.</p>
+-    <ul aria-label="Usulan metadata hasil baca">{(Object.entries(fields) as [FieldName,string][]).filter(([key])=>draft[key].status==='present').map(([key,label])=><li key={key}><strong>{label}:</strong> {draft[key].value} {pdf&&draft[key].page_number&&('· halaman '+draft[key].page_number)}</li>)}</ul>
+-    {detected<Object.keys(fields).length&&<p>{Object.keys(fields).length-detected} metadata belum terdeteksi otomatis. Statusnya ditandai “belum terbaca”, bukan disimpulkan tidak tercantum.</p>}
++  return <details><summary>Metadata SOP - {metadata?'tersimpan di backend':'perlu koreksi judul'}</summary>
++    <p>{origin==='operator'?'Koreksi operator tersimpan.':'Hasil deteksi sistem tersimpan untuk versi ini.'} Cocokkan dengan halaman sumber; koreksi hanya nilai yang salah.</p>
++    <ul aria-label="Usulan metadata hasil baca">{(Object.entries(fields) as [FieldName,string][]).map(([key,label])=><li key={key}><strong>{label}:</strong> {draft[key].status==='present'?draft[key].value:draft[key].status==='not_stated'?'Tidak tercantum dalam sumber':'Tidak terdeteksi'} {pdf&&draft[key].page_number&&('/ halaman '+draft[key].page_number)}</li>)}</ul>
++    <p>Persetujuan penggunaan di Chat dilakukan sekali pada ringkasan dokumen; keberlakuan hukum tetap terpisah.</p>
+     <fieldset disabled={busy}><legend>Ringkasan metadata</legend>
+-      <label>Judul resmi SOP<input value={draft.official_title.value??''} maxLength={1024} placeholder="Sistem mengisi jika judul terbaca jelas pada PDF" onChange={e=>setDraft(old=>{const next={...old,official_title:{...old.official_title,status:'present' as const,value:e.target.value||null}};if(!metadata&&(old.logical_sop_id===documentId||old.logical_sop_id.startsWith('SOP:')))next.logical_sop_id=makeLogicalId(next,documentId);return next;})}/></label>
++      <label>Judul resmi SOP<input value={draft.official_title.value??''} maxLength={1024} placeholder="Sistem mengisi jika judul terbaca jelas pada PDF" onChange={e=>setDraft(old=>{const next={...old,official_title:{...old.official_title,status:'present' as const,value:e.target.value||null}};return next;})}/></label>
+       {pdf&&<label>Halaman judul<input type="number" min={1} step={1} value={draft.official_title.page_number??''} onChange={e=>update('official_title',{page_number:e.target.value?Number(e.target.value):null})}/></label>}
+       {draft.official_title.status!=='present'&&<p>Judul belum dapat dikenali otomatis. Isi judul resmi dari PDF; tidak perlu menyalin metadata lainnya.</p>}
+       <label>Identitas layanan SOP<input value={draft.logical_sop_id} readOnly aria-readonly="true"/></label>
+--- a/control-plane/src/sop-review.tsx
++++ b/control-plane/src/sop-review.tsx
+@@ -1,13 +1,13 @@
+ import {useEffect,useMemo,useState} from 'react';
+ import {Link} from '@tanstack/react-router';
+-import {sendUserChat,type PublicChat} from './api';
++import {type PublicChat} from './api';
+ import {SOPMetadataForm,type OfficialMetadata} from './sop-metadata';
+ 
+ type ReviewEvent={event_id:string;kind:string;note?:string;created_at:string;principal:string;problem_id?:string;category?:string};
+ type Trial={trial_id:string;case_id:string;question:string;answer:PublicChat;principal?:string;created_at?:string;rating?:{ok:boolean;note:string;principal?:string;created_at?:string}|null};
+ type ApprovalRequirement={key:string;satisfied:boolean};
+ type VersionComparison={previous_version_id:string;version_id:string;changed_blocks:number;omitted_blocks:number;changes:{block_id:string;kind:string;pages:number[];before:string;after:string;excerpt_truncated:boolean}[]};
+-export type Review={official_metadata?:OfficialMetadata|null;metadata_event_id?:string|null;metadata_confirmed?:boolean;suggested_title?:string;comparison?:VersionComparison|null;publication_decision?:ReviewEvent|null;document_id:string;title:string;version_id:string;status:string;source_available:boolean;source_type:string|null;text:string;pages:{page:number;start:number;end:number}[];content_ok:boolean;can_approve:boolean;problems:ReviewEvent[];events:ReviewEvent[];trials:Trial[];required_cases:string[];approval_requirements:ApprovalRequirement[];extraction?:{status:string;error?:string;warnings?:string[]};extracted_blocks?:{block_id:string;type:string;content:string;page_numbers:number[];related_pages?:number[];table_data?:{headers?:string[];rows?:string[][]};flowchart_nodes?:{row_number:string;column_header:string;bbox:number[]}[]}[]};
++export type Review={material_binding?:string;operator_status?:string;next_action?:string;metadata_origin?:'system'|'operator';system_summary?:{passed:boolean;primary_issue:string|null;checks:{name:string;status:string;action:string}[];scenarios:{name:string;result:string;pages:number[]}[]}|null;official_metadata?:OfficialMetadata|null;metadata_event_id?:string|null;metadata_confirmed?:boolean;suggested_title?:string;comparison?:VersionComparison|null;publication_decision?:ReviewEvent|null;document_id:string;title:string;version_id:string;status:string;source_available:boolean;source_type:string|null;text:string;pages:{page:number;start:number;end:number}[];content_ok:boolean;can_approve:boolean;problems:ReviewEvent[];events:ReviewEvent[];trials:Trial[];required_cases:string[];approval_requirements:ApprovalRequirement[];extraction?:{status:string;error?:string;warnings?:string[]};extracted_blocks?:{block_id:string;type:string;content:string;page_numbers:number[];related_pages?:number[];table_data?:{headers?:string[];rows?:string[][]};flowchart_nodes?:{row_number:string;column_header:string;bbox:number[]}[]}[]};
+ const cases:Record<string,{label:string;question:string}>={
+   requirements:{label:'Persyaratan',question:'Apa persyaratan menurut SOP ini?'},
+   procedure:{label:'Prosedur',question:'Bagaimana prosedur menurut SOP ini?'},
+@@ -19,21 +19,6 @@
+ type PublicationAction=keyof typeof publicationActions;
+ const correctionCategories:Record<string,string>={unknown:'Belum diketahui',extraction:'Pembacaan dokumen',retrieval:'Pencarian sumber',context:'Konteks percakapan',answer:'Penyusunan jawaban',claim_check:'Pemeriksaan klaim',citation_viewer:'Tampilan sitasi'};
+ const eventLabels:Record<string,string>={official_metadata:'Metadata resmi diperiksa',content_ok:'Isi dinyatakan sesuai',problem:'Masalah dilaporkan',resolve:'Masalah diselesaikan',rating:'Jawaban dinilai',approve:'Disetujui untuk digunakan',reject:'Dokumen ditolak',defer:'Keputusan ditunda',revoke:'Penggunaan di Chat dicabut'};
+-const approvalLabels:Record<string,string>={
+-  metadata_revision_valid:'Hubungan revisi sesuai identitas layanan',
+-  metadata_checked:'Metadata resmi sudah diperiksa',
+-  metadata_publication_allowed:'Metadata tidak menunjukkan masa berlaku terlarang',
+-  source_available:'File sumber tersedia',
+-  extraction_complete:'Ekstraksi Docling selesai',
+-  content_checked:'Pemeriksaan isi ditandai sesuai',
+-  all_trials_reviewed:'Semua percobaan dinilai sesuai atau masalahnya diselesaikan',
+-  no_open_problems:'Tidak ada masalah terbuka',
+-};
+-function approvalLabel(key:string){
+-  if(key.startsWith('case:'))return `Percobaan wajib: ${cases[key.slice(5)]?.label??key.slice(5)}`;
+-  return approvalLabels[key]??key;
+-}
+-
+ function ExtractedBlock({block}:{block:NonNullable<Review['extracted_blocks']>[number]}){
+   const table=block.table_data;
+   return <div><details><summary>Detail sumber blok</summary><small>{block.type} · {block.block_id} · halaman {block.page_numbers.join(', ')}</small></details>
+@@ -60,22 +45,31 @@
+ 
+ export function SOPReviewPanel({documentId,token}:{documentId:string;token:string}){
+   const [review,setReview]=useState<Review|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState('');
+-  const [pdf,setPdf]=useState(''),[inspect,setInspect]=useState(true),[chat,setChat]=useState(false);
++  const [pdf,setPdf]=useState(''),[inspect,setInspect]=useState(true);
+   const [sourcePage,setSourcePage]=useState(1);
+   const [preview,setPreview]=useState(''),[previewError,setPreviewError]=useState('');
+-  const [showAllTrials,setShowAllTrials]=useState(false);
+   const [publicationAction,setPublicationAction]=useState<PublicationAction|null>(null);
+   const [category,setCategory]=useState('unknown');
+   const [sourceError,setSourceError]=useState(''),[sourceRevision,setSourceRevision]=useState(0);
+-  const [note,setNote]=useState(''),[report,setReport]=useState<string|null>(null),[caseId,setCaseId]=useState('requirements');
+-  const [question,setQuestion]=useState(cases.requirements.question);
++  const [note,setNote]=useState(''),[report,setReport]=useState<string|null>(null);
+   const session=useMemo(()=>`web-${crypto.randomUUID()}`,[documentId,token,review?.version_id]);
+   const id=encodeURIComponent(documentId);
+-  async function load(){setReview(await requestReview(id,token) as Review);}
++  async function readReview(){
++    const current=await requestReview(id,token) as Review;
++    if(current.source_available&&(current.source_type!=='.pdf'||current.extraction?.status==='COMPLETE'))
++    {
++      await requestReview(`${id}/prepare`,token,{version_id:current.version_id});
++      const prepared=await requestReview(id,token) as Review;
++      if(prepared.version_id!==current.version_id)throw new Error('Versi sumber berubah. Muat ulang ringkasan.');
++      return prepared;
++    }
++    return current;
++  }
++  async function load(){setReview(await readReview());}
+   function openReport(value:string){setPublicationAction(null);setNote('');setCategory('unknown');setReport(value);}
+   useEffect(()=>{
+-    let live=true;setReview(null);setError('');setPdf('');setInspect(true);setChat(false);setSourcePage(1);setPublicationAction(null);setNote('');setReport(null);
+-    void requestReview(id,token).then(data=>{if(live)setReview(data as Review);}).catch(e=>{if(live)setError(e.message);});
++    let live=true;setReview(null);setError('');setPdf('');setInspect(true);setSourcePage(1);setPublicationAction(null);setNote('');setReport(null);
++    void readReview().then(data=>{if(live)setReview(data as Review);}).catch(e=>{if(live)setError(e.message);});
+     return()=>{live=false;};
+   },[id,token]);
+   useEffect(()=>{if(!['QUEUED','PROCESSING'].includes(review?.extraction?.status??''))return;const timer=setInterval(()=>void load().catch(e=>setError(e.message)),3000);return()=>clearInterval(timer);},[review?.extraction?.status,id,token]);
+@@ -99,19 +93,14 @@
+     catch(e){setError(e instanceof Error?e.message:'Penyimpanan gagal. Muat ulang untuk memeriksa hasil.');}
+     finally{setBusy(false);}
+   }
+-  function decide(action:string,problem_id?:string){return requestReview(`${id}/decision`,token,{version_id:review!.version_id,action,note,problem_id,...(action==='problem'?{category}:{})});}
+-  async function ask(){
+-    await sendUserChat(question,session,undefined,undefined,90000,
+-      {token,documentIds:[documentId],sopVersion:review!.version_id,sopCase:caseId});
+-  }
++  function decide(action:string,problem_id?:string){return requestReview(`${id}/decision`,token,{version_id:review!.version_id,action,note,problem_id,...(action==='approve'?{material_binding:review!.material_binding}:{}),...(action==='problem'?{category}:{})});}
+   if(!review)return <section className="panel" aria-label="Pemeriksaan SOP">{error?<p role="alert">{error}</p>:<p role="status">Memuat pemeriksaan SOP...</p>}<button onClick={()=>void act(load)} disabled={busy}>Muat ulang pemeriksaan</button></section>;
+   const pageNumbers=Array.from(new Set([...review.pages.map(p=>p.page),...(review.extracted_blocks??[]).flatMap(b=>b.page_numbers)])).sort((a,b)=>a-b);
+   const pageBlocks=(review.extracted_blocks??[]).filter(b=>b.page_numbers.includes(sourcePage));
+-  const unverifiedRatingCount=review.trials.filter(t=>t.rating?.principal==='shared-admin-token').length;
+   return <section className="panel" aria-label="Pemeriksaan SOP">
+-    <h2>{review.title}</h2><p><strong>{review.status}</strong></p>
+-    {!review.metadata_confirmed&&<p>Judul di atas masih petunjuk; konfirmasikan judul resmi dari sumber.</p>}
+-    <SOPMetadataForm key={`${session}:${review.metadata_event_id??"new"}:${review.extraction?.status??"na"}:${(review.extracted_blocks??[]).length}`} documentId={documentId} metadata={review.official_metadata} eventId={review.metadata_event_id} pdf={review.source_type==='.pdf'} busy={busy||!review.source_available||(review.source_type==='.pdf'&&review.extraction?.status!=='COMPLETE')} extractedBlocks={review.extracted_blocks??[]} onSave={(metadata,expected_event_id)=>void act(()=>requestReview(`${id}/metadata`,token,{version_id:review.version_id,expected_event_id,metadata}))}/>
++    <h2>{review.title}</h2><p><strong>{review.operator_status??review.status}</strong></p><p>{review.next_action}</p>
++    {review.metadata_origin==='system'&&<p>Metadata dibaca dan disimpan oleh sistem. Koreksi hanya jika berbeda dari sumber.</p>}
++    <SOPMetadataForm key={`${session}:${review.metadata_event_id??"new"}:${review.extraction?.status??"na"}:${(review.extracted_blocks??[]).length}`} documentId={documentId} origin={review.metadata_origin} metadata={review.official_metadata} eventId={review.metadata_event_id} pdf={review.source_type==='.pdf'} busy={busy||!review.source_available||(review.source_type==='.pdf'&&review.extraction?.status!=='COMPLETE')} extractedBlocks={review.extracted_blocks??[]} onSave={(metadata,expected_event_id)=>void act(()=>requestReview(`${id}/metadata`,token,{version_id:review.version_id,expected_event_id,metadata}))}/>
+     {review.extraction&&<><p role="status">Pembacaan dokumen: <strong>{review.extraction.status==='COMPLETE'?'Selesai':review.extraction.status==='PROCESSING'||review.extraction.status==='QUEUED'?'Sedang diproses':'Perlu diperiksa'}</strong></p>{review.extraction.error&&<p role="alert">Masalah pembacaan SOP: {review.extraction.error}</p>}<details><summary>Perbaikan pembacaan dan detail teknis</summary><p>Ekstraksi Docling: {review.extraction.status}</p><p>Proses ulang diperlukan jika hasil pembacaan keliru. Mengajukan pertanyaan tidak memerlukan proses ulang.</p><button disabled={busy||['QUEUED','PROCESSING'].includes(review.extraction.status)} onClick={()=>void act(()=>requestReview(`${id}/process`,token,{version_id:review.version_id}))}>Proses ulang dengan Docling</button></details></>}
+     <details><summary>Identitas dan versi</summary><p>ID: {documentId}</p><p>Versi isi: {review.version_id}</p><p>Reviewer menggunakan token admin bersama; nama pribadi tidak tersedia.</p></details>
+     <button disabled={busy} onClick={()=>void act(load)}>Muat ulang pemeriksaan</button>
+@@ -126,36 +115,33 @@
+           <div>{pdf?<><a href={`${pdf}#page=${sourcePage}`} target="_blank" rel="noreferrer">Buka sumber asli halaman {sourcePage}</a>{review.source_type==='.pdf'&&(preview?<img title="PDF asli SOP" alt={`PDF asli SOP halaman ${sourcePage}`} data-source-page={sourcePage} src={preview} style={{width:'100%',height:'auto',border:'1px solid #888'}}/>:previewError?<><p role="alert">{previewError}</p><button onClick={()=>setSourceRevision(v=>v+1)}>Coba muat sumber lagi</button></>:<p role="status">Memuat pratinjau halaman {sourcePage}...</p>)}</>:sourceError?<><p role="alert">{sourceError}</p><button onClick={()=>setSourceRevision(v=>v+1)}>Coba muat sumber lagi</button></>:<p>Memuat file sumber...</p>}</div>
+           <div className="sop-reading-pane" role="region" aria-label={`Hasil baca halaman ${sourcePage}`} tabIndex={0}><h3>Hasil baca halaman {sourcePage}</h3>{pageBlocks.length?pageBlocks.map(b=><ExtractedBlock key={b.block_id} block={b}/>):review.source_type!=='.pdf'?<pre style={{whiteSpace:'pre-wrap'}}>{review.text}</pre>:<p>Hasil baca halaman ini belum tersedia. Periksa PDF asli dan laporkan jika ada isi yang hilang.</p>}</div>
+         </div>
+-        <button disabled={busy} onClick={()=>void act(()=>decide('content_ok'))}>Isi sudah sesuai</button>
++
+         <button disabled={busy} onClick={()=>openReport('content')}>Laporkan kesalahan</button>
+       </>}
+       {review.comparison&&<details><summary>Perubahan dari hasil baca sebelumnya</summary><p>{review.comparison.changed_blocks} blok berubah. Periksa kembali PDF sebelum menyetujui; perubahan hasil baca tidak otomatis mengubah keputusan operator.</p><small>Versi sebelumnya: {review.comparison.previous_version_id}</small>{review.comparison.changes.map(change=><article key={change.block_id}><p>Halaman {change.pages.join(', ')} · {change.block_id}</p><p style={{whiteSpace:'pre-wrap'}}>Sebelumnya: {change.before||'(Tidak ada blok)'}</p><p style={{whiteSpace:'pre-wrap'}}>Sekarang: {change.after||'(Blok dihapus)'}</p>{change.excerpt_truncated&&<p>Cuplikan dipendekkan. Baca isi lengkap pada PDF.</p>}</article>)}{review.comparison.omitted_blocks>0&&<p>{review.comparison.omitted_blocks} blok lain tidak ditampilkan; periksa sumber lengkap.</p>}</details>}
+-      </div><div className="sop-review-stage"><h3>2. Coba dan nilai jawaban</h3><p>Tanyakan isi SOP, buka halaman sumber, lalu tandai apakah jawabannya sesuai.</p>
+-      <button disabled={busy||(review.source_type==='.pdf'?review.extraction?.status!=='COMPLETE':!review.content_ok)} onClick={()=>setChat(true)}>Coba chat SOP ini</button>
+-      {review.extraction?.status==='COMPLETE'&&<Link to="/" onClick={()=>{sessionStorage.setItem('nusantara-chat-document-pending',documentId);sessionStorage.setItem('nusantara-chat-sop-version-pending',review.version_id);}}>Uji di chat utama</Link>}
+-      {!review.content_ok&&<p>Persetujuan isi belum diberikan. Percobaan teknis tersedia setelah ekstraksi lengkap; keputusan isi tetap oleh operator.</p>}
+-      {chat&&<><h3>Percobaan — belum aktif</h3><p>Percobaan terikat pada SOP dan versi di atas. Nilai seluruh jawaban, termasuk jawaban baru.</p>
+-        <label>Jenis percobaan<select disabled={busy} value={caseId} onChange={e=>{setCaseId(e.target.value);setQuestion(cases[e.target.value].question);}}>{review.required_cases.map(c=><option key={c} value={c}>{cases[c].label}</option>)}</select></label>
+-        <label>Pertanyaan SOP<textarea disabled={busy} value={question} maxLength={2000} onChange={e=>setQuestion(e.target.value)}/></label>
+-        <button disabled={busy||!question.trim()} onClick={()=>void act(ask)}>Kirim pertanyaan SOP</button>{!question.trim()&&<p>Isi pertanyaan terlebih dahulu.</p>}
+-      </>}
+-      <details open={chat}><summary>Hasil percobaan jawaban ({review.trials.length})</summary>
+-      {review.trials.length>10&&<button onClick={()=>setShowAllTrials(v=>!v)}>{showAllTrials?'Tampilkan 10 percobaan terbaru':`Tampilkan semua ${review.trials.length} percobaan`}</button>}
+-      {(showAllTrials?review.trials:review.trials.slice(-10)).map(t=><article key={t.trial_id}><h3>{cases[t.case_id]?.label}</h3><p>{t.question}</p><p style={{whiteSpace:'pre-wrap'}}>{t.answer.response}</p><p>Model: {t.answer.model}; sumber: {review.title}; versi: {review.version_id.slice(0,12)}</p>{t.answer.evidence.flatMap(e=>e.pages??[]).filter((p,i,a)=>a.indexOf(p)===i).map(page=><button key={page} disabled={busy} onClick={()=>{setSourcePage(page);setInspect(true);}}>Buka halaman {page}</button>)}<button disabled={busy} onClick={()=>{const firstPage=t.answer.evidence.flatMap(e=>e.pages??[])[0];if(firstPage)setSourcePage(firstPage);setInspect(true);}}>Buka sumber jawaban</button><p>{t.rating?t.rating.ok?'Jawaban sesuai':'Ada masalah':'Belum dinilai'}</p>
+-        <button disabled={busy} onClick={()=>void act(()=>requestReview(`${id}/trials/${t.trial_id}/rating`,token,{version_id:review.version_id,ok:true,note:''}))}>Jawaban sesuai</button>
+-        <button disabled={busy} onClick={()=>openReport(t.trial_id)}>Ada masalah</button></article>)}
+-      </details></div><div className="sop-review-stage"><h3>3. Keputusan operator</h3><p>{review.content_ok?'Isi sudah Anda nyatakan sesuai.':'Pemeriksaan isi belum dikonfirmasi.'} {review.problems.length} masalah masih terbuka.</p>
+-      {review.problems.map(p=><article key={p.event_id}><p>Masalah terbuka: {p.note}</p><p>Kategori: {correctionCategories[p.category??'unknown']??p.category}</p><button disabled={busy} onClick={()=>openReport(`resolve:${p.event_id}`)}>Catat penyelesaian masalah</button></article>)}
+-      {report&&<div role="region" aria-label="Catatan masalah"><label>Kategori masalah<select value={category} disabled={busy} onChange={e=>setCategory(e.target.value)}>{Object.entries(correctionCategories).map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></label><label>Catatan wajib<textarea autoFocus value={note} maxLength={2000} onChange={e=>setNote(e.target.value)} disabled={busy}/></label><button disabled={busy||!note.trim()} onClick={()=>void act(()=>report==='content'?decide('problem'):report.startsWith('resolve:')?decide('resolve',report.slice(8)):requestReview(`${id}/trials/${report}/rating`,token,{version_id:review.version_id,ok:false,note,category}))}>Simpan catatan</button>{!note.trim()&&<p>Isi catatan sebelum menyimpan.</p>}<button disabled={busy} onClick={()=>setReport(null)}>Batal</button></div>}
+-      <section className="panel" aria-label="Syarat persetujuan"><h4>Syarat persetujuan</h4><ul>{review.approval_requirements.map(item=><li key={item.key}>{item.satisfied?'Terpenuhi:':'Belum terpenuhi:'} {approvalLabel(item.key)}</li>)}</ul>
+-        {unverifiedRatingCount>0&&<p role="note">{unverifiedRatingCount} rating tersimpan memakai token admin bersama; identitas penilainya tidak tercatat. Periksa kembali dan nilai ulang secara manual sebelum menyetujui.</p>}
+-      </section>
+-      <button disabled={busy||!review.can_approve||review.status==='Aktif'} onClick={()=>void act(()=>decide('approve'))}>Setujui untuk digunakan</button>
++      </div><div className="sop-review-stage"><h3>Penggunaan di Chat</h3>
++      <p>Persetujuan Anda mengizinkan versi dokumen dan metadata yang ditampilkan sebagai sumber Chat. Persetujuan ini tidak menyatakan keabsahan hukum SOP.</p>
++      {review.system_summary&&<p>Pemeriksaan sistem: {review.system_summary.passed?'Sumber siap digunakan.':review.system_summary.primary_issue}</p>}
++      {review.status==='Aktif'&&<Link to="/" onClick={()=>{
++        sessionStorage.setItem('nusantara-chat-document-pending',documentId);
++        sessionStorage.setItem('nusantara-chat-approved-version-pending',review.version_id);
++        sessionStorage.removeItem('nusantara-chat-sop-version-pending');
++      }}>Coba chat SOP ini</Link>}
++      {review.problems.filter(p=>p.kind==='problem').slice(0,1).map(p=><article key={p.event_id}><p>Masalah terbuka: {p.note}</p><p>Kategori: {correctionCategories[p.category??'unknown']??p.category}</p><button disabled={busy} onClick={()=>openReport(`resolve:${p.event_id}`)}>Catat penyelesaian masalah</button></article>)}
++      {report&&<div role="region" aria-label="Catatan masalah"><label>Kategori masalah<select value={category} disabled={busy} onChange={e=>setCategory(e.target.value)}>{Object.entries(correctionCategories).map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></label><label>Catatan wajib<textarea autoFocus value={note} maxLength={2000} onChange={e=>setNote(e.target.value)} disabled={busy}/></label><button disabled={busy||!note.trim()} onClick={()=>void act(()=>report==='content'?decide('problem'):decide('resolve',report.slice(8)))}>Simpan catatan</button>{!note.trim()&&<p>Isi catatan sebelum menyimpan.</p>}<button disabled={busy} onClick={()=>setReport(null)}>Batal</button></div>}
++      <details><summary>Pemeriksaan sistem dan detail teknis</summary>
++        <p>Hasil otomatis merupakan pemeriksaan sistem, bukan penilaian manusia. Model live belum dievaluasi oleh pemeriksaan sumber ini.</p>
++        <p>ID: {documentId} / Versi: {review.version_id}</p>
++        {review.system_summary?.checks.map(c=><p key={c.name}>{c.name}: {c.status}</p>)}
++        {review.system_summary?.scenarios.map(c=><p key={c.name}>{cases[c.name]?.label??c.name}: {c.result} / halaman {c.pages.join(', ')}</p>)}
++        <p>Riwayat percobaan: {review.trials.length}. Jumlah atau penilaian trial tidak mengubah persetujuan isi.</p>
++        {review.trials.slice(-10).map(t=><article key={t.trial_id}><p>{t.question}</p><p>{t.answer.response}</p></article>)}
++      </details>
++      <button disabled={busy||!review.can_approve||!review.material_binding||review.status==='Aktif'} onClick={()=>void act(()=>decide('approve'))}>Setujui penggunaan di Chat</button>
+       <div role="group" aria-label="Keputusan penggunaan dokumen">{(Object.keys(publicationActions) as PublicationAction[]).filter(action=>action!=='revoke'||review.publication_decision?.kind==='approve'||review.status==='Aktif').map(action=><button key={action} disabled={busy} onClick={()=>{setPublicationAction(action);setReport(null);setNote('');}}>{publicationActions[action]}</button>)}</div>
+       {publicationAction&&<section aria-label="Alasan keputusan operator"><p>{publicationActions[publicationAction]}: dokumen tidak akan dipakai untuk jawaban baru di Chat utama. Pratinjau pemeriksaan tetap tersedia.</p><label>Alasan keputusan<textarea autoFocus value={note} maxLength={2000} disabled={busy} onChange={e=>setNote(e.target.value)}/></label><button disabled={busy||!note.trim()} onClick={()=>void act(()=>requestReview(`${id}/decision`,token,{version_id:review.version_id,action:publicationAction,note}))}>Simpan keputusan</button><button disabled={busy} onClick={()=>{setPublicationAction(null);setNote('');}}>Batal keputusan</button></section>}
+       {review.publication_decision?.note&&<p>Alasan: {review.publication_decision.note}</p>}
+-      {!review.can_approve&&<p>Persetujuan menunggu pemeriksaan isi, penilaian seluruh jawaban, lima jenis percobaan terbaru yang dinilai sesuai, dan penyelesaian masalah terbuka. Jawaban lama yang salah tetap tercatat; lakukan percobaan pengganti lalu catat penyelesaiannya.</p>}
+-      {review.status==='Aktif'&&<><p>Persetujuan versi ini tersimpan.</p><Link to="/" onClick={()=>{sessionStorage.setItem('nusantara-chat-document-pending',documentId);sessionStorage.removeItem('nusantara-chat-sop-version-pending');}}>Buka chat</Link></>}
++      {!review.can_approve&&<p>{review.next_action??'Sistem sedang memeriksa kesiapan sumber.'}</p>}
+       </div>
+     </>}
+     <details><summary>Riwayat pemeriksaan versi ini</summary>{review.events.length?review.events.map(e=><p key={e.event_id}>{e.created_at} · {eventLabels[e.kind]??e.kind} · {e.principal} · {e.note}</p>):<p>Belum ada keputusan operator.</p>}</details>
+--- /dev/null
++++ b/control-plane/tests/knowledge-core.test.tsx
+@@ -0,0 +1,60 @@
++import {render,screen,fireEvent,waitFor,cleanup} from '@testing-library/react';
++import {afterEach,expect,it,vi} from 'vitest';
++import {SOPReviewPanel} from '../src/sop-review';
++vi.mock('@tanstack/react-router',()=>({Link:({to,children,onClick}:{to:string;children:React.ReactNode;onClick?:()=>void})=><a href={to} onClick={e=>{e.preventDefault();onClick?.();}}>{children}</a>}));
++afterEach(()=>{cleanup();vi.unstubAllGlobals();sessionStorage.clear();});
++it('prepares system findings and hands the approved version directly to Chat without trial rating work',async()=>{
++  const state={document_id:'DOC-TEST',title:'LAYANAN CONTOH',version_id:'a'.repeat(64),material_binding:'c'.repeat(64),status:'Aktif',operator_status:'Aktif untuk Chat',source_available:true,source_type:'.txt',text:'Surat Pengantar',pages:[],content_ok:true,can_approve:true,problems:[],events:[],trials:[],required_cases:['time_cost'],approval_requirements:[{key:'case:time_cost',satisfied:false}],system_summary:{passed:true,primary_issue:null,checks:[],scenarios:[]}};
++  vi.stubGlobal('fetch',vi.fn(async()=>({ok:true,json:async()=>state,blob:async()=>new Blob(['source'])})));
++  URL.createObjectURL=vi.fn(()=> 'blob:fixture');URL.revokeObjectURL=vi.fn();
++  render(<SOPReviewPanel documentId="DOC-TEST" token="fixture"/>);
++  expect(await screen.findByText('Aktif untuk Chat')).toBeVisible();
++  await waitFor(()=>expect(vi.mocked(fetch).mock.calls.some(([url,options])=>String(url).endsWith('/prepare')&&options?.method==='POST')).toBe(true));
++  expect(screen.queryByText(/nilai ulang secara manual/i)).toBeNull();
++  expect(screen.queryByRole('button',{name:'Jawaban sesuai'})).toBeNull();
++  fireEvent.click(screen.getByRole('link',{name:'Coba chat SOP ini'}));
++  expect(sessionStorage.getItem('nusantara-chat-document-pending')).toBe('DOC-TEST');
++  expect(sessionStorage.getItem('nusantara-chat-approved-version-pending')).toBe('a'.repeat(64));
++  expect(sessionStorage.getItem('nusantara-chat-sop-version-pending')).toBeNull();
++});
++
++
++it('sends approved handoff version and blocks a source handoff without operator access',async()=>{
++  const {UserChat}=await import('../src/assistant');
++  sessionStorage.setItem('nusantara-chat-document-pending','DOC-TEST');
++  sessionStorage.setItem('nusantara-chat-approved-version-pending','a'.repeat(64));
++  const calls:Record<string,unknown>[]=[];
++  vi.stubGlobal('fetch',vi.fn(async(url:string,options?:RequestInit)=>({ok:true,json:async()=>{
++    if(url.includes('/reviews/'))return {title:'LAYANAN CONTOH',status:'Aktif',version_id:'a'.repeat(64)};
++    if(url.includes('/history'))return {turns:[]};
++    if(url==='/v1/chat'){calls.push(JSON.parse(String(options?.body)));return {response:'Surat Pengantar',evidence:[],grounding:{reason:'grounded'},trust:{requires_human:false},timestamp:'fixture'};}
++    return {provider:'ollama',model:'fixture'};
++  }})));
++  const view=render(<UserChat token="fixture"/>);
++  await screen.findByText(/Dokumen aktif: LAYANAN CONTOH/);
++  fireEvent.change(screen.getByLabelText('Pertanyaan Anda'),{target:{value:'Apa kelengkapannya?'}});
++  fireEvent.click(screen.getByRole('button',{name:'Kirim pertanyaan'}));
++  await waitFor(()=>expect(calls).toHaveLength(1));
++  expect(calls[0]).toMatchObject({document_ids:['DOC-TEST'],document_version:'a'.repeat(64)});
++  expect(calls[0]).not.toHaveProperty('sop_case');
++  view.unmount();
++  sessionStorage.setItem('nusantara-chat-document-pending','DOC-TEST');
++  render(<UserChat/>);
++  expect(await screen.findByText(/Sumber SOP belum tersambung/)).toBeVisible();
++  fireEvent.change(screen.getByLabelText('Pertanyaan Anda'),{target:{value:'Apa kelengkapannya?'}});
++  expect(screen.getByRole('button',{name:'Kirim pertanyaan'})).toBeDisabled();
++});
++
++
++it('keeps PDF tables and metadata controls after backend preparation',async()=>{
++  const detail={document_id:'PDF-TEST',title:'LAYANAN CONTOH',version_id:'a'.repeat(64),material_binding:'c'.repeat(64),status:'Siap disetujui',source_available:true,source_type:'.pdf',text:'',pages:[{page:1,start:0,end:10}],content_ok:false,can_approve:true,problems:[],events:[],trials:[],required_cases:[],approval_requirements:[],extraction:{status:'COMPLETE'},extracted_blocks:[{block_id:'table',type:'table',content:'',page_numbers:[1],table_data:{headers:['Kelengkapan'],rows:[['Surat Pengantar']]}}]};
++  vi.stubGlobal('fetch',vi.fn(async(url:string)=>{
++    if(url.includes('/source?'))return {ok:true,blob:async()=>new Blob(['PDF'])};
++    if(url.endsWith('/prepare')){const {extraction,extracted_blocks,...prepared}=detail;return {ok:true,json:async()=>prepared};}
++    return {ok:true,json:async()=>detail};
++  }));
++  URL.createObjectURL=vi.fn(()=> 'blob:fixture');URL.revokeObjectURL=vi.fn();
++  render(<SOPReviewPanel documentId="PDF-TEST" token="fixture"/>);
++  expect(await screen.findByRole('table',{name:'Tabel SOP halaman 1'})).toHaveTextContent('Surat Pengantar');
++  expect(screen.getByLabelText('Judul resmi SOP',{exact:true})).toBeEnabled();
++});
+--- a/control-plane/tests/sop-metadata.test.tsx
++++ b/control-plane/tests/sop-metadata.test.tsx
+@@ -3,50 +3,28 @@
+ import {SOPMetadataForm} from '../src/sop-metadata';
+ 
+ afterEach(cleanup);
+-it('prefills SOP metadata from extracted text and saves without manual re-entry',()=>{
++const absent={status:'unreadable' as const,value:null,page_number:null,note:''};
++const metadata={schema_version:1 as const,logical_sop_id:'SOP:fixture',replaces_document_id:null,validity:'not_confirmed' as const,validity_note:'Tidak menyimpulkan hukum.',
++  official_title:{status:'present' as const,value:'LAYANAN CONTOH',page_number:1,note:''},
++  institution:absent,unit:absent,sop_number:{status:'present' as const,value:'ABC-07',page_number:1,note:''},
++  jurisdiction:absent,issued_on:absent,effective_on:absent,expires_on:absent,revision:absent};
++it('reads stored backend metadata and saves a correction without retyping detected values',()=>{
+   const save=vi.fn();
+-  const extractedBlocks=[{page_numbers:[1],content:[
+-    'Judul SOP: PERMOHONAN DATA PRIBADI',
+-    'Instansi: Dinas Kependudukan dan Pencatatan Sipil',
+-    'Unit Kerja: Bidang Pelayanan',
+-    'Nomor SOP: 01/SOP-DISDUKCAPIL/2026',
+-    'Wilayah Kewenangan: Kota Tangerang',
+-    'Tanggal Penetapan: 12 Oktober 2025',
+-    'Tanggal Mulai Berlaku: 2025-11-01',
+-    'Tanggal Akhir Berlaku: 2026-10-31',
+-    'Nomor Revisi: 2',
+-  ].join('\n')}];
+-  render(<SOPMetadataForm documentId="DOC-fixture" pdf busy={false} extractedBlocks={extractedBlocks} onSave={save}/>);
+-  expect(screen.getByLabelText('Judul resmi SOP',{exact:true})).toHaveValue('PERMOHONAN DATA PRIBADI');
++  render(<SOPMetadataForm documentId="DOC-fixture" metadata={metadata} origin="system" pdf busy={false} onSave={save}/>);
++  fireEvent.click(screen.getByText(/Metadata SOP/));
++  expect(screen.getByLabelText('Judul resmi SOP',{exact:true})).toHaveValue('LAYANAN CONTOH');
+   expect(screen.getByLabelText('Halaman judul')).toHaveValue(1);
+-  expect((screen.getByLabelText('Identitas layanan SOP') as HTMLInputElement).value).toMatch(/^SOP:/);
++  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).toHaveTextContent('Nomor SOP: ABC-07');
++  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).toHaveTextContent('Tidak terdeteksi');
+   expect(screen.getByRole('button',{name:'Simpan pemeriksaan metadata'})).toBeEnabled();
+-  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).toHaveTextContent('Nomor SOP');
+   fireEvent.click(screen.getByRole('button',{name:'Simpan pemeriksaan metadata'}));
+-  expect(save).toHaveBeenCalledWith(expect.objectContaining({
+-    official_title:expect.objectContaining({value:'PERMOHONAN DATA PRIBADI',page_number:1}),
+-    sop_number:expect.objectContaining({value:'01/SOP-DISDUKCAPIL/2026',page_number:1}),
+-    issued_on:expect.objectContaining({value:'2025-10-12'}),
+-    effective_on:expect.objectContaining({value:'2025-11-01'}),
+-    expires_on:expect.objectContaining({value:'2026-10-31'}),
+-    validity:'not_confirmed'
+-  }),null);
++  expect(save).toHaveBeenCalledWith(metadata,null);
+ });
+-
+-it('recognizes SOP cover metadata when labels have no colon and share an extracted line',()=>{
+-  const extractedBlocks=[{page_numbers:[1],content:[
+-    'PEMERINTAH KOTA CONTOH DINAS PELAYANAN CONTOH BIDANG LAYANAN DATA',
+-    'Nomor SOP PEL-03 Tgl Pembuatan 21-Sep-15 Tgl Revisi Agustus 2018 Tgl Pengesahan 21-Sep-15',
+-    'Nama S.O.P PERMOHONAN DATA CONTOH',
+-  ].join('\n')}];
+-  render(<SOPMetadataForm documentId="DOC-fixture" pdf busy={false} extractedBlocks={extractedBlocks} onSave={vi.fn()}/>);
+-  expect(screen.getByLabelText('Judul resmi SOP',{exact:true})).toHaveValue('PERMOHONAN DATA CONTOH');
+-  expect(screen.getByLabelText('Halaman judul')).toHaveValue(1);
+-  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).toHaveTextContent('Instansi: PELAYANAN CONTOH');
+-  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).toHaveTextContent('Unit kerja: LAYANAN DATA');
+-  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).toHaveTextContent('Nomor SOP: PEL-03');
+-  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).not.toHaveTextContent('Tanggal penetapan');
+-  expect(screen.getByRole('list',{name:'Usulan metadata hasil baca'})).not.toHaveTextContent('Nomor revisi');
++it('does not show local detection as though it were persisted backend metadata',()=>{
++  render(<SOPMetadataForm documentId="DOC-fixture" metadata={metadata} pdf busy={false} extractedBlocks={[{page_numbers:[1],content:'Nama SOP: JUDUL LAIN'}]} onSave={vi.fn()}/>);
++  fireEvent.click(screen.getByText(/Metadata SOP/));
++  expect(screen.getByLabelText('Judul resmi SOP',{exact:true})).toHaveValue('LAYANAN CONTOH');
++  expect(screen.queryByText('JUDUL LAIN')).toBeNull();
+ });
+ 
+ it('disables metadata controls while a save is in flight',()=>{
+--- a/control-plane/tests/sop-review.test.tsx
++++ b/control-plane/tests/sop-review.test.tsx
+@@ -9,11 +9,11 @@
+ beforeEach(()=>{
+   fail=false;
+   sourceFail=false;
+-  state={document_id:'SOP-1',title:'PERMOHONAN DATA PRIBADI',version_id:'a'.repeat(64),status:'Menunggu pemeriksaan isi',source_available:true,source_type:'.pdf',text:'Surat Permohonan',pages:[],content_ok:false,can_approve:false,problems:[],events:[],trials:[],required_cases:['requirements','procedure','time_cost','followup','missing'],approval_requirements:[]};
++  state={document_id:'SOP-1',title:'PERMOHONAN DATA PRIBADI',version_id:'a'.repeat(64),material_binding:'c'.repeat(64),status:'Menunggu pemeriksaan isi',source_available:true,source_type:'.pdf',text:'Surat Permohonan',pages:[],content_ok:false,can_approve:false,problems:[],events:[],trials:[],required_cases:['requirements','procedure','time_cost','followup','missing'],approval_requirements:[]};
+   vi.stubGlobal('fetch',vi.fn(async(_url:string,options?:RequestInit)=>{
+     if(fail&&options?.method==='POST')return {ok:false,status:500,json:async()=>({detail:'Penyimpanan gagal'})};
+     if(String(_url).includes('/source?'))return sourceFail?{ok:false,status:503,json:async()=>({detail:'Sumber belum tersedia'})}:{ok:true,blob:async()=>new Blob(['PDF'],{type:'application/pdf'})};
+-    if(options?.method==='POST')state={...state,content_ok:true,status:'Isi sudah diperiksa'};
++    if(options?.method==='POST'&&String(_url).endsWith('/decision')&&JSON.parse(String(options.body)).action==='approve')state={...state,status:'Aktif'};
+     return {ok:true,json:async()=>state};
+   }));
+   URL.createObjectURL=vi.fn(()=> 'blob:test');URL.revokeObjectURL=vi.fn();
+@@ -53,20 +53,14 @@
+   await screen.findByText(status);
+   expect(screen.getByText('Alasan: Periksa ulang isi dokumen')).toBeVisible();
+ });
+-it('persists the content check after reload without approving the SOP',async()=>{
++it('requires one explicit usage decision after system readiness without a content-check button',async()=>{
++  state.status='Siap disetujui';state.operator_status='Siap disetujui';state.can_approve=true;
+   render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+-  fireEvent.click(await screen.findByRole('button',{name:'Isi sudah sesuai'}));
+-  await screen.findByText(/Isi sudah Anda nyatakan sesuai/);
+-  expect(state.content_ok).toBe(true);
+-  expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
+-  const write=vi.mocked(fetch).mock.calls.find(([,options])=>options?.method==='POST');
+-  expect(JSON.parse(String(write?.[1]?.body))).toMatchObject({version_id:'a'.repeat(64),action:'content_ok'});
+-
+-  cleanup();
+-  render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+-  await screen.findByText(/Isi sudah Anda nyatakan sesuai/);
+-  expect(state.content_ok).toBe(true);
+-  expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
++  expect(await screen.findByRole('button',{name:'Setujui penggunaan di Chat'})).toBeEnabled();
++  expect(screen.queryByRole('button',{name:'Isi sudah sesuai'})).toBeNull();
++  expect(vi.mocked(fetch).mock.calls.some(([,options])=>options?.method==='POST')).toBe(false);
++  fireEvent.click(screen.getByRole('button',{name:'Setujui penggunaan di Chat'}));
++  await waitFor(()=>expect(vi.mocked(fetch).mock.calls.some(([,options])=>options?.method==='POST'&&JSON.parse(String(options.body)).action==='approve')).toBe(true));
+ });
+ it('shows revision differences without treating them as approval',async()=>{
+   state.comparison={previous_version_id:'b'.repeat(64),version_id:'a'.repeat(64),changed_blocks:1,omitted_blocks:0,changes:[{block_id:'requirements',kind:'changed',pages:[1],before:'Surat Permohonan',after:'Surat Pengantar',excerpt_truncated:false}]};
+@@ -74,57 +68,33 @@
+   fireEvent.click(await screen.findByText('Perubahan dari hasil baca sebelumnya'));
+   expect(screen.getByText('Sebelumnya: Surat Permohonan')).toBeVisible();
+   expect(screen.getByText('Sekarang: Surat Pengantar')).toBeVisible();
+-  expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
++  expect(screen.getByRole('button',{name:'Setujui penggunaan di Chat'})).toBeDisabled();
+ });
+-it('shows the exact missing approval case and unverified shared-token rating origin',async()=>{
+-  state.status='Isi sudah diperiksa';state.content_ok=true;
+-  state.approval_requirements=[
+-    {key:'source_available',satisfied:true},
+-    {key:'extraction_complete',satisfied:true},
+-    {key:'content_checked',satisfied:true},
+-    {key:'case:requirements',satisfied:true},
+-    {key:'case:procedure',satisfied:true},
+-    {key:'case:time_cost',satisfied:true},
+-    {key:'case:followup',satisfied:true},
+-    {key:'case:missing',satisfied:false},
+-    {key:'all_trials_reviewed',satisfied:true},
+-    {key:'no_open_problems',satisfied:true},
+-  ];
+-  state.trials=['requirements','procedure','time_cost','followup'].map((case_id,i)=>({
+-    trial_id:`trial-${i}`,case_id,principal:'shared-admin-token',created_at:'2026-10-27T08:00:00Z',
+-    answer:{response:'Fixture answer',model:'fixture',evidence:[]},
+-    rating:{ok:true,principal:'shared-admin-token',created_at:'2026-10-27T09:00:00Z'},
+-  }));
++it('shows trial counts as technical diagnostics and keeps Chat unavailable before approval',async()=>{
++  state.status='Siap disetujui';state.can_approve=true;
++  state.approval_requirements=[{key:'case:time_cost',satisfied:false},{key:'all_trials_reviewed',satisfied:false}];
+   render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+-  const prerequisites=await screen.findByRole('region',{name:'Syarat persetujuan'});
+-  expect(prerequisites).toHaveTextContent(/Belum terpenuhi:.*Informasi yang tidak ada/);
+-  expect(prerequisites).toHaveTextContent('4 rating tersimpan memakai token admin bersama; identitas penilainya tidak tercatat.');
+-  expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
+-});
+-it('hands an operator trial to the main chat without approving the SOP',async()=>{
+-  sessionStorage.clear();state.extraction={status:'COMPLETE'};
+-  render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+-  fireEvent.click(await screen.findByRole('link',{name:'Uji di chat utama'}));
+-  expect(sessionStorage.getItem('nusantara-chat-document-pending')).toBe('SOP-1');
+-  expect(sessionStorage.getItem('nusantara-chat-sop-version-pending')).toBe('a'.repeat(64));
+-  expect(state.content_ok).toBe(false);
+-  sessionStorage.clear();
++  expect(await screen.findByRole('button',{name:'Setujui penggunaan di Chat'})).toBeEnabled();
++  expect(screen.queryByRole('link',{name:'Coba chat SOP ini'})).toBeNull();
++  expect(screen.queryByText(/nilai ulang secara manual/)).toBeNull();
++  expect(screen.queryByRole('region',{name:'Syarat persetujuan'})).toBeNull();
+ });
+ it('compares Docling partial text and PDF and keeps chat blocked until complete without approving content',async()=>{
+   state.extraction={status:'PARTIAL',error:'Tabel perlu pemeriksaan'};
+   state.extracted_blocks=[{block_id:'#/texts/0',type:'text',content:'Surat Permohonan',page_numbers:[1]}];
+   render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+   await screen.findByText('PERMOHONAN DATA PRIBADI');
+-  expect(screen.getByRole('button',{name:'Coba chat SOP ini'})).toBeDisabled();
++  expect(screen.queryByRole('link',{name:'Coba chat SOP ini'})).toBeNull();
+   await screen.findByTitle('PDF asli SOP');
+   expect(screen.getByText('Surat Permohonan')).toBeVisible();
+   expect(screen.getByText('Halaman 1')).toBeVisible();
+   expect(screen.getByText(/Masalah pembacaan SOP: Tabel perlu pemeriksaan/)).toBeVisible();
+   state.extraction={status:'COMPLETE'};
+   fireEvent.click(screen.getByRole('button',{name:'Muat ulang pemeriksaan'}));
+-  await waitFor(()=>expect(screen.getByRole('button',{name:'Coba chat SOP ini'})).toBeEnabled());
++  await waitFor(()=>expect(screen.getByText('Selesai')).toBeVisible());
++  expect(screen.queryByRole('link',{name:'Coba chat SOP ini'})).toBeNull();
+   expect(state.content_ok).toBe(false);
+-  expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
++  expect(screen.getByRole('button',{name:'Setujui penggunaan di Chat'})).toBeDisabled();
+ });
+ it('requires notes and releases busy state after a failed write',async()=>{
+   render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+--- a/control-plane/vite.config.ts
++++ b/control-plane/vite.config.ts
+@@ -8,7 +8,7 @@
+ function commit(){try{return execFileSync('C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/git/cmd/git.exe',['rev-parse','HEAD'],{cwd:'..',encoding:'utf8'}).trim();}catch{return 'NOT_VERIFIED';}}
+ const localServices = JSON.parse(readFileSync(new URL('../config/local-services.json', import.meta.url), 'utf8'));
+ const backendTarget = process.env.NUSANTARA_BACKEND_URL || `http://${localServices.host}:${localServices.backendPort}`;
+-export default defineConfig(({mode})=>({plugins:[react()], cacheDir:process.env.NUSANTARA_VITE_CACHE_DIR || 'node_modules/.vite', server:{host:localServices.host,port:localServices.frontendPort,strictPort:true,proxy:{'^/v1/chat(/history)?$':{target:backendTarget,changeOrigin:true},'^/v1/runtime/readiness([?]|$)':{target:backendTarget,changeOrigin:true},'^/v1/dev/inspection-preview$':{target:backendTarget,changeOrigin:true},'^/v1/knowledge/pipeline/(documents|status|watch|runs/[^/]+/retry|reviews/[^/?]+(/source|/citation|/process|/decision|/metadata|/trials/[^/?]+/rating)?)([?]|$)':{target:backendTarget,changeOrigin:true},'/v1/control-plane':{target:backendTarget,changeOrigin:true},'/health':{target:backendTarget,changeOrigin:true}}},preview:{host:localServices.host},
++export default defineConfig(({mode})=>({plugins:[react()], cacheDir:process.env.NUSANTARA_VITE_CACHE_DIR || 'node_modules/.vite', server:{host:localServices.host,port:localServices.frontendPort,strictPort:true,proxy:{'^/v1/chat(/history)?$':{target:backendTarget,changeOrigin:true},'^/v1/runtime/readiness([?]|$)':{target:backendTarget,changeOrigin:true},'^/v1/dev/inspection-preview$':{target:backendTarget,changeOrigin:true},'^/v1/knowledge/pipeline/(documents|status|watch|runs/[^/]+/retry|reviews/[^/?]+(/source|/citation|/prepare|/process|/decision|/metadata|/trials/[^/?]+/rating)?)([?]|$)':{target:backendTarget,changeOrigin:true},'/v1/control-plane':{target:backendTarget,changeOrigin:true},'/health':{target:backendTarget,changeOrigin:true}}},preview:{host:localServices.host},
+   define:{__CPLANE_BUILD__:JSON.stringify({version:'0.1.0',gitCommit:commit(),timestamp:new Date().toISOString(),environment:mode,sourceId:createHash('sha256').update(sources('src').map(f=>f+'\0'+readFileSync(f,'utf8')).join('\0')).digest('hex')})}}));
+ 
+ 
+--- /dev/null
++++ b/tests/test_knowledge_core_simplification.py
+@@ -0,0 +1,128 @@
++"""Contract behavior through the persistent review interface; isolated stores only."""
++from test_sop_review import engine_at, confirm_fixture_metadata
++from app.knowledge.sop_review import SOPReview
++
++
++def test_one_explicit_approval_survives_new_unrated_trials(tmp_path):
++    engine = engine_at(tmp_path / 'chat.db')
++    run = engine.process_knowledge_source('sop.txt', b'Nama SOP: LAYANAN CONTOH\nPersyaratan: surat pengantar. Prosedur: serahkan berkas.')
++    review = SOPReview(engine)
++    detail = review.detail(run['document_id'])
++    identifier, version = detail['document_id'], detail['version_id']
++    review.decide(identifier, version, 'content_ok', 'fixture-operator')
++    confirm_fixture_metadata(review, review.detail(identifier))
++    approved = review.decide(identifier, version, 'approve', 'fixture-operator')
++    assert approved['status'] == 'Aktif'
++    review.record_trial(identifier, version, 'time_cost', 'Berapa biayanya?',
++                        {'response': 'Tidak tersedia', 'evidence': []}, 'fixture-operator')
++    refreshed = SOPReview(engine_at(tmp_path / 'chat.db')).detail(identifier)
++    assert refreshed['status'] == 'Aktif'
++    assert refreshed['approval']['event_id'] == approved['approval']['event_id']
++
++
++def test_prepare_persists_detected_metadata_without_approving_or_inventing_absence(tmp_path):
++    engine = engine_at(tmp_path / 'chat.db')
++    run = engine.process_knowledge_source('sop.txt', b'Nama S.O.P LAYANAN CONTOH\nNomor SOP ABC-07\nInstansi: Dinas Contoh\nPersyaratan: Surat Pengantar.')
++    review = SOPReview(engine)
++    detail = review.detail(run['document_id'])
++    prepared = review.prepare(detail['document_id'], detail['version_id'])
++    assert prepared['official_metadata']['sop_number']['value'] == 'ABC-07'
++    assert prepared['official_metadata']['effective_on']['status'] == 'unreadable'
++    assert prepared['metadata_origin'] == 'system'
++    assert prepared['metadata_confirmed'] is False
++    assert prepared['approval'] is None
++    assert prepared['operator_status'] == 'Siap disetujui'
++    refreshed = SOPReview(engine_at(tmp_path / 'chat.db')).detail(detail['document_id'])
++    assert refreshed['official_metadata'] == prepared['official_metadata']
++    assert refreshed['system_summary']['material_binding'] == prepared['material_binding']
++    again = review.prepare(detail['document_id'], detail['version_id'])
++    assert len(again['events']) == len(prepared['events'])
++    approved = review.decide(detail['document_id'], detail['version_id'], 'approve', 'fixture-operator')
++    assert approved['status'] == 'Aktif'
++    assert approved['metadata_confirmed'] is True
++
++
++def test_preparation_is_authenticated_version_bound_and_reads_back_same_metadata(tmp_path, monkeypatch):
++    from fastapi import FastAPI
++    from fastapi.testclient import TestClient
++    from app.api.knowledge_pipeline import create_knowledge_pipeline_router, get_knowledge_engine
++    monkeypatch.setenv('NUSANTARA_ADMIN_TOKEN', 'fixture-only')
++    engine = engine_at(tmp_path / 'chat.db')
++    run = engine.process_knowledge_source('sop.txt', b'Nama SOP: LAYANAN CONTOH\nNomor SOP: TEST-09\nPersyaratan: surat pengantar.')
++    async def run_sync(fn, *args, **kwargs): return fn(*args)
++    app = FastAPI(); app.include_router(create_knowledge_pipeline_router(run_sync), prefix='/v1')
++    app.dependency_overrides[get_knowledge_engine] = lambda: engine
++    with TestClient(app) as client:
++        url = '/v1/knowledge/pipeline/reviews/' + run['document_id']
++        headers = {'X-Admin-Token': 'fixture-only'}
++        version = client.get(url, headers=headers).json()['version_id']
++        assert client.post(url + '/prepare', json={'version_id': version}).status_code == 403
++        assert client.post(url + '/prepare', headers=headers, json={'version_id': '0' * 64}).status_code == 409
++        prepared = client.post(url + '/prepare', headers=headers, json={'version_id': version})
++        assert prepared.status_code == 200, prepared.text
++        assert client.get(url, headers=headers).json()['official_metadata'] == prepared.json()['official_metadata']
++        assert prepared.json()['approval'] is None
++        decision = {'version_id': version, 'action': 'approve'}
++        assert client.post(url + '/decision', headers=headers, json=decision).status_code == 422
++        assert client.post(url + '/decision', headers=headers, json={**decision, 'material_binding': '0' * 64}).status_code == 409
++        approved = client.post(url + '/decision', headers=headers, json={**decision, 'material_binding': prepared.json()['material_binding']})
++        assert approved.status_code == 200, approved.text
++        assert approved.json()['status'] == 'Aktif'
++
++
++from test_v1_sop_boundary import api, SESSION
++
++
++def test_chat_rejects_stale_approved_handoff_before_model(api, monkeypatch):
++    import asyncio, pytest
++    from fastapi import HTTPException
++    monkeypatch.setattr(SOPReview, 'is_pilot', lambda *args: True)
++    monkeypatch.setattr(SOPReview, 'detail', lambda *args: {'status': 'Aktif', 'version_id': 'b' * 64})
++    request = api.ns['ChatRequest'](session_id=SESSION, user_input='Apa kelengkapannya?',
++                document_ids=['internal-source'], document_version='a' * 64)
++    with pytest.raises(HTTPException) as error:
++        asyncio.run(api.ns['chat'](request, x_admin_token='operator-fixture'))
++    assert error.value.status_code == 409
++    assert error.value.detail == 'CHAT_SOURCE_VERSION_CHANGED'
++    assert api.calls['model'] == 0
++
++
++def test_optional_undetected_fields_need_no_operator_notes(tmp_path):
++    from test_sop_metadata import metadata_payload
++    engine = engine_at(tmp_path / 'chat.db')
++    identifier = engine.process_knowledge_source('sop.txt', b'Nama SOP: LAYANAN CONTOH\nPersyaratan surat pengantar.')['document_id']
++    review = SOPReview(engine); detail = review.detail(identifier)
++    metadata = metadata_payload('LAYANAN CONTOH')
++    metadata['unit'] = {'status':'unreadable','value':None,'note':''}
++    saved = review.confirm_metadata(identifier, detail['version_id'], metadata, 'fixture-operator')
++    assert saved['official_metadata']['unit']['note'] == ''
++
++
++def test_new_metadata_snapshot_requires_fresh_explicit_approval(tmp_path):
++    from test_sop_metadata import metadata_payload
++    engine = engine_at(tmp_path / 'chat.db')
++    identifier = engine.process_knowledge_source('sop.txt', b'Nama SOP: LAYANAN CONTOH\nPersyaratan surat pengantar.')['document_id']
++    review = SOPReview(engine); detail = review.prepare(identifier, review.detail(identifier)['version_id'])
++    approved = review.decide(identifier, detail['version_id'], 'approve', 'fixture-operator')
++    changed = metadata_payload('LAYANAN YANG DIKOREKSI')
++    saved = review.confirm_metadata(identifier, detail['version_id'], changed, 'fixture-operator',
++                                    expected_event_id=approved['metadata_event_id'])
++    assert saved['status'] != 'Aktif'
++    assert saved['approval']['event_id'] == approved['approval']['event_id']
++    prepared = review.prepare(identifier, detail['version_id'])
++    assert prepared['status'] == 'Siap disetujui'
++    assert prepared['approval']['event_id'] == approved['approval']['event_id']
++
++
++def test_stale_metadata_display_cannot_authorize_a_new_snapshot(tmp_path, monkeypatch):
++    from test_sop_metadata import metadata_payload
++    import pytest
++    engine = engine_at(tmp_path / 'chat.db')
++    identifier = engine.process_knowledge_source('sop.txt', b'Nama SOP: LAYANAN CONTOH\nPersyaratan surat pengantar.')['document_id']
++    review = SOPReview(engine); shown = review.prepare(identifier, review.detail(identifier)['version_id'])
++    changed = review.confirm_metadata(identifier, shown['version_id'], metadata_payload('JUDUL DIKOREKSI'),
++                                      'fixture-operator', expected_event_id=shown['metadata_event_id'])
++    with pytest.raises(ValueError, match='Metadata berubah'):
++        review.decide(identifier, shown['version_id'], 'approve', 'fixture-operator',
++                      expected_material_binding=shown['material_binding'])
++    assert review.detail(identifier)['approval'] is None
+--- a/tests/test_knowledge_pipeline_api.py
++++ b/tests/test_knowledge_pipeline_api.py
+@@ -50,7 +50,7 @@
+     body = {'version_id': detail['version_id'], 'metadata': metadata_payload()}
+     assert client.post(url + '/metadata', json=body).status_code == 403
+     assert client.post(url + '/metadata', headers=AUTH, json={**body, 'version_id': '0' * 64}).status_code == 409
+-    invalid = {**body, 'metadata': {**metadata_payload(), 'institution': {'status': 'not_stated'}}}
++    invalid = {**body, 'metadata': {**metadata_payload(), 'institution': {'status': 'present'}}}
+     assert client.post(url + '/metadata', headers=AUTH, json=invalid).status_code == 422
+     saved = client.post(url + '/metadata', headers=AUTH, json=body)
+     assert saved.status_code == 200, saved.text
+@@ -124,7 +124,7 @@
+     assert client.get(url + '/source', headers=AUTH).content == raw
+     assert client.get(url + '/source').status_code == 403
+     version = detail['version_id']
+-    assert client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'approve'}).status_code == 409
++    assert client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'approve'}).status_code == 422
+     assert client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'problem'}).status_code == 409
+     response = client.post(url + '/decision', headers=AUTH, json={'version_id': version, 'action': 'problem', 'note': 'Teks perlu diperiksa'})
+     assert response.status_code == 200
+--- a/tests/test_sop_metadata.py
++++ b/tests/test_sop_metadata.py
+@@ -32,8 +32,6 @@
+     review, identifier, version = ready_review(tmp_path)
+     before = review.engine.rag.get_document_info(identifier)
+     assert review.detail(identifier)['can_approve'] is False
+-    with pytest.raises(ValueError):
+-        review.decide(identifier, version, 'approve', 'operator')
+     detail = review.confirm_metadata(identifier, version, metadata_payload(), 'shared-admin-token')
+     assert detail['official_metadata']['official_title']['value'] == 'PERMOHONAN DATA PRIBADI'
+     assert detail['metadata_confirmed'] is True
+@@ -64,7 +62,6 @@
+ 
+ @pytest.mark.parametrize('field,change', [
+     ('institution', {'status': 'not_stated', 'value': 'Nama rekaan', 'note': 'Tidak ada'}),
+-    ('unit', {'status': 'unreadable', 'note': '   '}),
+     ('effective_on', {'status': 'present', 'value': '2026-02-30'}),
+     ('official_title', {'status': 'present', 'value': '   '}),
+ ])
+--- a/tests/test_sop_review.py
++++ b/tests/test_sop_review.py
+@@ -28,7 +28,7 @@
+     return review.confirm_metadata(detail['document_id'], detail['version_id'], data, 'fixture-reviewer')
+ 
+ 
+-def test_approval_requires_content_and_every_required_trial_and_survives_restart(tmp_path):
++def test_explicit_approval_survives_diagnostic_trials_and_restart(tmp_path):
+     engine = engine_at(tmp_path / 'chat.db')
+     run = engine.process_knowledge_source('sop.txt', b'Persyaratan: Surat Permohonan. Prosedur: serahkan berkas. Waktu: 3 hari kerja.')
+     review = SOPReview(engine)
+@@ -46,13 +46,13 @@
+     assert SOPReview(engine_at(tmp_path / 'chat.db')).detail(doc['document_id'])['status'] == 'Aktif'
+     assert review.decide(doc['document_id'], version, 'approve', 'admin-token', '')['approval'] == approved['approval']
+     review.record_trial(doc['document_id'], version, 'requirements', 'Pertanyaan baru', {'response': 'Baru'}, 'admin-token')
+-    assert review.detail(doc['document_id'])['status'] != 'Aktif'
++    assert review.detail(doc['document_id'])['status'] == 'Aktif'
+     failed = review.detail(doc['document_id'])['trials'][-1]
+     problem = review.rate(doc['document_id'], version, failed['trial_id'], False, 'Jawaban belum tepat', 'admin-token')['problems'][0]
+     replacement = review.record_trial(doc['document_id'], version, 'requirements', 'Pertanyaan koreksi', {'response': 'Koreksi'}, 'admin-token')
+     review.rate(doc['document_id'], version, replacement['trial_id'], True, '', 'admin-token')
+     result = review.decide(doc['document_id'], version, 'resolve', 'admin-token', 'Jawaban pengganti telah diperiksa', problem['event_id'])
+-    assert result['status'] == 'Siap disetujui'
++    assert result['status'] == 'Aktif'
+     assert next(t for t in result['trials'] if t['trial_id'] == failed['trial_id'])['rating']['ok'] is False
+ 
+ 

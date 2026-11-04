@@ -6,10 +6,42 @@ vi.mock('@tanstack/react-router',()=>({Link:({to,children,onClick}:{to:string;ch
 let state:any;
 let fail=false;
 let sourceFail=false;
+it('renders native Docling cells as a table instead of flattened markdown',async()=>{
+  state={...state,extracted_blocks:[{block_id:'native-table',type:'table',content:'flattened fallback',page_numbers:[1],table_data:{num_rows:2,num_cols:2,table_cells:[
+    {start_row_offset_idx:0,start_col_offset_idx:0,row_span:1,col_span:2,column_header:true,text:'Persyaratan layanan'},
+    {start_row_offset_idx:1,start_col_offset_idx:0,row_span:1,col_span:1,text:'Surat permohonan'},
+    {start_row_offset_idx:1,start_col_offset_idx:1,row_span:1,col_span:1,text:'3 hari kerja'},
+  ]}}]};
+  render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+  const table=await screen.findByRole('table',{name:'Tabel SOP halaman 1'});
+  expect(table.querySelector('th')).toHaveAttribute('colspan','2');
+  expect(table.querySelectorAll('tr')).toHaveLength(2);
+  expect(table).toHaveTextContent('Surat permohonan');
+});
+it('prevents content confirmation until PDF extraction finishes',async()=>{
+  state={...state,extraction:{status:'PROCESSING'}};
+  render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
+  expect(await screen.findByRole('button',{name:'Isi sudah sesuai'})).toBeDisabled();
+  expect(screen.getByText('Tunggu pembacaan PDF selesai sebelum menyimpan pemeriksaan isi.')).toBeInTheDocument();
+});
+it('opens all physical PDF pages before extraction and starts reading automatically',async()=>{
+  state={...state,source_page_count:3,extraction:{status:'NOT_PROCESSED'}};
+  const fetcher=vi.fn(async(url:string,options?:RequestInit)=>{
+    if(String(url).includes('/source?'))return {ok:true,blob:async()=>new Blob(['PDF'])};
+    if(options?.method==='POST')state={...state,extraction:{status:'QUEUED'}};
+    return {ok:true,json:async()=>state};
+  });
+  vi.stubGlobal('fetch',fetcher);
+  render(<SOPReviewPanel documentId="SOP-1" token="fixture" autoProcess/>);
+  fireEvent.click(await screen.findByRole('button',{name:'Halaman 3'}));
+  expect(screen.getByText('Halaman 3 dari 3')).toBeInTheDocument();
+  expect(await screen.findByRole('region',{name:'Hasil baca halaman 3'})).toBeInTheDocument();
+  await waitFor(()=>expect(fetcher.mock.calls.filter(([url,options])=>String(url).endsWith('/process')&&options?.method==='POST')).toHaveLength(1));
+});
 beforeEach(()=>{
   fail=false;
   sourceFail=false;
-  state={document_id:'SOP-1',title:'PERMOHONAN DATA PRIBADI',version_id:'a'.repeat(64),status:'Menunggu pemeriksaan isi',source_available:true,source_type:'.pdf',text:'Surat Permohonan',pages:[],content_ok:false,can_approve:false,problems:[],events:[],trials:[],required_cases:['requirements','procedure','time_cost','followup','missing'],approval_requirements:[]};
+  state={document_id:'SOP-1',title:'PERMOHONAN DATA PRIBADI',version_id:'a'.repeat(64),status:'Menunggu pemeriksaan isi',source_available:true,source_type:'.pdf',extraction:{status:'COMPLETE'},text:'Surat Permohonan',pages:[],content_ok:false,can_approve:false,problems:[],events:[],trials:[],required_cases:['requirements','procedure','time_cost','followup','missing'],approval_requirements:[]};
   vi.stubGlobal('fetch',vi.fn(async(_url:string,options?:RequestInit)=>{
     if(fail&&options?.method==='POST')return {ok:false,status:500,json:async()=>({detail:'Penyimpanan gagal'})};
     if(String(_url).includes('/source?'))return sourceFail?{ok:false,status:503,json:async()=>({detail:'Sumber belum tersedia'})}:{ok:true,blob:async()=>new Blob(['PDF'],{type:'application/pdf'})};
@@ -57,6 +89,7 @@ it('persists the content check after reload without approving the SOP',async()=>
   render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
   fireEvent.click(await screen.findByRole('button',{name:'Isi sudah sesuai'}));
   await screen.findByText(/Isi sudah Anda nyatakan sesuai/);
+  expect(screen.getByText('Pemeriksaan isi tersimpan untuk versi dokumen ini.')).toBeInTheDocument();
   expect(state.content_ok).toBe(true);
   expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
   const write=vi.mocked(fetch).mock.calls.find(([,options])=>options?.method==='POST');
@@ -65,6 +98,7 @@ it('persists the content check after reload without approving the SOP',async()=>
   cleanup();
   render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
   await screen.findByText(/Isi sudah Anda nyatakan sesuai/);
+  expect(screen.getByText('Pemeriksaan isi tersimpan untuk versi dokumen ini.')).toBeInTheDocument();
   expect(state.content_ok).toBe(true);
   expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
 });

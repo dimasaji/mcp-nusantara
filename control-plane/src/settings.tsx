@@ -40,7 +40,7 @@ export function RuntimeSettingsPage(){
   const lastHealthCheckDate=lastHealthCheckAt>0?new Date(lastHealthCheckAt):null;
   const lastHealthCheckLabel=lastHealthCheckDate?`${lastHealthCheckDate.toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'medium'})}.${String(lastHealthCheckDate.getMilliseconds()).padStart(3,'0')}`:null;
   const knowledge=useQuery({queryKey:['settings-knowledge',scope],queryFn:()=>fetchKnowledgePipelineStatus(token),enabled:!!token.trim(),retry:false,gcTime:0,refetchInterval:30000});
-  return <><OperatorConsole title="Model & koneksi"/><RuntimeReadinessPanel token={token}/>
+  return <><OperatorConsole title="Model & koneksi"/><details className="panel"><summary>Pemeriksaan sistem untuk teknisi</summary><RuntimeReadinessPanel token={token}/>
     <section className="panel"><h2>Health Backend aktual</h2><p>Sumber: /health</p>
       {health.isFetching&&<p role="status" aria-live="polite">Memeriksa GET /health pada Backend…</p>}
       {health.isError?<p role="alert">{health.error.message}</p>:health.data&&<><p>GET /health - HTTP {health.data.httpStatus}</p><p>{health.data.service??'Backend'}: {health.data.status} - versi {health.data.version}</p></>}
@@ -55,6 +55,6 @@ export function RuntimeSettingsPage(){
       <p><Link to="/knowledge">Kelola dokumen dan History Knowledge</Link></p></section>
     <section className="panel"><h2>Biaya &amp; routing model</h2><p>Model aktif dan pemilihan provider memakai kendali runtime V1 di atas. Biaya hanya ditampilkan jika tersedia dari ledger backend.</p><Link to="/costs">Buka biaya aktual dan riwayat ledger</Link></section>
     <section className="panel"><h2>Maintenance &amp; Recovery</h2><p>Periksa health backend dan koneksi model sebelum melakukan pemulihan. Jika API gagal, periksa status layanan lokal melalui skrip existing <code>scripts/Status-NusantaraV1.ps1</code>.</p><p>Backup, update, dan restore belum tersedia melalui API Control Plane. Penjadwalan pemulihan dan kesiapan VPS belum diverifikasi.</p></section>
-    <section className="panel"><h2>Evidence teknis dan governance</h2><Link to="/technical">Buka evidence teknis existing</Link><p><Link to="/approvals">Human Control</Link></p></section></>;
+    <section className="panel"><h2>Evidence teknis dan governance</h2><Link to="/technical">Buka evidence teknis existing</Link><p><Link to="/approvals">Human Control</Link></p></section></details></>;
 }
 

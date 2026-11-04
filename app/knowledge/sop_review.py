@@ -165,7 +165,13 @@ class SOPReview:
 
     def detail(self, document_id, *, check_lineage=True):
         doc = self._document(document_id)
-        path, _, digest = self.source(document_id)
+        path, raw, digest = self.source(document_id)
+        source_page_count = None
+        if path and path.suffix.lower() == '.pdf':
+            import io
+            from pypdf import PdfReader
+            # Physical navigation is independent of OCR offsets/citation proof.
+            source_page_count = len(PdfReader(io.BytesIO(raw)).pages)
         source_version = hashlib.sha256(json.dumps([doc.title, doc.source, digest, doc.metadata.get('source_pages', [])],
             ensure_ascii=False, sort_keys=True).encode()).hexdigest()
         is_pdf = bool(path and path.suffix.lower() == '.pdf')
@@ -208,6 +214,7 @@ class SOPReview:
         approval_requirements = [
             {'key': 'source_available', 'satisfied': bool(path)},
             {'key': 'extraction_complete', 'satisfied': extraction_ready},
+            {'key': 'index_ready', 'satisfied': index_ready},
             {'key': 'content_checked', 'satisfied': content_ok},
             {'key': 'metadata_checked', 'satisfied': metadata is not None},
             {'key': 'metadata_publication_allowed', 'satisfied': metadata_allowed},
@@ -235,6 +242,8 @@ class SOPReview:
             status = 'Ada masalah'
         elif not extraction_ready:
             status = 'Menunggu ekstraksi'
+        elif not index_ready:
+            status = 'Indeks belum siap; coba proses ulang dokumen'
         elif not content_ok:
             status = 'Menunggu pemeriksaan isi'
         elif metadata is None:
@@ -265,6 +274,7 @@ class SOPReview:
                 'extraction_job_id': extraction['job_id'] if extraction else None,
                 'source_available': bool(path), 'source_type': path.suffix if path else None,
                 'text': doc.source, 'pages': doc.metadata.get('source_pages', []), 'status': status,
+                'source_page_count': source_page_count,
                 'content_ok': content_ok, 'required_cases': REQUIRED_CASES, 'trials': trials,
                 'events': events, 'problems': problems, 'can_approve': ready, 'approval': approval,
                 'publication_decision': publication_decision,
@@ -345,7 +355,7 @@ class SOPReview:
             detail = self._check(document_id, version)
             if action == 'approve':
                 if not detail['can_approve']:
-                    raise ValueError('Periksa isi dan metadata resmi, nilai lima percobaan wajib dan selesaikan semua masalah sebelum menyetujui.')
+                    raise ValueError('Periksa isi, metadata resmi, dan selesaikan semua masalah sebelum menyetujui.')
                 if detail['status'] == 'Aktif':
                     return detail
                 logical_id = detail['official_metadata']['logical_sop_id']

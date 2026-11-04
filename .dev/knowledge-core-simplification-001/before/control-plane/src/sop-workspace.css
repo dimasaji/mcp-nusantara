@@ -1,0 +1,22 @@
+.knowledge-workspace{max-width:1440px;margin-inline:auto}
+.settings-shell:has(.knowledge-workspace) .settings-navigation nav{flex-direction:row}
+.knowledge-workspace .sop-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;padding:0;margin:20px 0;gap:12px}
+.sop-steps li{padding:16px;border:1px solid #d7e4df;border-radius:12px;background:#f5faf7}
+.sop-steps strong,.sop-steps span{display:block}.sop-steps span{font-size:.85rem;margin-top:6px;color:#52665f}
+.knowledge-workspace summary{cursor:pointer;font-weight:600;padding-block:8px}
+.sop-current-document{display:flex;align-items:center;justify-content:space-between;gap:20px;border-left:4px solid #168050}
+.sop-current-document h2{margin-block:8px}.sop-current-document .primary{flex-shrink:0}
+.sop-document-list{display:grid;gap:8px;margin-top:12px}.sop-document-list>article{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px;border-bottom:1px solid #d7e4df}
+.sop-document-list h3{margin:0 0 6px}.sop-document-list details p{overflow-wrap:anywhere}
+.sop-optional>.panel{border:0;box-shadow:none;padding:8px 0;margin:0}
+.sop-review-stage{border-top:1px solid #d7e4df;padding-block:20px;margin-top:16px}
+.sop-review-stage h3{margin-top:0}.sop-review-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-block:12px}
+.sop-reading-pane{max-height:760px;overflow:auto;padding:8px;border:1px solid #d7e4df;border-radius:8px}
+.knowledge-workspace .sop-review-toolbar{display:flex;flex-direction:row;justify-content:flex-start;gap:8px}
+.knowledge-workspace .sop-reading-pane{min-width:0}
+.sop-table-scroll{max-width:100%;overflow:auto}
+.knowledge-workspace .sop-source-table{min-width:1600px;width:max-content;table-layout:auto;border-collapse:collapse}
+.knowledge-workspace .sop-source-table th,.knowledge-workspace .sop-source-table td{min-width:95px;max-width:300px;white-space:normal;word-break:normal;overflow-wrap:normal;vertical-align:top;text-align:left;font-size:13px;line-height:1.5;padding:12px}
+.knowledge-workspace .sop-source-table th:first-child,.knowledge-workspace .sop-source-table td:first-child{min-width:36px}
+.knowledge-workspace .sop-source-table th:nth-child(2),.knowledge-workspace .sop-source-table td:nth-child(2){min-width:260px}
+@media(max-width:760px){.knowledge-workspace .sop-steps{grid-template-columns:1fr}.sop-current-document{align-items:flex-start;flex-direction:column}.sop-document-list>article{align-items:flex-start;flex-direction:column}.sop-reading-pane{max-height:600px}}

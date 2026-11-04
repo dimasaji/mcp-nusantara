@@ -221,7 +221,7 @@ describe('V1 user and operator surfaces',()=>{
   });
   it('reports missing runtime endpoints honestly without enabling unsupported controls',async()=>{
     vi.stubGlobal('fetch',vi.fn(async()=>({ok:false,status:404})));
-    render(<AdminAuthProvider><OperatorConsole/></AdminAuthProvider>);
+    render(<AdminAuthProvider><OperatorConsole/></AdminAuthProvider>);expect(screen.getByText('Ganti model dan akses operator').closest('details')).not.toHaveAttribute('open');fireEvent.click(screen.getByText('Ganti model dan akses operator'));
     expect(await screen.findByRole('alert')).toHaveTextContent('Runtime yang terhubung belum menyediakan API ini');
     expect(screen.getByRole('button',{name:'Muat model tersedia'})).toBeDisabled();
     expect(screen.queryByLabelText('Pilih model tersedia')).not.toBeInTheDocument();
@@ -229,7 +229,7 @@ describe('V1 user and operator surfaces',()=>{
   });
   it.each([403,500,503])('retains truthful runtime status when inventory fails with %s',async(code)=>{
     vi.stubGlobal('fetch',vi.fn(async(path:string)=>path.endsWith('/models')?{ok:false,status:code,json:async()=>({detail:code===503?'MODEL_INVENTORY_UNAVAILABLE':'denied'})}:{ok:true,json:async()=>status}));
-    render(<AdminAuthProvider><OperatorConsole/></AdminAuthProvider>);fireEvent.change(screen.getByLabelText('Token operator'),{target:{value:'test-token'}});
+    render(<AdminAuthProvider><OperatorConsole/></AdminAuthProvider>);expect(screen.getByText('Ganti model dan akses operator').closest('details')).not.toHaveAttribute('open');fireEvent.click(screen.getByText('Ganti model dan akses operator'));fireEvent.change(screen.getByLabelText('Token operator'),{target:{value:'test-token'}});
     await waitFor(()=>expect(screen.getByRole('button',{name:'Muat model tersedia'})).toBeEnabled());
     fireEvent.click(screen.getByRole('button',{name:'Muat model tersedia'}));
     expect(await screen.findByRole('alert')).toBeInTheDocument();
@@ -275,22 +275,22 @@ describe('V1 user and operator surfaces',()=>{
   });
   it('loads actual inventory with authorization and applies only an acknowledged change',async()=>{
     const fetch=vi.fn(async(path:string)=>({ok:true,json:async()=>path.includes('/models')?{models:['fixture-a','fixture-b'],provider:'ollama',observed_revision:0}:path.endsWith('/model-selection')?{...status,model:'fixture-b',revision:1,selection_source:'OPERATOR'}:status}));vi.stubGlobal('fetch',fetch);
-    render(<AdminAuthProvider><OperatorConsole/></AdminAuthProvider>);expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    render(<AdminAuthProvider><OperatorConsole/></AdminAuthProvider>);expect(screen.getByText('Ganti model dan akses operator').closest('details')).not.toHaveAttribute('open');fireEvent.click(screen.getByText('Ganti model dan akses operator'));expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('Token operator'),{target:{value:'test-token'}});await waitFor(()=>expect(screen.getByRole('button',{name:'Muat model tersedia'})).toBeEnabled());fireEvent.click(screen.getByRole('button',{name:'Muat model tersedia'}));
-    fireEvent.change(await screen.findByLabelText('Pilih model tersedia'),{target:{value:'fixture-b'}});fireEvent.click(screen.getByRole('button',{name:'Terapkan model global'}));expect(await screen.findByText(/Model diterapkan untuk request berikutnya/)).toBeInTheDocument();
+    fireEvent.change(await screen.findByLabelText('Pilih model tersedia'),{target:{value:'fixture-b'}});fireEvent.click(screen.getByRole('button',{name:'Gunakan model ini'}));expect(await screen.findByText(/Model diterapkan untuk request berikutnya/)).toBeInTheDocument();
     const call=fetch.mock.calls.find(([path])=>path.endsWith('/model-selection')) as unknown as [string,RequestInit];expect(JSON.parse(call[1].body as string)).toEqual({model:'fixture-b',provider:'ollama',expected_revision:0});expect(call[1].headers).toEqual(expect.objectContaining({'X-Admin-Token':'test-token'}));
   });
   it('loads Ollama tags and applies Qwen from an OpenRouter bootstrap without a provider dispatch',async()=>{
     const bootstrap={...status,provider:'openrouter',model:'openai/gpt-4o-mini'};
     const fetch=vi.fn(async(path:string)=>({ok:true,json:async()=>path.includes('/models')?{models:['qwen2.5:7b','llama3.2:1b'],provider:'ollama',observed_revision:0}:path.endsWith('/model-selection')?{...bootstrap,provider:'ollama',model:'qwen2.5:7b',revision:1}:bootstrap}));vi.stubGlobal('fetch',fetch);
-    render(<AdminAuthProvider><OperatorConsole/></AdminAuthProvider>);
+    render(<AdminAuthProvider><OperatorConsole/></AdminAuthProvider>);expect(screen.getByText('Ganti model dan akses operator').closest('details')).not.toHaveAttribute('open');fireEvent.click(screen.getByText('Ganti model dan akses operator'));
     fireEvent.change(await screen.findByLabelText('Provider runtime'),{target:{value:'ollama'}});
     fireEvent.change(screen.getByLabelText('Token operator'),{target:{value:'test-token'}});
     fireEvent.click(screen.getByRole('button',{name:'Muat model tersedia'}));
     expect(await screen.findByRole('option',{name:'qwen2.5:7b'})).toBeInTheDocument();
     expect(fetch.mock.calls.some(([path])=>path==='/v1/control-plane/models?provider=ollama')).toBe(true);
     fireEvent.change(screen.getByLabelText('Pilih model tersedia'),{target:{value:'qwen2.5:7b'}});
-    fireEvent.click(screen.getByRole('button',{name:'Terapkan model global'}));
+    fireEvent.click(screen.getByRole('button',{name:'Gunakan model ini'}));
     expect(await screen.findByText(/Model diterapkan untuk request berikutnya/)).toBeInTheDocument();
     const selection=fetch.mock.calls.find(([path])=>path.endsWith('/model-selection')) as unknown as [string,RequestInit];
     expect(JSON.parse(selection[1].body as string)).toEqual({model:'qwen2.5:7b',provider:'ollama',expected_revision:0});

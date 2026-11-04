@@ -1,96 +1,91 @@
-# Graph Report - mcp-starter  (2026-10-27)
+# Graph Report - mcp-starter  (2026-10-30)
 
 ## Corpus Check
-- 4848 files · ~15,018,919 words
+- 2917 files · ~7,111,261 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 6353 file(s) not represented in the graph (top: (none) 3851, .log 632, .hsaco 511)
+- Unclassified: 762 file(s) not represented in the graph (top: (none) 282, .xml 274, .before 47)
 
 ## Summary
-- 43827 nodes · 106940 edges · 1764 communities (1260 shown, 504 thin omitted)
-- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 8486 edges (avg confidence: 0.88)
+- 30515 nodes · 74480 edges · 1363 communities (884 shown, 479 thin omitted)
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 6404 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7b6859df`
+- Built from commit: `5bc43e73`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- control-plane/src/router.tsx
+- router.tsx
 - MasterDeveloperEngine
-- control-plane-four-20261019/vite-cache/deps/zod.js
+- local-services-contract.ps1
 - Reranker
 - index-B0GOEJQx.js
 - tests/test_v1_langgraph.py
 - app/knowledge/schemas.py
-- scripts/validate_gate17_experiment.py
+- validate_gate17_evaluation.py
 - tests/test_effective_rag_profile.py
 - Workspace
 - GovernedToolRegistry
-- mcp-nusantara-upstream/control-plane/src/router.tsx
 - pathlib
-- normalize_text
+- AuditTrail
 - nusantara_master_engine_BACKUP_20261002_164634.py
 - index-CsLlr2Cg.js
-- ref_vitest
-- chat-p0-20261019/vite-cache/deps/zod.js
+- control-plane/src/api.ts
 - index-Ry5oqxsC.js
-- mcp-nusantara-upstream/control-plane/src/human.tsx
+- control-plane/src/ui.tsx
 - load_nusantara_config
-- ncp-v1-ui-local-20261019/reference/tests/ui.test.mjs
 - graph-CjYkENDk.js
-- RAG
-- mcp-nusantara-upstream/tests/test_web_evidence_pipeline.py
-- graph--PuxfVum.js
 - V2Orchestrator
-- app/approval/change_request.py
+- source-before/app/api/v2_routes.py
+- graph--PuxfVum.js
+- EmbeddingProvider
+- ToolRegistry
 - graph-BsHL5xdw.js
-- knowledge-upload-entry/baseline/api.ts
 - graph-Bu3TEQPk.js
 - MDA-POST-MDE09-001.md
 - index-CSdgo_zW.js
 - ProductionSemanticRetriever
 - MDA-CPLANE-UI-AUTH-001.md
-- RAG
+- SQLiteVectorStore
 - KnowledgeEngine
 - NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md
 - t2
 - NUSANTARA-CONFIGURATION-ARCHITECT.md
 - docs/commands/R2-A10 CLOSURE & R2-A11 EXECUTION CONTRACT.md
-- mcp-nusantara-upstream/app/api/routes.py
+- AuthorizationError
 - R2CORERUNTIME&DEVELOPER-EXECUTION-AUTHORIZATION-CONTRACT.md
 - ContextEngine
-- Template/reference/tests/ui.test.mjs
-- mcp-nusantara-upstream/tests/v2/test_phases_7_21.py
+- ui.test.mjs
+- perbaikanbukti/tests/v2/test_phases_7_21.py
 - scripts/validate_gate17_proposal.py
-- RetrievalEvidenceList
+- fastapi
 - NUSANTARA R2-A7.md
 - ExecutionAudit
-- LanguageEngine
+- CostLedger
 - NUSANTARA-V1-CC01-RESPONSE-PROJECTION-PROPOSAL.md
 - OllamaProvider
-- evidence/vite-cache/deps/zod.js
+- zod.js
 - app/developer_core/controlled_write.py
-- tests/test_control_plane_attestation_binding.py
-- Issue tracker: GitHub
+- EvidenceGroundingGuard
+- Domain Docs
 - NUSANTARA R2-A9.md
 - e2
 - control-plane/src/human.tsx
-- mcp-nusantara-upstream/app/developer_core/change_plan_validator.py
+- perbaikanbukti/tests/test_runtime_verification.py
 - app/rag/store.py
-- ref_react
+- payload/control-plane/src/operator.tsx
 - app/knowledge/official_knowledge_ingestion.py
 - MASTER ENGINEERING AUDIT — NUSANTARA AI V1
 - t2
 - NCP-V1-CHAT-001 — patch dan verifikasi terarah
-- scripts/release_check.py
+- .query
 - MDA-R3-AUTHORIZATION.md
 - Files Created by Hermes
-- control-plane-four-20261019/vite-cache/deps/@xyflow_react.js
 - K1
 - Communities (1601 total, 1305 thin omitted)
-- evidence/vite-cache/deps/@xyflow_react.js
-- OneUseAuthorization
+- @xyflow_react.js
+- os
 - "node_modules/react-dom/cjs/react-dom-client.development.js"
 - run
 - master_engine_ai.py
@@ -98,93 +93,91 @@
 - NUSANTARA AI V1 � GATES
 - MDE-04 -09.md
 - MemoryEngine
-- mcp-nusantara-upstream/tests/test_effective_rag_profile.py
-- source-checkpoint/app__api__control_plane.py
-- mcp-nusantara-upstream/scripts/validate_gate17_root_cause.py
-- mcp-nusantara-upstream/tests/test_v1_response_projection.py
-- mcp-nusantara-upstream/control-plane/package.json
+- app/improvement/release.py
+- perbaikanbukti/tests/test_effective_rag_profile.py
+- validate_gate17_root_cause.py
+- XYPanZoom
+- KONTRAK IMPLEMENTASI CODEX
 - Communities (1565 total, 1308 thin omitted)
 - control-plane/tests/inspection-preview-network-guard.cjs
-- chat-p0-20261019/vite-cache/deps/@xyflow_react.js
-- LayaIntentAdapter
+- test_laya_intent.py
 - MASTERENGINEERINGCOMMAND.md
-- HandoffRequest
-- mcp-nusantara-upstream/docs/contracts/NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md
+- tests/test_v1_sop_boundary.py
+- R1_CORRECTION_BACKUP_20261007_142020/test_configuration_integration.py
 - i
-- "node_modules/react-dom/cjs/react-dom-client.development.js"
-- datetime
-- "node_modules/react-dom/cjs/react-dom-client.development.js"
+- perbaikanbukti/tests/test_runtime_authorization.py
+- perbaikanbukti/app/core/runtime_identity.py
+- GenerateResponse
 - v1-recovery-backup-20261006/app/api/routes.py
 - Remaining Work
 - NUSANTARA MASTER DEVELOPER ENGINE.md
 - NUSANTARA V1 RECOVERY MASTER.md
-- LanguageEngine
 - OpenRouterProvider
 - ContextBuilder
 - Triage
-- app/problem/engine.py
+- ProblemDetector
 - tests/test_weip_rag_adapter.py
-- i
+- P1
 - Fase 9 — Performa dan stabilitas
-- control-plane/src/api.ts
-- push
+- control-plane/src/operator.tsx
+- estimate_openrouter_cost
 - app/workflow/workflow_schema.py
 - NUSANTARA-ARCHITECTURE-CONTRACT-V1.md
-- push
-- l
-- reconcile_sop_knowledge.py
+- ExecutionPlan
+- constructor
+- HealthCheckResponse
 - docs/commands/Inspection-Preview-Transport-Foundation.md
-- i
-- useStore
+- d
+- control-plane__src__api.ts
 - control-plane/package.json
 - EntityExtractor
 - Prinsip Pengembangan — Nusantara Core + Hermes
 - Roadmap 18 Fase - Nusantara Core + Hermes
-- useStore
-- .get
+- GenerateRequest
+- test_chat_request_idempotency.py
 - SECURITY TRACE — NUSANTARA AI V1
-- ChatRequest
-- AuditTrail
-- normalizeParams
+- RuntimeAuthorization
+- app/approval/queue.py
+- ExecutionApprovalEnforcer
 - BOUNDED-DEVELOPMENT-ENVELOPE.md
 - push
 - docs/commands/NUSANTARA-CONTROL-PLANE.md
-- normalizeParams
+- Kontrak Implementasi NUSANTARA di Localhost
 - teach/SKILL.md
 - HistoryEntry
-- commitMutationEffectsOnFiber
-- mcp-nusantara-upstream/scripts/validate_gate17_evidence.py
-- GapDetectionError
-- commitMutationEffectsOnFiber
+- KONTRAK KERJA OPENCODE
+- validate_gate17_evidence.py
+- validate_gate17_gap.py
+- test_sop_golden_gate.py
 - Process
 - NUSANTARA V1 — Contract Compliance Clarifications
-- LongTermMemory
+- SessionMemory
 - ref_node_path
-- control-plane-four-20261019/vite-cache/deps/@tanstack_react-router.js
+- SOPReview
 - app/skills/sop_semantic/engine.py
-- tests/test_v1_sop_boundary.py
-- evidence/vite-cache/deps/@tanstack_react-router.js
+- test_direct_knowledge_http_endpoints_are_operator_only_before_store_access
+- @tanstack_react-router.js
 - Architecture Decision Records (ADR)
 - NUSANTARA-V1-CONTRACT-COMPLIANCE.md
-- OfficialKnowledgeEngine
+- _loaded_code_manifest
 - EvidenceRejected
 - routes-cost-20261016-142819/routes.py
-- socketpair
+- worker
 - RuntimeGraphMapper
 - DEVCORE_COMPLIANCE — kontrak Developer Core vs source
-- chat-p0-20261019/vite-cache/deps/@tanstack_react-router.js
+- Selection
 - NUSANTARA-MASTER-AUDIT.ps1
 - Environment & Architecture Report
 - R2 AUTHORIZATION CONTRACT.md
-- getComponentNameFromFiber
-- getComponentNameFromFiber
-- constructor
-- mcp-nusantara-upstream/tests/v2/test_devcore_routes.py
+- Check
+- EffectiveRAGProfile
+- .get
+- stub_modules
 - BASELINE — NUSANTARA AI V1
 - NUSANTARA CORE — DEVELOPER CORE ENGINE IMPLEMENTATION CONTRACT
 - useStore
-- MemoriaVectorStore
-- .on
+- RAG
+- test_v1_laya_integration.py
 - FileSystemTool
 - validate_gate15_6_change_plan_validator.py
 - NUSANTARA V1 — Intelligence Model
@@ -192,56 +185,55 @@
 - tests/test_audit_regressions.py
 - RAG SCHEMA AUDIT — NUSANTARA AI V1
 - project
-- MemoriaVectorStore
-- renderRootConcurrent
-- Retriever
-- NUSANTARA-MASTER-AUDIT-V2.ps1
-- renderRootConcurrent
-- DevCore
-- nusantara-e2e-20261016-1018/baseline/api.ts
-- write
-- What You Must Do When Invoked
 - RAG
-- EmbeddingProvider
+- SessionManager
+- app/devcore/__init__.py
+- ChunkProcessor
+- NUSANTARA-MASTER-AUDIT-V2.ps1
+- test_d2_reproduction.py
+- DevCore
+- ExecutionBoundary
+- DocumentTools
+- What You Must Do When Invoked
+- tests/test_control_plane_attestation_binding.py
+- perbaikanbukti/app/knowledge/embeddings.py
 - before/control-plane/src/human.tsx
 - What You Must Do When Invoked
 - RAG
-- setInitialProperties
-- setInitialProperties
+- Audit jalur Nusantara V1 dan penonaktifan V2
+- control-plane__tests__human.test.tsx
 - 40. ACCEPTANCE GATES
-- write
+- perbaikanbukti/app/evaluation/evaluator.py
 - 1. MANDATE
-- mcp-nusantara-upstream/tests/test_hermes_v1_conversation.py
 - MDE-03 Provider Registry — discovery and contract closure
 - Codebase Design
 - During the session
 - compilerOptions
-- before/api.ts
+- ADENDUM TUGAS OPENCODE
 - 32. FINAL OUTPUT YANG HARUS DIHASILKAN
 - ref_node_fs
-- NCP-V1-OPENWEBUI-REA-ADAPT-001/before/control-plane/src/api.ts
+- ChunkProcessor
 - HTML Report Format
 - tests/test_web_evidence_pipeline.py
 - normalizeParams
-- require_admin
+- perbaikanbukti/tests/test_control_plane_attestation_binding.py
 - perbaikanbukti/tests/test_web_evidence_pipeline.py
 - template.sh
 - tests/test_developer_core_engine_contract.py
 - LanguageEngine
-- dispatchEventForPluginEventSystem
-- dispatchEventForPluginEventSystem
+- tests/test_local_operator_identity.py
+- NUSANTARA V1 — Tiga Lapisan Knowledge dan Tiga Alur Kelulusan Satu SOP
 - P0 tahap A — batas SOP V1
-- source-checkpoint/app__api__routes.py
+- MockProvider
 - approval_controller.py
 - r1-local-001-20261007/app/api/routes.py
 - CLAUDE_CONTRACT.MD
-- MemoryStore
-- profile-before/app__api__routes.py
-- continue-20261019-095544/before/app__api__routes.py
+- perbaikanbukti/tests/test_evidence_runner_guards.py
+- app__api__routes.py
+- CandidateStore
 - Migrate to Shoehorn
 - openrouter-cost-20261016-141908/routes.py
 - developer_core_engine.before_prod_integration_20261002_142101.py
-- chat-p0-20261019/vite-cache/deps/chunk-Z2UXYY2T.js
 - developer_core_engine.before_source_cleanup_20261002_142345.py
 - health-gate/source-before/app/api/routes.py
 - developer_core_engine.before_safe_graph_rag_20261002_142601.py
@@ -249,55 +241,51 @@
 - 7. PREVIEW PRESENTATION
 - NUSANTARA-MDE-ATTESTATION-BROWSER-E2E-001
 - Final Audit
-- laya-integration/before/app__api__routes.py
+- RuntimeImpactAnalyzer
 - perbaikanbukti/app/api/routes.py
-- control-plane-four-20261019/vite-cache/deps/chunk-Z2UXYY2T.js
 - developer_core_engine.before_graph_rag_production_20261002_142501.py
-- chat-p0-20261019/vite-cache/deps/@tanstack_react-query.js
-- control-plane-four-20261019/vite-cache/deps/@tanstack_react-query.js
-- before/app__core__nusantara_config.py
+- .emit
+- perbaikanbukti/app/research/gap_detector.py
 - SessionMemory
 - graphify reference: extra exports and benchmark
-- cost-ledger-v1-20261013-181330/app/core/nusantara_config.py
+- NusantaraConfig
 - developer_core_engine.before_production_rag_20261002_141904.py
-- mcp-nusantara-upstream/tests/test_runtime_verification.py
+- Independent Spec review
 - graphify reference: extra exports and benchmark
 - 14. STATUS SEMANTICS
 - cost-ledger-v1-20261013-181425/app/core/nusantara_config.py
 - profile-before/app__core__nusantara_config.py
 - developer_core_engine.before_graph_rag_v2_20261002_132824.py
-- get2
+- controlled_pipeline
 - payload/app/api/control_plane.py
 - developer_core_engine.before_graph_adapter_20261002_132323.py
 - developer_core_engine.before_source_filter_20261002_132632.py
-- EvidenceRejected
-- .on
-- tests/test_v1_review_execution_api.py
+- perbaikanbukti/app/knowledge/web_evidence.py
+- OllamaProvider
 - Ask Matt
-- pytest
+- perbaikanbukti/app/api/v2_routes.py
 - perbaikanbukti/app/security/local_operator.py
 - Diagnosing Bugs
-- constructor
+- KONTRAK UJI RUNTIME NUSANTARA V1
 - scripts/validate_gate12_final.py
 - 16. TEST REQUIREMENTS
 - 5. FORBIDDEN SCOPE
 - NUSANTARA V1 — Agent Orchestration Boundary
 - MDE-04 Model Registry — identity and selection contract
-- LanguageEngine
 - app
 - developer_core_engine.before_quality_20261002_131836.py
-- get2
+- OllamaProvider
 - MasterDeveloperEngine
-- has
-- has
-- convertBaseSchema
-- create_plan
-- before/control-plane__src__api.ts
+- perbaikanbukti/app/observability/logging.py
+- OpenAICompatibleProvider
+- create
+- OllamaProvider
+- tests/test_v1_response_projection.py
 - hermes-acp-20261016T064413Z-b7d16e5d/app/api/control_plane.py
-- ref_node_assert
-- get
-- convertBaseSchema
-- get
+- check_v1_isolated_upload.cjs
+- Implementasi tiga lapisan knowledge dan tiga alur SOP V1
+- Perbaikan fondasi Nusantara V1
+- Sambungan SOP ke chat — 28 Oktober 2026
 - ProductionSemanticRetriever
 - tests__test_runtime_attestation.py
 - V100 — Environment / Architecture
@@ -344,21 +332,21 @@
 - nusantara_master_pdf_sop_engine.py
 - commitMutationEffectsOnFiber
 - developer_core_engine.py
-- completeWork
-- now
-- completeWork
+- OllamaProvider
+- app/developer_core/operationalization.py
+- Audit request aktual SOP dan percakapan Drive
 - developer_core_engine.before_domain_routing_20261002_161418.py
 - ProductionHybridRAG
 - FULL-ROOT Development Report — 2026-10-07
 - MDE-02 execution report — 2026-10-07
 - developer_core_engine.before_master_20261002_162403.py
 - developer_core_engine_BEFORE_ROUTING_PATCH.py
-- mcp-nusantara-upstream/tests/test_evidence_finalization.py
-- NCP-V1-SOP-OPERATOR-001/before/control-plane/src/api.ts
-- loadServerRoute
-- EvidenceGroundingGuard
+- test_evidence_finalization.py
+- SemanticIntentEngine
+- perbaikanbukti/app/developer_core/operationalization.py
+- install
 - 33. GATE 4 � TRUST AUDIT RESULT
-- mcp-nusantara-upstream/app/policy/policy_engine.py
+- perbaikanbukti/app/policy/policy_engine.py
 - 35. GATE 6 � MEMORY AUDIT RESULT
 - NUSANTARA_DEEP_AUDIT_PHASE_0_21.md
 - MDA PHASE-0 → R1 AUTHORIZATION MASTER COMMAND.md
@@ -367,29 +355,29 @@
 - 10. NEGATIVE VERIFICATION
 - 19. STATUS SEMANTICS
 - 4. AUTHORIZED SCOPE
-- EvidenceGroundingGuard
+- setup-matt-pocock-skills/SKILL.md
 - NUSANTARA V1 — Knowledge RAG
-- EvidenceGroundingGuard
+- Issue tracker: GitHub
 - NUSANTARA V1 — Tool MCP API
 - NUSANTARA V1 — Trust Policy Approval
 - PRODUCTION_KNOWLEDGE_BASE.md
-- before/tests/test_v1_sop_boundary.py
-- baseline/control_plane.py
+- Issue tracker: GitLab
+- Process
 - ProductionSemanticRetriever
-- perbaikanbukti/app/knowledge/production_semantic_retriever.py
-- ProviderUnavailableError
-- reconcileChildFibersImpl
-- reconcileChildFibersImpl
-- rag-authority-patch-20261012-103513/production_semantic_retriever.py
+- ProductionSemanticRetriever
+- LLMProvider
+- app/developer_core/operational_run.py
+- project
+- ProductionSemanticRetriever
 - core-human-first-20261008-4b875c29/CONTRACT.md
-- ContextEngine
+- ContextState
 - NusantaraMasterDeveloperEngine
 - MemoryStore
 - developer_core_engine.before_query_expansion.py
 - MCPServer
-- "node_modules/react/cjs/react.development.js"
-- loadServerRoute
-- "node_modules/react/cjs/react.development.js"
+- perbaikanbukti/app/developer_core/operational_run.py
+- perbaikanbukti/app/knowledge/chunker.py
+- .__init__
 - EmbeddingProvider
 - ProductionSemanticRetriever
 - developer_core_engine.before_chat_domain_fix.py
@@ -406,17 +394,17 @@
 - DEVELOPER_CORE_OPERATIONALIZATION.md
 - Local Verification Report
 - MDE-02 effective configuration contract
-- setOptions
-- setOptions
-- useRouter
-- .buildLocation
+- Final verification evidence — 2026-10-28
+- Kelanjutan perbaikan Nusantara — 28 Oktober 2026
+- main
+- validate_gate15_7_approval_wiring.py
 - SQLiteVectorStore
 - ExecutionAudit
-- MASTER ENGINEERING AUDIT — NUSANTARA AI V1
+- validate_gate15_change_planning_final.py
 - DeveloperCoreClient
 - validate_gate16_graph.py
 - NUSANTARA Control Plane V1
-- ExecutionPlan
+- ToolError
 - MDE-03 Provider Registry execution report
 - MDE-04 Model Registry execution report
 - app/developer_core/hermes_acp_connection.py
@@ -425,7 +413,6 @@
 - graphify reference: commit hook and native CLAUDE.md integration
 - test_finalized_leaf_result_mut0/project/runs/run-one/package.json
 - Asumsi, batasan, dan jejak verifikasi
-- ContextState
 - perbaikanbukti/app/knowledge/official_knowledge_ingestion.py
 - .claude/skills/developer-core/SKILL.md
 - graphify reference: add a URL and watch a folder
@@ -440,11 +427,11 @@
 - NUSANTARA CORE + HERMES
 - 2. AUTHORITY
 - 35. TEST REQUIREMENTS
-- calculator
-- control-plane/e2e/attestation.spec.ts
+- app/tools/base.py
+- attestation.spec.ts
 - EvidenceGroundingGuard
-- restoreViewTransitionOnHostInstances
-- restoreViewTransitionOnHostInstances
+- Issue tracker: Local Markdown
+- app/developer_core/e2e_health_check.py
 - test_finalized_results_mutatio0/project/runs/run-one/package.json
 - R2 CORE RUNTIME IDENTITY EXECUTION REPORT
 - Inventory direktori kedalaman3
@@ -468,7 +455,7 @@
 - graphify reference: transcribe video and audio
 - MarkItDown for Nusantara Core
 - Nusantara Engineering Control Plane v0.1
-- mcp-nusantara-upstream/app/knowledge/official_knowledge_ingestion.py
+- CHG-E2E-HEALTH-001/app/developer_core/e2e_health_check.py
 - MDA-CHATGPT-DEVELOPER-001
 - 8. TESTING STACK
 - MDA-CPLANE-UI-AUTH-001
@@ -481,26 +468,26 @@
 - Phase Status — Nusantara Core + Hermes
 - setInitialProperties
 - Windows
-- safe_acall
-- get_cached
+- asyncio
+- .query
 - developer_core_engine.before_chat_debug.py
-- mcp-nusantara-upstream/app/knowledge/production_semantic_retriever.py
+- ModelRouter
 - developer_core_engine.before_gate_fix.py
-- Files Created by Hermes
+- get_pages_from_original
 - tests/test_evidence_runner_guards.py
 - developer_core_engine.before_master_routing_fix.py
 - start_owui.sh
 - Panduan teknis operator Nusantara V1
 - developer_core_engine.before_query_domain_fix.py
 - .agents/skills/graphify/references/extraction-spec.md
-- EvidenceRegistryError
+- app/core/evidence_registry.py
 - CLAUDE.md
 - .claude/CLAUDE.md
 - .claude/skills/graphify/references/extraction-spec.md
 - developer_core_engine.before_query_domain_fix2.py
 - ProductionHybridRAG
 - ProductionHybridRAG
-- XYPanZoom
+- perbaikanbukti/app/developer_core/e2e_health_check.py
 - Fase 8 — Observability, evidence, dan pengujian
 - docs/ARCHITECTURE_CURRENT.md
 - docs/ARCHITECTURE_GAP.md
@@ -527,12 +514,12 @@
 - ProductionHybridRAG
 - graphify reference: incremental update and cluster-only
 - ProductionHybridRAG
-- app/api/v2_routes.py
-- app/api/inspection_preview.py
+- r1-local-001-20261007/app/api/v2_routes.py
+- perbaikanbukti/app/devcore/router.py
 - ProductionHybridRAG
 - NUSANTARA V1: chat sebagai beranda dan Control Plane di Pengaturan
-- OpenRouterProvider
-- ExecutionAudit
+- pytest
+- ModelRouter
 - SQLiteVectorStore
 - CHANGELOG
 - LanguageEngine
@@ -552,79 +539,74 @@
 - developer_core_engine.before_hard_grounding_gate.py
 - developer_core_engine.before_service_routing.py
 - Test-Driven Development
-- ._connect
+- SQLiteVectorStore
 - app/api/control_plane.py
-- EvidenceGroundingGuard
+- TrustEngine
 - before/local_operator.py
 - RuntimeAuthorization
 - Reranker
-- rgb
-- mcp-nusantara-upstream/app/knowledge/production_kb.py
+- transport
+- perbaikanbukti/tests/test_inspection_preview_api.py
 - IntentFusion
-- SQLiteVectorStore
+- Live SOP Chat E2E Runbook (operator gated)
 - app__security__local_operator.py
-- before/app/approval/runtime_authorization.py
-- NUSANTARA AI V1 � GATES
+- RuntimeAuthorization
+- validate_gate15_5_change_plan_schema.py
 - r2-20261007/source-before/app/api/routes.py
 - perbaikanbukti/app/api/control_plane.py
 - perbaikanbukti/tests/test_v1_langgraph.py
-- .parseLocation
+- perbaikanbukti/tests/test_v1_response_projection.py
 - NUSANTARA V1 — Autonomous Evidence Closure Report
-- .buildLocation
-- constructor
+- transport
+- FakeProvider
 - Process
 - WEB EVIDENCE INGESTION PIPELINE (WEIP) — IMPLEMENTATION CONTRACT
 - 4. FASE PENGERJAAN WAJIB
 - ContextBuilder
 - LLMProvider
-- Acuan sumber dan jawaban lengkap
+- app/developer_core/write_policy.py
 - cost-ledger-v1-20261013-181330/tests/test_cost_governance_reference.py
 - cost-ledger-v1-20261013-181425/tests/test_cost_governance_reference.py
 - r2-a11-phase-b-20261008-55fd917c/before/tests__test_runtime_verification.py
 - r2-a9-auth-foundation-20261008/before/tests__test_runtime_verification.py
 - NUSANTARA-MASTER DEVELOPER-AGENT.md
-- mcp-nusantara-upstream/app/language/engine.py
+- audit_v1_phases_7_21.py
 - perbaikanbukti/app/language/engine.py
 - control-plane__src__human.tsx
 - tests/test_runtime_verification.py
 - perbaikanbukti/tests/run_evidence_tests_isolated.py
 - perbaikanbukti/tests/test_cost_governance_reference.py
 - tests/run_evidence_tests_isolated.py
-- now
-- ProductionHybridRAG
-- KnowledgeEngine
+- probe
+- laya_intent.py
+- perbaikanbukti/app/developer_core/write_policy.py
 - writing-for-agents/SKILL.md
-- openrouter-cost-20261016-141908/cost_ledger.py
+- CostGovernanceDenied
 - Temuan detail
 - NUSANTARA V1 — EVIDENCE COMPLETION & HUMAN DECISION CONTRACT
 - NUSANTARA MASTER ENGINEERING SYSTEM
 - perbaikanbukti/app/workflow/workflow_schema.py
 - persist_retrieval_receipt
 - NUSANTARA MASTER PHASE RUN
-- useBaseQuery
+- FixtureProvider
 - DeveloperCoreEngine
-- useRouter
-- run
-- useBaseQuery
+- FixtureProvider
+- LIVE_SERVICE_BLOCKER.md
+- MUTEX_COMPATIBILITY.md
 - source_sha256
 - test_b2_integration.py
 - Q: Cek proyek Nusantara
 - perbaikanbukti/app/handoff/engine.py
 - NUSANTARA MASTER PHASE AUDIT
-- ExperimentResult
-- acquireResource
 - Steps
 - wayfinder/SKILL.md
-- acquireResource
-- tests__test_v1_response_projection.py
 - sop_table_reconstruction_engine.py
 - perbaikanbukti/tests/test_hermes_v1_conversation.py
 - E
 - Process
-- .replace
 - EntityExtractor
 - Laya V1: experiment closed, default OFF
-- ref_node_child_process
+- verify_knowledge_upload_entry.cjs
 - perbaikanbukti/app/rag/store.py
 - Steps
 - NUSANTARA V1 — CC-01 Response Projection Proposal
@@ -632,116 +614,75 @@
 - Scaffold Exercises
 - perbaikanbukti/app/core/evidence_registry.py
 - perbaikanbukti/tests/test_developer_core_engine_contract.py
-- executeServerLane
 - to-spec/SKILL.md
-- mcp-nusantara-upstream/tests/test_runtime_build_provenance.py
-- executeServerLane
-- .parseLocation
-- KnowledgeEngine
-- VersionRegistry
-- KnowledgeEngine
+- tests/test_runtime_build_provenance.py
+- investigate.py
 - r2-a14-build-provenance-20261008-61f072ac/CONTRACT.md
-- perbaikanbukti/app/knowledge/production_embedding_bridge.py
-- evidence/vite-cache/deps/@tanstack_react-query.js
-- before/tests/test_hermes_v1_conversation.py
-- .replace
-- before/test_hermes_v1_conversation.py
+- app/knowledge/production_embedding_bridge.py
+- @tanstack_react-query.js
+- SourceRegistry
 - v1-cc01-option-c-backup-20261006/app/api/routes.py
-- noop
-- get
-- SnapshotManager
-- noop
-- update
-- baseline/cost_ledger.py
 - nusantara_sop_semantic_engine_v2.py
-- scripts/validate_gate17_evaluation.py
-- app/mcp/schemas.py
+- MCPServer
 - v1-etr-20261010-120500/manifest.json
-- before-api.ts
+- hermes-acp-20261016T064413Z-b7d16e5d/control-plane/src/operator.tsx
 - perbaikanbukti/app/context/schemas.py
-- run
-- run
-- aa
+- perbaikanbukti/app/tools/base.py
 - preflight.cjs
 - Current State (evidence)
 - V1WorkflowError
 - Proposed implementation plan — Human Decision required
-- BuildDefinition
-- perbaikanbukti/app/governance/tools.py
+- .replace
 - TextParser
 - Kontrak Codex — Satu SOP Siap Diverifikasi Operator
 - Process
-- IntentClassifier
+- perbaikanbukti/app/language/intent.py
 - <Questionnaire title>
-- Reranker
-- SOPReview
 - perbaikanbukti/app/problem/problem_schema.py
-- CandidateStore
-- perbaikanbukti/app/skills/sop_semantic/engine.py
-- commitPlacement
+- requests
 - writing-shape/SKILL.md
-- Bukti Penerimaan — NCP-V1-HERMES-DEVELOPER-001
-- service/local-services.ps1
-- find
-- scripts/verify_docker_runtime.py
-- useLinkProps
+- sop-review.tsx
+- verify_docker_runtime.py
 - Alur development Nusantara
-- Steps
-- mcp-nusantara-upstream/scripts/validate_gate17_experiment.py
+- test_v1_review_execution_api.py
 - .evaluate
 - NUSANTARA V1 fixed ports and Windows autostart
-- .navigate
-- commitPlacement
-- #dispatch
-- useLinkProps
-- .update
 - bundle_sha256
 - OneUseAuthorization
 - Sections
-- .__init__
 - writing-beats/SKILL.md
-- V1KnowledgeBoundary
+- SOPReview
 - loop-me/SKILL.md
 - Reference
 - implement_v2_hermes_runtime.py
-- SQLiteVectorStore
 - test_projection_regression-v3.py
 - test_projection_targeted-v2.py
 - test_projection_targeted-v3.py
 - OneUseAuthorization
-- TextNormalizer
+- perbaikanbukti/app/language/normalizer.py
 - constructor
 - Credential Delivery / Transport Design Review
 - BASELINE.json
 - chief-of-staff/SKILL.md
 - SessionManager
-- ToolRegistry
-- perbaikanbukti/tests/test_runtime_attestation.py
+- BaseTool
+- create_plan
 - stub_modules
 - hitl-loop.template.sh
-- XYPanZoom
-- .navigate
 - GLOSSARY.md Format
-- getNodeDimensions
-- before/test_v1_response_projection.py
-- Selection
 - 2. GOVERNING PRINCIPLES
-- MemoryEngine
 - writing-fragments/SKILL.md
-- NCP-V1-CHAT-001 — patch dan verifikasi terarah
 - refresh.cjs
-- get2
-- .get
-- SourceRejected
-- tests/test_openwebui_adapt.py
+- style_default2
+- .__init__
+- app/research/knowledge_discovery.py
 - DeveloperControl
-- mcp-nusantara-upstream/tests/test_v1_langgraph.py
 - scripts/developer_core_change_query.py
 - Kontrak Hermes — Developer Lokal NUSANTARA V1
 - OneUseAuthorization
 - DeveloperCoreEngine
-- laya_intent.py
-- app/api/routes.py
+- sop_table_reconstruction_engine_v2.py
+- .__init__
 - perbaikanbukti/app/knowledge/schemas.py
 - has
 - typing
@@ -753,17 +694,10 @@
 - implement-spec/SKILL.md
 - NUSANTARA V1 CONTRACT COMPLIANCE REPORT
 - NUSANTARA V1 RECOVERY REPORT
-- before/tests/test_ncp_v1_chat_contract.py
-- createResult
 - convertBaseSchema
-- createResult
-- generateStringFormatCheck
-- IndoBERTClient
-- final-20261016-114420/manifest.json
 - Verifikasi backend Nusantara — 22 Oktober 2026
 - SOP-INGESTION-V1.md
 - R2-A9 IMPLEMENTATION RESULT
-- LLMProvider
 - ACPTests
 - BoundaryTests
 - CREDITS.md
@@ -771,148 +705,119 @@
 - NUSANTARA-V1-FREEZE-20261012-175316.md
 - IntentFusion
 - RAG
-- "node_modules/react/cjs/react-jsx-runtime.development.js"
 - Invoke-NusantaraV1-Readiness.ps1
-- describeNode
 - Selected PDF Chat repair — 23 October 2026
-- "node_modules/react/cjs/react-jsx-dev-runtime.development.js"
 - completeWork
-- json
-- "node_modules/react/cjs/react-jsx-runtime.development.js"
 - scripts/implement_v2_hermes_runtime_safe.py
-- describeNode
-- "node_modules/react/cjs/react-jsx-dev-runtime.development.js"
-- ReactFlow
-- json
-- Selection
-- verify-chat.cjs
+- get2
 - TrustEngine
 - P0 fase B — baseline PDF asli dan model lokal
 - LanguageEngine
-- mcp-nusantara-upstream/app/api/v2_routes.py
 - 14. TEST CONTRACT
 - 25. HUMAN DECISION GATE
 - IndoBERTClient
 - chunk-GEOUHMPA.js
 - perbaikanbukti/app/research/root_cause.py
-- DeveloperRuntime
-- ToolError
-- ContextBuilder
+- GraphifyBridge
 - reconcileChildFibersImpl
 - IndoBERTClient
-- createReactiveSystem
-- test-0f1864efd6274d279abbeb7b98804e36/registration-fixture/service/local-services.ps1
-- test-3e99958f9da249fcac36df36f42e3632/registration-fixture/service/local-services.ps1
-- test-64043a44de7e42a1b98760badd6a226f/registration-fixture/service/local-services.ps1
-- test-7c098f3ef0834dffb4a5f658c26462b6/registration-fixture/service/local-services.ps1
-- test-a65fb6c2f6c34e39b566bd77105fa7d0/registration-fixture/service/local-services.ps1
-- test-ae929d9898f44e48a1bf10305a0e170b/registration-fixture/service/local-services.ps1
-- test-b74983ba03b24fbc8e4407f56f644e3d/registration-fixture/service/local-services.ps1
 - OpenRouterProvider
 - Caller Authentication Boundary Decision
-- sqlite3
-- tests/test_inspection_preview_api.py
+- perbaikanbukti/app/governance/sandbox.py
 - MDA-R2 OPEN FINDINGS CLOSURE CONTRACT
-- Remaining Work
-- control-plane/e2e/human.spec.ts
+- human.spec.ts
 - ApprovalQueue
-- worker
 - FINAL STATUS — NCP-V1-HERMES-DEVELOPER-001
 - R2-A8 minimum correlation remediation — discovery/design report
-- mcp-nusantara-upstream/scripts/validate_gate17_proposal.py
-- mcp-nusantara-upstream/app/workflow/engine.py
-- tests/test_runtime_authorization.py
 - RuntimeGraphMapper
 - .evaluate
-- perbaikanbukti/app/tools/base.py
 - 4. V1 PROTECTION CONTRACT
 - perbaikanbukti/app/workflow/engine.py
-- HermesAgent
+- app/api/routes.py
 - perbaikanbukti/tests/test_audit_regressions.py
-- worker
-- AuthorizationError
+- create_plan
 - Kontrak Hermes — Perbaikan Chat Satu SOP NUSANTARA V1
-- MCPServer
+- sop_table_reconstruction_engine_v3.py
 - source-before/app/knowledge/official_knowledge_ingestion.py
 - NUSANTARA — MASTER DEVELOPER & AGENT CONTROL CONTRACT V1
 - 35. FINAL AUTHORITY
 - "node_modules/react/cjs/react.development.js"
-- loadServerRoute
-- DocumentTools
-- perbaikanbukti/tests/test_runtime_authorization.py
+- runClientTransaction
+- tests/test_inspection_preview_api.py
+- ctypes
 - setOptions
-- source-before/app/api/v2_routes.py
+- MemoryEngine
 - app__api__v2_routes.py
-- worker
-- worker
-- worker
+- MemoryEngine
+- ToolEngine
+- FeedbackStore
 - restoreViewTransitionOnHostInstances
-- worker
-- worker
+- ToolRegistry
+- PolicyRule
 - source-before/app/knowledge/production_kb.py
-- perbaikanbukti/app/api/v2_routes.py
+- r2-a11-c0-20261008-observation-8c48f128/observe_once.py
 - KnowledgeEngine
-- worker
-- .update
-- _gte
-- verify-layout.cjs
+- Qr
+- ToolEngine
+- OfficialKnowledgeEngine
+- OfficialKnowledgeEngine
 - MDA R2 Controlled Implementation Closure — 2026-10-07
-- MDA R2 Controlled Implementation Closure — 2026-10-07
+- ._build_facts
 - Human-first Nusantara Core — discovery and bounded improvement
-- MDA R2 Controlled Implementation Closure — 2026-10-07
+- perbaikanbukti/tests/test_v1_smoke.py
 - Nusantara workflow execution: 2026-10-21
 - R2-A7 minimum runtime attestation implementation report
-- sys
+- socket
 - createBrowserHistory
 - ControlledPatchExecutor
 - V1-DOCUMENT-REQUIREMENTS.md
-- perbaikanbukti/app/improvement/release.py
-- _TextHTML
-- create_plan
-- .handle
+- tests/test_v1_smoke.py
+- test_v1_shared_hardening.py
+- Xd
+- ObservabilityEngine
 - SOPReview
 - DeveloperCoreEngine
-- R1_SOCKET_GUARD_BACKUP_20261007_142145/test_configuration_integration.py
+- NusantaraConfig
 - .buildLocation
-- clamp
-- find
-- clamp
-- mcp-nusantara-upstream/app/knowledge/schemas.py
-- graphify reference: query, path, explain
-- graphify reference: query, path, explain
-- backup-20261022T075007Z/knowledge/official_sources/ktp_el/manifest.json
+- normalize_text
+- ObservabilityEngine
+- ToolError
+- controlled_pipeline
+- .replace
+- setupScrollRestoration
+- prohibited
 - 33. GATE 4 � TRUST AUDIT RESULT
 - NUSANTARA V1 — Runtime Execution
 - Local WIP review — 2026-10-20
-- PROJECT_BASELINE — NUSANTARA AI V1 (mcp-starter 0.1.0)
-- RuntimeAuthorization
-- mcp-nusantara-upstream/scripts/verify_docker_runtime.py
-- data/knowledge/official_sources/ktp_el/manifest.json
+- tokenize
+- tokenize
+- 9. SECURITY ANALYSIS
+- normalize_text
 - MDA R2 — Cost Governance Guard Design
 - Graph Report - mcp-starter  (2026-10-07)
 - NCP-V1-SOP-OPERATOR-001 — implementasi dan serah terima
-- mcp-nusantara-upstream/tests/run_evidence_tests_isolated.py
-- MemoryEngine
-- ToolEngine
+- Continuation verification — 28 October 2026
+- app/developer_core/claude_code_integration.py
+- LLMProviderProtocol
 - Graph Report - mcp-starter  (2026-10-08)
 - useBaseQuery
 - Nusantara–Hermes: patch tahap koneksi ACP
 - TableFormerV2
 - perbaikanbukti/app/developer_core/approval_controller.py
-- tests/test_ncp_v1_chat_contract.py
-- perbaikanbukti/app/developer_core/change_plan_validator.py
+- test_ncp_v1_chat_contract.py
+- Mc
 - perbaikanbukti/app/developer_core/controlled_write.py
 - SentenceTransformerEmbedder
-- perbaikanbukti/app/research/experiment.py
+- ControlledExperiment
 - useRouter
-- perbaikanbukti/tests/test_inspection_preview_api.py
+- Mc
 - NUSANTARA V1 — Final Closure Report
 - Laporan Verifikasi Nusantara V1
 - acquireResource
-- tests/test_local_operator_identity.py
-- interpolateTransform
-- interpolateTransform
-- mcp-nusantara-upstream/control-plane/tests/inspection-preview-network-guard.cjs
+- perbaikanbukti/app/developer_core/claude_code_integration.py
+- LLMProviderProtocol
+- CHG-20261005-001/app/developer_core/write_policy.py
+- ui04-chat-timeout-20261009-130937/test-write-guard.cjs
 - NUSANTARA V1 — Autostart Report (NCP-V1-AUTOSTART-001)
 - evidence-registry-package-20261010-01/package.json
 - step3-5-continuation-20261010-01/package.json
@@ -922,51 +827,40 @@
 - R2-A6 CLOSURE REPORT — BLOCKED / NOT_VERIFIED
 - R2-A8 configuration/profile remediation — implementation report
 - payload/app/developer_core/hermes_acp_connection.py
-- test_installer.py
-- mcp-nusantara-upstream/tests/test_cost_governance_reference.py
-- perbaikanbukti/app/knowledge/web_evidence.py
+- InstallTests
+- ResponseObservationMiddleware
+- ResponseObservationMiddleware
 - executeServerLane
 - docs/audit/comparison/02_CORE_ENGINE_COMPARISON.md
 - Optional V1 OpenRouter and LangGraph
 - Kontrak Kerja Agent Hermes untuk Nusantara V1
 - PROJECT_CONTEXT.md
 - perbaikanbukti/app/core/hardening/validator.py
-- ChangePlanError
+- perbaikanbukti/app/developer_core/change_plan.py
 - SemanticIntentEngine
-- stub_modules
-- SessionMemory
+- OllamaEngine
+- OllamaEngine
 - perbaikanbukti/app/research/failure_analysis.py
-- source-before/app/knowledge/production_embedding_bridge.py
+- perbaikanbukti/app/developer_core/self_improvement_loop.py
 - ACL-EXCLUSION-BLK-ACL-REPORTS-001-20261015.md
-- onFocus
 - app
-- compileFn
-- onFocus
-- compileFn
-- NCP-V1-CHAT-001 — patch dan verifikasi terarah
-- Handover penyempurnaan Workspace / Human Control
-- NCP-V1-UI-LOCAL-001 — Integrasi tampilan operator ke NUSANTARA V1 lokal
-- Failed UI tests
+- _lte
+- DiagnosticPopen
+- test_actual_http_boundary_denies_public_document_scope_before_lookup
 - NUSANTARA-V1-GAP-MATRIX-20261009-192815.md
 - NUSANTARA-MDE-ATTESTATION-BROWSER-E2E-001 v1.0 — Execution Report
 - DevCore Human Goal → Real Inspection Plan Integration
 - Human goal → inspection preview
 - Human Goal → Inspection Plan Preview
-- NCP-V1-UI-FINAL-001 — hasil implementasi
 - NUSANTARA V1 Autonomous Closure — 2026-10-10
-- r2-a11-c0-20261008-observation-8c48f128/observe_once.py
 - R2 CORE RUNTIME IDENTITY EXECUTION REPORT
 - R2-A2 DISCOVERY / IMPLEMENTATION GATE RECORD
 - NUS-V1-WEIP-20261009 v1.1.0 — scoped implementation
-- perbaikanbukti/tests/test_control_plane_attestation_binding.py
-- mcp-nusantara-upstream/tests/test_control_plane_attestation_binding.py
-- verify.cjs
 - perbaikanbukti/tests/test_weip_rag_adapter.py
 - RuntimeImpactAnalyzer
 - perbaikanbukti/app/handoff/schemas.py
 - docs/audit/comparison/04_MODEL_LLM_LAYER.md
 - Response
-- MemoriaVectorStore
 - perbaikanbukti/app/policy/schemas.py
 - noop
 - FileSystemTool
@@ -974,20 +868,8 @@
 - Nusantara Configuration Architecture — Design Contract Phase 4
 - Nusantara DeveloperCoreEngine — Implementation Contract
 - NUSANTARA V1 — CC-01 Opsi C: Laporan Implementasi dan VERIFY
-- EntityExtractor
-- mcp-nusantara-upstream/app/workflow/workflow_schema.py
-- mcp-nusantara-upstream/docs/contracts/NUSANTARA-ARCHITECTURE-CONTRACT-V1.md
 - NCP-V1-UI-LOCAL-001 — Integrasi tampilan operator ke NUSANTARA V1 lokal
 - app/developer_core/context_router.py
-- ControlledExperiment
-- mcp-nusantara-upstream/app/governance/tools.py
-- fetch
-- fetch
-- perbaikanbukti/tests/test_local_operator_identity.py
-- source-checkpoint/app__models__openrouter_cost_policy.py
-- before/app__models__openrouter_cost_policy.py
-- benchmark-ollama.cjs
-- Nusantara V1 ? hasil implementasi 2026-10-15
 - openrouter-estimator-20261016-142658/openrouter_cost_policy.py
 - run
 - ATTESTATION Browser E2E — isolated implementation report
@@ -995,22 +877,18 @@
 - MDE09 — Final discovery and closure audit
 - NUS-EVIDENCE-COMPLETION-002 — Offline Evidence and Acceptance Mapping
 - NUS-EVIDENCE-COMPLETION-003 — Completion Report
-- normalize_text
-- Status Hermes ACP Nusantara V1 — 16 Oktober 2026
+- @tanstack/react-query
 - R2-A10 — Runtime attestation isolation fix
 - docs/audit/comparison/03_E2E_CHAT_TRACE.md
 - docs/audit/comparison/06_RAG_KNOWLEDGE.md
-- ObservabilityEngine
 - R2-A11 Phase B2 — isolated integration validation
 - R2-A12 — Read-only Runtime Identity discovery
 - R2 CORE RUNTIME IDENTITY EXECUTION REPORT — R2-A5
 - Minimum implementation plan — NOT authorized to MODIFY
 - Control Plane UI completion audit — 2026-10-08
 - WEIP completion — scoped implementation, acceptance REVIEW_REQUIRED
-- NUSANTARA V2 CAPABILITY AUDIT
-- test_pdf_preview.py
 - AuditTrail
-- perbaikanbukti/app/devcore/workspace.py
+- Workspace
 - perbaikanbukti/app/developer_core/context_router.py
 - ExecutionPlan
 - commitPlacement
@@ -1018,22 +896,11 @@
 - EvidenceCollector
 - StateMachine
 - MDE-01 Configuration Intelligence
-- #dispatch
-- Chat P0 — fix verified, activation awaiting HD-CHAT-002
-- datetime
-- Control Plane V1 — four-menu implementation and actual verification
-- datetime
-- gemma4_browser_canary.cjs
-- NUSANTARA V1 Chat Autopilot Closeout ? 2026-10-19
-- NCP-V1-AUTOSTART-001 continuation handover
+- find
 - useLinkProps
-- ncp-v1-ui-local-20261019/reference/package.json
-- Hasil integrasi SOP Nusantara V1
-- 57eda7e564_cd4dd6f_humanspec.js
 - PROJECT_STRUCTURE_AUDIT_20261007_110002/REPORT.md
 - Panduan teknis operator Nusantara V1
 - Panduan teknis operator Nusantara V1
-- mcp-nusantara-upstream/app/mcp/schemas.py
 - Control Plane inspection_preview — Discovery Closure
 - ARCHITECTURE_CURRENT.md
 - docs/audit/comparison/00_EXECUTIVE_SUMMARY.md
@@ -1055,32 +922,16 @@
 - Protected-state safety analysis
 - HDG-R2-A9-AUTH-001 — Implementation stopped at Windows feasibility
 - Official fixture verification — NEEDS_OWNER_INPUT
-- mcp-nusantara-upstream/app/core/hardening/timeout.py
-- .navigate
 - ActionEngine
 - project
 - CircuitBreaker
-- perbaikanbukti/app/core/hardening/timeout.py
 - perbaikanbukti/app/devcore/backend.py
-- Retriever
-- .create_request
-- perbaikanbukti/app/improvement/gate.py
 - perbaikanbukti/app/trust/schemas.py
 - Nusantara Configuration — Phase 10 Architecture Review
 - NUSANTARA_MASTER_BACKLOG_20261009-204835.md
 - Template/reference/package.json
-- Retriever
-- Selection
-- _overwrite
-- _overwrite
-- NCP-V1-AUTOFIX-HUMAN-001 — evidence and handover
-- NUSANTARA V1 — Paket integrasi UI lokal
-- verify-history.cjs
-- Perbaikan percakapan SOP Nusantara V1 — 15 Oktober 2026
-- Nusantara V1: verification, keputusan, dan eksekusi
 - isolation
 - test_counts
-- 9. SECURITY ANALYSIS
 - browser-results-reviewed/attestation-API-failure-remains-unavailable/error-context.md
 - browser-results-reviewed/attestation-API-rejection--3d937-sed-without-automatic-retry/error-context.md
 - CONTROL_PLANE_FINAL_ACCEPTANCE_20261008-182030.md
@@ -1113,23 +964,12 @@
 - Nusantara Configuration — Phase 7 Integration
 - Nusantara Configuration — Phase 8 Validation
 - Nusantara Configuration Map — Phase 3
-- IntentClassifier
 - NUSANTARA V1 — Paket integrasi UI lokal
 - "node_modules/react/cjs/react-jsx-runtime.development.js"
 - describeNode
 - "node_modules/react/cjs/react-jsx-dev-runtime.development.js"
-- Chat connection recovery
-- Chat P0 — preflight and required budget decision
-- generateStringFormatCheck
-- _gte
-- Model Settings V1 — HOLD
-- service__nusantara-supervisor.ps1
 - ReactFlow
 - json
-- Handover NCP-V1-UI-LOCAL-001
-- NUSANTARA V1 — Operator Control Plane
-- Mc
-- createReactiveSystem
 - browser-results-diagnostic/attestation-five-stages-re-0a584--explicit-PENDING-intention/error-context.md
 - browser-results-installed/attestation-five-stages-re-0a584--explicit-PENDING-intention/error-context.md
 - CONTROL_PLANE_FINAL_ACCEPTANCE_20261008-182152.md
@@ -1146,318 +986,69 @@
 - OpenRouterProvider
 - nusantara_master_engine.py
 - Docling Models
-- perbaikanbukti/app/core/hardening/retry.py
-- operator_exchange
-- StagingStore
-- create_plan
-- LLMProviderProtocol
 - _BorrowedConnection
 - MemoryEngine
-- perbaikanbukti/app/observability/metrics.py
+- Metrics
 - perbaikanbukti/app/policy/engine.py
 - EXECUTIVE_AUDIT_SUMMARY.md
 - Nusantara Configuration — Phase 9 Regression
 - NUSANTARA-LEVEL-B-RESULT-20261008-202057.md
 - NUSANTARA V1 — Operator Control Plane
-- parseSegments
+- .update
 - _gte
 - NUSANTARA V1 — MASTER PRD
-- NUSANTARA V1 Chat P0 - live handover (2026-10-19)
-- defaultOnDefaultTransitionIndicator
-- defaultOnDefaultTransitionIndicator
-- _lte
-- Gemma 4 Control Plane canary
-- What You Must Do When Invoked
-- What You Must Do When Invoked
-- tokenize
-- NCP-V1-AUTOSTART-001 implementation evidence
-- mcp-nusantara-upstream/tests/test_weip_rag_adapter.py
-- .handle
-- investigate.py
-- DAFDUK 24 new24
-- mcp-nusantara-upstream/app/rag/store.py
-- Prinsip Pengembangan — Nusantara Core + Hermes
 - verify_v1_review_live.cjs
-- PERMOHONAN DATA INFORMASI ADMINISTRASI KEPENDUDUKAN (UNTUK INDIVIDU)
-- Roadmap 18 Fase - Nusantara Core + Hermes
-- test_operator_model_is_used_by_real_hermes_and_public_projection
 - DOCLING_V1_INTEGRATION_REPORT.md
-- PERMOHONAN DATA PRIBADI
-- PERMOHONAN INFORMASI DATA PENDUDUK UNTUK OPD INSTANSI SWASTA
-- backup-20261022T075007Z/knowledge/sop/manifest.json
-- mcp-nusantara-upstream/app/context/schemas.py
-- v1-20261012-092454/report.md
-- test_operator_model_is_used_by_real_hermes_and_public_projection
+- tests/test_v1_operator_control.py
 - perbaikanbukti/tests/v2/test_devcore_inspection.py
-- mcp-nusantara-upstream/tests/test_developer_core_engine_contract.py
-- v1-20261012-092935/report.md
-- v1-20261014-100121/report.md
-- app/knowledge/production_embedding_bridge.py
+- source-before/grounding.py
 - Independent Spec review evidence
-- mcp-nusantara-upstream/app/knowledge/production_embedding_bridge.py
 - NUSANTARA-MASTER-AUDIT-V2.md
 - tests/test_hermes_v1_conversation.py
 - NUSANTARA-PHASE1-GATE.md
-- find
-- ProblemDetector
+- V1LangGraphWorkflow
 - remediation
-- DAFDUK 24 new24
-- IntentClassifier
-- mcp-nusantara-upstream/app/problem/problem_schema.py
-- CandidateStore
-- PERMOHONAN DATA INFORMASI ADMINISTRASI KEPENDUDUKAN (UNTUK INDIVIDU)
-- mcp-nusantara-upstream/app/skills/sop_semantic/engine.py
-- Architecture Decision Records (ADR)
-- PERMOHONAN DATA PRIBADI
 - clamp
-- ApprovalPrincipal
-- PERMOHONAN INFORMASI DATA PENDUDUK UNTUK OPD INSTANSI SWASTA
 - AppException
-- TextParser
-- TextNormalizer
-- Environment & Architecture Report
-- SessionManager
-- ToolRegistry
-- DeveloperControl
-- BASELINE — NUSANTARA AI V1
-- mcp-nusantara-upstream/app/tools/base.py
-- DeveloperCoreEngine
-- HandoffEngine
-- IntentFusion
-- mcp-nusantara-upstream/app/models/schemas.py
-- mcp-nusantara-upstream/scripts/validate_gate17_evaluation.py
-- mcp-nusantara-upstream/tests/test_v1_review_execution_api.py
-- data/knowledge/sop/manifest.json
-- Current State (evidence)
-- test_operator_model_is_used_by_real_hermes_and_public_projection
-- 16. IMPLEMENTATION SCOPE PROPOSAL
 - tests/v2/test_devcore_inspection.py
-- DevCore
-- ExperimentEvaluator
-- ToolError
 - Bukti Verifikasi U02/U04 - Chat Nusantara
-- 8. RESPONSE PROJECTION OPTIONS
-- ApprovalQueue
-- mcp-nusantara-upstream/app/research/root_cause.py
 - interpolateTransform
-- RuntimeGraphMapper
-- create_handoff_request
 - Independent Standards review of priority remediation
-- .evaluate
-- compilerOptions
-- mcp-nusantara-upstream/tests/test_audit_regressions.py
 - browser-results/attestation-API-failure-remains-unavailable/error-context.md
 - browser-results/attestation-API-rejection--3d937-sed-without-automatic-retry/error-context.md
-- _TextHTML
-- mcp-nusantara-upstream/artifacts/settings-health/browser-e2e.cjs
-- mcp-nusantara-upstream/app/core/hardening/validator.py
-- ControlledPatchExecutor
+- app/knowledge/web_evidence.py
 - attestation-direct-decision-cannot-bypass-review/error-context.md
 - attestation-direct-evidence-cannot-bypass-review/error-context.md
-- .handle
-- RAG SCHEMA AUDIT — NUSANTARA AI V1
-- mcp-nusantara-upstream/tests/test_inspection_preview_api.py
-- mcp-nusantara-upstream/app/handoff/engine.py
 - attestation-direct-review-cannot-bypass-review/error-context.md
 - attestation-direct-test-cannot-bypass-review/error-context.md
-- mcp-nusantara-upstream/app/developer_core/approval_controller.py
-- mcp-nusantara-upstream/app/developer_core/controlled_write.py
 - browser-results/attestation-five-stages-re-0a584--explicit-PENDING-intention/error-context.md
-- mcp-nusantara-upstream/app/research/experiment.py
-- mcp-nusantara-upstream/CLAUDE_CONTRACT.MD
-- PolicyRule
 - attestation-invented-autho-f7705-sed-without-automatic-retry/error-context.md
 - attestation-malformed-snapshot-remains-unavailable/error-context.md
 - attestation-material-conte-0047a-ing-and-relocks-the-session/error-context.md
 - attestation-wrong-evidence-9a8ad-sed-without-automatic-retry/error-context.md
 - MDA_R2_PRE_AUTHORIZATION_20261007_143236.md
-- mcp-nusantara-upstream/app/devcore/workspace.py
-- ChangePlanError
 - === MDE CONTROL PLANE PREFLIGHT ===
-- SemanticIntentEngine
-- ModelSelection
-- mcp-nusantara-upstream/app/research/failure_analysis.py
-- SECURITY TRACE — NUSANTARA AI V1
-- Final Audit
-- mcp-nusantara-upstream/scripts/validate_gate16_graph.py
-- api
-- ._build_facts
-- verify
+- ModelRouter
 - Existing lifecycle analysis — scripts not executed
 - Evidence binding and server-owned permit bridge
-- ._build_facts
-- graphify reference: extra exports and benchmark
-- RuntimeImpactAnalyzer
-- mcp-nusantara-upstream/app/handoff/schemas.py
-- mcp-nusantara-upstream/app/policy/schemas.py
-- app/reasoning/schemas.py
-- mcp-nusantara-upstream/app/research/gap_detector.py
-- FileSystemTool
-- graphify reference: extra exports and benchmark
-- mcp-nusantara-upstream/scripts/developer_core_change_query.py
-- mcp-nusantara-upstream/scripts/validate_gate12_final.py
 - Indeks bukti dan cara verifikasi
 - Standards axis evidence
 - onFocus
 - compileFn
-- switch_index_recovery.py
-- AuditTrail
-- mcp-nusantara-upstream/app/developer_core/context_router.py
-- ExecutionPlan
-- EvidenceCollector
-- StateMachine
-- mcp-nusantara-upstream/control-plane/e2e/human.spec.ts
-- MDE-03 Provider Registry — discovery and contract closure
-- MDE-04 Model Registry — identity and selection contract
-- DEVCORE_COMPLIANCE — kontrak Developer Core vs source
 - Document Layout Analysis "heron"
-- sop_cv_table_detector.py
-- ActionEngine
-- CircuitBreaker
-- mcp-nusantara-upstream/app/devcore/backend.py
-- security-source/app/execution/base.py
-- mcp-nusantara-upstream/app/trust/schemas.py
-- V100 — Environment / Architecture
-- V101 — Foundation
-- V102 — LLM Provider
-- V103 — Language
-- V104 — Context
-- V105 — Problem
-- V106 — Knowledge / RAG
-- V107 — Reasoning
-- V108 — Workflow
-- V109 — Policy
-- V110 — Trust
-- V111 — Memory
-- V112 — Tool
-- V113 — MCP Ready
-- V114 — Human Handoff
-- V115 — API Gateway
-- V116 — UI
-- V117 — Evaluation / Observability
-- V118 — Docker / Production
-- V200 — Discovery / Reconciliation
-- V201 — Architecture
-- V202 — Hardening
-- V203 — Observability
-- V204 — Trust
-- V205 — Policy
-- V206 — Memory
-- V207 — RAG
-- V208 — MCP
-- V209 — Tool Governance
-- V210 — Experience
-- V211 — Feedback
-- V212 — Evaluation
-- V213 — Failure Analysis
-- V214 — Gap Detection
-- V215 — Knowledge Discovery
-- V216 — Experiment
-- V217 — Improvement Proposal
-- V218 — Human Approval
-- V219 — V1.x Development
-- V220 — Regression / Security
-- V221 — Release / Rollback
-- FULL-ROOT Development Report — 2026-10-07
-- MDE-02 execution report — 2026-10-07
 - fetch
-- verify_knowledge_upload_entry.cjs
 - Response
-- graphify reference: query, path, explain
 - Ringkasan /knowledge Page - Sederhanakan Tampilan
-- Perekaman KTP-el Pemula - Dukcapil Nyaba Kelurahan
-- SentenceTransformerEmbedder
-- mcp-nusantara-upstream/app/reasoning/schemas.py
-- graphify reference: query, path, explain
-- 33. GATE 4 � TRUST AUDIT RESULT
-- 33. GATE 4 � TRUST AUDIT RESULT
-- 34. GATE 5 � POLICY AUDIT RESULT
-- 35. GATE 6 � MEMORY AUDIT RESULT
-- mcp-nusantara-upstream/docs/audit/NUSANTARA_DEEP_AUDIT_PHASE_0_21.md
-- mcp-nusantara-upstream/docs/PRODUCTION_KNOWLEDGE_BASE.md
-- PROJECT_BASELINE — NUSANTARA AI V1 (mcp-starter 0.1.0)
-- Nusantara Core + Hermes — Local Starter
-- mcp-nusantara-upstream/scripts/validate_gate15_6_change_plan_validator.py
-- mcp-nusantara-upstream/scripts/validate_gate15_7_approval_wiring.py
 - perbaikanbukti/app/reasoning/schemas.py
-- Get-NusantaraProcesses
-- requests
 - Audit arsitektur dan integrasi
-- Warga Kota Tangerang Bisa Buat KTP-el Dimana Saja Lewat Sobat Dukcapil
-- KTP Elektronik - Kecamatan Tangerang
 - datetime
-- source-before/app/api/knowledge_pipeline.py
-- LLMProviderProtocol
-- MemoryEngine
-- mcp-nusantara-upstream/app/observability/metrics.py
-- mcp-nusantara-upstream/app/policy/engine.py
-- build_server
-- CHANGELOG
-- 31. GATE 2 � CORE HARDENING AUDIT RESULT
-- 31. GATE 2 � CORE HARDENING AUDIT RESULT
-- 32. GATE 3 � OBSERVABILITY AUDIT RESULT
-- Nusantara Master Developer Engine
-- NUSANTARA V1: chat sebagai beranda dan Control Plane di Pengaturan
-- mcp-nusantara-upstream/docs/DEVELOPER_CORE_OPERATIONALIZATION.md
-- Local Verification Report
-- MDE-02 effective configuration contract
-- MDE-03 Provider Registry execution report
-- MDE-04 Model Registry execution report
-- Mc
-- mcp-nusantara-upstream/service/nusantara-supervisor.ps1
-- Informasi Pelayanan Disdukcapil Kota Tangerang
-- backup-20261022T075007Z/manifest.json
-- Get-ResourceSample
 - NUSANTARA-MASTER-AUDIT.md
 - git-status.txt
 - guard-descriptor-check.txt
-- mcp-nusantara-upstream/.agents/skills/developer-core/SKILL.md
-- graphify reference: add a URL and watch a folder
-- graphify reference: commit hook and native CLAUDE.md integration
-- graphify reference: incremental update and cluster-only
 - guard-reuse-check.txt
-- mcp-nusantara-upstream/.claude/skills/developer-core/SKILL.md
-- graphify reference: add a URL and watch a folder
-- graphify reference: commit hook and native CLAUDE.md integration
-- graphify reference: incremental update and cluster-only
-- V2 Phase 00 — Discovery / Reconciliation
-- Nusantara Master Developer Engine v3
-- ROADMAP_STATUS — Phase 0–21 (V2.0.0-alpha.2)
-- mcp-nusantara-upstream/scripts/audit_deep.ps1
-- Response
 - guard-write-check.txt
-- graphify reference: GitHub clone and cross-repo merge
-- graphify reference: transcribe video and audio
-- MarkItDown for Nusantara Core
-- Session
-- OrchestrationEngine
-- mcp-nusantara-upstream/audit_gate7_deep.ps1
-- graphify reference: GitHub clone and cross-repo merge
-- graphify reference: transcribe video and audio
-- MarkItDown for Nusantara Core
-- Phase Status — Nusantara Core + Hermes
 - pytest-stdout.log
 - pytest-tmp/test_audit_chain_detects_tampe0/decisions.jsonl.head.json
-- mcp-nusantara-upstream/AGENTS.md
-- mcp-nusantara-upstream/.agents/skills/graphify/references/extraction-spec.md
-- mcp-nusantara-upstream/ARCHITECTURE_CURRENT.md
-- mcp-nusantara-upstream/CLAUDE.md
-- mcp-nusantara-upstream/.claude/CLAUDE.md
-- mcp-nusantara-upstream/.claude/skills/graphify/references/extraction-spec.md
-- mcp-nusantara-upstream/docs/ARCHITECTURE_CURRENT.md
-- mcp-nusantara-upstream/docs/ARCHITECTURE_GAP.md
-- mcp-nusantara-upstream/docs/architecture/TARGET_ARCHITECTURE.md
-- mcp-nusantara-upstream/docs/ARCHITECTURE_TARGET_V1.md
-- mcp-nusantara-upstream/docs/COMPOSITION_ROOT_DESIGN.md
-- mcp-nusantara-upstream/docs/NUSANTARA_REPO_MAP.md
-- mcp-nusantara-upstream/RELEASE_NOTES.md
-- mcp-nusantara-upstream/RELEASE_READINESS_REPORT.md
-- mcp-nusantara-upstream/RISK_REGISTER.md
-- mcp-nusantara-upstream/ROLLBACK_PLAN.md
-- healthcheck.sh script
-- mcp-nusantara-upstream/scripts/start.sh
-- mcp-nusantara-upstream/scripts/test.sh
-- nusantara-ai
 - pytest-tmp/test_audit_chain_detects_tampe0/decisions.jsonl.lock
 - pytest-tmp/test_decision_api_requires_aut0/control_plane/evidence_decisions.jsonl
 - pytest-tmp/test_decision_api_requires_aut0/control_plane/evidence_decisions.jsonl.head.json
@@ -1474,30 +1065,15 @@
 - python-results.xml
 - results-bundle.json
 - test-summary.json
-- Perekaman KTP-el Pemula - Dukcapil Nyaba Kelurahan
-- Warga Kota Tangerang Bisa Buat KTP-el Dimana Saja Lewat Sobat Dukcapil
-- KTP Elektronik - Kecamatan Tangerang
-- Informasi Pelayanan Disdukcapil Kota Tangerang
-- source-before/app/core/runtime_identity.py
+- source_build_id
 - MDA POST-MDE09 PREFLIGHT
 - Existing audit/approval reuse and ownership
 - Conditional implementation plan — not executed
-- mcp-nusantara-upstream/app/knowledge/chunker.py
-- build_server
 - Nusantara-Hermes-ACP-Connection-Patch/manifest.json
 - _overwrite
 - Session
 - OrchestrationEngine
 - Ringkasan eksekutif audit NUSANTARA V1
-- chat-p0-20261019/vite-cache/deps/package.json
-- control-plane-four-20261019/vite-cache/deps/package.json
-- backup-20261022T075007Z/knowledge/sop/extracted/CAPIL_02_OCR/CAPIL_02_OCR.md
-- backup-20261022T075007Z/knowledge/sop/extracted/CAPIL_02_OCR_IND/CAPIL_02_OCR_IND.md
-- backup-20261022T075007Z/knowledge/source/ktp_el_official_test.md
-- ui-fix-summary.md
-- data/knowledge/sop/extracted/CAPIL_02_OCR/CAPIL_02_OCR.md
-- data/knowledge/sop/extracted/CAPIL_02_OCR_IND/CAPIL_02_OCR_IND.md
-- data/knowledge/source/ktp_el_official_test.md
 - mde02-20261007/docs/ARCHITECTURE_CURRENT.md
 - mde02-20261007/docs/ARCHITECTURE_GAP.md
 - mde02-20261007/docs/ARCHITECTURE_TARGET_V1.md
@@ -1538,18 +1114,11 @@
 - Audit riwayat Git
 - Matriks kepatuhan PRD NUSANTARA V1
 - NUSANTARA V1 Priority Remediation Report
-- mcp-nusantara-upstream/app/observability/context.py
-- Handler
-- perbaikanbukti/app/devcore/inspection.py
 - Handler
 - Laporan pengujian dan end-to-end
 - isValidIPv6
 - Analisis akar masalah
 - Pemeriksaan knowledge Nusantara — 26 Oktober 2026
-- Handler
-- _lte
-- OllamaEngine
-- ResponseObservationMiddleware
 - defaultOnDefaultTransitionIndicator
 - Operator review — PIAK-03 Permohonan Data Pribadi
 - knowledge-human-interface-20261026.md
@@ -1557,44 +1126,44 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `"node_modules/react-dom/cjs/react-dom-client.development.js"()` - 811 edges
-2. `"node_modules/react-dom/cjs/react-dom-client.development.js"()` - 811 edges
-3. `"node_modules/react-dom/cjs/react-dom-client.development.js"()` - 811 edges
-4. `K1()` - 415 edges
-5. `e2()` - 410 edges
-6. `t2()` - 404 edges
-7. `t2()` - 400 edges
-8. `Communities (1601 total, 1305 thin omitted)` - 297 edges
-9. `load_nusantara_config()` - 295 edges
-10. `hashes` - 292 edges
+2. `K1()` - 415 edges
+3. `e2()` - 410 edges
+4. `t2()` - 404 edges
+5. `t2()` - 400 edges
+6. `Communities (1601 total, 1305 thin omitted)` - 297 edges
+7. `hashes` - 292 edges
+8. `Communities (1565 total, 1308 thin omitted)` - 258 edges
+9. `OllamaProvider` - 204 edges
+10. `load_nusantara_config()` - 183 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `3.1 Alur SOP di kode` --references--> `SOPReviewPanel()`  [INFERRED]
-  docs/audit/NCP-V1-HERMES-DEVELOPER-001-2026-10-23-02-47.md → control-plane/src/sop-review.tsx
+- `Dashboard benar dalam arti apa?` --references--> `OverviewPage()`  [INFERRED]
+  docs/audit/comparison/09_OBSERVABILITY_TESTING.md → control-plane/src/overview.tsx
 - `Why shoehorn?` --references--> `as()`  [INFERRED]
   .agents/skills/migrate-to-shoehorn/SKILL.md → docs/reports/v1-ui01-candidate-20261009T091424Z/frontend/assets/index-Ry5oqxsC.js
 - `Workflow` --references--> `as()`  [INFERRED]
   .agents/skills/migrate-to-shoehorn/SKILL.md → docs/reports/v1-ui01-candidate-20261009T091424Z/frontend/assets/index-Ry5oqxsC.js
 - `Hasil` --references--> `developer_core()`  [INFERRED]
   reports/NUSANTARA-V1-CC01-OPTION-C-IMPLEMENTATION-2026-10-06.md → master_engine_ai.py
-- `4. SOURCE ANALYSIS` --references--> `developer_core()`  [INFERRED]
-  docs/commands/NUSANTARA-V1-CC01-RESPONSE-PROJECTION-PROPOSAL.md → master_engine_ai.py
+- `Cara pakai` --references--> `answer()`  [INFERRED]
+  docs/v2/DEVCORE_COMPLIANCE.md → tests/test_laya_intent.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (1764 total, 504 thin omitted)
+## Communities (1363 total, 479 thin omitted)
 
-### Community 0 - "control-plane/src/router.tsx"
-Cohesion: 0.06
-Nodes (35): decisions, EngineeringConsole(), Reference(), Section, sections, Status(), HumanPage(), TechnicalPage() (+27 more)
+### Community 0 - "router.tsx"
+Cohesion: 0.05
+Nodes (54): executeReviewedAction(), ExecutionReview(), execute(), HumanPage(), architecture, assistantAlias, ChatPage(), consoleRoute (+46 more)
 
 ### Community 1 - "MasterDeveloperEngine"
 Cohesion: 0.12
 Nodes (5): Check, main(), MasterDeveloperEngine, PhaseResult, run_v2_capability_audit()
 
-### Community 3 - "control-plane-four-20261019/vite-cache/deps/zod.js"
-Cohesion: 0.01
-Nodes (59): _any(), base64ToUint8Array(), base64urlToUint8Array(), _bigint(), bigint2(), bigint3(), boolean3(), _catch() (+51 more)
+### Community 2 - "local-services-contract.ps1"
+Cohesion: 0.11
+Nodes (18): Get-LocalStatus(), Get-PortListeners(), Get-RuntimePaths(), Get-ServicePort(), Get-ServiceProcesses(), Initialize-LocalState(), Invoke-LocalStart(), Resume-LocalMonitor() (+10 more)
 
 ### Community 4 - "Reranker"
 Cohesion: 0.09
@@ -1602,111 +1171,95 @@ Nodes (5): create_reranker(), CrossEncoderReranker, LLMReranker, Reranker, Simpl
 
 ### Community 5 - "index-B0GOEJQx.js"
 Cohesion: 0.01
-Nodes (405): dh, hu(), oh(), td(), xh, _3, a1(), a2() (+397 more)
+Nodes (441): fA, hA, pA, py(), uA, vA, fA, hA (+433 more)
 
 ### Community 7 - "tests/test_v1_langgraph.py"
-Cohesion: 0.15
-Nodes (17): fixture(), FixtureProvider, projection_and_helpers(), request(), test_cancellation_does_not_replay_paid_request(), run(), test_cloud_binding_is_rejected_before_graph_import(), test_disabled_flag_does_not_import_langgraph_or_execute() (+9 more)
+Cohesion: 0.19
+Nodes (16): fixture(), projection_and_helpers(), request(), test_cancellation_does_not_replay_paid_request(), run(), test_cloud_binding_is_rejected_before_graph_import(), test_disabled_flag_does_not_import_langgraph_or_execute(), test_existing_grounding_rejects_missing_evidence_and_unsupported_claim() (+8 more)
 
 ### Community 8 - "app/knowledge/schemas.py"
-Cohesion: 0.02
-Nodes (49): chunk_text(), Chunker, get_chunker(), IndoBERTEmbeddingAdapter, DocumentParser, DOCXParser, get_parser(), MarkdownParser (+41 more)
+Cohesion: 0.05
+Nodes (41): chunk_text(), Chunker, get_chunker(), DocumentParser, DOCXParser, get_parser(), MarkdownParser, parse_document() (+33 more)
 
-### Community 9 - "scripts/validate_gate17_experiment.py"
-Cohesion: 0.18
-Nodes (17): base_kwargs(), baseline_required(), candidate_required(), deterministic_id(), duplicate_evidence_blocked(), evidence_deterministic(), evidence_required(), hypothesis_required() (+9 more)
+### Community 9 - "validate_gate17_evaluation.py"
+Cohesion: 0.06
+Nodes (40): ControlledExperiment, EvaluationError, EvaluationResult, ExperimentEvaluator, ExperimentError, ExperimentResult, EvaluationError, EvaluationResult (+32 more)
 
 ### Community 10 - "tests/test_effective_rag_profile.py"
 Cohesion: 0.12
 Nodes (25): FakeStore, make_rag(), profile(), source_tree(), test_actual_v1_chat_retrieval_and_filter_block(), run_sync(), test_actual_v1_search_default_override_and_response(), test_actual_v2_callback_public_shape_and_internal_linkage() (+17 more)
 
 ### Community 11 - "Workspace"
-Cohesion: 0.04
-Nodes (61): normalize_result(), RegistryBackend, static_facts(), check_grounding(), _negated(), _num(), Violation, DevPlan (+53 more)
+Cohesion: 0.08
+Nodes (31): validate_output(), static_facts(), DevPlan, extract_file_refs(), plan(), _fail(), find_file(), list_directory() (+23 more)
 
 ### Community 12 - "GovernedToolRegistry"
-Cohesion: 0.03
-Nodes (58): InputRejected, validate_schema(), AgentExecutorInterface, ExecutorInterface, NativeExecutor, register_builtin_tools(), register_manifest(), Decision (+50 more)
-
-### Community 13 - "mcp-nusantara-upstream/control-plane/src/router.tsx"
 Cohesion: 0.04
-Nodes (102): ChatSendError, fetchAvailableModels(), fetchChatHistory(), fetchCostSummary(), fetchKnowledgePipelineStatus(), fetchModelStatus(), fetchOperationsSummary(), fetchRuntimeHealth() (+94 more)
+Nodes (47): spec(), AgentExecutorInterface, ExecutorInterface, NativeExecutor, register_builtin_tools(), register_manifest(), safe_calc(), ev() (+39 more)
 
 ### Community 14 - "pathlib"
 Cohesion: 0.01
-Nodes (115): main(), now(), main(), make_change_id(), now(), read_json(), check_json_file(), run_health_check() (+107 more)
+Nodes (124): main(), now(), main(), now(), main(), now(), read(), build_parser() (+116 more)
 
-### Community 15 - "normalize_text"
+### Community 15 - "AuditTrail"
 Cohesion: 0.04
-Nodes (21): create_language_engine(), classify_intent(), _apply_token_map(), _repl(), _compile_token_map(), normalize_text(), _reduce_repeats(), TextNormalizer (+13 more)
+Nodes (57): audit_verify(), chat(), generate(), retrieve(), ChatV2Request, create_memory_session(), decide(), DecisionRequest (+49 more)
 
 ### Community 16 - "nusantara_master_engine_BACKUP_20261002_164634.py"
-Cohesion: 0.04
-Nodes (34): chat(), ChatRequest, ContextEngine, EntityEngine, EvaluationEngine, GroundingGuard, health(), HumanHandoffEngine (+26 more)
+Cohesion: 0.19
+Nodes (12): chat(), ChatRequest, health(), knowledge_status(), mcp(), mcp_manifest(), MCPRequest, observability() (+4 more)
 
 ### Community 17 - "index-CsLlr2Cg.js"
 Cohesion: 0.01
-Nodes (455): dh, oh(), xh, _1(), $2(), _3, a1(), a2() (+447 more)
+Nodes (463): Ct(), oh(), td(), Vn(), xh, _1(), $2(), a1() (+455 more)
 
-### Community 18 - "ref_vitest"
-Cohesion: 0.03
-Nodes (62): renderPage(), status, answer, status, answer, status, ChatSendError, fetchAvailableModels() (+54 more)
-
-### Community 19 - "chat-p0-20261019/vite-cache/deps/zod.js"
-Cohesion: 0.01
-Nodes (59): _any(), base64ToUint8Array(), base64urlToUint8Array(), _bigint(), bigint2(), bigint3(), boolean3(), _catch() (+51 more)
+### Community 18 - "control-plane/src/api.ts"
+Cohesion: 0.05
+Nodes (67): ChatOptions, ChatSendError, CostSummary, DECISION_FIELDS, decisionRequestError(), decisionValidationMessage(), fetchAvailableModels(), fetchChatHistory() (+59 more)
 
 ### Community 20 - "index-Ry5oqxsC.js"
 Cohesion: 0.01
-Nodes (397): dj(), dj(), fj(), bh(), dh, Ui(), yh(), a0 (+389 more)
+Nodes (540): At(), bh(), oi(), $0(), a0, Aa(), Ab(), aC (+532 more)
 
-### Community 21 - "mcp-nusantara-upstream/control-plane/src/human.tsx"
-Cohesion: 0.03
-Nodes (139): attestationKey(), attestationWorkflow(), canApprove(), counts(), Decision, emptySession(), evidenceKey(), gateEvidenceReady() (+131 more)
+### Community 21 - "control-plane/src/ui.tsx"
+Cohesion: 0.09
+Nodes (30): decisions, EngineeringConsole(), Reference(), Section, sections, Status(), AttestationIdentity(), OperatorConnection() (+22 more)
 
 ### Community 22 - "load_nusantara_config"
-Cohesion: 0.01
-Nodes (152): get_settings(), Settings, load_nusantara_config(), IndoBERTEmbeddingAdapter, get_settings(), Settings, ConfigurationError, _Embedding (+144 more)
-
-### Community 23 - "ncp-v1-ui-local-20261019/reference/tests/ui.test.mjs"
-Cohesion: 0.06
-Nodes (10): data(), detail(), Element, elements, get(), listeners, main(), snapshot() (+2 more)
+Cohesion: 0.04
+Nodes (62): load_nusantara_config(), ConfigurationError, test_alias_conflict_is_order_independent(), test_bounded_depth_and_no_interpolation(), test_credential_url_safe_error(), test_defaults_preserve_declared_and_effective_source_profiles(), test_determinism_with_input_order_and_empty_overrides(), test_environment_opt_in_and_no_dotenv_loading() (+54 more)
 
 ### Community 24 - "graph-CjYkENDk.js"
 Cohesion: 0.01
-Nodes (393): _a(), Aa(), ad(), ae(), af(), ag(), ah, ai() (+385 more)
+Nodes (394): _a(), Aa(), ad(), ae(), af(), ag(), ah, ai() (+386 more)
 
-### Community 25 - "RAG"
-Cohesion: 0.02
-Nodes (88): get_knowledge_engine(), RAG, DocumentIngestRequest, KnowledgeBaseConfig, _BorrowedConnection, SQLiteVectorStore, probe_local_hash(), probe_local_hash() (+80 more)
+### Community 25 - "V2Orchestrator"
+Cohesion: 0.05
+Nodes (13): Event, EventRecorder, _trim(), V2Orchestrator, V2Result, test_telemetry_retention_does_not_touch_audit(), test_trust_receives_generated_claim_and_all_stages_trace(), ContextBudgetTests (+5 more)
 
-### Community 26 - "mcp-nusantara-upstream/tests/test_web_evidence_pipeline.py"
+### Community 26 - "source-before/app/api/v2_routes.py"
 Cohesion: 0.09
-Nodes (52): approved(), collect(), dns(), pipeline(), source(), test_adapter_actual_v1_store_compatibility_only_in_temp_db(), test_api_web_pdf_fixture_parsing(), test_audit_tampering_detected() (+44 more)
+Nodes (25): FeedbackRecord, FeedbackRejected, FeedbackStore, audit_verify(), chat(), generate(), ChatV2Request, create_memory_session() (+17 more)
 
 ### Community 27 - "graph--PuxfVum.js"
 Cohesion: 0.01
-Nodes (393): _a(), Aa(), ad(), ae(), af(), ag(), ah, ai() (+385 more)
+Nodes (397): _a(), Aa(), ad(), ae(), af(), ag(), ah, ai() (+389 more)
 
-### Community 28 - "V2Orchestrator"
-Cohesion: 0.04
-Nodes (19): Event, EventRecorder, _trim(), FeedbackRecord, FeedbackRejected, FeedbackStore, V2Orchestrator, test_telemetry_retention_does_not_touch_audit() (+11 more)
+### Community 28 - "EmbeddingProvider"
+Cohesion: 0.03
+Nodes (12): create_embedder(), EmbeddingProvider, EmbeddingService, MockEmbeddingProvider, OpenAIEmbeddingProvider, SentenceTransformerEmbedder, create_retriever(), Retriever (+4 more)
 
-### Community 29 - "app/approval/change_request.py"
-Cohesion: 0.05
-Nodes (33): assess_risk(), ReviewWorkflow, branch_name(), check(), create_review_branch(), DevBranch, GateBlocked, start() (+25 more)
+### Community 29 - "ToolRegistry"
+Cohesion: 0.12
+Nodes (3): BaseTool, create_registry(), ToolRegistry
 
 ### Community 30 - "graph-BsHL5xdw.js"
 Cohesion: 0.02
-Nodes (389): _a(), Aa(), ad(), ae(), af(), ah, ai(), al() (+381 more)
-
-### Community 31 - "knowledge-upload-entry/baseline/api.ts"
-Cohesion: 0.07
-Nodes (43): CostSummary, DECISION_FIELDS, DecisionRecord, decisionRequestError(), decisionValidationMessage(), EvidencePackage, executeReviewedAction(), ExecutionContext (+35 more)
+Nodes (388): _a(), Aa(), ad(), ae(), af(), ah, al(), a() (+380 more)
 
 ### Community 32 - "graph-Bu3TEQPk.js"
 Cohesion: 0.01
-Nodes (391): _a(), Aa(), ad(), ae(), af(), ag(), ah, al() (+383 more)
+Nodes (391): _a(), Aa(), ad(), ae(), af(), ag(), ah, ai() (+383 more)
 
 ### Community 33 - "MDA-POST-MDE09-001.md"
 Cohesion: 0.04
@@ -1714,23 +1267,23 @@ Nodes (47): 0. MASTER DIRECTIVE, END MASTER COMMAND, HUMAN = AUTHORITY, I. POST-
 
 ### Community 34 - "index-CSdgo_zW.js"
 Cohesion: 0.01
-Nodes (401): dh, oh(), td(), _1(), _3, a1(), a2(), a3() (+393 more)
+Nodes (459): dh, nc(), oh(), td(), xh, _1(), $2(), _3 (+451 more)
 
 ### Community 35 - "ProductionSemanticRetriever"
-Cohesion: 0.11
-Nodes (11): build_parser(), _first_value(), _lexical_overlap(), main(), _normalize_score(), ProductionSemanticRetriever, _quote_fts_token(), RetrievalEvidence (+3 more)
+Cohesion: 0.12
+Nodes (9): _first_value(), _lexical_overlap(), _normalize_score(), ProductionSemanticRetriever, _quote_fts_token(), RetrievalEvidence, _safe_float(), _token_set() (+1 more)
 
 ### Community 36 - "MDA-CPLANE-UI-AUTH-001.md"
 Cohesion: 0.04
 Nodes (46): 10. API ARCHITECTURE, 11. PRODUCTION KNOWLEDGE DATABASE PROTECTION, 12. NO CONTROL DATABASE, 13. PRIMARY UI INFORMATION ARCHITECTURE, 14. OVERVIEW, 15. STATUS MUST BE DERIVED, 16. ROADMAP VIEW, 17. ARCHITECTURE VIEW (+38 more)
 
-### Community 37 - "RAG"
-Cohesion: 0.04
-Nodes (5): KnowledgeEngine, ChunkProcessor, create_rag(), MemoriaVectorStore, RAG
+### Community 37 - "SQLiteVectorStore"
+Cohesion: 0.09
+Nodes (8): _BorrowedConnection, SQLiteVectorStore, engine_at(), test_approval_requires_content_and_every_required_trial_and_survives_restart(), test_pilot_is_private_to_trial_before_first_human_decision(), test_problem_requires_note_and_cannot_inherit_approval(), test_session_cannot_switch_document_or_version_and_changed_source_needs_review(), restarted_retrieval()
 
 ### Community 38 - "KnowledgeEngine"
 Cohesion: 0.04
-Nodes (52): KnowledgeEngine, __init__(), FakeRag, FakeStore, test_folder_watch_uses_the_same_pipeline_and_deduplicates(), test_piak03_extracted_sop_is_only_a_generic_pipeline_fixture(), test_pipeline_deduplicates_and_never_promotes_authority(), test_pipeline_retains_extraction_failure_in_chat_store_history() (+44 more)
+Nodes (34): KnowledgeEngine, __init__(), activity_rows(), RetrievalEvidenceList, KnowledgeEngine, test_knowledge_facade_forwards_config_and_preserves_legacy_topk(), factory(), test_unsupported_knowledge_filter_is_rejected_before_retrieval() (+26 more)
 
 ### Community 39 - "NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md"
 Cohesion: 0.04
@@ -1738,7 +1291,7 @@ Nodes (45): 10. NO DESTRUCTIVE DEVELOPMENT, 11. REGRESSION RULE, 12. RISK LEVEL,
 
 ### Community 40 - "t2"
 Cohesion: 0.02
-Nodes (379): fl(), ga(), vi, b(), E(), p(), D(), Y() (+371 more)
+Nodes (376): gn(), vi, E(), D(), t2(), a0(), ad(), AE() (+368 more)
 
 ### Community 41 - "NUSANTARA-CONFIGURATION-ARCHITECT.md"
 Cohesion: 0.04
@@ -1748,65 +1301,61 @@ Nodes (44): 10. ATURAN KEAMANAN, 11. ATURAN DEVELOPERCORE, 12. LANGGRAPH, 13. OU
 Cohesion: 0.04
 Nodes (45): 10. Source and Diff Evidence, 11. Remaining R2-A10 Limitations, 12. Authoritative Gate Table, 13. Human Decision Gate, 14. Mission, 15.1 Actual process identity, 15.2 Active-process build identity, 15.3 Provider/model correlation (+37 more)
 
-### Community 43 - "mcp-nusantara-upstream/app/api/routes.py"
-Cohesion: 0.07
-Nodes (38): _apply_grounding_safety_gate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), ChatRequest, create_workflow(), _deterministic_response() (+30 more)
+### Community 43 - "AuthorizationError"
+Cohesion: 0.17
+Nodes (28): AuthorizationError, act(), command(), fixture(), respond(), native_proof(), test_abort_after_dispatch_records_uncertainty_without_second_dispatch(), test_abort_revokes_before_dispatch() (+20 more)
 
 ### Community 44 - "R2CORERUNTIME&DEVELOPER-EXECUTION-AUTHORIZATION-CONTRACT.md"
 Cohesion: 0.05
 Nodes (43): 0. CONTRACT STATUS, 10. RUNTIME INSTANCE IDENTITY, 11. REQUEST CORRELATION, 12. RUNTIME TOPOLOGY, 13. R2 PHASE GATES, 14. R2-A0 PRE-FLIGHT, 15. R2-A1 READ-ONLY DISCOVERY, 16. R2-A2 DISCOVERY REPORT (+35 more)
 
-### Community 46 - "Template/reference/tests/ui.test.mjs"
+### Community 46 - "ui.test.mjs"
 Cohesion: 0.06
-Nodes (10): data(), detail(), Element, elements, get(), listeners, main(), snapshot() (+2 more)
+Nodes (13): Bukti kode dan batas isolasi, SECURITY, action(), data(), detail(), Element, elements, get() (+5 more)
 
-### Community 47 - "mcp-nusantara-upstream/tests/v2/test_phases_7_21.py"
-Cohesion: 0.03
-Nodes (38): NotApprovedForChange, aggregate(), compare(), EvalCase, EvalRecord, load_baseline(), run_cases(), save_baseline() (+30 more)
+### Community 47 - "perbaikanbukti/tests/v2/test_phases_7_21.py"
+Cohesion: 0.04
+Nodes (32): assess_risk(), NotApprovedForChange, aggregate(), compare(), EvalCase, EvalRecord, load_baseline(), run_cases() (+24 more)
 
 ### Community 48 - "scripts/validate_gate17_proposal.py"
 Cohesion: 0.12
 Nodes (19): affected_components_required(), affected_files_required(), approval_required_enforced(), deterministic_payload(), evidence_required(), gap_binding(), Gate174Error, ImprovementProposalAdapter (+11 more)
 
-### Community 49 - "RetrievalEvidenceList"
-Cohesion: 0.15
-Nodes (6): project_activity_blocks(), select_blocks(), RetrievalEvidenceList, test_budget_selection_discloses_omissions_without_cutting_a_table(), test_model_citations_must_belong_to_the_supplied_blocks_and_pages(), test_table_projection_keeps_actual_rows_and_header_labels()
+### Community 49 - "fastapi"
+Cohesion: 0.02
+Nodes (52): ExtractionRequest, get_knowledge_engine(), MetadataConfirmation, ReviewDecision, TrialRating, get_provider_factory(), get_readiness_knowledge(), get_runtime_owner() (+44 more)
 
 ### Community 50 - "NUSANTARA R2-A7.md"
 Cohesion: 0.05
 Nodes (41): 10. PROVIDER RECEIPT REQUIREMENT, 11. DATABASE / RAG PROTECTION, 12. MODEL / PROVIDER PROTECTION, 13. API PROTECTION, 14. IMPLEMENTATION LIMIT, 15. TEST AUTHORIZATION, 16. LIVE GENERATION REQUEST, 17. SERVICE RESTART (+33 more)
 
 ### Community 51 - "ExecutionAudit"
-Cohesion: 0.08
-Nodes (11): ExecutionAudit, ExecutionAuditError, ExecutionAuditResult, audit_entries(), check(), event_names(), main(), audit_entries() (+3 more)
+Cohesion: 0.10
+Nodes (7): ExecutionAudit, ExecutionAuditError, ExecutionAuditResult, audit_entries(), check(), event_names(), main()
 
-### Community 52 - "LanguageEngine"
-Cohesion: 0.17
-Nodes (3): create_language_engine(), LanguageDetection, LanguageEngine
+### Community 52 - "CostLedger"
+Cohesion: 0.09
+Nodes (20): _actual_cents(), _cost_cents(), CostGovernanceDenied, CostLedger, _decimal(), _now(), _policy_cents(), make_ledger() (+12 more)
 
 ### Community 54 - "NUSANTARA-V1-CC01-RESPONSE-PROJECTION-PROPOSAL.md"
-Cohesion: 0.08
-Nodes (23): 0. OBJECTIVE, 10. MEMORY PRIVACY, 11. DEVELOPER CORE PRIVACY, 12. API COMPATIBILITY IMPACT, 13. PROPOSED TARGET, 14. LEAKAGE TEST PLAN, 15. AUTHORIZATION / DIAGNOSTIC BOUNDARY, 17. RISK ANALYSIS (+15 more)
+Cohesion: 0.06
+Nodes (31): 0. OBJECTIVE, 10. MEMORY PRIVACY, 11. DEVELOPER CORE PRIVACY, 12. API COMPATIBILITY IMPACT, 13. PROPOSED TARGET, 14. LEAKAGE TEST PLAN, 15. AUTHORIZATION / DIAGNOSTIC BOUNDARY, 16. IMPLEMENTATION SCOPE PROPOSAL (+23 more)
 
 ### Community 55 - "OllamaProvider"
-Cohesion: 0.01
-Nodes (186): health_detail(), ModelGateway, MockProvider, OllamaProvider, ModelRouter, health_detail(), health_detail(), main() (+178 more)
+Cohesion: 0.02
+Nodes (112): _available_model_names(), health_detail(), ProviderUnavailableError, OllamaProvider, OpenAICompatibleProvider, health_detail(), health_detail(), health_detail() (+104 more)
 
-### Community 56 - "evidence/vite-cache/deps/zod.js"
+### Community 56 - "zod.js"
 Cohesion: 0.01
 Nodes (63): _any(), base64ToUint8Array(), base64urlToUint8Array(), _bigint(), bigint2(), bigint3(), boolean3(), _catch() (+55 more)
 
 ### Community 57 - "app/developer_core/controlled_write.py"
-Cohesion: 0.08
-Nodes (35): audit(), _authorization(), build_staging(), execute(), execute_current(), _execute_reviewed(), execution_context(), execution_history() (+27 more)
+Cohesion: 0.15
+Nodes (28): workflow_contract(), audit(), _authorization(), build_staging(), execute(), execute_current(), _execute_reviewed(), execution_context() (+20 more)
 
-### Community 58 - "tests/test_control_plane_attestation_binding.py"
-Cohesion: 0.18
-Nodes (14): body(), isolated(), post(), test_atomic_material_change_and_storage_failure(), test_binding_changes_between_validation_and_creation(), test_bounded_json(), test_browser_cannot_reach_arm_execute(), test_capacity_rejects_without_poisoning() (+6 more)
-
-### Community 59 - "Issue tracker: GitHub"
-Cohesion: 0.06
-Nodes (30): Before exploring, read these, Domain Docs, File structure, Flag ADR conflicts, Use the glossary's vocabulary, Conventions, Issue tracker: GitHub, Pull requests as a triage surface (+22 more)
+### Community 59 - "Domain Docs"
+Cohesion: 0.33
+Nodes (5): Before exploring, read these, Domain Docs, File structure, Flag ADR conflicts, Use the glossary's vocabulary
 
 ### Community 60 - "NUSANTARA R2-A9.md"
 Cohesion: 0.05
@@ -1814,27 +1363,27 @@ Nodes (36): 10. ONE-USE AUTHORIZATION REQUIREMENTS, 11. HUMAN TEST CASE MODEL, 1
 
 ### Community 61 - "e2"
 Cohesion: 0.02
-Nodes (371): ai(), gn(), On(), vi, b(), p(), e2(), a0() (+363 more)
+Nodes (383): _3, gn(), ha(), rc(), vi, e2(), a0(), ac() (+375 more)
 
 ### Community 62 - "control-plane/src/human.tsx"
-Cohesion: 0.04
-Nodes (96): attestationKey(), attestationWorkflow(), canApprove(), counts(), Decision, emptySession(), evidenceKey(), gateEvidenceReady() (+88 more)
+Cohesion: 0.05
+Nodes (79): attestationKey(), attestationWorkflow(), canApprove(), counts(), Decision, emptySession(), evidenceKey(), gateEvidenceReady() (+71 more)
 
-### Community 63 - "mcp-nusantara-upstream/app/developer_core/change_plan_validator.py"
-Cohesion: 0.29
-Nodes (5): _non_empty_sequence(), _non_empty_string(), validate_change_plan(), validate_transition(), ValidationResult
+### Community 63 - "perbaikanbukti/tests/test_runtime_verification.py"
+Cohesion: 0.12
+Nodes (20): app_fixture(), factory(), respond(), headers(), session(), test_concurrent_cancelled_generation_consumes_reservation(), test_disarmed_local_only_and_no_network_arm_endpoint(), test_failed_final_asgi_send_is_not_recorded_as_delivery() (+12 more)
 
 ### Community 64 - "app/rag/store.py"
-Cohesion: 0.05
-Nodes (38): as_retriever(), chunk_text(), Conflict, _content_tokens(), detect_conflicts(), DocMeta, grounded_context(), Hit (+30 more)
+Cohesion: 0.11
+Nodes (14): as_retriever(), chunk_text(), Conflict, _content_tokens(), detect_conflicts(), DocMeta, grounded_context(), Hit (+6 more)
 
-### Community 65 - "ref_react"
-Cohesion: 0.04
-Nodes (85): OperatorConsole(), apply(), loadModels(), refresh(), UserChat(), refreshHistory(), send(), OperatorConsole() (+77 more)
+### Community 65 - "payload/control-plane/src/operator.tsx"
+Cohesion: 0.21
+Nodes (19): Connection, HermesConnectionPanel(), check(), readConnection(), Activity(), BlockersPage(), CostsPage(), CurrentWork() (+11 more)
 
 ### Community 66 - "app/knowledge/official_knowledge_ingestion.py"
-Cohesion: 0.06
-Nodes (57): append_audit(), backup_database(), command_manifest(), command_register_demo(), command_scan(), command_stats(), command_template(), connect_db() (+49 more)
+Cohesion: 0.07
+Nodes (54): append_audit(), backup_database(), command_manifest(), command_register_demo(), command_scan(), command_stats(), command_template(), connect_db() (+46 more)
 
 ### Community 67 - "MASTER ENGINEERING AUDIT — NUSANTARA AI V1"
 Cohesion: 0.06
@@ -1842,15 +1391,11 @@ Nodes (35): 10. Storage Flow, 11. Observability Flow, 12. Security Surface, 13. 
 
 ### Community 68 - "t2"
 Cohesion: 0.02
-Nodes (373): gn(), hu(), vi, D(), t2(), a0(), ad(), AE() (+365 more)
+Nodes (373): cl(), ll(), vi, D(), t2(), a0(), ad(), AE() (+365 more)
 
 ### Community 69 - "NCP-V1-CHAT-001 — patch dan verifikasi terarah"
-Cohesion: 0.12
-Nodes (16): Asal 16 dan 768 dimensi, Backup dan preservasi, Baseline dan workflow, Hasil pemeriksaan, Kandidat dan cutover, Kelanjutan terotorisasi — pemulihan indeks dan upload SOP, Menjalankan dan membatalkan, NCP-V1-CHAT-001 — patch dan verifikasi terarah (+8 more)
-
-### Community 70 - "scripts/release_check.py"
 Cohesion: 0.11
-Nodes (17): Check, render(), verdict(), Finding, _is_generated_vendor_copy(), scan_tree(), compile_all(), main() (+9 more)
+Nodes (16): Asal 16 dan 768 dimensi, Backup dan preservasi, Baseline dan workflow, Hasil pemeriksaan, Kandidat dan cutover, Kelanjutan terotorisasi — pemulihan indeks dan upload SOP, Menjalankan dan membatalkan, NCP-V1-CHAT-001 — patch dan verifikasi terarah (+8 more)
 
 ### Community 71 - "MDA-R3-AUTHORIZATION.md"
 Cohesion: 0.06
@@ -1860,33 +1405,29 @@ Nodes (34): 10. CANONICAL RAG PARAMETERS, 11. IMPORTANT CURRENT BEHAVIOR, 12. RE
 Cohesion: 0.06
 Nodes (34): Configuration, Current Status, Evaluation Test Suite: 12/12 Passed (100%), Files Created by Hermes, Functional Tests: ✅ Pass Rate 100%, Import Tests: ✅ All Pass, Phase 0 - Dokumentasi (4 files ✅), Phase 10 - Trust Engine (2 files ✅) (+26 more)
 
-### Community 73 - "control-plane-four-20261019/vite-cache/deps/@xyflow_react.js"
-Cohesion: 0.01
-Nodes (99): addConnectionToLookup(), applyChange(), applyChanges(), applyEdgeChanges(), applyNodeChanges(), attrInterpolateNS(), attrTweenNS(), tween() (+91 more)
-
 ### Community 74 - "K1"
 Cohesion: 0.02
-Nodes (366): d(), ei(), ii(), Wa(), E(), componentDidCatch(), K1(), $a() (+358 more)
+Nodes (343): d(), ai(), ei(), ii(), ki, Wa(), E(), K1() (+335 more)
 
 ### Community 75 - "Communities (1601 total, 1305 thin omitted)"
 Cohesion: 0.01
 Nodes (297): Communities (1601 total, 1305 thin omitted), Community 0 - "RAG", Community 100 - "AuditTrail", Community 101 - "R2CORERUNTIME&DEVELOPER-EXECUTION-AUTHORIZATION-CONTRACT.md", Community 102 - "app/language/engine.py", Community 103 - "LongTermMemory", Community 104 - "Environment & Architecture Report", Community 105 - "_apply_grounding_safety_gate" (+289 more)
 
-### Community 76 - "evidence/vite-cache/deps/@xyflow_react.js"
+### Community 76 - "@xyflow_react.js"
 Cohesion: 0.01
-Nodes (121): addConnectionToLookup(), applyChange(), applyChanges(), applyEdgeChanges(), applyNodeChanges(), arraylike(), attrInterpolateNS(), attrTweenNS() (+113 more)
+Nodes (116): addConnectionToLookup(), applyChange(), applyChanges(), applyEdgeChanges(), applyNodeChanges(), attrInterpolateNS(), attrTweenNS(), tween() (+108 more)
 
-### Community 77 - "OneUseAuthorization"
-Cohesion: 0.02
-Nodes (113): verification(), VerificationController, _process_identity(), assess_receipt(), _aware_time(), CorrelationReceipt, EndpointBinding, OneDispatchTransport (+105 more)
+### Community 77 - "os"
+Cohesion: 0.01
+Nodes (172): install_runtime_verification(), verification(), VerificationController, _file_lock(), install_authorization_foundation(), install_runtime_attestation(), _process_identity(), assess_receipt() (+164 more)
 
 ### Community 78 - ""node_modules/react-dom/cjs/react-dom-client.development.js""
 Cohesion: 0.02
 Nodes (132): "node_modules/react-dom/cjs/react-dom-client.development.js"(), actionStateReducer(), addEventListenerToChild(), addTrappedEventListener(), areHookInputsEqual(), basicStateReducer(), blurActiveElementWithinFragment(), checkIfFullyUnsuspended() (+124 more)
 
 ### Community 79 - "run"
-Cohesion: 0.18
-Nodes (4): make_ws(), TestDevCore, Orchestrator, run()
+Cohesion: 0.16
+Nodes (5): make_ws(), TestDevCore, TestSecurityGate, Orchestrator, run()
 
 ### Community 80 - "master_engine_ai.py"
 Cohesion: 0.23
@@ -1906,27 +1447,27 @@ Nodes (32): 0. IDENTITAS EKSEKUSI, 10. CHANGE LEDGER, 11. IMPACT ANALYSIS, 12. C
 
 ### Community 84 - "MemoryEngine"
 Cohesion: 0.05
-Nodes (48): ActionEngine, build_action_engine(), GatePipeline, MemoryEngine, OrchestrationEngine, PolicyDecision, PolicyEngine, GateIntegration (+40 more)
+Nodes (37): ActionEngine, build_action_engine(), GatePipeline, MemoryEngine, OrchestrationEngine, PolicyDecision, PolicyEngine, ReasoningEngine (+29 more)
 
-### Community 85 - "mcp-nusantara-upstream/tests/test_effective_rag_profile.py"
+### Community 85 - "app/improvement/release.py"
+Cohesion: 0.11
+Nodes (19): VersionRegistry, ChecklistItem, create_backup(), generate_release_notes(), ready_to_release(), release_checklist(), restore_backup(), rollback() (+11 more)
+
+### Community 86 - "perbaikanbukti/tests/test_effective_rag_profile.py"
 Cohesion: 0.13
 Nodes (25): FakeStore, make_rag(), profile(), source_tree(), test_actual_v1_chat_retrieval_and_filter_block(), run_sync(), test_actual_v1_search_default_override_and_response(), test_actual_v2_callback_public_shape_and_internal_linkage() (+17 more)
 
-### Community 86 - "source-checkpoint/app__api__control_plane.py"
-Cohesion: 0.11
-Nodes (35): _command(), _now(), probe(), active_knowledge_status(), _admin_reviewer(), _available_model_names(), available_models(), check_hermes_connection() (+27 more)
+### Community 87 - "validate_gate17_root_cause.py"
+Cohesion: 0.14
+Nodes (19): RootCauseAnalysisError, RootCauseAnalyzer, RootCauseCandidate, RootCauseResult, cause_without_evidence_blocked(), confidence_range_blocked(), deterministic_analysis_id(), duplicate_cause_blocked() (+11 more)
 
-### Community 87 - "mcp-nusantara-upstream/scripts/validate_gate17_root_cause.py"
-Cohesion: 0.09
-Nodes (34): RootCauseAnalysisError, RootCauseAnalyzer, RootCauseCandidate, RootCauseResult, cause_without_evidence_blocked(), confidence_range_blocked(), deterministic_analysis_id(), duplicate_cause_blocked() (+26 more)
+### Community 88 - "XYPanZoom"
+Cohesion: 0.10
+Nodes (26): createFilter(), createPanZoomEndHandler(), createPanZoomHandler(), createPanZoomStartHandler(), createZoomOnScrollHandler(), getControlDirection(), getResizeDirection(), nodeToChildExtent() (+18 more)
 
-### Community 88 - "mcp-nusantara-upstream/tests/test_v1_response_projection.py"
-Cohesion: 0.06
-Nodes (33): test_api_health(), app(), test_health_returns_request_id_header(), test_request_id_is_unique_per_request(), test_metrics_endpoint_has_request_id(), test_metrics_endpoint_returns_observability_snapshot(), test_request_generates_metrics_counter(), test_v1_metrics_counter_increases_after_request() (+25 more)
-
-### Community 89 - "mcp-nusantara-upstream/control-plane/package.json"
-Cohesion: 0.04
-Nodes (45): dependencies, react, react-dom, @tanstack/react-query, @tanstack/react-router, @xyflow/react, zod, devDependencies (+37 more)
+### Community 89 - "KONTRAK IMPLEMENTASI CODEX"
+Cohesion: 0.07
+Nodes (27): 10. Wewenang dan pemulihan, 11. Instruksi siap ditempel ke Codex, 1. Tujuan, 2.1 Keputusan yang wajib dipertahankan, 2.2 Termasuk, 2.3 Tidak termasuk, 2. Acuan keputusan dan batas lingkup, 3.1 Pisahkan sumber fakta dari penyusun bahasa (+19 more)
 
 ### Community 90 - "Communities (1565 total, 1308 thin omitted)"
 Cohesion: 0.01
@@ -1936,41 +1477,41 @@ Nodes (258): Communities (1565 total, 1308 thin omitted), Community 0 - "knowled
 Cohesion: 0.09
 Nodes (13): fs, net, path, subprocess, {syncBuiltinESMExports}, transformer, vitestWorker, fs (+5 more)
 
-### Community 92 - "chat-p0-20261019/vite-cache/deps/@xyflow_react.js"
-Cohesion: 0.01
-Nodes (133): append_default(), applyChange(), applyChanges(), applyEdgeChanges(), applyNodeChanges(), attr_default(), Attribution(), attrInterpolateNS() (+125 more)
-
-### Community 93 - "LayaIntentAdapter"
-Cohesion: 0.06
-Nodes (36): LayaIntentAdapter, answer(), configuration(), test_actual_protocol_preserves_context_before_classification(), respond(), test_disabled_configuration_never_calls_laya(), forbidden(), test_failures_return_no_hint() (+28 more)
+### Community 93 - "test_laya_intent.py"
+Cohesion: 0.26
+Nodes (10): LayaIntentAdapter, configuration(), test_actual_protocol_preserves_context_before_classification(), respond(), test_disabled_configuration_never_calls_laya(), forbidden(), test_environment_configuration_has_existing_owner(), test_failures_return_no_hint() (+2 more)
 
 ### Community 94 - "MASTERENGINEERINGCOMMAND.md"
 Cohesion: 0.06
 Nodes (30): 10. DECISION PAGE, 11. APPROVE CONFIRMATION, 12. REJECT, 13. HOLD, 14. USER-FRIENDLY LANGUAGE, 15. EVERY IMPORTANT STATUS MUST HAVE EXPLANATION, 16. STATUS SEMANTICS, 17. PROGRESS INDICATOR (+22 more)
 
-### Community 96 - "mcp-nusantara-upstream/docs/contracts/NUSANTARA-V1-VERIFICATION-WORK-CONTRACT.md"
-Cohesion: 0.04
-Nodes (45): 10. NO DESTRUCTIVE DEVELOPMENT, 11. REGRESSION RULE, 12. RISK LEVEL, 13. AUDIT EVIDENCE, 14. DEFINITION OF DONE, 15. CURRENT GOVERNANCE RULE, 16. FINAL RULE, 1. TUJUAN (+37 more)
+### Community 95 - "tests/test_v1_sop_boundary.py"
+Cohesion: 0.05
+Nodes (32): test_inventory_without_model_is_not_chat_ready_and_no_inference_is_dispatched(), test_readiness_fails_closed_without_creating_missing_storage_or_review_tables(), test_readiness_preserves_inventory_inference_and_configuration_distinctions(), confirm_fixture_metadata(), engine_at(), test_approval_requires_content_and_every_required_trial_and_survives_restart(), test_content_check_event_persists_with_optional_trial_id_column(), test_correction_retains_category_question_answer_revision_and_resolution() (+24 more)
+
+### Community 96 - "R1_CORRECTION_BACKUP_20261007_142020/test_configuration_integration.py"
+Cohesion: 0.10
+Nodes (16): config(), factory(), configured(), test_adapter_constructs_existing_client_without_starting_worker(), test_explicit_store_embedding_and_kb_config_preserved(), test_guarded_api_assembly_and_public_regression(), test_incompatible_embedding_rejected_before_store_or_worker(), test_knowledge_facade_preserves_omitted_and_explicit_topk() (+8 more)
 
 ### Community 97 - "i"
 Cohesion: 0.05
-Nodes (98): nc(), ac(), al(), aO, c(), i(), ax(), b2() (+90 more)
+Nodes (107): a3(), ac(), al(), aO, c(), i(), aT(), ax() (+99 more)
 
-### Community 98 - ""node_modules/react-dom/cjs/react-dom-client.development.js""
-Cohesion: 0.02
-Nodes (132): "node_modules/react-dom/cjs/react-dom-client.development.js"(), actionStateReducer(), addEventListenerToChild(), addTrappedEventListener(), areHookInputsEqual(), basicStateReducer(), blurActiveElementWithinFragment(), checkIfFullyUnsuspended() (+124 more)
+### Community 98 - "perbaikanbukti/tests/test_runtime_authorization.py"
+Cohesion: 0.16
+Nodes (27): act(), command(), fixture(), respond(), native_proof(), test_abort_after_dispatch_records_uncertainty_without_second_dispatch(), test_abort_revokes_before_dispatch(), test_atttestation_projection_no_legacy_digest_and_normal_preserved() (+19 more)
 
-### Community 99 - "datetime"
-Cohesion: 0.01
-Nodes (94): assess_untrusted_build_provenance(), BuildDefinition, BuildInput, BuildProvenanceOwner, _hash(), _name(), ProcessBinding, _result() (+86 more)
+### Community 99 - "perbaikanbukti/app/core/runtime_identity.py"
+Cohesion: 0.06
+Nodes (23): assess_untrusted_build_provenance(), BuildDefinition, BuildInput, BuildProvenanceOwner, _hash(), _name(), ProcessBinding, _result() (+15 more)
 
-### Community 100 - ""node_modules/react-dom/cjs/react-dom-client.development.js""
-Cohesion: 0.02
-Nodes (132): "node_modules/react-dom/cjs/react-dom-client.development.js"(), actionStateReducer(), addEventListenerToChild(), addTrappedEventListener(), areHookInputsEqual(), basicStateReducer(), blurActiveElementWithinFragment(), checkIfFullyUnsuspended() (+124 more)
+### Community 100 - "GenerateResponse"
+Cohesion: 0.07
+Nodes (3): GenerateResponse, ModelRouter, ModelRouter
 
 ### Community 101 - "v1-recovery-backup-20261006/app/api/routes.py"
 Cohesion: 0.06
-Nodes (34): create_workflow_engine(), Workflow, WorkflowEngine, WorkflowState, _apply_grounding_safety_gate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt() (+26 more)
+Nodes (32): GraphifyBridge, DeveloperRuntime, _apply_grounding_safety_gate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), ChatRequest (+24 more)
 
 ### Community 102 - "Remaining Work"
 Cohesion: 0.07
@@ -1984,37 +1525,33 @@ Nodes (27): 10. MODEL ARCHITECTURE, 11. RAG ARCHITECTURE, 12. EMBEDDING / INDEX 
 Cohesion: 0.07
 Nodes (27): AGENT / ORCHESTRATION RULE, BACKUP / ROLLBACK, CHANGE CONTROL, CRITICAL FINAL RULE, CURRENT VERIFICATION RESULT, DEVELOPMENT PRINCIPLE, EXECUTE NOW, NON-NEGOTIABLE ARCHITECTURE RULES (+19 more)
 
-### Community 105 - "LanguageEngine"
-Cohesion: 0.11
-Nodes (3): create_language_engine(), LanguageDetection, LanguageEngine
-
 ### Community 108 - "Triage"
 Cohesion: 0.06
 Nodes (29): Bad agent brief, Behavioral, not procedural, Complete acceptance criteria, Durability over precision, Examples, Explicit scope boundaries, Good agent brief (bug), Good agent brief (enhancement) (+21 more)
 
-### Community 109 - "app/problem/engine.py"
+### Community 109 - "ProblemDetector"
 Cohesion: 0.02
-Nodes (39): classify_problem(), detect_problem(), detect_report(), DetectionResult, _compat_analyze(), generate_problem_id(), process_problem(), ClarificationRequest (+31 more)
+Nodes (63): extract_entities(), classify_problem(), ProblemClassifier, detect_problem(), detect_report(), DetectionResult, ProblemDetector, _compat_analyze() (+55 more)
 
 ### Community 110 - "tests/test_weip_rag_adapter.py"
-Cohesion: 0.13
-Nodes (17): make_adapter(), test_remaining_task1_approved_adapter_retrievable(), test_remaining_task1_rejected_never_enters_retrieval(), test_remaining_task1_requires_explicit_temporary_boundary(), test_remaining_task2_atomic_rename_retry_is_bounded(), test_remaining_task2_changed_request_during_ingestion_rolls_back(), embedding(), test_remaining_task2_failure_rolls_back_and_preserves_previous() (+9 more)
+Cohesion: 0.14
+Nodes (16): make_adapter(), test_remaining_task1_approved_adapter_retrievable(), test_remaining_task1_rejected_never_enters_retrieval(), test_remaining_task1_requires_explicit_temporary_boundary(), test_remaining_task2_atomic_rename_retry_is_bounded(), test_remaining_task2_changed_request_during_ingestion_rolls_back(), embedding(), test_remaining_task2_failure_rolls_back_and_preserves_previous() (+8 more)
 
-### Community 111 - "i"
-Cohesion: 0.03
-Nodes (169): At(), oi(), $0(), Aa(), Ab(), As(), #b(), bd() (+161 more)
+### Community 111 - "P1"
+Cohesion: 0.10
+Nodes (34): G1(), e1(), ed(), ka(), n1(), o1(), pg(), qg() (+26 more)
 
 ### Community 112 - "Fase 9 — Performa dan stabilitas"
 Cohesion: 0.40
 Nodes (4): Fakta runtime yang tersedia, Fase 9 — Performa dan stabilitas, Hipotesis lambat yang dapat ditelusuri, Rencana pengukuran — belum dijalankan
 
-### Community 113 - "control-plane/src/api.ts"
-Cohesion: 0.05
-Nodes (106): ChatOptions, CostSummary, DECISION_FIELDS, DecisionRecord, decisionRequestError(), decisionValidationMessage(), EvidencePackage, executeReviewedAction() (+98 more)
+### Community 113 - "control-plane/src/operator.tsx"
+Cohesion: 0.11
+Nodes (52): DecisionRecord, EvidencePackage, ExecutionContext, ExecutionHistory, fetchCostSummary(), fetchEvidencePackage(), fetchExecutionContext(), fetchExecutionHistory() (+44 more)
 
-### Community 114 - "push"
-Cohesion: 0.04
-Nodes (130): Component(), addObjectDiffToProperties(), addObjectToProperties(), addValueToProperties(), applyDerivedStateFromProps(), areSameKeyPath(), attemptEarlyBailoutIfNoScheduledUpdate(), bailoutHooks() (+122 more)
+### Community 114 - "estimate_openrouter_cost"
+Cohesion: 0.16
+Nodes (12): cost_estimator(), CostEstimateUnavailable, estimate_openrouter_cost(), test_actual_payload_uses_real_estimator_before_dispatch(), estimate(), run(), transport(), pricing() (+4 more)
 
 ### Community 115 - "app/workflow/workflow_schema.py"
 Cohesion: 0.10
@@ -2024,37 +1561,33 @@ Nodes (8): PersistenceConfig, WorkflowDefinition, WorkflowResult, WorkflowResume
 Cohesion: 0.08
 Nodes (25): 10. POLICY, 11. TRUST, 12. MCP DAN TOOLS, 13. OBSERVABILITY, 14. AUDIT, 15. R&D, 16. HUMAN APPROVAL, 17. ROLLBACK (+17 more)
 
-### Community 117 - "push"
+### Community 117 - "ExecutionPlan"
 Cohesion: 0.04
-Nodes (130): Component(), addObjectDiffToProperties(), addObjectToProperties(), addValueToProperties(), applyDerivedStateFromProps(), areSameKeyPath(), attemptEarlyBailoutIfNoScheduledUpdate(), bailoutHooks() (+122 more)
+Nodes (28): ControlledPatchError, ControlledPatchExecutor, PatchResult, ExecutionApprovalEnforcer, ExecutionApprovalError, ExecutionApprovalResult, BoundaryResult, ExecutionBoundary (+20 more)
 
-### Community 118 - "l"
+### Community 118 - "constructor"
 Cohesion: 0.03
-Nodes (174): E(), yd(), _1(), E(), ab(), al(), aN, au() (+166 more)
+Nodes (194): Ct(), di(), Vn(), wd(), E(), yd(), _1(), E() (+186 more)
 
-### Community 119 - "reconcile_sop_knowledge.py"
-Cohesion: 0.39
-Nodes (4): main(), norm(), sha256(), text_layer_chars()
+### Community 119 - "HealthCheckResponse"
+Cohesion: 0.10
+Nodes (4): HealthCheckResponse, StructuredGenerateRequest, StructuredGenerateResponse, OpenAICompatibleProvider
 
 ### Community 120 - "docs/commands/Inspection-Preview-Transport-Foundation.md"
 Cohesion: 0.05
 Nodes (37): 10. RESPONSE CONTRACT, 11. AUTHORIZATION SEMANTICS, 12. DEVCORE INTEGRATION, 13. `/v2/dev` PRESERVATION, 14. NORMAL COMPOSITION, 15. FRONTEND AUTHENTICATION BOUNDARY, 16. CORS / COMPOSITION, 17. TEST REQUIREMENTS (+29 more)
 
-### Community 121 - "i"
-Cohesion: 0.04
-Nodes (111): nc(), sc(), a3(), ac(), al(), aO, c(), i() (+103 more)
+### Community 121 - "d"
+Cohesion: 0.03
+Nodes (147): sc(), addObserver(), al(), c(), aT(), b2(), bd(), Bs() (+139 more)
 
-### Community 122 - "useStore"
-Cohesion: 0.04
-Nodes (94): A11yDescriptions(), addEdge2(), areEqual$1(), AriaLiveMessage(), BackgroundComponent(), cc(), ConnectionLineWrapper(), ControlButton() (+86 more)
+### Community 122 - "control-plane__src__api.ts"
+Cohesion: 0.11
+Nodes (18): DECISION_FIELDS, DecisionRecord, decisionRequestError(), decisionValidationMessage(), EvidencePackage, fetchAvailableModels(), fetchModelStatus(), InspectionPreviewResult (+10 more)
 
 ### Community 123 - "control-plane/package.json"
-Cohesion: 0.04
-Nodes (45): dependencies, react, react-dom, @tanstack/react-query, @tanstack/react-router, @xyflow/react, zod, devDependencies (+37 more)
-
-### Community 124 - "EntityExtractor"
-Cohesion: 0.16
-Nodes (3): create_entity_extractor(), EntityExtractor, EntityMatch
+Cohesion: 0.05
+Nodes (36): dependencies, react, react-dom, @tanstack/react-query, @tanstack/react-router, @xyflow/react, zod, devDependencies (+28 more)
 
 ### Community 125 - "Prinsip Pengembangan — Nusantara Core + Hermes"
 Cohesion: 0.08
@@ -2064,29 +1597,29 @@ Nodes (23): 1. Filosofi Utama, 2. Prinsip Keamanan, 3. Prinsip Pengujian, 4. Pri
 Cohesion: 0.08
 Nodes (23): Fase 0 - Environment & Architecture (Sudah Selesai), Fase 10 - Trust Engine (Selesai), Fase 11 - Memory Engine (Selesai), Fase 12 - Tool Engine (Selesai), Fase 13 - MCP Ready (Selesai), Fase 14 - Human Handoff (Selesai), Fase 15 - API Gateway (Selesai), Fase 16 - UI (Belum Dikerjakan) (+15 more)
 
-### Community 127 - "useStore"
-Cohesion: 0.04
-Nodes (101): A11yDescriptions(), addEdge2(), areConnectionMapsEqual(), areEqual$1(), areSetsEqual(), AriaLiveMessage(), BackgroundComponent(), cc() (+93 more)
+### Community 127 - "GenerateRequest"
+Cohesion: 0.11
+Nodes (4): ModelSelection, GenerateRequest, ModelGateway, ModelGateway
 
-### Community 128 - ".get"
-Cohesion: 0.09
-Nodes (48): Ct(), Vn(), Aa(), #b(), bh(), c1(), ci(), Da() (+40 more)
+### Community 128 - "test_chat_request_idempotency.py"
+Cohesion: 0.11
+Nodes (14): chat(), complete(), events(), ChatRequest, FakeKnowledge, FakeProvider, main(), test_chat_wires_governed_openrouter() (+6 more)
 
 ### Community 129 - "SECURITY TRACE — NUSANTARA AI V1"
 Cohesion: 0.20
 Nodes (9): Decision Required, F-S1. `logger` not defined (routes.py:624, 643), F-S2. `ProblemEngine.analyze` AttributeError (routes.py:782, 1246), F-S3. `KnowledgeSearchRequest` missing attrs (routes.py:1392-1398), Findings (per item), Scope, SECURITY TRACE — NUSANTARA AI V1, Summary (+1 more)
 
-### Community 130 - "ChatRequest"
-Cohesion: 0.05
-Nodes (26): chat(), complete(), events(), ChatRequest, main(), FakeKnowledge, FakeProvider, main() (+18 more)
+### Community 130 - "RuntimeAuthorization"
+Cohesion: 0.15
+Nodes (7): audit_projection(), Binding, canonical(), Review, RuntimeAuthorization, handle(), safe_string()
 
-### Community 131 - "AuditTrail"
+### Community 131 - "app/approval/queue.py"
 Cohesion: 0.03
-Nodes (43): AuditTrail, _file_lock(), ChangeRequest, ApprovalError, ApprovalQueue, ApprovalRequest, payload_hash(), recover_forked_telemetry() (+35 more)
+Nodes (38): ChangeRequest, ApprovalError, ApprovalRequest, payload_hash(), ChangePlanApproval, ChangePlanApprovalBinding, ChangePlanApprovalError, _effective_risk() (+30 more)
 
-### Community 132 - "normalizeParams"
-Cohesion: 0.02
-Nodes (90): _array(), _base64(), base642(), _base64url(), base64url2(), _cidrv4(), cidrv42(), _cidrv6() (+82 more)
+### Community 132 - "ExecutionApprovalEnforcer"
+Cohesion: 0.21
+Nodes (3): ExecutionApprovalEnforcer, ExecutionApprovalError, ExecutionApprovalResult
 
 ### Community 133 - "BOUNDED-DEVELOPMENT-ENVELOPE.md"
 Cohesion: 0.09
@@ -2100,33 +1633,33 @@ Nodes (130): Component(), addObjectDiffToProperties(), addObjectToProperties(), 
 Cohesion: 0.08
 Nodes (23): 10. ROOT CAUSE SAFETY, 11. HUMAN REVIEW, 12. REVIEW ACTIONS, 13. EXISTING UI BEHAVIOR, 14. API BOUNDARY, 15. NO MOCK AS REAL DATA, 17. VISUAL ACCEPTANCE, 18. ERROR / UNAVAILABLE STATE (+15 more)
 
-### Community 136 - "normalizeParams"
-Cohesion: 0.02
-Nodes (90): _array(), _base64(), base642(), _base64url(), base64url2(), _cidrv4(), cidrv42(), _cidrv6() (+82 more)
+### Community 136 - "Kontrak Implementasi NUSANTARA di Localhost"
+Cohesion: 0.10
+Nodes (19): 10. Pemulihan dan penetapan selesai, 11. Instruksi siap pakai untuk sesi implementasi besok, 1. Tujuan, 2. Lingkungan sasaran, 3. Kandidat kode dan urutan dependensi, 4. Lingkup pekerjaan besok, 5. Alur yang mengikat engine dan penjelasan operator, 6. Pemilik kode yang harus diperiksa (+11 more)
 
 ### Community 137 - "teach/SKILL.md"
 Cohesion: 0.07
 Nodes (25): Learning Record Format, Numbering, Optional sections, Supersession, Template, What does _not_ qualify, When to write a learning record, MISSION.md Format (+17 more)
 
 ### Community 138 - "HistoryEntry"
-Cohesion: 0.11
-Nodes (11): _build(), Config, ContextMetadata, ContextUpdate, HistoryEntry, MissingInformationRequest, MissingInformationResponse, SessionIsolationConfig (+3 more)
+Cohesion: 0.13
+Nodes (9): _build(), Config, ContextMetadata, ContextUpdate, ContextWindowConfig, HistoryEntry, MissingInformationRequest, MissingInformationResponse (+1 more)
 
-### Community 139 - "commitMutationEffectsOnFiber"
-Cohesion: 0.07
-Nodes (88): bubbleNestedEffectDurations(), callCallback(), callGetSnapshotBeforeUpdates(), captureCommitPhaseError(), clearHydrationBoundary(), clearSingletonPreambleContribution(), commitActivityHydrationCallbacks(), commitAttachRef() (+80 more)
+### Community 139 - "KONTRAK KERJA OPENCODE"
+Cohesion: 0.10
+Nodes (19): 1. Tujuan, 2. Batas ruang lingkup, 3. Prinsip kerja wajib, 4. Urutan pelaksanaan, 5. Kriteria penerimaan milestone, 6. Format laporan OpenCode, 7. Kewenangan dan persetujuan, 8. Instruksi pembuka untuk OpenCode (+11 more)
 
-### Community 140 - "mcp-nusantara-upstream/scripts/validate_gate17_evidence.py"
-Cohesion: 0.09
-Nodes (10): EvidenceCollectionError, EvidenceCollector, empty_data_blocked(), empty_type_blocked(), invalid_source_blocked(), non_dict_data_blocked(), empty_data_blocked(), empty_type_blocked() (+2 more)
+### Community 140 - "validate_gate17_evidence.py"
+Cohesion: 0.14
+Nodes (6): EvidenceCollectionError, EvidenceCollector, empty_data_blocked(), empty_type_blocked(), invalid_source_blocked(), non_dict_data_blocked()
 
-### Community 141 - "GapDetectionError"
-Cohesion: 0.09
-Nodes (13): Gap, GapDetectionError, GapDetector, empty_evidence_item_blocked(), invalid_component_blocked(), invalid_gap_type_blocked(), invalid_severity_blocked(), missing_evidence_blocked() (+5 more)
+### Community 141 - "validate_gate17_gap.py"
+Cohesion: 0.14
+Nodes (8): Gap, GapDetectionError, GapDetector, empty_evidence_item_blocked(), invalid_component_blocked(), invalid_gap_type_blocked(), invalid_severity_blocked(), missing_evidence_blocked()
 
-### Community 142 - "commitMutationEffectsOnFiber"
-Cohesion: 0.07
-Nodes (88): bubbleNestedEffectDurations(), callCallback(), callGetSnapshotBeforeUpdates(), captureCommitPhaseError(), clearHydrationBoundary(), clearSingletonPreambleContribution(), commitActivityHydrationCallbacks(), commitAttachRef() (+80 more)
+### Community 142 - "test_sop_golden_gate.py"
+Cohesion: 0.23
+Nodes (14): LocalProvider, source(), test_a_cost_mention_prevents_an_absence_claim(), test_absent_information_is_not_replaced_with_a_model_guess(), test_an_external_provider_is_never_used(), test_changed_revision_during_generation_discards_the_answer(), test_duration_rewrite_cannot_drop_a_material_condition(), test_followup_uses_fresh_source_and_never_answers_for_a_different_service() (+6 more)
 
 ### Community 143 - "Process"
 Cohesion: 0.07
@@ -2136,29 +1669,17 @@ Nodes (25): 1. State the question, 2. Isolate the logic in a portable module, 3.
 Cohesion: 0.20
 Nodes (9): Agent boundary, Configuration truth, Freeze/change control, Intelligence boundaries, Knowledge/RAG pipeline, NUSANTARA V1 — Contract Compliance Clarifications, Runtime execution, Tool/MCP/API boundaries (+1 more)
 
-### Community 146 - "LongTermMemory"
-Cohesion: 0.06
-Nodes (6): create_long_term_memory(), LongTermMemory, SessionMemory, Memory, Memory, Memory
-
 ### Community 147 - "ref_node_path"
-Cohesion: 0.04
-Nodes (47): {chromium}, { chromium }, fs, path, { chromium }, fs, path, { chromium } (+39 more)
-
-### Community 148 - "control-plane-four-20261019/vite-cache/deps/@tanstack_react-router.js"
-Cohesion: 0.04
-Nodes (58): appendUniqueUserTags(), Asset(), Await(), AwaitInner(), Block(), buildBranch(), buildRouteBranch(), buildTagsFromMatches() (+50 more)
+Cohesion: 0.06
+Nodes (31): { chromium }, fs, path, { chromium }, fs, path, headers, {chromium} (+23 more)
 
 ### Community 149 - "app/skills/sop_semantic/engine.py"
 Cohesion: 0.21
 Nodes (13): call_ollama(), clean(), discover(), EvidenceAdapter, extract_from_text(), extract_metadata(), get_list(), main() (+5 more)
 
-### Community 150 - "tests/test_v1_sop_boundary.py"
-Cohesion: 0.09
-Nodes (17): api(), execute_v1(), payload(), send(), test_external_public_chat_never_retrieves_internal_evidence(), test_history_redacts_raw_chunks_even_if_a_stored_answer_contains_them(), test_legacy_history_is_not_released_to_new_public_session(), test_local_operator_can_retrieve_but_citations_contain_no_raw_chunk() (+9 more)
-
-### Community 151 - "evidence/vite-cache/deps/@tanstack_react-router.js"
-Cohesion: 0.03
-Nodes (72): appendUniqueUserTags(), Asset(), Await(), AwaitInner(), Block(), buildBranch(), buildRouteBranch(), buildTagsFromMatches() (+64 more)
+### Community 151 - "@tanstack_react-router.js"
+Cohesion: 0.04
+Nodes (53): appendUniqueUserTags(), Await(), AwaitInner(), Block(), buildBranch(), buildRouteBranch(), buildTagsFromMatches(), createConstantNode() (+45 more)
 
 ### Community 152 - "Architecture Decision Records (ADR)"
 Cohesion: 0.10
@@ -2168,29 +1689,33 @@ Nodes (19): ADR-001: LLM Provider Abstraction, ADR-002: Model Router, ADR-003: M
 Cohesion: 0.10
 Nodes (19): 10. ARCHITECTURE CONSISTENCY, 11. V1 FREEZE RULE, 12. CREATE AUDIT REPORT, 13. CREATE MACHINE-READABLE RESULT, 14. TESTING, 15. IMPORTANT — DO NOT TOUCH, 16. FINAL DECISION, 1. BACA DULU (+11 more)
 
-### Community 155 - "EvidenceRejected"
+### Community 154 - "_loaded_code_manifest"
 Cohesion: 0.11
-Nodes (16): EvidenceRejected, _expire_connection(), FetchResult, _hash(), _identifier(), parse_document(), StagingStore, _url() (+8 more)
+Nodes (17): _code_fingerprint(), constant(), describe(), runtime_attestation(), _loaded_code_manifest(), _manifest_hash(), source_build_id(), test_equal_registered_code_hash_does_not_cover_changed_global() (+9 more)
+
+### Community 155 - "EvidenceRejected"
+Cohesion: 0.12
+Nodes (12): EvidenceRejected, _hash(), _identifier(), _now(), StagingStore, _url(), verify_fixture_checksum(), WebEvidencePipeline (+4 more)
 
 ### Community 156 - "routes-cost-20261016-142819/routes.py"
-Cohesion: 0.06
-Nodes (42): _apply_grounding_safety_gate(), _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), chat_history() (+34 more)
+Cohesion: 0.07
+Nodes (41): _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), chat_history(), ChatRequest (+33 more)
 
-### Community 157 - "socketpair"
-Cohesion: 0.01
-Nodes (109): main(), worker(), audit(), fixture_dotenv(), forbidden(), inside(), resolved(), main() (+101 more)
+### Community 157 - "worker"
+Cohesion: 0.21
+Nodes (8): Wayfinding operations, main(), worker(), audit(), fixture_dotenv(), forbidden(), inside(), resolved()
 
 ### Community 158 - "RuntimeGraphMapper"
-Cohesion: 0.10
-Nodes (17): RuntimeImpactAnalyzer, RuntimeGraphMapper, test_existing_graph_not_required_for_import(), test_impact_analyzer(), test_mapper_has_engine_mapping(), test_mapper_loads_existing_graph(), test_mapping_to_impact(), test_existing_graph_not_required_for_import() (+9 more)
+Cohesion: 0.21
+Nodes (6): RuntimeGraphMapper, test_existing_graph_not_required_for_import(), test_impact_analyzer(), test_mapper_has_engine_mapping(), test_mapper_loads_existing_graph(), test_mapping_to_impact()
 
 ### Community 159 - "DEVCORE_COMPLIANCE — kontrak Developer Core vs source"
 Cohesion: 0.25
 Nodes (7): Cara pakai, Checklist kontrak (#25) untuk perubahan ini, DEVCORE_COMPLIANCE — kontrak Developer Core vs source, Integrasi dengan agent.py live, Security gate (workflow #24), Status per prioritas (workflow #27), Temuan audit arsip (sebelum perubahan)
 
-### Community 160 - "chat-p0-20261019/vite-cache/deps/@tanstack_react-router.js"
-Cohesion: 0.04
-Nodes (58): appendUniqueUserTags(), Asset(), Await(), AwaitInner(), Block(), buildBranch(), buildRouteBranch(), buildTagsFromMatches() (+50 more)
+### Community 160 - "Selection"
+Cohesion: 0.12
+Nodes (16): array(), arrayAll(), arraylike(), constant_default(), data_default(), datum(), enter_default(), exit_default() (+8 more)
 
 ### Community 162 - "Environment & Architecture Report"
 Cohesion: 0.11
@@ -2200,21 +1725,21 @@ Nodes (18): 1. Sistem Operasi & Hardware, 2. Software Environment, 3. Port Alloc
 Cohesion: 0.11
 Nodes (18): 11. EVIDENCE HIERARCHY, 12. CONTROL PLANE BOUNDARY, 13. HUMAN DECISION BOUNDARY, 14. HARD STOP CONDITIONS, 15. ACCEPTANCE CRITERIA, 16. REQUIRED TEST MATRIX, 17. EVIDENCE RECEIPT CONTRACT, 18. REPORTING CONTRACT (+10 more)
 
-### Community 164 - "getComponentNameFromFiber"
-Cohesion: 0.04
-Nodes (80): addFiberToLanesMap(), attachPingListener(), attachSuspenseRetryListeners(), attemptHydrationAtCurrentPriority(), callComponentWillReceiveProps(), captureCommitPhaseErrorOnRoot(), chainThenableValue(), checkIfSnapshotChanged() (+72 more)
+### Community 164 - "Check"
+Cohesion: 0.14
+Nodes (12): Check, render(), verdict(), Finding, _is_generated_vendor_copy(), scan_tree(), TestSecurity, compile_all() (+4 more)
 
-### Community 165 - "getComponentNameFromFiber"
-Cohesion: 0.04
-Nodes (80): addFiberToLanesMap(), attachPingListener(), attachSuspenseRetryListeners(), attemptHydrationAtCurrentPriority(), callComponentWillReceiveProps(), captureCommitPhaseErrorOnRoot(), chainThenableValue(), checkIfSnapshotChanged() (+72 more)
+### Community 165 - "EffectiveRAGProfile"
+Cohesion: 0.16
+Nodes (6): capture_retrieval(), EffectiveRAGProfile, _log_receipt(), make_rag_profile(), publish_rag_profile(), RetrievalCapture
 
-### Community 166 - "constructor"
-Cohesion: 0.04
-Nodes (118): Ct(), Vn(), wd(), xh, $2(), Aa(), ab(), #b() (+110 more)
+### Community 166 - ".get"
+Cohesion: 0.09
+Nodes (49): Ct(), Vn(), wd(), Aa(), #b(), bh(), c1(), ci() (+41 more)
 
-### Community 167 - "mcp-nusantara-upstream/tests/v2/test_devcore_routes.py"
-Cohesion: 0.02
-Nodes (22): NaiveRegistry, Obj, FakeProvider, load_routes(), mod(), StubModel, TestRoutes, FakeProvider (+14 more)
+### Community 167 - "stub_modules"
+Cohesion: 0.06
+Nodes (9): NaiveRegistry, Obj, load_routes(), mod(), TestRoutes, stub_modules(), load_routes(), mod() (+1 more)
 
 ### Community 168 - "BASELINE — NUSANTARA AI V1"
 Cohesion: 0.11
@@ -2226,19 +1751,19 @@ Nodes (17): ATURAN BACKUP, ATURAN MODIFIKASI FILE, ATURAN OUTPUT CHATGPT, KOMPAT
 
 ### Community 170 - "useStore"
 Cohesion: 0.04
-Nodes (101): A11yDescriptions(), addEdge2(), areConnectionMapsEqual(), areEqual$1(), areSetsEqual(), AriaLiveMessage(), BackgroundComponent(), cc() (+93 more)
+Nodes (98): addEdge2(), areConnectionMapsEqual(), areEqual$1(), areSetsEqual(), BackgroundComponent(), cc(), ConnectionLineWrapper(), ControlButton() (+90 more)
 
-### Community 171 - "MemoriaVectorStore"
-Cohesion: 0.01
-Nodes (99): ChunkProcessor, create_rag(), MemoriaVectorStore, ChunkProcessor, create_rag(), MemoriaVectorStore, configured(), test_adapter_constructs_existing_client_without_starting_worker() (+91 more)
+### Community 171 - "RAG"
+Cohesion: 0.02
+Nodes (88): IndoBERTEmbeddingAdapter, create_rag(), MemoriaVectorStore, RAG, create_rag(), MemoriaVectorStore, RAG, configured() (+80 more)
 
-### Community 172 - ".on"
-Cohesion: 0.12
-Nodes (45): copy(), defaultConstrain(), defaultTransform(), drag_default(), beforestart(), drag(), mousedowned(), mousemoved() (+37 more)
+### Community 172 - "test_v1_laya_integration.py"
+Cohesion: 0.23
+Nodes (11): Before → after, answer(), respond(), ask(), comparable(), configured_parts(), test_dead_laya_keeps_final_answer_and_followup_session_context(), test_laya_hint_keeps_baseline_evidence_and_canonical_intent() (+3 more)
 
 ### Community 173 - "FileSystemTool"
-Cohesion: 0.09
-Nodes (4): FileSystemTool, ToolRegistry, ToolRegistry, ToolRegistry
+Cohesion: 0.12
+Nodes (3): FileSystemTool, ToolRegistry, ToolRegistry
 
 ### Community 174 - "validate_gate15_6_change_plan_validator.py"
 Cohesion: 0.47
@@ -2253,48 +1778,44 @@ Cohesion: 0.24
 Nodes (3): DeveloperControl, main(), utc_now()
 
 ### Community 178 - "tests/test_audit_regressions.py"
-Cohesion: 0.16
-Nodes (8): test_authorized_developer_lists_workspace(), test_authorized_ingest_keeps_path_literal(), test_binary_parsers_reject_file_path(), test_knowledge_http_denies_before_backend(), test_privileged_api_denies_before_access(), test_slow_knowledge_work_keeps_event_loop_responsive(), test_text_content_never_reads_server_file(), test_worker_environment_configuration()
+Cohesion: 0.17
+Nodes (7): test_authorized_ingest_keeps_path_literal(), test_binary_parsers_reject_file_path(), test_knowledge_http_denies_before_backend(), test_privileged_api_denies_before_access(), test_slow_knowledge_work_keeps_event_loop_responsive(), test_text_content_never_reads_server_file(), test_worker_environment_configuration()
 
 ### Community 179 - "RAG SCHEMA AUDIT — NUSANTARA AI V1"
 Cohesion: 0.17
 Nodes (11): Action required, Conclusion, F-R1. `StoredChunk(embedding=...)` type mismatch (rag.py:359), F-R2. `MemoriaVectorStore` union-attr (rag.py:367, 446, 510, 672, 683), F-R3. `Evidence(..., store_id=None)` explicit defaults (rag.py:683, 684), Pydantic runtime verification, RAG SCHEMA AUDIT — NUSANTARA AI V1, Remaining items (+3 more)
 
 ### Community 180 - "project"
-Cohesion: 0.04
-Nodes (35): digest(), project(), _project_query_parity(), read(), intention(), snapshot(), snapshot(), snapshot() (+27 more)
+Cohesion: 0.06
+Nodes (19): digest(), project(), _project_query_parity(), read(), intention(), snapshot(), snapshot(), snapshot() (+11 more)
 
-### Community 183 - "renderRootConcurrent"
-Cohesion: 0.05
-Nodes (77): cancelCallback(), checkIfRootIsPrerendering(), claimQueuedTransitionTypes(), commitDoubleInvokeEffectsInDEV(), commitRoot(), completeRoot(), completeRootWhenReady(), completeUnitOfWork() (+69 more)
+### Community 181 - "RAG"
+Cohesion: 0.03
+Nodes (7): KnowledgeEngine, ChunkProcessor, create_rag(), DocParser, MemoriaVectorStore, RAG, RetrievalEvidenceList
 
-### Community 186 - "renderRootConcurrent"
-Cohesion: 0.05
-Nodes (77): cancelCallback(), checkIfRootIsPrerendering(), claimQueuedTransitionTypes(), commitDoubleInvokeEffectsInDEV(), commitRoot(), completeRoot(), completeRootWhenReady(), completeUnitOfWork() (+69 more)
+### Community 183 - "app/devcore/__init__.py"
+Cohesion: 0.12
+Nodes (5): normalize_result(), RegistryBackend, load_agent(), Obj, TestIntegration
+
+### Community 186 - "test_d2_reproduction.py"
+Cohesion: 0.30
+Nodes (9): record(), SyntheticBackend, test_d2_01_mixed_negation_bypasses_grounding(), test_d2_02_backend_find_outside_result_survives_sanitization(), test_d2_02_backend_read_result_not_bound_to_request(), test_d2_03_sensitive_directory_metadata_leak(), test_d2_04_denied_walk_silently_reports_complete_search(), test_d2_05_truncated_source_receives_unqualified_pass() (+1 more)
 
 ### Community 187 - "DevCore"
-Cohesion: 0.04
-Nodes (62): build_prompt(), DevCore, rejected(), test_decimal_comma_fix_preserves_integer_and_dot_decimal(), test_decimal_comma_fix_preserves_local_and_clause_negation(), test_decimal_comma_matching_value_is_retained_in_human_answer(), test_decimal_comma_mismatch_is_rejected_in_human_answer(), test_decimal_comma_mixed_supported_value_and_unsupported_claim() (+54 more)
-
-### Community 188 - "nusantara-e2e-20261016-1018/baseline/api.ts"
 Cohesion: 0.06
-Nodes (66): DECISION_FIELDS, DecisionRecord, decisionRequestError(), decisionValidationMessage(), EvidencePackage, executeReviewedAction(), ExecutionContext, ExecutionHistory (+58 more)
+Nodes (41): build_prompt(), DevCore, rejected(), check_grounding(), _negated(), _num(), Violation, test_decimal_comma_fix_preserves_integer_and_dot_decimal() (+33 more)
 
-### Community 189 - "write"
-Cohesion: 0.09
-Nodes (66): addConstant(), addUserConstant(), codePointLength(), codePointLengthVar(), comparisonOperand(), compileChild(), dropsWhenAbsent(), emitOwnKeys() (+58 more)
+### Community 188 - "ExecutionBoundary"
+Cohesion: 0.19
+Nodes (3): BoundaryResult, ExecutionBoundary, ExecutionBoundaryError
 
 ### Community 191 - "What You Must Do When Invoked"
 Cohesion: 0.08
 Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native AGENTS.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
-### Community 192 - "RAG"
-Cohesion: 0.04
-Nodes (4): ChunkProcessor, create_rag(), MemoriaVectorStore, RAG
-
-### Community 193 - "EmbeddingProvider"
-Cohesion: 0.07
-Nodes (5): create_embedder(), EmbeddingProvider, EmbeddingService, MockEmbeddingProvider, OpenAIEmbeddingProvider
+### Community 192 - "tests/test_control_plane_attestation_binding.py"
+Cohesion: 0.18
+Nodes (14): body(), isolated(), post(), test_atomic_material_change_and_storage_failure(), test_binding_changes_between_validation_and_creation(), test_bounded_json(), test_browser_cannot_reach_arm_execute(), test_capacity_rejects_without_poisoning() (+6 more)
 
 ### Community 194 - "before/control-plane/src/human.tsx"
 Cohesion: 0.06
@@ -2305,28 +1826,20 @@ Cohesion: 0.08
 Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
 ### Community 196 - "RAG"
-Cohesion: 0.04
-Nodes (4): KnowledgeEngine, create_rag(), MemoriaVectorStore, RAG
+Cohesion: 0.03
+Nodes (6): KnowledgeEngine, ChunkProcessor, create_rag(), DocParser, MemoriaVectorStore, RAG
 
-### Community 197 - "setInitialProperties"
-Cohesion: 0.06
-Nodes (68): batchedUpdates$1(), camelize(), checkAttributeStringCoercion(), checkControlledValueProps(), checkCSSPropertyStringCoercion(), checkFormFieldValueStringCoercion(), checkForUnmatchedText(), coerceFormActionProp() (+60 more)
-
-### Community 198 - "setInitialProperties"
-Cohesion: 0.06
-Nodes (68): batchedUpdates$1(), camelize(), checkAttributeStringCoercion(), checkControlledValueProps(), checkCSSPropertyStringCoercion(), checkFormFieldValueStringCoercion(), checkForUnmatchedText(), coerceFormActionProp() (+60 more)
+### Community 197 - "Audit jalur Nusantara V1 dan penonaktifan V2"
+Cohesion: 0.17
+Nodes (11): 1. Output model dan perintah sistem, 2. Guard input/output dan keterhubungannya, 3. RAG, chunks, ACL, dan streaming, 4. OpenRouter dan data keluar, 5. Durabilitas sesi dan `web`, 6. Makna tes yang ada, 7. Kandidat latensi Ollama dari kode, Audit jalur Nusantara V1 dan penonaktifan V2 (+3 more)
 
 ### Community 199 - "40. ACCEPTANCE GATES"
 Cohesion: 0.13
 Nodes (15): 40. ACCEPTANCE GATES, CPLANE-01, CPLANE-02, CPLANE-03, CPLANE-04, CPLANE-05, CPLANE-06, CPLANE-07 (+7 more)
 
-### Community 200 - "write"
-Cohesion: 0.09
-Nodes (66): addConstant(), addUserConstant(), codePointLength(), codePointLengthVar(), comparisonOperand(), compileChild(), dropsWhenAbsent(), emitOwnKeys() (+58 more)
-
-### Community 202 - "mcp-nusantara-upstream/tests/test_hermes_v1_conversation.py"
-Cohesion: 0.18
-Nodes (13): execute(), test_actual_public_endpoint_sanitizes_provider_failure_without_retry(), test_conversation_cannot_smuggle_official_or_verified_claims(), test_conversation_uses_existing_provider_without_false_grounding(), test_evidence_required_and_unknown_requests_still_fail_closed(), test_existing_supported_answer_preserves_evidence_and_guard(), test_explicit_repeat_is_a_transformation_not_verified_evidence(), test_explicit_repeat_variants() (+5 more)
+### Community 200 - "perbaikanbukti/app/evaluation/evaluator.py"
+Cohesion: 0.32
+Nodes (8): aggregate(), compare(), EvalCase, EvalRecord, load_baseline(), run_cases(), save_baseline(), score_record()
 
 ### Community 203 - "MDE-03 Provider Registry — discovery and contract closure"
 Cohesion: 0.25
@@ -2344,41 +1857,37 @@ Nodes (19): ADR Format, Numbering, Optional sections, Template, What qualifies, 
 Cohesion: 0.15
 Nodes (12): compilerOptions, esModuleInterop, jsx, lib, module, moduleResolution, noEmit, skipLibCheck (+4 more)
 
-### Community 207 - "before/api.ts"
-Cohesion: 0.06
-Nodes (56): ChatOptions, ChatSendError, CostSummary, DECISION_FIELDS, DecisionRecord, decisionRequestError(), decisionValidationMessage(), EvidencePackage (+48 more)
+### Community 207 - "ADENDUM TUGAS OPENCODE"
+Cohesion: 0.17
+Nodes (11): 1. Tujuan, 2. Baseline yang sudah tercatat — jangan diuji ulang tanpa alasan, 3. Aturan kerja, 4. Prioritas 1 — Verifikasi browser Approval, 5. Prioritas 2 — Tutaskan satu SOP sampai Chat, 6. Prioritas 3 — Jalankan Golden Gate terisolasi, 7. Kriteria penutupan, 8. Instruksi siap ditempel ke OpenCode (+3 more)
 
 ### Community 208 - "32. FINAL OUTPUT YANG HARUS DIHASILKAN"
 Cohesion: 0.15
 Nodes (13): 32. FINAL OUTPUT YANG HARUS DIHASILKAN, A. PROJECT STATUS, B. ARCHITECTURE STATUS, C. CONFIGURATION STATUS, D. PROVIDER STATUS, E. MODEL STATUS, F. RAG STATUS, G. EMBEDDING / INDEX STATUS (+5 more)
 
 ### Community 209 - "ref_node_fs"
-Cohesion: 0.06
-Nodes (10): output, reference, output, output, output, output, output, reference (+2 more)
-
-### Community 210 - "NCP-V1-OPENWEBUI-REA-ADAPT-001/before/control-plane/src/api.ts"
-Cohesion: 0.06
-Nodes (56): ChatOptions, ChatSendError, CostSummary, DECISION_FIELDS, DecisionRecord, decisionRequestError(), decisionValidationMessage(), EvidencePackage (+48 more)
+Cohesion: 0.08
+Nodes (13): output, output, output, reference, before, file, fs, path (+5 more)
 
 ### Community 211 - "HTML Report Format"
 Cohesion: 0.10
 Nodes (18): Call-graph collapse, Candidate card, Cross-section (good for layered shallowness), Diagram patterns, Hand-built boxes-and-arrows (when Mermaid's layout fights you), Header, HTML Report Format, Mass diagram (good for "interface as wide as implementation") (+10 more)
 
 ### Community 212 - "tests/test_web_evidence_pipeline.py"
-Cohesion: 0.09
-Nodes (52): approved(), collect(), dns(), pipeline(), source(), test_adapter_actual_v1_store_compatibility_only_in_temp_db(), test_api_web_pdf_fixture_parsing(), test_audit_tampering_detected() (+44 more)
+Cohesion: 0.11
+Nodes (46): approved(), collect(), dns(), pipeline(), source(), test_adapter_actual_v1_store_compatibility_only_in_temp_db(), test_api_web_pdf_fixture_parsing(), test_audit_tampering_detected() (+38 more)
 
 ### Community 213 - "normalizeParams"
 Cohesion: 0.02
-Nodes (90): _array(), _base64(), base642(), _base64url(), base64url2(), _cidrv4(), cidrv42(), _cidrv6() (+82 more)
+Nodes (88): _array(), _base64(), base642(), _base64url(), base64url2(), _cidrv4(), cidrv42(), _cidrv6() (+80 more)
 
-### Community 214 - "require_admin"
-Cohesion: 0.02
-Nodes (118): create_knowledge_pipeline_router(), add_knowledge_source(), configure_knowledge_watch(), knowledge_pipeline_status(), process_review(), retry_knowledge_source(), review_decision(), review_source() (+110 more)
+### Community 214 - "perbaikanbukti/tests/test_control_plane_attestation_binding.py"
+Cohesion: 0.18
+Nodes (14): body(), isolated(), post(), test_atomic_material_change_and_storage_failure(), test_binding_changes_between_validation_and_creation(), test_bounded_json(), test_browser_cannot_reach_arm_execute(), test_capacity_rejects_without_poisoning() (+6 more)
 
 ### Community 215 - "perbaikanbukti/tests/test_web_evidence_pipeline.py"
-Cohesion: 0.09
-Nodes (52): approved(), collect(), dns(), pipeline(), source(), test_adapter_actual_v1_store_compatibility_only_in_temp_db(), test_api_web_pdf_fixture_parsing(), test_audit_tampering_detected() (+44 more)
+Cohesion: 0.11
+Nodes (45): approved(), collect(), dns(), pipeline(), source(), test_adapter_actual_v1_store_compatibility_only_in_temp_db(), test_api_web_pdf_fixture_parsing(), test_audit_tampering_detected() (+37 more)
 
 ### Community 216 - "template.sh"
 Cohesion: 0.22
@@ -2392,21 +1901,17 @@ Nodes (17): engine(), project(), test_absolute_outside_graph_denied(), test_anal
 Cohesion: 0.08
 Nodes (13): create_language_engine(), LanguageDetection, LanguageEngine, Entity, EntityResult, EntityType, IntentResult, LanguageDetectionResult (+5 more)
 
-### Community 219 - "dispatchEventForPluginEventSystem"
-Cohesion: 0.05
-Nodes (58): accumulateEnterLeaveListenersForEvent(), accumulateOrCreateContinuousQueuedReplayableEvent(), accumulateTwoPhaseListeners(), acquireSingletonInstance(), assertIsMounted(), attemptContinuousHydration(), attemptExplicitHydrationTarget(), attemptReplayContinuousQueuedEvent() (+50 more)
+### Community 219 - "tests/test_local_operator_identity.py"
+Cohesion: 0.25
+Nodes (17): channel_for(), no_impersonation(), policy_for(), raw_proof(), test_actual_windows_peer_session_server_and_launcher_correlation(), handle(), test_challenge_time_bounds(), test_cleanup_on_identity_api_failure() (+9 more)
 
-### Community 220 - "dispatchEventForPluginEventSystem"
-Cohesion: 0.05
-Nodes (58): accumulateEnterLeaveListenersForEvent(), accumulateOrCreateContinuousQueuedReplayableEvent(), accumulateTwoPhaseListeners(), acquireSingletonInstance(), assertIsMounted(), attemptContinuousHydration(), attemptExplicitHydrationTarget(), attemptReplayContinuousQueuedEvent() (+50 more)
+### Community 220 - "NUSANTARA V1 — Tiga Lapisan Knowledge dan Tiga Alur Kelulusan Satu SOP"
+Cohesion: 0.18
+Nodes (10): 1. Tujuan dan batas pekerjaan, 2. Lapisan 1 — Pengetahuan resmi, 3. Lapisan 2 — Konteks percakapan, 4. Lapisan 3 — Kemampuan menggunakan alat, 5. Alur 1 — PDF sampai layak digunakan, 6. Alur 2 — Pertanyaan sampai jawaban bersumber, 7. Alur 3 — Koreksi sampai mutu terbukti kembali, 8. Paket pembuktian dan keputusan akhir (+2 more)
 
 ### Community 221 - "P0 tahap A — batas SOP V1"
 Cohesion: 0.29
 Nodes (6): Batas penerimaan, Evidence pengujian, Hasil implementasi, P0 tahap A — batas SOP V1, Perbaikan prasyarat yang ditemukan saat uji, Review perubahan dan rollback
-
-### Community 222 - "source-checkpoint/app__api__routes.py"
-Cohesion: 0.05
-Nodes (45): GraphifyBridge, _apply_grounding_safety_gate(), _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat() (+37 more)
 
 ### Community 223 - "approval_controller.py"
 Cohesion: 0.44
@@ -2420,33 +1925,25 @@ Nodes (38): _apply_grounding_safety_gate(), _build_evidence_text(), _build_syste
 Cohesion: 0.18
 Nodes (10): 1. MISI UTAMA, 2. ATURAN KERAS, 3. V1 ADALAH PRIORITAS, 4. CURRENT V1 ARCHITECTURE, 5. MARKITDOWN PRINCIPLE, 6. DOCUMENT PIPELINE, 7. MARKITDOWN MU, Claude Code — Engineering, Architecture, MarkItDown, RAG & Production Hardening (+2 more)
 
-### Community 226 - "MemoryStore"
+### Community 227 - "app__api__routes.py"
 Cohesion: 0.07
-Nodes (4): create_long_term_memory(), create_memory_store(), LongTermMemory, MemoryStore
+Nodes (38): analyze_problem(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), ChatRequest, create_workflow(), _deterministic_response() (+30 more)
 
-### Community 227 - "profile-before/app__api__routes.py"
-Cohesion: 0.07
-Nodes (39): analyze_problem(), _apply_grounding_safety_gate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), ChatRequest, create_workflow() (+31 more)
-
-### Community 228 - "continue-20261019-095544/before/app__api__routes.py"
-Cohesion: 0.06
-Nodes (42): _apply_grounding_safety_gate(), _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), chat_history() (+34 more)
+### Community 228 - "CandidateStore"
+Cohesion: 0.14
+Nodes (6): CandidateStore, html_to_text(), KnowledgeCandidate, NotApproved, SourceRejected, SourceValidator
 
 ### Community 229 - "Migrate to Shoehorn"
 Cohesion: 0.20
 Nodes (9): `as Type` → `fromPartial()`, `as unknown as Type` → `fromAny()`, Install, Large objects with few needed properties, Migrate to Shoehorn, Migration patterns, When to use each, Why shoehorn? (+1 more)
 
 ### Community 230 - "openrouter-cost-20261016-141908/routes.py"
-Cohesion: 0.06
-Nodes (42): _apply_grounding_safety_gate(), _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), chat_history() (+34 more)
+Cohesion: 0.07
+Nodes (41): _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), chat_history(), ChatRequest (+33 more)
 
 ### Community 231 - "developer_core_engine.before_prod_integration_20261002_142101.py"
 Cohesion: 0.08
 Nodes (40): build_graph_context(), build_source_index(), ChatRequest, collect_source_files(), developer_chat(), developer_health(), get_node(), get_production_rag() (+32 more)
-
-### Community 232 - "chat-p0-20261019/vite-cache/deps/chunk-Z2UXYY2T.js"
-Cohesion: 0.08
-Nodes (7): "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js"(), checkIfSnapshotChanged(), useSyncExternalStore$2(), "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js"(), "node_modules/react-dom/cjs/react-dom.development.js"(), createPortal$1(), testStringCoercion()
 
 ### Community 233 - "developer_core_engine.before_source_cleanup_20261002_142345.py"
 Cohesion: 0.08
@@ -2476,53 +1973,45 @@ Nodes (9): 1. Dasar dan kelas bukti, 2. Identitas dan pelestarian, 3. Batas file
 Cohesion: 0.20
 Nodes (9): CRITICAL, Final Audit, Findings, HIGH, LOW, MEDIUM, Scope, Security checks (+1 more)
 
-### Community 240 - "laya-integration/before/app__api__routes.py"
-Cohesion: 0.07
-Nodes (40): _apply_grounding_safety_gate(), _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), ChatRequest (+32 more)
+### Community 240 - "RuntimeImpactAnalyzer"
+Cohesion: 0.18
+Nodes (6): RuntimeImpactAnalyzer, test_existing_graph_not_required_for_import(), test_impact_analyzer(), test_mapper_has_engine_mapping(), test_mapper_loads_existing_graph(), test_mapping_to_impact()
 
 ### Community 241 - "perbaikanbukti/app/api/routes.py"
 Cohesion: 0.07
-Nodes (40): _apply_grounding_safety_gate(), _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), ChatRequest (+32 more)
-
-### Community 242 - "control-plane-four-20261019/vite-cache/deps/chunk-Z2UXYY2T.js"
-Cohesion: 0.08
-Nodes (7): "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js"(), checkIfSnapshotChanged(), useSyncExternalStore$2(), "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js"(), "node_modules/react-dom/cjs/react-dom.development.js"(), createPortal$1(), testStringCoercion()
+Nodes (39): _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), ChatRequest, create_workflow() (+31 more)
 
 ### Community 243 - "developer_core_engine.before_graph_rag_production_20261002_142501.py"
 Cohesion: 0.08
 Nodes (40): build_graph_context(), build_source_index(), ChatRequest, collect_source_files(), developer_chat(), developer_health(), get_node(), get_production_rag() (+32 more)
 
-### Community 244 - "chat-p0-20261019/vite-cache/deps/@tanstack_react-query.js"
-Cohesion: 0.06
-Nodes (26): addObserver(), clearGcTimeout(), #clearStaleTimeout(), clearTimeout(), #combineResult(), getCurrentQuery(), getPreviousPageParam(), getQueries() (+18 more)
+### Community 245 - ".emit"
+Cohesion: 0.31
+Nodes (3): Event, EventRecorder, _trim()
 
-### Community 245 - "control-plane-four-20261019/vite-cache/deps/@tanstack_react-query.js"
-Cohesion: 0.06
-Nodes (27): #combineResult(), findAll(), functionalUpdate(), getCurrentQuery(), getMutationCache(), getQueries(), getQueryData(), getResult() (+19 more)
-
-### Community 246 - "before/app__core__nusantara_config.py"
-Cohesion: 0.07
-Nodes (23): ConfigurationError, _Embedding, _Features, _Frozen, _Generation, _Governance, _Knowledge, _leaves() (+15 more)
+### Community 246 - "perbaikanbukti/app/research/gap_detector.py"
+Cohesion: 0.33
+Nodes (3): Gap, GapDetectionError, GapDetector
 
 ### Community 247 - "SessionMemory"
-Cohesion: 0.08
-Nodes (13): SessionMemory, test_bounded_and_redacted(), test_expired_histories_removed_from_disk(), test_http_opt_in_and_delete(), test_isolation_restart_retention_and_delete(), test_bounded_and_redacted(), test_expired_histories_removed_from_disk(), test_http_opt_in_and_delete() (+5 more)
+Cohesion: 0.11
+Nodes (9): SessionMemory, test_bounded_and_redacted(), test_expired_histories_removed_from_disk(), test_http_opt_in_and_delete(), test_isolation_restart_retention_and_delete(), test_bounded_and_redacted(), test_expired_histories_removed_from_disk(), test_http_opt_in_and_delete() (+1 more)
 
 ### Community 248 - "graphify reference: extra exports and benchmark"
 Cohesion: 0.22
 Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
 
-### Community 249 - "cost-ledger-v1-20261013-181330/app/core/nusantara_config.py"
-Cohesion: 0.07
+### Community 249 - "NusantaraConfig"
+Cohesion: 0.06
 Nodes (23): ConfigurationError, _Embedding, _Features, _Frozen, _Generation, _Governance, _Knowledge, _leaves() (+15 more)
 
 ### Community 250 - "developer_core_engine.before_production_rag_20261002_141904.py"
 Cohesion: 0.09
 Nodes (38): build_graph_context(), build_source_index(), ChatRequest, collect_source_files(), developer_chat(), developer_health(), get_node(), graph_analysis_api() (+30 more)
 
-### Community 251 - "mcp-nusantara-upstream/tests/test_runtime_verification.py"
-Cohesion: 0.07
-Nodes (34): test_r1_preserves_out_of_scope_protected_sources(), application(), client(), test_attestation_is_stable_and_uses_current_process_os_identity(), test_duplicate_endpoint_registration_is_rejected(), test_endpoint_does_not_open_files_databases_network_or_configuration(), test_live_handler_code_changes_are_detected_without_reading_source(), test_local_runtime_origin_is_allowed_and_post_is_not() (+26 more)
+### Community 251 - "Independent Spec review"
+Cohesion: 0.20
+Nodes (9): Independent Spec review, Requirement evidence already addressed, Review result, Round 2 final review, Round 2 follow-up: cross-runtime mutex and listener blocker, Runtime and operational acceptance remain HOLD, SP-01 P1 Unscoped Chat returns source text that was not the approved extraction, SP-02 P1 Cached Chat replies bypass current approval/content-version checks (+1 more)
 
 ### Community 252 - "graphify reference: extra exports and benchmark"
 Cohesion: 0.22
@@ -2544,13 +2033,13 @@ Nodes (23): ConfigurationError, _Embedding, _Features, _Frozen, _Generation, _Go
 Cohesion: 0.09
 Nodes (38): build_graph_context(), build_source_index(), ChatRequest, collect_source_files(), developer_chat(), developer_health(), get_node(), graph_analysis_api() (+30 more)
 
-### Community 257 - "get2"
-Cohesion: 0.05
-Nodes (49): append_default(), attr_default(), attr_default2(), attrInterpolate(), attrTween(), attrTween_default(), tween(), creator_default() (+41 more)
+### Community 257 - "controlled_pipeline"
+Cohesion: 0.22
+Nodes (3): controlled_pipeline(), __init__(), language()
 
 ### Community 258 - "payload/app/api/control_plane.py"
 Cohesion: 0.12
-Nodes (33): state(), active_knowledge_status(), _admin_reviewer(), _available_model_names(), available_models(), check_hermes_connection(), cost_summary(), _decision_audit_file() (+25 more)
+Nodes (32): active_knowledge_status(), _admin_reviewer(), _available_model_names(), available_models(), check_hermes_connection(), cost_summary(), _decision_audit_file(), evidence_decisions() (+24 more)
 
 ### Community 259 - "developer_core_engine.before_graph_adapter_20261002_132323.py"
 Cohesion: 0.10
@@ -2560,25 +2049,17 @@ Nodes (38): build_graph_context(), build_source_index(), ChatRequest, collect_so
 Cohesion: 0.10
 Nodes (38): build_graph_context(), build_source_index(), ChatRequest, collect_source_files(), developer_chat(), developer_health(), get_node(), graph_analysis_api() (+30 more)
 
-### Community 261 - "EvidenceRejected"
-Cohesion: 0.24
-Nodes (4): EvidenceRejected, _identifier(), verify_fixture_checksum(), WebEvidencePipeline
-
-### Community 262 - ".on"
-Cohesion: 0.12
-Nodes (45): copy(), defaultConstrain(), defaultTransform(), drag_default(), beforestart(), drag(), mousedowned(), mousemoved() (+37 more)
-
-### Community 263 - "tests/test_v1_review_execution_api.py"
-Cohesion: 0.13
-Nodes (5): environment(), test_copy_failure_is_persisted_and_cannot_reuse_approval(), test_operation_summary_stops_requesting_review_after_completion(), test_other_runtime_profiles_cannot_reach_v1_mutation(), test_review_governance_executor_history()
+### Community 261 - "perbaikanbukti/app/knowledge/web_evidence.py"
+Cohesion: 0.07
+Nodes (17): ApprovalPrincipal, _DeadlineHTTPS, EvidenceFetcher, EvidenceRejected, _expire_connection(), FetchResult, _hash(), _identifier() (+9 more)
 
 ### Community 264 - "Ask Matt"
 Cohesion: 0.12
 Nodes (14): Phase boundaries, Primary and secondary sources, The five options, The tree, These are judgement calls, Ask Matt, Codebase health, Context hygiene (+6 more)
 
-### Community 266 - "pytest"
-Cohesion: 0.02
-Nodes (68): _available_model_names(), cost_estimator(), _actual_cents(), _cost_cents(), CostGovernanceDenied, CostLedger, _decimal(), _now() (+60 more)
+### Community 266 - "perbaikanbukti/app/api/v2_routes.py"
+Cohesion: 0.06
+Nodes (28): InspectionPreviewRequest, preview(), inspection_preview(), InspectionPreviewRequest, preview(), audit_verify(), chat(), generate() (+20 more)
 
 ### Community 267 - "perbaikanbukti/app/security/local_operator.py"
 Cohesion: 0.09
@@ -2588,9 +2069,9 @@ Nodes (15): Actor, ActorError, Groups, LocalOperatorChannel, Luid, operator_exch
 Cohesion: 0.13
 Nodes (14): Completion criterion: a tight loop that goes red, Diagnosing Bugs, Minimise, Non-deterministic bugs, Phase 1: Build a feedback loop, Phase 2: Reproduce + minimise, Phase 3: Hypothesise, Phase 4: Instrument (+6 more)
 
-### Community 269 - "constructor"
-Cohesion: 0.08
-Nodes (10): compileDecodeCharMap(), constructor(), createFileRoute(), documentNavigation(), _getUserHistoryState(), id(), isModuleNotFoundError(), lazyRouteComponent() (+2 more)
+### Community 269 - "KONTRAK UJI RUNTIME NUSANTARA V1"
+Cohesion: 0.11
+Nodes (18): 1. Tujuan, 2. Penjelasan alur runtime yang harus diverifikasi, 3. Batas dan kewenangan, 4. Prasyarat dan baseline read-only, 5. Prosedur uji satu dokumen, 6. Kriteria penerimaan, 7. Aturan diagnosis dan perubahan kode, 8. Format laporan wajib (+10 more)
 
 ### Community 270 - "scripts/validate_gate12_final.py"
 Cohesion: 0.39
@@ -2612,61 +2093,49 @@ Nodes (7): Boundary dan lifecycle, Evidence dan change control, NUSANTARA V1 —
 Cohesion: 0.25
 Nodes (7): Decision and verification, Identity vocabulary and canonical interpretation, Lifecycle and evidence, MDE-03 mismatch closure and compatibility, MDE-04 Model Registry — identity and selection contract, Model Identity Matrix, Path audit
 
-### Community 275 - "LanguageEngine"
-Cohesion: 0.10
-Nodes (3): create_language_engine(), LanguageDetection, LanguageEngine
-
 ### Community 276 - "app"
-Cohesion: 0.06
-Nodes (34): test_api_health(), app(), test_health_returns_request_id_header(), test_request_id_is_unique_per_request(), test_metrics_endpoint_has_request_id(), test_metrics_endpoint_returns_observability_snapshot(), test_request_generates_metrics_counter(), test_v1_metrics_counter_increases_after_request() (+26 more)
+Cohesion: 0.11
+Nodes (16): test_api_health(), app(), test_health_returns_request_id_header(), test_request_id_is_unique_per_request(), test_metrics_endpoint_has_request_id(), test_metrics_endpoint_returns_observability_snapshot(), test_request_generates_metrics_counter(), test_v1_metrics_counter_increases_after_request() (+8 more)
 
 ### Community 277 - "developer_core_engine.before_quality_20261002_131836.py"
 Cohesion: 0.11
 Nodes (39): build_graph_context(), build_source_index(), ChatRequest, collect_source_files(), developer_chat(), developer_health(), get_node(), graph_analysis_api() (+31 more)
 
-### Community 278 - "get2"
-Cohesion: 0.05
-Nodes (44): attr_default2(), attrInterpolate(), attrTween(), tween(), delay_default(), delayConstant(), delayFunction(), dispatchConstant() (+36 more)
-
 ### Community 279 - "MasterDeveloperEngine"
 Cohesion: 0.14
 Nodes (4): Check, main(), MasterDeveloperEngine, PhaseResult
 
-### Community 280 - "has"
-Cohesion: 0.06
-Nodes (43): aborted(), aggregateChecks(), config(), constructor(), init(), Internals(), defineBound(), discriminatorMap() (+35 more)
+### Community 280 - "perbaikanbukti/app/observability/logging.py"
+Cohesion: 0.31
+Nodes (4): configure_logging(), JsonFormatter, log_event(), redact()
 
-### Community 281 - "has"
-Cohesion: 0.06
-Nodes (43): aborted(), aggregateChecks(), config(), constructor(), init(), Internals(), defineBound(), discriminatorMap() (+35 more)
+### Community 282 - "create"
+Cohesion: 0.39
+Nodes (9): create(), schedule(), start2(), stop(), tick(), timeout_default(), Timer(), flattenError() (+1 more)
 
-### Community 282 - "convertBaseSchema"
-Cohesion: 0.09
-Nodes (43): applyMinItems(), catchall(), _check(), clone(), cloneDef(), convertBaseSchema(), decodeJSONPointerSegment(), deferProp() (+35 more)
-
-### Community 284 - "before/control-plane__src__api.ts"
-Cohesion: 0.06
-Nodes (35): ChatSendError, CostSummary, DECISION_FIELDS, DecisionRecord, decisionRequestError(), decisionValidationMessage(), EvidencePackage, executeReviewedAction() (+27 more)
+### Community 284 - "tests/test_v1_response_projection.py"
+Cohesion: 0.21
+Nodes (13): assert_public(), internal_context(), sample_payload(), test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state(), test_http_generic_exception_does_not_echo_internal_exception(), test_http_partial_context_never_becomes_a_public_dump(), test_http_provider_unavailable_preserves_existing_shared_handler(), test_http_stage_statuses_remain_safe() (+5 more)
 
 ### Community 285 - "hermes-acp-20261016T064413Z-b7d16e5d/app/api/control_plane.py"
 Cohesion: 0.12
 Nodes (28): active_knowledge_status(), _admin_reviewer(), _available_model_names(), available_models(), cost_summary(), _decision_audit_file(), evidence_decisions(), evidence_package() (+20 more)
 
-### Community 286 - "ref_node_assert"
-Cohesion: 0.08
-Nodes (19): {chromium}, fs, path, assert, {chromium}, {execFileSync}, fs, path (+11 more)
+### Community 286 - "check_v1_isolated_upload.cjs"
+Cohesion: 0.11
+Nodes (14): assert, {chromium}, {execFileSync}, fs, path, assert, {chromium}, fs (+6 more)
 
-### Community 287 - "get"
-Cohesion: 0.07
-Nodes (42): add(), assignProp(), assignProps(), attach(), bucketFor(), canonicalKey(), checkArrayGuards(), checkObjectGuards() (+34 more)
+### Community 287 - "Implementasi tiga lapisan knowledge dan tiga alur SOP V1"
+Cohesion: 0.25
+Nodes (7): Implementasi tiga lapisan knowledge dan tiga alur SOP V1, Mengambil perubahan ke Windows, Perubahan perilaku, Tiga alur penerimaan, Verifikasi yang dijalankan, Workflow pengembangan dan review, defer()
 
-### Community 288 - "convertBaseSchema"
-Cohesion: 0.09
-Nodes (43): applyMinItems(), catchall(), _check(), clone(), cloneDef(), convertBaseSchema(), decodeJSONPointerSegment(), deferProp() (+35 more)
+### Community 288 - "Perbaikan fondasi Nusantara V1"
+Cohesion: 0.25
+Nodes (7): Batas yang tetap harus dibuktikan di PC, Dampak pada instalasi existing, Hasil verifikasi, Metode verifikasi, Perbaikan fondasi Nusantara V1, Permintaan dan penerimaan, Workflow operator
 
-### Community 289 - "get"
-Cohesion: 0.07
-Nodes (42): add(), assignProp(), assignProps(), attach(), bucketFor(), canonicalKey(), checkArrayGuards(), checkObjectGuards() (+34 more)
+### Community 289 - "Sambungan SOP ke chat — 28 Oktober 2026"
+Cohesion: 0.25
+Nodes (7): Batas penyelesaian, Bukti runtime nyata, Sambungan SOP ke chat — 28 Oktober 2026, Titik putus dan patch, Uji PDF nyata setelah pengguna meminta “jalankan” —17:58 WIB, Update setelah izin restart pengguna — 28 Oktober 2026,17:55 WIB, Workflow dan verifikasi
 
 ### Community 290 - "ProductionSemanticRetriever"
 Cohesion: 0.12
@@ -2852,25 +2321,21 @@ Nodes (88): bubbleNestedEffectDurations(), callCallback(), callGetSnapshotBefore
 Cohesion: 0.11
 Nodes (29): authority_summary(), build_grounding_context(), ChatRequest, classify_query_domain(), collect_source_files(), content_tokens(), developer_chat(), developer_health() (+21 more)
 
-### Community 336 - "completeWork"
-Cohesion: 0.10
-Nodes (41): bubbleProperties(), claimNextRetryLane(), completeWork(), createHoistableInstance(), cutOffTailIfNeeded(), describeAncestors(), describeDiff(), emitPendingHydrationWarnings() (+33 more)
+### Community 337 - "app/developer_core/operationalization.py"
+Cohesion: 0.52
+Nodes (6): create_operationalization(), inspect_graph(), inspect_project(), inspect_validation(), main(), run_command()
 
-### Community 337 - "now"
-Cohesion: 0.12
-Nodes (26): clearNow(), create(), schedule(), start2(), stop(), tick(), inherit(), merge_default2() (+18 more)
-
-### Community 338 - "completeWork"
-Cohesion: 0.10
-Nodes (41): bubbleProperties(), claimNextRetryLane(), completeWork(), createHoistableInstance(), cutOffTailIfNeeded(), describeAncestors(), describeDiff(), emitPendingHydrationWarnings() (+33 more)
+### Community 338 - "Audit request aktual SOP dan percakapan Drive"
+Cohesion: 0.29
+Nodes (6): Audit request aktual SOP dan percakapan Drive, Bukti dan workflow, Drive: respons salah berasal dari backend,terbawa riwayat, Identitas yang diuji, Perubahan state selama audit dan request baru setelah Aktif —18:16 WIB, SOP: approval efektif belum Aktif
 
 ### Community 341 - "developer_core_engine.before_domain_routing_20261002_161418.py"
 Cohesion: 0.12
 Nodes (29): authority_summary(), build_grounding_context(), ChatRequest, classify_query_domain(), collect_source_files(), content_tokens(), developer_chat(), developer_health() (+21 more)
 
 ### Community 343 - "ProductionHybridRAG"
-Cohesion: 0.10
-Nodes (7): build_parser(), main(), ProductionEvidence, ProductionEvidencePack, ProductionHybridRAG, run_self_test(), search_production_knowledge()
+Cohesion: 0.11
+Nodes (6): build_parser(), main(), ProductionEvidence, ProductionEvidencePack, ProductionHybridRAG, run_self_test()
 
 ### Community 344 - "FULL-ROOT Development Report — 2026-10-07"
 Cohesion: 0.29
@@ -2888,29 +2353,29 @@ Nodes (29): authority_summary(), build_grounding_context(), ChatRequest, classif
 Cohesion: 0.12
 Nodes (29): authority_summary(), build_grounding_context(), ChatRequest, classify_query_domain(), collect_source_files(), content_tokens(), developer_chat(), developer_health() (+21 more)
 
-### Community 348 - "mcp-nusantara-upstream/tests/test_evidence_finalization.py"
-Cohesion: 0.27
-Nodes (16): prepared(), test_finalization_rejects_source_change_and_failed_command(), test_finalized_leaf_result_mutation_is_rejected(), test_finalized_results_mutation_is_rejected(), test_finalized_run_cannot_be_replaced_or_reference_itself(), digest(), finalize(), main() (+8 more)
+### Community 348 - "test_evidence_finalization.py"
+Cohesion: 0.37
+Nodes (11): digest(), finalize(), main(), publish(), snapshot(), write_once(), prepared(), test_finalization_rejects_source_change_and_failed_command() (+3 more)
 
-### Community 349 - "NCP-V1-SOP-OPERATOR-001/before/control-plane/src/api.ts"
-Cohesion: 0.06
-Nodes (49): ChatOptions, ChatSendError, CostSummary, DECISION_FIELDS, DecisionRecord, decisionRequestError(), decisionValidationMessage(), EvidencePackage (+41 more)
+### Community 349 - "SemanticIntentEngine"
+Cohesion: 0.19
+Nodes (3): SemanticIntentEngine, warmup(), test_cold_semantic_index_does_not_block_rule_fallback()
 
-### Community 350 - "loadServerRoute"
-Cohesion: 0.10
-Nodes (33): acquireMatchResources(), arraysEqual(), awaitCurrent(), awaitPendingMinimum(), batch(), commitMatches(), createRouterStores(), getMatchStore() (+25 more)
+### Community 350 - "perbaikanbukti/app/developer_core/operationalization.py"
+Cohesion: 0.52
+Nodes (6): create_operationalization(), inspect_graph(), inspect_project(), inspect_validation(), main(), run_command()
 
-### Community 351 - "EvidenceGroundingGuard"
-Cohesion: 0.11
-Nodes (4): EvidenceGroundingGuard, extract_requirement_statement(), GroundingResult, service_answer_facts()
+### Community 351 - "install"
+Cohesion: 0.38
+Nodes (5): install(), audit(), deny(), __init__(), inside()
 
 ### Community 352 - "33. GATE 4 � TRUST AUDIT RESULT"
 Cohesion: 0.33
 Nodes (6): 33. GATE 4 � TRUST AUDIT RESULT, Core Safety, Decision, Evidence, Gap, Test Evidence
 
-### Community 353 - "mcp-nusantara-upstream/app/policy/policy_engine.py"
-Cohesion: 0.07
-Nodes (12): PolicyDecision, PolicyEvaluation, PolicyRule, RiskLevel, create_policy_engine(), evaluate_policy(), PolicyEngine, PolicyRule (+4 more)
+### Community 353 - "perbaikanbukti/app/policy/policy_engine.py"
+Cohesion: 0.11
+Nodes (8): PolicyDecision, PolicyEvaluation, PolicyRule, RiskLevel, create_policy_engine(), evaluate_policy(), PolicyEngine, PolicyRule
 
 ### Community 354 - "35. GATE 6 � MEMORY AUDIT RESULT"
 Cohesion: 0.33
@@ -2944,17 +2409,13 @@ Nodes (6): 19. STATUS SEMANTICS, BLOCKED, ERROR, MISMATCH, NOT_VERIFIED, VERIFIE
 Cohesion: 0.33
 Nodes (6): 4.1 Inspect, 4.2 Trace, 4.3 Implement minimal verification instrumentation, 4.4 Add/update tests, 4.5 Generate evidence, 4. AUTHORIZED SCOPE
 
-### Community 362 - "EvidenceGroundingGuard"
-Cohesion: 0.11
-Nodes (4): EvidenceGroundingGuard, extract_requirement_statement(), GroundingResult, service_answer_facts()
-
 ### Community 363 - "NUSANTARA V1 — Knowledge RAG"
 Cohesion: 0.33
 Nodes (5): Evidence dan change control, Implementasi V1, NUSANTARA V1 — Knowledge RAG, Oracle dan gate terbuka, Perubahan dan rollback
 
-### Community 364 - "EvidenceGroundingGuard"
-Cohesion: 0.11
-Nodes (4): EvidenceGroundingGuard, extract_requirement_statement(), GroundingResult, service_answer_facts()
+### Community 364 - "Issue tracker: GitHub"
+Cohesion: 0.33
+Nodes (6): Conventions, Issue tracker: GitHub, Pull requests as a triage surface, Wayfinding operations, When a skill says "fetch the relevant ticket", When a skill says "publish to the issue tracker"
 
 ### Community 365 - "NUSANTARA V1 — Tool MCP API"
 Cohesion: 0.33
@@ -2968,37 +2429,37 @@ Nodes (5): Approval dan audit, Evidence dan change control, Implementasi V1, NUS
 Cohesion: 0.33
 Nodes (5): Commands, Database, Safety, Source directory, Supported
 
-### Community 368 - "before/tests/test_v1_sop_boundary.py"
-Cohesion: 0.09
-Nodes (18): execute_v1(), payload(), send(), test_actual_http_boundary_denies_public_document_scope_before_lookup(), test_direct_knowledge_http_endpoints_are_operator_only_before_store_access(), test_external_public_chat_never_retrieves_internal_evidence(), test_history_redacts_raw_chunks_even_if_a_stored_answer_contains_them(), test_legacy_history_is_not_released_to_new_public_session() (+10 more)
+### Community 368 - "Issue tracker: GitLab"
+Cohesion: 0.33
+Nodes (6): Conventions, Issue tracker: GitLab, Merge requests as a triage surface, Wayfinding operations, When a skill says "fetch the relevant ticket", When a skill says "publish to the issue tracker"
 
-### Community 369 - "baseline/control_plane.py"
-Cohesion: 0.13
-Nodes (26): active_knowledge_status(), _admin_reviewer(), _available_model_names(), available_models(), _decision_audit_file(), evidence_decisions(), evidence_package(), EvidenceDecisionInput (+18 more)
+### Community 369 - "Process"
+Cohesion: 0.33
+Nodes (6): 1. Explore, 2. Present findings and ask, 3. Confirm and edit, 4. Write, 5. Done, Process
 
 ### Community 370 - "ProductionSemanticRetriever"
 Cohesion: 0.12
 Nodes (9): _first_value(), _lexical_overlap(), _normalize_score(), ProductionSemanticRetriever, _quote_fts_token(), RetrievalEvidence, _safe_float(), _token_set() (+1 more)
 
-### Community 371 - "perbaikanbukti/app/knowledge/production_semantic_retriever.py"
-Cohesion: 0.11
-Nodes (11): build_parser(), _first_value(), _lexical_overlap(), main(), _normalize_score(), ProductionSemanticRetriever, _quote_fts_token(), RetrievalEvidence (+3 more)
-
-### Community 372 - "ProviderUnavailableError"
-Cohesion: 0.01
-Nodes (42): capture_model_identity(), ProviderUnavailableError, OpenAICompatibleProvider, test_http_provider_unavailable_preserves_existing_shared_handler(), ModelRouter, ModelSelection, ModelRouter, ModelSelection (+34 more)
-
-### Community 373 - "reconcileChildFibersImpl"
-Cohesion: 0.17
-Nodes (38): coerceRef(), createChildReconciler(), createChild(), deleteChild(), deleteRemainingChildren(), mapRemainingChildren(), placeChild(), placeSingleChild() (+30 more)
-
-### Community 374 - "reconcileChildFibersImpl"
-Cohesion: 0.17
-Nodes (38): coerceRef(), createChildReconciler(), createChild(), deleteChild(), deleteRemainingChildren(), mapRemainingChildren(), placeChild(), placeSingleChild() (+30 more)
-
-### Community 375 - "rag-authority-patch-20261012-103513/production_semantic_retriever.py"
+### Community 371 - "ProductionSemanticRetriever"
 Cohesion: 0.12
-Nodes (11): build_parser(), _first_value(), _lexical_overlap(), main(), _normalize_score(), ProductionSemanticRetriever, _quote_fts_token(), RetrievalEvidence (+3 more)
+Nodes (9): _first_value(), _lexical_overlap(), _normalize_score(), ProductionSemanticRetriever, _quote_fts_token(), RetrievalEvidence, _safe_float(), _token_set() (+1 more)
+
+### Community 372 - "LLMProvider"
+Cohesion: 0.06
+Nodes (5): LLMProvider, ModelSelection, ModelSelection, ModelRouter, ModelSelection
+
+### Community 373 - "app/developer_core/operational_run.py"
+Cohesion: 0.47
+Nodes (3): build_report(), graph_status(), load_json()
+
+### Community 374 - "project"
+Cohesion: 0.47
+Nodes (3): digest(), project(), read()
+
+### Community 375 - "ProductionSemanticRetriever"
+Cohesion: 0.13
+Nodes (9): _first_value(), _lexical_overlap(), _normalize_score(), ProductionSemanticRetriever, _quote_fts_token(), RetrievalEvidence, _safe_float(), _token_set() (+1 more)
 
 ### Community 376 - "core-human-first-20261008-4b875c29/CONTRACT.md"
 Cohesion: 0.05
@@ -3009,28 +2470,20 @@ Cohesion: 0.07
 Nodes (4): create_long_term_memory(), create_memory_store(), LongTermMemory, MemoryStore
 
 ### Community 380 - "developer_core_engine.before_query_expansion.py"
-Cohesion: 0.14
-Nodes (26): authority_summary(), build_grounding_context(), ChatRequest, classify_query_domain(), collect_source_files(), content_tokens(), developer_chat(), developer_health() (+18 more)
+Cohesion: 0.13
+Nodes (27): authority_summary(), build_grounding_context(), ChatRequest, classify_query_domain(), collect_source_files(), content_tokens(), developer_chat(), developer_health() (+19 more)
 
 ### Community 381 - "MCPServer"
 Cohesion: 0.07
 Nodes (4): create_server(), get_default_server(), MCPServer, MCPSession
 
-### Community 382 - ""node_modules/react/cjs/react.development.js""
-Cohesion: 0.09
-Nodes (27): "node_modules/react/cjs/react.development.js"(), addTransitionType(), aggregateErrors(), checkKeyStringCoercion(), cloneAndReplaceKey(), defineKeyPropWarningGetter(), elementRefGetterWithDeprecationWarning(), enqueueTask() (+19 more)
+### Community 382 - "perbaikanbukti/app/developer_core/operational_run.py"
+Cohesion: 0.47
+Nodes (3): build_report(), graph_status(), load_json()
 
-### Community 383 - "loadServerRoute"
-Cohesion: 0.10
-Nodes (33): acquireMatchResources(), arraysEqual(), awaitCurrent(), awaitPendingMinimum(), batch(), commitMatches(), createRouterStores(), getMatchStore() (+25 more)
-
-### Community 384 - ""node_modules/react/cjs/react.development.js""
-Cohesion: 0.09
-Nodes (27): "node_modules/react/cjs/react.development.js"(), addTransitionType(), aggregateErrors(), checkKeyStringCoercion(), cloneAndReplaceKey(), defineKeyPropWarningGetter(), elementRefGetterWithDeprecationWarning(), enqueueTask() (+19 more)
-
-### Community 385 - "EmbeddingProvider"
-Cohesion: 0.08
-Nodes (5): create_embedder(), EmbeddingProvider, EmbeddingService, MockEmbeddingProvider, OpenAIEmbeddingProvider
+### Community 383 - "perbaikanbukti/app/knowledge/chunker.py"
+Cohesion: 0.47
+Nodes (3): chunk_text(), Chunker, get_chunker()
 
 ### Community 386 - "ProductionSemanticRetriever"
 Cohesion: 0.14
@@ -3092,29 +2545,29 @@ Nodes (4): Architecture alignment, Important limitation, Local Verification Repo
 Cohesion: 0.40
 Nodes (4): Construction and precedence, Critical boundaries and implementation decision, EffectiveConfiguration representation, MDE-02 effective configuration contract
 
-### Community 402 - "setOptions"
-Cohesion: 0.14
-Nodes (26): bindMethods(), clearInterval(), #clearRefetchInterval(), #computeRefetchInterval(), constructor(), destroy(), difference(), #executeFetch() (+18 more)
+### Community 402 - "Final verification evidence — 2026-10-28"
+Cohesion: 0.33
+Nodes (5): Control Plane persistence test, Current process and runtime observation, Evidence boundaries, Final verification evidence — 2026-10-28, Guarded backend regression
 
-### Community 403 - "setOptions"
-Cohesion: 0.09
-Nodes (35): addObserver(), bindMethods(), clearGcTimeout(), clearInterval(), #clearRefetchInterval(), #clearStaleTimeout(), clearTimeout(), #computeRefetchInterval() (+27 more)
+### Community 403 - "Kelanjutan perbaikan Nusantara — 28 Oktober 2026"
+Cohesion: 0.33
+Nodes (5): Bukti runtime dan batasnya, Kelanjutan perbaikan Nusantara — 28 Oktober 2026, Masalah dan perbaikan, Verifikasi, Workflow dan pekerjaan tersisa
 
-### Community 404 - "useRouter"
-Cohesion: 0.10
-Nodes (34): CatchNotFound(), getElement(), getElementScrollRestorationEntry(), getScrollRestorationScriptForRouter(), getScrollRestorationSelector(), getScrollToTopElements(), isNotFound(), Matches() (+26 more)
+### Community 404 - "main"
+Cohesion: 0.40
+Nodes (3): main(), audit(), socketpair()
 
-### Community 405 - ".buildLocation"
-Cohesion: 0.08
-Nodes (31): cleanPath(), comparePaths(), composeRewrites(), encodeParam(), encodePathLikeUrl(), executeRewriteInput(), executeRewriteOutput(), extractStrictParams() (+23 more)
+### Community 405 - "validate_gate15_7_approval_wiring.py"
+Cohesion: 0.53
+Nodes (3): check_code_ref(), check_doc_file(), main()
 
 ### Community 407 - "ExecutionAudit"
 Cohesion: 0.12
 Nodes (3): ExecutionAudit, ExecutionAuditError, ExecutionAuditResult
 
-### Community 408 - "MASTER ENGINEERING AUDIT — NUSANTARA AI V1"
-Cohesion: 0.06
-Nodes (35): 10. Storage Flow, 11. Observability Flow, 12. Security Surface, 13. Test Coverage, 14. Known Bugs, 15. Architectural Risks, 16. Duplicate Components, 17. Dead Code (+27 more)
+### Community 408 - "validate_gate15_change_planning_final.py"
+Cohesion: 0.53
+Nodes (3): check_doc_status_contract(), main(), run_sub_validator()
 
 ### Community 410 - "validate_gate16_graph.py"
 Cohesion: 0.40
@@ -3124,9 +2577,9 @@ Nodes (9): collect_strings(), find_target_nodes(), inspect_graph(), main(), node
 Cohesion: 0.17
 Nodes (11): Acceptance boundary, Decisions needed before implementation, Execution and UI, Existing authority and implementation, Human-facing capability contract, Implementation addendum — approved decisions, 2026-10-09, Knowledge boundary and evidence limits, Memory boundary requiring review (+3 more)
 
-### Community 412 - "ExecutionPlan"
-Cohesion: 0.02
-Nodes (52): ControlledPatchError, ControlledPatchExecutor, PatchResult, ExecutionApprovalError, BoundaryResult, ExecutionBoundary, ExecutionBoundaryError, ExecutionPlan (+44 more)
+### Community 412 - "ToolError"
+Cohesion: 0.14
+Nodes (3): CalculatorTool, DateTimeTool, ToolError
 
 ### Community 413 - "MDE-03 Provider Registry execution report"
 Cohesion: 0.40
@@ -3137,8 +2590,8 @@ Cohesion: 0.40
 Nodes (4): Completion, remaining work and rollback, Identity contract and findings, MDE-04 Model Registry execution report, Verification
 
 ### Community 416 - "app/developer_core/hermes_acp_connection.py"
-Cohesion: 0.18
-Nodes (15): _classify_stderr(), _cleanup(), _drain_stderr(), _exchange(), _reader(), test_closed_acp_process_maps_known_stderr_without_exposing_its_path(), test_initialize_handshake_accepts_only_hermes_agent_identity(), test_install_state_permission_failure_is_safe_and_actionable() (+7 more)
+Cohesion: 0.20
+Nodes (13): _classify_stderr(), _cleanup(), _command(), _drain_stderr(), _exchange(), _now(), probe(), _reader() (+5 more)
 
 ### Community 417 - ".agents/skills/developer-core/SKILL.md"
 Cohesion: 0.50
@@ -3177,12 +2630,12 @@ Cohesion: 0.50
 Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify reference: commit hook and native CLAUDE.md integration
 
 ### Community 427 - ".on"
-Cohesion: 0.06
-Nodes (74): copy(), createFilter(), createPanOnScrollHandler(), createPanZoomEndHandler(), createPanZoomHandler(), createPanZoomStartHandler(), createZoomOnScrollHandler(), defaultConstrain() (+66 more)
+Cohesion: 0.11
+Nodes (49): copy(), createPanOnScrollHandler(), defaultConstrain(), defaultTransform(), drag_default(), beforestart(), drag(), mousedowned() (+41 more)
 
 ### Community 428 - "NUSANTARA V2 CAPABILITY AUDIT"
-Cohesion: 0.25
-Nodes (7): Capability Matrix, Important, NUSANTARA V2 CAPABILITY AUDIT, Priority Gaps, Recommended Build Order, Runtime Candidates, Six V2 Contracts
+Cohesion: 0.13
+Nodes (10): Capability Matrix, Important, NUSANTARA V2 CAPABILITY AUDIT, Priority Gaps, Recommended Build Order, Runtime Candidates, Six V2 Contracts, _module() (+2 more)
 
 ### Community 429 - "V2 Phase 00 — Discovery / Reconciliation"
 Cohesion: 0.50
@@ -3216,25 +2669,21 @@ Nodes (4): 2. AUTHORITY, Authorized, Explicitly NOT Authorized, WRITE AUTHORIZAT
 Cohesion: 0.50
 Nodes (4): 35. TEST REQUIREMENTS, Backend, Integration, UI
 
-### Community 437 - "calculator"
-Cohesion: 0.01
-Nodes (61): create_handoff_request(), create_embedder(), EmbeddingProvider, EmbeddingService, MockEmbeddingProvider, OpenAIEmbeddingProvider, SentenceTransformerEmbedder, Document (+53 more)
+### Community 437 - "app/tools/base.py"
+Cohesion: 0.28
+Nodes (6): add_days(), execute_calculator(), get_default_registry(), parse_date(), ToolDefinition, ToolResult
 
-### Community 438 - "control-plane/e2e/attestation.spec.ts"
-Cohesion: 0.21
-Nodes (10): Mock, noAuthority(), review(), snapshot(), test, Mock, noAuthority(), review() (+2 more)
+### Community 438 - "attestation.spec.ts"
+Cohesion: 0.38
+Nodes (5): Mock, noAuthority(), review(), snapshot(), test
 
 ### Community 439 - "EvidenceGroundingGuard"
 Cohesion: 0.05
-Nodes (42): _apply_grounding_safety_gate(), EvidenceGroundingGuard, ask(), setup(), test_colloquial_service_requests_are_resolved_without_question_lookup(), test_duration_rewrite_cannot_become_an_office_promise(), test_fact_selection_and_rewrite_are_not_specific_to_piak(), test_followups_retrieve_fresh_evidence_in_same_session_and_do_not_guess_online() (+34 more)
+Nodes (18): _apply_grounding_safety_gate(), EvidenceGroundingGuard, _apply_grounding_safety_gate(), _apply_grounding_safety_gate(), _apply_grounding_safety_gate(), _apply_grounding_safety_gate(), _apply_grounding_safety_gate(), test_requirement_quote_requires_matching_service_and_remains_guarded() (+10 more)
 
-### Community 440 - "restoreViewTransitionOnHostInstances"
-Cohesion: 0.11
-Nodes (34): applyViewTransitionName(), applyViewTransitionToHostInstances(), applyViewTransitionToHostInstancesRecursive(), clearContainerSparingly(), commitAfterMutationEffectsOnFiber(), commitAppearingPairViewTransitions(), commitBeforeMutationEffects(), commitBeforeMutationEffects_complete() (+26 more)
-
-### Community 441 - "restoreViewTransitionOnHostInstances"
-Cohesion: 0.11
-Nodes (34): applyViewTransitionName(), applyViewTransitionToHostInstances(), applyViewTransitionToHostInstancesRecursive(), clearContainerSparingly(), commitAfterMutationEffectsOnFiber(), commitAppearingPairViewTransitions(), commitBeforeMutationEffects(), commitBeforeMutationEffects_complete() (+26 more)
+### Community 440 - "Issue tracker: Local Markdown"
+Cohesion: 0.40
+Nodes (4): Conventions, Issue tracker: Local Markdown, When a skill says "fetch the relevant ticket", When a skill says "publish to the issue tracker"
 
 ### Community 442 - "test_finalized_results_mutatio0/project/runs/run-one/package.json"
 Cohesion: 0.20
@@ -3284,10 +2733,6 @@ Nodes (3): Bukti, Menutup gate, ROADMAP_STATUS — V2 Phase 0–21
 Cohesion: 0.33
 Nodes (4): Human Acceptance Console, Nusantara Engineering Control Plane v0.1, V1 user and operator control (2026-10-09), Offline UI test inputs
 
-### Community 467 - "mcp-nusantara-upstream/app/knowledge/official_knowledge_ingestion.py"
-Cohesion: 0.17
-Nodes (27): append_audit(), backup_database(), command_manifest(), command_register_demo(), command_scan(), command_stats(), command_template(), connect_db() (+19 more)
-
 ### Community 469 - "8. TESTING STACK"
 Cohesion: 0.67
 Nodes (3): 8. TESTING STACK, End-to-End, Unit / Component
@@ -3309,36 +2754,20 @@ Cohesion: 0.06
 Nodes (68): batchedUpdates$1(), camelize(), checkAttributeStringCoercion(), checkControlledValueProps(), checkCSSPropertyStringCoercion(), checkFormFieldValueStringCoercion(), checkForUnmatchedText(), coerceFormActionProp() (+60 more)
 
 ### Community 479 - "Windows"
-Cohesion: 0.08
-Nodes (31): ActorError, LocalOperatorChannel, ProcessEntry, ProcessIdentity, SecurityAttributes, validate_name(), VerifiedPeer, Windows (+23 more)
+Cohesion: 0.07
+Nodes (40): ActorError, LocalOperatorChannel, operator_exchange(), OperatorPolicy, ProcessEntry, ProcessIdentity, SecurityAttributes, validate_name() (+32 more)
 
-### Community 480 - "safe_acall"
+### Community 480 - "asyncio"
 Cohesion: 0.02
-Nodes (75): CircuitBreaker, CircuitOpen, aretry(), retry(), _fail(), safe_acall(), safe_call(), SafeResult (+67 more)
-
-### Community 481 - "get_cached"
-Cohesion: 0.12
-Nodes (17): cache_stats(), get_cached(), encode(), handle_request(), main(), mean_pooling(), encode(), main() (+9 more)
+Nodes (85): CircuitBreaker, CircuitOpen, aretry(), retry(), _fail(), safe_acall(), safe_call(), SafeResult (+77 more)
 
 ### Community 482 - "developer_core_engine.before_chat_debug.py"
 Cohesion: 0.16
 Nodes (26): authority_summary(), build_grounding_context(), ChatRequest, collect_source_files(), content_tokens(), developer_chat(), developer_health(), get_production_rag() (+18 more)
 
-### Community 483 - "mcp-nusantara-upstream/app/knowledge/production_semantic_retriever.py"
-Cohesion: 0.12
-Nodes (11): build_parser(), _first_value(), _lexical_overlap(), main(), _normalize_score(), ProductionSemanticRetriever, _quote_fts_token(), RetrievalEvidence (+3 more)
-
 ### Community 484 - "developer_core_engine.before_gate_fix.py"
 Cohesion: 0.16
 Nodes (26): authority_summary(), build_grounding_context(), ChatRequest, collect_source_files(), content_tokens(), developer_chat(), developer_health(), get_production_rag() (+18 more)
-
-### Community 485 - "Files Created by Hermes"
-Cohesion: 0.06
-Nodes (34): Configuration, Current Status, Evaluation Test Suite: 12/12 Passed (100%), Files Created by Hermes, Functional Tests: ✅ Pass Rate 100%, Import Tests: ✅ All Pass, Phase 0 - Dokumentasi (4 files ✅), Phase 10 - Trust Engine (2 files ✅) (+26 more)
-
-### Community 486 - "tests/test_evidence_runner_guards.py"
-Cohesion: 0.12
-Nodes (6): guarded_io_open(), guarded_open(), guarded_os_open(), test_blocked_error_includes_operation_and_target(), test_database_and_sidecar_paths_remain_protected(), within_output()
 
 ### Community 487 - "developer_core_engine.before_master_routing_fix.py"
 Cohesion: 0.16
@@ -3356,9 +2785,9 @@ Nodes (6): Konfigurasi dan status, Meninjau dan mengeksekusi, Menjalankan dan me
 Cohesion: 0.16
 Nodes (26): authority_summary(), build_grounding_context(), ChatRequest, collect_source_files(), content_tokens(), developer_chat(), developer_health(), get_production_rag() (+18 more)
 
-### Community 498 - "EvidenceRegistryError"
-Cohesion: 0.06
-Nodes (46): append_decision_audit(), _canonical(), _checkpoint_hash(), _checkpoint_path(), collect_review_package(), _cross_process_lock(), EvidenceRegistryError, read_decision_audit() (+38 more)
+### Community 498 - "app/core/evidence_registry.py"
+Cohesion: 0.09
+Nodes (36): append_decision_audit(), _canonical(), _checkpoint_hash(), _checkpoint_path(), collect_review_package(), _cross_process_lock(), EvidenceRegistryError, read_decision_audit() (+28 more)
 
 ### Community 505 - "developer_core_engine.before_query_domain_fix2.py"
 Cohesion: 0.16
@@ -3371,10 +2800,6 @@ Nodes (6): build_parser(), main(), ProductionEvidence, ProductionEvidencePack, P
 ### Community 507 - "ProductionHybridRAG"
 Cohesion: 0.11
 Nodes (6): build_parser(), main(), ProductionEvidence, ProductionEvidencePack, ProductionHybridRAG, run_self_test()
-
-### Community 508 - "XYPanZoom"
-Cohesion: 0.09
-Nodes (30): createFilter(), createPanOnScrollHandler(), createPanZoomEndHandler(), createPanZoomHandler(), createPanZoomStartHandler(), createZoomOnScrollHandler(), getControlDirection(), getResizeDirection() (+22 more)
 
 ### Community 509 - "Fase 8 — Observability, evidence, dan pengujian"
 Cohesion: 0.40
@@ -3408,13 +2833,13 @@ Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphif
 Cohesion: 0.12
 Nodes (6): build_parser(), main(), ProductionEvidence, ProductionEvidencePack, ProductionHybridRAG, run_self_test()
 
-### Community 539 - "app/api/v2_routes.py"
-Cohesion: 0.04
-Nodes (67): audit_verify(), chat(), generate(), retrieve(), ChatV2Request, create_memory_session(), decide(), DecisionRequest (+59 more)
+### Community 539 - "r1-local-001-20261007/app/api/v2_routes.py"
+Cohesion: 0.06
+Nodes (43): tokenize(), analyze(), extract_failures(), Failure, FailureReport, Pattern, _severity(), _stage_of() (+35 more)
 
-### Community 540 - "app/api/inspection_preview.py"
-Cohesion: 0.10
-Nodes (8): InspectionPreviewRequest, preview(), inspection_preview(), InspectionPreviewRequest, preview(), DevPlan, extract_file_refs(), plan()
+### Community 540 - "perbaikanbukti/app/devcore/router.py"
+Cohesion: 0.60
+Nodes (3): DevPlan, extract_file_refs(), plan()
 
 ### Community 541 - "ProductionHybridRAG"
 Cohesion: 0.12
@@ -3424,16 +2849,12 @@ Nodes (6): build_parser(), main(), ProductionEvidence, ProductionEvidencePack, P
 Cohesion: 0.40
 Nodes (4): Integrasi dan pemulihan, NUSANTARA V1: chat sebagai beranda dan Control Plane di Pengaturan, Perubahan, Verifikasi
 
-### Community 543 - "OpenRouterProvider"
+### Community 543 - "pytest"
 Cohesion: 0.02
-Nodes (119): OpenRouterError, OpenRouterProvider, test_openrouter_reserves_before_dispatch(), run(), transport(), test_cancellation_preserves_reservation(), run(), transport() (+111 more)
-
-### Community 544 - "ExecutionAudit"
-Cohesion: 0.12
-Nodes (3): ExecutionAudit, ExecutionAuditError, ExecutionAuditResult
+Nodes (80): V1CoreResult, OpenRouterError, OpenRouterProvider, test_real_stdio_discovery_call_rejection_and_audit(), exercise(), config(), invoke(), run() (+72 more)
 
 ### Community 545 - "SQLiteVectorStore"
-Cohesion: 0.13
+Cohesion: 0.14
 Nodes (3): DocumentInfo, StoredChunk, SQLiteVectorStore
 
 ### Community 546 - "CHANGELOG"
@@ -3441,8 +2862,8 @@ Cohesion: 0.40
 Nodes (4): 2.0.0-alpha, 2.0.0-alpha.2, 2.0.0-alpha.3, CHANGELOG
 
 ### Community 547 - "LanguageEngine"
-Cohesion: 0.17
-Nodes (3): create_language_engine(), LanguageDetection, LanguageEngine
+Cohesion: 0.16
+Nodes (3): LanguageDetection, LanguageEngine, PipelineResult
 
 ### Community 548 - "run"
 Cohesion: 0.18
@@ -3457,8 +2878,8 @@ Cohesion: 0.15
 Nodes (24): backup_database(), build_manifest(), chunk_text(), classify_source(), DocumentRecord, extract_text(), ingest_all(), load_docx() (+16 more)
 
 ### Community 551 - "20261027-priority-fixes/source-before/app/api/routes.py"
-Cohesion: 0.06
-Nodes (46): _apply_grounding_safety_gate(), _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), complete() (+38 more)
+Cohesion: 0.07
+Nodes (43): _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), complete(), _chat_completed(), cost_estimator(), events() (+35 more)
 
 ### Community 554 - "developer_core_engine.before_grounded_chat.py"
 Cohesion: 0.17
@@ -3481,8 +2902,12 @@ Cohesion: 0.15
 Nodes (10): Designing for Mockability, When to Mock, Anti-patterns, Rules of the loop, Seams: where tests go, Test-Driven Development, What a good test is, Bad Tests (+2 more)
 
 ### Community 592 - "app/api/control_plane.py"
-Cohesion: 0.07
-Nodes (46): active_knowledge_status(), _admin_reviewer(), available_models(), check_hermes_connection(), cost_summary(), _decision_audit_file(), evidence_decisions(), evidence_package() (+38 more)
+Cohesion: 0.08
+Nodes (43): active_knowledge_status(), _admin_reviewer(), available_models(), check_hermes_connection(), cost_summary(), _decision_audit_file(), evidence_decisions(), evidence_package() (+35 more)
+
+### Community 593 - "TrustEngine"
+Cohesion: 0.19
+Nodes (3): create_trust_engine(), evaluate_trust(), TrustEngine
 
 ### Community 594 - "before/local_operator.py"
 Cohesion: 0.13
@@ -3496,29 +2921,21 @@ Nodes (9): audit_projection(), AuthorizationError, Binding, canonical(), install
 Cohesion: 0.09
 Nodes (5): create_reranker(), CrossEncoderReranker, LLMReranker, Reranker, SimpleReranker
 
-### Community 597 - "rgb"
-Cohesion: 0.08
-Nodes (30): color_formatHex(), color_formatHex8(), color_formatHsl(), color_formatRgb(), cubehelix(), cubehelix2(), cubehelix3(), cubehelixConvert() (+22 more)
+### Community 598 - "perbaikanbukti/tests/test_inspection_preview_api.py"
+Cohesion: 0.25
+Nodes (9): rejected(), post(), test_absent_server_token(), test_invalid_auth(), test_non_preview_rejected(), test_normal_only(), test_registration_and_existing_dev_preserved(), test_strict_payload() (+1 more)
 
-### Community 598 - "mcp-nusantara-upstream/app/knowledge/production_kb.py"
-Cohesion: 0.14
-Nodes (24): backup_database(), build_manifest(), chunk_text(), classify_source(), DocumentRecord, extract_text(), ingest_all(), load_docx() (+16 more)
-
-### Community 602 - "SQLiteVectorStore"
-Cohesion: 0.07
-Nodes (4): KnowledgeEngine, __init__(), _BorrowedConnection, SQLiteVectorStore
+### Community 602 - "Live SOP Chat E2E Runbook (operator gated)"
+Cohesion: 0.40
+Nodes (4): Evidence to retain, Gate before running, Live SOP Chat E2E Runbook (operator gated), Operator execution after gate passes
 
 ### Community 603 - "app__security__local_operator.py"
 Cohesion: 0.11
 Nodes (14): Actor, ActorError, Groups, LocalOperatorChannel, Luid, operator_exchange(), OperatorPolicy, ProcessEntry (+6 more)
 
-### Community 604 - "before/app/approval/runtime_authorization.py"
+### Community 604 - "RuntimeAuthorization"
 Cohesion: 0.15
 Nodes (9): audit_projection(), AuthorizationError, Binding, canonical(), install_authorization_foundation(), Review, RuntimeAuthorization, handle() (+1 more)
-
-### Community 605 - "NUSANTARA AI V1 � GATES"
-Cohesion: 0.06
-Nodes (32): 10. GATE 4 � TRUST, 11. GATE 5 � POLICY, 12. GATE 6 � MEMORY, 13. GATE 7 � RAG, 14. GATE 8 � MCP, 15. GATE 9 � TOOL GOVERNANCE, 16. GATE 10 � EXPERIENCE, 17. GATE 11 � FEEDBACK (+24 more)
 
 ### Community 606 - "r2-20261007/source-before/app/api/routes.py"
 Cohesion: 0.07
@@ -3529,24 +2946,16 @@ Cohesion: 0.14
 Nodes (17): _admin_reviewer(), _available_model_names(), available_models(), _decision_audit_file(), evidence_decisions(), evidence_package(), EvidenceDecisionInput, _human_acceptance_boundary() (+9 more)
 
 ### Community 608 - "perbaikanbukti/tests/test_v1_langgraph.py"
-Cohesion: 0.16
-Nodes (17): fixture(), FixtureProvider, projection_and_helpers(), request(), test_cancellation_does_not_replay_paid_request(), run(), test_cloud_binding_is_rejected_before_graph_import(), test_disabled_flag_does_not_import_langgraph_or_execute() (+9 more)
+Cohesion: 0.20
+Nodes (16): fixture(), projection_and_helpers(), request(), test_cancellation_does_not_replay_paid_request(), run(), test_cloud_binding_is_rejected_before_graph_import(), test_disabled_flag_does_not_import_langgraph_or_execute(), test_existing_grounding_rejects_missing_evidence_and_unsupported_claim() (+8 more)
 
-### Community 609 - ".parseLocation"
-Cohesion: 0.15
-Nodes (21): assignKeyAndIndex(), createAtom(), createBrowserHistory(), createHashHistory(), createHistory(), createMemoryHistory(), createRandomKey(), decodePath() (+13 more)
+### Community 609 - "perbaikanbukti/tests/test_v1_response_projection.py"
+Cohesion: 0.29
+Nodes (10): assert_public(), internal_context(), sample_payload(), test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state(), test_http_partial_context_never_becomes_a_public_dump(), test_http_stage_statuses_remain_safe(), test_malformed_public_assessment_is_not_silently_coerced(), test_oversized_citation_is_not_returned_or_silently_truncated() (+2 more)
 
 ### Community 610 - "NUSANTARA V1 — Autonomous Evidence Closure Report"
 Cohesion: 0.07
 Nodes (24): CC-01-HTTP-REGRESSION-RESULTS — 2026-10-10, HTTP branch investigation, Next action, Pure checks, Status, CC-06-DIAGNOSTIC-AND-TEST-RESULTS — 2026-10-10, Findings, Required next check (+16 more)
-
-### Community 611 - ".buildLocation"
-Cohesion: 0.08
-Nodes (31): cleanPath(), comparePaths(), composeRewrites(), encodeParam(), encodePathLikeUrl(), executeRewriteInput(), executeRewriteOutput(), extractStrictParams() (+23 more)
-
-### Community 612 - "constructor"
-Cohesion: 0.08
-Nodes (10): compileDecodeCharMap(), constructor(), createFileRoute(), documentNavigation(), _getUserHistoryState(), id(), isModuleNotFoundError(), lazyRouteComponent() (+2 more)
 
 ### Community 613 - "Process"
 Cohesion: 0.15
@@ -3564,9 +2973,9 @@ Nodes (29): 1. TUJUAN KONTRAK, 2. ATURAN PRIORITAS DAN OTORISASI, 3. KONTRAK ARS
 Cohesion: 0.10
 Nodes (6): GenerateRequest, GenerateResponse, HealthCheckResponse, LLMProvider, StructuredGenerateRequest, StructuredGenerateResponse
 
-### Community 618 - "Acuan sumber dan jawaban lengkap"
-Cohesion: 0.07
-Nodes (26): 10. Coba jelaskan alurnya dari awal sampai selesai., 11. Bagian mana yang harus saya lakukan sendiri, dan mana yang dikerjakan petugas?, 12. Biasanya berapa lama sampai selesai menurut SOP ini?, 13. Waktu yang disebut tadi untuk seluruh proses atau hanya satu tahap?, 14. Apakah ada biaya? Kalau ada, berapa dan bagaimana pembayarannya?, 15. Dalam kondisi apa permohonan saya bisa ditolak atau belum dapat diproses?, 16. Apa yang saya terima setelah layanan ini selesai?, 17. Kalau prosesnya terlambat atau ada masalah, apa yang bisa saya lakukan menurut dokumen? (+18 more)
+### Community 618 - "app/developer_core/write_policy.py"
+Cohesion: 0.83
+Nodes (3): normalize(), validate(), validate_file()
 
 ### Community 619 - "cost-ledger-v1-20261013-181330/tests/test_cost_governance_reference.py"
 Cohesion: 0.13
@@ -3588,21 +2997,21 @@ Nodes (14): app_fixture(), factory(), respond(), headers(), session(), test_conc
 Cohesion: 0.07
 Nodes (27): 10. TOOL GOVERNANCE, 11. FILESYSTEM SECURITY, 12. SOURCE COMPLETENESS, 13. GROUNDING CONTRACT, 15. VERIFICATION CONTRACT, 16. RUNTIME IDENTITY, 17. LIVE INTEGRATION, 18. DATABASE / RAG / PROVIDER PROTECTION (+19 more)
 
-### Community 624 - "mcp-nusantara-upstream/app/language/engine.py"
-Cohesion: 0.12
-Nodes (10): Entity, EntityResult, EntityType, IntentResult, LanguageDetectionResult, NLPSegment, NormalizationResult, PipelineConfig (+2 more)
+### Community 624 - "audit_v1_phases_7_21.py"
+Cohesion: 0.83
+Nodes (3): existing_files(), inspect_phase(), main()
 
 ### Community 625 - "perbaikanbukti/app/language/engine.py"
 Cohesion: 0.12
-Nodes (10): Entity, EntityResult, EntityType, IntentResult, LanguageDetectionResult, NLPSegment, NormalizationResult, PipelineConfig (+2 more)
+Nodes (10): create_language_engine(), Entity, EntityResult, EntityType, IntentResult, LanguageDetectionResult, NLPSegment, NormalizationResult (+2 more)
 
 ### Community 627 - "control-plane__src__human.tsx"
-Cohesion: 0.07
-Nodes (40): DECISION_FIELDS, DecisionRecord, decisionRequestError(), decisionValidationMessage(), EvidencePackage, fetchAvailableModels(), fetchEvidencePackage(), fetchModelStatus() (+32 more)
+Cohesion: 0.16
+Nodes (22): fetchEvidencePackage(), ApprovalChecklist(), AttestationContent(), AttestationIdentity(), DecisionPanel(), Explanation(), HumanContent(), HumanNavigation() (+14 more)
 
 ### Community 629 - "tests/test_runtime_verification.py"
-Cohesion: 0.07
-Nodes (34): test_r1_preserves_out_of_scope_protected_sources(), application(), client(), test_attestation_is_stable_and_uses_current_process_os_identity(), test_duplicate_endpoint_registration_is_rejected(), test_endpoint_does_not_open_files_databases_network_or_configuration(), test_live_handler_code_changes_are_detected_without_reading_source(), test_local_runtime_origin_is_allowed_and_post_is_not() (+26 more)
+Cohesion: 0.06
+Nodes (36): test_r1_preserves_out_of_scope_protected_sources(), application(), client(), test_attestation_is_stable_and_uses_current_process_os_identity(), test_duplicate_endpoint_registration_is_rejected(), test_endpoint_does_not_open_files_databases_network_or_configuration(), test_live_handler_code_changes_are_detected_without_reading_source(), test_local_runtime_origin_is_allowed_and_post_is_not() (+28 more)
 
 ### Community 630 - "perbaikanbukti/tests/run_evidence_tests_isolated.py"
 Cohesion: 0.19
@@ -3613,23 +3022,27 @@ Cohesion: 0.13
 Nodes (14): Denied, FakeLedger, make_guard(), Policy, Price, ReferenceGuard, test_authorized_request_reserves_before_any_dispatch(), test_budget_exhaustion_rejects_without_reservation() (+6 more)
 
 ### Community 632 - "tests/run_evidence_tests_isolated.py"
-Cohesion: 0.18
-Nodes (22): audit(), authorize_file_descriptor(), blocked(), check_database(), descriptor_identity(), descriptor_modes(), guarded_connect(), guarded_connect_ex() (+14 more)
+Cohesion: 0.19
+Nodes (23): audit(), authorize_file_descriptor(), blocked(), check_database(), descriptor_identity(), descriptor_modes(), guarded_connect(), guarded_connect_ex() (+15 more)
 
-### Community 633 - "now"
-Cohesion: 0.12
-Nodes (26): clearNow(), create(), schedule(), start2(), stop(), tick(), inherit(), merge_default2() (+18 more)
+### Community 633 - "probe"
+Cohesion: 0.83
+Nodes (4): probe(), checked(), information(), sid_text()
 
-### Community 634 - "ProductionHybridRAG"
-Cohesion: 0.12
-Nodes (6): build_parser(), main(), ProductionEvidence, ProductionEvidencePack, ProductionHybridRAG, run_self_test()
+### Community 634 - "laya_intent.py"
+Cohesion: 0.26
+Nodes (5): hint_eligible(), intent_request(), LayaIntentHint, main(), summary()
+
+### Community 635 - "perbaikanbukti/app/developer_core/write_policy.py"
+Cohesion: 0.83
+Nodes (3): normalize(), validate(), validate_file()
 
 ### Community 636 - "writing-for-agents/SKILL.md"
-Cohesion: 0.15
-Nodes (11): Context pointers, Information hierarchy, Leading words, Invocation, Router skills, Skill mechanics, Splitting by invocation, Pruning (+3 more)
+Cohesion: 0.14
+Nodes (12): Context pointers, Information hierarchy, Leading words, Invocation, Router skills, Skill mechanics, Splitting by invocation, Pruning (+4 more)
 
-### Community 637 - "openrouter-cost-20261016-141908/cost_ledger.py"
-Cohesion: 0.17
+### Community 637 - "CostGovernanceDenied"
+Cohesion: 0.19
 Nodes (7): _actual_cents(), _cost_cents(), CostGovernanceDenied, CostLedger, _decimal(), _now(), _policy_cents()
 
 ### Community 638 - "Temuan detail"
@@ -3649,32 +3062,16 @@ Cohesion: 0.10
 Nodes (8): PersistenceConfig, WorkflowDefinition, WorkflowResult, WorkflowResumeRequest, WorkflowSession, WorkflowState, WorkflowTransition, WorkflowValidation
 
 ### Community 642 - "persist_retrieval_receipt"
-Cohesion: 0.25
-Nodes (10): _canonical_json(), persist_retrieval_receipt(), receipt_path(), verify_receipt_record(), test_receipt_is_persisted_and_hash_verifies(), test_receipt_requires_invocation_id(), test_tampered_receipt_fails_integrity_check(), test_receipt_is_persisted_and_hash_verifies() (+2 more)
+Cohesion: 0.30
+Nodes (7): _canonical_json(), persist_retrieval_receipt(), receipt_path(), verify_receipt_record(), test_receipt_is_persisted_and_hash_verifies(), test_receipt_requires_invocation_id(), test_tampered_receipt_fails_integrity_check()
 
 ### Community 643 - "NUSANTARA MASTER PHASE RUN"
 Cohesion: 0.08
 Nodes (25): Final, NUSANTARA MASTER PHASE RUN, Phase 0 - Discovery, Phase 10 - Experience, Phase 11 - Feedback, Phase 12 - Evaluation, Phase 13 - Failure Analysis, Phase 14 - Gap Detection (+17 more)
 
-### Community 644 - "useBaseQuery"
-Cohesion: 0.14
-Nodes (25): build(), defaultQueryOptions(), fetchOptimistic(), #findMatchingObservers(), get(), getCurrentResult(), getOptimisticResult(), getQueryCache() (+17 more)
-
 ### Community 645 - "DeveloperCoreEngine"
-Cohesion: 0.10
-Nodes (16): DeveloperCoreEngine, test_gate14_engine_inventory(), test_gate14_engine_loads(), test_gate14_existing_graphify(), test_gate14_graph_bridge(), test_gate14_runtime_gate_mapping(), test_gate14_engine_inventory(), test_gate14_engine_loads() (+8 more)
-
-### Community 646 - "useRouter"
-Cohesion: 0.10
-Nodes (34): CatchNotFound(), getElement(), getElementScrollRestorationEntry(), getScrollRestorationScriptForRouter(), getScrollRestorationSelector(), getScrollToTopElements(), isNotFound(), Matches() (+26 more)
-
-### Community 647 - "run"
-Cohesion: 0.18
-Nodes (4): make_ws(), TestDevCore, Orchestrator, run()
-
-### Community 648 - "useBaseQuery"
 Cohesion: 0.14
-Nodes (25): build(), difference(), fetchOptimistic(), #findMatchingObservers(), get(), getCurrentResult(), getOptimisticResult(), getQueryCache() (+17 more)
+Nodes (11): DeveloperCoreEngine, test_gate14_engine_inventory(), test_gate14_engine_loads(), test_gate14_existing_graphify(), test_gate14_graph_bridge(), test_gate14_runtime_gate_mapping(), test_gate14_engine_inventory(), test_gate14_engine_loads() (+3 more)
 
 ### Community 649 - "source_sha256"
 Cohesion: 0.08
@@ -3689,20 +3086,12 @@ Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: Cek proyek Nusantara, Source Nodes
 
 ### Community 652 - "perbaikanbukti/app/handoff/engine.py"
-Cohesion: 0.12
-Nodes (4): create_handoff_engine(), create_handoff_request(), get_default_handoff_engine(), HandoffEngine
+Cohesion: 0.10
+Nodes (5): create_handoff_engine(), create_handoff_request(), get_default_handoff_engine(), HandoffEngine, summarize_context()
 
 ### Community 653 - "NUSANTARA MASTER PHASE AUDIT"
 Cohesion: 0.08
 Nodes (24): NUSANTARA MASTER PHASE AUDIT, Phase 0 - Discovery, Phase 10 - Experience, Phase 11 - Feedback, Phase 12 - Evaluation, Phase 13 - Failure Analysis, Phase 14 - Gap Detection, Phase 15 - Knowledge Discovery (+16 more)
-
-### Community 654 - "ExperimentResult"
-Cohesion: 0.15
-Nodes (7): ExperimentResult, EvaluationError, EvaluationResult, ExperimentEvaluator, EvaluationError, EvaluationResult, ExperimentEvaluator
-
-### Community 655 - "acquireResource"
-Cohesion: 0.12
-Nodes (24): accumulateSuspenseyCommitOnFiber(), acquireResource(), adoptPreloadPropsForScript(), adoptPreloadPropsForStylesheet(), customizeViewTransitionError(), describeLinkForResourceErrorDEV(), escapeSelectorAttributeValueInsideDoubleQuotes(), estimateImageBytes() (+16 more)
 
 ### Community 656 - "Steps"
 Cohesion: 0.17
@@ -3711,14 +3100,6 @@ Nodes (11): 1. Detect the environment, 2. Install dependency-cruiser, 3. Write t
 ### Community 657 - "wayfinder/SKILL.md"
 Cohesion: 0.17
 Nodes (11): Chart the map, Fog of war, Invocation, Out of scope, Plan, don't do, Refer by name, The Map, The map body (+3 more)
-
-### Community 658 - "acquireResource"
-Cohesion: 0.12
-Nodes (24): accumulateSuspenseyCommitOnFiber(), acquireResource(), adoptPreloadPropsForScript(), adoptPreloadPropsForStylesheet(), customizeViewTransitionError(), describeLinkForResourceErrorDEV(), escapeSelectorAttributeValueInsideDoubleQuotes(), estimateImageBytes() (+16 more)
-
-### Community 659 - "tests__test_v1_response_projection.py"
-Cohesion: 0.14
-Nodes (13): assert_public(), controlled_pipeline(), trust(), internal_context(), sample_payload(), test_http_branch_projection_preserves_public_behavior_and_excludes_internal_state(), test_http_partial_context_never_becomes_a_public_dump(), test_http_stage_statuses_remain_safe() (+5 more)
 
 ### Community 660 - "sop_table_reconstruction_engine.py"
 Cohesion: 0.29
@@ -3729,16 +3110,12 @@ Cohesion: 0.20
 Nodes (11): execute(), test_actual_public_endpoint_sanitizes_provider_failure_without_retry(), test_conversation_cannot_smuggle_official_or_verified_claims(), test_conversation_uses_existing_provider_without_false_grounding(), test_evidence_required_and_unknown_requests_still_fail_closed(), test_existing_supported_answer_preserves_evidence_and_guard(), test_explicit_repeat_is_a_transformation_not_verified_evidence(), test_explicit_repeat_variants() (+3 more)
 
 ### Community 664 - "E"
-Cohesion: 0.19
-Nodes (22): ag(), et(), Io(), ma(), mc(), ou(), yr(), dt() (+14 more)
+Cohesion: 0.23
+Nodes (20): ag(), et(), Io(), ma(), mc(), dt(), E(), fc() (+12 more)
 
 ### Community 665 - "Process"
-Cohesion: 0.29
-Nodes (6): 1. Scope the procedure, 2. Map each stage's journey, 3. Author the wizard, 4. Verify and hand off, Process, Wizard
-
-### Community 666 - ".replace"
-Cohesion: 0.18
-Nodes (14): BuildProvenanceOwner, observed(), test_assessment_and_recording_do_not_open_files_or_network(), test_client_or_serialized_provenance_cannot_supply_authority(), test_conflicting_record_terminal_and_redaction_safe(), test_determinism_and_inventory_order(), test_incomplete_definition_and_loaded_inventory(), test_malformed_definition_is_bounded() (+6 more)
+Cohesion: 0.22
+Nodes (8): 1. Scope the procedure, 2. Map each stage's journey, 3. Author the wizard, 4. Verify and hand off, Process, Wizard, _multipleOf(), step()
 
 ### Community 667 - "EntityExtractor"
 Cohesion: 0.14
@@ -3748,9 +3125,9 @@ Nodes (4): create_entity_extractor(), EntityExtractor, EntityMatch, extract_enti
 Cohesion: 0.29
 Nodes (6): Confidence selection and scope, Failure conditions, Final-answer comparison, Installed serving and checkpoint evidence, Laya V1: experiment closed, default OFF, Upload Control Panel follow-up
 
-### Community 669 - "ref_node_child_process"
-Cohesion: 0.07
-Nodes (17): sources(), localServices, sources(), localServices, sources(), testInputs, cp, path (+9 more)
+### Community 669 - "verify_knowledge_upload_entry.cjs"
+Cohesion: 0.11
+Nodes (12): localServices, sources(), cp, path, scripts, workspace, assert, {chromium} (+4 more)
 
 ### Community 670 - "perbaikanbukti/app/rag/store.py"
 Cohesion: 0.14
@@ -3777,120 +3154,64 @@ Cohesion: 0.25
 Nodes (16): append_decision_audit(), _canonical(), _checkpoint_hash(), _checkpoint_path(), collect_review_package(), _cross_process_lock(), EvidenceRegistryError, read_decision_audit() (+8 more)
 
 ### Community 676 - "perbaikanbukti/tests/test_developer_core_engine_contract.py"
-Cohesion: 0.15
-Nodes (17): engine(), project(), test_absolute_outside_graph_denied(), test_analyze_contract_and_graph_evidence(), test_bounded_depth_and_entry_count(), test_deterministic_and_captured_root(), test_graph_limits_and_permission_errors(), forbidden() (+9 more)
-
-### Community 677 - "executeServerLane"
-Cohesion: 0.18
-Nodes (22): abortMatches(), applyFailure(), contextualize2(), createLoaderTask2(), executeServerLane(), getLoaderContext2(), getNotFoundBoundary2(), getRoute2() (+14 more)
+Cohesion: 0.14
+Nodes (18): DeveloperAnalysis, engine(), project(), test_absolute_outside_graph_denied(), test_analyze_contract_and_graph_evidence(), test_bounded_depth_and_entry_count(), test_deterministic_and_captured_root(), test_graph_limits_and_permission_errors() (+10 more)
 
 ### Community 678 - "to-spec/SKILL.md"
 Cohesion: 0.22
 Nodes (8): Further Notes, Implementation Decisions, Out of Scope, Problem Statement, Process, Solution, Testing Decisions, User Stories
 
-### Community 679 - "mcp-nusantara-upstream/tests/test_runtime_build_provenance.py"
-Cohesion: 0.03
-Nodes (50): _code_fingerprint(), constant(), describe(), runtime_attestation(), _loaded_code_manifest(), _manifest_hash(), source_build_id(), test_equal_registered_code_hash_does_not_cover_changed_global() (+42 more)
+### Community 679 - "tests/test_runtime_build_provenance.py"
+Cohesion: 0.16
+Nodes (14): build(), observed(), test_assessment_and_recording_do_not_open_files_or_network(), test_client_or_serialized_provenance_cannot_supply_authority(), test_conflicting_record_terminal_and_redaction_safe(), test_determinism_and_inventory_order(), test_helpers_are_in_existing_scoped_manifest(), test_incomplete_definition_and_loaded_inventory() (+6 more)
 
-### Community 680 - "executeServerLane"
-Cohesion: 0.18
-Nodes (22): abortMatches(), applyFailure(), contextualize2(), createLoaderTask2(), executeServerLane(), getLoaderContext2(), getNotFoundBoundary2(), getRoute2() (+14 more)
-
-### Community 681 - ".parseLocation"
-Cohesion: 0.15
-Nodes (21): assignKeyAndIndex(), createAtom(), createBrowserHistory(), createHashHistory(), createHistory(), createMemoryHistory(), createRandomKey(), decodePath() (+13 more)
-
-### Community 683 - "VersionRegistry"
-Cohesion: 0.08
-Nodes (28): VersionRegistry, ChecklistItem, create_backup(), generate_release_notes(), ready_to_release(), release_checklist(), restore_backup(), rollback() (+20 more)
+### Community 683 - "investigate.py"
+Cohesion: 0.13
+Nodes (14): calculate(), files(), meta(), preservation(), secret_file(), sha(), ChecklistItem, create_backup() (+6 more)
 
 ### Community 685 - "r2-a14-build-provenance-20261008-61f072ac/CONTRACT.md"
 Cohesion: 0.09
 Nodes (21): ACCEPTANCE CRITERIA, AUTONOMOUS ENGINEERING AUTHORIZATION, BOUNDED DEVELOPMENT ENVELOPE, CONTROL PLANE RESTRICTION, CORE ENGINEERING REQUIREMENT, DATABASE / RAG RESTRICTION, EVIDENCE REQUIREMENTS, FINAL STOP CONDITION (+13 more)
 
-### Community 686 - "perbaikanbukti/app/knowledge/production_embedding_bridge.py"
-Cohesion: 0.22
-Nodes (20): backup_database(), blob_to_vector(), connect(), cosine_similarity(), create_run_id(), embed_database(), embed_texts(), ensure_schema() (+12 more)
+### Community 686 - "app/knowledge/production_embedding_bridge.py"
+Cohesion: 0.05
+Nodes (73): backup_database(), blob_to_vector(), connect(), cosine_similarity(), create_run_id(), embed_database(), embed_texts(), ensure_schema() (+65 more)
 
-### Community 687 - "evidence/vite-cache/deps/@tanstack_react-query.js"
+### Community 687 - "@tanstack_react-query.js"
 Cohesion: 0.06
-Nodes (27): #combineResult(), findAll(), functionalUpdate(), getCurrentQuery(), getMutationCache(), getQueries(), getQueryData(), getResult() (+19 more)
+Nodes (26): addObserver(), clearGcTimeout(), #clearStaleTimeout(), clearTimeout(), #combineResult(), getCurrentQuery(), getPreviousPageParam(), getQueries() (+18 more)
 
-### Community 688 - "before/tests/test_hermes_v1_conversation.py"
-Cohesion: 0.18
-Nodes (13): execute(), test_actual_public_endpoint_sanitizes_provider_failure_without_retry(), test_conversation_cannot_smuggle_official_or_verified_claims(), test_conversation_uses_existing_provider_without_false_grounding(), test_evidence_required_and_unknown_requests_still_fail_closed(), test_existing_supported_answer_preserves_evidence_and_guard(), test_explicit_repeat_is_a_transformation_not_verified_evidence(), test_explicit_repeat_variants() (+5 more)
-
-### Community 689 - ".replace"
-Cohesion: 0.23
-Nodes (4): EvidenceFetcher, _now(), SourceEntry, SourceRegistry
-
-### Community 690 - "before/test_hermes_v1_conversation.py"
-Cohesion: 0.18
-Nodes (13): execute(), test_actual_public_endpoint_sanitizes_provider_failure_without_retry(), test_conversation_cannot_smuggle_official_or_verified_claims(), test_conversation_uses_existing_provider_without_false_grounding(), test_evidence_required_and_unknown_requests_still_fail_closed(), test_existing_supported_answer_preserves_evidence_and_guard(), test_explicit_repeat_is_a_transformation_not_verified_evidence(), test_explicit_repeat_variants() (+5 more)
+### Community 689 - "SourceRegistry"
+Cohesion: 0.17
+Nodes (11): EvidenceFetcher, SourceRegistry, test_completion_pending_dns_thread_is_bounded(), slow_dns(), test_dns_timeout_cannot_open_connection(), slow_dns(), test_source_verification_and_status_records(), test_completion_pending_dns_thread_is_bounded() (+3 more)
 
 ### Community 691 - "v1-cc01-option-c-backup-20261006/app/api/routes.py"
-Cohesion: 0.08
-Nodes (30): _apply_grounding_safety_gate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), chat(), ChatRequest, create_workflow(), _deterministic_response() (+22 more)
-
-### Community 692 - "noop"
-Cohesion: 0.15
-Nodes (18): cancel(), cancelQueries(), dehydrate(), dehydrateMutation(), dehydratePromise(), dehydrateQuery(), fetchInfiniteQuery(), getDefaultOptions() (+10 more)
-
-### Community 693 - "get"
 Cohesion: 0.06
-Nodes (59): addConnectionToLookup(), adoptUserNodes(), areConnectionMapsEqual(), areSetsEqual(), BatchProvider(), calculateChildXYZ(), calculateNodePosition(), calculateSnapOffset() (+51 more)
-
-### Community 694 - "SnapshotManager"
-Cohesion: 0.23
-Nodes (4): SnapshotError, SnapshotFile, SnapshotManager, SnapshotManifest
-
-### Community 695 - "noop"
-Cohesion: 0.15
-Nodes (21): cancel(), cancelQueries(), defaultQueryOptions(), dehydratePromise(), dehydrateQuery(), ensureInfiniteQueryData(), ensureQueryData(), fetchInfiniteQuery() (+13 more)
-
-### Community 696 - "update"
-Cohesion: 0.16
-Nodes (21): calculateSnapOffset(), getClosestHandle(), getEventHandlerParams(), getHandle(), getHandlePosition(), getHandleType(), getNodesWithinDistance(), getPointerPosition() (+13 more)
-
-### Community 697 - "baseline/cost_ledger.py"
-Cohesion: 0.20
-Nodes (7): _actual_cents(), _cost_cents(), CostGovernanceDenied, CostLedger, _decimal(), _now(), _policy_cents()
+Nodes (34): create_workflow_engine(), Workflow, WorkflowEngine, WorkflowState, _apply_grounding_safety_gate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt() (+26 more)
 
 ### Community 698 - "nusantara_sop_semantic_engine_v2.py"
 Cohesion: 0.31
 Nodes (17): clean(), detect_service(), detect_sop_number(), detect_title(), extract_legal_basis(), extract_outputs(), extract_procedure(), extract_requirements() (+9 more)
 
-### Community 699 - "scripts/validate_gate17_evaluation.py"
-Cohesion: 0.19
-Nodes (15): EvaluationError, deterministic_evaluation_id(), duplicate_evidence_blocked(), experiment_binding(), experiment_kwargs(), improvement_accepted(), inconclusive_rejected(), invalid_delta_blocked() (+7 more)
-
-### Community 700 - "app/mcp/schemas.py"
-Cohesion: 0.03
-Nodes (10): MCPError, MCPServerInfo, MCPSessionInfo, MCPTool, create_session(), Session, create_session(), Session (+2 more)
+### Community 700 - "MCPServer"
+Cohesion: 0.02
+Nodes (32): evaluate(), get_default_server(), MCPServer, MCPSession, MCPError, MCPServerInfo, MCPSessionInfo, MCPTool (+24 more)
 
 ### Community 701 - "v1-etr-20261010-120500/manifest.json"
 Cohesion: 0.10
 Nodes (20): branch, change_summary, command, contract_id, evidence_directory, evidence_timestamp_utc, exit_code, git_commit (+12 more)
 
-### Community 702 - "before-api.ts"
-Cohesion: 0.12
-Nodes (16): fetchAvailableModels(), fetchHumanAcceptance(), fetchModelStatus(), HumanAcceptanceRecord, InspectionPreviewResult, InspectionPreviewSchema, ModelStatus, ModelStatusSchema (+8 more)
+### Community 702 - "hermes-acp-20261016T064413Z-b7d16e5d/control-plane/src/operator.tsx"
+Cohesion: 0.09
+Nodes (31): Activity(), BlockersPage(), CostsPage(), CurrentWork(), ErrorState(), HomeCosts(), Missing(), OperationCounts() (+23 more)
 
 ### Community 703 - "perbaikanbukti/app/context/schemas.py"
 Cohesion: 0.12
 Nodes (9): Config, ContextMetadata, ContextState, ContextUpdate, ContextWindowConfig, HistoryEntry, MissingInformationRequest, MissingInformationResponse (+1 more)
 
-### Community 707 - "run"
-Cohesion: 0.12
-Nodes (20): deepPartial(), handleCodecAResult(), handleCodecTxResult(), handlePipeResult(), hide(), input(), inSide(), output() (+12 more)
-
-### Community 708 - "run"
-Cohesion: 0.12
-Nodes (20): deepPartial(), handleCodecAResult(), handleCodecTxResult(), handlePipeResult(), hide(), input(), inSide(), output() (+12 more)
-
-### Community 709 - "aa"
-Cohesion: 0.10
-Nodes (20): fA, hA, pA, uA, vA, fA, hA, pA (+12 more)
+### Community 709 - "perbaikanbukti/app/tools/base.py"
+Cohesion: 0.32
+Nodes (6): add_days(), calculator(), current_time(), execute_calculator(), get_default_registry(), parse_date()
 
 ### Community 710 - "preflight.cjs"
 Cohesion: 0.13
@@ -3904,13 +3225,9 @@ Nodes (15): Approval Gate, Chunking, Current State (evidence), DocumentConverter
 Cohesion: 0.10
 Nodes (16): Exact minimum candidate files, Proposed implementation plan — Human Decision required, Required isolated cases, Rollback and authority, Sequence if separately authorized, Browser intention boundary, Decision visibility and operator lifecycle, Live and protected-state boundary (+8 more)
 
-### Community 716 - "BuildDefinition"
-Cohesion: 0.15
-Nodes (6): BuildDefinition, BuildInput, _hash(), _name(), ProcessBinding, build()
-
-### Community 717 - "perbaikanbukti/app/governance/tools.py"
-Cohesion: 0.16
-Nodes (8): Decision, default_tool_policy(), _Entry, GovernedToolRegistry, Risk, ToolClass, ToolOutcome, ToolSpec
+### Community 716 - ".replace"
+Cohesion: 0.08
+Nodes (23): assess_untrusted_build_provenance(), BuildDefinition, BuildInput, BuildProvenanceOwner, _hash(), _name(), ProcessBinding, _result() (+15 more)
 
 ### Community 718 - "TextParser"
 Cohesion: 0.20
@@ -3924,73 +3241,41 @@ Nodes (14): 1. Gunakan SOP yang sudah tersimpan, 2. Pemeriksaan isi melalui UI, 
 Cohesion: 0.25
 Nodes (7): 1. Pin the fixed point, 2. Identify the spec source, 3. Identify the standards sources, 4. Spawn both sub-agents in parallel, 5. Aggregate, Process, Why two axes
 
-### Community 722 - "IntentClassifier"
-Cohesion: 0.19
+### Community 722 - "perbaikanbukti/app/language/intent.py"
+Cohesion: 0.21
 Nodes (7): classify_intent(), IntentClassifier, _normalize_text(), RuleMatch, _score_intent(), _tokenize(), verify_examples()
 
 ### Community 723 - "<Questionnaire title>"
 Cohesion: 0.25
 Nodes (7): Anything else?, Context, Document structure, How to answer, <Questionnaire title>, <Theme heading>, What load is the system expected to handle at launch?
 
-### Community 724 - "Reranker"
-Cohesion: 0.09
-Nodes (5): create_reranker(), CrossEncoderReranker, LLMReranker, Reranker, SimpleReranker
-
-### Community 725 - "SOPReview"
-Cohesion: 0.06
-Nodes (22): SOPReview, v1_session_id(), V1KnowledgeBoundary, run_sync(), create_knowledge_pipeline_router(), add_knowledge_source(), configure_knowledge_watch(), knowledge_pipeline_status() (+14 more)
-
 ### Community 726 - "perbaikanbukti/app/problem/problem_schema.py"
 Cohesion: 0.15
 Nodes (10): ClarificationRequest, Goal, MissingInfo, PossibleSolution, ProblemResolution, ProblemSchema, ProblemStatement, RiskAssessment (+2 more)
 
-### Community 727 - "CandidateStore"
-Cohesion: 0.14
-Nodes (6): CandidateStore, html_to_text(), KnowledgeCandidate, NotApproved, SourceRejected, SourceValidator
-
-### Community 728 - "perbaikanbukti/app/skills/sop_semantic/engine.py"
-Cohesion: 0.21
-Nodes (13): call_ollama(), clean(), discover(), EvidenceAdapter, extract_from_text(), extract_metadata(), get_list(), main() (+5 more)
-
-### Community 729 - "commitPlacement"
-Cohesion: 0.16
-Nodes (19): addFragmentHandleToFiber(), addFragmentHandleToInstance(), commitFragmentInstanceDeletionEffects(), commitFragmentInstanceInsertionEffects(), commitNewChildToFragmentInstance(), commitNewChildToFragmentInstances(), commitPlacement(), deleteChildFromFragmentInstance() (+11 more)
+### Community 728 - "requests"
+Cohesion: 0.11
+Nodes (21): call_ollama(), clean(), discover(), EvidenceAdapter, extract_from_text(), extract_metadata(), get_list(), main() (+13 more)
 
 ### Community 730 - "writing-shape/SKILL.md"
 Cohesion: 0.25
 Nodes (7): Conversational feel, Format arguments to actually have, Grounding, Out of scope, Pulling from the pile, The loop, Writing rhythm
 
-### Community 731 - "Bukti Penerimaan — NCP-V1-HERMES-DEVELOPER-001"
-Cohesion: 0.14
-Nodes (13): 1. Ringkasan, 2. Bukti akses & konteks, 3.1 Alur SOP di kode, 3.2 Dokumen SOP nyata (runtime), 3.3 Alur chat terikat SOP (API-level, nyata), 3. Verifikasi kode (evidence nyata), 4.1 Blocker browser E2E, 4. Status pengujian (+5 more)
+### Community 731 - "sop-review.tsx"
+Cohesion: 0.05
+Nodes (44): cleanValue(), ExtractedBlock, Fact, FieldName, fields, findFact(), labelPatterns, makeLogicalId() (+36 more)
 
-### Community 732 - "service/local-services.ps1"
-Cohesion: 0.32
-Nodes (11): Get-LocalStatus(), Get-PortListeners(), Get-RuntimePaths(), Get-ServicePort(), Get-ServiceProcesses(), Initialize-LocalState(), Invoke-LocalStart(), Save-RuntimePaths() (+3 more)
-
-### Community 733 - "find"
-Cohesion: 0.12
-Nodes (25): add(), canFetch(), canRun(), clear(), continue(), createRetryer(), defaultMutationOptions(), execute() (+17 more)
-
-### Community 734 - "scripts/verify_docker_runtime.py"
-Cohesion: 0.29
-Nodes (9): audit(), auth(), generation(), health(), ingest(), request(), responsive_ingest(), search() (+1 more)
-
-### Community 735 - "useLinkProps"
-Cohesion: 0.16
-Nodes (18): applyLinkState(), applySearchMiddleware(), areLinkPropsEqual(), collectElementProps(), deepEqual(), functionalUpdate(), getHrefOption(), getServerLinkProps() (+10 more)
+### Community 734 - "verify_docker_runtime.py"
+Cohesion: 0.36
+Nodes (7): audit(), generation(), health(), ingest(), request(), responsive_ingest(), search()
 
 ### Community 736 - "Alur development Nusantara"
 Cohesion: 0.15
 Nodes (11): graphify, Nusantara development workflow, 0. Tetapkan pekerjaan, 1. Graphify: petakan dampak, 2. Diagnosing Bugs: buktikan masalah, 3. TDD: satu perilaku setiap siklus, 4. Codebase Design: periksa bentuk modul, 5. Code Review: standar dan spesifikasi (+3 more)
 
-### Community 737 - "Steps"
-Cohesion: 0.15
-Nodes (12): 1. Detect package manager, 2. Install dependencies, 3. Initialize Husky, 4. Create `.husky/pre-commit`, 5. Create `.lintstagedrc`, 6. Create `.prettierrc` (if missing), 7. Verify, 8. Commit (+4 more)
-
-### Community 738 - "mcp-nusantara-upstream/scripts/validate_gate17_experiment.py"
-Cohesion: 0.19
-Nodes (18): ExperimentError, base_kwargs(), baseline_required(), candidate_required(), deterministic_id(), duplicate_evidence_blocked(), evidence_deterministic(), evidence_required() (+10 more)
+### Community 737 - "test_v1_review_execution_api.py"
+Cohesion: 0.06
+Nodes (20): 1. Detect package manager, 2. Install dependencies, 3. Initialize Husky, 4. Create `.husky/pre-commit`, 5. Create `.lintstagedrc`, 6. Create `.prettierrc` (if missing), 7. Verify, 8. Commit (+12 more)
 
 ### Community 739 - ".evaluate"
 Cohesion: 0.18
@@ -3999,26 +3284,6 @@ Nodes (3): create_evaluator(), evaluate(), Evaluator
 ### Community 740 - "NUSANTARA V1 fixed ports and Windows autostart"
 Cohesion: 0.15
 Nodes (11): Commands, Health and controlled recovery, NUSANTARA V1 fixed ports and Windows autostart, Ollama, Task and permissions, Validation and reboot acceptance, Docker, Jalankan di Windows / PowerShell (+3 more)
-
-### Community 741 - ".navigate"
-Cohesion: 0.21
-Nodes (16): cacheLoaderMatch(), contextualize(), createLoaderTask(), getLoaderContext(), getParentSnapshot(), loadResource(), materializeRedirect(), normalize2() (+8 more)
-
-### Community 742 - "commitPlacement"
-Cohesion: 0.16
-Nodes (19): addFragmentHandleToFiber(), addFragmentHandleToInstance(), commitFragmentInstanceDeletionEffects(), commitFragmentInstanceInsertionEffects(), commitNewChildToFragmentInstance(), commitNewChildToFragmentInstances(), commitPlacement(), deleteChildFromFragmentInstance() (+11 more)
-
-### Community 743 - "#dispatch"
-Cohesion: 0.14
-Nodes (19): add(), canFetch(), canRun(), clear(), continue(), createRetryer(), #dispatch(), execute() (+11 more)
-
-### Community 744 - "useLinkProps"
-Cohesion: 0.16
-Nodes (18): applyLinkState(), applySearchMiddleware(), areLinkPropsEqual(), collectElementProps(), deepEqual(), functionalUpdate(), getHrefOption(), getServerLinkProps() (+10 more)
-
-### Community 745 - ".update"
-Cohesion: 0.19
-Nodes (15): createSegmentNode(), createSieveCache(), findSingleMatch(), invariant(), parseSegment(), parseSegments(), processRouteMasks(), visit() (+7 more)
 
 ### Community 746 - "bundle_sha256"
 Cohesion: 0.11
@@ -4032,17 +3297,13 @@ Nodes (3): EndpointBinding, OneDispatchTransport, OneUseAuthorization
 Cohesion: 0.33
 Nodes (5): Evidence, Guidance, Merge Danger, Sections, Summary
 
-### Community 749 - ".__init__"
-Cohesion: 0.18
-Nodes (5): EntityEngine, NusantaraMasterEngine, PolicyEngine, ReasoningCore, WorkflowEngine
-
 ### Community 750 - "writing-beats/SKILL.md"
 Cohesion: 0.33
 Nodes (5): Ending the journey, Grounding, Pulling from the pile, What is a beat, Writing rhythm
 
-### Community 751 - "V1KnowledgeBoundary"
-Cohesion: 0.07
-Nodes (20): V1KnowledgeBoundary, test_pilot_is_private_to_trial_before_first_human_decision(), _approve_fixture(), _convert(), _pdf(), test_changed_extracted_content_requires_a_new_review_and_approval(), worker(), test_concurrent_conversion_cannot_label_new_content_with_old_version() (+12 more)
+### Community 751 - "SOPReview"
+Cohesion: 0.02
+Nodes (97): create_knowledge_pipeline_router(), add_knowledge_source(), chat_citation(), configure_knowledge_watch(), confirm_metadata(), knowledge_pipeline_status(), process_review(), retry_knowledge_source() (+89 more)
 
 ### Community 752 - "loop-me/SKILL.md"
 Cohesion: 0.40
@@ -4055,10 +3316,6 @@ Nodes (4): Files, Implementation vs Review, Reference, Steps
 ### Community 754 - "implement_v2_hermes_runtime.py"
 Cohesion: 0.42
 Nodes (14): backup(), create_adapter(), create_test(), find_class(), find_function(), main(), parse(), patch_hermes_agent() (+6 more)
-
-### Community 755 - "SQLiteVectorStore"
-Cohesion: 0.15
-Nodes (3): DocumentInfo, StoredChunk, SQLiteVectorStore
 
 ### Community 756 - "test_projection_regression-v3.py"
 Cohesion: 0.22
@@ -4076,13 +3333,13 @@ Nodes (15): assert_public(), internal_context(), _project_v1_chat_response(), _P
 Cohesion: 0.12
 Nodes (3): EndpointBinding, OneDispatchTransport, OneUseAuthorization
 
-### Community 760 - "TextNormalizer"
+### Community 760 - "perbaikanbukti/app/language/normalizer.py"
 Cohesion: 0.15
 Nodes (6): _apply_token_map(), _repl(), _compile_token_map(), normalize_text(), _reduce_repeats(), TextNormalizer
 
 ### Community 761 - "constructor"
 Cohesion: 0.07
-Nodes (20): awaitCurrent(), cleanPath(), compileDecodeCharMap(), composeRewrites(), constructor(), createFileRoute(), executeRewriteInput(), executeRewriteOutput() (+12 more)
+Nodes (15): arraysEqual(), compileDecodeCharMap(), constructor(), createFileRoute(), createRouterStores(), getMatchStore(), setMatches(), id() (+7 more)
 
 ### Community 762 - "Credential Delivery / Transport Design Review"
 Cohesion: 0.11
@@ -4096,45 +3353,21 @@ Nodes (17): branch, chunks, documents, dependencies, httpx, pypdf, pytest, git_s
 Cohesion: 0.50
 Nodes (3): Schedules, Strategic View, Subagents
 
-### Community 768 - "ToolRegistry"
-Cohesion: 0.12
-Nodes (3): BaseTool, create_registry(), ToolRegistry
-
-### Community 769 - "perbaikanbukti/tests/test_runtime_attestation.py"
-Cohesion: 0.20
-Nodes (10): application(), client(), test_attestation_is_stable_and_uses_current_process_os_identity(), test_duplicate_endpoint_registration_is_rejected(), test_endpoint_does_not_open_files_databases_network_or_configuration(), test_live_handler_code_changes_are_detected_without_reading_source(), test_local_runtime_origin_is_allowed_and_post_is_not(), test_main_change_only_installs_attestation_and_preserves_existing_handlers() (+2 more)
+### Community 768 - "BaseTool"
+Cohesion: 0.14
+Nodes (3): BaseTool, CalculatorTool, DateTimeTool
 
 ### Community 770 - "stub_modules"
-Cohesion: 0.08
-Nodes (5): load_agent(), NaiveRegistry, Obj, stub_modules(), TestIntegration
+Cohesion: 0.13
+Nodes (3): load_agent(), stub_modules(), TestIntegration
 
 ### Community 772 - "hitl-loop.template.sh"
 Cohesion: 0.83
 Nodes (3): capture(), hitl-loop.template.sh script, step()
 
-### Community 773 - "XYPanZoom"
-Cohesion: 0.08
-Nodes (32): createFilter(), createPanOnScrollHandler(), createPanZoomEndHandler(), createPanZoomHandler(), createPanZoomStartHandler(), createZoomOnScrollHandler(), fitViewport(), getControlDirection() (+24 more)
-
-### Community 775 - ".navigate"
-Cohesion: 0.21
-Nodes (16): cacheLoaderMatch(), contextualize(), createLoaderTask(), getLoaderContext(), getParentSnapshot(), loadResource(), materializeRedirect(), normalize2() (+8 more)
-
 ### Community 776 - "GLOSSARY.md Format"
 Cohesion: 0.50
 Nodes (3): GLOSSARY.md Format, Rules, Structure
-
-### Community 777 - "getNodeDimensions"
-Cohesion: 0.20
-Nodes (17): adoptUserNodes(), calculateChildXYZ(), calculateNodePosition(), calculateZ(), clampPositionToParent(), fitViewport(), getFitViewNodes(), getNodeDimensions() (+9 more)
-
-### Community 778 - "before/test_v1_response_projection.py"
-Cohesion: 0.10
-Nodes (24): _project_v1_chat_response(), _PublicChatEvidence, _PublicChatGrounding, _PublicChatModel, _PublicChatProblem, _PublicChatResponse, _PublicChatTrust, _PublicChatUnderstanding (+16 more)
-
-### Community 779 - "Selection"
-Cohesion: 0.12
-Nodes (16): array(), arrayAll(), arraylike(), constant_default(), data_default(), datum(), enter_default(), exit_default() (+8 more)
 
 ### Community 780 - "2. GOVERNING PRINCIPLES"
 Cohesion: 0.29
@@ -4144,37 +3377,25 @@ Nodes (7): 2. GOVERNING PRINCIPLES, P1 — V1 Stability First, P2 — Minimal Ch
 Cohesion: 0.50
 Nodes (3): File format, What is a fragment, Writing rhythm
 
-### Community 783 - "NCP-V1-CHAT-001 — patch dan verifikasi terarah"
-Cohesion: 0.12
-Nodes (16): Asal 16 dan 768 dimensi, Backup dan preservasi, Baseline dan workflow, Hasil pemeriksaan, Kandidat dan cutover, Kelanjutan terotorisasi — pemulihan indeks dan upload SOP, Menjalankan dan membatalkan, NCP-V1-CHAT-001 — patch dan verifikasi terarah (+8 more)
-
 ### Community 784 - "refresh.cjs"
-Cohesion: 0.15
-Nodes (16): visit(), appendRun(), cloud, crypto, data, fs, gate, original (+8 more)
+Cohesion: 0.16
+Nodes (15): visit(), appendRun(), cloud, crypto, data, fs, gate, original (+7 more)
 
-### Community 785 - "get2"
-Cohesion: 0.05
-Nodes (44): append_default(), attr_default(), attr_default2(), attrInterpolate(), attrTween(), attrTween_default(), tween(), creator_default() (+36 more)
+### Community 785 - "style_default2"
+Cohesion: 0.07
+Nodes (36): append_default(), attr_default(), attr_default2(), attrInterpolate(), attrTween(), attrTween_default(), tween(), creator_default() (+28 more)
 
-### Community 786 - ".get"
-Cohesion: 0.11
-Nodes (42): Ct(), dl(), Vn(), Aa(), bb(), bh(), Br(), Da() (+34 more)
+### Community 786 - ".__init__"
+Cohesion: 0.18
+Nodes (5): EntityEngine, NusantaraMasterEngine, PolicyEngine, ReasoningCore, WorkflowEngine
 
-### Community 787 - "SourceRejected"
-Cohesion: 0.05
-Nodes (27): CandidateStore, html_to_text(), KnowledgeCandidate, NotApproved, SourceRejected, SourceValidator, _PinnedHTTPS, SourceFetcher (+19 more)
-
-### Community 788 - "tests/test_openwebui_adapt.py"
-Cohesion: 0.22
-Nodes (3): test_retrieval_failure_is_distinct_from_empty_sources(), test_topic_definition_skips_retrieval_even_with_selected_document(), unavailable()
+### Community 787 - "app/research/knowledge_discovery.py"
+Cohesion: 0.06
+Nodes (20): CandidateStore, html_to_text(), KnowledgeCandidate, NotApproved, SourceRejected, SourceValidator, _PinnedHTTPS, SourceFetcher (+12 more)
 
 ### Community 790 - "DeveloperControl"
 Cohesion: 0.24
 Nodes (3): DeveloperControl, main(), utc_now()
-
-### Community 791 - "mcp-nusantara-upstream/tests/test_v1_langgraph.py"
-Cohesion: 0.16
-Nodes (17): fixture(), FixtureProvider, projection_and_helpers(), request(), test_cancellation_does_not_replay_paid_request(), run(), test_cloud_binding_is_rejected_before_graph_import(), test_disabled_flag_does_not_import_langgraph_or_execute() (+9 more)
 
 ### Community 792 - "scripts/developer_core_change_query.py"
 Cohesion: 0.42
@@ -4188,25 +3409,25 @@ Nodes (9): 1. Hasil kerja utama, 2. Pekerjaan yang boleh dilakukan Hermes, 3. Ge
 Cohesion: 0.14
 Nodes (3): EndpointBinding, OneDispatchTransport, OneUseAuthorization
 
-### Community 796 - "laya_intent.py"
-Cohesion: 0.07
-Nodes (19): hint_eligible(), intent_request(), LayaIntentHint, main(), summary(), assign_word_to_column(), build_rows(), clean() (+11 more)
+### Community 796 - "sop_table_reconstruction_engine_v2.py"
+Cohesion: 0.20
+Nodes (8): assign_word_to_column(), build_rows(), clean(), detect_table_header(), extract_step(), header_type(), normalize(), reconstruct_row()
 
-### Community 798 - "app/api/routes.py"
-Cohesion: 0.01
-Nodes (134): create_workflow(), developer_core_status(), DocumentIngestRequest, get_metrics(), get_workflow(), health_check(), HealthResponse, HumanHandoffRequest (+126 more)
+### Community 798 - ".__init__"
+Cohesion: 0.18
+Nodes (5): EntityEngine, NusantaraMasterEngine, PolicyEngine, ReasoningCore, WorkflowEngine
 
 ### Community 799 - "perbaikanbukti/app/knowledge/schemas.py"
-Cohesion: 0.06
-Nodes (24): chunk_text(), Chunker, get_chunker(), KnowledgeEngine, capture_retrieval(), Document, DocumentIngestRequest, DocumentIngestResponse (+16 more)
+Cohesion: 0.11
+Nodes (13): Document, DocumentIngestRequest, DocumentIngestResponse, DocumentListResponse, DocumentMetadata, EmbeddingResult, Evidence, EvidencePack (+5 more)
 
 ### Community 800 - "has"
 Cohesion: 0.06
 Nodes (43): aborted(), aggregateChecks(), config(), constructor(), init(), Internals(), defineBound(), discriminatorMap() (+35 more)
 
 ### Community 801 - "typing"
-Cohesion: 0.01
-Nodes (58): ConfigurationError, _Embedding, _Features, _Frozen, _Generation, _Governance, _Knowledge, _LayaIntent (+50 more)
+Cohesion: 0.02
+Nodes (50): ConfigurationError, _Embedding, _Features, _Frozen, _Generation, _Governance, _Knowledge, _LayaIntent (+42 more)
 
 ### Community 802 - "perbaikanbukti/app/models/schemas.py"
 Cohesion: 0.15
@@ -4222,7 +3443,7 @@ Nodes (6): 7. CHANGE CONTROL LEVELS, LEVEL A — OBSERVATION, LEVEL B — DIAGNO
 
 ### Community 805 - "get"
 Cohesion: 0.07
-Nodes (42): add(), assignProp(), assignProps(), attach(), bucketFor(), canonicalKey(), checkArrayGuards(), checkObjectGuards() (+34 more)
+Nodes (41): add(), assignProp(), assignProps(), attach(), bucketFor(), canonicalKey(), checkArrayGuards(), checkObjectGuards() (+33 more)
 
 ### Community 808 - "NUSANTARA V1 CONTRACT COMPLIANCE REPORT"
 Cohesion: 0.12
@@ -4230,35 +3451,11 @@ Nodes (16): Agent Boundary, Architecture Consistency, Configuration Truth, Contr
 
 ### Community 809 - "NUSANTARA V1 RECOVERY REPORT"
 Cohesion: 0.12
-Nodes (16): BASELINE, BLOCKER 1 INDOBERT, BLOCKER 2 TRUST, BLOCKER 3 RAG, CHANGED FILES, CONTRACT STATUS, DEPLOYMENT, FILESYSTEM SECURITY (+8 more)
-
-### Community 810 - "before/tests/test_ncp_v1_chat_contract.py"
-Cohesion: 0.19
-Nodes (10): execute(), test_current_facts_report_missing_web_integration(), test_general_definition_does_not_require_knowledge(), test_natural_followup_keeps_bounded_same_session_context(), test_pre_provider_retry_links_attempt_without_redispatching_old_id(), test_provider_unavailable_is_retryable_error_instead_of_saved_answer(), test_selected_document_followup_keeps_filter_and_retrieval_context(), test_service_fact_quote_retains_known_pdf_page() (+2 more)
-
-### Community 811 - "createResult"
-Cohesion: 0.17
-Nodes (20): createResult(), ensureInfiniteQueryData(), ensureQueryData(), fetchQuery(), getObserversCount(), isActive(), isDisabled(), isFetched() (+12 more)
+Nodes (15): BASELINE, BLOCKER 1 INDOBERT, BLOCKER 2 TRUST, BLOCKER 3 RAG, CHANGED FILES, CONTRACT STATUS, DEPLOYMENT, FILESYSTEM SECURITY (+7 more)
 
 ### Community 813 - "convertBaseSchema"
 Cohesion: 0.09
-Nodes (42): applyMinItems(), catchall(), _check(), clone(), cloneDef(), convertBaseSchema(), decodeJSONPointerSegment(), deferProp() (+34 more)
-
-### Community 814 - "createResult"
-Cohesion: 0.20
-Nodes (16): createResult(), getObserversCount(), getPreviousPageParam(), hasPreviousPage(), isActive(), isDisabled(), isFetched(), isStale() (+8 more)
-
-### Community 815 - "generateStringFormatCheck"
-Cohesion: 0.15
-Nodes (16): canParseURL(), generateStringFormatCheck(), isIso7064Mod97(), isLuhnAlgo(), isValidBase64(), isValidBase64URL(), isValidCIDRv6(), isValidCreditCard() (+8 more)
-
-### Community 816 - "IndoBERTClient"
-Cohesion: 0.17
-Nodes (3): IndoBERTClient, exchange(), request()
-
-### Community 817 - "final-20261016-114420/manifest.json"
-Cohesion: 0.12
-Nodes (15): acceptance, created_at, evidence, hashes, human_acceptance, production_data_changed, provider_calls, runtime_identity (+7 more)
+Nodes (43): applyMinItems(), catchall(), _check(), clone(), cloneDef(), convertBaseSchema(), decodeJSONPointerSegment(), deferProp() (+35 more)
 
 ### Community 818 - "Verifikasi backend Nusantara — 22 Oktober 2026"
 Cohesion: 0.12
@@ -4267,10 +3464,6 @@ Nodes (14): Cara pengujian, Hasil suite luas, Pemisahan kegagalan lain, Review d
 ### Community 820 - "R2-A9 IMPLEMENTATION RESULT"
 Cohesion: 0.12
 Nodes (12): Attributable diff review, Changed files, Protected boundaries and remaining gaps, R2-A9 IMPLEMENTATION RESULT, Resulting behavior, Validation, Security and protected-state review, Backend command (repository root) (+4 more)
-
-### Community 821 - "LLMProvider"
-Cohesion: 0.10
-Nodes (6): GenerateRequest, GenerateResponse, HealthCheckResponse, LLMProvider, StructuredGenerateRequest, StructuredGenerateResponse
 
 ### Community 823 - "BoundaryTests"
 Cohesion: 0.20
@@ -4285,80 +3478,36 @@ Cohesion: 0.40
 Nodes (4): Aturan freeze, Baseline tes yang telah dilaporkan, Batasan, Git status saat pencatatan
 
 ### Community 831 - "RAG"
-Cohesion: 0.04
-Nodes (8): finish_receipt(), finish_receipt(), finish_receipt(), RAG, finish_receipt(), finish_receipt(), controlled_connect(), trace()
-
-### Community 832 - ""node_modules/react/cjs/react-jsx-runtime.development.js""
-Cohesion: 0.25
-Nodes (13): "node_modules/react/cjs/react-jsx-runtime.development.js"(), checkKeyStringCoercion(), defineKeyPropWarningGetter(), elementRefGetterWithDeprecationWarning(), getComponentNameFromType(), getOwner(), getTaskName(), hasValidKey() (+5 more)
-
-### Community 837 - "describeNode"
-Cohesion: 0.30
-Nodes (15): added(), describeElementDiff(), describeExpandedElement(), describeFiberType(), describeNode(), describePropertiesDiff(), describePropValue(), describeSiblingFiber() (+7 more)
+Cohesion: 0.03
+Nodes (5): ChunkProcessor, create_rag(), DocParser, MemoriaVectorStore, RAG
 
 ### Community 839 - "Selected PDF Chat repair — 23 October 2026"
 Cohesion: 0.29
 Nodes (6): Change, Remaining blockers, Reproduction and cause, Selected PDF Chat repair — 23 October 2026, Verification, Workflow evidence
 
-### Community 840 - ""node_modules/react/cjs/react-jsx-dev-runtime.development.js""
-Cohesion: 0.25
-Nodes (13): "node_modules/react/cjs/react-jsx-dev-runtime.development.js"(), checkKeyStringCoercion(), defineKeyPropWarningGetter(), elementRefGetterWithDeprecationWarning(), getComponentNameFromType(), getOwner(), getTaskName(), hasValidKey() (+5 more)
-
 ### Community 842 - "completeWork"
 Cohesion: 0.10
 Nodes (41): bubbleProperties(), claimNextRetryLane(), completeWork(), createHoistableInstance(), cutOffTailIfNeeded(), describeAncestors(), describeDiff(), emitPendingHydrationWarnings() (+33 more)
-
-### Community 844 - "json"
-Cohesion: 0.14
-Nodes (15): _boolean(), boolean2(), _coercedNumber(), _coercedString(), json(), _null2(), _null3(), _number() (+7 more)
-
-### Community 845 - ""node_modules/react/cjs/react-jsx-runtime.development.js""
-Cohesion: 0.25
-Nodes (13): "node_modules/react/cjs/react-jsx-runtime.development.js"(), checkKeyStringCoercion(), defineKeyPropWarningGetter(), elementRefGetterWithDeprecationWarning(), getComponentNameFromType(), getOwner(), getTaskName(), hasValidKey() (+5 more)
 
 ### Community 846 - "scripts/implement_v2_hermes_runtime_safe.py"
 Cohesion: 0.53
 Nodes (10): backup(), create_adapter(), create_test(), main(), patch_orchestrator(), patch_routes(), protected_snapshot(), read() (+2 more)
 
-### Community 847 - "describeNode"
-Cohesion: 0.30
-Nodes (15): added(), describeElementDiff(), describeExpandedElement(), describeFiberType(), describeNode(), describePropertiesDiff(), describePropValue(), describeSiblingFiber() (+7 more)
-
-### Community 848 - ""node_modules/react/cjs/react-jsx-dev-runtime.development.js""
-Cohesion: 0.25
-Nodes (13): "node_modules/react/cjs/react-jsx-dev-runtime.development.js"(), checkKeyStringCoercion(), defineKeyPropWarningGetter(), elementRefGetterWithDeprecationWarning(), getComponentNameFromType(), getOwner(), getTaskName(), hasValidKey() (+5 more)
-
-### Community 849 - "ReactFlow"
-Cohesion: 0.13
-Nodes (15): Attribution(), BatchProvider(), createQueue(), getElementsDiffChanges(), getMediaQuery(), handleAttributionWarning(), isAttributionVisible(), mergeAriaLabelConfig() (+7 more)
-
-### Community 850 - "json"
-Cohesion: 0.14
-Nodes (15): _boolean(), boolean2(), _coercedNumber(), _coercedString(), json(), _null2(), _null3(), _number() (+7 more)
-
-### Community 852 - "Selection"
-Cohesion: 0.07
-Nodes (40): array(), arrayAll(), clearNow(), create(), schedule(), start2(), stop(), tick() (+32 more)
-
-### Community 853 - "verify-chat.cjs"
-Cohesion: 0.15
-Nodes (9): { chromium }, fs, model, path, response, { chromium }, fs, out (+1 more)
+### Community 852 - "get2"
+Cohesion: 0.12
+Nodes (24): clearNow(), delay_default(), delayConstant(), delayFunction(), duration_default(), get2(), inherit(), init() (+16 more)
 
 ### Community 854 - "TrustEngine"
-Cohesion: 0.03
-Nodes (62): create_trust_engine(), TrustEngine, RiskLevel, TrustAssessment, create_trust_engine(), evaluate_trust(), TrustEngine, check() (+54 more)
+Cohesion: 0.04
+Nodes (39): create_trust_engine(), evaluate_trust(), TrustEngine, RiskLevel, TrustAssessment, test_phase4_batch_evaluation_preserves_one_result_per_claim(), test_phase4_canonical_score_adapter_shape(), test_phase4_confidence_is_not_factual_certainty() (+31 more)
 
 ### Community 855 - "P0 fase B — baseline PDF asli dan model lokal"
-Cohesion: 0.25
-Nodes (7): Bukti kode dan batas isolasi, Bukti runtime, Langkah berikut dan kriteria lulus, P0 fase B — baseline PDF asli dan model lokal, Perubahan workspace, Sumber yang disetujui, Yang belum diuji
+Cohesion: 0.29
+Nodes (6): Bukti runtime, Langkah berikut dan kriteria lulus, P0 fase B — baseline PDF asli dan model lokal, Perubahan workspace, Sumber yang disetujui, Yang belum diuji
 
 ### Community 856 - "LanguageEngine"
-Cohesion: 0.13
-Nodes (4): LanguageDetection, LanguageEngine, Entity, PipelineResult
-
-### Community 857 - "mcp-nusantara-upstream/app/api/v2_routes.py"
-Cohesion: 0.10
-Nodes (23): HermesV2Adapter, audit_verify(), chat(), generate(), ChatV2Request, create_memory_session(), decide(), DecisionRequest (+15 more)
+Cohesion: 0.03
+Nodes (35): create_language_engine(), LanguageDetection, LanguageEngine, create_entity_extractor(), classify_intent(), IntentClassifier, _normalize_text(), RuleMatch (+27 more)
 
 ### Community 858 - "14. TEST CONTRACT"
 Cohesion: 0.50
@@ -4376,81 +3525,29 @@ Nodes (7): "node_modules/use-sync-external-store/cjs/use-sync-external-store-shi
 Cohesion: 0.26
 Nodes (4): RootCauseAnalysisError, RootCauseAnalyzer, RootCauseCandidate, RootCauseResult
 
-### Community 863 - "DeveloperRuntime"
-Cohesion: 0.08
-Nodes (5): DeveloperRuntime, GraphifyBridge, DeveloperRuntime, GraphifyBridge, DeveloperRuntime
-
-### Community 864 - "ToolError"
-Cohesion: 0.14
-Nodes (3): CalculatorTool, DateTimeTool, ToolError
-
 ### Community 866 - "reconcileChildFibersImpl"
 Cohesion: 0.17
 Nodes (38): coerceRef(), createChildReconciler(), createChild(), deleteChild(), deleteRemainingChildren(), mapRemainingChildren(), placeChild(), placeSingleChild() (+30 more)
-
-### Community 868 - "createReactiveSystem"
-Cohesion: 0.16
-Nodes (13): createReactiveSystem(), checkDirty2(), isValidLink(), propagate2(), shallowPropagate2(), unlink2(), effect(), hasKeys() (+5 more)
-
-### Community 869 - "test-0f1864efd6274d279abbeb7b98804e36/registration-fixture/service/local-services.ps1"
-Cohesion: 0.32
-Nodes (11): Get-LocalStatus(), Get-PortListeners(), Get-RuntimePaths(), Get-ServicePort(), Get-ServiceProcesses(), Initialize-LocalState(), Invoke-LocalStart(), Save-RuntimePaths() (+3 more)
-
-### Community 870 - "test-3e99958f9da249fcac36df36f42e3632/registration-fixture/service/local-services.ps1"
-Cohesion: 0.32
-Nodes (11): Get-LocalStatus(), Get-PortListeners(), Get-RuntimePaths(), Get-ServicePort(), Get-ServiceProcesses(), Initialize-LocalState(), Invoke-LocalStart(), Save-RuntimePaths() (+3 more)
-
-### Community 871 - "test-64043a44de7e42a1b98760badd6a226f/registration-fixture/service/local-services.ps1"
-Cohesion: 0.32
-Nodes (11): Get-LocalStatus(), Get-PortListeners(), Get-RuntimePaths(), Get-ServicePort(), Get-ServiceProcesses(), Initialize-LocalState(), Invoke-LocalStart(), Save-RuntimePaths() (+3 more)
-
-### Community 872 - "test-7c098f3ef0834dffb4a5f658c26462b6/registration-fixture/service/local-services.ps1"
-Cohesion: 0.32
-Nodes (11): Get-LocalStatus(), Get-PortListeners(), Get-RuntimePaths(), Get-ServicePort(), Get-ServiceProcesses(), Initialize-LocalState(), Invoke-LocalStart(), Save-RuntimePaths() (+3 more)
-
-### Community 873 - "test-a65fb6c2f6c34e39b566bd77105fa7d0/registration-fixture/service/local-services.ps1"
-Cohesion: 0.32
-Nodes (11): Get-LocalStatus(), Get-PortListeners(), Get-RuntimePaths(), Get-ServicePort(), Get-ServiceProcesses(), Initialize-LocalState(), Invoke-LocalStart(), Save-RuntimePaths() (+3 more)
-
-### Community 874 - "test-ae929d9898f44e48a1bf10305a0e170b/registration-fixture/service/local-services.ps1"
-Cohesion: 0.32
-Nodes (11): Get-LocalStatus(), Get-PortListeners(), Get-RuntimePaths(), Get-ServicePort(), Get-ServiceProcesses(), Initialize-LocalState(), Invoke-LocalStart(), Save-RuntimePaths() (+3 more)
-
-### Community 875 - "test-b74983ba03b24fbc8e4407f56f644e3d/registration-fixture/service/local-services.ps1"
-Cohesion: 0.32
-Nodes (11): Get-LocalStatus(), Get-PortListeners(), Get-RuntimePaths(), Get-ServicePort(), Get-ServiceProcesses(), Initialize-LocalState(), Invoke-LocalStart(), Save-RuntimePaths() (+3 more)
 
 ### Community 877 - "Caller Authentication Boundary Decision"
 Cohesion: 0.14
 Nodes (13): 10. Required Authorization, 11. Final Recommendation, 1. Decision, 2. Existing Authentication Mechanisms, 3. Existing Trusted Boundary, 4. Browser Identity Evidence, 5. Server Credential Ownership, 6. Transport Boundary (+5 more)
 
-### Community 878 - "sqlite3"
-Cohesion: 0.01
-Nodes (167): build_parser(), main(), Actor, Groups, Luid, SidAttributes, Statistics, build_parser() (+159 more)
-
-### Community 879 - "tests/test_inspection_preview_api.py"
-Cohesion: 0.32
-Nodes (7): post(), test_absent_server_token(), test_invalid_auth(), test_non_preview_rejected(), test_normal_only(), test_strict_payload(), test_supported_goals()
+### Community 878 - "perbaikanbukti/app/governance/sandbox.py"
+Cohesion: 0.47
+Nodes (3): run_allowlisted(), SandboxDenied, SandboxResult
 
 ### Community 880 - "MDA-R2 OPEN FINDINGS CLOSURE CONTRACT"
 Cohesion: 0.14
 Nodes (13): 10. REQUIRED DELIVERABLES, 11. EXIT CRITERIA, 12. INITIAL DECISION, 1. PURPOSE, 2. SCOPE, 3. PRESERVATION REQUIREMENTS, 4. FINDING F-01 — OPENROUTER COST GOVERNANCE, 5. FINDING F-02 — RUNTIME IDENTITY CLOSURE (+5 more)
 
-### Community 881 - "Remaining Work"
-Cohesion: 0.07
-Nodes (27): Critical Order, Important, Overall Progress, Phase 0 — Discovery, Phase 10 — Experience, Phase 11 — Feedback, Phase 12 — Evaluation, Phase 13 — Failure Analysis (+19 more)
-
-### Community 882 - "control-plane/e2e/human.spec.ts"
+### Community 882 - "human.spec.ts"
 Cohesion: 0.38
 Nodes (3): evidence(), inspect(), start()
 
 ### Community 883 - "ApprovalQueue"
 Cohesion: 0.27
 Nodes (4): ApprovalError, ApprovalQueue, ApprovalRequest, payload_hash()
-
-### Community 884 - "worker"
-Cohesion: 0.23
-Nodes (7): main(), worker(), audit(), fixture_dotenv(), forbidden(), inside(), resolved()
 
 ### Community 885 - "FINAL STATUS — NCP-V1-HERMES-DEVELOPER-001"
 Cohesion: 0.29
@@ -4460,25 +3557,9 @@ Nodes (6): 1. Ringkasan eksekusi, 2. Bukti chat terikat SOP (API-level, nyata), 
 Cohesion: 0.15
 Nodes (12): 10. Human Decision Gate required, 1. Current blockers, 2. Root cause, 3. Minimum remediation, 4. Exact proposed files, 5. Architecture impact, 6. Security impact, 7. Protected-state impact (+4 more)
 
-### Community 887 - "mcp-nusantara-upstream/scripts/validate_gate17_proposal.py"
-Cohesion: 0.12
-Nodes (19): affected_components_required(), affected_files_required(), approval_required_enforced(), deterministic_payload(), evidence_required(), gap_binding(), Gate174Error, ImprovementProposalAdapter (+11 more)
-
-### Community 888 - "mcp-nusantara-upstream/app/workflow/engine.py"
-Cohesion: 0.19
-Nodes (4): create_workflow_engine(), Workflow, WorkflowEngine, WorkflowState
-
-### Community 889 - "tests/test_runtime_authorization.py"
-Cohesion: 0.15
-Nodes (30): act(), command(), fixture(), respond(), native_proof(), client(), test_abort_after_dispatch_records_uncertainty_without_second_dispatch(), test_abort_revokes_before_dispatch() (+22 more)
-
 ### Community 891 - ".evaluate"
 Cohesion: 0.18
 Nodes (3): create_evaluator(), evaluate(), Evaluator
-
-### Community 892 - "perbaikanbukti/app/tools/base.py"
-Cohesion: 0.32
-Nodes (6): add_days(), calculator(), current_time(), execute_calculator(), get_default_registry(), parse_date()
 
 ### Community 893 - "4. V1 PROTECTION CONTRACT"
 Cohesion: 0.67
@@ -4488,29 +3569,21 @@ Nodes (3): 4.1 V1 Freeze, 4.2 Protected Components, 4. V1 PROTECTION CONTRACT
 Cohesion: 0.19
 Nodes (4): create_workflow_engine(), Workflow, WorkflowEngine, WorkflowState
 
-### Community 897 - "HermesAgent"
-Cohesion: 0.04
-Nodes (39): _arithmetic_response(), evaluate(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), _chat_completed(), _deterministic_response(), _extract_document_entities() (+31 more)
+### Community 897 - "app/api/routes.py"
+Cohesion: 0.02
+Nodes (105): analyze_problem(), _arithmetic_response(), _build_evidence_text(), _build_system_prompt(), _build_user_prompt(), _chat_completed(), create_workflow(), _deterministic_response() (+97 more)
 
 ### Community 898 - "perbaikanbukti/tests/test_audit_regressions.py"
 Cohesion: 0.19
 Nodes (7): test_authorized_developer_lists_workspace(), test_binary_parsers_reject_file_path(), test_privileged_api_denies_before_access(), test_search_empty_and_populated_results(), test_slow_knowledge_work_keeps_event_loop_responsive(), test_text_content_never_reads_server_file(), test_worker_environment_configuration()
 
-### Community 899 - "worker"
-Cohesion: 0.23
-Nodes (7): main(), worker(), audit(), fixture_dotenv(), forbidden(), inside(), resolved()
-
-### Community 900 - "AuthorizationError"
-Cohesion: 0.17
-Nodes (28): AuthorizationError, act(), command(), fixture(), respond(), native_proof(), test_abort_after_dispatch_records_uncertainty_without_second_dispatch(), test_abort_revokes_before_dispatch() (+20 more)
-
 ### Community 901 - "Kontrak Hermes — Perbaikan Chat Satu SOP NUSANTARA V1"
 Cohesion: 0.29
 Nodes (6): Batas pekerjaan dan serah terima, Bukti kegagalan, Hasil yang harus diserahkan, Kontrak Hermes — Perbaikan Chat Satu SOP NUSANTARA V1, Pekerjaan Hermes, Uji penerimaan
 
-### Community 902 - "MCPServer"
-Cohesion: 0.07
-Nodes (4): create_server(), get_default_server(), MCPServer, MCPSession
+### Community 902 - "sop_table_reconstruction_engine_v3.py"
+Cohesion: 0.23
+Nodes (6): clean(), detect_header(), get_page_number(), group_words_by_y(), normalize_page_words(), word_center()
 
 ### Community 903 - "source-before/app/knowledge/official_knowledge_ingestion.py"
 Cohesion: 0.16
@@ -4520,97 +3593,65 @@ Nodes (28): append_audit(), backup_database(), command_manifest(), command_regis
 Cohesion: 0.09
 Nodes (27): "node_modules/react/cjs/react.development.js"(), addTransitionType(), aggregateErrors(), checkKeyStringCoercion(), cloneAndReplaceKey(), defineKeyPropWarningGetter(), elementRefGetterWithDeprecationWarning(), enqueueTask() (+19 more)
 
-### Community 907 - "loadServerRoute"
-Cohesion: 0.12
-Nodes (31): acquireMatchResources(), arraysEqual(), awaitPendingMinimum(), batch(), commitMatches(), createRouterStores(), getMatchStore(), setMatches() (+23 more)
-
-### Community 908 - "DocumentTools"
+### Community 907 - "runClientTransaction"
 Cohesion: 0.11
-Nodes (10): review_detail(), DocumentReadError, DocumentTools, run_worker(), process_review(), test_conversion_cache_page_provenance_and_approval_are_independent(), test_document_tools_access_version_and_unprocessed_are_distinct(), test_conversion_cache_page_provenance_and_approval_are_independent() (+2 more)
+Nodes (38): acquireMatchResources(), awaitCurrent(), awaitPendingMinimum(), cacheLoaderMatch(), commitMatches(), contextualize(), createLoaderTask(), discardBackground() (+30 more)
 
-### Community 909 - "perbaikanbukti/tests/test_runtime_authorization.py"
-Cohesion: 0.16
-Nodes (27): act(), command(), fixture(), respond(), native_proof(), test_abort_after_dispatch_records_uncertainty_without_second_dispatch(), test_abort_revokes_before_dispatch(), test_atttestation_projection_no_legacy_digest_and_normal_preserved() (+19 more)
+### Community 908 - "tests/test_inspection_preview_api.py"
+Cohesion: 0.32
+Nodes (7): post(), test_absent_server_token(), test_invalid_auth(), test_non_preview_rejected(), test_normal_only(), test_strict_payload(), test_supported_goals()
 
 ### Community 910 - "setOptions"
-Cohesion: 0.09
-Nodes (35): addObserver(), bindMethods(), clearGcTimeout(), clearInterval(), #clearRefetchInterval(), #clearStaleTimeout(), clearTimeout(), #computeRefetchInterval() (+27 more)
+Cohesion: 0.14
+Nodes (26): bindMethods(), clearInterval(), #clearRefetchInterval(), #computeRefetchInterval(), constructor(), destroy(), difference(), #executeFetch() (+18 more)
 
-### Community 911 - "source-before/app/api/v2_routes.py"
-Cohesion: 0.12
-Nodes (22): audit_verify(), chat(), generate(), ChatV2Request, create_memory_session(), decide(), DecisionRequest, delete_memory_session() (+14 more)
+### Community 911 - "MemoryEngine"
+Cohesion: 0.22
+Nodes (4): ContextEngine, HumanHandoffEngine, MemoryEngine, now_iso()
 
 ### Community 912 - "app__api__v2_routes.py"
 Cohesion: 0.12
 Nodes (24): audit(), audit_verify(), chat(), generate(), retrieve(), ChatV2Request, create_memory_session(), decide() (+16 more)
 
-### Community 913 - "worker"
-Cohesion: 0.23
-Nodes (7): main(), worker(), audit(), fixture_dotenv(), forbidden(), inside(), resolved()
+### Community 913 - "MemoryEngine"
+Cohesion: 0.22
+Nodes (4): ContextEngine, HumanHandoffEngine, MemoryEngine, now_iso()
 
-### Community 914 - "worker"
-Cohesion: 0.23
-Nodes (7): main(), worker(), audit(), fixture_dotenv(), forbidden(), inside(), resolved()
+### Community 914 - "ToolEngine"
+Cohesion: 0.20
+Nodes (3): add_items(), MCPEngine, ToolEngine
 
-### Community 915 - "worker"
-Cohesion: 0.23
-Nodes (7): main(), worker(), audit(), fixture_dotenv(), forbidden(), inside(), resolved()
+### Community 915 - "FeedbackStore"
+Cohesion: 0.24
+Nodes (3): FeedbackRecord, FeedbackRejected, FeedbackStore
 
 ### Community 918 - "restoreViewTransitionOnHostInstances"
 Cohesion: 0.11
 Nodes (34): applyViewTransitionName(), applyViewTransitionToHostInstances(), applyViewTransitionToHostInstancesRecursive(), clearContainerSparingly(), commitAfterMutationEffectsOnFiber(), commitAppearingPairViewTransitions(), commitBeforeMutationEffects(), commitBeforeMutationEffects_complete() (+26 more)
 
-### Community 919 - "worker"
-Cohesion: 0.23
-Nodes (7): main(), worker(), audit(), fixture_dotenv(), forbidden(), inside(), resolved()
-
-### Community 920 - "worker"
-Cohesion: 0.23
-Nodes (7): main(), worker(), audit(), fixture_dotenv(), forbidden(), inside(), resolved()
-
 ### Community 921 - "source-before/app/knowledge/production_kb.py"
 Cohesion: 0.14
 Nodes (24): backup_database(), build_manifest(), chunk_text(), classify_source(), DocumentRecord, extract_text(), ingest_all(), load_docx() (+16 more)
 
-### Community 924 - "perbaikanbukti/app/api/v2_routes.py"
-Cohesion: 0.13
-Nodes (23): audit_verify(), chat(), generate(), retrieve(), ChatV2Request, create_memory_session(), decide(), DecisionRequest (+15 more)
+### Community 924 - "r2-a11-c0-20261008-observation-8c48f128/observe_once.py"
+Cohesion: 0.25
+Nodes (3): now(), observe(), redact()
 
-### Community 925 - "KnowledgeEngine"
-Cohesion: 0.12
-Nodes (4): activity_rows(), rows_text(), KnowledgeEngine, __init__()
-
-### Community 926 - "worker"
-Cohesion: 0.23
-Nodes (7): main(), worker(), audit(), fixture_dotenv(), forbidden(), inside(), resolved()
-
-### Community 927 - ".update"
-Cohesion: 0.19
-Nodes (15): createSegmentNode(), createSieveCache(), findSingleMatch(), invariant(), parseSegment(), parseSegments(), processRouteMasks(), visit() (+7 more)
-
-### Community 928 - "_gte"
-Cohesion: 0.40
-Nodes (5): _gte(), min(), _minLength(), nonempty(), _nonnegative()
-
-### Community 929 - "verify-layout.cjs"
-Cohesion: 0.20
-Nodes (11): { chromium }, currentSession, fs, historyTurns, inspectViewport(), main(), metrics(), out (+3 more)
+### Community 926 - "Qr"
+Cohesion: 0.22
+Nodes (9): Xn(), zf(), Dd(), Ey(), Qr(), setMutationDefaults(), setQueryDefaults(), Sy() (+1 more)
 
 ### Community 930 - "MDA R2 Controlled Implementation Closure — 2026-10-07"
-Cohesion: 0.17
-Nodes (11): AUTHORIZATION, CHANGES, DATABASE/WAL/SHM STATUS, FINAL STATUS, GIT DIFF, INTEGRITY RESULTS, MDA R2 Controlled Implementation Closure — 2026-10-07, OPEN LIMITATIONS (+3 more)
-
-### Community 931 - "MDA R2 Controlled Implementation Closure — 2026-10-07"
-Cohesion: 0.17
-Nodes (11): AUTHORIZATION, CHANGES, DATABASE/WAL/SHM STATUS, FINAL STATUS, GIT DIFF, INTEGRITY RESULTS, MDA R2 Controlled Implementation Closure — 2026-10-07, OPEN LIMITATIONS (+3 more)
+Cohesion: 0.05
+Nodes (34): AUTHORIZATION, CHANGES, DATABASE/WAL/SHM STATUS, FINAL STATUS, GIT DIFF, INTEGRITY RESULTS, MDA R2 Controlled Implementation Closure — 2026-10-07, OPEN LIMITATIONS (+26 more)
 
 ### Community 932 - "Human-first Nusantara Core — discovery and bounded improvement"
 Cohesion: 0.22
 Nodes (8): Decision required and final status, Human-first Nusantara Core — discovery and bounded improvement, Not changed, Not tested and evidence limits, Objective, Preservation and diff review, Risk and protected state, Tested: actual attempts
 
-### Community 933 - "MDA R2 Controlled Implementation Closure — 2026-10-07"
-Cohesion: 0.17
-Nodes (11): AUTHORIZATION, CHANGES, DATABASE/WAL/SHM STATUS, FINAL STATUS, GIT DIFF, INTEGRITY RESULTS, MDA R2 Controlled Implementation Closure — 2026-10-07, OPEN LIMITATIONS (+3 more)
+### Community 933 - "perbaikanbukti/tests/test_v1_smoke.py"
+Cohesion: 0.31
+Nodes (4): _client(), test_v1_chat_does_not_500(), test_v1_knowledge_search_does_not_500(), test_v1_problem_analyze_does_not_500()
 
 ### Community 934 - "Nusantara workflow execution: 2026-10-21"
 Cohesion: 0.17
@@ -4620,61 +3661,53 @@ Nodes (11): Code Review, Codebase Design, Control-plane verification, Final veri
 Cohesion: 0.17
 Nodes (11): Authorization and scope, Build identity evidence, Final status and stop, Implementation files and rationale, Mechanism and runtime identity evidence, Non-mutation evidence and limits, Post-state and known limitations, Pre-state (+3 more)
 
-### Community 936 - "sys"
+### Community 936 - "socket"
 Cohesion: 0.01
-Nodes (137): create_operationalization(), inspect_graph(), inspect_project(), inspect_validation(), main(), run_command(), effective_config(), _hash() (+129 more)
+Nodes (167): Evidence, ForbiddenOwners, guarded(), opened(), prohibited(), socketpair_only(), ForbiddenOwners, guarded() (+159 more)
 
 ### Community 937 - "createBrowserHistory"
-Cohesion: 0.10
-Nodes (28): assignKeyAndIndex(), createAtom(), createBrowserHistory(), createHashHistory(), createHistory(), createMemoryHistory(), createRandomKey(), createReactiveSystem() (+20 more)
+Cohesion: 0.09
+Nodes (32): Alur runtime `/v1/chat`, Batas verifikasi (penting), PROJECT_BASELINE — NUSANTARA AI V1 (mcp-starter 0.1.0), Ringkasan, Temuan utama, assignKeyAndIndex(), batch(), createAtom() (+24 more)
 
 ### Community 938 - "ControlledPatchExecutor"
 Cohesion: 0.24
 Nodes (3): ControlledPatchError, ControlledPatchExecutor, PatchResult
 
-### Community 943 - "perbaikanbukti/app/improvement/release.py"
-Cohesion: 0.27
-Nodes (8): ChecklistItem, create_backup(), generate_release_notes(), ready_to_release(), release_checklist(), restore_backup(), rollback(), _sha256()
+### Community 943 - "tests/test_v1_smoke.py"
+Cohesion: 0.31
+Nodes (4): _client(), test_v1_chat_does_not_500(), test_v1_knowledge_search_does_not_500(), test_v1_problem_analyze_does_not_500()
 
-### Community 947 - "SOPReview"
-Cohesion: 0.16
-Nodes (3): DocumentReadError, DocumentTools, SOPReview
+### Community 945 - "Xd"
+Cohesion: 0.29
+Nodes (8): dj(), dh, dj(), fj(), dh, Pf(), N0(), Xd()
 
-### Community 949 - "R1_SOCKET_GUARD_BACKUP_20261007_142145/test_configuration_integration.py"
-Cohesion: 0.10
-Nodes (16): configured(), test_adapter_constructs_existing_client_without_starting_worker(), test_database_path_handoff_without_real_database(), store(), test_explicit_store_embedding_and_kb_config_preserved(), test_guarded_api_assembly_and_public_regression(), test_incompatible_embedding_rejected_before_store_or_worker(), test_knowledge_facade_preserves_omitted_and_explicit_topk() (+8 more)
+### Community 949 - "NusantaraConfig"
+Cohesion: 0.04
+Nodes (27): _Embedding, _Features, _Frozen, _Generation, _Governance, _Knowledge, _leaves(), _Legacy (+19 more)
 
 ### Community 951 - ".buildLocation"
-Cohesion: 0.10
-Nodes (25): comparePaths(), encodeParam(), encodePathLikeUrl(), extractStrictParams(), findGlobalNotFoundRouteId(), findLast(), getSearchMiddlewares(), getUrlPath() (+17 more)
+Cohesion: 0.08
+Nodes (33): cleanPath(), comparePaths(), composeRewrites(), decodePath(), decodeSegment(), encodeParam(), encodePathLikeUrl(), executeRewriteInput() (+25 more)
 
-### Community 952 - "clamp"
-Cohesion: 0.24
-Nodes (11): clamp(), clampa(), clamph(), clampi(), clampt(), formatHsl(), hex(), rgb_formatHex() (+3 more)
+### Community 952 - "normalize_text"
+Cohesion: 0.29
+Nodes (4): IntentEngine, MasterDomainEngine, normalize_text(), ProblemEngine
 
-### Community 953 - "find"
-Cohesion: 0.20
-Nodes (11): defaultMutationOptions(), find(), getMutationDefaults(), getQueryDefaults(), hashKey(), hashQueryKeyByOptions(), matchMutation(), matchQuery() (+3 more)
+### Community 955 - "controlled_pipeline"
+Cohesion: 0.29
+Nodes (3): controlled_pipeline(), __init__(), language()
 
-### Community 954 - "clamp"
-Cohesion: 0.24
-Nodes (11): clamp(), clampa(), clamph(), clampi(), clampt(), formatHsl(), hex(), rgb_formatHex() (+3 more)
+### Community 956 - ".replace"
+Cohesion: 0.12
+Nodes (14): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal, SourceEntry, For /graphify explain, For /graphify path (+6 more)
 
-### Community 955 - "mcp-nusantara-upstream/app/knowledge/schemas.py"
-Cohesion: 0.11
-Nodes (13): Document, DocumentIngestRequest, DocumentIngestResponse, DocumentListResponse, DocumentMetadata, EmbeddingResult, Evidence, EvidencePack (+5 more)
+### Community 957 - "setupScrollRestoration"
+Cohesion: 0.36
+Nodes (8): getElement(), getElementScrollRestorationEntry(), getScrollRestorationSelector(), getScrollToTopElements(), ScrollRestoration2(), setupScrollRestoration(), useElementScrollRestoration(), useScrollRestoration()
 
-### Community 956 - "graphify reference: query, path, explain"
-Cohesion: 0.33
-Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
-
-### Community 957 - "graphify reference: query, path, explain"
-Cohesion: 0.33
-Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
-
-### Community 958 - "backup-20261022T075007Z/knowledge/official_sources/ktp_el/manifest.json"
-Cohesion: 0.18
-Nodes (10): created_at, dataset, documents, domain, engine, verification_policy, allowed_domains, required_authority (+2 more)
+### Community 958 - "prohibited"
+Cohesion: 0.29
+Nodes (6): ForbiddenOwners, guarded(), opened(), memory_audit_only(), prohibited(), socketpair_only()
 
 ### Community 959 - "33. GATE 4 � TRUST AUDIT RESULT"
 Cohesion: 0.33
@@ -4688,21 +3721,21 @@ Nodes (5): Evidence dan change control, Implementasi V1, Kriteria dan batas bukt
 Cohesion: 0.33
 Nodes (5): Additional runtime defects, Local WIP review — 2026-10-20, Spec, Standards, Validation and limits
 
-### Community 962 - "PROJECT_BASELINE — NUSANTARA AI V1 (mcp-starter 0.1.0)"
+### Community 962 - "tokenize"
+Cohesion: 0.29
+Nodes (4): EvaluationEngine, GroundingGuard, tokenize(), TrustEngine
+
+### Community 963 - "tokenize"
+Cohesion: 0.29
+Nodes (4): EvaluationEngine, GroundingGuard, tokenize(), TrustEngine
+
+### Community 964 - "9. SECURITY ANALYSIS"
 Cohesion: 0.33
-Nodes (5): Alur runtime `/v1/chat`, Batas verifikasi (penting), PROJECT_BASELINE — NUSANTARA AI V1 (mcp-starter 0.1.0), Ringkasan, Temuan utama
+Nodes (6): 9. SECURITY ANALYSIS, Developer Core, Gate Integration, Memory, Policy, Reasoning
 
-### Community 963 - "RuntimeAuthorization"
-Cohesion: 0.15
-Nodes (7): audit_projection(), Binding, canonical(), Review, RuntimeAuthorization, handle(), safe_string()
-
-### Community 964 - "mcp-nusantara-upstream/scripts/verify_docker_runtime.py"
-Cohesion: 0.11
-Nodes (11): IndoBERTClient, exchange(), audit(), auth(), generation(), health(), ingest(), request() (+3 more)
-
-### Community 965 - "data/knowledge/official_sources/ktp_el/manifest.json"
-Cohesion: 0.18
-Nodes (10): created_at, dataset, documents, domain, engine, verification_policy, allowed_domains, required_authority (+2 more)
+### Community 965 - "normalize_text"
+Cohesion: 0.40
+Nodes (3): IntentEngine, normalize_text(), ProblemEngine
 
 ### Community 966 - "MDA R2 — Cost Governance Guard Design"
 Cohesion: 0.18
@@ -4716,17 +3749,13 @@ Nodes (10): Community Hubs (Navigation), Corpus Check, God Nodes (most connected
 Cohesion: 0.20
 Nodes (9): Baseline dan file tugas, Blocker HOLD, Hasil implementasi, Kelanjutan setelah pengguna melakukan restart, NCP-V1-SOP-OPERATOR-001 — implementasi dan serah terima, Rollback aman, Sumber dan runtime, Tutorial operator setelah blocker runtime selesai (+1 more)
 
-### Community 969 - "mcp-nusantara-upstream/tests/run_evidence_tests_isolated.py"
-Cohesion: 0.19
-Nodes (23): audit(), authorize_file_descriptor(), blocked(), check_database(), descriptor_identity(), descriptor_modes(), guarded_connect(), guarded_connect_ex() (+15 more)
+### Community 969 - "Continuation verification — 28 October 2026"
+Cohesion: 0.33
+Nodes (5): Continuation verification — 28 October 2026, Current evidence, Live reproduction, Workflow and next step, test_cost_absence_reaches_public_chat_without_an_intent_mapping_error()
 
-### Community 971 - "MemoryEngine"
-Cohesion: 0.22
-Nodes (4): ContextEngine, HumanHandoffEngine, MemoryEngine, now_iso()
-
-### Community 972 - "ToolEngine"
-Cohesion: 0.20
-Nodes (3): add_items(), MCPEngine, ToolEngine
+### Community 971 - "app/developer_core/claude_code_integration.py"
+Cohesion: 0.70
+Nodes (4): main(), make_change_id(), now(), read_json()
 
 ### Community 973 - "Graph Report - mcp-starter  (2026-10-08)"
 Cohesion: 0.18
@@ -4734,7 +3763,7 @@ Nodes (10): Community Hubs (Navigation), Corpus Check, God Nodes (most connected
 
 ### Community 974 - "useBaseQuery"
 Cohesion: 0.14
-Nodes (25): build(), difference(), fetchOptimistic(), #findMatchingObservers(), get(), getCurrentResult(), getOptimisticResult(), getQueryCache() (+17 more)
+Nodes (25): build(), defaultQueryOptions(), fetchOptimistic(), #findMatchingObservers(), get(), getCurrentResult(), getOptimisticResult(), getQueryCache() (+17 more)
 
 ### Community 975 - "Nusantara–Hermes: patch tahap koneksi ACP"
 Cohesion: 0.18
@@ -4748,29 +3777,29 @@ Nodes (10): Architecture, Citation, License, Limitations, Model details, Option 
 Cohesion: 0.44
 Nodes (10): approve(), is_forbidden(), main(), normalize(), now(), read_json(), reject(), status() (+2 more)
 
-### Community 978 - "tests/test_ncp_v1_chat_contract.py"
-Cohesion: 0.14
-Nodes (14): execute(), test_current_facts_report_missing_web_integration(), test_general_definition_does_not_require_knowledge(), test_natural_followup_keeps_bounded_same_session_context(), test_pilot_does_not_accept_a_new_channel_merely_from_topic_overlap(), test_pre_provider_retry_links_attempt_without_redispatching_old_id(), test_provider_unavailable_is_retryable_error_instead_of_saved_answer(), test_selected_document_followup_keeps_filter_and_retrieval_context() (+6 more)
+### Community 978 - "test_ncp_v1_chat_contract.py"
+Cohesion: 0.08
+Nodes (32): execute(), test_current_facts_report_missing_web_integration(), test_general_definition_does_not_require_knowledge(), test_natural_followup_keeps_bounded_same_session_context(), test_pre_provider_retry_links_attempt_without_redispatching_old_id(), test_provider_unavailable_is_retryable_error_instead_of_saved_answer(), test_selected_document_followup_keeps_filter_and_retrieval_context(), test_service_fact_quote_retains_known_pdf_page() (+24 more)
 
-### Community 979 - "perbaikanbukti/app/developer_core/change_plan_validator.py"
-Cohesion: 0.29
-Nodes (5): _non_empty_sequence(), _non_empty_string(), validate_change_plan(), validate_transition(), ValidationResult
+### Community 979 - "Mc"
+Cohesion: 0.50
+Nodes (5): ic(), Bh(), gi(), J1(), Mc()
 
 ### Community 980 - "perbaikanbukti/app/developer_core/controlled_write.py"
 Cohesion: 0.40
 Nodes (10): audit(), build_staging(), execute(), is_forbidden(), load_plan(), main(), norm(), safe_relative() (+2 more)
 
-### Community 982 - "perbaikanbukti/app/research/experiment.py"
+### Community 982 - "ControlledExperiment"
 Cohesion: 0.27
 Nodes (3): ControlledExperiment, ExperimentError, ExperimentResult
 
 ### Community 983 - "useRouter"
-Cohesion: 0.13
-Nodes (24): CatchNotFound(), getScrollRestorationScriptForRouter(), isNotFound(), Matches(), MatchesInner(), MatchView(), Navigate(), render() (+16 more)
+Cohesion: 0.08
+Nodes (36): Asset(), CatchNotFound(), ClientOnly(), getScrollRestorationScriptForRouter(), HeadContent2(), InlineCssStyle(), isNotFound(), Matches() (+28 more)
 
-### Community 984 - "perbaikanbukti/tests/test_inspection_preview_api.py"
-Cohesion: 0.36
-Nodes (7): post(), test_absent_server_token(), test_invalid_auth(), test_non_preview_rejected(), test_normal_only(), test_strict_payload(), test_supported_goals()
+### Community 984 - "Mc"
+Cohesion: 0.50
+Nodes (5): ic(), Bh(), gi(), J1(), Mc()
 
 ### Community 985 - "NUSANTARA V1 — Final Closure Report"
 Cohesion: 0.18
@@ -4784,21 +3813,17 @@ Nodes (10): Hasil pemeriksaan, Integrasi IndoBERT dalam proses pengujian, Kegaga
 Cohesion: 0.12
 Nodes (24): accumulateSuspenseyCommitOnFiber(), acquireResource(), adoptPreloadPropsForScript(), adoptPreloadPropsForStylesheet(), customizeViewTransitionError(), describeLinkForResourceErrorDEV(), escapeSelectorAttributeValueInsideDoubleQuotes(), estimateImageBytes() (+16 more)
 
-### Community 988 - "tests/test_local_operator_identity.py"
-Cohesion: 0.23
-Nodes (18): OperatorPolicy, channel_for(), no_impersonation(), policy_for(), raw_proof(), test_actual_windows_peer_session_server_and_launcher_correlation(), handle(), test_challenge_time_bounds() (+10 more)
+### Community 988 - "perbaikanbukti/app/developer_core/claude_code_integration.py"
+Cohesion: 0.70
+Nodes (4): main(), make_change_id(), now(), read_json()
 
-### Community 989 - "interpolateTransform"
-Cohesion: 0.33
-Nodes (10): interpolateTransform(), pop(), rotate(), scale(), skewX(), translate(), number_default(), one() (+2 more)
+### Community 990 - "CHG-20261005-001/app/developer_core/write_policy.py"
+Cohesion: 0.83
+Nodes (3): normalize(), validate(), validate_file()
 
-### Community 990 - "interpolateTransform"
-Cohesion: 0.33
-Nodes (10): interpolateTransform(), pop(), rotate(), scale(), skewX(), translate(), number_default(), one() (+2 more)
-
-### Community 991 - "mcp-nusantara-upstream/control-plane/tests/inspection-preview-network-guard.cjs"
-Cohesion: 0.09
-Nodes (13): fs, path, {syncBuiltinESMExports}, fs, path, {syncBuiltinESMExports}, fs, net (+5 more)
+### Community 991 - "ui04-chat-timeout-20261009-130937/test-write-guard.cjs"
+Cohesion: 0.18
+Nodes (6): fs, path, {syncBuiltinESMExports}, fs, path, {syncBuiltinESMExports}
 
 ### Community 992 - "NUSANTARA V1 — Autostart Report (NCP-V1-AUTOSTART-001)"
 Cohesion: 0.20
@@ -4836,14 +3861,6 @@ Nodes (9): Authorization and pre-state, Build and runtime identity limits, Chang
 Cohesion: 0.31
 Nodes (6): _cleanup(), _command(), _exchange(), _now(), probe(), _reader()
 
-### Community 1002 - "mcp-nusantara-upstream/tests/test_cost_governance_reference.py"
-Cohesion: 0.13
-Nodes (14): Denied, FakeLedger, make_guard(), Policy, Price, ReferenceGuard, test_authorized_request_reserves_before_any_dispatch(), test_budget_exhaustion_rejects_without_reservation() (+6 more)
-
-### Community 1003 - "perbaikanbukti/app/knowledge/web_evidence.py"
-Cohesion: 0.14
-Nodes (9): ApprovalPrincipal, EvidenceFetcher, _expire_connection(), FetchResult, _now(), parse_document(), SourceEntry, SourceRegistry (+1 more)
-
 ### Community 1004 - "executeServerLane"
 Cohesion: 0.18
 Nodes (22): abortMatches(), applyFailure(), contextualize2(), createLoaderTask2(), executeServerLane(), getLoaderContext2(), getNotFoundBoundary2(), getRoute2() (+14 more)
@@ -4868,57 +3885,25 @@ Nodes (9): Architecture, Current Baseline, Developer instruction, Knowledge Engi
 Cohesion: 0.21
 Nodes (4): InputRejected, sanitize_text(), validate_output(), validate_schema()
 
-### Community 1012 - "stub_modules"
-Cohesion: 0.13
-Nodes (3): load_agent(), stub_modules(), TestIntegration
-
 ### Community 1014 - "perbaikanbukti/app/research/failure_analysis.py"
 Cohesion: 0.36
 Nodes (7): analyze(), extract_failures(), Failure, FailureReport, Pattern, _severity(), _stage_of()
 
-### Community 1015 - "source-before/app/knowledge/production_embedding_bridge.py"
-Cohesion: 0.22
-Nodes (20): backup_database(), blob_to_vector(), connect(), cosine_similarity(), create_run_id(), embed_database(), embed_texts(), ensure_schema() (+12 more)
+### Community 1015 - "perbaikanbukti/app/developer_core/self_improvement_loop.py"
+Cohesion: 0.83
+Nodes (3): main(), now(), read()
 
 ### Community 1016 - "ACL-EXCLUSION-BLK-ACL-REPORTS-001-20261015.md"
 Cohesion: 0.20
 Nodes (9): Akar masalah (terbukti, bukan dugaan), Cakupan (tiga oracle independen, hasil konsisten), Kontrol kolateral, Operasi asli yang gagal: sebelum -> sesudah, Pembaruan 2026-10-15 (13:20), Pembaruan 2026-10-15 13:30 — koreksi penting, Pengecualian terdokumentasi untuk artefak yang tidak terbaca + tes regresinya, Tes regresi (DoD kontrak) (+1 more)
 
-### Community 1017 - "onFocus"
-Cohesion: 0.47
-Nodes (5): onFocus(), onOnline(), refetch(), setEventListener(), setFocused()
-
 ### Community 1018 - "app"
-Cohesion: 0.05
-Nodes (39): test_api_health(), app(), test_health_returns_request_id_header(), test_request_id_is_unique_per_request(), test_metrics_endpoint_has_request_id(), test_metrics_endpoint_returns_observability_snapshot(), test_request_generates_metrics_counter(), test_v1_metrics_counter_increases_after_request() (+31 more)
+Cohesion: 0.12
+Nodes (15): test_api_health(), test_authorized_developer_lists_workspace(), app(), test_health_returns_request_id_header(), test_request_id_is_unique_per_request(), test_metrics_endpoint_has_request_id(), test_metrics_endpoint_returns_observability_snapshot(), test_request_generates_metrics_counter() (+7 more)
 
-### Community 1019 - "compileFn"
-Cohesion: 0.28
-Nodes (9): compile(), compileFn(), compileValidator(), guard(), installCompiledUserMethods(), isBackEdge(), isRecursiveSchema(), isRef() (+1 more)
-
-### Community 1020 - "onFocus"
-Cohesion: 0.31
-Nodes (8): dehydrate(), dehydrateMutation(), getAll(), onFocus(), onOnline(), refetch(), setEventListener(), setFocused()
-
-### Community 1021 - "compileFn"
-Cohesion: 0.28
-Nodes (9): compile(), compileFn(), compileValidator(), guard(), installCompiledUserMethods(), isBackEdge(), isRecursiveSchema(), isRef() (+1 more)
-
-### Community 1022 - "NCP-V1-CHAT-001 — patch dan verifikasi terarah"
-Cohesion: 0.22
-Nodes (8): Baseline dan workflow, Hasil pemeriksaan, Menjalankan dan membatalkan, NCP-V1-CHAT-001 — patch dan verifikasi terarah, Penyebab yang terbukti, Perubahan, Review, Verifikasi nyata dan batas PASS
-
-### Community 1023 - "Handover penyempurnaan Workspace / Human Control"
-Cohesion: 0.22
-Nodes (7): Berkas / pemulihan, Handover penyempurnaan Workspace / Human Control, Runtime dan keterbatasan, Validasi yang digunakan, Bukti pengujian dan batasnya, Pemeriksaan elemen, Perbandingan AI Workspace dan Human Control
-
-### Community 1024 - "NCP-V1-UI-LOCAL-001 — Integrasi tampilan operator ke NUSANTARA V1 lokal"
-Cohesion: 0.22
-Nodes (8): Batas implementasi, Desain yang diterapkan, Handover, Kontrak data dan status, Kriteria penerimaan dalam satu siklus, Langkah awal yang wajib dilakukan pada repo aktual, NCP-V1-UI-LOCAL-001 — Integrasi tampilan operator ke NUSANTARA V1 lokal, Tujuan dan otorisasi
-
-### Community 1025 - "Failed UI tests"
-Cohesion: 0.22
-Nodes (8): acceptance.test.ts, attestation.test.tsx, Failed UI tests, human.test.tsx, inspection-preview.test.tsx, ui-routing.test.tsx, ui.test.tsx, verification-pages.test.tsx
+### Community 1019 - "_lte"
+Cohesion: 0.50
+Nodes (4): _lte(), max(), _maxLength(), _nonpositive()
 
 ### Community 1026 - "NUSANTARA-V1-GAP-MATRIX-20261009-192815.md"
 Cohesion: 0.22
@@ -4929,8 +3914,8 @@ Cohesion: 0.22
 Nodes (8): Acceptance and residual limitations, Authorization, audit and historical evidence, Commands and actual results — new, Diff review and final authority, NUSANTARA-MDE-ATTESTATION-BROWSER-E2E-001 v1.0 — Execution Report, Prelaunch isolation evidence — new, Proven minimum gap and actual implementation, Revalidated baseline
 
 ### Community 1028 - "DevCore Human Goal → Real Inspection Plan Integration"
-Cohesion: 0.22
-Nodes (8): Before → after, DevCore Human Goal → Real Inspection Plan Integration, Discovery and minimum integration point, Exact changes, Graph and diff review, New tests and commands, Objective and authority, Risk, limitations and stop
+Cohesion: 0.25
+Nodes (7): DevCore Human Goal → Real Inspection Plan Integration, Discovery and minimum integration point, Exact changes, Graph and diff review, New tests and commands, Objective and authority, Risk, limitations and stop
 
 ### Community 1029 - "Human goal → inspection preview"
 Cohesion: 0.22
@@ -4940,17 +3925,9 @@ Nodes (8): Buat AI lebih pintar., Buat Nusantara lebih cepat., Cari masalah pada
 Cohesion: 0.22
 Nodes (8): Authority and interpretation, Diff review and created artifacts, Discovery evidence, Human Goal → Inspection Plan Preview, Limitations and final status, New execution evidence, Preview and boundaries, Repository and preservation
 
-### Community 1031 - "NCP-V1-UI-FINAL-001 — hasil implementasi"
-Cohesion: 0.22
-Nodes (8): Batas kontrak dan pembacaan, Bukti verifikasi, File kode diubah / ditambahkan, Keputusan hasil pekerjaan, Menjalankan di Windows PowerShell, NCP-V1-UI-FINAL-001 — hasil implementasi, Rollback tanpa menghapus data, Status per menu dan endpoint
-
 ### Community 1032 - "NUSANTARA V1 Autonomous Closure — 2026-10-10"
 Cohesion: 0.22
 Nodes (8): Before, Blocker completed in this continuation: read-only container home, Change, Deployment verification, NUSANTARA V1 Autonomous Closure — 2026-10-10, Other blockers and current status, Rollback and decision needed, Test and command evidence
-
-### Community 1033 - "r2-a11-c0-20261008-observation-8c48f128/observe_once.py"
-Cohesion: 0.25
-Nodes (3): now(), observe(), redact()
 
 ### Community 1034 - "R2 CORE RUNTIME IDENTITY EXECUTION REPORT"
 Cohesion: 0.22
@@ -4964,21 +3941,9 @@ Nodes (8): Changes and final status, Discovery outcome, Governing boundary, Mini
 Cohesion: 0.22
 Nodes (8): Actual commands and results, Architecture, Baseline and preservation, Changes, Gates, Limitations and next gates, NUS-V1-WEIP-20261009 v1.1.0 — scoped implementation, Rollback
 
-### Community 1037 - "perbaikanbukti/tests/test_control_plane_attestation_binding.py"
-Cohesion: 0.18
-Nodes (14): body(), isolated(), post(), test_atomic_material_change_and_storage_failure(), test_binding_changes_between_validation_and_creation(), test_bounded_json(), test_browser_cannot_reach_arm_execute(), test_capacity_rejects_without_poisoning() (+6 more)
-
-### Community 1038 - "mcp-nusantara-upstream/tests/test_control_plane_attestation_binding.py"
-Cohesion: 0.18
-Nodes (14): body(), isolated(), post(), test_atomic_material_change_and_storage_failure(), test_binding_changes_between_validation_and_creation(), test_bounded_json(), test_browser_cannot_reach_arm_execute(), test_capacity_rejects_without_poisoning() (+6 more)
-
-### Community 1039 - "verify.cjs"
-Cohesion: 0.08
-Nodes (16): {Client}, fs, path, {StdioClientTransport}, { chromium }, fs, outputDir, path (+8 more)
-
 ### Community 1040 - "perbaikanbukti/tests/test_weip_rag_adapter.py"
-Cohesion: 0.13
-Nodes (17): make_adapter(), test_remaining_task1_approved_adapter_retrievable(), test_remaining_task1_rejected_never_enters_retrieval(), test_remaining_task1_requires_explicit_temporary_boundary(), test_remaining_task2_atomic_rename_retry_is_bounded(), test_remaining_task2_changed_request_during_ingestion_rolls_back(), embedding(), test_remaining_task2_failed_replacement_restores_existing_version() (+9 more)
+Cohesion: 0.14
+Nodes (16): make_adapter(), test_remaining_task1_approved_adapter_retrievable(), test_remaining_task1_rejected_never_enters_retrieval(), test_remaining_task1_requires_explicit_temporary_boundary(), test_remaining_task2_atomic_rename_retry_is_bounded(), test_remaining_task2_changed_request_during_ingestion_rolls_back(), embedding(), test_remaining_task2_failed_replacement_restores_existing_version() (+8 more)
 
 ### Community 1042 - "perbaikanbukti/app/handoff/schemas.py"
 Cohesion: 0.31
@@ -4994,11 +3959,11 @@ Nodes (4): PolicyDecision, PolicyEvaluation, PolicyRule, RiskLevel
 
 ### Community 1047 - "noop"
 Cohesion: 0.15
-Nodes (21): cancel(), cancelQueries(), defaultQueryOptions(), dehydratePromise(), dehydrateQuery(), ensureInfiniteQueryData(), ensureQueryData(), fetchInfiniteQuery() (+13 more)
+Nodes (18): cancel(), cancelQueries(), dehydrate(), dehydrateMutation(), dehydratePromise(), dehydrateQuery(), fetchInfiniteQuery(), getDefaultOptions() (+10 more)
 
 ### Community 1050 - "update"
-Cohesion: 0.16
-Nodes (21): calculateSnapOffset(), getClosestHandle(), getEventHandlerParams(), getHandle(), getHandlePosition(), getHandleType(), getNodesWithinDistance(), getPointerPosition() (+13 more)
+Cohesion: 0.11
+Nodes (27): calculateSnapOffset(), getClosestHandle(), getDragItems(), getEdgePosition(), getEventHandlerParams(), getHandle(), getHandle$1(), getHandlePosition() (+19 more)
 
 ### Community 1051 - "Nusantara Configuration Architecture — Design Contract Phase 4"
 Cohesion: 0.22
@@ -5012,18 +3977,6 @@ Nodes (8): A — Audit finding, B — Rencana dan desain final, Batas hasil dan 
 Cohesion: 0.22
 Nodes (8): Bukti VERIFY, Checkpoint dan pemulihan, Dampak kompatibilitas dan batas hasil, Gate V1 yang masih terbuka, Hasil, NUSANTARA V1 — CC-01 Opsi C: Laporan Implementasi dan VERIFY, Respons publik Opsi C, Scope dan integritas
 
-### Community 1058 - "EntityExtractor"
-Cohesion: 0.14
-Nodes (4): create_entity_extractor(), EntityExtractor, EntityMatch, extract_entities()
-
-### Community 1059 - "mcp-nusantara-upstream/app/workflow/workflow_schema.py"
-Cohesion: 0.10
-Nodes (8): PersistenceConfig, WorkflowDefinition, WorkflowResult, WorkflowResumeRequest, WorkflowSession, WorkflowState, WorkflowTransition, WorkflowValidation
-
-### Community 1060 - "mcp-nusantara-upstream/docs/contracts/NUSANTARA-ARCHITECTURE-CONTRACT-V1.md"
-Cohesion: 0.08
-Nodes (25): 10. POLICY, 11. TRUST, 12. MCP DAN TOOLS, 13. OBSERVABILITY, 14. AUDIT, 15. R&D, 16. HUMAN APPROVAL, 17. ROLLBACK (+17 more)
-
 ### Community 1061 - "NCP-V1-UI-LOCAL-001 — Integrasi tampilan operator ke NUSANTARA V1 lokal"
 Cohesion: 0.22
 Nodes (8): Batas implementasi, Desain yang diterapkan, Handover, Kontrak data dan status, Kriteria penerimaan dalam satu siklus, Langkah awal yang wajib dilakukan pada repo aktual, NCP-V1-UI-LOCAL-001 — Integrasi tampilan operator ke NUSANTARA V1 lokal, Tujuan dan otorisasi
@@ -5031,30 +3984,6 @@ Nodes (8): Batas implementasi, Desain yang diterapkan, Handover, Kontrak data da
 ### Community 1062 - "app/developer_core/context_router.py"
 Cohesion: 0.50
 Nodes (7): build_context(), is_forbidden(), main(), node_path(), node_text(), score_node(), tokens()
-
-### Community 1064 - "mcp-nusantara-upstream/app/governance/tools.py"
-Cohesion: 0.16
-Nodes (8): Decision, default_tool_policy(), _Entry, GovernedToolRegistry, Risk, ToolClass, ToolOutcome, ToolSpec
-
-### Community 1065 - "fetch"
-Cohesion: 0.10
-Nodes (25): addConsumeAwareSignal(), #dispatch(), ensureQueryFn(), fetch(), fetchNextPage(), fetchPreviousPage(), fetchState(), functionalUpdate() (+17 more)
-
-### Community 1066 - "fetch"
-Cohesion: 0.29
-Nodes (8): addConsumeAwareSignal(), ensureQueryFn(), fetch(), fetchNextPage(), fetchPreviousPage(), getNextPageParam(), hasNextPage(), infiniteQueryBehavior()
-
-### Community 1067 - "perbaikanbukti/tests/test_local_operator_identity.py"
-Cohesion: 0.27
-Nodes (17): channel_for(), no_impersonation(), policy_for(), raw_proof(), test_actual_windows_peer_session_server_and_launcher_correlation(), handle(), test_challenge_time_bounds(), test_cleanup_on_identity_api_failure() (+9 more)
-
-### Community 1070 - "benchmark-ollama.cjs"
-Cohesion: 0.29
-Nodes (6): fs, measure(), options, path, resources(), { spawnSync }
-
-### Community 1071 - "Nusantara V1 ? hasil implementasi 2026-10-15"
-Cohesion: 0.25
-Nodes (7): Menjalankan, Nusantara V1 ? hasil implementasi 2026-10-15, Pekerjaan tersisa dan batas verifikasi, Penggunaan controlled-write yang diperketat, Perintah dan hasil aktual, Perubahan pada sesi ini, Runtime nyata
 
 ### Community 1073 - "run"
 Cohesion: 0.12
@@ -5080,13 +4009,9 @@ Nodes (7): Acceptance matrix (contract §10), Artifact integrity observations, C
 Cohesion: 0.25
 Nodes (7): Acceptance matrix, Evidence files and hashes, Implementation files, Limitations and preserved state, NUS-EVIDENCE-COMPLETION-003 — Completion Report, Result summary, Verification actually run
 
-### Community 1079 - "normalize_text"
-Cohesion: 0.29
-Nodes (4): IntentEngine, MasterDomainEngine, normalize_text(), ProblemEngine
-
-### Community 1080 - "Status Hermes ACP Nusantara V1 — 16 Oktober 2026"
-Cohesion: 0.25
-Nodes (7): Diagnosis ACP, Hasil, Langkah untuk membuka blocker, Pemetaan dan konfigurasi, Perubahan, Status Hermes ACP Nusantara V1 — 16 Oktober 2026, Verifikasi
+### Community 1080 - "@tanstack/react-query"
+Cohesion: 0.07
+Nodes (37): fetchRuntimeReadiness(), AdminAuthContext, AdminAuthProvider(), Connection, HermesConnectionPanel(), check(), hermesHttpError(), hermesReason() (+29 more)
 
 ### Community 1081 - "R2-A10 — Runtime attestation isolation fix"
 Cohesion: 0.25
@@ -5116,16 +4041,8 @@ Nodes (7): Actual frontend/backend inventory, Control Plane UI completion audit 
 Cohesion: 0.25
 Nodes (7): Actual verification, Evidence and rollback, Exact remaining human gates, Gate status, Implemented changes, Preservation finding WEIP-COMP-DB-01, WEIP completion — scoped implementation, acceptance REVIEW_REQUIRED
 
-### Community 1091 - "NUSANTARA V2 CAPABILITY AUDIT"
-Cohesion: 0.25
-Nodes (7): Capability Matrix, Important, NUSANTARA V2 CAPABILITY AUDIT, Priority Gaps, Recommended Build Order, Runtime Candidates, Six V2 Contracts
-
-### Community 1092 - "test_pdf_preview.py"
-Cohesion: 0.17
-Nodes (10): activity_grid_regions(), normalize_activity_grids(), ruled_grid_pipeline(), __call__(), _init_models(), test_activity_grid_regions_use_physical_pdf_pages(), test_footnotes_outside_grid_remain_available_for_absence_checks(), test_ruled_normalization_preserves_cells_and_links_continuation_pages() (+2 more)
-
-### Community 1094 - "perbaikanbukti/app/devcore/workspace.py"
-Cohesion: 0.29
+### Community 1094 - "Workspace"
+Cohesion: 0.32
 Nodes (3): is_sensitive_name(), PathBlocked, Workspace
 
 ### Community 1095 - "perbaikanbukti/app/developer_core/context_router.py"
@@ -5144,53 +4061,13 @@ Nodes (4): MCPError, MCPServerInfo, MCPSessionInfo, MCPTool
 Cohesion: 0.25
 Nodes (7): Evidence dan cakupan, Highest-risk findings, MDE-01 Configuration Intelligence, Output dan checkpoint, Precedence, duplicate, effective context, Protected boundaries dan urutan rekomendasi, Ringkasan yang diminta command
 
-### Community 1102 - "#dispatch"
-Cohesion: 0.14
-Nodes (19): add(), canFetch(), canRun(), clear(), continue(), createRetryer(), #dispatch(), execute() (+11 more)
-
-### Community 1103 - "Chat P0 — fix verified, activation awaiting HD-CHAT-002"
-Cohesion: 0.29
-Nodes (6): Actual browser findings, Budget, Chat P0 — fix verified, activation awaiting HD-CHAT-002, HUMAN DECISION REQUIRED — HD-CHAT-002, Root causes and minimal fixes, Verification
-
-### Community 1104 - "datetime"
-Cohesion: 0.29
-Nodes (7): datetime(), datetime2(), _isoDateTime(), _isoTime(), time(), time2(), timeSource()
-
-### Community 1105 - "Control Plane V1 — four-menu implementation and actual verification"
-Cohesion: 0.29
-Nodes (6): Approved Backend activation, COMPLETED, Control Plane V1 — four-menu implementation and actual verification, E2E RESULT, REMAINING / HUMAN DECISION REQUIRED, Tests and evidence
-
-### Community 1106 - "datetime"
-Cohesion: 0.29
-Nodes (7): datetime(), datetime2(), _isoDateTime(), _isoTime(), time(), time2(), timeSource()
-
-### Community 1107 - "gemma4_browser_canary.cjs"
-Cohesion: 0.29
-Nodes (5): { chromium }, fs, main(), outputDir, path
-
-### Community 1108 - "NUSANTARA V1 Chat Autopilot Closeout ? 2026-10-19"
-Cohesion: 0.29
-Nodes (6): Changes and tests, Dispatch and cost accounting, NUSANTARA V1 Chat Autopilot Closeout ? 2026-10-19, Operator next step, Status, Step results
-
-### Community 1109 - "NCP-V1-AUTOSTART-001 continuation handover"
-Cohesion: 0.29
-Nodes (6): Actual HTTP / OpenRouter / SOP / retrieval, NCP-V1-AUTOSTART-001 continuation handover, One-step Administrator installation, Preservation and remaining acceptance, Root cause and evidence, Test failures: origin and resolution
+### Community 1102 - "find"
+Cohesion: 0.12
+Nodes (25): add(), canFetch(), canRun(), clear(), continue(), createRetryer(), defaultMutationOptions(), execute() (+17 more)
 
 ### Community 1110 - "useLinkProps"
-Cohesion: 0.16
-Nodes (18): applyLinkState(), applySearchMiddleware(), areLinkPropsEqual(), collectElementProps(), deepEqual(), functionalUpdate(), getHrefOption(), getServerLinkProps() (+10 more)
-
-### Community 1111 - "ncp-v1-ui-local-20261019/reference/package.json"
-Cohesion: 0.29
-Nodes (6): name, private, scripts, test, type, version
-
-### Community 1112 - "Hasil integrasi SOP Nusantara V1"
-Cohesion: 0.29
-Nodes (6): Hasil integrasi SOP Nusantara V1, Hasil per sumber, Pengujian, Perbaikan implementasi, Runtime dan perlindungan data, Verifikasi API dan UI nyata
-
-### Community 1113 - "57eda7e564_cd4dd6f_humanspec.js"
-Cohesion: 0.38
-Nodes (3): evidence(), inspect(), start()
+Cohesion: 0.11
+Nodes (23): applyLinkState(), applySearchMiddleware(), areLinkPropsEqual(), collectElementProps(), deepEqual(), documentNavigation(), functionalUpdate(), getHrefOption() (+15 more)
 
 ### Community 1114 - "PROJECT_STRUCTURE_AUDIT_20261007_110002/REPORT.md"
 Cohesion: 0.29
@@ -5203,10 +4080,6 @@ Nodes (6): Konfigurasi dan status, Meninjau dan mengeksekusi, Menjalankan dan me
 ### Community 1116 - "Panduan teknis operator Nusantara V1"
 Cohesion: 0.29
 Nodes (6): Konfigurasi dan status, Meninjau dan mengeksekusi, Menjalankan dan menghentikan, Panduan teknis operator Nusantara V1, Pemulihan dan evidence, SOP layanan
-
-### Community 1117 - "mcp-nusantara-upstream/app/mcp/schemas.py"
-Cohesion: 0.36
-Nodes (4): MCPError, MCPServerInfo, MCPSessionInfo, MCPTool
 
 ### Community 1118 - "Control Plane inspection_preview — Discovery Closure"
 Cohesion: 0.29
@@ -5272,25 +4145,9 @@ Nodes (6): Feasibility evidence and STOP, HDG-R2-A9-AUTH-001 — Implementation 
 Cohesion: 0.29
 Nodes (6): Changes and safety, Decision and missing input, Evidence examined, Next gate, Official fixture verification — NEEDS_OWNER_INPUT, Tests
 
-### Community 1139 - "mcp-nusantara-upstream/app/core/hardening/timeout.py"
-Cohesion: 0.31
-Nodes (3): await_with_timeout(), OperationTimeout, run_with_timeout()
-
-### Community 1140 - ".navigate"
-Cohesion: 0.18
-Nodes (18): cacheLoaderMatch(), contextualize(), createLoaderTask(), documentNavigation(), getLoaderContext(), getParentSnapshot(), loadResource(), materializeRedirect() (+10 more)
-
 ### Community 1142 - "project"
 Cohesion: 0.38
 Nodes (5): digest(), project(), git(), read(), cmd()
-
-### Community 1144 - "perbaikanbukti/app/core/hardening/timeout.py"
-Cohesion: 0.31
-Nodes (3): await_with_timeout(), OperationTimeout, run_with_timeout()
-
-### Community 1148 - "perbaikanbukti/app/improvement/gate.py"
-Cohesion: 0.20
-Nodes (7): branch_name(), check(), create_review_branch(), DevBranch, GateBlocked, start(), VersionRegistry
 
 ### Community 1150 - "Nusantara Configuration — Phase 10 Architecture Review"
 Cohesion: 0.29
@@ -5304,38 +4161,6 @@ Nodes (6): Frontend assets, Git inventory, Important file inventory, Known backl
 Cohesion: 0.29
 Nodes (6): name, private, scripts, test, type, version
 
-### Community 1154 - "Selection"
-Cohesion: 0.12
-Nodes (16): array(), arrayAll(), arraylike(), constant_default(), data_default(), datum(), enter_default(), exit_default() (+8 more)
-
-### Community 1155 - "_overwrite"
-Cohesion: 0.33
-Nodes (6): _normalize(), _overwrite(), slugify(), _toLowerCase(), _toUpperCase(), _trim()
-
-### Community 1156 - "_overwrite"
-Cohesion: 0.33
-Nodes (6): _normalize(), _overwrite(), slugify(), _toLowerCase(), _toUpperCase(), _trim()
-
-### Community 1157 - "NCP-V1-AUTOFIX-HUMAN-001 — evidence and handover"
-Cohesion: 0.33
-Nodes (5): Baseline retained, not rerun, Completed within verified scope, Human decisions / remaining, NCP-V1-AUTOFIX-HUMAN-001 — evidence and handover, Next execution
-
-### Community 1158 - "NUSANTARA V1 — Paket integrasi UI lokal"
-Cohesion: 0.33
-Nodes (5): Batas yang penting, Cara memakai, Isi paket, NUSANTARA V1 — Paket integrasi UI lokal, Validasi yang sudah tersedia
-
-### Community 1159 - "verify-history.cjs"
-Cohesion: 0.33
-Nodes (4): { chromium }, fs, out, path
-
-### Community 1160 - "Perbaikan percakapan SOP Nusantara V1 — 15 Oktober 2026"
-Cohesion: 0.33
-Nodes (5): Hasil runtime akhir, Pemeriksaan terhadap PDF asli, Pengujian dan evidence, Penyebab dan perubahan, Perbaikan percakapan SOP Nusantara V1 — 15 Oktober 2026
-
-### Community 1161 - "Nusantara V1: verification, keputusan, dan eksekusi"
-Cohesion: 0.33
-Nodes (5): Evidence final dan runtime nyata, Hasil, Nusantara V1: verification, keputusan, dan eksekusi, Pengujian aktual, REA
-
 ### Community 1162 - "isolation"
 Cohesion: 0.33
 Nodes (6): isolation, active_data_blocked, cache_isolated, filesystem_writes_scoped, network_blocked, subprocess_blocked
@@ -5343,10 +4168,6 @@ Nodes (6): isolation, active_data_blocked, cache_isolated, filesystem_writes_sco
 ### Community 1163 - "test_counts"
 Cohesion: 0.33
 Nodes (6): test_counts, collected, errors, failed, passed, skipped
-
-### Community 1164 - "9. SECURITY ANALYSIS"
-Cohesion: 0.33
-Nodes (6): 9. SECURITY ANALYSIS, Developer Core, Gate Integration, Memory, Policy, Reasoning
 
 ### Community 1165 - "browser-results-reviewed/attestation-API-failure-remains-unavailable/error-context.md"
 Cohesion: 0.33
@@ -5402,7 +4223,7 @@ Nodes (5): Current state and evidence, Discovery conclusion, Observed execution 
 
 ### Community 1180 - "getNodeDimensions"
 Cohesion: 0.20
-Nodes (17): adoptUserNodes(), calculateChildXYZ(), calculateNodePosition(), calculateZ(), clampPositionToParent(), fitViewport(), getFitViewNodes(), getNodeDimensions() (+9 more)
+Nodes (18): adoptUserNodes(), calculateChildXYZ(), calculateNodePosition(), calculateZ(), clampPositionToParent(), fitViewport(), getFitViewNodes(), getNodeDimensions() (+10 more)
 
 ### Community 1181 - "HDG-R2-A9-AUTH-002 — Isolated Windows IPC correction"
 Cohesion: 0.33
@@ -5421,16 +4242,16 @@ Cohesion: 0.53
 Nodes (4): check_grounding(), _negated(), _num(), Violation
 
 ### Community 1187 - "createResult"
-Cohesion: 0.20
-Nodes (16): createResult(), getObserversCount(), getPreviousPageParam(), hasPreviousPage(), isActive(), isDisabled(), isFetched(), isStale() (+8 more)
+Cohesion: 0.17
+Nodes (20): createResult(), ensureInfiniteQueryData(), ensureQueryData(), fetchQuery(), getObserversCount(), isActive(), isDisabled(), isFetched() (+12 more)
 
 ### Community 1188 - "BaseEdge"
 Cohesion: 0.14
 Nodes (16): BaseEdge(), calculateControlOffset(), createBezierEdge(), createSimpleBezierEdge(), createSmoothStepEdge(), createStraightEdge(), getBend(), getBezierEdgeCenter() (+8 more)
 
 ### Community 1189 - "pydantic"
-Cohesion: 0.07
-Nodes (15): create_default_provider_config(), GenerateRequest, GenerateResponse, HealthStatus, ModelSelection, ProviderConfig, StructuredOutput, ProblemReport (+7 more)
+Cohesion: 0.13
+Nodes (7): HandoffLevel, HandoffRequest, HandoffStatus, ProblemReport, ProblemSeverity, ToolDefinition, ToolResult
 
 ### Community 1190 - "perbaikanbukti/app/security/readiness.py"
 Cohesion: 0.53
@@ -5464,10 +4285,6 @@ Nodes (5): Batas validation, Bukti yang dipakai kembali, Hasil requirement Phase
 Cohesion: 0.33
 Nodes (5): Cakupan klasifikasi, Konflik yang harus dipertahankan selama migrasi, Nusantara Configuration Map — Phase 3, Parameter dan jalur terpisah, Settings pusat existing
 
-### Community 1198 - "IntentClassifier"
-Cohesion: 0.27
-Nodes (5): IntentClassifier, _normalize_text(), RuleMatch, _score_intent(), _tokenize()
-
 ### Community 1199 - "NUSANTARA V1 — Paket integrasi UI lokal"
 Cohesion: 0.33
 Nodes (5): Batas yang penting, Cara memakai, Isi paket, NUSANTARA V1 — Paket integrasi UI lokal, Validasi yang sudah tersedia
@@ -5484,53 +4301,13 @@ Nodes (15): added(), describeElementDiff(), describeExpandedElement(), describeF
 Cohesion: 0.25
 Nodes (13): "node_modules/react/cjs/react-jsx-dev-runtime.development.js"(), checkKeyStringCoercion(), defineKeyPropWarningGetter(), elementRefGetterWithDeprecationWarning(), getComponentNameFromType(), getOwner(), getTaskName(), hasValidKey() (+5 more)
 
-### Community 1203 - "Chat connection recovery"
-Cohesion: 0.40
-Nodes (4): Captured failure, Chat connection recovery, Fixed backend exceptions, Runtime evidence
-
-### Community 1204 - "Chat P0 — preflight and required budget decision"
-Cohesion: 0.40
-Nodes (4): Chat P0 — preflight and required budget decision, Concrete approved-run harness prepared, HUMAN DECISION REQUIRED — HD-CHAT-001, Verified actual browser
-
-### Community 1205 - "generateStringFormatCheck"
-Cohesion: 0.15
-Nodes (16): canParseURL(), generateStringFormatCheck(), isIso7064Mod97(), isLuhnAlgo(), isValidBase64(), isValidBase64URL(), isValidCIDRv6(), isValidCreditCard() (+8 more)
-
-### Community 1206 - "_gte"
-Cohesion: 0.40
-Nodes (5): _gte(), min(), _minLength(), nonempty(), _nonnegative()
-
-### Community 1207 - "Model Settings V1 — HOLD"
-Cohesion: 0.40
-Nodes (4): Gemma correction and verification, Model Settings V1 — HOLD, Proven failure and change, Verification
-
-### Community 1208 - "service__nusantara-supervisor.ps1"
-Cohesion: 0.80
-Nodes (4): Start-Nusantara(), Start-Ollama(), Test-Port(), Write-Log()
-
 ### Community 1209 - "ReactFlow"
-Cohesion: 0.13
-Nodes (15): Attribution(), BatchProvider(), createQueue(), getElementsDiffChanges(), getMediaQuery(), handleAttributionWarning(), isAttributionVisible(), mergeAriaLabelConfig() (+7 more)
+Cohesion: 0.14
+Nodes (14): A11yDescriptions(), AriaLiveMessage(), Attribution(), BatchProvider(), createQueue(), getElementsDiffChanges(), getMediaQuery(), handleAttributionWarning() (+6 more)
 
 ### Community 1210 - "json"
 Cohesion: 0.14
 Nodes (15): _boolean(), boolean2(), _coercedNumber(), _coercedString(), json(), _null2(), _null3(), _number() (+7 more)
-
-### Community 1211 - "Handover NCP-V1-UI-LOCAL-001"
-Cohesion: 0.40
-Nodes (4): Berkas dan rollback, Data dan keterbatasan, Handover NCP-V1-UI-LOCAL-001, Validasi
-
-### Community 1212 - "NUSANTARA V1 — Operator Control Plane"
-Cohesion: 0.40
-Nodes (4): Data boundary, Main flow, NUSANTARA V1 — Operator Control Plane, Verification
-
-### Community 1213 - "Mc"
-Cohesion: 0.50
-Nodes (5): ic(), Bh(), gi(), J1(), Mc()
-
-### Community 1214 - "createReactiveSystem"
-Cohesion: 0.16
-Nodes (13): createReactiveSystem(), checkDirty2(), isValidLink(), propagate2(), shallowPropagate2(), unlink2(), effect(), hasKeys() (+5 more)
 
 ### Community 1215 - "browser-results-diagnostic/attestation-five-stages-re-0a584--explicit-PENDING-intention/error-context.md"
 Cohesion: 0.40
@@ -5584,10 +4361,6 @@ Nodes (12): chat(), ChatRequest, health(), knowledge_status(), mcp(), mcp_manife
 Cohesion: 0.40
 Nodes (4): Docling Models, Layout Model, References, TableFormer
 
-### Community 1233 - "operator_exchange"
-Cohesion: 0.22
-Nodes (12): operator_exchange(), run_client(), client(), test_direct_native_ipc_to_foundation_decision_without_activation(), client(), rejected(), test_registration_and_existing_dev_preserved(), run_client() (+4 more)
-
 ### Community 1241 - "EXECUTIVE_AUDIT_SUMMARY.md"
 Cohesion: 0.21
 Nodes (4): Rencana remediasi untuk persetujuan operator, Urutan verifikasi setelah perubahan disetujui, Duplikasi, kode tidak terpakai dan ownership, Register technical debt dan temuan
@@ -5604,145 +4377,41 @@ Nodes (4): Gate Decision, Results, Safety, Summary
 Cohesion: 0.40
 Nodes (4): Data boundary, Main flow, NUSANTARA V1 — Operator Control Plane, Verification
 
-### Community 1245 - "parseSegments"
-Cohesion: 0.30
-Nodes (11): createSegmentNode(), createSieveCache(), findSingleMatch(), invariant(), parseSegment(), parseSegments(), processRouteMasks(), visit() (+3 more)
+### Community 1245 - ".update"
+Cohesion: 0.21
+Nodes (15): createSegmentNode(), createSieveCache(), findSingleMatch(), invariant(), parseSegment(), parseSegments(), processRouteMasks(), visit() (+7 more)
 
 ### Community 1246 - "_gte"
-Cohesion: 0.17
-Nodes (12): next(), _gte(), _lte(), max(), _maxLength(), min(), _minLength(), nonempty() (+4 more)
+Cohesion: 0.40
+Nodes (5): _gte(), min(), _minLength(), nonempty(), _nonnegative()
 
 ### Community 1247 - "NUSANTARA V1 — MASTER PRD"
 Cohesion: 0.17
 Nodes (11): Alur P0, Definition of Done, Instruksi Codex: audit READ-ONLY, Inventaris modul, Masalah aktif 2026-10-26, NUSANTARA V1 — MASTER PRD, Prinsip, Requirements (+3 more)
 
-### Community 1248 - "NUSANTARA V1 Chat P0 - live handover (2026-10-19)"
-Cohesion: 0.50
-Nodes (3): Completed in this continuation, NUSANTARA V1 Chat P0 - live handover (2026-10-19), Remaining
-
-### Community 1249 - "defaultOnDefaultTransitionIndicator"
-Cohesion: 0.67
-Nodes (3): defaultOnDefaultTransitionIndicator(), handleNavigateComplete(), startFakeNavigation()
-
-### Community 1250 - "defaultOnDefaultTransitionIndicator"
-Cohesion: 0.67
-Nodes (3): defaultOnDefaultTransitionIndicator(), handleNavigateComplete(), startFakeNavigation()
-
-### Community 1251 - "_lte"
-Cohesion: 0.50
-Nodes (4): _lte(), max(), _maxLength(), _nonpositive()
-
-### Community 1252 - "Gemma 4 Control Plane canary"
-Cohesion: 0.50
-Nodes (3): Change and runtime, Evidence files, Gemma 4 Control Plane canary
-
-### Community 1253 - "What You Must Do When Invoked"
-Cohesion: 0.08
-Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native AGENTS.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
-
-### Community 1254 - "What You Must Do When Invoked"
-Cohesion: 0.08
-Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
-
-### Community 1255 - "tokenize"
-Cohesion: 0.29
-Nodes (4): EvaluationEngine, GroundingGuard, tokenize(), TrustEngine
-
-### Community 1257 - "NCP-V1-AUTOSTART-001 implementation evidence"
-Cohesion: 0.50
-Nodes (3): Delivered changes, NCP-V1-AUTOSTART-001 implementation evidence, Remaining authorized work requiring approval
-
-### Community 1258 - "mcp-nusantara-upstream/tests/test_weip_rag_adapter.py"
-Cohesion: 0.13
-Nodes (17): make_adapter(), test_remaining_task1_approved_adapter_retrievable(), test_remaining_task1_rejected_never_enters_retrieval(), test_remaining_task1_requires_explicit_temporary_boundary(), test_remaining_task2_atomic_rename_retry_is_bounded(), test_remaining_task2_changed_request_during_ingestion_rolls_back(), embedding(), test_remaining_task2_failed_replacement_restores_existing_version() (+9 more)
-
-### Community 1260 - "investigate.py"
-Cohesion: 0.27
-Nodes (6): calculate(), files(), meta(), preservation(), secret_file(), sha()
-
-### Community 1261 - "DAFDUK 24 new24"
-Cohesion: 0.50
-Nodes (3): DAFDUK 24 new24, Isi Dokumen, Metadata
-
-### Community 1262 - "mcp-nusantara-upstream/app/rag/store.py"
-Cohesion: 0.14
-Nodes (14): as_retriever(), chunk_text(), Conflict, _content_tokens(), detect_conflicts(), DocMeta, grounded_context(), Hit (+6 more)
-
-### Community 1263 - "Prinsip Pengembangan — Nusantara Core + Hermes"
-Cohesion: 0.08
-Nodes (23): 1. Filosofi Utama, 2. Prinsip Keamanan, 3. Prinsip Pengujian, 4. Prinsip Arsitektur, 5. Prinsip Iterasi, 6. Checklist Sebelum Lanjut ke Fase Berikutnya, Arsitektur Tetap Sama, Data Sensitif Diminimalkan (+15 more)
-
 ### Community 1264 - "verify_v1_review_live.cjs"
-Cohesion: 0.14
-Nodes (7): {defineConfig}, path, repo, {chromium}, {execFileSync}, fs, path
-
-### Community 1265 - "PERMOHONAN DATA INFORMASI ADMINISTRASI KEPENDUDUKAN (UNTUK INDIVIDU)"
-Cohesion: 0.50
-Nodes (3): Isi Dokumen, Metadata, PERMOHONAN DATA INFORMASI ADMINISTRASI KEPENDUDUKAN (UNTUK INDIVIDU)
-
-### Community 1266 - "Roadmap 18 Fase - Nusantara Core + Hermes"
-Cohesion: 0.08
-Nodes (23): Fase 0 - Environment & Architecture (Sudah Selesai), Fase 10 - Trust Engine (Selesai), Fase 11 - Memory Engine (Selesai), Fase 12 - Tool Engine (Selesai), Fase 13 - MCP Ready (Selesai), Fase 14 - Human Handoff (Selesai), Fase 15 - API Gateway (Selesai), Fase 16 - UI (Belum Dikerjakan) (+15 more)
-
-### Community 1267 - "test_operator_model_is_used_by_real_hermes_and_public_projection"
-Cohesion: 0.20
-Nodes (6): test_auth_unavailable_failure_and_conflict_never_change_selection(), test_operator_model_is_used_by_real_hermes_and_public_projection(), fixture_generate(), fixture_health_check(), fixture_inventory(), test_substantive_and_followup_questions_never_take_greeting_shortcut()
+Cohesion: 0.11
+Nodes (9): testInputs, {defineConfig}, path, @vitejs/plugin-react, repo, {chromium}, {execFileSync}, fs (+1 more)
 
 ### Community 1268 - "DOCLING_V1_INTEGRATION_REPORT.md"
 Cohesion: 0.25
 Nodes (7): Backend dan audit, Contoh jawaban nyata, Dependensi, File dan sambungan utama, Koreksi dan verifikasi chat utama lokal — 26 Oktober 2026, PDF dan hasil ekstraksi, Verifikasi
 
-### Community 1269 - "PERMOHONAN DATA PRIBADI"
-Cohesion: 0.50
-Nodes (3): Isi Dokumen, Metadata, PERMOHONAN DATA PRIBADI
-
-### Community 1270 - "PERMOHONAN INFORMASI DATA PENDUDUK UNTUK OPD INSTANSI SWASTA"
-Cohesion: 0.50
-Nodes (3): Isi Dokumen, Metadata, PERMOHONAN INFORMASI DATA PENDUDUK UNTUK OPD INSTANSI SWASTA
-
-### Community 1271 - "backup-20261022T075007Z/knowledge/sop/manifest.json"
-Cohesion: 0.50
-Nodes (3): documents, generated_at, root
-
-### Community 1272 - "mcp-nusantara-upstream/app/context/schemas.py"
-Cohesion: 0.12
-Nodes (9): Config, ContextMetadata, ContextState, ContextUpdate, ContextWindowConfig, HistoryEntry, MissingInformationRequest, MissingInformationResponse (+1 more)
-
-### Community 1273 - "v1-20261012-092454/report.md"
-Cohesion: 0.50
-Nodes (3): Files, Findings, Recommended review order
-
-### Community 1274 - "test_operator_model_is_used_by_real_hermes_and_public_projection"
-Cohesion: 0.20
-Nodes (6): test_auth_unavailable_failure_and_conflict_never_change_selection(), test_operator_model_is_used_by_real_hermes_and_public_projection(), fixture_generate(), fixture_health_check(), fixture_inventory(), test_substantive_and_followup_questions_never_take_greeting_shortcut()
+### Community 1274 - "tests/test_v1_operator_control.py"
+Cohesion: 0.03
+Nodes (42): get_settings(), Settings, get_settings(), Settings, test_bootstrap_layers_preserve_provenance_and_secrets(), test_owner_reads_dotenv_once_and_process_environment_wins(), isolated_owner(), test_auth_unavailable_failure_and_conflict_never_change_selection() (+34 more)
 
 ### Community 1275 - "perbaikanbukti/tests/v2/test_devcore_inspection.py"
 Cohesion: 0.35
 Nodes (8): core_without_execution(), no_operation(), test_existing_router_modes_are_not_replaced(), test_normalization_and_response_mutation_do_not_change_future_plans(), test_operation_requirements_are_not_misclassified_as_static(), test_restricted_goals_and_mixed_source_requests_fail_closed(), test_supported_goal_through_real_devcore_has_terminal_preview(), test_unknown_engineering_goal_clarifies_without_generic_find()
 
-### Community 1276 - "mcp-nusantara-upstream/tests/test_developer_core_engine_contract.py"
-Cohesion: 0.14
-Nodes (18): DeveloperAnalysis, engine(), project(), test_absolute_outside_graph_denied(), test_analyze_contract_and_graph_evidence(), test_bounded_depth_and_entry_count(), test_deterministic_and_captured_root(), test_graph_limits_and_permission_errors() (+10 more)
-
-### Community 1277 - "v1-20261012-092935/report.md"
-Cohesion: 0.50
-Nodes (3): Files, Findings, Recommended review order
-
-### Community 1278 - "v1-20261014-100121/report.md"
-Cohesion: 0.50
-Nodes (3): Files, Findings, Recommended review order
-
-### Community 1279 - "app/knowledge/production_embedding_bridge.py"
-Cohesion: 0.22
-Nodes (20): backup_database(), blob_to_vector(), connect(), cosine_similarity(), create_run_id(), embed_database(), embed_texts(), ensure_schema() (+12 more)
+### Community 1279 - "source-before/grounding.py"
+Cohesion: 0.24
+Nodes (3): extract_requirement_statement(), service_answer_facts(), sop_wording_supported()
 
 ### Community 1280 - "Independent Spec review evidence"
 Cohesion: 0.18
 Nodes (11): FR traceability, Independent Spec review evidence, Nonfunctional and DoD map, Requirement findings, S-01 review approval is not a universal prerequisite for indexing or operator retrieval, S-02 approval version omits Docling extraction identity, S-03 review/status GET routes mutate storage, S-04 detailed health contains unprobed availability claims (+3 more)
-
-### Community 1281 - "mcp-nusantara-upstream/app/knowledge/production_embedding_bridge.py"
-Cohesion: 0.22
-Nodes (20): backup_database(), blob_to_vector(), connect(), cosine_similarity(), create_run_id(), embed_database(), embed_texts(), ensure_schema() (+12 more)
 
 ### Community 1282 - "NUSANTARA-MASTER-AUDIT-V2.md"
 Cohesion: 0.50
@@ -5756,169 +4425,33 @@ Nodes (13): execute(), test_actual_public_endpoint_sanitizes_provider_failure_wi
 Cohesion: 0.50
 Nodes (3): Decision, Prinsip, Results
 
-### Community 1285 - "find"
-Cohesion: 0.20
-Nodes (11): defaultMutationOptions(), find(), getMutationDefaults(), getQueryDefaults(), hashKey(), hashQueryKeyByOptions(), matchMutation(), matchQuery() (+3 more)
-
-### Community 1286 - "ProblemDetector"
-Cohesion: 0.01
-Nodes (159): analyze_problem(), ingest_document(), request_handoff(), _run_sync_v1(), search_knowledge(), create_handoff_engine(), get_default_handoff_engine(), HandoffEngine (+151 more)
-
 ### Community 1287 - "remediation"
 Cohesion: 0.50
 Nodes (4): remediation, evidence, fix, root_cause
-
-### Community 1288 - "DAFDUK 24 new24"
-Cohesion: 0.50
-Nodes (3): DAFDUK 24 new24, Isi Dokumen, Metadata
-
-### Community 1289 - "IntentClassifier"
-Cohesion: 0.19
-Nodes (7): classify_intent(), IntentClassifier, _normalize_text(), RuleMatch, _score_intent(), _tokenize(), verify_examples()
-
-### Community 1290 - "mcp-nusantara-upstream/app/problem/problem_schema.py"
-Cohesion: 0.15
-Nodes (10): ClarificationRequest, Goal, MissingInfo, PossibleSolution, ProblemResolution, ProblemSchema, ProblemStatement, RiskAssessment (+2 more)
-
-### Community 1291 - "CandidateStore"
-Cohesion: 0.14
-Nodes (6): CandidateStore, html_to_text(), KnowledgeCandidate, NotApproved, SourceRejected, SourceValidator
-
-### Community 1292 - "PERMOHONAN DATA INFORMASI ADMINISTRASI KEPENDUDUKAN (UNTUK INDIVIDU)"
-Cohesion: 0.50
-Nodes (3): Isi Dokumen, Metadata, PERMOHONAN DATA INFORMASI ADMINISTRASI KEPENDUDUKAN (UNTUK INDIVIDU)
-
-### Community 1293 - "mcp-nusantara-upstream/app/skills/sop_semantic/engine.py"
-Cohesion: 0.21
-Nodes (13): call_ollama(), clean(), discover(), EvidenceAdapter, extract_from_text(), extract_metadata(), get_list(), main() (+5 more)
-
-### Community 1294 - "Architecture Decision Records (ADR)"
-Cohesion: 0.10
-Nodes (19): ADR-001: LLM Provider Abstraction, ADR-002: Model Router, ADR-003: Mock Provider untuk Test, ADR-004: Language Engine untuk Bahasa Indonesia, ADR-005: Context Engine dengan Session Isolation, ADR-006: Problem Engine dengan Clarification, ADR-007: Knowledge/RAG dengan Evidence Tracking, ADR-008: Workflow Engine dengan State Machine (+11 more)
-
-### Community 1295 - "PERMOHONAN DATA PRIBADI"
-Cohesion: 0.50
-Nodes (3): Isi Dokumen, Metadata, PERMOHONAN DATA PRIBADI
 
 ### Community 1296 - "clamp"
 Cohesion: 0.24
 Nodes (11): clamp(), clampa(), clamph(), clampi(), clampt(), formatHsl(), hex(), rgb_formatHex() (+3 more)
 
-### Community 1297 - "ApprovalPrincipal"
-Cohesion: 0.40
-Nodes (4): ApprovalPrincipal, authorize(), authorize(), authorize()
-
-### Community 1298 - "PERMOHONAN INFORMASI DATA PENDUDUK UNTUK OPD INSTANSI SWASTA"
-Cohesion: 0.50
-Nodes (3): Isi Dokumen, Metadata, PERMOHONAN INFORMASI DATA PENDUDUK UNTUK OPD INSTANSI SWASTA
-
 ### Community 1299 - "AppException"
-Cohesion: 0.06
-Nodes (22): AppException, ConflictError, InternalError, NotAuthorizedError, NotFoundError, ValidationError, AppException, ConflictError (+14 more)
-
-### Community 1300 - "TextParser"
-Cohesion: 0.20
-Nodes (7): DocumentParser, DOCXParser, get_parser(), MarkdownParser, parse_document(), PDFParser, TextParser
-
-### Community 1301 - "TextNormalizer"
-Cohesion: 0.15
-Nodes (6): _apply_token_map(), _repl(), _compile_token_map(), normalize_text(), _reduce_repeats(), TextNormalizer
-
-### Community 1302 - "Environment & Architecture Report"
-Cohesion: 0.11
-Nodes (18): 1. Sistem Operasi & Hardware, 2. Software Environment, 3. Port Allocation, 4. Arsitektur Sistem, 5. Struktur Folder (Target), 6. Dependency Proposal, 7. Database / API / Security / Testing Plan, 8. Kesimpulan (+10 more)
-
-### Community 1304 - "ToolRegistry"
-Cohesion: 0.12
-Nodes (3): BaseTool, create_registry(), ToolRegistry
-
-### Community 1305 - "DeveloperControl"
-Cohesion: 0.22
-Nodes (4): DeveloperControl, main(), utc_now(), cmd()
-
-### Community 1306 - "BASELINE — NUSANTARA AI V1"
-Cohesion: 0.11
-Nodes (17): BASELINE — NUSANTARA AI V1, Change, Compile Check, Conclusion, Dependency Check (pip), Environment, Failures / Gaps Captured (POST-FIX), Gate 16.9.6–9.10 (Execution Audit) — POST-FIX verification (+9 more)
-
-### Community 1307 - "mcp-nusantara-upstream/app/tools/base.py"
-Cohesion: 0.24
-Nodes (8): ToolDefinition, ToolResult, add_days(), calculator(), current_time(), execute_calculator(), get_default_registry(), parse_date()
-
-### Community 1311 - "mcp-nusantara-upstream/app/models/schemas.py"
-Cohesion: 0.15
-Nodes (7): create_default_provider_config(), GenerateRequest, GenerateResponse, HealthStatus, ModelSelection, ProviderConfig, StructuredOutput
-
-### Community 1312 - "mcp-nusantara-upstream/scripts/validate_gate17_evaluation.py"
-Cohesion: 0.21
-Nodes (14): deterministic_evaluation_id(), duplicate_evidence_blocked(), experiment_binding(), experiment_kwargs(), improvement_accepted(), inconclusive_rejected(), invalid_delta_blocked(), invalid_evidence_blocked() (+6 more)
-
-### Community 1314 - "mcp-nusantara-upstream/tests/test_v1_review_execution_api.py"
-Cohesion: 0.13
-Nodes (5): environment(), test_copy_failure_is_persisted_and_cannot_reuse_approval(), test_operation_summary_stops_requesting_review_after_completion(), test_other_runtime_profiles_cannot_reach_v1_mutation(), test_review_governance_executor_history()
-
-### Community 1315 - "data/knowledge/sop/manifest.json"
-Cohesion: 0.50
-Nodes (3): documents, generated_at, root
-
-### Community 1316 - "Current State (evidence)"
-Cohesion: 0.12
-Nodes (15): Approval Gate, Chunking, Current State (evidence), DocumentConverter interface (runtime), Gap Analysis (corrected), Hashing, MARKITDOWN AUDIT — NUSANTARA AI V1, MarkItDown — re-audit (CORRECTED) (+7 more)
-
-### Community 1317 - "test_operator_model_is_used_by_real_hermes_and_public_projection"
-Cohesion: 0.20
-Nodes (6): test_auth_unavailable_failure_and_conflict_never_change_selection(), test_operator_model_is_used_by_real_hermes_and_public_projection(), fixture_generate(), fixture_health_check(), fixture_inventory(), test_substantive_and_followup_questions_never_take_greeting_shortcut()
-
-### Community 1318 - "16. IMPLEMENTATION SCOPE PROPOSAL"
-Cohesion: 0.50
-Nodes (4): 16. IMPLEMENTATION SCOPE PROPOSAL, Expected source change, Expected test change, Forbidden changes
+Cohesion: 0.09
+Nodes (14): AppException, ConflictError, InternalError, NotAuthorizedError, NotFoundError, ValidationError, AppException, ConflictError (+6 more)
 
 ### Community 1319 - "tests/v2/test_devcore_inspection.py"
 Cohesion: 0.35
 Nodes (8): core_without_execution(), no_operation(), test_existing_router_modes_are_not_replaced(), test_normalization_and_response_mutation_do_not_change_future_plans(), test_operation_requirements_are_not_misclassified_as_static(), test_restricted_goals_and_mixed_source_requests_fail_closed(), test_supported_goal_through_real_devcore_has_terminal_preview(), test_unknown_engineering_goal_clarifies_without_generic_find()
 
-### Community 1322 - "ToolError"
-Cohesion: 0.14
-Nodes (3): CalculatorTool, DateTimeTool, ToolError
-
 ### Community 1323 - "Bukti Verifikasi U02/U04 - Chat Nusantara"
 Cohesion: 0.20
 Nodes (9): 1. Ringkasan Hasil Chat, 2. Bukti Pencarian Pengetahuan, 3. State Dokumen & Verifikasi, 4. Kesimpulan, 5. Rekomendasi, Bukti Verifikasi U02/U04 - Chat Nusantara, PERMOHONAN_DATA_PRIBADI (PIAK-03), Query 1: "Apa persyaratan permohonan data pribadi?" (+1 more)
-
-### Community 1324 - "8. RESPONSE PROJECTION OPTIONS"
-Cohesion: 0.50
-Nodes (4): 8. RESPONSE PROJECTION OPTIONS, Option A — Strict Public Projection, Option B — Public + Diagnostic Projection, Option C — Compatibility Projection
-
-### Community 1325 - "ApprovalQueue"
-Cohesion: 0.27
-Nodes (4): ApprovalError, ApprovalQueue, ApprovalRequest, payload_hash()
-
-### Community 1326 - "mcp-nusantara-upstream/app/research/root_cause.py"
-Cohesion: 0.26
-Nodes (4): RootCauseAnalysisError, RootCauseAnalyzer, RootCauseCandidate, RootCauseResult
 
 ### Community 1327 - "interpolateTransform"
 Cohesion: 0.33
 Nodes (10): interpolateTransform(), pop(), rotate(), scale(), skewX(), translate(), number_default(), one() (+2 more)
 
-### Community 1329 - "create_handoff_request"
-Cohesion: 0.18
-Nodes (3): create_handoff_request(), get_default_handoff_engine(), summarize_context()
-
 ### Community 1330 - "Independent Standards review of priority remediation"
-Cohesion: 0.20
-Nodes (9): Baseline and scope, Independent Standards review of priority remediation, Open findings at this review snapshot, Positive controls and preserved scope, Review outcome, STD-01 P1 — successful request replay bypasses current approval and content revision, STD-02 P1 — unscoped retrieval returns initial indexed text instead of approved extraction, STD-03 P1 — extraction read can return new blocks labeled with an old version during reprocessing (+1 more)
-
-### Community 1331 - ".evaluate"
-Cohesion: 0.18
-Nodes (3): create_evaluator(), evaluate(), Evaluator
-
-### Community 1332 - "compilerOptions"
-Cohesion: 0.15
-Nodes (12): compilerOptions, esModuleInterop, jsx, lib, module, moduleResolution, noEmit, skipLibCheck (+4 more)
-
-### Community 1333 - "mcp-nusantara-upstream/tests/test_audit_regressions.py"
-Cohesion: 0.19
-Nodes (7): test_authorized_developer_lists_workspace(), test_binary_parsers_reject_file_path(), test_privileged_api_denies_before_access(), test_search_empty_and_populated_results(), test_slow_knowledge_work_keeps_event_loop_responsive(), test_text_content_never_reads_server_file(), test_worker_environment_configuration()
+Cohesion: 0.14
+Nodes (13): Baseline and scope, Independent Standards review of priority remediation, Lock invariants, Open findings at this review snapshot, Positive controls and preserved scope, Probe and operational evidence, Review outcome, Round 2 cross-runtime mutex addendum (+5 more)
 
 ### Community 1334 - "browser-results/attestation-API-failure-remains-unavailable/error-context.md"
 Cohesion: 0.50
@@ -5928,17 +4461,9 @@ Nodes (3): Error details, Instructions, Test info
 Cohesion: 0.50
 Nodes (3): Error details, Instructions, Test info
 
-### Community 1338 - "mcp-nusantara-upstream/artifacts/settings-health/browser-e2e.cjs"
-Cohesion: 0.18
-Nodes (6): { chromium }, fs, path, { chromium }, fs, path
-
-### Community 1339 - "mcp-nusantara-upstream/app/core/hardening/validator.py"
-Cohesion: 0.21
-Nodes (4): InputRejected, sanitize_text(), validate_output(), validate_schema()
-
-### Community 1340 - "ControlledPatchExecutor"
-Cohesion: 0.24
-Nodes (3): ControlledPatchError, ControlledPatchExecutor, PatchResult
+### Community 1336 - "app/knowledge/web_evidence.py"
+Cohesion: 0.10
+Nodes (10): ApprovalPrincipal, _DeadlineHTTPS, _expire_connection(), FetchResult, parse_document(), _TextHTML, authorize(), test_completion_oversized_pdf_rejected_before_fixture_parser() (+2 more)
 
 ### Community 1342 - "attestation-direct-decision-cannot-bypass-review/error-context.md"
 Cohesion: 0.50
@@ -5948,18 +4473,6 @@ Nodes (3): Error details, Instructions, Test info
 Cohesion: 0.50
 Nodes (3): Error details, Instructions, Test info
 
-### Community 1345 - "RAG SCHEMA AUDIT — NUSANTARA AI V1"
-Cohesion: 0.17
-Nodes (11): Action required, Conclusion, F-R1. `StoredChunk(embedding=...)` type mismatch (rag.py:359), F-R2. `MemoriaVectorStore` union-attr (rag.py:367, 446, 510, 672, 683), F-R3. `Evidence(..., store_id=None)` explicit defaults (rag.py:683, 684), Pydantic runtime verification, RAG SCHEMA AUDIT — NUSANTARA AI V1, Remaining items (+3 more)
-
-### Community 1346 - "mcp-nusantara-upstream/tests/test_inspection_preview_api.py"
-Cohesion: 0.32
-Nodes (7): post(), test_absent_server_token(), test_invalid_auth(), test_non_preview_rejected(), test_normal_only(), test_strict_payload(), test_supported_goals()
-
-### Community 1347 - "mcp-nusantara-upstream/app/handoff/engine.py"
-Cohesion: 0.29
-Nodes (3): HandoffLevel, HandoffRequest, HandoffStatus
-
 ### Community 1348 - "attestation-direct-review-cannot-bypass-review/error-context.md"
 Cohesion: 0.50
 Nodes (3): Error details, Instructions, Test info
@@ -5968,25 +4481,9 @@ Nodes (3): Error details, Instructions, Test info
 Cohesion: 0.50
 Nodes (3): Error details, Instructions, Test info
 
-### Community 1350 - "mcp-nusantara-upstream/app/developer_core/approval_controller.py"
-Cohesion: 0.44
-Nodes (10): approve(), is_forbidden(), main(), normalize(), now(), read_json(), reject(), status() (+2 more)
-
-### Community 1351 - "mcp-nusantara-upstream/app/developer_core/controlled_write.py"
-Cohesion: 0.40
-Nodes (10): audit(), build_staging(), execute(), is_forbidden(), load_plan(), main(), norm(), safe_relative() (+2 more)
-
 ### Community 1352 - "browser-results/attestation-five-stages-re-0a584--explicit-PENDING-intention/error-context.md"
 Cohesion: 0.50
 Nodes (3): Error details, Instructions, Test info
-
-### Community 1353 - "mcp-nusantara-upstream/app/research/experiment.py"
-Cohesion: 0.27
-Nodes (3): ControlledExperiment, ExperimentError, ExperimentResult
-
-### Community 1354 - "mcp-nusantara-upstream/CLAUDE_CONTRACT.MD"
-Cohesion: 0.18
-Nodes (10): 1. MISI UTAMA, 2. ATURAN KERAS, 3. V1 ADALAH PRIORITAS, 4. CURRENT V1 ARCHITECTURE, 5. MARKITDOWN PRINCIPLE, 6. DOCUMENT PIPELINE, 7. MARKITDOWN MU, Claude Code — Engineering, Architecture, MarkItDown, RAG & Production Hardening (+2 more)
 
 ### Community 1356 - "attestation-invented-autho-f7705-sed-without-automatic-retry/error-context.md"
 Cohesion: 0.50
@@ -6008,37 +4505,13 @@ Nodes (3): Error details, Instructions, Test info
 Cohesion: 0.50
 Nodes (3): Governance Lock, Next Action, R2 Evidence Status
 
-### Community 1362 - "mcp-nusantara-upstream/app/devcore/workspace.py"
-Cohesion: 0.29
-Nodes (3): is_sensitive_name(), PathBlocked, Workspace
-
 ### Community 1364 - "=== MDE CONTROL PLANE PREFLIGHT ==="
 Cohesion: 0.50
 Nodes (3): Changes, rollback and self-audit, === MDE CONTROL PLANE PREFLIGHT ===, Verification and evidence
 
-### Community 1366 - "ModelSelection"
-Cohesion: 0.08
-Nodes (5): ModelSelection, ModelSelection, ModelGateway, ModelGateway, ModelGateway
-
-### Community 1367 - "mcp-nusantara-upstream/app/research/failure_analysis.py"
-Cohesion: 0.36
-Nodes (7): analyze(), extract_failures(), Failure, FailureReport, Pattern, _severity(), _stage_of()
-
-### Community 1368 - "SECURITY TRACE — NUSANTARA AI V1"
-Cohesion: 0.20
-Nodes (9): Decision Required, F-S1. `logger` not defined (routes.py:624, 643), F-S2. `ProblemEngine.analyze` AttributeError (routes.py:782, 1246), F-S3. `KnowledgeSearchRequest` missing attrs (routes.py:1392-1398), Findings (per item), Scope, SECURITY TRACE — NUSANTARA AI V1, Summary (+1 more)
-
-### Community 1369 - "Final Audit"
-Cohesion: 0.20
-Nodes (9): CRITICAL, Final Audit, Findings, HIGH, LOW, MEDIUM, Scope, Security checks (+1 more)
-
-### Community 1370 - "mcp-nusantara-upstream/scripts/validate_gate16_graph.py"
-Cohesion: 0.40
-Nodes (9): collect_strings(), find_target_nodes(), inspect_graph(), main(), node_text(), normalize(), run_gate14(), validate_links() (+1 more)
-
-### Community 1373 - "verify"
-Cohesion: 0.22
-Nodes (3): verify(), audit_reload(), generation()
+### Community 1366 - "ModelRouter"
+Cohesion: 0.03
+Nodes (61): capture_retrieval(), ModelGateway, create_mock_provider(), MockProvider, ModelRouter, HermesAgent, HermesAgent, _conversation_answer_safe() (+53 more)
 
 ### Community 1374 - "Existing lifecycle analysis — scripts not executed"
 Cohesion: 0.50
@@ -6047,38 +4520,6 @@ Nodes (3): Existing lifecycle analysis — scripts not executed, Proposed future
 ### Community 1375 - "Evidence binding and server-owned permit bridge"
 Cohesion: 0.50
 Nodes (3): Bridge sequence — future only, Evidence binding and server-owned permit bridge, Immutable review binding
-
-### Community 1377 - "graphify reference: extra exports and benchmark"
-Cohesion: 0.22
-Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
-
-### Community 1379 - "mcp-nusantara-upstream/app/handoff/schemas.py"
-Cohesion: 0.31
-Nodes (3): HandoffLevel, HandoffRequest, HandoffStatus
-
-### Community 1380 - "mcp-nusantara-upstream/app/policy/schemas.py"
-Cohesion: 0.31
-Nodes (4): PolicyDecision, PolicyEvaluation, PolicyRule, RiskLevel
-
-### Community 1381 - "app/reasoning/schemas.py"
-Cohesion: 0.39
-Nodes (3): Fact, Inference, ReasoningResult
-
-### Community 1382 - "mcp-nusantara-upstream/app/research/gap_detector.py"
-Cohesion: 0.33
-Nodes (3): Gap, GapDetectionError, GapDetector
-
-### Community 1384 - "graphify reference: extra exports and benchmark"
-Cohesion: 0.22
-Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
-
-### Community 1385 - "mcp-nusantara-upstream/scripts/developer_core_change_query.py"
-Cohesion: 0.42
-Nodes (8): build_graph(), extract_target(), load_json(), main(), node_text(), query_change(), resolve_target(), traverse()
-
-### Community 1386 - "mcp-nusantara-upstream/scripts/validate_gate12_final.py"
-Cohesion: 0.39
-Nodes (7): deterministic_discovery(), discover_tool_modules(), tools_are_serializable(), tools_do_not_execute_shell(), tools_exist(), tools_have_public_api(), tools_importable()
 
 ### Community 1387 - "Indeks bukti dan cara verifikasi"
 Cohesion: 0.22
@@ -6089,284 +4530,28 @@ Cohesion: 0.22
 Nodes (9): Exact duplication and ownership inventory, S-01 P1 Review enrollment happens after upload and changes retrieval on GET, S-02 P1 Approval does not bind actual Docling extraction revision, S-03 P1 WAL backups copy only the main SQLite file, S-04 P2 Persisted chat has no retention and clear does not clear history, S-05 P2 Handoff API creates a discarded owner, S-06 P2 Bounded upload validates after unbounded body buffering, S-07 P3 Documented runtime is behind current source (+1 more)
 
 ### Community 1389 - "onFocus"
-Cohesion: 0.31
-Nodes (8): dehydrate(), dehydrateMutation(), getAll(), onFocus(), onOnline(), refetch(), setEventListener(), setFocused()
+Cohesion: 0.47
+Nodes (5): onFocus(), onOnline(), refetch(), setEventListener(), setFocused()
 
 ### Community 1390 - "compileFn"
 Cohesion: 0.28
 Nodes (9): compile(), compileFn(), compileValidator(), guard(), installCompiledUserMethods(), isBackEdge(), isRecursiveSchema(), isRef() (+1 more)
 
-### Community 1393 - "mcp-nusantara-upstream/app/developer_core/context_router.py"
-Cohesion: 0.50
-Nodes (7): build_context(), is_forbidden(), main(), node_path(), node_text(), score_node(), tokens()
-
-### Community 1397 - "mcp-nusantara-upstream/control-plane/e2e/human.spec.ts"
-Cohesion: 0.32
-Nodes (4): evidence(), inspect(), start(), decision()
-
-### Community 1398 - "MDE-03 Provider Registry — discovery and contract closure"
-Cohesion: 0.25
-Nodes (7): Configured, registered, runtime verified, Decision, impact and rollback, Existing abstractions and consumers, Identity finding: not universally consistent, MDE-03 Provider Registry — discovery and contract closure, Provider matrix, Registration and selection contract
-
-### Community 1399 - "MDE-04 Model Registry — identity and selection contract"
-Cohesion: 0.25
-Nodes (7): Decision and verification, Identity vocabulary and canonical interpretation, Lifecycle and evidence, MDE-03 mismatch closure and compatibility, MDE-04 Model Registry — identity and selection contract, Model Identity Matrix, Path audit
-
-### Community 1400 - "DEVCORE_COMPLIANCE — kontrak Developer Core vs source"
-Cohesion: 0.25
-Nodes (7): Cara pakai, Checklist kontrak (#25) untuk perubahan ini, DEVCORE_COMPLIANCE — kontrak Developer Core vs source, Integrasi dengan agent.py live, Security gate (workflow #24), Status per prioritas (workflow #27), Temuan audit arsip (sebelum perubahan)
-
 ### Community 1401 - "Document Layout Analysis "heron""
 Cohesion: 0.50
 Nodes (3): Document Layout Analysis "heron", Inference code example, References
 
-### Community 1408 - "V100 — Environment / Architecture"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V100 — Environment / Architecture
-
-### Community 1409 - "V101 — Foundation"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V101 — Foundation
-
-### Community 1410 - "V102 — LLM Provider"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V102 — LLM Provider
-
-### Community 1411 - "V103 — Language"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V103 — Language
-
-### Community 1412 - "V104 — Context"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V104 — Context
-
-### Community 1413 - "V105 — Problem"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V105 — Problem
-
-### Community 1414 - "V106 — Knowledge / RAG"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V106 — Knowledge / RAG
-
-### Community 1415 - "V107 — Reasoning"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V107 — Reasoning
-
-### Community 1416 - "V108 — Workflow"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V108 — Workflow
-
-### Community 1417 - "V109 — Policy"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V109 — Policy
-
-### Community 1418 - "V110 — Trust"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V110 — Trust
-
-### Community 1419 - "V111 — Memory"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V111 — Memory
-
-### Community 1420 - "V112 — Tool"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V112 — Tool
-
-### Community 1421 - "V113 — MCP Ready"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V113 — MCP Ready
-
-### Community 1422 - "V114 — Human Handoff"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V114 — Human Handoff
-
-### Community 1423 - "V115 — API Gateway"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V115 — API Gateway
-
-### Community 1424 - "V116 — UI"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V116 — UI
-
-### Community 1425 - "V117 — Evaluation / Observability"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V117 — Evaluation / Observability
-
-### Community 1426 - "V118 — Docker / Production"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V118 — Docker / Production
-
-### Community 1427 - "V200 — Discovery / Reconciliation"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V200 — Discovery / Reconciliation
-
-### Community 1428 - "V201 — Architecture"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V201 — Architecture
-
-### Community 1429 - "V202 — Hardening"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V202 — Hardening
-
-### Community 1430 - "V203 — Observability"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V203 — Observability
-
-### Community 1431 - "V204 — Trust"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V204 — Trust
-
-### Community 1432 - "V205 — Policy"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V205 — Policy
-
-### Community 1433 - "V206 — Memory"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V206 — Memory
-
-### Community 1434 - "V207 — RAG"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V207 — RAG
-
-### Community 1435 - "V208 — MCP"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V208 — MCP
-
-### Community 1436 - "V209 — Tool Governance"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V209 — Tool Governance
-
-### Community 1437 - "V210 — Experience"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V210 — Experience
-
-### Community 1438 - "V211 — Feedback"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V211 — Feedback
-
-### Community 1439 - "V212 — Evaluation"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V212 — Evaluation
-
-### Community 1440 - "V213 — Failure Analysis"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V213 — Failure Analysis
-
-### Community 1441 - "V214 — Gap Detection"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V214 — Gap Detection
-
-### Community 1442 - "V215 — Knowledge Discovery"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V215 — Knowledge Discovery
-
-### Community 1443 - "V216 — Experiment"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V216 — Experiment
-
-### Community 1444 - "V217 — Improvement Proposal"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V217 — Improvement Proposal
-
-### Community 1445 - "V218 — Human Approval"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V218 — Human Approval
-
-### Community 1446 - "V219 — V1.x Development"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V219 — V1.x Development
-
-### Community 1447 - "V220 — Regression / Security"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V220 — Regression / Security
-
-### Community 1448 - "V221 — Release / Rollback"
-Cohesion: 0.29
-Nodes (6): Changes, Findings, Gaps, Runtime, Tests, V221 — Release / Rollback
-
-### Community 1449 - "FULL-ROOT Development Report — 2026-10-07"
-Cohesion: 0.29
-Nodes (6): Actually executed verification, Architecture impact and recovery, FULL-ROOT Development Report — 2026-10-07, Implementation, Open issues and next action, Required V1 scenarios and limits
-
-### Community 1450 - "MDE-02 execution report — 2026-10-07"
-Cohesion: 0.29
-Nodes (6): Checkpoint verification, Definition of done and remaining roadmap, Discovery and decision, Execution evidence, MDE-02 execution report — 2026-10-07, Protected boundaries
-
 ### Community 1451 - "fetch"
-Cohesion: 0.29
-Nodes (8): addConsumeAwareSignal(), ensureQueryFn(), fetch(), fetchNextPage(), fetchPreviousPage(), getNextPageParam(), hasNextPage(), infiniteQueryBehavior()
-
-### Community 1452 - "verify_knowledge_upload_entry.cjs"
-Cohesion: 0.25
-Nodes (6): assert, {chromium}, crypto, {execFileSync}, fs, path
-
-### Community 1454 - "graphify reference: query, path, explain"
-Cohesion: 0.33
-Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
+Cohesion: 0.10
+Nodes (25): addConsumeAwareSignal(), #dispatch(), ensureQueryFn(), fetch(), fetchNextPage(), fetchPreviousPage(), fetchState(), functionalUpdate() (+17 more)
 
 ### Community 1455 - "Ringkasan /knowledge Page - Sederhanakan Tampilan"
 Cohesion: 0.29
 Nodes (6): 1. Isu Awal, 2. Perbaikan, 3. Bukti Pertanyaan Dapat dijawab, 4. Status Rekomendasi, Perubahan di `app/ui/index.html`, Ringkasan /knowledge Page - Sederhanakan Tampilan
 
-### Community 1458 - "mcp-nusantara-upstream/app/reasoning/schemas.py"
-Cohesion: 0.29
-Nodes (3): Fact, Inference, ReasoningResult
-
-### Community 1459 - "graphify reference: query, path, explain"
-Cohesion: 0.33
-Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
-
-### Community 1460 - "33. GATE 4 � TRUST AUDIT RESULT"
-Cohesion: 0.33
-Nodes (6): 33. GATE 4 � TRUST AUDIT RESULT, Core Safety, Decision, Evidence, Gap, Test Evidence
-
-### Community 1461 - "33. GATE 4 � TRUST AUDIT RESULT"
-Cohesion: 0.33
-Nodes (6): 33. GATE 4 � TRUST AUDIT RESULT, Core Safety, Decision, Evidence, Gap, Test Evidence
-
-### Community 1462 - "34. GATE 5 � POLICY AUDIT RESULT"
-Cohesion: 0.33
-Nodes (6): 34. GATE 5 � POLICY AUDIT RESULT, Core Safety, Decision, Evidence, Observation, Test Evidence
-
-### Community 1463 - "35. GATE 6 � MEMORY AUDIT RESULT"
-Cohesion: 0.33
-Nodes (6): 35. GATE 6 � MEMORY AUDIT RESULT, Core Safety, Decision, Evidence, Gap, Test Evidence
-
-### Community 1464 - "mcp-nusantara-upstream/docs/audit/NUSANTARA_DEEP_AUDIT_PHASE_0_21.md"
-Cohesion: 0.33
-Nodes (5): Evidence, IMPORTANT, Interpretation, Recommended Next Action, Summary
-
-### Community 1465 - "mcp-nusantara-upstream/docs/PRODUCTION_KNOWLEDGE_BASE.md"
-Cohesion: 0.33
-Nodes (5): Commands, Database, Safety, Source directory, Supported
-
-### Community 1466 - "PROJECT_BASELINE — NUSANTARA AI V1 (mcp-starter 0.1.0)"
-Cohesion: 0.33
-Nodes (5): Alur runtime `/v1/chat`, Batas verifikasi (penting), PROJECT_BASELINE — NUSANTARA AI V1 (mcp-starter 0.1.0), Ringkasan, Temuan utama
-
-### Community 1467 - "Nusantara Core + Hermes — Local Starter"
-Cohesion: 0.33
-Nodes (5): Docker, Jalankan di Windows / PowerShell, Nusantara Core + Hermes — Local Starter, Ollama lokal, Verifikasi
-
-### Community 1468 - "mcp-nusantara-upstream/scripts/validate_gate15_6_change_plan_validator.py"
-Cohesion: 0.47
-Nodes (3): check_file(), _has_any(), main()
-
-### Community 1469 - "mcp-nusantara-upstream/scripts/validate_gate15_7_approval_wiring.py"
-Cohesion: 0.53
-Nodes (3): check_code_ref(), check_doc_file(), main()
-
 ### Community 1470 - "perbaikanbukti/app/reasoning/schemas.py"
 Cohesion: 0.29
 Nodes (3): Fact, Inference, ReasoningResult
-
-### Community 1471 - "Get-NusantaraProcesses"
-Cohesion: 0.40
-Nodes (9): Is-PortOpen(), Start-Nusantara(), Status-Nusantara(), Stop-Nusantara(), Get-NusantaraProcesses(), Is-PortOpen(), Start-Nusantara(), Status-Nusantara() (+1 more)
-
-### Community 1472 - "requests"
-Cohesion: 0.15
-Nodes (12): _post(), test_v1_live_chat_does_not_500(), test_v1_live_knowledge_search_does_not_500(), test_v1_live_problem_analyze_does_not_500(), _post(), test_v1_live_chat_does_not_500(), test_v1_live_knowledge_search_does_not_500(), test_v1_live_problem_analyze_does_not_500() (+4 more)
 
 ### Community 1473 - "Audit arsitektur dan integrasi"
 Cohesion: 0.29
@@ -6376,66 +4561,6 @@ Nodes (7): Audit arsitektur dan integrasi, Cakupan inspeksi dan kode tidak terpa
 Cohesion: 0.29
 Nodes (7): datetime(), datetime2(), _isoDateTime(), _isoTime(), time(), time2(), timeSource()
 
-### Community 1477 - "source-before/app/api/knowledge_pipeline.py"
-Cohesion: 0.38
-Nodes (3): ExtractionRequest, ReviewDecision, TrialRating
-
-### Community 1482 - "build_server"
-Cohesion: 0.47
-Nodes (4): build_server(), calculator(), current_time_utc(), execute()
-
-### Community 1483 - "CHANGELOG"
-Cohesion: 0.40
-Nodes (4): 2.0.0-alpha, 2.0.0-alpha.2, 2.0.0-alpha.3, CHANGELOG
-
-### Community 1484 - "31. GATE 2 � CORE HARDENING AUDIT RESULT"
-Cohesion: 0.40
-Nodes (5): 31. GATE 2 � CORE HARDENING AUDIT RESULT, Core Safety, Decision, Evidence, Test Evidence
-
-### Community 1485 - "31. GATE 2 � CORE HARDENING AUDIT RESULT"
-Cohesion: 0.40
-Nodes (5): 31. GATE 2 � CORE HARDENING AUDIT RESULT, Core Safety, Decision, Evidence, Test Evidence
-
-### Community 1486 - "32. GATE 3 � OBSERVABILITY AUDIT RESULT"
-Cohesion: 0.40
-Nodes (5): 32. GATE 3 � OBSERVABILITY AUDIT RESULT, Core Safety, Decision, Evidence, Test Evidence
-
-### Community 1487 - "Nusantara Master Developer Engine"
-Cohesion: 0.40
-Nodes (4): Nusantara Master Developer Engine, Phase Matrix, Safety, Summary
-
-### Community 1488 - "NUSANTARA V1: chat sebagai beranda dan Control Plane di Pengaturan"
-Cohesion: 0.40
-Nodes (4): Integrasi dan pemulihan, NUSANTARA V1: chat sebagai beranda dan Control Plane di Pengaturan, Perubahan, Verifikasi
-
-### Community 1489 - "mcp-nusantara-upstream/docs/DEVELOPER_CORE_OPERATIONALIZATION.md"
-Cohesion: 0.40
-Nodes (4): Pipeline, Principle, Purpose, Safety Contract
-
-### Community 1490 - "Local Verification Report"
-Cohesion: 0.40
-Nodes (4): Architecture alignment, Important limitation, Local Verification Report, Verified in the supplied repository
-
-### Community 1491 - "MDE-02 effective configuration contract"
-Cohesion: 0.40
-Nodes (4): Construction and precedence, Critical boundaries and implementation decision, EffectiveConfiguration representation, MDE-02 effective configuration contract
-
-### Community 1492 - "MDE-03 Provider Registry execution report"
-Cohesion: 0.40
-Nodes (4): Findings and decision, MDE-03 Provider Registry execution report, State, remaining issues and rollback, Verification executed
-
-### Community 1493 - "MDE-04 Model Registry execution report"
-Cohesion: 0.40
-Nodes (4): Completion, remaining work and rollback, Identity contract and findings, MDE-04 Model Registry execution report, Verification
-
-### Community 1494 - "Mc"
-Cohesion: 0.40
-Nodes (6): ic(), Bh(), gi(), J1(), Mc(), ic()
-
-### Community 1495 - "mcp-nusantara-upstream/service/nusantara-supervisor.ps1"
-Cohesion: 0.80
-Nodes (4): Start-Nusantara(), Start-Ollama(), Test-Port(), Write-Log()
-
 ### Community 1500 - "git-status.txt"
 Cohesion: 0.67
 Nodes (3): git-status.txt, bytes, sha256
@@ -6444,53 +4569,9 @@ Nodes (3): git-status.txt, bytes, sha256
 Cohesion: 0.67
 Nodes (3): guard-descriptor-check.txt, bytes, sha256
 
-### Community 1502 - "mcp-nusantara-upstream/.agents/skills/developer-core/SKILL.md"
-Cohesion: 0.50
-Nodes (3): Required workflow, Role, Safety
-
-### Community 1503 - "graphify reference: add a URL and watch a folder"
-Cohesion: 0.50
-Nodes (3): For /graphify add, For --watch, graphify reference: add a URL and watch a folder
-
-### Community 1504 - "graphify reference: commit hook and native CLAUDE.md integration"
-Cohesion: 0.50
-Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify reference: commit hook and native CLAUDE.md integration
-
-### Community 1505 - "graphify reference: incremental update and cluster-only"
-Cohesion: 0.50
-Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
-
 ### Community 1506 - "guard-reuse-check.txt"
 Cohesion: 0.67
 Nodes (3): guard-reuse-check.txt, bytes, sha256
-
-### Community 1507 - "mcp-nusantara-upstream/.claude/skills/developer-core/SKILL.md"
-Cohesion: 0.50
-Nodes (3): Required workflow, Role, Safety
-
-### Community 1508 - "graphify reference: add a URL and watch a folder"
-Cohesion: 0.50
-Nodes (3): For /graphify add, For --watch, graphify reference: add a URL and watch a folder
-
-### Community 1509 - "graphify reference: commit hook and native CLAUDE.md integration"
-Cohesion: 0.50
-Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify reference: commit hook and native CLAUDE.md integration
-
-### Community 1510 - "graphify reference: incremental update and cluster-only"
-Cohesion: 0.50
-Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
-
-### Community 1511 - "V2 Phase 00 — Discovery / Reconciliation"
-Cohesion: 0.50
-Nodes (3): Checks, Gaps, V2 Phase 00 — Discovery / Reconciliation
-
-### Community 1512 - "Nusantara Master Developer Engine v3"
-Cohesion: 0.50
-Nodes (3): Gate, Nusantara Master Developer Engine v3, Safety
-
-### Community 1513 - "ROADMAP_STATUS — Phase 0–21 (V2.0.0-alpha.2)"
-Cohesion: 0.50
-Nodes (3): ROADMAP_STATUS — Phase 0–21 (V2.0.0-alpha.2), Status rilis, Yang wajib Anda jalankan di mesin dengan dependensi
 
 ### Community 1517 - "guard-write-check.txt"
 Cohesion: 0.67
@@ -6568,14 +4649,6 @@ Nodes (3): results-bundle.json, bytes, sha256
 Cohesion: 0.67
 Nodes (3): test-summary.json, bytes, sha256
 
-### Community 1613 - "mcp-nusantara-upstream/app/knowledge/chunker.py"
-Cohesion: 0.47
-Nodes (3): chunk_text(), Chunker, get_chunker()
-
-### Community 1614 - "build_server"
-Cohesion: 0.47
-Nodes (4): build_server(), calculator(), current_time_utc(), execute()
-
 ### Community 1616 - "_overwrite"
 Cohesion: 0.33
 Nodes (6): _normalize(), _overwrite(), slugify(), _toLowerCase(), _toUpperCase(), _trim()
@@ -6594,11 +4667,7 @@ Nodes (6): Aturan status dan denominator, Kelengkapan inventaris modul DOCX bagi
 
 ### Community 1736 - "NUSANTARA V1 Priority Remediation Report"
 Cohesion: 0.33
-Nodes (5): NUSANTARA V1 Priority Remediation Report, Remaining work to close HOLD, Result summary, Runtime blocker and limits, Verification performed
-
-### Community 1737 - "mcp-nusantara-upstream/app/observability/context.py"
-Cohesion: 0.60
-Nodes (3): current_ids(), new_id(), request_context()
+Nodes (5): Blockers and next operator action, Latest verification evidence, NUSANTARA V1 Priority Remediation Report, Results, Root cause and changes
 
 ### Community 1741 - "Laporan pengujian dan end-to-end"
 Cohesion: 0.40
@@ -6616,33 +4685,29 @@ Nodes (4): Akar yang belum dapat ditetapkan, Analisis akar masalah, Model perbai
 Cohesion: 0.40
 Nodes (4): Bukti saat ini, Kesimpulan dan langkah perbaikan, Pemeriksaan knowledge Nusantara — 26 Oktober 2026, Workflow
 
-### Community 1746 - "_lte"
-Cohesion: 0.50
-Nodes (4): _lte(), max(), _maxLength(), _nonpositive()
-
 ### Community 1749 - "defaultOnDefaultTransitionIndicator"
 Cohesion: 0.67
 Nodes (3): defaultOnDefaultTransitionIndicator(), handleNavigateComplete(), startFakeNavigation()
 
 ## Knowledge Gaps
-- **6172 isolated node(s):** `block-dangerous-git.sh script`, `operatorMenus`, `scope`, `files`, `Connection` (+6167 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 14759 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **504 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **4987 isolated node(s):** `block-dangerous-git.sh script`, `operatorMenus`, `scope`, `files`, `Connection` (+4982 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 10774 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **479 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `fetch()` connect `index-CSdgo_zW.js` to `i`, `ref_vitest`, `t2`?**
-  _High betweenness centrality (0.021) - this node is a cross-community bridge._
-- **Why does `ContextState` connect `ContextState` to `ContextBuilder`, `ContextBuilder`, `HistoryEntry`, `ContextBuilder`, `ContextEngine`, `.update_session`, `SessionManager`, `ContextEngine`, `SessionManager`?**
-  _High betweenness centrality (0.008) - this node is a cross-community bridge._
-- **Why does `t2()` connect `t2` to `i`, `index-CSdgo_zW.js`, `constructor`, `K1`, `i`, `graph-CjYkENDk.js`, `Mc`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
+- **Why does `answer()` connect `test_v1_laya_integration.py` to `DEVCORE_COMPLIANCE — kontrak Developer Core vs source`, `test_laya_intent.py`, `NUSANTARA V1 — CC-01 Response Projection Proposal`, `Implementasi tiga lapisan knowledge dan tiga alur SOP V1`?**
+  _High betweenness centrality (0.334) - this node is a cross-community bridge._
+- **Why does `Perubahan perilaku` connect `Implementasi tiga lapisan knowledge dan tiga alur SOP V1` to `test_v1_laya_integration.py`?**
+  _High betweenness centrality (0.334) - this node is a cross-community bridge._
+- **Why does `defer()` connect `Implementasi tiga lapisan knowledge dan tiga alur SOP V1` to `@tanstack_react-router.js`?**
+  _High betweenness centrality (0.334) - this node is a cross-community bridge._
 - **Are the 17 inferred relationships involving `"node_modules/react-dom/cjs/react-dom-client.development.js"()` (e.g. with `addEventListenerToChild()` and `basicStateReducer()`) actually correct?**
   _`"node_modules/react-dom/cjs/react-dom-client.development.js"()` has 17 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 17 inferred relationships involving `"node_modules/react-dom/cjs/react-dom-client.development.js"()` (e.g. with `addEventListenerToChild()` and `basicStateReducer()`) actually correct?**
-  _`"node_modules/react-dom/cjs/react-dom-client.development.js"()` has 17 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 17 inferred relationships involving `"node_modules/react-dom/cjs/react-dom-client.development.js"()` (e.g. with `addEventListenerToChild()` and `basicStateReducer()`) actually correct?**
-  _`"node_modules/react-dom/cjs/react-dom-client.development.js"()` has 17 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 36 inferred relationships involving `K1()` (e.g. with `_O` and `v3`) actually correct?**
+  _`K1()` has 36 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 38 inferred relationships involving `e2()` (e.g. with `AE()` and `Bc()`) actually correct?**
+  _`e2()` has 38 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `block-dangerous-git.sh script`, `operatorMenus`, `scope` to the rest of the system?**
-  _6172 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _4987 weakly-connected nodes found - possible documentation gaps or missing edges._

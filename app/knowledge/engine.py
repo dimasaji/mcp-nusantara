@@ -266,12 +266,9 @@ class KnowledgeEngine:
             return self._record_pipeline(safe_name,digest,'FAILED',reason)
         processing=self._record_pipeline(safe_name,digest,'PROCESSING',source_path=str(stored))
         try:
-            text=self._extract_pipeline_text(safe_name,raw)
-            normalized=' '.join(text.split())
-            if len(normalized)<40:
-                raise ValueError('EXTRACTED_TEXT_TOO_SHORT_OR_SCANNED; OCR_REQUIRED')
-            if len(set(normalized))/max(1,len(normalized))<0.015:
-                raise ValueError('EXTRACTED_TEXT_QUALITY_CHECK_FAILED')
+            from .preparation import prepare_knowledge_text
+            extracted_text=self._extract_pipeline_text(safe_name,raw)
+            text, preparation=prepare_knowledge_text(extracted_text)
             digest_id=document_id or 'DOC-SHA256-'+digest
             from .store import SQLiteVectorStore
             if isinstance(self.rag._store,SQLiteVectorStore):
@@ -287,6 +284,8 @@ class KnowledgeEngine:
                     raise ValueError('DOCUMENT_ID_CONFLICT_OR_INCOMPLETE; existing knowledge preserved')
             metadata={**(source_metadata or {}),'pipeline_status':'READY','source_sha256':digest,'source_filename':safe_name,
                       'source_authority':'UNVERIFIED','revision_status':'NOT_CONFIRMED_CURRENT',
+                      'knowledge_preparation':preparation,
+                      'source_pages':[],
                       'indexed_at':datetime.now(timezone.utc).isoformat()}
             title = self._source_title(text, safe_name)
             metadata['source_title'] = title
@@ -296,7 +295,7 @@ class KnowledgeEngine:
                 from pypdf import PdfReader
                 import io
                 pages = [page.extract_text() or '' for page in PdfReader(io.BytesIO(raw)).pages]
-                if '\n'.join(pages) == text:
+                if '\n'.join(pages) == extracted_text:
                     offset = 0
                     metadata['source_pages'] = []
                     for number, page_text in enumerate(pages, 1):

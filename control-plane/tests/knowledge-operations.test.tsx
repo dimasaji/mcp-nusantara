@@ -22,6 +22,23 @@ function renderPage(token='operator-test'){
 beforeEach(()=>{vi.stubGlobal('scrollTo',vi.fn());});
 afterEach(()=>vi.unstubAllGlobals());
 describe('general knowledge operations',()=>{
+  it('opens the newly uploaded document without choosing it from the document list',async()=>{
+    let uploaded=false;
+    const doc={document_id:'new-document',title:'Dokumen baru',status:'READY',updated_at:''};
+    vi.stubGlobal('fetch',vi.fn(async(url:string,init?:RequestInit)=>({ok:true,status:200,json:async()=>{
+      if(init?.method==='POST'){uploaded=true;return {...status.runs[0],document_id:doc.document_id};}
+      if(String(url).includes('/reviews/'))return {...doc,version_id:'a'.repeat(64),source_available:false,source_type:'.txt',text:'Teks layanan',pages:[],problems:[],events:[],trials:[],required_cases:[],approval_requirements:[]};
+      return {...status,documents:uploaded?[doc]:[]};
+    }})));
+    renderPage();
+    fireEvent.click(await screen.findByText('Tambahkan dokumen baru'));
+    const file=new File(['Informasi layanan dan persyaratan dokumen baru.'],'baru.txt');
+    Object.defineProperty(file,'arrayBuffer',{value:async()=>new ArrayBuffer(16)});
+    fireEvent.change(screen.getByLabelText('Pilih dokumen'),{target:{files:[file]}});
+    fireEvent.click(screen.getByRole('button',{name:'Proses dan validasi'}));
+    expect(await screen.findByRole('region',{name:'Pemeriksaan SOP'})).toBeInTheDocument();
+    expect(screen.getAllByRole('heading',{name:'Dokumen baru'}).length).toBeGreaterThan(1);
+  });
   it('opens chat with the selected document and clears an earlier trial version',async()=>{
     sessionStorage.clear();
     sessionStorage.setItem('nusantara-chat-sop-version-pending','b'.repeat(64));

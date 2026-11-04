@@ -22,6 +22,50 @@ def activity_grid_regions(source: Path) -> dict[int, list[tuple]]:
     return regions
 
 
+def layout_grid_regions(source: Path):
+    """Find large raster grids before layout classification, without inventing text.
+
+    Raster detections only guide Docling's existing OCR/table reconstruction.
+    They never enter the native-cell normalization path or certify cell values.
+    """
+    import pymupdf
+    from PIL import Image
+
+    regions = activity_grid_regions(source)
+
+    def centers(values, threshold):
+        groups = []
+        for index, value in enumerate(values):
+            if value < threshold:
+                continue
+            if groups and index == groups[-1][-1] + 1:
+                groups[-1].append(index)
+            else:
+                groups.append([index])
+        return [sum(group) / len(group) for group in groups]
+
+    with pymupdf.open(source) as pdf:
+        for number, page in enumerate(pdf, 1):
+            if number in regions or page.get_text().strip():
+                continue
+            pixmap = page.get_pixmap(matrix=pymupdf.Matrix(1.5, 1.5), alpha=False)
+            image = Image.frombytes('RGB', (pixmap.width, pixmap.height), pixmap.samples).convert('L')
+            mask = image.point(lambda value: 255 if value < 200 else 0)
+            horizontal = centers(list(mask.resize((1, mask.height), Image.Resampling.BOX).getdata()), 255 * .40)
+            if len(horizontal) < 5:
+                continue
+            top, bottom = int(horizontal[0]), int(horizontal[-1]) + 1
+            body = mask.crop((0, top, mask.width, bottom))
+            vertical = centers(list(body.resize((body.width, 1), Image.Resampling.BOX).getdata()), 255 * .40)
+            if len(vertical) < 6 or vertical[-1] - vertical[0] < mask.width * .60:
+                continue
+            sx, sy = page.rect.width / mask.width, page.rect.height / mask.height
+            regions[number] = [(max(0, vertical[0] - 2) * sx, max(0, horizontal[0] - 2) * sy,
+                                min(mask.width, vertical[-1] + 2) * sx,
+                                min(mask.height, horizontal[-1] + 2) * sy)]
+    return regions
+
+
 def normalize_activity_grids(payload, source: Path):
     """Retain native Docling JSON, repair merged columns from ruled source cells.
 
@@ -146,16 +190,19 @@ def ruled_grid_pipeline():
             self.original = original
 
         def __call__(self, result, pages):
-            regions = activity_grid_regions(result.input.file)
+            regions = layout_grid_regions(result.input.file)
             for page in self.original(result, pages):
                 for region in regions.get(page.page_no, []):
                     bbox = BoundingBox(l=region[0], t=region[1], r=region[2], b=region[3], coord_origin=CoordOrigin.TOPLEFT)
                     def inside(box):
                         box = box.to_top_left_origin(page.size.height)
                         return bbox.l <= (box.l + box.r) / 2 <= bbox.r and bbox.t <= (box.t + box.b) / 2 <= bbox.b
-                    cells = [c for c in page.cells if inside(c.rect.to_bounding_box())]
-                    if not cells:
-                        continue
+                    # Some backends expose OCR words without textline cells.
+                    source_cells = page.cells
+                    if not source_cells and page._backend is not None:
+                        segmented = page._backend.get_segmented_page()
+                        source_cells = segmented.word_cells if segmented is not None else []
+                    cells = [c for c in source_cells if inside(c.rect.to_bounding_box())]
                     clusters = page.predictions.layout.clusters
                     retained = [c for c in clusters if not inside(c.bbox)]
                     retained.append(Cluster(id=max((c.id for c in clusters), default=0) + 1,
