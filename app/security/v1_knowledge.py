@@ -60,6 +60,25 @@ class V1KnowledgeBoundary:
         return {item['document_id']: self._versions[item['document_id']]
                 for item in answer.get('evidence', [])}
 
+    def document_answer_facts(self, question, evidence):
+        """Approved document chat invokes the same registered core skill."""
+        if self._review_trial:
+            from app.knowledge.document_answers import document_answer_facts
+            return document_answer_facts(question, evidence)
+        if not self._operator or len(evidence) != 1:
+            return None
+        item = evidence[0]
+        version = item.metadata.get('version_id')
+        if not version:
+            return None
+        from app.skills.composition import OPERATOR_PERMISSIONS
+        result = self._engine.skills.execute('sop.facts',
+            {'document_id': item.document_id, 'version_id': version, 'question': question},
+            role='operator', permissions=set(OPERATOR_PERMISSIONS), requested_by='operator-chat')
+        if result.status != 'executed':
+            raise HTTPException(503, 'SOP_SKILL_UNAVAILABLE')
+        return result.output.get('facts')
+
     def validate_response(self, answer, source_versions=None):
         if not isinstance(answer, dict):
             raise HTTPException(409, 'CHAT_SOURCE_VERSION_UNAVAILABLE')

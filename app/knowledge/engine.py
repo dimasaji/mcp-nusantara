@@ -34,8 +34,18 @@ class KnowledgeEngine:
         self._pipeline_initialized = False
         self._pipeline_schema_lock = Lock()
         self._pipeline_process_lock = Lock()
+        self._skills_lock = Lock()
+        self._skills = None
         self.rag = rag if rag is not None else (
             create_rag(nusantara_config=nusantara_config) if nusantara_config is not None else create_rag())
+
+    @property
+    def skills(self):
+        with self._skills_lock:
+            if self._skills is None:
+                from app.skills.composition import build_skill_runtime
+                self._skills = build_skill_runtime(self)
+        return self._skills
 
     def ingest_document(self, document: Any):
         # Accept the lightweight API Document model as well as the canonical
@@ -262,6 +272,11 @@ class KnowledgeEngine:
         with self._pipeline_process_lock:
             return self._process_knowledge_source(filename,raw,document_id,source_metadata)
 
+    def intake_document(self, filename: str, raw: bytes):
+        """Automatic intake shared by HTTP upload, inbox and retry."""
+        from app.skills.composition import prepare_uploaded_source
+        return prepare_uploaded_source(self, self.process_knowledge_source(filename, raw), filename)
+
     def _process_knowledge_source(self, filename, raw, document_id=None, source_metadata=None):
         """Extract, validate, deduplicate and index using Chat's existing RAG/store."""
         safe_name=Path(filename.replace('\\','/')).name[:200] or 'document'
@@ -348,7 +363,7 @@ class KnowledgeEngine:
         raw=source.read_bytes()
         if hashlib.sha256(raw).hexdigest()!=row['source_sha256']:
             raise ValueError('STORED_SOURCE_INTEGRITY_MISMATCH')
-        return self.process_knowledge_source(row['filename'],raw)
+        return self.intake_document(row['filename'], raw)
 
     def set_knowledge_watch(self, enabled: bool) -> dict[str, Any]:
         folder=(Path(self.rag._store.db_path).resolve().parent/'inbox').resolve()
@@ -385,7 +400,8 @@ class KnowledgeEngine:
                 with self._pipeline_db() as conn:
                     seen=conn.execute('SELECT 1 FROM knowledge_pipeline_runs WHERE source_sha256=?',(digest,)).fetchone()
                 if not seen:
-                    self.process_knowledge_source(path.name,raw);done+=1
+                    self.intake_document(path.name, raw)
+                    done += 1
             except OSError as exc:
                 self._record_pipeline(path.name,'0'*64,'FAILED',f'FILE_READ_FAILED:{type(exc).__name__}')
         return done

@@ -217,7 +217,7 @@ def create_knowledge_pipeline_router(run_sync):
         if not raw:
             raise HTTPException(422, 'DOCUMENT_EMPTY')
         try:
-            return await run_sync(knowledge.process_knowledge_source, filename, raw, timeout_s=90)
+            return await run_sync(knowledge.intake_document, filename, raw, timeout_s=90)
         except HTTPException:
             raise
         except Exception as exc:
