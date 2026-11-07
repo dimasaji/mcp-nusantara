@@ -110,3 +110,22 @@ def test_native_scan_reconstructs_both_activity_pages(tmp_path):
     assert {2, 3}.issubset(table_pages)
     assert payload['page_count'] == 3
     assert payload['docling_json']['pages']
+    from types import SimpleNamespace
+
+    from app.knowledge.docling_layout import normalize_activity_grids
+    from app.knowledge.document_answers import document_answer_facts
+
+    normalized = normalize_activity_grids(payload, source)
+    assert normalized['status'] == 'COMPLETE', normalized['warnings']
+    assert [r['number'] for r in normalized['activity_rows']] == list(range(1, 18))
+    item = SimpleNamespace(title='Layanan contoh', document_id='native', score=1.,
+        metadata={'sop_rows': normalized['activity_rows'],
+                  'full_document_text': normalized['full_document_text']})
+    requirements = document_answer_facts('Apa persyaratannya?', [item])
+    assert 'Surat Keterangan Lahir' in requirements['fallback']
+    assert 'Alamat Email' in requirements['fallback']
+    duration = document_answer_facts('Berapa lama?', [item])
+    assert duration['fallback'] == 'Menurut SOP: 4 Hari Kerja.'
+    assert duration['pages'] == [3]
+    procedure = document_answer_facts('Bagaimana prosedurnya?', [item])
+    assert procedure['pages'] == [2, 3]

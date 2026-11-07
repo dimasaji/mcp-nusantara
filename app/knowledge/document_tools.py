@@ -12,7 +12,7 @@ from uuid import uuid4
 from .docling_config import CONFIG, effective_config
 from .sop_review import SOPReview
 
-PARSER_VERSION = 'docling-2.142.1/adapter-9-raster-grid'
+PARSER_VERSION = 'docling-2.142.1/adapter-10-source-cell-core'
 _executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='docling')
 
 
