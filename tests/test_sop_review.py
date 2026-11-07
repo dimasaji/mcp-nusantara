@@ -28,7 +28,38 @@ def confirm_fixture_metadata(review, detail):
     return review.confirm_metadata(detail['document_id'], detail['version_id'], data, 'fixture-reviewer')
 
 
-def test_approval_requires_content_and_every_required_trial_and_survives_restart(tmp_path):
+def test_approval_without_manual_trials_activates_chat_and_survives_restart(tmp_path):
+    from app.security.v1_knowledge import V1KnowledgeBoundary
+
+    path = tmp_path / 'chat.db'
+    engine = engine_at(path)
+    identifier = engine.process_knowledge_source('layanan.txt',
+        b'Persyaratan layanan: Surat Pengantar. Waktu layanan: 2 hari kerja.')['document_id']
+    review = SOPReview(engine)
+    detail = review.detail(identifier)
+    version = detail['version_id']
+    review.decide(identifier, version, 'content_ok', 'operator')
+    ready = confirm_fixture_metadata(review, review.detail(identifier))
+    assert ready['can_approve'] is True
+    assert ready['status'] == 'Siap disetujui'
+    assert all(item['satisfied'] for item in ready['approval_requirements'])
+    approved = review.decide(identifier, version, 'approve', 'operator')
+    assert approved['status'] == 'Aktif'
+    assert approved['trials'] == []
+    assert review.decide(identifier, version, 'approve', 'operator')['approval'] == approved['approval']
+
+    restarted = engine_at(path)
+    assert SOPReview(restarted).detail(identifier)['status'] == 'Aktif'
+    for scope in (None, [identifier]):
+        boundary = V1KnowledgeBoundary(restarted, operator=True, provider='ollama',
+                                       document_ids=scope)
+        evidence = boundary.search_knowledge('Persyaratan')
+        assert [item.document_id for item in evidence] == [identifier]
+        assert 'Surat Pengantar' in evidence[0].source
+    assert V1KnowledgeBoundary(restarted, operator=False, provider='ollama').search_knowledge('Persyaratan') == []
+
+
+def test_review_changes_invalidate_approval_and_survive_restart(tmp_path):
     engine = engine_at(tmp_path / 'chat.db')
     run = engine.process_knowledge_source('sop.txt', b'Persyaratan: Surat Permohonan. Prosedur: serahkan berkas. Waktu: 3 hari kerja.')
     review = SOPReview(engine)

@@ -7,13 +7,16 @@ import os
 import re
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from threading import Lock
 from uuid import uuid4
 
 from .docling_config import CONFIG, effective_config
 from .sop_review import SOPReview
 
-PARSER_VERSION = 'docling-2.142.1/adapter-8-validated-grid'
+PARSER_VERSION = 'docling-2.142.1/adapter-10-source-cell-core'
 _executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='docling')
+_scheduled_lock = Lock()
+_scheduled = set()
 
 
 class DocumentReadError(ValueError):
@@ -62,7 +65,7 @@ class DocumentTools:
     def status(self, document_id, version=None):
         detail = self._identity(document_id, version)
         with self.engine._pipeline_db() as conn:
-            conn.execute("UPDATE document_extractions SET status='FAILED',error='WORKER_LEASE_EXPIRED: proses terhenti; proses ulang tersedia',updated_at=CURRENT_TIMESTAMP WHERE status IN ('QUEUED','PROCESSING') AND updated_at < datetime('now','-20 minutes')")
+            self._expire_processing(conn)
             row = self._row(conn, document_id, detail)
         return ({key: row[key] for key in ('job_id', 'status', 'error', 'updated_at')}
                 if row else {'status': 'NOT_PROCESSED', 'error': None})
@@ -152,6 +155,16 @@ class DocumentTools:
                 'changes': changes[:20], 'omitted_blocks': max(0, len(changes) - 20)}
 
     def process(self, document_id, version, *, force=False):
+        result = self.enqueue(document_id, version, force=force)
+        self.resume_queued()
+        return result
+
+    @staticmethod
+    def _expire_processing(conn):
+        conn.execute("UPDATE document_extractions SET status='FAILED',error='WORKER_LEASE_EXPIRED: proses terhenti; proses ulang tersedia',updated_at=CURRENT_TIMESTAMP WHERE status='PROCESSING' AND updated_at < datetime('now','-20 minutes')")
+
+    def enqueue(self, document_id, version, *, force=False):
+        """Persist a source/configuration-bound request before any dispatch."""
         detail = self._identity(document_id, version)
         self.status(document_id, version)
         if detail.get('_historical') or version != detail['version_id']:
@@ -166,14 +179,58 @@ class DocumentTools:
             conn.execute('BEGIN IMMEDIATE')
             row = conn.execute("SELECT job_id,status FROM document_extractions WHERE cache_key=? AND status IN ('QUEUED','PROCESSING','COMPLETE') ORDER BY rowid DESC LIMIT 1", (key,)).fetchone()
             if row and (not force or row['status'] != 'COMPLETE'):
-                return dict(row)
-            if conn.execute("SELECT 1 FROM document_extractions WHERE status IN ('QUEUED','PROCESSING','STOPPING') LIMIT 1").fetchone():
-                raise DocumentReadError('DOCUMENT_CONVERSION_BUSY: satu konversi sedang berjalan')
-            job = uuid4().hex
-            conn.execute('INSERT INTO document_extractions(job_id,document_id,version,cache_key,status) VALUES(?,?,?,?,?)',
-                         (job, document_id, source_version, key, 'QUEUED'))
-        _executor.submit(self._convert, job, path, detail, digest, force, configuration)
-        return {'job_id': job, 'status': 'QUEUED'}
+                result = dict(row)
+            else:
+                job = uuid4().hex
+                payload = {'blocks': [], 'warnings': [], 'queue_request': {
+                    'configuration': configuration, 'parser_version': PARSER_VERSION, 'digest': digest, 'force': force}}
+                conn.execute('INSERT INTO document_extractions(job_id,document_id,version,cache_key,status,payload) VALUES(?,?,?,?,?,?)',
+                             (job, document_id, source_version, key, 'QUEUED', json.dumps(payload)))
+                result = {'job_id': job, 'status': 'QUEUED'}
+        return result
+
+    def _validate_request(self, path, detail, digest, configuration):
+        current = self.review.detail(detail['document_id'])
+        source, _, actual_digest = self.review.source(detail['document_id'])
+        if (source is None or source.resolve() != path.resolve() or actual_digest != digest
+                or current['source_version_id'] != detail['source_version_id']
+                or effective_config() != configuration):
+            raise DocumentReadError('DOCUMENT_QUEUE_SOURCE_OR_CONFIGURATION_CHANGED')
+
+    def resume_queued(self):
+        """Resume waiting jobs only; do not replay an unknown in-flight worker."""
+        with self.engine._pipeline_db() as conn:
+            self._expire_processing(conn)
+            jobs = conn.execute("SELECT * FROM document_extractions WHERE status='QUEUED' ORDER BY rowid LIMIT 32").fetchall()
+        count = 0
+        for row in jobs:
+            key = (str(self.root), row['job_id'])
+            with _scheduled_lock:
+                if key in _scheduled:
+                    continue
+                _scheduled.add(key)
+            try:
+                request = json.loads(row['payload'] or '{}')['queue_request']
+                detail = self.review.detail(row['document_id'])
+                path, _, digest = self.review.source(row['document_id'])
+                if (detail['source_version_id'] != row['version'] or path is None
+                        or digest != request['digest'] or request['parser_version'] != PARSER_VERSION):
+                    raise DocumentReadError('DOCUMENT_QUEUE_SOURCE_OR_CONFIGURATION_CHANGED')
+                self._validate_request(path, detail, digest, request['configuration'])
+                future = _executor.submit(self._convert, row['job_id'], path, detail, digest,
+                                          request['force'], request['configuration'])
+                def finished(_future, scheduled_key=key):
+                    with _scheduled_lock:
+                        _scheduled.discard(scheduled_key)
+                future.add_done_callback(finished)
+                count += 1
+            except Exception as exc:
+                with _scheduled_lock:
+                    _scheduled.discard(key)
+                with self.engine._pipeline_db() as conn:
+                    conn.execute("UPDATE document_extractions SET status='FAILED',error=?,updated_at=CURRENT_TIMESTAMP WHERE job_id=? AND status='QUEUED'",
+                                 (f'DOCUMENT_QUEUE_INVALID: {type(exc).__name__}: {str(exc)[:300]}', row['job_id']))
+        return count
 
     def _convert(self, job, path, detail, digest, force=False, configuration=None):
         configuration = configuration or CONFIG
@@ -183,7 +240,16 @@ class DocumentTools:
         try:
             self.root.mkdir(parents=True, exist_ok=True)
             with self.engine._pipeline_db() as conn:
-                conn.execute("UPDATE document_extractions SET status='PROCESSING',updated_at=CURRENT_TIMESTAMP WHERE job_id=?", (job,))
+                conn.execute('BEGIN IMMEDIATE')
+                row = conn.execute('SELECT status FROM document_extractions WHERE job_id=?', (job,)).fetchone()
+                if row is None or row['status'] != 'QUEUED':
+                    return
+                if conn.execute("SELECT 1 FROM document_extractions WHERE status IN ('PROCESSING','STOPPING') LIMIT 1").fetchone():
+                    return
+                conn.execute("UPDATE document_extractions SET status='PROCESSING',updated_at=CURRENT_TIMESTAMP WHERE job_id=? AND status='QUEUED'", (job,))
+            # A future can wait behind a long conversion. Revalidate bindings
+            # at actual execution time, not just when it was scheduled.
+            self._validate_request(path, detail, digest, configuration)
             env = {**os.environ, 'HF_HUB_OFFLINE': '1', 'OMP_NUM_THREADS': '2', 'CUDA_VISIBLE_DEVICES': '',
                    'NUSANTARA_DOCLING_CONFIG': json.dumps(configuration)}
             payload = None
@@ -206,6 +272,7 @@ class DocumentTools:
                 payload = json.loads(output.read_text(encoding='utf-8'))
             from .docling_layout import normalize_activity_grids
             payload = normalize_activity_grids(payload, path)
+            self._validate_request(path, detail, digest, configuration)
             payload.update(document_id=detail['document_id'], title=detail['title'], version=detail['version_id'],
                            pdf_sha256=digest, parser_version=PARSER_VERSION, configuration=configuration)
             payload['version'] = self.review.extracted_version(detail['source_version_id'], payload)
@@ -215,7 +282,7 @@ class DocumentTools:
             temporary.write_text(json.dumps(payload, ensure_ascii=False), encoding='utf-8')
             temporary.replace(output)
             with self.engine._pipeline_db() as conn:
-                conn.execute('UPDATE document_extractions SET status=?,payload=?,error=?,updated_at=CURRENT_TIMESTAMP WHERE job_id=?',
+                conn.execute("UPDATE document_extractions SET status=?,payload=?,error=?,updated_at=CURRENT_TIMESTAMP WHERE job_id=? AND status='PROCESSING'",
                              (status, json.dumps(payload, ensure_ascii=False), error, job))
         except Exception as exc:
             with self.engine._pipeline_db() as conn:

@@ -184,12 +184,6 @@ class SOPReview:
         resolved = {e['problem_id'] for e in events if e['kind'] == 'resolve'}
         problems = [p for p in problems if p['event_id'] not in resolved]
         content_ok = any(e['kind'] == 'content_ok' for e in events)
-        latest_trials = {t['case_id']: t for t in trials}
-        complete = all(case in latest_trials and latest_trials[case]['rating']
-                       and latest_trials[case]['rating']['ok'] for case in REQUIRED_CASES)
-        # Failed historical answers stay failed. An operator may resolve their
-        # issue after a replacement succeeds, without rewriting the old verdict.
-        all_ok = bool(trials) and all(t['rating'] and (t['rating']['ok'] or t['rating']['event_id'] in resolved) for t in trials)
         extraction_ready = not is_pdf or extraction['status'] == 'COMPLETE'
         index_ready = (not is_pdf) or (doc.metadata.get('pipeline_status') == 'READY')
         metadata_event = next((e for e in reversed(events) if e['kind'] == 'official_metadata'), None)
@@ -201,10 +195,8 @@ class SOPReview:
             except ValueError:
                 lineage_ok = False
         metadata_allowed = bool(metadata and metadata.publication_allowed() and lineage_ok)
-        # Approval no longer requires manual trial rating; trials are internal
-        # automated checks. Integrity checks (source, extraction, content,
-        # metadata, no open problems, index readiness) remain mandatory.
-        ready = bool(path and extraction_ready and content_ok and not problems and metadata_allowed and index_ready)
+        # Trials are optional diagnostics. Reported failures remain open problems
+        # until explicitly resolved; source/content/metadata/index checks still gate approval.
         approval_requirements = [
             {'key': 'source_available', 'satisfied': bool(path)},
             {'key': 'extraction_complete', 'satisfied': extraction_ready},
@@ -212,12 +204,10 @@ class SOPReview:
             {'key': 'metadata_checked', 'satisfied': metadata is not None},
             {'key': 'metadata_publication_allowed', 'satisfied': metadata_allowed},
             {'key': 'metadata_revision_valid', 'satisfied': lineage_ok},
-            *[{'key': f'case:{case}', 'satisfied': bool(
-                latest_trials.get(case) and latest_trials[case]['rating'] and latest_trials[case]['rating']['ok'])}
-              for case in REQUIRED_CASES],
-            {'key': 'all_trials_reviewed', 'satisfied': bool(all_ok)},
+            {'key': 'index_ready', 'satisfied': index_ready},
             {'key': 'no_open_problems', 'satisfied': not problems},
         ]
+        ready = all(item['satisfied'] for item in approval_requirements)
         approval = next((e for e in reversed(events) if e['kind'] == 'approve'), None)
         publication_decision = next((e for e in reversed(events)
                                      if e['kind'] == 'approve' or e['kind'] in PUBLICATION_BLOCKS), None)
@@ -243,11 +233,8 @@ class SOPReview:
             status = 'Hubungan revisi perlu diperiksa'
         elif not metadata_allowed:
             status = 'Keberlakuan perlu diperiksa'
-        elif not complete:
-            missing_cases = [case for case in REQUIRED_CASES if case not in latest_trials or not (latest_trials[case].get('rating') and latest_trials[case]['rating'].get('ok'))]
-            status = 'Menunggu penilaian percobaan: ' + ', '.join(missing_cases) if missing_cases else 'Isi sudah diperiksa'
-        elif not all_ok:
-            status = 'Ada percobaan yang belum sesuai; periksa dan selesaikan masalahnya'
+        elif not index_ready:
+            status = 'Menunggu indeks Knowledge'
         elif ready and approval is not None and not approval_current:
             status = 'Siap disetujui (approval perlu diperbarui)'
         elif ready and approval_current:
@@ -345,7 +332,7 @@ class SOPReview:
             detail = self._check(document_id, version)
             if action == 'approve':
                 if not detail['can_approve']:
-                    raise ValueError('Periksa isi dan metadata resmi, nilai lima percobaan wajib dan selesaikan semua masalah sebelum menyetujui.')
+                    raise ValueError('Periksa isi dan metadata resmi, pastikan indeks siap dan selesaikan semua masalah sebelum menyetujui.')
                 if detail['status'] == 'Aktif':
                     return detail
                 logical_id = detail['official_metadata']['logical_sop_id']

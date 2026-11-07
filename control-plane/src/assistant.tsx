@@ -49,7 +49,7 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
   const logicalRequest=useRef<{question:string;session:string;id:string;retryOf?:string}|null>(null);
   async function refreshHistory(active=()=>true){
     const requestedSession=session;
-    try{const history=await fetchChatHistory(session,selectedDocument?token:'');if(active()&&currentSession.current===requestedSession){
+    try{const history=await fetchChatHistory(session,token);if(active()&&currentSession.current===requestedSession){
       const restored=history.turns.filter(t=>t.answer!==null).map(t=>({question:t.question,answer:t.answer!,requestId:t.request_id}));
       if(restored[0]?.question&&!titles[session])setTitles(old=>{const next={...old,[session]:restored[0].question.trim().replace(/\s+/g,' ').slice(0,60)};if(!token)localStorage.setItem(storagePrefix+'-titles',JSON.stringify(next));return next;});
       setMessages(current=>[...restored,...current.filter(t=>!restored.some(r=>r.answer.timestamp===t.answer.timestamp&&r.question===t.question))]);

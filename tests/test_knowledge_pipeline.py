@@ -87,8 +87,7 @@ def test_folder_watch_uses_the_same_pipeline_and_deduplicates(tmp_path):
 
 
 def test_piak03_extracted_sop_is_only_a_generic_pipeline_fixture(tmp_path):
-    fixture = (Path(__file__).resolve().parents[1] / 'artifacts/sop-integration'
-               / 'run-20261015T090151-a46af298/PERMOHONAN_DATA_PRIBADI/ingestion-text.txt')
+    fixture = Path(__file__).parent / 'fixtures/piak03-extracted.txt'
     assert fixture.is_file(), 'PIAK-03 extracted-text fixture must remain available for pipeline verification'
     rag = FakeRag(tmp_path / 'chat.db')
     result = KnowledgeEngine(rag=rag).process_knowledge_source(fixture.name, fixture.read_bytes())

@@ -26,7 +26,7 @@ const approvalLabels:Record<string,string>={
   source_available:'File sumber tersedia',
   extraction_complete:'Ekstraksi Docling selesai',
   content_checked:'Pemeriksaan isi ditandai sesuai',
-  all_trials_reviewed:'Semua percobaan dinilai sesuai atau masalahnya diselesaikan',
+  index_ready:'Indeks Knowledge siap digunakan',
   no_open_problems:'Tidak ada masalah terbuka',
 };
 function approvalLabel(key:string){
@@ -130,7 +130,7 @@ export function SOPReviewPanel({documentId,token}:{documentId:string;token:strin
         <button disabled={busy} onClick={()=>openReport('content')}>Laporkan kesalahan</button>
       </>}
       {review.comparison&&<details><summary>Perubahan dari hasil baca sebelumnya</summary><p>{review.comparison.changed_blocks} blok berubah. Periksa kembali PDF sebelum menyetujui; perubahan hasil baca tidak otomatis mengubah keputusan operator.</p><small>Versi sebelumnya: {review.comparison.previous_version_id}</small>{review.comparison.changes.map(change=><article key={change.block_id}><p>Halaman {change.pages.join(', ')} · {change.block_id}</p><p style={{whiteSpace:'pre-wrap'}}>Sebelumnya: {change.before||'(Tidak ada blok)'}</p><p style={{whiteSpace:'pre-wrap'}}>Sekarang: {change.after||'(Blok dihapus)'}</p>{change.excerpt_truncated&&<p>Cuplikan dipendekkan. Baca isi lengkap pada PDF.</p>}</article>)}{review.comparison.omitted_blocks>0&&<p>{review.comparison.omitted_blocks} blok lain tidak ditampilkan; periksa sumber lengkap.</p>}</details>}
-      </div><div className="sop-review-stage"><h3>2. Coba dan nilai jawaban</h3><p>Tanyakan isi SOP, buka halaman sumber, lalu tandai apakah jawabannya sesuai.</p>
+      </div><div className="sop-review-stage"><h3>2. Coba jawaban (opsional)</h3><p>Anda dapat mencoba jawaban dan melaporkan masalah. Uji chat manual tidak menjadi syarat persetujuan SOP.</p>
       <button disabled={busy||(review.source_type==='.pdf'?review.extraction?.status!=='COMPLETE':!review.content_ok)} onClick={()=>setChat(true)}>Coba chat SOP ini</button>
       {review.extraction?.status==='COMPLETE'&&<Link to="/" onClick={()=>{sessionStorage.setItem('nusantara-chat-document-pending',documentId);sessionStorage.setItem('nusantara-chat-sop-version-pending',review.version_id);}}>Uji di chat utama</Link>}
       {!review.content_ok&&<p>Persetujuan isi belum diberikan. Percobaan teknis tersedia setelah ekstraksi lengkap; keputusan isi tetap oleh operator.</p>}
@@ -148,13 +148,13 @@ export function SOPReviewPanel({documentId,token}:{documentId:string;token:strin
       {review.problems.map(p=><article key={p.event_id}><p>Masalah terbuka: {p.note}</p><p>Kategori: {correctionCategories[p.category??'unknown']??p.category}</p><button disabled={busy} onClick={()=>openReport(`resolve:${p.event_id}`)}>Catat penyelesaian masalah</button></article>)}
       {report&&<div role="region" aria-label="Catatan masalah"><label>Kategori masalah<select value={category} disabled={busy} onChange={e=>setCategory(e.target.value)}>{Object.entries(correctionCategories).map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></label><label>Catatan wajib<textarea autoFocus value={note} maxLength={2000} onChange={e=>setNote(e.target.value)} disabled={busy}/></label><button disabled={busy||!note.trim()} onClick={()=>void act(()=>report==='content'?decide('problem'):report.startsWith('resolve:')?decide('resolve',report.slice(8)):requestReview(`${id}/trials/${report}/rating`,token,{version_id:review.version_id,ok:false,note,category}))}>Simpan catatan</button>{!note.trim()&&<p>Isi catatan sebelum menyimpan.</p>}<button disabled={busy} onClick={()=>setReport(null)}>Batal</button></div>}
       <section className="panel" aria-label="Syarat persetujuan"><h4>Syarat persetujuan</h4><ul>{review.approval_requirements.map(item=><li key={item.key}>{item.satisfied?'Terpenuhi:':'Belum terpenuhi:'} {approvalLabel(item.key)}</li>)}</ul>
-        {unverifiedRatingCount>0&&<p role="note">{unverifiedRatingCount} rating tersimpan memakai token admin bersama; identitas penilainya tidak tercatat. Periksa kembali dan nilai ulang secara manual sebelum menyetujui.</p>}
+        {unverifiedRatingCount>0&&<p role="note">{unverifiedRatingCount} rating tersimpan memakai token admin bersama; identitas penilainya tidak tercatat. Riwayat percobaan ini tersedia sebagai informasi pemeriksaan.</p>}
       </section>
       <button disabled={busy||!review.can_approve||review.status==='Aktif'} onClick={()=>void act(()=>decide('approve'))}>Setujui untuk digunakan</button>
       <div role="group" aria-label="Keputusan penggunaan dokumen">{(Object.keys(publicationActions) as PublicationAction[]).filter(action=>action!=='revoke'||review.publication_decision?.kind==='approve'||review.status==='Aktif').map(action=><button key={action} disabled={busy} onClick={()=>{setPublicationAction(action);setReport(null);setNote('');}}>{publicationActions[action]}</button>)}</div>
       {publicationAction&&<section aria-label="Alasan keputusan operator"><p>{publicationActions[publicationAction]}: dokumen tidak akan dipakai untuk jawaban baru di Chat utama. Pratinjau pemeriksaan tetap tersedia.</p><label>Alasan keputusan<textarea autoFocus value={note} maxLength={2000} disabled={busy} onChange={e=>setNote(e.target.value)}/></label><button disabled={busy||!note.trim()} onClick={()=>void act(()=>requestReview(`${id}/decision`,token,{version_id:review.version_id,action:publicationAction,note}))}>Simpan keputusan</button><button disabled={busy} onClick={()=>{setPublicationAction(null);setNote('');}}>Batal keputusan</button></section>}
       {review.publication_decision?.note&&<p>Alasan: {review.publication_decision.note}</p>}
-      {!review.can_approve&&<p>Persetujuan menunggu pemeriksaan isi, penilaian seluruh jawaban, lima jenis percobaan terbaru yang dinilai sesuai, dan penyelesaian masalah terbuka. Jawaban lama yang salah tetap tercatat; lakukan percobaan pengganti lalu catat penyelesaiannya.</p>}
+      {!review.can_approve&&<p>Lengkapi pemeriksaan isi dan metadata, pastikan pembacaan dokumen dan indeks Knowledge siap, lalu selesaikan masalah terbuka sebelum menyetujui.</p>}
       {review.status==='Aktif'&&<><p>Persetujuan versi ini tersimpan.</p><Link to="/" onClick={()=>{sessionStorage.setItem('nusantara-chat-document-pending',documentId);sessionStorage.removeItem('nusantara-chat-sop-version-pending');}}>Buka chat</Link></>}
       </div>
     </>}
