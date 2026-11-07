@@ -106,9 +106,11 @@ def normalize_activity_grids(payload, source: Path):
     normalization never invents values, and records the extraction method.
     """
     import pymupdf
+
+    from .sop_tables import normalize_docling_tables
     regions = activity_grid_regions(source)
     if not regions:
-        return payload
+        return normalize_docling_tables(payload)
     blocks, activities, search_text = [], [], []
     labels = {'No.': 'number', 'Uraian Kegiatan': 'activity', 'Kelengkapan': 'kelengkapan',
               'Waktu': 'waktu', 'Output': 'output', 'Keterangan': 'keterangan'}
@@ -181,13 +183,18 @@ def normalize_activity_grids(payload, source: Path):
                            if label.split(' / ')[-1] in labels}
                 if not {'number', 'activity', 'kelengkapan'}.issubset(columns):
                     raise ValueError('RULED_GRID_HEADERS_INCOMPLETE')
-                for values in body:
+                for rindex, values in enumerate(body, header_count):
                     number = values[columns['number']]
                     if not number.isdigit():
                         raise ValueError('RULED_GRID_ACTIVITY_NUMBER_INVALID')
                     row = {key: values[col] for key, col in columns.items()}
                     activities.append({**row, 'number': int(number), 'page': page_number,
-                                       'block_id': key, 'headers': headers})
+                                       'block_id': key, 'headers': headers,
+                                       'method': 'pdf-ruled-grid-validated',
+                                       'source_cells': {field: {'text': raw_rows[rindex][col] or '',
+                                           'bbox': table.rows[rindex].cells[col], 'page_number': page_number,
+                                           'start_row_offset_idx': rindex, 'start_col_offset_idx': col}
+                                                        for field, col in columns.items()}})
                 def escape(value):
                     return value.replace('|', '\\|')
                 markdown = '\n'.join(['|' + '|'.join(map(escape, headers)) + '|',
@@ -198,8 +205,6 @@ def normalize_activity_grids(payload, source: Path):
                                'table_data': {'headers': headers, 'rows': body, 'num_rows': len(body),
                                               'num_cols': len(headers), 'source_cells': [r.cells for r in table.rows]},
                                'flowchart_nodes': nodes})
-    if [r['number'] for r in activities] != list(range(1, len(activities) + 1)):
-        raise ValueError('RULED_GRID_SEQUENCE_INVALID')
     pages = sorted({r['page'] for r in activities})
     for block in blocks:
         if block['type'] == 'table':
@@ -207,14 +212,14 @@ def normalize_activity_grids(payload, source: Path):
     # Native Docling texts supplement scanned/non-grid regions in the search
     # corpus. Whole-document absence must not depend on a context projection.
     search_text.extend(item.get('text', '') for item in payload.get('docling_json', {}).get('texts', []))
-    return {**payload, 'blocks': blocks, 'activity_rows': activities,
+    return normalize_docling_tables({**payload, 'blocks': blocks, 'activity_rows': activities,
             'full_document_text': '\n'.join(search_text),
             'markdown': '\n\n'.join(b['content'] for b in blocks),
             'normalization': {'method': 'docling-plus-pdf-ruled-grid', 'source': 'physical PDF cells',
-                              'activity_count': len(activities), 'native_docling_json_preserved': True}}
+                              'activity_count': len(activities), 'native_docling_json_preserved': True}})
 
 
-def ruled_grid_pipeline(detected_regions: dict[int, list[tuple]] | None = None):
+def ruled_grid_pipeline(detected_regions: dict[int, list[tuple]] | None = None, source_headers=None):
     from docling.datamodel.base_models import Cluster
     from docling.pipeline.standard_pdf_pipeline import StandardPdfPipeline
     from docling_core.types.doc import BoundingBox, CoordOrigin, DocItemLabel
@@ -229,6 +234,19 @@ def ruled_grid_pipeline(detected_regions: dict[int, list[tuple]] | None = None):
                 page_regions = regions.get(page.page_no, []) or scanned_activity_grid_regions(page)
                 if page_regions and detected_regions is not None:
                     detected_regions[page.page_no] = page_regions
+                if page_regions and source_headers is not None:
+                    from .sop_tables import column_field
+                    headers = []
+                    for cell in page.cells:
+                        if not column_field(cell.text):
+                            continue
+                        box = cell.rect.to_bounding_box().to_top_left_origin(page.size.height)
+                        x, y = (box.l + box.r)/2, (box.t + box.b)/2
+                        if any(left <= x <= right and top <= y <= top+(bottom-top)/4
+                               for left, top, right, bottom in page_regions):
+                            headers.append({'text': cell.text, 'bbox': box.model_dump(mode='json'),
+                                            'page_number': page.page_no, 'method': 'page-ocr-header'})
+                    source_headers[page.page_no] = headers
                 for region in page_regions:
                     bbox = BoundingBox(l=region[0], t=region[1], r=region[2], b=region[3], coord_origin=CoordOrigin.TOPLEFT)
                     def inside(box, region_bbox=bbox, height=page.size.height):

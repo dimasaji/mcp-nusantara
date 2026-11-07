@@ -7,7 +7,7 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parents[2]
 CONFIG = {'device': 'cpu', 'threads': 2, 'ocr': 'tesseract_cli', 'languages': ['ind', 'eng'],
           'force_full_page_ocr': False, 'tables': True, 'timeout_seconds': 600,
-          'ocr_policy': 'native-text-first', 'normalization_version': 'ruled-grid-raster-3'}
+          'ocr_policy': 'native-text-first', 'normalization_version': 'source-cell-core-4'}
 _hashes = {}
 
 
