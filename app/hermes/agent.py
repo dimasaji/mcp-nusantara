@@ -533,7 +533,8 @@ class HermesAgent:
         service_facts=None if (conversation or repeated_text is not None or pilot_chat) else service_answer_facts(turn,evidence,previous)
         if pilot_chat and evidence:
             from app.knowledge.document_answers import document_answer_facts
-            service_facts = document_answer_facts(request.user_input, evidence)
+            fact_reader = getattr(_knowledge, 'document_answer_facts', document_answer_facts)
+            service_facts = await _run_sync_v1(fact_reader, request.user_input, evidence)
         answer_evidence=evidence
         service_context={} if conversation or (turn.get('facet') and turn.get('topic_hint')) else None
         if _cari_handled:

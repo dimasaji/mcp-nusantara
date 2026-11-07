@@ -48,6 +48,8 @@ async def lifespan(app: FastAPI):
             while True:
                 try:
                     await asyncio.to_thread(_knowledge.scan_knowledge_watch)
+                    from app.knowledge.document_tools import DocumentTools
+                    await asyncio.to_thread(lambda: DocumentTools(_knowledge, operator=True).resume_queued())
                 except Exception:
                     # Pipeline failures are retained per source; service stays available.
                     logger.exception('Knowledge folder monitor failed')

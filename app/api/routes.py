@@ -14,6 +14,7 @@ from fastapi import APIRouter, Header, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.knowledge_pipeline import create_knowledge_pipeline_router
+from app.api.skills import create_skill_router
 from app.api.runtime_readiness import router as runtime_readiness_router
 from app.policy.policy_engine import PolicyEngine, PolicyDecision
 from app.handoff.engine import HandoffEngine, HandoffLevel
@@ -1477,6 +1478,7 @@ async def ingest_document(
 
 
 router.include_router(create_knowledge_pipeline_router(_run_sync_v1))
+router.include_router(create_skill_router(_run_sync_v1))
 router.include_router(runtime_readiness_router)
 
 
