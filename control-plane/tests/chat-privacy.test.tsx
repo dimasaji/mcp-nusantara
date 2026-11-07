@@ -8,7 +8,7 @@ afterEach(()=>{vi.unstubAllGlobals();localStorage.clear();sessionStorage.clear()
 const status={model:'fixture',provider:'ollama',revision:0,process_id:1,consistency_scope:'CURRENT_PROCESS_ONLY',availability:'NOT_VERIFIED',status:'NOT_VERIFIED',selection_enabled:true,selection_source:'BOOTSTRAP',last_request:null};
 const answer={session_id:'session',response:'Internal operator response',model:'fixture',provider_status:'ollama',latency_ms:1,timestamp:'now',trust:{supports_claim:false,confidence:0,risk_level:'low',requires_human:false,evidence_count:1,evidence_available:true},grounding:{enabled:true,grounded:true,reason:'grounded'},understanding:{intent:'general'},problem:{goal:null},evidence:[{document_id:'source',title:'Source',chunk:'PRIVATE_RAW_SOURCE',score:.9}]};
 
-it('sends the operator credential only for document-scoped chat and matching history and strips source chunks',async()=>{
+it('sends the operator credential for operator chat and matching history and strips source chunks',async()=>{
   const fetch=vi.fn(async(path:string)=>({ok:true,json:async()=>path==='/v1/chat/history'?{session_id:'session',turns:[]}:answer}));
   vi.stubGlobal('fetch',fetch);
   const result=await sendUserChat('Query','session','a'.repeat(32),undefined,90000,{token:'operator-fixture',documentIds:['source']});
@@ -18,7 +18,7 @@ it('sends the operator credential only for document-scoped chat and matching his
   expect(result.evidence[0].chunk).toBe('');
 });
 
-it('keeps general chat public even when an operator token is present in the upload panel',async()=>{
+it('keeps a new operator chat and its history authenticated before a document is selected',async()=>{
   const fetch=vi.fn(async(path:string)=>({ok:true,json:async()=>path==='/v1/chat/history'?{session_id:'session',turns:[]}:answer}));
   vi.stubGlobal('fetch',fetch);
   render(<UserChat token="operator-fixture"/>);
@@ -26,9 +26,21 @@ it('keeps general chat public even when an operator token is present in the uplo
   fireEvent.click(screen.getByRole('button',{name:'Kirim pertanyaan'}));
   await screen.findByText('Internal operator response');
   const chat=fetch.mock.calls.find(([path])=>path==='/v1/chat') as unknown as [string,RequestInit];
-  expect(chat[1].headers).not.toHaveProperty('X-Admin-Token');
+  expect(chat[1].headers).toHaveProperty('X-Admin-Token','operator-fixture');
   const histories=fetch.mock.calls.filter(([path])=>path==='/v1/chat/history') as unknown as [string,RequestInit][];
-  expect(histories.every(([,init])=>!(init.headers as Record<string,string>)['X-Admin-Token'])).toBe(true);
+  expect(histories.length).toBeGreaterThan(0);
+  expect(histories.every(([,init])=>(init.headers as Record<string,string>)['X-Admin-Token']==='operator-fixture')).toBe(true);
+});
+
+it('keeps public chat and history unauthenticated',async()=>{
+  const fetch=vi.fn(async(path:string)=>({ok:true,json:async()=>path==='/v1/chat/history'?{session_id:'session',turns:[]}:answer}));
+  vi.stubGlobal('fetch',fetch);
+  render(<UserChat/>);
+  fireEvent.change(screen.getByLabelText('Pertanyaan Anda'),{target:{value:'Pertanyaan umum'}});
+  fireEvent.click(screen.getByRole('button',{name:'Kirim pertanyaan'}));
+  await screen.findByText('Internal operator response');
+  const calls=fetch.mock.calls.filter(([path])=>path==='/v1/chat'||path==='/v1/chat/history') as unknown as [string,RequestInit][];
+  expect(calls.every(([,init])=>!(init.headers as Record<string,string>)['X-Admin-Token'])).toBe(true);
 });
 
 it('keeps operator token entry out of the chat upload popover',()=>{

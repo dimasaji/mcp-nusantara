@@ -23,7 +23,10 @@ from .schemas import RetrievalEvidenceList
 class KnowledgeEngine:
     @staticmethod
     def _source_title(text: str, fallback: str) -> str:
-        match = re.search(r'^\s*Nama\s+S\.?O\.?P\.?\s*[:\-]?\s+([^\r\n]+)', text, re.M | re.I)
+        # Scanned two-column headers may place the label after left-column
+        # text, and OCR may read its colon as a semicolon. Keep the source
+        # wording as an unverified suggestion; never repair OCR words by guess.
+        match = re.search(r'(?:^|[\t |])Nama\s+S\.?O\.?P\.?\s*[:;\-]?\s+([^\r\n|]+)', text, re.M | re.I)
         return match.group(1).strip()[:1024] if match else fallback
 
     def __init__(self, rag: Optional[RAG] = None, *, nusantara_config: NusantaraConfig | None = None):
@@ -31,8 +34,18 @@ class KnowledgeEngine:
         self._pipeline_initialized = False
         self._pipeline_schema_lock = Lock()
         self._pipeline_process_lock = Lock()
+        self._skills_lock = Lock()
+        self._skills = None
         self.rag = rag if rag is not None else (
             create_rag(nusantara_config=nusantara_config) if nusantara_config is not None else create_rag())
+
+    @property
+    def skills(self):
+        with self._skills_lock:
+            if self._skills is None:
+                from app.skills.composition import build_skill_runtime
+                self._skills = build_skill_runtime(self)
+        return self._skills
 
     def ingest_document(self, document: Any):
         # Accept the lightweight API Document model as well as the canonical
@@ -170,34 +183,48 @@ class KnowledgeEngine:
             parser=TextOnly(); parser.feed(raw.decode('utf-8-sig'))
             return html.unescape(' '.join(parser.parts))
         if suffix == '.pdf':
-            from pypdf import PdfReader
-            import io
-            text='\n'.join(page.extract_text() or '' for page in PdfReader(io.BytesIO(raw)).pages)
-            if len(' '.join(text.split()))>=40:
-                return text
-            import fitz
-            command=os.getenv('NUSANTARA_TESSERACT_CMD') or shutil.which('tesseract')
-            if not command:
-                candidate=Path('C:/Program Files/Tesseract-OCR/tesseract.exe')
-                command=str(candidate) if candidate.is_file() else None
-            if not command:
-                raise ValueError('OCR_NOT_AVAILABLE_FOR_SCANNED_PDF')
-            pages=[]
-            with fitz.open(stream=raw,filetype='pdf') as document:
-                for page in document:
-                    pixmap=page.get_pixmap(matrix=fitz.Matrix(2,2),alpha=False)
-                    result=subprocess.run([command,'stdin','stdout','-l','ind+eng'],input=pixmap.tobytes('png'),
-                        capture_output=True,timeout=30,check=False)
-                    if result.returncode:
-                        raise ValueError('LOCAL_OCR_FAILED')
-                    pages.append(result.stdout.decode('utf-8',errors='replace'))
-            return '\n'.join(pages)
+            return '\n'.join(KnowledgeEngine._extract_pdf_pages(raw))
         if suffix == '.docx':
             import xml.etree.ElementTree as ET
             with zipfile.ZipFile(__import__('io').BytesIO(raw)) as archive:
                 root=ET.fromstring(archive.read('word/document.xml'))
             return '\n'.join(''.join(node.itertext()) for node in root.iter('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p'))
         raise ValueError('FORMAT_NOT_SUPPORTED')
+
+    @staticmethod
+    def _extract_pdf_pages(raw: bytes) -> list[str]:
+        """Read each physical page independently; native text cannot hide a scan."""
+        import io
+        from pypdf import PdfReader
+
+        pages = [page.extract_text() or '' for page in PdfReader(io.BytesIO(raw)).pages]
+        sparse_pages = [index for index, text in enumerate(pages) if len(' '.join(text.split())) < 40]
+        if not sparse_pages:
+            return pages
+        import pymupdf
+        with pymupdf.open(stream=raw, filetype='pdf') as document:
+            # A blank page or short native-only appendix is not a scan. OCR is
+            # needed when sparse text coexists with raster content, or when
+            # textless vector content may contain outlined text.
+            needs_ocr = [index for index in sparse_pages
+                         if document[index].get_image_info()
+                         or (not pages[index].strip() and document[index].get_drawings())]
+            if not needs_ocr:
+                return pages
+            command = os.getenv('NUSANTARA_TESSERACT_CMD') or shutil.which('tesseract')
+            if not command:
+                candidate = Path('C:/Program Files/Tesseract-OCR/tesseract.exe')
+                command = str(candidate) if candidate.is_file() else None
+            if not command:
+                raise ValueError('OCR_NOT_AVAILABLE_FOR_SCANNED_PDF')
+            for index in needs_ocr:
+                pixmap = document[index].get_pixmap(matrix=pymupdf.Matrix(2, 2), alpha=False)
+                result = subprocess.run([command, 'stdin', 'stdout', '-l', 'ind+eng'],
+                    input=pixmap.tobytes('png'), capture_output=True, timeout=30, check=False)
+                if result.returncode:
+                    raise ValueError('LOCAL_OCR_FAILED')
+                pages[index] = result.stdout.decode('utf-8', errors='replace')
+        return pages
 
     def _record_pipeline(self, filename: str, digest: str, status: str, reason: str | None = None,
                          document_id: str | None = None, source_path: str | None = None) -> dict[str, Any]:
@@ -245,6 +272,11 @@ class KnowledgeEngine:
         with self._pipeline_process_lock:
             return self._process_knowledge_source(filename,raw,document_id,source_metadata)
 
+    def intake_document(self, filename: str, raw: bytes):
+        """Automatic intake shared by HTTP upload, inbox and retry."""
+        from app.skills.composition import prepare_uploaded_source
+        return prepare_uploaded_source(self, self.process_knowledge_source(filename, raw), filename)
+
     def _process_knowledge_source(self, filename, raw, document_id=None, source_metadata=None):
         """Extract, validate, deduplicate and index using Chat's existing RAG/store."""
         safe_name=Path(filename.replace('\\','/')).name[:200] or 'document'
@@ -266,11 +298,16 @@ class KnowledgeEngine:
             return self._record_pipeline(safe_name,digest,'FAILED',reason)
         processing=self._record_pipeline(safe_name,digest,'PROCESSING',source_path=str(stored))
         try:
-            text=self._extract_pipeline_text(safe_name,raw)
+            pdf_pages = self._extract_pdf_pages(raw) if Path(safe_name).suffix.lower() == '.pdf' else None
+            text = '\n'.join(pdf_pages) if pdf_pages is not None else self._extract_pipeline_text(safe_name, raw)
             normalized=' '.join(text.split())
             if len(normalized)<40:
                 raise ValueError('EXTRACTED_TEXT_TOO_SHORT_OR_SCANNED; OCR_REQUIRED')
-            if len(set(normalized))/max(1,len(normalized))<0.015:
+            # Character diversity is only a low-information screen, not an OCR
+            # accuracy score. Bound the sample so long, readable SOPs are not
+            # rejected merely because their alphabet stays the same.
+            quality_sample = normalized[:2048]
+            if len(set(quality_sample))/len(quality_sample)<0.015:
                 raise ValueError('EXTRACTED_TEXT_QUALITY_CHECK_FAILED')
             digest_id=document_id or 'DOC-SHA256-'+digest
             from .store import SQLiteVectorStore
@@ -290,18 +327,15 @@ class KnowledgeEngine:
                       'indexed_at':datetime.now(timezone.utc).isoformat()}
             title = self._source_title(text, safe_name)
             metadata['source_title'] = title
-            # Record physical PDF pages only when offsets match extracted text.
-            # OCR or other formats retain unknown pagination rather than guesses.
-            if Path(safe_name).suffix.lower() == '.pdf':
-                from pypdf import PdfReader
-                import io
-                pages = [page.extract_text() or '' for page in PdfReader(io.BytesIO(raw)).pages]
-                if '\n'.join(pages) == text:
-                    offset = 0
-                    metadata['source_pages'] = []
-                    for number, page_text in enumerate(pages, 1):
-                        metadata['source_pages'].append({'page': number, 'start': offset, 'end': offset + len(page_text)})
-                        offset += len(page_text) + 1
+            # Offsets refer to the exact native/OCR text indexed above. Retain
+            # physical page provenance for scans without re-extracting the PDF.
+            if pdf_pages is not None:
+                offset = 0
+                metadata['source_pages'] = []
+                for number, page_text in enumerate(pdf_pages, 1):
+                    metadata['source_pages'].append({'page': number, 'start': offset,
+                                                     'end': offset + len(page_text)})
+                    offset += len(page_text) + 1
             from .schemas import DocumentIngestRequest
             result=self.rag.ingest_document(DocumentIngestRequest(document_id=digest_id,title=title,
                  source=text,content_type='text/plain',metadata=metadata))
@@ -329,7 +363,7 @@ class KnowledgeEngine:
         raw=source.read_bytes()
         if hashlib.sha256(raw).hexdigest()!=row['source_sha256']:
             raise ValueError('STORED_SOURCE_INTEGRITY_MISMATCH')
-        return self.process_knowledge_source(row['filename'],raw)
+        return self.intake_document(row['filename'], raw)
 
     def set_knowledge_watch(self, enabled: bool) -> dict[str, Any]:
         folder=(Path(self.rag._store.db_path).resolve().parent/'inbox').resolve()
@@ -366,7 +400,8 @@ class KnowledgeEngine:
                 with self._pipeline_db() as conn:
                     seen=conn.execute('SELECT 1 FROM knowledge_pipeline_runs WHERE source_sha256=?',(digest,)).fetchone()
                 if not seen:
-                    self.process_knowledge_source(path.name,raw);done+=1
+                    self.intake_document(path.name, raw)
+                    done += 1
             except OSError as exc:
                 self._record_pipeline(path.name,'0'*64,'FAILED',f'FILE_READ_FAILED:{type(exc).__name__}')
         return done

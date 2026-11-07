@@ -1,6 +1,8 @@
 """Budgeted source selection preserving table headers, blocks and physical pages."""
 import re
 
+from .pdf_sop import requirement_rows
+
 
 def project_activity_blocks(document, question):
     """Project stored table rows with their real column labels, never answers."""
@@ -10,7 +12,9 @@ def project_activity_blocks(document, question):
     fields = ['activity', 'kelengkapan', 'waktu', 'output', 'keterangan']
     selected_rows = rows
     if re.search(r'persyaratan|syarat|bawa', question, re.I):
-        selected_rows = rows[:1]
+        selected_rows = requirement_rows(rows, question)
+        if not selected_rows:
+            return document['blocks']
         fields = ['activity', 'kelengkapan']
     elif re.search(r'proses|prosedur|bagaimana|lalu|lanjut', question, re.I):
         fields = ['activity']
@@ -24,7 +28,8 @@ def project_activity_blocks(document, question):
     result = []
     for block in document['blocks']:
         if block['type'] != 'table':
-            result.append(block); continue
+            result.append(block)
+            continue
         relevant = [r for r in selected_rows if r['block_id'] == block['block_id']]
         if not relevant:
             continue
@@ -59,7 +64,8 @@ def select_blocks(blocks, question, context_tokens=4096):
             continue
         size = len(render(block).encode('utf-8')) + 2
         if used + size <= budget:
-            selected.append((index, block)); used += size
+            selected.append((index, block))
+            used += size
     if not selected:
         raise ValueError('Konteks SOP tidak muat utuh: satu blok/tabel melebihi anggaran. Blok tidak dipotong.')
     selected.sort()
