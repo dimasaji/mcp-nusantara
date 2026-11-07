@@ -314,29 +314,10 @@ class HermesAgent:
         memory=getattr(_gate_integration,'memory',None)
         previous=memory.service_context(request.session_id) if hasattr(memory,'service_context') else {}
         scoped_document_ids = getattr(request, 'document_ids', [])
-        if not scoped_document_ids and getattr(_knowledge, '_operator', False):
-            try:
-                from app.knowledge.sop_review import SOPReview
-                _review = SOPReview(_knowledge._engine if hasattr(_knowledge, '_engine') else _knowledge)
-                for _doc in (_knowledge._engine if hasattr(_knowledge, '_engine') else _knowledge).list_documents().documents:
-                    _did = getattr(_doc, 'document_id', None)
-                    if _did and _review.is_pilot(_did):
-                        _det = _review.detail(_did)
-                        if _det.get('status') == 'Aktif':
-                            scoped_document_ids = [_did]
-                            if hasattr(_knowledge, '_document_ids'):
-                                _knowledge._document_ids = list(scoped_document_ids)
-                            if hasattr(_knowledge, '_sop_version'):
-                                _knowledge._sop_version = _det['version_id']
-                            if not getattr(request, 'sop_version', None):
-                                request = request.model_copy(update={'sop_version': _det['version_id'], 'sop_case': request.sop_case or 'followup'})
-                            break
-                        else:
-                            pass
-            except Exception:
-                pass
         if scoped_document_ids and previous.get('document_id') not in scoped_document_ids:
-            previous = {}
+            if not (previous.get('search_results')
+                    and previous.get('search_scope') == list(scoped_document_ids)):
+                previous = {}
         search_scope = {'filter': {'document_ids': scoped_document_ids}} if scoped_document_ids else {}
         prior_conversation=memory.context(request.session_id,limit=6) if hasattr(memory,'context') else []
         core = await _run_sync_v1(self.run, request.user_input,
@@ -345,6 +326,9 @@ class HermesAgent:
         problem = core['problem']
         initial_intent,_ = _extract_intent(_extract_understanding_data(understanding))
         turn=LanguageEngine.service_turn(request.user_input,previous.get('topic',''),initial_intent)
+        if not scoped_document_ids and previous.get('document_id') and turn['uses_context']:
+            scoped_document_ids = [previous['document_id']]
+            search_scope = {'filter': {'document_ids': scoped_document_ids}}
         repeated_text = _repeat_text(request.user_input)
         conversation = repeated_text is None and (
             _conversation_request(request.user_input)
@@ -394,59 +378,47 @@ class HermesAgent:
         # --------------------------------------------------------------
         # GLOBAL SEARCH (/cari) — cari dokumen dalam indeks yang diizinkan
         # --------------------------------------------------------------
-        _cari_handled = False
-        _cari_response = None
-        _cari_text = (request.user_input or '').strip()
-        if _cari_text.lower().startswith('/cari'):
-            _cari_query = _cari_text[5:].strip()
-            if _cari_query.lower().startswith('sop'):
-                _cari_query = _cari_query[3:].strip()
-            if not _cari_query:
-                _cari_query = (previous or {}).get('topic', '') if isinstance(previous, dict) else ''
-            # Selection from previous search results (user types a number)
-            _cari_selected = None
-            if not _cari_query and isinstance(previous, dict) and previous.get('search_results') and _cari_text.isdigit():
-                _idx = int(_cari_text) - 1
-                _res = previous.get('search_results', [])
-                if 0 <= _idx < len(_res):
-                    _cari_selected = _res[_idx]
-            if _cari_selected is not None:
-                previous = dict(previous or {})
-                previous['document_id'] = _cari_selected.get('document_id')
-                previous['topic'] = _cari_selected.get('title') or previous.get('topic')
-                previous.pop('search_results', None)
-                if hasattr(_gate_integration, 'memory') and _gate_integration.memory is not None:
-                    try:
-                        _gate_integration.memory.remember_service_context(request.session_id, previous)
-                    except Exception:
-                        pass
-                _cari_response = 'Dokumen terpilih: %s (id: %s). Silakan tanyakan pertanyaan Anda.' % (
-                    _cari_selected.get('title'), _cari_selected.get('document_id'))
-                _cari_handled = True
-                conversation = True
-            elif _cari_query:
+        search_command = re.fullmatch(r'/cari(?:\s+(.*))?', request.user_input.strip(), re.I)
+        selection = request.user_input.strip()
+        pending_results = previous.get('search_results', [])
+        if search_command:
+            query = (search_command.group(1) or '').strip()
+            query = re.sub(r'^sop(?:\s+|$)', '', query, flags=re.I).strip()
+            previous = {}
+            if not query:
+                _cari_response = 'Ketik /cari SOP diikuti nama atau topik layanan.'
+            else:
                 try:
-                    _cari_results = await _run_sync_v1(_knowledge.search_knowledge, _cari_query, top_k=10, **search_scope)
-                except Exception:
-                    _cari_results = []
-                if _cari_results:
-                    _lines = ['Hasil pencarian:']
-                    for i, r in enumerate(_cari_results, 1):
-                        _title = getattr(r, 'title', None) or getattr(r, 'document_id', '?')
-                        _lines.append('%d. %s (id: %s)' % (i, _title, getattr(r, 'document_id', '?')))
-                    _lines.append('Pilih hasil dengan mengetik nomornya, atau tanyakan langsung.')
-                    _cari_response = '\\n'.join(_lines)
-                    previous = dict(previous or {})
-                    previous['search_results'] = [{'document_id': getattr(r,'document_id',None), 'title': getattr(r,'title',None)} for r in _cari_results]
-                    if hasattr(_gate_integration, 'memory') and _gate_integration.memory is not None:
-                        try:
-                            _gate_integration.memory.remember_service_context(request.session_id, previous)
-                        except Exception:
-                            pass
+                    found = await _run_sync_v1(_knowledge.search_knowledge, query, top_k=10, **search_scope)
+                except Exception as exc:
+                    from fastapi import HTTPException
+                    raise HTTPException(503, 'RETRIEVAL_UNAVAILABLE',
+                                        headers={'X-Chat-Retry-Safe': 'pre-provider'}) from exc
+                results = {}
+                for item in found:
+                    results.setdefault(item.document_id, {'document_id': item.document_id, 'title': item.title})
+                if results:
+                    previous = {'search_results': list(results.values()),
+                                'search_scope': list(scoped_document_ids or [])}
+                    lines = ['Hasil pencarian:']
+                    lines.extend(f"{i}. {item['title']}" for i, item in enumerate(results.values(), 1))
+                    lines.append('Pilih hasil dengan mengetik nomornya, atau tanyakan langsung.')
+                    _cari_response = '\n'.join(lines)
                 else:
                     _cari_response = 'Tidak ditemukan dokumen yang cocok.'
-                _cari_handled = True
-                conversation = True
+            _cari_handled = True
+            conversation = True
+        elif pending_results and re.fullmatch(r'[0-9]+', selection):
+            index = int(selection) - 1 if len(selection) <= len(str(len(pending_results))) else -1
+            if 0 <= index < len(pending_results):
+                selected = pending_results[index]
+                previous = {'document_id': selected['document_id'], 'title': selected['title'],
+                            'topic': selected['title']}
+                _cari_response = f"Dokumen terpilih: {selected['title']}. Silakan tanyakan pertanyaan Anda."
+            else:
+                _cari_response = 'Nomor hasil tidak tersedia. Pilih nomor dari hasil pencarian.'
+            _cari_handled = True
+            conversation = True
 
         # --------------------------------------------------------------
         # KNOWLEDGE ENGINE

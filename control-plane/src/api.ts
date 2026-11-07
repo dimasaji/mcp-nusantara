@@ -148,7 +148,7 @@ export async function sendUserChat(user_input:string,session_id:string,request_i
       },timeoutMs);
     });
     const response=await Promise.race([fetch('/v1/chat',{method:'POST',signal:controller.signal,credentials:'omit',cache:'no-store',redirect:'error',
-        headers:{'Content-Type':'application/json',...(options.token&&options.documentIds?.length?{'X-Admin-Token':options.token}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{}),...(options.sopVersion?{sop_version:options.sopVersion,sop_case:options.sopCase}:{})})}),deadline]);
+        headers:{'Content-Type':'application/json',...(options.token?{'X-Admin-Token':options.token}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{}),...(options.sopVersion?{sop_version:options.sopVersion,sop_case:options.sopCase}:{})})}),deadline]);
     if(!response.ok){
       let body:{detail?:unknown}|null=null;
       try{body=await response.json() as {detail?:unknown};}catch{/* HTTP status remains authoritative when the body is unreadable. */}
