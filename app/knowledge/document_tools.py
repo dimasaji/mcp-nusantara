@@ -13,7 +13,7 @@ from uuid import uuid4
 from .docling_config import CONFIG, effective_config
 from .sop_review import SOPReview
 
-PARSER_VERSION = 'docling-2.142.1/adapter-10-source-cell-core'
+PARSER_VERSION = 'docling-2.142.1/adapter-11-haystack-cleaning'
 _executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='docling')
 _scheduled_lock = Lock()
 _scheduled = set()
@@ -272,6 +272,8 @@ class DocumentTools:
                 payload = json.loads(output.read_text(encoding='utf-8'))
             from .docling_layout import normalize_activity_grids
             payload = normalize_activity_grids(payload, path)
+            from .text_cleaning import clean_extraction
+            payload = clean_extraction(payload)
             self._validate_request(path, detail, digest, configuration)
             payload.update(document_id=detail['document_id'], title=detail['title'], version=detail['version_id'],
                            pdf_sha256=digest, parser_version=PARSER_VERSION, configuration=configuration)

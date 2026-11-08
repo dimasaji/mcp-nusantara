@@ -9,6 +9,8 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
 
+os.environ['HAYSTACK_TELEMETRY_ENABLED'] = 'False'
+
 # Explicit local evidence-only boot; default runtime composition is preserved.
 _READ_ONLY_EVIDENCE = os.environ.get('NUSANTARA_CONTROL_PLANE_READ_ONLY') == '1'
 _configuration = None
