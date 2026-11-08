@@ -33,6 +33,20 @@ describe('SOP current progress',()=>{
   expect(sessionStorage.getItem('nusantara-chat-document-pending')).toBe('akta');
   expect(sessionStorage.getItem('nusantara-chat-sop-version-pending')).toBeNull();
  });
+ it('offers index recovery without showing an approved broken index as available',()=>{
+  const broken=structuredClone(data);
+  const workflow=broken.documents![0].workflow!;
+  workflow.state='BLOCKED';workflow.index_status='MISSING';
+  workflow.stages.indexing='WAITING';workflow.stages.availability='WAITING';
+  workflow.reason='Indeks pencarian perlu dipulihkan.';
+  broken.documents![1].workflow!.index_status='MISSING';
+  mount(<SOPProgressPanel data={broken}/>);
+  expect(screen.getByRole('link',{name:'Pulihkan indeks melalui chat'})).toBeInTheDocument();
+  expect(screen.getByText('Indeks belum siap; persetujuan dokumen tetap tersimpan.')).toBeInTheDocument();
+  expect(screen.getByText('Indeks pencarian belum siap.')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('link',{name:'Pulihkan indeks melalui chat'}));
+  expect(sessionStorage.getItem('nusantara-chat-document-pending')).toBe('akta');
+ });
  it('hands off the exact review document and reuses existing retry',()=>{
   const retry=vi.fn();mount(<SOPProgressPanel data={data} onRetry={retry}/>);
   fireEvent.click(screen.getByRole('link',{name:'Periksa dokumen'}));

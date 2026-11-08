@@ -43,18 +43,11 @@ async def lifespan(app: FastAPI):
     watcher = None
     if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
         import asyncio
-        import logging
         from app.api.routes import _knowledge
-        logger=logging.getLogger(__name__)
         async def monitor():
             while True:
-                try:
-                    await asyncio.to_thread(_knowledge.scan_knowledge_watch)
-                    from app.knowledge.document_tools import DocumentTools
-                    await asyncio.to_thread(lambda: DocumentTools(_knowledge, operator=True).resume_queued())
-                except Exception:
-                    # Pipeline failures are retained per source; service stays available.
-                    logger.exception('Knowledge folder monitor failed')
+                from app.knowledge.maintenance import maintain_knowledge
+                await asyncio.to_thread(maintain_knowledge, _knowledge)
                 await asyncio.sleep(5)
         watcher=asyncio.create_task(monitor())
     try:

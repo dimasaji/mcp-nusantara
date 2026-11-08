@@ -50,6 +50,37 @@ def _signature(binding):
     return hashlib.sha256(json.dumps(binding, sort_keys=True).encode()).hexdigest()
 
 
+def index_status(engine, document_id, version):
+    """Read-only consistency check; never infer final readiness from READY/count.
+
+    A missing/stale index is repairable from the retained COMPLETE extraction.
+    This check does not run embeddings or publish anything.
+    """
+    store = engine.rag._store
+    document = store.get_document_info(document_id)
+    if document is None:
+        return 'MISSING'
+    marker = document.metadata.get('final_index') or {}
+    chunks = store.get_chunks_by_document(document_id)
+    if not marker or not chunks:
+        return 'MISSING'
+    binding = _binding(engine, version)
+    signature = _signature(binding)
+    if (marker.get('signature') != signature or marker.get('version_id') != version
+            or len(chunks) != marker.get('chunk_count') or len(chunks) != document.chunks_count):
+        return 'STALE'
+    source = marker.get('source', '')
+    if not all(chunk.metadata.get('final_index_signature') == signature
+               and chunk.metadata.get('final_index_version') == version
+               and chunk.embedding.model == binding['embedding_model']
+               and chunk.embedding.dimension == binding['embedding_dimension']
+               and len(chunk.embedding.vector) == binding['embedding_dimension']
+               and all(math.isfinite(value) for value in chunk.embedding.vector)
+               and chunk.content == source[chunk.start_char:chunk.end_char] for chunk in chunks):
+        return 'STALE'
+    return 'CURRENT'
+
+
 def materialize(engine, document_id, source_version, payload, *, job_id=None, validate_source=None):
     """Build embeddings before the write transaction; retain old index on failure.
 
@@ -92,14 +123,8 @@ def materialize(engine, document_id, source_version, payload, *, job_id=None, va
     validate()
     document = store.get_document_info(document_id)
     marker = document.metadata.get('final_index', {})
-    old_chunks = store.get_chunks_by_document(document_id)
-    if (not job_id and marker.get('signature') == signature and marker.get('source') == text
-            and marker.get('source_pages') == pages and old_chunks
-            and len(old_chunks) == marker.get('chunk_count')
-            and all(chunk.metadata.get('final_index_signature') == signature
-                    and chunk.embedding.model == binding['embedding_model']
-                    and chunk.embedding.dimension == binding['embedding_dimension']
-                    and chunk.content == text[chunk.start_char:chunk.end_char] for chunk in old_chunks)):
+    if (not job_id and marker.get('source') == text and marker.get('source_pages') == pages
+            and index_status(engine, document_id, version) == 'CURRENT'):
         return False
 
     chunker = engine.rag._chunker

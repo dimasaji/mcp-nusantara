@@ -383,20 +383,26 @@ class HermesAgent:
         pending_results = previous.get('search_results', [])
         if search_command:
             query = (search_command.group(1) or '').strip()
+            catalog_domain = 'sop' if re.match(r'^sop(?:\s+|$)', query, re.I) else None
             query = re.sub(r'^sop(?:\s+|$)', '', query, flags=re.I).strip()
             previous = {}
             if not query:
                 _cari_response = 'Ketik /cari SOP diikuti nama atau topik layanan.'
             else:
                 try:
-                    found = await _run_sync_v1(_knowledge.search_knowledge, query, top_k=10, **search_scope)
+                    catalog = getattr(_knowledge, 'search_documents', None)
+                    if catalog:
+                        found = await _run_sync_v1(catalog, query, limit=10, domain=catalog_domain, **search_scope)
+                    else:
+                        found = await _run_sync_v1(_knowledge.search_knowledge, query, top_k=10, **search_scope)
                 except Exception as exc:
                     from fastapi import HTTPException
                     raise HTTPException(503, 'RETRIEVAL_UNAVAILABLE',
                                         headers={'X-Chat-Retry-Safe': 'pre-provider'}) from exc
                 results = {}
                 for item in found:
-                    results.setdefault(item.document_id, {'document_id': item.document_id, 'title': item.title})
+                    card = item if isinstance(item, dict) else {'document_id': item.document_id, 'title': item.title}
+                    results.setdefault(card['document_id'], card)
                 if results:
                     previous = {'search_results': list(results.values()),
                                 'search_scope': list(scoped_document_ids or [])}

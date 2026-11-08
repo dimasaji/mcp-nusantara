@@ -233,7 +233,7 @@ class SQLiteVectorStore:
         with self._connect() as conn:
             conn.execute(
                 """
-                INSERT OR REPLACE INTO documents (
+                INSERT INTO documents (
                     document_id,
                     title,
                     source,
@@ -245,6 +245,11 @@ class SQLiteVectorStore:
                     updated_at
                 )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(document_id) DO UPDATE SET
+                    title=excluded.title, source=excluded.source,
+                    content_type=excluded.content_type, chunks_count=excluded.chunks_count,
+                    size_bytes=excluded.size_bytes, metadata_json=excluded.metadata_json,
+                    updated_at=excluded.updated_at
                 """,
                 (
                     document_id,
@@ -316,6 +321,7 @@ class SQLiteVectorStore:
         query_embedding: List[float],
         top_k: int = 5,
         document_ids: list[str] | None = None,
+        distinct_documents: bool = False,
     ) -> List[tuple]:
         results = []
 
@@ -337,6 +343,13 @@ class SQLiteVectorStore:
 
         results.sort(key=lambda item: item[1], reverse=True)
 
+        if distinct_documents:
+            seen, unique = set(), []
+            for item in results:
+                if item[0].document_id not in seen:
+                    seen.add(item[0].document_id)
+                    unique.append(item)
+            results = unique
         return results[: max(1, int(top_k))]
 
     def search_lexical(
@@ -344,6 +357,7 @@ class SQLiteVectorStore:
         query: str,
         top_k: int = 20,
         document_ids: list[str] | None = None,
+        distinct_documents: bool = False,
     ) -> List[tuple]:
         """
         Lexical Retrieval V2.
@@ -417,6 +431,13 @@ class SQLiteVectorStore:
             reverse=True,
         )
 
+        if distinct_documents:
+            seen, unique = set(), []
+            for item in results:
+                if item[0].document_id not in seen:
+                    seen.add(item[0].document_id)
+                    unique.append(item)
+            results = unique
         return results[: max(1, int(top_k))]
 
     def delete_document(self, document_id: str) -> bool:

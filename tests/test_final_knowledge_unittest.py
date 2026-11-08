@@ -305,6 +305,115 @@ class FinalKnowledgeTests(unittest.TestCase):
 
 
 
+    def test_sop_catalog_filters_before_ranking_and_returns_distinct_documents(self):
+        self.complete()
+        self.approve()
+        for identifier, title in [('other-sop', 'SOP Keterangan Lahir Tambahan'),
+                                  ('third-sop', 'SOP Keterangan Lahir Ketiga'),
+                                  ('general', 'SOP - catatan.txt')]:
+            source = 'Artikel Keterangan Lahir' if identifier == 'general' else title
+            raw = source.encode()
+            digest = hashlib.sha256(raw).hexdigest()
+            self.engine._store_uploaded_source(identifier + '.txt', raw, digest)
+            self.engine.rag.ingest_document(DocumentIngestRequest(document_id=identifier,
+                title=title, source=source, metadata={'source_sha256': digest}))
+            detail = self.review.detail(identifier)
+            self.review.decide(identifier, detail['version_id'], 'content_ok', 'fixture')
+            metadata = copy.deepcopy(self.review.detail(self.identifier)['official_metadata'])
+            metadata['logical_sop_id'] = identifier
+            metadata['official_title']['value'] = source
+            self.review.confirm_metadata(identifier, detail['version_id'], metadata, 'fixture')
+            approved = self.review.decide(identifier, detail['version_id'], 'approve', 'fixture')
+            self.assertEqual(approved['status'], 'Aktif')
+        original = self.engine.rag._store.get_chunks_by_document('other-sop')[0]
+        for number in range(60):
+            chunk = original.model_copy(deep=True)
+            chunk.chunk_id = 'legacy-' + str(number)
+            self.engine.rag._store.store_chunk(chunk)
+        self.engine.rag.ingest_document(DocumentIngestRequest(document_id='unapproved',
+            title='Petunjuk layanan', source='STANDAR OPERASIONAL PROSEDUR\nKeterangan Lahir'))
+        boundary = V1KnowledgeBoundary(self.engine, operator=True, provider='ollama')
+        found = boundary.search_documents('Keterangan Lahir', limit=3, domain='sop')
+        self.assertEqual({item['document_id'] for item in found}, {self.identifier, 'other-sop', 'third-sop'})
+        self.assertEqual(boundary.search_documents('Keterangan Lahir', domain='sop', filter={'document_ids': ['general']}), [])
+        self.assertEqual(boundary.search_documents('Keterangan Lahir', domain='sop', filter={'document_ids': ['unapproved']}), [])
+        all_found = boundary.search_documents('Keterangan Lahir', limit=5)
+        self.assertIn('general', {item['document_id'] for item in all_found})
+        self.assertEqual(V1KnowledgeBoundary(self.engine, operator=False, provider='ollama')
+                         .search_documents('Keterangan Lahir', domain='sop'), [])
+
+
+    def test_dashboard_detects_lost_final_index_and_chat_recovers_after_reopen(self):
+        self.complete()
+        self.approve()
+        approval = self.review.detail(self.identifier)['approval']
+        with self.engine.rag._store._connect() as conn:
+            conn.execute('DELETE FROM chunks WHERE document_id=?', (self.identifier,))
+        reopened = owner(self.db)
+        document = reopened.knowledge_pipeline_status()['documents'][0]
+        self.assertEqual(document['workflow']['stages']['indexing'], 'WAITING')
+        self.assertEqual(document['workflow']['stages']['availability'], 'WAITING')
+        self.assertEqual(document['workflow']['index_status'], 'MISSING')
+        self.assertNotEqual(document['workflow']['state'], 'ACTIVE')
+        # Recovery occurs through the normal authorized chat retrieval path.
+        found = V1KnowledgeBoundary(reopened, operator=True, provider='ollama').search_knowledge('Keterangan Lahir')
+        self.assertEqual(found[0].document_id, self.identifier)
+        self.assertEqual(SOPReview(reopened).detail(self.identifier)['approval'], approval)
+        after = reopened.knowledge_pipeline_status()['documents'][0]
+        self.assertEqual(after['workflow']['index_status'], 'CURRENT')
+        self.assertEqual(after['workflow']['state'], 'ACTIVE')
+
+
+    def test_catalog_selection_and_grounded_chat_survive_index_recovery(self):
+        self.complete()
+        self.approve()
+        with self.engine.rag._store._connect() as conn:
+            conn.execute('DELETE FROM chunks WHERE document_id=?', (self.identifier,))
+        reopened = owner(self.db)
+        parts = offline_chat_fixture()
+        boundary = V1KnowledgeBoundary(reopened, operator=True, provider='ollama')
+        parts[2]['knowledge'] = boundary
+        from app.core.gate_integration import GateIntegration
+        parts[2]['gates'] = GateIntegration()
+        parts[4].answer = 'Persyaratan: Surat Keterangan Lahir Asli.'
+        found = execute_chat(parts, '/cari SOP Keterangan Lahir').payload
+        self.assertIn('AKTA KELAHIRAN', found['response'])
+        selected = execute_chat(parts, '1').payload
+        self.assertIn('Dokumen terpilih', selected['response'])
+        answer = execute_chat(parts, 'Apa persyaratan akta kelahiran?').payload
+        self.assertIn('Surat Keterangan Lahir Asli', answer['response'])
+        self.assertTrue(answer['grounding']['grounded'])
+        self.assertEqual(answer['evidence'][0]['document_id'], self.identifier)
+        self.assertEqual(answer['evidence'][0]['pages'], [1])
+        boundary.validate_response(answer)
+
+    def test_failed_index_repair_is_retryable_without_changing_approval(self):
+        self.complete()
+        self.approve()
+        before = self.review.detail(self.identifier)['approval']
+        with self.engine.rag._store._connect() as conn:
+            conn.execute('DELETE FROM chunks WHERE document_id=?', (self.identifier,))
+        def failed(_):
+            raise RuntimeError('fixture embedding temporarily unavailable')
+        broken = owner(self.db, failed)
+        with self.assertRaises(RuntimeError):
+            V1KnowledgeBoundary(broken, operator=True, provider='ollama').search_documents('Lahir', domain='sop')
+        self.assertEqual(SOPReview(broken).detail(self.identifier)['approval'], before)
+        self.assertEqual(broken.knowledge_pipeline_status()['documents'][0]['workflow']['index_status'], 'MISSING')
+        recovered = owner(self.db)
+        self.assertTrue(V1KnowledgeBoundary(recovered, operator=True, provider='ollama').search_documents('Lahir', domain='sop'))
+        self.assertEqual(SOPReview(recovered).detail(self.identifier)['approval'], before)
+
+
+    def test_document_metadata_update_does_not_delete_final_chunks(self):
+        self.complete()
+        before = self.engine.rag._store.get_chunks_by_document(self.identifier)
+        document = self.engine.rag._store.get_document_info(self.identifier)
+        document.metadata['document_kind'] = 'sop'
+        self.engine.rag._store.store_document_info(document)
+        self.assertEqual(self.engine.rag._store.get_chunks_by_document(self.identifier), before)
+
+
 class RoutingTests(unittest.TestCase):
     def test_substantive_general_wording_can_probe_without_sop_keyword(self):
         from app.hermes.agent import _conversation_request
@@ -381,6 +490,7 @@ class RoutingTests(unittest.TestCase):
         self.assertEqual(result.payload['response'], '3000')
         self.assertEqual(parts[5]['searched'], 0)
         self.assertEqual(parts[4].calls, 0)
+
 
 
 if __name__ == '__main__':

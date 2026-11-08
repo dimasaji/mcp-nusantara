@@ -4,6 +4,9 @@ No upload, approval or index mutation. Chat requests are real and may be stored 
 normal chat history. Reports omit questions, responses, source text and tokens.
 """
 import argparse
+import hashlib
+import math
+from datetime import UTC, datetime
 import json
 import os
 from pathlib import Path
@@ -95,22 +98,36 @@ def evaluate(cases, request, expected_build=None):
                   'source_version': before.get('version_id') == case['version_id']}
         start = time.monotonic()
         provider = None
+        chat_latency = None
         if all(checks.values()):
             group = case.get('conversation', uuid4().hex)
             payload = {'user_input': case['question'], 'session_id': sessions.setdefault(group, 'web-' + uuid4().hex),
                        'request_id': uuid4().hex}
             if case.get('selected'):
                 payload['document_ids'] = [case['document_id']]
+            chat_started = time.monotonic()
             response = request('POST', '/v1/chat', payload)
+            chat_latency = round((time.monotonic() - chat_started) * 1000)
             checks.update(grade(case, response))
             provider = response.get('provider_status')
             after = request('GET', path, None)
             checks['source_stable'] = (after.get('status') == 'Aktif' and
                                        after.get('version_id') == before.get('version_id'))
-        results.append({'id': case['id'], 'checks': checks, 'passed': all(checks.values()),
-                        'provider_status': provider, 'elapsed_ms': round((time.monotonic() - start) * 1000)})
+        results.append({'id': case['id'], 'document_id': case['document_id'], 'version_id': case['version_id'], 'checks': checks, 'passed': all(checks.values()),
+                        'provider_status': provider, 'chat_latency_ms': chat_latency, 'elapsed_ms': round((time.monotonic() - start) * 1000)})
     same_build = request('GET', '/health', None).get('build_id') == build
-    return {'transport': 'LIVE_HTTP', 'build_id': build, 'expected_build_checked': bool(expected_build),
+    metrics = {}
+    for name in sorted({name for result in results for name in result['checks']}):
+        observed = [result['checks'][name] for result in results if name in result['checks']]
+        metrics[name] = {'passed': sum(observed), 'total': len(observed), 'rate': sum(observed) / len(observed)}
+    latencies = sorted(result['chat_latency_ms'] for result in results if result['chat_latency_ms'] is not None)
+    dataset_hash = hashlib.sha256(json.dumps(cases, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+    return {'transport': 'LIVE_HTTP', 'checked_at': datetime.now(UTC).isoformat(),
+            'dataset_sha256': dataset_hash, 'metrics': metrics,
+            'executed_cases': len(latencies), 'skipped_cases': len(results) - len(latencies),
+            'latency_ms': {'scope': 'CHAT_HTTP_ONLY', 'samples': len(latencies),
+                           'p50': latencies[math.ceil(len(latencies) * .5) - 1] if latencies else None,
+                           'p95': latencies[math.ceil(len(latencies) * .95) - 1] if latencies else None}, 'build_id': build, 'expected_build_checked': bool(expected_build),
             'build_stable': same_build, 'native_embedding': 'NOT_ATTESTED',
             'passed': same_build and all(r['passed'] for r in results),
             'passed_cases': sum(r['passed'] for r in results), 'total_cases': len(results), 'cases': results}

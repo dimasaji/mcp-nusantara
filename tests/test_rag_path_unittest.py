@@ -146,6 +146,33 @@ class RuntimeEvaluationTests(unittest.TestCase):
         handlers = build.call_args.args
         self.assertTrue(any(isinstance(h, ProxyHandler) and h.proxies == {} for h in handlers))
 
+    def test_report_has_measured_rates_and_version_bindings(self):
+        def request(method, path, payload):
+            if path == '/health':
+                return {'build_id': 'build'}
+            if method == 'GET':
+                return {'status': 'Aktif', 'version_id': 'version'}
+            return self.response
+        report = self.evaluate([self.case], request, 'build')
+        self.assertEqual(report['metrics']['retrieved']['passed'], 1)
+        self.assertEqual(report['metrics']['facts']['total'], 1)
+        self.assertEqual(report['metrics']['facts']['rate'], 1.0)
+        self.assertEqual(report['cases'][0]['version_id'], 'version')
+        self.assertIn('p95', report['latency_ms'])
+
+    def test_skipped_cases_do_not_count_as_fast_chat(self):
+        def request(method, path, payload):
+            if path == '/health':
+                return {'build_id': 'build'}
+            if method == 'POST':
+                self.fail('Inactive source must not call chat')
+            return {'status': 'Ditolak', 'version_id': 'version'}
+        report = self.evaluate([self.case], request)
+        self.assertFalse(report['passed'])
+        self.assertEqual(report['executed_cases'], 0)
+        self.assertEqual(report['latency_ms']['samples'], 0)
+        self.assertIsNone(report['latency_ms']['p95'])
+
 
 if __name__ == '__main__':
     unittest.main()

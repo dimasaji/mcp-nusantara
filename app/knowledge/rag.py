@@ -561,12 +561,14 @@ class RAG:
         }
 
     def query(self, query_text: str, top_k: Optional[int] = None, rerank: bool = False,
-              document_ids: list[str] | None = None) -> RetrievalResult:
+              document_ids: list[str] | None = None, distinct_documents: bool = False) -> RetrievalResult:
         effective_top_k = top_k or self._config.retrieval_top_k
         candidate_k = max(effective_top_k * 4, 20)
         descriptor = self._profile_descriptor(top_k, effective_top_k, rerank, candidate_k)
         if document_ids is not None:
             descriptor['document_scope'] = list(document_ids)
+        if distinct_documents:
+            descriptor['result_unit'] = 'DOCUMENT'
         receipt = make_rag_profile(descriptor)
         trace = {'status': 'STARTED', 'stage': 'embedding', 'gate_status': 'NOT_EXECUTED',
                  'reranker_status': 'NOT_EXECUTED', 'resolved_relevance_gate': None}
@@ -590,6 +592,7 @@ class RAG:
 
         try:
             result = self._query(query_text, effective_top_k, rerank, trace,
+                                 **({'distinct_documents': True} if distinct_documents else {}),
                                  **({'document_ids': document_ids} if document_ids is not None else {}))
         except Exception as exc:
             trace.update(status='FAILED', exception_type=type(exc).__name__)
@@ -607,6 +610,7 @@ class RAG:
         rerank: bool = False,
         trace: Optional[dict] = None,
         document_ids: list[str] | None = None,
+        distinct_documents: bool = False,
     ) -> RetrievalResult:
         """
         Query knowledge base menggunakan Hybrid Retrieval.
@@ -637,6 +641,7 @@ class RAG:
         semantic_candidates = self._store.search_similarity(
             query_embedding,
             candidate_k,
+            **({'distinct_documents': True} if distinct_documents else {}),
             **({'document_ids': document_ids} if document_ids is not None else {}),
         )
         trace['semantic_count'] = len(semantic_candidates)
@@ -648,6 +653,7 @@ class RAG:
         lexical_candidates = self._store.search_lexical(
             query_text,
             candidate_k,
+            **({'distinct_documents': True} if distinct_documents else {}),
             **({'document_ids': document_ids} if document_ids is not None else {}),
         )
         trace['lexical_count'] = len(lexical_candidates)
@@ -700,6 +706,13 @@ class RAG:
             )
 
         fused.sort(key=lambda item: item[1], reverse=True)
+        if distinct_documents:
+            seen, unique = set(), []
+            for item in fused:
+                if item[0].document_id not in seen:
+                    seen.add(item[0].document_id)
+                    unique.append(item)
+            fused = unique
 
         # ============================================================
         # 4. BUILD EVIDENCE
