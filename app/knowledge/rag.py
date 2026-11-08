@@ -730,10 +730,15 @@ class RAG:
                 hybrid_score, 6
             )
 
+            final_index = doc_info.metadata.get('final_index', {}) if doc_info else {}
+            evidence_source = (final_index['source'] if final_index
+                and metadata.get('final_index_version') == final_index.get('version_id')
+                else doc_info.source if doc_info else '')
+
             evidence = Evidence(
                 document_id=chunk.document_id,
                 title=doc_info.title if doc_info else "",
-                source=doc_info.source if doc_info else "",
+                source=evidence_source,
                 chunk=chunk.content,
                 chunk_id=chunk.chunk_id,
                 chunk_index=chunk.chunk_index,

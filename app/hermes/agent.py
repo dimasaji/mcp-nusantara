@@ -424,18 +424,27 @@ class HermesAgent:
         # KNOWLEDGE ENGINE
         # --------------------------------------------------------------
 
+        from .knowledge_routing import should_probe_knowledge, grounded_probe_candidates
+        knowledge_probe = bool(conversation and repeated_text is None and not _cari_handled
+                               and should_probe_knowledge(request.user_input)
+                               and not (_arithmetic_response and _arithmetic_response(request.user_input) is not None))
         with capture_retrieval('V1_CHAT', consumer_post_filter=0.50) as retrieval_capture:
             try:
-                evidence = [] if (conversation or repeated_text is not None) else await _run_sync_v1(_knowledge.search_knowledge,
+                evidence = [] if ((conversation and not knowledge_probe) or repeated_text is not None or _cari_handled) else await _run_sync_v1(_knowledge.search_knowledge,
                     turn['query'], top_k=None, **search_scope)
             except Exception as exc:
-                # Retrieval failure is not an empty result or a provider error.
-                if getattr(exc, 'status_code', None) == 409 and str(getattr(exc, 'detail', '')).startswith('Masalah pembacaan SOP:'):
-                    raise
-                from fastapi import HTTPException
-                logging.getLogger(__name__).warning('V1 retrieval unavailable: %s', type(exc).__name__)
-                raise HTTPException(503, 'RETRIEVAL_UNAVAILABLE',
-                                    headers={'X-Chat-Retry-Safe': 'pre-provider'}) from exc
+                if knowledge_probe:
+                    # Optional discovery must not make general model chat depend
+                    # on a healthy embedding/index worker. No source is claimed.
+                    logging.getLogger(__name__).warning('V1 optional knowledge probe unavailable: %s', type(exc).__name__)
+                    evidence = []
+                else:
+                    if getattr(exc, 'status_code', None) == 409 and str(getattr(exc, 'detail', '')).startswith('Masalah pembacaan SOP:'):
+                        raise
+                    from fastapi import HTTPException
+                    logging.getLogger(__name__).warning('V1 retrieval unavailable: %s', type(exc).__name__)
+                    raise HTTPException(503, 'RETRIEVAL_UNAVAILABLE',
+                                        headers={'X-Chat-Retry-Safe': 'pre-provider'}) from exc
             if sop_hint is not None and sop_hint.terms:
                 try:
                     # Keep every baseline candidate. Aspect labels are not metadata
@@ -509,6 +518,11 @@ class HermesAgent:
                 and (retrieval_capture.canonical_gate_applied or _evidence_score(item) >= 0.50)
             )
         ]
+
+        if knowledge_probe:
+            evidence = grounded_probe_candidates(request.user_input, evidence)
+            if evidence:
+                conversation = False
 
         # A topic definition can use available sources, but sources are optional
         # for general explanation. Explicit document scope always stays grounded.

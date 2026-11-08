@@ -125,6 +125,8 @@ class V1KnowledgeBoundary:
                 detail = review.detail(identifier)
                 if not self._review_trial and detail['status'] != 'Aktif':
                     return []
+                if not self._review_trial:
+                    self._engine.ensure_final_document_index(identifier)
                 return self._remember(review.evidence(identifier, self._sop_version or detail['version_id'], self._document_query or query), review)
             exact_read = getattr(self._engine, 'selected_document_evidence', None)
             if exact_read is not None:
@@ -141,6 +143,8 @@ class V1KnowledgeBoundary:
                          or review.detail(doc.document_id)['status'] == 'Aktif')]
         if not eligible:
             return []
+        for identifier in eligible:
+            self._engine.ensure_final_document_index(identifier)
         limit = top_k or self._engine.retrieval_top_k
         evidence = []
         # Keep the existing bounded document-scope interface. Publication
