@@ -71,8 +71,11 @@ export async function fetchOperationsSummary(token:string):Promise<OperationsSum
   return runtimeFetch('/v1/control-plane/operations-summary',{headers:{'X-Admin-Token':token}}) as Promise<OperationsSummary>;
 }
 export type KnowledgePipelineRun={run_id:string;filename:string;source_sha256:string;status:string;reason:string|null;document_id:string|null;created_at:string;source_path:string|null};
-export type KnowledgeDocument={document_id:string;title:string;chunks_count:number;status:string;source_verification:string;verification_reason?:string|null;source_sha256?:string|null;updated_at:string;review_status?:string};
-export type KnowledgePipelineStatus={source:string;database:string;documents_indexed:number;pipeline_ready_documents:number;documents?:KnowledgeDocument[];watch:{enabled:boolean;folder:string;updated_at:string};runs:KnowledgePipelineRun[];checked_at:string};
+export type SOPWorkflowState='ACTIVE'|'QUEUED'|'PROCESSING'|'REVIEW_REQUIRED'|'APPROVAL_REQUIRED'|'BLOCKED'|'UNKNOWN';
+export type SOPWorkflow={state:SOPWorkflowState;version_id:string|null;stages:Record<string,string>;extraction_status:string;cleaning_profile:string|null;reason:string;next_action:'chat'|'wait'|'prepare'|'review'};
+export type SOPSummary={scope:'CURRENT_KNOWLEDGE';total:number;counts:Record<SOPWorkflowState,number>;failed_sources:{run_id:string;filename:string;reason:string|null;retryable:boolean}[]};
+export type KnowledgeDocument={document_id:string;title:string;chunks_count:number;status:string;source_verification:string;verification_reason?:string|null;source_sha256?:string|null;updated_at:string;review_status?:string;workflow?:SOPWorkflow};
+export type KnowledgePipelineStatus={source:string;database:string;documents_indexed:number;pipeline_ready_documents:number;documents?:KnowledgeDocument[];sop_summary?:SOPSummary;watch:{enabled:boolean;folder:string;updated_at:string};runs:KnowledgePipelineRun[];checked_at:string};
 export async function fetchKnowledgePipelineStatus(token:string):Promise<KnowledgePipelineStatus>{
   if(!token.trim())throw new Error('Token operator diperlukan untuk melihat History knowledge.');
   return runtimeFetch('/v1/knowledge/pipeline/status',{headers:{'X-Admin-Token':token}}) as Promise<KnowledgePipelineStatus>;
