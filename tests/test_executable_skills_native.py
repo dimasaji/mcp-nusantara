@@ -36,6 +36,11 @@ def test_real_intake_skill_to_cited_facts_after_fixture_approval(tmp_path):
     assert inspected.output['page_count'] == 3
     review = SOPReview(engine)
     detail = review.detail(identifier)
+    from app.knowledge.document_tools import DocumentTools
+    extracted = DocumentTools(engine, operator=True).baca_dokumen(identifier, detail['version_id'])
+    assert extracted['text_cleaning']['profile'].startswith('haystack-')
+    assert extracted['raw_extraction']['page_count'] == 3
+    assert extracted['raw_extraction']['activity_rows'] == extracted['activity_rows']
     assert detail['approval'] is None
     arguments = {'document_id': identifier, 'version_id': detail['version_id'], 'question': 'Berapa lama?'}
     assert invoke(engine, 'sop.facts', arguments).output['status'] == 'not_approved'

@@ -135,6 +135,9 @@ class SOPReview:
         content = {key: payload.get(key) for key in (
             'blocks', 'page_count', 'markdown', 'full_document_text', 'activity_rows',
             'pdf_sha256', 'parser_version', 'configuration')}
+        # Bind new cleaning provenance without changing historical payload IDs.
+        content.update({key: payload[key] for key in ('raw_extraction', 'text_cleaning')
+                        if key in payload})
         return hashlib.sha256(json.dumps([source_version, content], ensure_ascii=False,
                                          sort_keys=True, allow_nan=False).encode()).hexdigest()
 
