@@ -300,6 +300,13 @@ class KnowledgeEngine:
         try:
             pdf_pages = self._extract_pdf_pages(raw) if Path(safe_name).suffix.lower() == '.pdf' else None
             text = '\n'.join(pdf_pages) if pdf_pages is not None else self._extract_pipeline_text(safe_name, raw)
+            from .text_cleaning import clean_text, persist_intake_text
+            raw_text, raw_pages = text, pdf_pages
+            if pdf_pages is not None:
+                pdf_pages = [clean_text(page) for page in pdf_pages]
+                text = '\n'.join(pdf_pages)
+            else:
+                text = clean_text(text)
             normalized=' '.join(text.split())
             if len(normalized)<40:
                 raise ValueError('EXTRACTED_TEXT_TOO_SHORT_OR_SCANNED; OCR_REQUIRED')
@@ -325,6 +332,8 @@ class KnowledgeEngine:
             metadata={**(source_metadata or {}),'pipeline_status':'READY','source_sha256':digest,'source_filename':safe_name,
                       'source_authority':'UNVERIFIED','revision_status':'NOT_CONFIRMED_CURRENT',
                       'indexed_at':datetime.now(timezone.utc).isoformat()}
+            metadata['text_cleaning'] = persist_intake_text(
+                stored, digest_id, digest, raw_text, text, raw_pages, pdf_pages)
             title = self._source_title(text, safe_name)
             metadata['source_title'] = title
             # Offsets refer to the exact native/OCR text indexed above. Retain
