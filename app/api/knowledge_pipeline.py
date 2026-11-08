@@ -238,12 +238,7 @@ def create_knowledge_pipeline_router(run_sync):
         knowledge=Depends(get_knowledge_engine),
     ):
         require_admin(x_admin_token)
-        status = knowledge.knowledge_pipeline_status()
-        pilot = next((doc for doc in status.get('documents', []) if doc['title'] == 'PERMOHONAN DATA PRIBADI'), None)
-        if pilot:
-            detail = SOPReview(knowledge).detail(pilot['document_id'])
-            pilot['review_status'] = detail['status']
-        return status
+        return knowledge.knowledge_pipeline_status()
 
     @router.post('/watch')
     def configure_knowledge_watch(
