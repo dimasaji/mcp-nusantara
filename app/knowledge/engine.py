@@ -430,8 +430,10 @@ class KnowledgeEngine:
                       'source_verification': doc.metadata.get('source_verification', 'NOT_VERIFIED'),
                       'verification_reason': doc.metadata.get('verification_reason'),
                       'source_sha256': doc.metadata.get('source_sha256'),
+                      'text_cleaning': doc.metadata.get('text_cleaning'),
                       'updated_at': doc.updated_at.isoformat()} for doc in indexed_documents]
-        return {'source':'Chat RAG SQLite store','database':str(Path(self.rag._store.db_path).resolve()),
+        from .pipeline_overview import enrich_pipeline_status
+        return enrich_pipeline_status(self, {'source':'Chat RAG SQLite store','database':str(Path(self.rag._store.db_path).resolve()),
                 'documents_indexed':document_count,'pipeline_ready_documents':ready,'documents':inventory,
                 'watch':{'enabled':bool(config['watch_enabled']),'folder':config['watch_folder'],
-                         'updated_at':config['updated_at']},'runs':runs,'checked_at':datetime.now(timezone.utc).isoformat()}
+                         'updated_at':config['updated_at']},'runs':runs,'checked_at':datetime.now(timezone.utc).isoformat()})
