@@ -68,7 +68,8 @@ def test_conversation_uses_existing_provider_without_false_grounding(question, a
     assert public["grounding"] == {"enabled": True, "grounded": False, "reason": "not_evaluated"}
     assert public["evidence"] == [] and not public["trust"]["supports_claim"]
     assert public["session_id"] == "original-session"
-    assert parts[4].calls == 1 and parts[5]["remembered"] == 1 and parts[5]["searched"] == 0
+    # Substantive conversation probes authorized sources before model-only fallback.
+    assert parts[4].calls == 1 and parts[5]["remembered"] == 1 and parts[5]["searched"] == 1
     assert core.response_policy == "conversation"
     assert "berdasarkan knowledge base" not in public["problem"].get("goal", "").lower()
 

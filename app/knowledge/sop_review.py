@@ -330,6 +330,10 @@ class SOPReview:
     def decide(self, document_id, version, action, principal, note='', problem_id=None, category='unknown'):
         if category not in CORRECTION_CATEGORIES:
             raise ValueError('Kategori masalah tidak dikenal.')
+        if action == 'approve':
+            preflight = self._check(document_id, version)
+            if preflight['can_approve']:
+                self.engine.ensure_final_document_index(document_id)
         with self._db() as conn:
             conn.execute('BEGIN IMMEDIATE')
             detail = self._check(document_id, version)

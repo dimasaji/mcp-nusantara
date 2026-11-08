@@ -39,6 +39,19 @@ class KnowledgeEngine:
         self.rag = rag if rag is not None else (
             create_rag(nusantara_config=nusantara_config) if nusantara_config is not None else create_rag())
 
+    def complete_final_extraction(self, job_id, payload, *, validate_source=None):
+        from .final_index import materialize
+        with self._pipeline_db() as conn:
+            row = conn.execute('SELECT document_id,version FROM document_extractions WHERE job_id=?', (job_id,)).fetchone()
+        if row is None:
+            raise ValueError('FINAL_INDEX_JOB_NOT_FOUND')
+        return materialize(self, row['document_id'], row['version'], payload,
+                           job_id=job_id, validate_source=validate_source)
+
+    def ensure_final_document_index(self, document_id):
+        from .final_index import ensure_current
+        return ensure_current(self, document_id)
+
     @property
     def skills(self):
         with self._skills_lock:
@@ -78,21 +91,39 @@ class KnowledgeEngine:
         return scope
 
     def search_knowledge(self, query: str, top_k: int | None = None, filter: Optional[dict] = None):
-        scope = self.document_scope(filter)
+        return self._search_knowledge(query, top_k, self.document_scope(filter))
+
+    def search_authorized_documents(self, query: str, document_ids: list[str], top_k: int | None = None, *, distinct_documents=False):
+        """Internal boundary seam: IDs must already have passed publication checks.
+
+        Public caller-supplied filters retain their existing 20-document bound.
+        One authorized corpus uses one embedding, fusion and relevance gate.
+        """
+        if (not isinstance(document_ids, list) or not document_ids
+                or any(not isinstance(value, str) or not value for value in document_ids)):
+            raise ValueError('KNOWLEDGE_AUTHORIZED_SCOPE_INVALID')
+        return self._search_knowledge(query, top_k, list(dict.fromkeys(document_ids)), distinct_documents=distinct_documents)
+
+    def _search_knowledge(self, query, top_k, scope, *, distinct_documents=False):
         result = self.rag.query(query_text=query, top_k=top_k,
+                                **({'distinct_documents': True} if distinct_documents else {}),
                                 **({'document_ids': scope} if scope is not None else {}))
         query_terms = {w for w in re.findall(r'\w+', (query or '').casefold()) if len(w) > 2}
         for evidence in result.evidence_pack.evidence:
             info = self.rag.get_document_info(evidence.document_id)
             metadata = info.metadata if info else {}
             evidence.title = self._source_title(evidence.source, evidence.title)
-            evidence.metadata['source_pages'] = metadata.get('source_pages', [])
+            final_index = metadata.get('final_index', {})
+            source_pages = (final_index.get('source_pages', [])
+                            if evidence.metadata.get('final_index_version') == final_index.get('version_id')
+                            and final_index else metadata.get('source_pages', []))
+            evidence.metadata['source_pages'] = source_pages
             # Offset counters from chunkers can be approximate. Cite a page only
             # when the retrieved quotation occurs exactly once in original text.
             start = evidence.source.find(evidence.chunk) if evidence.chunk else -1
             if start >= 0 and evidence.source.find(evidence.chunk, start + 1) < 0:
                 end = start + len(evidence.chunk)
-                evidence.metadata['citation_pages'] = [p['page'] for p in metadata.get('source_pages', [])
+                evidence.metadata['citation_pages'] = [p['page'] for p in source_pages
                     if p['start'] < end and p['end'] > start]
             # Hybrid boost: combine vector score with keyword overlap so exact
             # term matches are not drowned by semantic-only neighbours.

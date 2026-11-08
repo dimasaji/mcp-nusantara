@@ -283,6 +283,10 @@ class DocumentTools:
             temporary = output.with_suffix('.tmp')
             temporary.write_text(json.dumps(payload, ensure_ascii=False), encoding='utf-8')
             temporary.replace(output)
+            if status == 'COMPLETE':
+                self.engine.complete_final_extraction(job, payload,
+                    validate_source=lambda: self._validate_request(path, detail, digest, configuration))
+                return
             with self.engine._pipeline_db() as conn:
                 conn.execute("UPDATE document_extractions SET status=?,payload=?,error=?,updated_at=CURRENT_TIMESTAMP WHERE job_id=? AND status='PROCESSING'",
                              (status, json.dumps(payload, ensure_ascii=False), error, job))

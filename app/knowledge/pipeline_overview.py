@@ -33,7 +33,10 @@ def _document_progress(engine, document, review, tools):
         is_pdf = detail['source_type'] == '.pdf'
         extracting = is_pdf and extraction['status'] in {'QUEUED', 'PROCESSING'}
         extraction_failed = is_pdf and extraction['status'] in {'FAILED', 'PARTIAL', 'STOPPING'}
-        indexed = document['status'] == 'READY' and document['chunks_count'] > 0
+        from .final_index import index_status
+        index_state = index_status(engine, identifier, detail['version_id']) if is_pdf else 'NOT_REQUIRED'
+        indexed = (index_state == 'CURRENT' if is_pdf else
+                   document['status'] == 'READY' and document['chunks_count'] > 0)
         clean_profile = (payload or {}).get('text_cleaning') if is_pdf else document.get('text_cleaning')
         requirements = {item['key']: item['satisfied'] for item in detail['approval_requirements']}
         reviewed = all(requirements.get(key, False) for key in (
@@ -45,6 +48,8 @@ def _document_progress(engine, document, review, tools):
             state = 'BLOCKED'
         elif extracting:
             state = extraction['status']
+        elif active and not indexed:
+            state = 'BLOCKED'
         elif active:
             state = 'ACTIVE'
         elif detail['can_approve']:
@@ -59,15 +64,17 @@ def _document_progress(engine, document, review, tools):
             'indexing': 'SUCCEEDED' if indexed else 'WAITING',
             'review': 'SUCCEEDED' if reviewed else 'FAILED' if detail['problems'] else 'WAITING',
             'approval': 'SUCCEEDED' if active else 'FAILED' if blocked_decision else 'WAITING',
-            'availability': 'SUCCEEDED' if active else 'WAITING',
+            'availability': 'SUCCEEDED' if active and indexed else 'WAITING',
         }
         action = ('chat' if active else 'wait' if extracting else
                   'prepare' if is_pdf and extraction['status'] == 'NOT_PROCESSED' else 'review')
         return {'review_status': detail['status'], 'title': detail['title'], 'workflow': {
             'state': state, 'version_id': detail['version_id'], 'stages': stages,
+            'index_status': index_state,
             'extraction_status': extraction['status'] if is_pdf else 'NOT_REQUIRED',
             'cleaning_profile': (clean_profile or {}).get('profile'),
-            'reason': extraction.get('error') or detail['status'], 'next_action': action,
+            'reason': extraction.get('error') or ('Indeks pencarian perlu dipulihkan. Buka chat untuk menyelaraskan dari hasil ekstraksi tersimpan.'
+                      if active and not indexed else detail['status']), 'next_action': action,
         }}
     raise ValueError('DOCUMENT_VERSION_CHANGED')
 

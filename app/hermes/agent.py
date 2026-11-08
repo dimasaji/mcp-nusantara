@@ -383,20 +383,26 @@ class HermesAgent:
         pending_results = previous.get('search_results', [])
         if search_command:
             query = (search_command.group(1) or '').strip()
+            catalog_domain = 'sop' if re.match(r'^sop(?:\s+|$)', query, re.I) else None
             query = re.sub(r'^sop(?:\s+|$)', '', query, flags=re.I).strip()
             previous = {}
             if not query:
                 _cari_response = 'Ketik /cari SOP diikuti nama atau topik layanan.'
             else:
                 try:
-                    found = await _run_sync_v1(_knowledge.search_knowledge, query, top_k=10, **search_scope)
+                    catalog = getattr(_knowledge, 'search_documents', None)
+                    if catalog:
+                        found = await _run_sync_v1(catalog, query, limit=10, domain=catalog_domain, **search_scope)
+                    else:
+                        found = await _run_sync_v1(_knowledge.search_knowledge, query, top_k=10, **search_scope)
                 except Exception as exc:
                     from fastapi import HTTPException
                     raise HTTPException(503, 'RETRIEVAL_UNAVAILABLE',
                                         headers={'X-Chat-Retry-Safe': 'pre-provider'}) from exc
                 results = {}
                 for item in found:
-                    results.setdefault(item.document_id, {'document_id': item.document_id, 'title': item.title})
+                    card = item if isinstance(item, dict) else {'document_id': item.document_id, 'title': item.title}
+                    results.setdefault(card['document_id'], card)
                 if results:
                     previous = {'search_results': list(results.values()),
                                 'search_scope': list(scoped_document_ids or [])}
@@ -424,18 +430,27 @@ class HermesAgent:
         # KNOWLEDGE ENGINE
         # --------------------------------------------------------------
 
+        from .knowledge_routing import should_probe_knowledge, grounded_probe_candidates
+        knowledge_probe = bool(conversation and repeated_text is None and not _cari_handled
+                               and should_probe_knowledge(request.user_input)
+                               and not (_arithmetic_response and _arithmetic_response(request.user_input) is not None))
         with capture_retrieval('V1_CHAT', consumer_post_filter=0.50) as retrieval_capture:
             try:
-                evidence = [] if (conversation or repeated_text is not None) else await _run_sync_v1(_knowledge.search_knowledge,
+                evidence = [] if ((conversation and not knowledge_probe) or repeated_text is not None or _cari_handled) else await _run_sync_v1(_knowledge.search_knowledge,
                     turn['query'], top_k=None, **search_scope)
             except Exception as exc:
-                # Retrieval failure is not an empty result or a provider error.
-                if getattr(exc, 'status_code', None) == 409 and str(getattr(exc, 'detail', '')).startswith('Masalah pembacaan SOP:'):
-                    raise
-                from fastapi import HTTPException
-                logging.getLogger(__name__).warning('V1 retrieval unavailable: %s', type(exc).__name__)
-                raise HTTPException(503, 'RETRIEVAL_UNAVAILABLE',
-                                    headers={'X-Chat-Retry-Safe': 'pre-provider'}) from exc
+                if knowledge_probe:
+                    # Optional discovery must not make general model chat depend
+                    # on a healthy embedding/index worker. No source is claimed.
+                    logging.getLogger(__name__).warning('V1 optional knowledge probe unavailable: %s', type(exc).__name__)
+                    evidence = []
+                else:
+                    if getattr(exc, 'status_code', None) == 409 and str(getattr(exc, 'detail', '')).startswith('Masalah pembacaan SOP:'):
+                        raise
+                    from fastapi import HTTPException
+                    logging.getLogger(__name__).warning('V1 retrieval unavailable: %s', type(exc).__name__)
+                    raise HTTPException(503, 'RETRIEVAL_UNAVAILABLE',
+                                        headers={'X-Chat-Retry-Safe': 'pre-provider'}) from exc
             if sop_hint is not None and sop_hint.terms:
                 try:
                     # Keep every baseline candidate. Aspect labels are not metadata
@@ -510,6 +525,11 @@ class HermesAgent:
             )
         ]
 
+        if knowledge_probe:
+            evidence = grounded_probe_candidates(request.user_input, evidence)
+            if evidence:
+                conversation = False
+
         # A topic definition can use available sources, but sources are optional
         # for general explanation. Explicit document scope always stays grounded.
         if not scoped_document_ids and not evidence and _general_definition(request.user_input):
@@ -531,6 +551,11 @@ class HermesAgent:
         from app.knowledge.grounding import service_answer_facts, GroundingResult
         pilot_chat = bool(getattr(request, 'sop_version', None))
         service_facts=None if (conversation or repeated_text is not None or pilot_chat) else service_answer_facts(turn,evidence,previous)
+        bound_fact_reader = getattr(_knowledge, 'document_answer_facts', None)
+        if not pilot_chat and not conversation and repeated_text is None and len(evidence) == 1 and bound_fact_reader:
+            bound_facts = await _run_sync_v1(bound_fact_reader, request.user_input, evidence)
+            if bound_facts is not None:
+                service_facts = bound_facts
         if pilot_chat and evidence:
             from app.knowledge.document_answers import document_answer_facts
             fact_reader = getattr(_knowledge, 'document_answer_facts', document_answer_facts)
@@ -747,7 +772,8 @@ class HermesAgent:
             latency_ms = 0
 
         elif (turn['needs_clarification'] and not (scoped_document_ids and evidence)) or (service_facts and service_facts.get('clarify')):
-            response_text=('Saya belum menemukan SOP yang sesuai untuk layanan tersebut.'
+            response_text=(service_facts['clarification'] if service_facts and service_facts.get('clarification') else
+                           'Saya belum menemukan SOP yang sesuai untuk layanan tersebut.'
                            if service_facts and service_facts.get('missing') and turn.get('topic_hint') else
                            'Layanan apa yang Anda maksud?' if not previous or (service_facts and not service_facts.get('missing')) else
                            'Yang ingin Anda ketahui persyaratan, proses, waktu, atau cara pengajuannya?')
