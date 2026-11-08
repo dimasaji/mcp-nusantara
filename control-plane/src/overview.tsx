@@ -1,10 +1,11 @@
 import {useQuery} from '@tanstack/react-query';
-import {useState,useMemo,useRef} from 'react';
+import {useState,useMemo,useRef,useEffect} from 'react';
 import {Link} from '@tanstack/react-router';
 import {fetchSnapshot,fetchEvidencePackage,fetchExecutionContext,fetchExecutionHistory,fetchModelStatus,
   fetchKnowledgePipelineStatus,uploadKnowledgeDocument,setKnowledgeWatch,retryKnowledgeDocument} from './api';
 import {useAdminAuth} from './auth';
 import {SOPReviewPanel} from './sop-review';
+import {SOPProgressPanel,reviewSelectionKey} from './sop-progress';
 import './sop-workspace.css';
 
 function explainUploadFailure(reason:string|null|undefined){
@@ -113,16 +114,25 @@ export function KnowledgeOperationsPage(){
   const fileInput=useRef<HTMLInputElement>(null);
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState('');
+  const [retryFeedback,setRetryFeedback]=useState<{authKey:string;text:string}|null>(null);
   const [uploadFailed,setUploadFailed]=useState(false);
   const [showAllRuns,setShowAllRuns]=useState(false);
   const uploadInFlight=useRef(false);
   const [existingFile,setExistingFile]=useState<{authKey:string;documentId:string}|null>(null);
   const authKey=useMemo(()=>crypto.randomUUID(),[token]);
   const query=useQuery({queryKey:['knowledge-pipeline',authKey],queryFn:()=>fetchKnowledgePipelineStatus(token),enabled:!!token.trim(),retry:false,refetchInterval:busy?2000:30000,gcTime:0});
+  useEffect(()=>{setReviewDocument(null);},[authKey]);
+  useEffect(()=>{
+    if(!token.trim()||!query.isSuccess)return;
+    const pending=sessionStorage.getItem(reviewSelectionKey);
+    if(pending&&query.data.documents?.some(doc=>doc.document_id===pending)){
+      setReviewDocument(pending);sessionStorage.removeItem(reviewSelectionKey);
+    }
+  },[authKey,token,query.isSuccess,query.data]);
   async function retryRun(id:string){
-    setBusy(true);setMessage('');
-    try{const run=await retryKnowledgeDocument(id,token);setMessage(run.status==='FAILED'?explainUploadFailure(run.reason):'Dokumen telah diproses ulang.');await query.refetch();}
-    catch(e){setMessage(e instanceof Error?e.message:'Pemrosesan ulang gagal.');}
+    setBusy(true);setRetryFeedback(null);
+    try{const run=await retryKnowledgeDocument(id,token);setRetryFeedback({authKey,text:run.status==='FAILED'?explainUploadFailure(run.reason):'Dokumen telah diproses ulang.'});await query.refetch();}
+    catch(e){setRetryFeedback({authKey,text:e instanceof Error?e.message:'Pemrosesan ulang gagal.'});}
     finally{setBusy(false);}
   }
   async function submit(){
@@ -162,12 +172,12 @@ export function KnowledgeOperationsPage(){
   const duplicateCounts=new Map([...duplicateGroups.values()].map(group=>[group[0].run_id,group.length]));
   const visibleRuns=showAllRuns?runs:summarizedRuns;
   const ready=query.data?.pipeline_ready_documents??runs.filter(r=>r.status==='READY').length;
-  const failed=runs.filter(r=>r.status==='FAILED').length;
+  const failed=query.data?.sop_summary?.failed_sources.length;
   const canUpload=!!token.trim()&&query.isSuccess&&!busy;
   const documents=query.data?.documents??[];
   const currentDocument=documents.find(doc=>doc.document_id===reviewDocument)??documents.find(doc=>doc.review_status)??documents[0];
   return <div className="knowledge-workspace">
-    <header><div><div className="eyebrow">DOKUMEN SOP</div><h1>Pemeriksaan SOP</h1><p>Periksa sumber, coba jawaban, lalu tentukan apakah SOP dapat digunakan.</p></div><button onClick={()=>void query.refetch()} disabled={!token.trim()||query.isFetching}>Muat ulang</button></header>
+    <header><div><div className="eyebrow">DOKUMEN SOP</div><h1>Pemeriksaan SOP</h1><p>Ikuti progres otomatis, periksa isi dan metadata, lalu setujui penggunaannya. Percobaan chat tersedia bila diperlukan.</p></div><button onClick={()=>void query.refetch()} disabled={!token.trim()||query.isFetching}>Muat ulang</button></header>
     <section className="panel" aria-label="Akses upload"><details open={!token.trim()||!query.isSuccess}><summary>Akses operator</summary>
       <p>Masukkan token operator untuk membuka dokumen tersimpan. Setelah refresh, verifikasi kembali.</p>
       <form onSubmit={e=>{e.preventDefault();setMessage('');if(tokenDraft.trim()===token)void query.refetch();else setToken(tokenDraft.trim());}}>
@@ -179,13 +189,14 @@ export function KnowledgeOperationsPage(){
       </details><p role="status">{!token.trim()?'Belum masuk. File dapat dipilih; upload menunggu verifikasi token.':query.isFetching?'Memeriksa akses operator…':query.isSuccess?'Akses operator terverifikasi. Anda dapat mengunggah file.':'Akses belum terverifikasi. Periksa token dan coba Verifikasi akses lagi.'}</p>
 
     </section>
-    <ol className="sop-steps" aria-label="Alur pemeriksaan"><li><strong>1. Pilih dokumen</strong><span>Gunakan file yang sudah tersimpan</span></li><li><strong>2. Periksa dan coba</strong><span>Cocokkan isi dan jawaban dengan PDF</span></li><li><strong>3. Putuskan</strong><span>Setujui atau catat masalahnya</span></li></ol>
+    {token.trim()&&query.isSuccess&&<section className="panel" aria-label="Progres SOP"><h2>Progres seluruh SOP</h2><SOPProgressPanel data={query.data} onSelect={setReviewDocument} onRetry={id=>void retryRun(id)} busy={busy}/>{retryFeedback?.authKey===authKey&&<p role="status">{retryFeedback.text}</p>}</section>}
+    <ol className="sop-steps" aria-label="Alur pemeriksaan"><li><strong>1. Pilih dokumen</strong><span>Gunakan file yang sudah tersimpan</span></li><li><strong>2. Periksa isi</strong><span>Cocokkan isi dan metadata dengan PDF</span></li><li><strong>3. Putuskan</strong><span>Setujui atau catat masalahnya</span></li></ol>
     {!token.trim()?<section className="panel"><h2>Mulai dengan akses operator</h2><p>Dokumen yang sudah diunggah akan muncul setelah akses terverifikasi. Tidak perlu mengunggah ulang.</p></section>:query.isPending?<p role="status">Memuat dokumen tersimpan...</p>:query.isError?<p role="alert">Dokumen belum dapat dibuka: {query.error.message}</p>:currentDocument?<>
       <section className="panel sop-current-document" aria-label="Dokumen yang diperiksa">
         <div><p className="eyebrow">DOKUMEN TERPILIH</p><h2>{currentDocument.title}</h2><p>Dokumen sudah tersimpan. Anda tidak perlu mengunggah ulang.</p><p>Status pemeriksaan: <strong>{currentDocument.review_status??'Belum diperiksa'}</strong></p></div>
         <button className="primary" onClick={()=>setReviewDocument(currentDocument.document_id)}>Periksa isi</button>
       </section>
-      {reviewDocument&&<SOPReviewPanel key={`${reviewDocument}-${authKey}`} documentId={reviewDocument} token={token}/>}
+      {reviewDocument&&<SOPReviewPanel key={`${reviewDocument}-${authKey}`} documentId={reviewDocument} token={token} onChanged={()=>query.refetch()}/>}
       <details className="panel"><summary>Pilih dokumen lain ({documents.length})</summary><p>Pilih berdasarkan judul dan file sumbernya. Versi atau salinan tetap disimpan terpisah.</p><div className="sop-document-list">{documents.map(doc=><article key={doc.document_id}><div><h3>{doc.title}</h3><small>{doc.review_status??'Belum diperiksa'} · {new Date(doc.updated_at).toLocaleDateString('id-ID')}</small><details><summary>Identitas dokumen</summary><p>{doc.document_id}</p></details></div><button onClick={()=>setReviewDocument(doc.document_id)} disabled={doc.document_id===reviewDocument}>Pilih dokumen</button></article>)}</div></details>
     </>:<section className="panel"><h2>Belum ada dokumen</h2><p>Buka Tambahkan dokumen baru di bawah untuk memasukkan SOP pertama.</p></section>}
     <details className="panel sop-optional"><summary>Tambahkan dokumen baru</summary><p>Gunakan hanya untuk dokumen yang belum tersedia atau revisi dengan isi berbeda.</p>
@@ -206,7 +217,7 @@ export function KnowledgeOperationsPage(){
     <section className="panel" aria-label="Ringkasan pipeline"><h2>Ringkasan proses</h2>
       {!token.trim()?<p>Token operator diperlukan untuk operasi dan History knowledge. Chat dan status umum tetap dapat dibaca tanpa keputusan.</p>
       :query.isPending?<p role="status">Memuat status pipeline...</p>:query.isError?<p role="alert">Status tidak tersedia: {query.error.message}</p>:<>
-        <div className="diagnostics"><span>{ready} dokumen lulus pipeline</span><span>{query.data.documents_indexed} dokumen ada di index Chat</span><span>{failed} dokumen gagal</span><span>Diperiksa {new Date(query.data.checked_at).toLocaleString('id-ID')}</span></div>
+        <div className="diagnostics"><span>{ready} dokumen terindeks teknis</span><span>{query.data.documents_indexed} dokumen ada di index Chat</span><span>{failed===undefined?'Jumlah kegagalan terkini belum tersedia':`${failed} sumber dengan percobaan impor terakhir gagal`}</span><span>Diperiksa {new Date(query.data.checked_at).toLocaleString('id-ID')}</span></div>
         <p>Sumber data: store knowledge Chat yang sama.</p>
         <p>Siap di index berarti ekstraksi, deduplikasi, dan indexing teknis berhasil. Ini tidak mengesahkan otoritas atau menetapkan dokumen sebagai revisi resmi yang berlaku.</p>
       </>}

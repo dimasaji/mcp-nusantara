@@ -1,4 +1,4 @@
-﻿import {render,screen,fireEvent,waitFor} from '@testing-library/react';
+import {render,screen,fireEvent,waitFor} from '@testing-library/react';
 import {describe,it,expect,vi,beforeEach} from 'vitest';
 import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
 import {AdminAuthProvider,useAdminAuth} from '../src/auth';
@@ -6,7 +6,7 @@ import {OperatorHome,WorkspacePage,WorkspaceTasks,CostsPage,TasksPage,BlockersPa
 import * as api from '../src/api';
 import {HumanNavigation} from '../src/human';
 vi.mock('@tanstack/react-router',()=>({Link:({to,children}:{to:string;children:React.ReactNode})=><a href={to}>{children}</a>}));
-vi.mock('../src/api',()=>({fetchRuntimeHealth:vi.fn(),fetchOperationsSummary:vi.fn(),fetchCostSummary:vi.fn(),fetchEvidencePackage:vi.fn(),fetchExecutionHistory:vi.fn(),fetchExecutionContext:vi.fn(),fetchModelStatus:vi.fn(),fetchSnapshot:vi.fn(),fetchChatHistory:vi.fn(),sendUserChat:vi.fn(),ChatSendError:class extends Error{}}));
+vi.mock('../src/api',()=>({fetchKnowledgePipelineStatus:vi.fn(),fetchRuntimeHealth:vi.fn(),fetchOperationsSummary:vi.fn(),fetchCostSummary:vi.fn(),fetchEvidencePackage:vi.fn(),fetchExecutionHistory:vi.fn(),fetchExecutionContext:vi.fn(),fetchModelStatus:vi.fn(),fetchSnapshot:vi.fn(),fetchChatHistory:vi.fn(),sendUserChat:vi.fn(),ChatSendError:class extends Error{}}));
 const binding={plan_id:'plan-fixture',version:'v1',action:'CONTROLLED_FILE_WRITE'};
 const pkg:api.EvidencePackage={package_id:'evp_sha256_'+'a'.repeat(64),generated_at:'2026-10-16',read_scope:'FIXTURE_ONLY',runtime_status:'NOT_VERIFIED',pass_allowed:false,evidence:[],criteria:[],blockers:[{id:'missing-proof',reason:'Evidence runtime belum lengkap'}]};
 function mount(children:React.ReactNode,token=''){
@@ -93,3 +93,10 @@ describe('Operator contract boundaries',()=>{
  });
 });
 
+
+it('shows the SOP overview entrypoint without a hardcoded pilot',()=>{
+ mount(<OperatorHome/>);
+ expect(screen.getByRole('heading',{name:'Progres seluruh SOP'})).toBeInTheDocument();
+ expect(screen.queryByText(/FOKUS LAYANAN · PIAK-03/)).toBeNull();
+ expect(api.fetchKnowledgePipelineStatus).not.toHaveBeenCalled();
+});
