@@ -1,5 +1,7 @@
 # Indeks final permanen dan penemuan SOP dari chat — 8 November 2026
 
+Lanjutan konsistensi jalur dan alat evaluasi runtime: [laporan lanjutan](rag-path-consistency-20261108.md). Angka 17 di bawah adalah hasil checkpoint awal; hasil terkini tercatat pada laporan lanjutan.
+
 Baseline: `9b7747b709e21288b1b5c1b31c678286e6f227f3` (merge PR #10).
 
 ## Masalah yang diperbaiki

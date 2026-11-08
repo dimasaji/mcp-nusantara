@@ -4,6 +4,19 @@ from __future__ import annotations
 import re
 
 
+def requested_step(question):
+    """A single explicit numeric step; ranges/lists retain the full procedure."""
+    matches = list(re.finditer(r'\b(?:langkah|tahap)\s*(?:ke[-\s]*)?([0-9]{1,6})(?![0-9])', question, re.I))
+    if len(matches) != 1:
+        return None
+    match = matches[0]
+    tail = question[match.end():]
+    if (re.match(r'\s*(?:sampai\b|hingga\b|s\.?\s*d\.?(?!\w))', tail, re.I)
+            or re.match(r'\s*(?:dan|atau|[,/–—&-])\s*(?:(?:langkah|tahap|ke)[-\s]*)?[0-9]', tail, re.I)):
+        return None
+    return int(match[1])
+
+
 def activity_rows(raw: bytes) -> list[dict]:
     import pymupdf
 

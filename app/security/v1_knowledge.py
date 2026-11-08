@@ -146,13 +146,9 @@ class V1KnowledgeBoundary:
         for identifier in eligible:
             self._engine.ensure_final_document_index(identifier)
         limit = top_k or self._engine.retrieval_top_k
-        evidence = []
-        # Keep the existing bounded document-scope interface. Publication
-        # eligibility precedes scoring/top-k, including catalogs over 20 docs.
-        for offset in range(0, len(eligible), 20):
-            evidence.extend(self._engine.search_knowledge(query, top_k=limit,
-                filter={'document_ids': eligible[offset:offset + 20]}))
-        evidence = sorted(evidence, key=lambda item: item.score, reverse=True)[:limit]
+        # Authorization precedes a single query over the complete eligible
+        # corpus; public request filter limits are not widened.
+        evidence = self._engine.search_authorized_documents(query, eligible, top_k=limit)
         result, hydrated = [], set()
         for item in evidence:
             if not review.is_pilot(item.document_id):
@@ -162,6 +158,11 @@ class V1KnowledgeBoundary:
                 continue
             hydrated.add(item.document_id)
             detail = review.detail(item.document_id)
+            if detail['status'] != 'Aktif':
+                raise HTTPException(409, 'CHAT_SOURCE_APPROVAL_OR_VERSION_CHANGED')
+            if (detail['source_type'] == '.pdf'
+                    and item.metadata.get('final_index_version') != detail['version_id']):
+                raise HTTPException(409, 'CHAT_SOURCE_APPROVAL_OR_VERSION_CHANGED')
             if detail['status'] == 'Aktif':
                 extracted = review.evidence(item.document_id, detail['version_id'], self._document_query or query)
                 for citation in extracted:

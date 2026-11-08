@@ -91,7 +91,20 @@ class KnowledgeEngine:
         return scope
 
     def search_knowledge(self, query: str, top_k: int | None = None, filter: Optional[dict] = None):
-        scope = self.document_scope(filter)
+        return self._search_knowledge(query, top_k, self.document_scope(filter))
+
+    def search_authorized_documents(self, query: str, document_ids: list[str], top_k: int | None = None):
+        """Internal boundary seam: IDs must already have passed publication checks.
+
+        Public caller-supplied filters retain their existing 20-document bound.
+        One authorized corpus uses one embedding, fusion and relevance gate.
+        """
+        if (not isinstance(document_ids, list) or not document_ids
+                or any(not isinstance(value, str) or not value for value in document_ids)):
+            raise ValueError('KNOWLEDGE_AUTHORIZED_SCOPE_INVALID')
+        return self._search_knowledge(query, top_k, list(dict.fromkeys(document_ids)))
+
+    def _search_knowledge(self, query, top_k, scope):
         result = self.rag.query(query_text=query, top_k=top_k,
                                 **({'document_ids': scope} if scope is not None else {}))
         query_terms = {w for w in re.findall(r'\w+', (query or '').casefold()) if len(w) > 2}

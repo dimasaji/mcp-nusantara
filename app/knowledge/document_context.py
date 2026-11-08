@@ -1,7 +1,7 @@
 """Budgeted source selection preserving table headers, blocks and physical pages."""
 import re
 
-from .pdf_sop import requirement_rows
+from .pdf_sop import requirement_rows, requested_step
 
 
 def project_activity_blocks(document, question):
@@ -11,7 +11,18 @@ def project_activity_blocks(document, question):
         return document['blocks']
     fields = ['activity', 'kelengkapan', 'waktu', 'output', 'keterangan']
     selected_rows = rows
-    if re.search(r'persyaratan|syarat|bawa', question, re.I):
+    step = requested_step(question)
+    if step is not None:
+        selected_rows = [row for row in rows if row['number'] == step]
+        if re.search(r'lama|waktu|durasi', question, re.I):
+            fields = ['activity', 'waktu']
+        elif re.search(r'hasil|produk', question, re.I):
+            fields = ['activity', 'output']
+        elif re.search(r'persyaratan|syarat|bawa|kelengkapan|dokumen', question, re.I):
+            fields = ['activity', 'kelengkapan']
+        else:
+            fields = ['activity']
+    elif re.search(r'persyaratan|syarat|bawa', question, re.I):
         selected_rows = requirement_rows(rows, question)
         if not selected_rows:
             return document['blocks']
@@ -32,12 +43,18 @@ def project_activity_blocks(document, question):
             continue
         relevant = [r for r in selected_rows if r['block_id'] == block['block_id']]
         if not relevant:
+            if step is not None:
+                numbers = [r['number'] for r in rows if r['block_id'] == block['block_id']]
+                result.append({**block, 'content': 'Nomor langkah yang tercantum: ' + ', '.join(map(str, numbers)),
+                               'selected_rows': [], 'omitted_rows': numbers, 'selected_columns': ['No.']})
             continue
         content = 'Tabel kegiatan SOP. Kolom: No.; ' + '; '.join(labels[f] for f in fields) + '.\n'
         content += '\n'.join(f"{r['number']}. " + ' | '.join(labels[f] + ': ' + r[f] for f in fields if r.get(f)) for r in relevant)
-        if re.search(r'persyaratan|syarat|bawa', question, re.I):
+        if step is None and re.search(r'persyaratan|syarat|bawa', question, re.I):
             content = '\n'.join(f"Baris {r['number']} — Kegiatan: {r['activity']}.\nKelengkapan pemohon pada tahap pengajuan: {r['kelengkapan']}." for r in relevant)
         result.append({**block, 'content': content, 'selected_rows': [r['number'] for r in relevant],
+                       'omitted_rows': [r['number'] for r in rows if r['block_id'] == block['block_id'] and r not in relevant],
+                       'page_numbers': sorted({r['page'] for r in relevant if isinstance(r.get('page'), int)}) or block['page_numbers'],
                        'selected_columns': [labels[f] for f in fields]})
     return result
 

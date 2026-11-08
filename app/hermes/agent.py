@@ -545,6 +545,11 @@ class HermesAgent:
         from app.knowledge.grounding import service_answer_facts, GroundingResult
         pilot_chat = bool(getattr(request, 'sop_version', None))
         service_facts=None if (conversation or repeated_text is not None or pilot_chat) else service_answer_facts(turn,evidence,previous)
+        bound_fact_reader = getattr(_knowledge, 'document_answer_facts', None)
+        if not pilot_chat and not conversation and repeated_text is None and len(evidence) == 1 and bound_fact_reader:
+            bound_facts = await _run_sync_v1(bound_fact_reader, request.user_input, evidence)
+            if bound_facts is not None:
+                service_facts = bound_facts
         if pilot_chat and evidence:
             from app.knowledge.document_answers import document_answer_facts
             fact_reader = getattr(_knowledge, 'document_answer_facts', document_answer_facts)
@@ -761,7 +766,8 @@ class HermesAgent:
             latency_ms = 0
 
         elif (turn['needs_clarification'] and not (scoped_document_ids and evidence)) or (service_facts and service_facts.get('clarify')):
-            response_text=('Saya belum menemukan SOP yang sesuai untuk layanan tersebut.'
+            response_text=(service_facts['clarification'] if service_facts and service_facts.get('clarification') else
+                           'Saya belum menemukan SOP yang sesuai untuk layanan tersebut.'
                            if service_facts and service_facts.get('missing') and turn.get('topic_hint') else
                            'Layanan apa yang Anda maksud?' if not previous or (service_facts and not service_facts.get('missing')) else
                            'Yang ingin Anda ketahui persyaratan, proses, waktu, atau cara pengajuannya?')

@@ -5,7 +5,7 @@ extraction. A failed model rewrite keeps the verified quote and its provenance.
 """
 import re
 
-from .pdf_sop import table_facts
+from .pdf_sop import table_facts, requested_step
 
 
 def document_answer_facts(question, evidence):
@@ -36,6 +36,45 @@ def document_answer_facts(question, evidence):
     facet = ('requirements' if re.search(r'persyaratan|syarat|bawa|dokumen(?:nya)?|kelengkapan|(?:dokumen|kelengkapan).{0,40}(?:langkah|tahap) pertama', question, re.I) else
              'duration' if re.search(r'berapa lama|waktu|durasi', question, re.I) else
              'procedure' if re.search(r'proses|prosedur|bagaimana|lalu|lanjut', question, re.I) else None)
+    step = requested_step(question)
+    if step is not None:
+        selected = [row for row in rows if row['number'] == step]
+        def clarify():
+            return {'clarify': True, 'document_id': item.document_id, 'topic': item.title,
+                    'clarification': 'Informasi tersebut belum dapat dipastikan untuk langkah yang dipilih. '
+                                     'Periksa nomor langkah atau tanyakan kegiatan, kelengkapan, dan waktunya.'}
+        if len(selected) != 1:
+            return clarify()
+        row = selected[0]
+        if re.search(r'biaya|tarif|harga|whatsapp|telepon|email', question, re.I):
+            return clarify()
+        if re.search(r'berapa lama|waktu|durasi', question, re.I):
+            facet = 'duration'
+        elif re.search(r'hasil|produk', question, re.I):
+            facet = 'product'
+        if facet == 'requirements':
+            value = row.get('kelengkapan', '').strip()
+            quote = fallback = 'Kelengkapan: ' + value.rstrip('.') + '.'
+        elif facet == 'duration':
+            value = row.get('waktu', '').strip()
+            if not re.search(r'\b[0-9]+\s+(?:menit|jam|hari)(?:\s+kerja)?\b', value, re.I):
+                return clarify()
+            quote = 'Waktu: ' + value.rstrip('.') + '.'
+            fallback = 'Menurut SOP: ' + value.rstrip('.') + '.'
+        elif facet == 'product':
+            value = row.get('output', '').strip()
+            quote = fallback = 'Output: ' + value.rstrip('.') + '.'
+        else:
+            facet = 'procedure'
+            value = row['activity'].strip()
+            quote = fallback = f"Prosedur:\n{step}. {value.rstrip('.')}."
+        if not value or value == '-':
+            return clarify()
+        return {'topic': item.title, 'title': item.title, 'document_id': item.document_id,
+                'source': quote, 'quote': quote, 'rewrite_quote': quote, 'fallback': fallback,
+                'facet': facet, 'unknown': False, 'table_derived': True,
+                'score': item.score, 'pages': [row['page']],
+                'proof': [{'title': item.title, 'chunk': quote, 'score': item.score}]}
     if facet:
         return table_facts({'facet': facet, 'question': question}, evidence)
     full = metadata.get('full_document_text', '')

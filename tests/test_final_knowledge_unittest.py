@@ -237,6 +237,73 @@ class FinalKnowledgeTests(unittest.TestCase):
         self.assertTrue(result.payload['evidence'])
 
 
+    def test_global_search_embeds_once_for_more_than_twenty_documents(self):
+        from app.knowledge.schemas import capture_retrieval
+        self.complete()
+        self.approve()
+        for index in range(24):
+            result = self.engine.rag.ingest_document(DocumentIngestRequest(
+                document_id=f'legacy-note-{index}', title=f'Catatan {index}',
+                source=f'Catatan umum administrasi nomor {index}.'))
+            self.assertTrue(result.success, result.error)
+        calls = []
+        def counted(text):
+            calls.append(text)
+            return embedding(text)
+        self.engine.rag._embedding = counted
+        with capture_retrieval('SINGLE_GLOBAL_QUERY') as captured:
+            found = V1KnowledgeBoundary(self.engine, operator=True, provider='ollama').search_knowledge('Keterangan Lahir')
+        self.assertEqual([item.document_id for item in found], [self.identifier])
+        self.assertEqual(calls, ['Keterangan Lahir'])
+        self.assertEqual(len(captured.receipts), 1)
+
+
+    def test_new_approved_extraction_cannot_relabel_old_retrieval_candidates(self):
+        from unittest.mock import patch
+        from fastapi import HTTPException
+        self.complete()
+        self.approve()
+        search = self.engine.search_authorized_documents
+        def changed_after_search(*args, **kwargs):
+            found = search(*args, **kwargs)
+            changed = copy.deepcopy(self.payload)
+            changed['blocks'][0]['block_id'] = 'block-reparsed'
+            with self.engine._pipeline_db() as conn:
+                conn.execute("INSERT INTO document_extractions(job_id,document_id,version,cache_key,status,payload) VALUES (?,?,?,?,?,?)",
+                             ('job-2', self.identifier, self.source_version, 'reparse', 'PROCESSING', '{}'))
+            self.engine.complete_final_extraction('job-2', changed)
+            self.approve()
+            return found
+        boundary = V1KnowledgeBoundary(self.engine, operator=True, provider='ollama')
+        with patch.object(self.engine, 'search_authorized_documents', side_effect=changed_after_search):
+            with self.assertRaises(HTTPException) as captured:
+                boundary.search_knowledge('Keterangan Lahir')
+        self.assertEqual(captured.exception.status_code, 409)
+        self.assertEqual(captured.exception.detail, 'CHAT_SOURCE_APPROVAL_OR_VERSION_CHANGED')
+
+
+    def test_actual_chat_uses_the_same_step_facts_as_selected_document(self):
+        from test_rag_path_unittest import large_document
+        from app.knowledge.pdf_sop import rows_text
+        rows = large_document()['activity_rows']
+        for row in rows:
+            row['page'] = 1
+        text = 'SOP AKTA KELAHIRAN\n' + rows_text(rows)
+        self.payload.update(activity_rows=rows, markdown=text, full_document_text=text,
+            blocks=[{'block_id': 'grid', 'type': 'table', 'content': text, 'page_numbers': [1]}])
+        self.complete()
+        self.approve()
+        parts = offline_chat_fixture()
+        parts[2]['knowledge'] = V1KnowledgeBoundary(owner(self.db), operator=True, provider='ollama',
+            document_query='Bagaimana langkah ke-5 untuk akta kelahiran?')
+        parts[4].answer = 'Kegiatan ini selesai dalam 99 hari.'
+        result = execute_chat(parts, 'Bagaimana langkah ke-5 untuk akta kelahiran?')
+        self.assertIn('berkas tahap 5', result.payload['response'])
+        self.assertNotIn('berkas tahap 6', result.payload['response'])
+        self.assertNotIn('99 hari', result.payload['response'])
+        self.assertTrue(result.payload['grounding']['grounded'])
+
+
 
 class RoutingTests(unittest.TestCase):
     def test_substantive_general_wording_can_probe_without_sop_keyword(self):
