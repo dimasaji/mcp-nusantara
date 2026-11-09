@@ -98,13 +98,26 @@ class KnowledgeEngine:
             # term matches are not drowned by semantic-only neighbours.
             if query_terms:
                 haystack = (getattr(evidence, 'chunk', '') or '').casefold()
+                title = (getattr(evidence, 'title', '') or '').casefold()
                 overlap = sum(1 for t in query_terms if t in haystack)
-                if overlap:
+                title_overlap = sum(1 for t in query_terms if t in title)
+                if overlap or title_overlap:
                     base = float(getattr(evidence, 'score', 0.0) or 0.0)
-                    evidence.score = min(1.0, base + 0.05 * overlap)
+                    boost = 0.05 * overlap + 0.15 * title_overlap
+                    evidence.score = min(1.0, base + boost)
         # Filter out low-relevance noise so nonsense queries do not return spurious results.
         filtered = [e for e in result.evidence_pack.evidence if float(getattr(e, 'score', 0.0) or 0.0) >= 0.32]
-        return RetrievalEvidenceList(filtered, getattr(result, 'effective_profile', None))
+        # Document-level grouping: keep only the best chunk per document so one
+        # document cannot occupy many result positions.
+        best = {}
+        for e in filtered:
+            did = getattr(e, 'document_id', None)
+            if did not in best or float(getattr(e, 'score', 0.0) or 0.0) > float(getattr(best[did], 'score', 0.0) or 0.0):
+                best[did] = e
+        grouped = sorted(best.values(), key=lambda e: float(getattr(e, 'score', 0.0) or 0.0), reverse=True)
+        if top_k:
+            grouped = grouped[:top_k]
+        return RetrievalEvidenceList(grouped, getattr(result, 'effective_profile', None))
 
     def search(self, query: str, top_k: int | None = None):
         return self.search_knowledge(query, top_k=top_k)
