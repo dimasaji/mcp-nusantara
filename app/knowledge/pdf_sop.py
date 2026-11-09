@@ -40,6 +40,33 @@ def rows_text(rows: list[dict]) -> str:
         for row in rows)
 
 
+def requirement_rows(rows: list[dict], question: str = '') -> list[dict]:
+    """Read submission/intake cells until the workflow becomes internal.
+
+    This is a conservative selection, not an inferred universal checklist.
+    Later collection or internal certification steps do not add requirements.
+    """
+    if not rows:
+        return []
+    if re.search(r'(?:langkah|tahap)\s+(?:pertama|1)\b', question, re.I):
+        return [rows[0]] if rows[0].get('kelengkapan') else []
+    selected = []
+    seen = set()
+    for row in rows:
+        activity = row['activity']
+        submission = re.match(r'^(?:pemohon\s+)?(?:menyampaikan|mengajukan|menyerahkan|mengisi|mengunggah|mengupload|membawa|melampirkan)\b', activity, re.I)
+        intake = (re.match(r'^(?:petugas\s+)?(?:menerima|memeriksa|memverifikasi|melakukan verifikasi|melakukan pemeriksaan)\b', activity, re.I)
+                  and re.search(r'\b(?:berkas|dokumen|kelengkapan|permohonan)\b', activity, re.I))
+        internal = re.search(r'\b(?:sertifikasi|disposisi|nota|draf|draft|jawaban)\b', activity, re.I)
+        if internal or not (submission or intake):
+            break
+        value = ' '.join(row.get('kelengkapan', '').casefold().split())
+        if value and value not in seen:
+            selected.append(row)
+            seen.add(value)
+    return selected
+
+
 def table_facts(turn: dict, evidence) -> dict | None:
     """Choose explicit table cells, never infer actors from flowchart position."""
     if len(evidence or []) != 1 or turn.get('facet') not in {'requirements', 'duration', 'procedure'}:
@@ -51,14 +78,16 @@ def table_facts(turn: dict, evidence) -> dict | None:
     facet = turn['facet']
     selected = []
     if facet == 'requirements':
-        first = rows[0]
-        # Report the input of the submission step, not qualifications or later
-        # internal outputs. Unknown layouts retain the ordinary grounded path.
-        if not re.match(r'^(?:menyampaikan|mengajukan|menyerahkan)\b', first['activity'], re.I) or not first.get('kelengkapan'):
+        selected = requirement_rows(rows, turn.get('question', ''))
+        if not selected:
             return None
-        selected = [first]
-        quote = f"Kelengkapan: {first['kelengkapan']}.\nUraian Kegiatan: {first['activity']}."
-        fallback = quote
+        quote = '\n'.join(f"Kelengkapan: {row['kelengkapan']}." for row in selected)
+        values = {}
+        for row in selected:
+            value = row['kelengkapan'].rstrip('.')
+            values.setdefault(' '.join(value.casefold().split()), value)
+        fallback = ('Siapkan ' + next(iter(values.values())) + '.' if len(values) == 1 else
+                    'Kelengkapan menurut SOP:\n' + '\n'.join('- ' + value for value in values.values()))
     elif facet == 'duration':
         selected = [row for row in rows if re.search(r'\bselesai\b', row['activity'], re.I)
                     and re.search(r'\b\d+\s+(?:hari|jam|menit)(?:\s+kerja)?\b', row.get('keterangan', ''), re.I)]

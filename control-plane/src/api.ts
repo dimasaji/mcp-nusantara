@@ -71,8 +71,11 @@ export async function fetchOperationsSummary(token:string):Promise<OperationsSum
   return runtimeFetch('/v1/control-plane/operations-summary',{headers:{'X-Admin-Token':token}}) as Promise<OperationsSummary>;
 }
 export type KnowledgePipelineRun={run_id:string;filename:string;source_sha256:string;status:string;reason:string|null;document_id:string|null;created_at:string;source_path:string|null};
-export type KnowledgeDocument={document_id:string;title:string;chunks_count:number;status:string;source_verification:string;verification_reason?:string|null;source_sha256?:string|null;updated_at:string;review_status?:string};
-export type KnowledgePipelineStatus={source:string;database:string;documents_indexed:number;pipeline_ready_documents:number;documents?:KnowledgeDocument[];watch:{enabled:boolean;folder:string;updated_at:string};runs:KnowledgePipelineRun[];checked_at:string};
+export type SOPWorkflowState='ACTIVE'|'QUEUED'|'PROCESSING'|'REVIEW_REQUIRED'|'APPROVAL_REQUIRED'|'BLOCKED'|'UNKNOWN';
+export type SOPWorkflow={state:SOPWorkflowState;version_id:string|null;stages:Record<string,string>;extraction_status:string;cleaning_profile:string|null;reason:string;next_action:'chat'|'wait'|'prepare'|'review'};
+export type SOPSummary={scope:'CURRENT_KNOWLEDGE';total:number;counts:Record<SOPWorkflowState,number>;failed_sources:{run_id:string;filename:string;reason:string|null;retryable:boolean}[]};
+export type KnowledgeDocument={document_id:string;title:string;chunks_count:number;status:string;source_verification:string;verification_reason?:string|null;source_sha256?:string|null;updated_at:string;review_status?:string;workflow?:SOPWorkflow};
+export type KnowledgePipelineStatus={source:string;database:string;documents_indexed:number;pipeline_ready_documents:number;documents?:KnowledgeDocument[];sop_summary?:SOPSummary;watch:{enabled:boolean;folder:string;updated_at:string};runs:KnowledgePipelineRun[];checked_at:string};
 export async function fetchKnowledgePipelineStatus(token:string):Promise<KnowledgePipelineStatus>{
   if(!token.trim())throw new Error('Token operator diperlukan untuk melihat History knowledge.');
   return runtimeFetch('/v1/knowledge/pipeline/status',{headers:{'X-Admin-Token':token}}) as Promise<KnowledgePipelineStatus>;
@@ -148,7 +151,7 @@ export async function sendUserChat(user_input:string,session_id:string,request_i
       },timeoutMs);
     });
     const response=await Promise.race([fetch('/v1/chat',{method:'POST',signal:controller.signal,credentials:'omit',cache:'no-store',redirect:'error',
-        headers:{'Content-Type':'application/json',...(options.token&&options.documentIds?.length?{'X-Admin-Token':options.token}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{}),...(options.sopVersion?{sop_version:options.sopVersion,sop_case:options.sopCase}:{})})}),deadline]);
+        headers:{'Content-Type':'application/json',...(options.token?{'X-Admin-Token':options.token}:{})},body:JSON.stringify({user_input,session_id,request_id,...(retry_of?{retry_of}:{}),...(options.onDelta?{stream:true}:{}),...(options.documentIds?.length?{document_ids:options.documentIds}:{}),...(options.sopVersion?{sop_version:options.sopVersion,sop_case:options.sopCase}:{})})}),deadline]);
     if(!response.ok){
       let body:{detail?:unknown}|null=null;
       try{body=await response.json() as {detail?:unknown};}catch{/* HTTP status remains authoritative when the body is unreadable. */}

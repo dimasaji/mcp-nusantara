@@ -9,6 +9,8 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
 
+os.environ['HAYSTACK_TELEMETRY_ENABLED'] = 'False'
+
 # Explicit local evidence-only boot; default runtime composition is preserved.
 _READ_ONLY_EVIDENCE = os.environ.get('NUSANTARA_CONTROL_PLANE_READ_ONLY') == '1'
 _configuration = None
@@ -48,6 +50,8 @@ async def lifespan(app: FastAPI):
             while True:
                 try:
                     await asyncio.to_thread(_knowledge.scan_knowledge_watch)
+                    from app.knowledge.document_tools import DocumentTools
+                    await asyncio.to_thread(lambda: DocumentTools(_knowledge, operator=True).resume_queued())
                 except Exception:
                     # Pipeline failures are retained per source; service stays available.
                     logger.exception('Knowledge folder monitor failed')

@@ -144,7 +144,7 @@ describe('general knowledge operations',()=>{
     expect(await screen.findByRole('heading',{name:'Pemeriksaan SOP'})).toBeInTheDocument();
     fireEvent.click(screen.getByText('Pengaturan dan informasi teknis'));
     fireEvent.click(screen.getByText('Riwayat proses sebelumnya'));
-    expect(await screen.findByText('1 dokumen lulus pipeline')).toBeInTheDocument();
+    expect(await screen.findByText('1 dokumen terindeks teknis')).toBeInTheDocument();
     expect(await screen.findByText('2 dokumen ada di index Chat')).toBeInTheDocument();
     expect(screen.getByText('scan.pdf')).toBeInTheDocument();
     expect(screen.getByText(/PDF tampaknya hasil pemindaian/)).toBeInTheDocument();

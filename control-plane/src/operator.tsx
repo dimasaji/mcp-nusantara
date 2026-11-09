@@ -1,4 +1,4 @@
-﻿import {DetailDrawer} from './operator-panels';
+import {DetailDrawer} from './operator-panels';
 export {DetailDrawer} from './operator-panels';
 import {useMemo,useState} from 'react';
 import {useQuery,useQueryClient} from '@tanstack/react-query';
@@ -8,6 +8,7 @@ import {useAdminAuth} from './auth';
 import {isAttestation} from './schemas';
 import {plainReason} from './readiness';
 import {EngineeringConsole} from './engineering-console';
+import {SOPProgressOverview} from './sop-progress';
 
 export const operatorMenus=[
   ['/dashboard','Beranda'],['/workspace','AI Workspace'],
@@ -72,8 +73,8 @@ function CurrentWork(){
 export function OperatorHome(){
   const client=useQueryClient();
   const pkg=useQuery({queryKey:['operator','package'],queryFn:fetchEvidencePackage,retry:false});
-  return <><header><div><p className="eyebrow">NUSANTARA · V1</p><h1>Beranda</h1><p>Pekerjaan, hambatan, keputusan, dan penggunaan.</p></div><button onClick={()=>void client.invalidateQueries({predicate:q=>['operator','operations-summary','home-costs'].includes(String(q.queryKey[0]))})}>Perbarui Beranda</button></header>
-    <section className="service-focus"><div><p className="eyebrow">DOKUMEN DAN CHAT</p><h2>Kelola SOP, lalu gunakan di Chat.</h2><p>Tambahkan dokumen, periksa isinya, dan setujui untuk digunakan.</p></div><Link to="/knowledge" className="button-link">Kelola dokumen</Link><Link to="/" className="button-link">Buka Chat</Link></section>
+  return <><header><div><p className="eyebrow">NUSANTARA · V1</p><h1>Beranda</h1><p>Pekerjaan, hambatan, keputusan, dan penggunaan.</p></div><button onClick={()=>void client.invalidateQueries({predicate:q=>['operator','operations-summary','home-costs','sop-overview','runtime-health'].includes(String(q.queryKey[0]))})}>Perbarui Beranda</button></header>
+    <SOPProgressOverview/>
     <div className="operator-cards">
       <section className="panel"><h2>Apa yang sedang dikerjakan?</h2><p>Kelola unggahan dan hasil pembacaan SOP pada halaman Dokumen.</p><Link to="/knowledge">Lihat dokumen</Link><details><summary>Tugas sistem lainnya</summary><OperationCounts kind="work"/><CurrentWork/><Link to="/tasks">Lihat aktivitas tugas</Link></details></section>
       <section className="panel"><h2>Apa masalahnya?</h2><p>Dokumen yang gagal dibaca atau perlu diperbaiki ditampilkan pada halaman Dokumen.</p><Link to="/knowledge">Periksa dokumen</Link><details><summary>Pemeriksaan sistem lanjutan</summary>{pkg.isPending?<p role="status">Memuat pemeriksaan.</p>:pkg.isError?<ErrorState error={pkg.error} retry={()=>void pkg.refetch()}/>:<><p>{pkg.data.blockers.length} masalah tercatat dalam paket pemeriksaan sistem.</p><p>{pkg.data.blockers[0]?plainReason(pkg.data.blockers[0].reason):'Tidak ada masalah pada paket yang dibaca.'}</p><p>Paket ini bukan status langsung seluruh dokumen atau layanan.</p></>}<Link to="/blockers">Lihat pemeriksaan sistem</Link></details></section>

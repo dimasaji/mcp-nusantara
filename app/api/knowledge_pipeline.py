@@ -217,7 +217,7 @@ def create_knowledge_pipeline_router(run_sync):
         if not raw:
             raise HTTPException(422, 'DOCUMENT_EMPTY')
         try:
-            return await run_sync(knowledge.process_knowledge_source, filename, raw, timeout_s=90)
+            return await run_sync(knowledge.intake_document, filename, raw, timeout_s=90)
         except HTTPException:
             raise
         except Exception as exc:
@@ -238,12 +238,7 @@ def create_knowledge_pipeline_router(run_sync):
         knowledge=Depends(get_knowledge_engine),
     ):
         require_admin(x_admin_token)
-        status = knowledge.knowledge_pipeline_status()
-        pilot = next((doc for doc in status.get('documents', []) if doc['title'] == 'PERMOHONAN DATA PRIBADI'), None)
-        if pilot:
-            detail = SOPReview(knowledge).detail(pilot['document_id'])
-            pilot['review_status'] = detail['status']
-        return status
+        return knowledge.knowledge_pipeline_status()
 
     @router.post('/watch')
     def configure_knowledge_watch(

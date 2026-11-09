@@ -6,6 +6,58 @@ owns cell matching and table reconstruction; coordinates come from the PDF.
 from pathlib import Path
 
 
+def scanned_activity_grid_regions(page) -> list[tuple]:
+    """Locate ruled raster grids, accepting only procedure headers read by OCR.
+
+    Run after OCR, before layout postprocessing assigns cells to containers.
+    Image geometry proposes a box; it never supplies text or table cell values.
+    """
+    import re
+
+    import cv2
+    import numpy as np
+
+    if page.size is None or not page.cells:
+        return []
+    image = page.get_image(scale=2)
+    if image is None:
+        return []
+    gray = np.asarray(image.convert('L'))
+    ink = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    height, width = ink.shape
+    horizontal = cv2.morphologyEx(ink, cv2.MORPH_OPEN,
+        cv2.getStructuringElement(cv2.MORPH_RECT, (max(20, width // 20), 1)))
+    vertical = cv2.morphologyEx(ink, cv2.MORPH_OPEN,
+        cv2.getStructuringElement(cv2.MORPH_RECT, (1, max(20, height // 20))))
+    joined = cv2.dilate(horizontal | vertical, np.ones((3, 3), dtype=np.uint8))
+    contours, _ = cv2.findContours(joined, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    scale_x, scale_y = page.size.width / width, page.size.height / height
+    regions = []
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        if w < width / 3 or h < height / 10:
+            continue
+        # Reject boxes without a grid of intersecting horizontal/vertical rules.
+        crop_h = horizontal[y:y+h, x:x+w]
+        crop_v = vertical[y:y+h, x:x+w]
+        h_count = cv2.connectedComponents(crop_h)[0] - 1
+        v_count = cv2.connectedComponents(crop_v)[0] - 1
+        if h_count < 3 or v_count < 3:
+            continue
+        left, top, right, bottom = x*scale_x, y*scale_y, (x+w)*scale_x, (y+h)*scale_y
+        header_text = []
+        for cell in page.cells:
+            box = cell.rect.to_bounding_box().to_top_left_origin(page.size.height)
+            cx, cy = (box.l + box.r) / 2, (box.t + box.b) / 2
+            if left <= cx <= right and top <= cy <= top + (bottom-top) / 4:
+                header_text.append(cell.text)
+        text = ' '.join(header_text).casefold()
+        if (re.search(r'\b(?:no|pelaksana)\b', text) and re.search(r'\bkegiatan\b', text)
+                and re.search(r'\b(?:kelengkapan|mutu\s+baku)\b', text)):
+            regions.append((left, top, right, bottom))
+    return sorted(regions, key=lambda box: (box[1], box[0]))
+
+
 def activity_grid_regions(source: Path) -> dict[int, list[tuple]]:
     import pymupdf
     regions = {}
@@ -22,48 +74,28 @@ def activity_grid_regions(source: Path) -> dict[int, list[tuple]]:
     return regions
 
 
-def layout_grid_regions(source: Path):
-    """Find large raster grids before layout classification, without inventing text.
-
-    Raster detections only guide Docling's existing OCR/table reconstruction.
-    They never enter the native-cell normalization path or certify cell values.
-    """
-    import pymupdf
-    from PIL import Image
-
-    regions = activity_grid_regions(source)
-
-    def centers(values, threshold):
-        groups = []
-        for index, value in enumerate(values):
-            if value < threshold:
-                continue
-            if groups and index == groups[-1][-1] + 1:
-                groups[-1].append(index)
-            else:
-                groups.append([index])
-        return [sum(group) / len(group) for group in groups]
-
-    with pymupdf.open(source) as pdf:
-        for number, page in enumerate(pdf, 1):
-            if number in regions or page.get_text().strip():
-                continue
-            pixmap = page.get_pixmap(matrix=pymupdf.Matrix(1.5, 1.5), alpha=False)
-            image = Image.frombytes('RGB', (pixmap.width, pixmap.height), pixmap.samples).convert('L')
-            mask = image.point(lambda value: 255 if value < 200 else 0)
-            horizontal = centers(list(mask.resize((1, mask.height), Image.Resampling.BOX).getdata()), 255 * .40)
-            if len(horizontal) < 5:
-                continue
-            top, bottom = int(horizontal[0]), int(horizontal[-1]) + 1
-            body = mask.crop((0, top, mask.width, bottom))
-            vertical = centers(list(body.resize((body.width, 1), Image.Resampling.BOX).getdata()), 255 * .40)
-            if len(vertical) < 6 or vertical[-1] - vertical[0] < mask.width * .60:
-                continue
-            sx, sy = page.rect.width / mask.width, page.rect.height / mask.height
-            regions[number] = [(max(0, vertical[0] - 2) * sx, max(0, horizontal[0] - 2) * sy,
-                                min(mask.width, vertical[-1] + 2) * sx,
-                                min(mask.height, horizontal[-1] + 2) * sy)]
-    return regions
+def missing_activity_grids(blocks, detected_regions) -> list[int]:
+    """Require reconstructed table provenance to cover each proposed grid."""
+    missing = set()
+    for page, regions in detected_regions.items():
+        for left, top, right, bottom in regions:
+            area = (right-left) * (bottom-top)
+            matched = False
+            for block in blocks:
+                if block['type'] != 'table':
+                    continue
+                for source in block.get('source_regions', []):
+                    if source['page'] != page:
+                        continue
+                    x0, y0, x1, y1 = source['bbox']
+                    overlap = max(0, min(right, x1)-max(left, x0)) * max(0, min(bottom, y1)-max(top, y0))
+                    table_area = (x1-x0) * (y1-y0)
+                    union = area + table_area - overlap
+                    if union > 0 and overlap / union >= .8:
+                        matched = True
+            if not matched:
+                missing.add(page)
+    return sorted(missing)
 
 
 def normalize_activity_grids(payload, source: Path):
@@ -74,13 +106,16 @@ def normalize_activity_grids(payload, source: Path):
     normalization never invents values, and records the extraction method.
     """
     import pymupdf
+
+    from .sop_tables import normalize_docling_tables
     regions = activity_grid_regions(source)
     if not regions:
-        return payload
+        return normalize_docling_tables(payload)
     blocks, activities, search_text = [], [], []
     labels = {'No.': 'number', 'Uraian Kegiatan': 'activity', 'Kelengkapan': 'kelengkapan',
               'Waktu': 'waktu', 'Output': 'output', 'Keterangan': 'keterangan'}
-    clean = lambda value: ' '.join((value or '').split())
+    def clean(value):
+        return ' '.join((value or '').split())
     with pymupdf.open(source) as pdf:
         for page_number, page in enumerate(pdf, 1):
             search_text.append(f'Halaman {page_number}\n' + page.get_text('text'))
@@ -148,14 +183,20 @@ def normalize_activity_grids(payload, source: Path):
                            if label.split(' / ')[-1] in labels}
                 if not {'number', 'activity', 'kelengkapan'}.issubset(columns):
                     raise ValueError('RULED_GRID_HEADERS_INCOMPLETE')
-                for values in body:
+                for rindex, values in enumerate(body, header_count):
                     number = values[columns['number']]
                     if not number.isdigit():
                         raise ValueError('RULED_GRID_ACTIVITY_NUMBER_INVALID')
                     row = {key: values[col] for key, col in columns.items()}
                     activities.append({**row, 'number': int(number), 'page': page_number,
-                                       'block_id': key, 'headers': headers})
-                escape = lambda value: value.replace('|', '\\|')
+                                       'block_id': key, 'headers': headers,
+                                       'method': 'pdf-ruled-grid-validated',
+                                       'source_cells': {field: {'text': raw_rows[rindex][col] or '',
+                                           'bbox': table.rows[rindex].cells[col], 'page_number': page_number,
+                                           'start_row_offset_idx': rindex, 'start_col_offset_idx': col}
+                                                        for field, col in columns.items()}})
+                def escape(value):
+                    return value.replace('|', '\\|')
                 markdown = '\n'.join(['|' + '|'.join(map(escape, headers)) + '|',
                                       '|' + '|'.join(['---'] * len(headers)) + '|'] +
                                      ['|' + '|'.join(map(escape, row)) + '|' for row in body])
@@ -164,8 +205,6 @@ def normalize_activity_grids(payload, source: Path):
                                'table_data': {'headers': headers, 'rows': body, 'num_rows': len(body),
                                               'num_cols': len(headers), 'source_cells': [r.cells for r in table.rows]},
                                'flowchart_nodes': nodes})
-    if [r['number'] for r in activities] != list(range(1, len(activities) + 1)):
-        raise ValueError('RULED_GRID_SEQUENCE_INVALID')
     pages = sorted({r['page'] for r in activities})
     for block in blocks:
         if block['type'] == 'table':
@@ -173,36 +212,50 @@ def normalize_activity_grids(payload, source: Path):
     # Native Docling texts supplement scanned/non-grid regions in the search
     # corpus. Whole-document absence must not depend on a context projection.
     search_text.extend(item.get('text', '') for item in payload.get('docling_json', {}).get('texts', []))
-    return {**payload, 'blocks': blocks, 'activity_rows': activities,
+    return normalize_docling_tables({**payload, 'blocks': blocks, 'activity_rows': activities,
             'full_document_text': '\n'.join(search_text),
             'markdown': '\n\n'.join(b['content'] for b in blocks),
             'normalization': {'method': 'docling-plus-pdf-ruled-grid', 'source': 'physical PDF cells',
-                              'activity_count': len(activities), 'native_docling_json_preserved': True}}
+                              'activity_count': len(activities), 'native_docling_json_preserved': True}})
 
 
-def ruled_grid_pipeline():
-    from docling.pipeline.standard_pdf_pipeline import StandardPdfPipeline
+def ruled_grid_pipeline(detected_regions: dict[int, list[tuple]] | None = None, source_headers=None):
     from docling.datamodel.base_models import Cluster
+    from docling.pipeline.standard_pdf_pipeline import StandardPdfPipeline
     from docling_core.types.doc import BoundingBox, CoordOrigin, DocItemLabel
 
-    class GridLayout:
+    class GridAfterOcr:
         def __init__(self, original):
             self.original = original
 
         def __call__(self, result, pages):
             regions = layout_grid_regions(result.input.file)
             for page in self.original(result, pages):
-                for region in regions.get(page.page_no, []):
+                page_regions = regions.get(page.page_no, []) or scanned_activity_grid_regions(page)
+                if page_regions and detected_regions is not None:
+                    detected_regions[page.page_no] = page_regions
+                if page_regions and source_headers is not None:
+                    from .sop_tables import column_field
+                    headers = []
+                    for cell in page.cells:
+                        if not column_field(cell.text):
+                            continue
+                        box = cell.rect.to_bounding_box().to_top_left_origin(page.size.height)
+                        x, y = (box.l + box.r)/2, (box.t + box.b)/2
+                        if any(left <= x <= right and top <= y <= top+(bottom-top)/4
+                               for left, top, right, bottom in page_regions):
+                            headers.append({'text': cell.text, 'bbox': box.model_dump(mode='json'),
+                                            'page_number': page.page_no, 'method': 'page-ocr-header'})
+                    source_headers[page.page_no] = headers
+                for region in page_regions:
                     bbox = BoundingBox(l=region[0], t=region[1], r=region[2], b=region[3], coord_origin=CoordOrigin.TOPLEFT)
-                    def inside(box):
-                        box = box.to_top_left_origin(page.size.height)
-                        return bbox.l <= (box.l + box.r) / 2 <= bbox.r and bbox.t <= (box.t + box.b) / 2 <= bbox.b
-                    # Some backends expose OCR words without textline cells.
-                    source_cells = page.cells
-                    if not source_cells and page._backend is not None:
-                        segmented = page._backend.get_segmented_page()
-                        source_cells = segmented.word_cells if segmented is not None else []
-                    cells = [c for c in source_cells if inside(c.rect.to_bounding_box())]
+                    def inside(box, region_bbox=bbox, height=page.size.height):
+                        box = box.to_top_left_origin(height)
+                        return (region_bbox.l <= (box.l + box.r) / 2 <= region_bbox.r
+                                and region_bbox.t <= (box.t + box.b) / 2 <= region_bbox.b)
+                    cells = [c for c in page.cells if inside(c.rect.to_bounding_box())]
+                    if not cells:
+                        continue
                     clusters = page.predictions.layout.clusters
                     retained = [c for c in clusters if not inside(c.bbox)]
                     retained.append(Cluster(id=max((c.id for c in clusters), default=0) + 1,
@@ -215,6 +268,8 @@ def ruled_grid_pipeline():
             super()._init_models()
             # Modify raw detections before Docling assigns cells and container
             # children. Replacing postprocessed clusters leaves dangling refs.
-            self.layout_model = GridLayout(self.layout_model)
+            # Docling 2.142 predicts raw layout BEFORE OCR. Wrap the OCR stage,
+            # whose output already has layout predictions and readable cells.
+            self.ocr_model = GridAfterOcr(self.ocr_model)
 
     return RuledGridPipeline

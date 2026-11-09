@@ -113,6 +113,56 @@ def upload(client, payload, filename='Petunjuk layanan.pdf'):
         'Content-Type': 'application/octet-stream', 'X-Document-Name': quote(filename)})
 
 
+def test_pdf_approval_activates_operator_retrieval_without_manual_chat(client, monkeypatch):
+    import json
+    import time
+    from types import SimpleNamespace
+
+    from app.security.v1_knowledge import V1KnowledgeBoundary
+    from test_sop_review import confirm_fixture_metadata
+
+    text = 'Persyaratan layanan: Surat Permohonan. Waktu layanan adalah 3 Hari Kerja.'
+    def worker(args, **kwargs):
+        Path(args[-1]).write_text(json.dumps({'status': 'COMPLETE', 'warnings': [],
+            'page_count': 1, 'markdown': text, 'docling_json': {'fixture': True},
+            'blocks': [{'block_id': '#/texts/0', 'type': 'text', 'content': text,
+                        'page_numbers': [1]}]}), encoding='utf-8')
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr('app.knowledge.worker_process.run_worker', worker)
+    monkeypatch.setattr('app.knowledge.document_tools.effective_config', lambda: {'fixture': True})
+    identifier = upload(client, pdf_bytes()).json()['document_id']
+    url = '/v1/knowledge/pipeline/reviews/' + identifier
+    detail = client.get(url, headers=AUTH).json()
+    assert client.post(url + '/process', headers=AUTH,
+                       json={'version_id': detail['version_id']}).status_code == 200
+    deadline = time.monotonic() + 10
+    while time.monotonic() < deadline:
+        detail = client.get(url, headers=AUTH).json()
+        if detail['extraction']['status'] not in {'QUEUED', 'PROCESSING'}:
+            break
+        time.sleep(.01)
+    assert detail['extraction']['status'] == 'COMPLETE'
+    version = detail['version_id']
+    assert client.post(url + '/decision', headers=AUTH,
+                       json={'version_id': version, 'action': 'content_ok'}).status_code == 200
+    engine = client.app.dependency_overrides[get_knowledge_engine]()
+    from app.knowledge.sop_review import SOPReview
+    confirm_fixture_metadata(SOPReview(engine), SOPReview(engine).detail(identifier))
+    response = client.post(url + '/decision', headers=AUTH,
+                           json={'version_id': version, 'action': 'approve'})
+    assert response.status_code == 200, response.text
+    approved = response.json()
+    assert approved['status'] == 'Aktif'
+    assert approved['trials'] == []
+    assert all(item['satisfied'] for item in approved['approval_requirements'])
+    assert client.get(url, headers=AUTH).json()['status'] == 'Aktif'
+    boundary = V1KnowledgeBoundary(engine, operator=True, provider='ollama')
+    evidence = boundary.search_knowledge('Persyaratan')
+    assert [item.document_id for item in evidence] == [identifier]
+    assert evidence[0].metadata['citation_pages'] == [1]
+    assert 'Surat Permohonan' in evidence[0].source
+
+
 def test_review_source_access_notes_and_server_approval_gate(client, monkeypatch):
     raw = pdf_bytes()
     doc = upload(client, raw).json()['document_id']
@@ -173,8 +223,8 @@ def test_review_source_access_notes_and_server_approval_gate(client, monkeypatch
     assert requirements['source_available'] is True
     assert requirements['extraction_complete'] is True
     assert requirements['content_checked'] is True
-    assert requirements['case:missing'] is False
-    assert requirements['all_trials_reviewed'] is False
+    assert requirements['index_ready'] is True
+    assert requirements['metadata_checked'] is False
     assert requirements['no_open_problems'] is True
     assert reloaded.json()['can_approve'] is False
 

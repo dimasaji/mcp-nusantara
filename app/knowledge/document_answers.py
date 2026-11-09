@@ -37,13 +37,7 @@ def document_answer_facts(question, evidence):
              'duration' if re.search(r'berapa lama|waktu|durasi', question, re.I) else
              'procedure' if re.search(r'proses|prosedur|bagaimana|lalu|lanjut', question, re.I) else None)
     if facet:
-        facts = table_facts({'facet': facet}, evidence)
-        if facts and facet == 'requirements':
-            value = rows[0]['kelengkapan'].rstrip('.')
-            quote = 'Kelengkapan: ' + value + '.'
-            facts.update(quote=quote, source=quote, rewrite_quote=quote, fallback='Siapkan ' + value + '.',
-                         proof=[{'title': item.title, 'chunk': quote, 'score': item.score}])
-        return facts
+        return table_facts({'facet': facet, 'question': question}, evidence)
     full = metadata.get('full_document_text', '')
     def make(quote, fallback, facet, selected, unknown=False):
         return {'topic': item.title, 'title': item.title, 'document_id': item.document_id, 'source': quote,
