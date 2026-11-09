@@ -28,13 +28,8 @@ const approvalLabels:Record<string,string>={
   source_available:'File sumber tersedia',
   extraction_complete:'Ekstraksi Docling selesai',
   content_checked:'Pemeriksaan isi ditandai sesuai',
-  index_ready:'Indeks Knowledge siap digunakan',
   no_open_problems:'Tidak ada masalah terbuka',
 };
-function approvalLabel(key:string){
-  if(key.startsWith('case:'))return `Percobaan wajib: ${cases[key.slice(5)]?.label??key.slice(5)}`;
-  return approvalLabels[key]??key;
-}
 
 function NativeDoclingTable({cells,rows,columns,label}:{cells:DoclingCell[];rows:number;columns:number;label:string}){
   return <div className="sop-table-scroll" tabIndex={0} role="region" aria-label="Tabel lengkap, dapat digeser"><table className="sop-source-table" aria-label={label}><tbody>{Array.from({length:rows},(_,r)=><tr key={r}>{Array.from({length:columns},(_,c)=>{
@@ -59,7 +54,15 @@ async function requestReview(path:string,token:string,body?:unknown,source=false
   const timer=setTimeout(()=>controller.abort(),60000);
   try{
     const response=await fetch(`/v1/knowledge/pipeline/reviews/${path}`,{method:body?'POST':'GET',signal:controller.signal,cache:'no-store',credentials:'omit',redirect:'error',headers:{'X-Admin-Token':token,...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});
-    if(!response.ok){const error=await response.json().catch(()=>null);throw new Error(typeof error?.detail==='string'?error.detail:`Pemeriksaan gagal (${response.status}). Coba muat ulang.`);}
+    if(!response.ok){
+      const error=await response.json().catch(()=>null);
+      if(typeof error?.detail==='string')throw new Error(error.detail);
+      if(response.status===422&&path.endsWith('/metadata')){
+        const message=Array.isArray(error?.detail)?error.detail[0]?.msg:null;
+        throw new Error(`Metadata belum tersimpan. ${typeof message==='string'?message:'Periksa kembali isian metadata.'}`);
+      }
+      throw new Error(`Pemeriksaan gagal (${response.status}). Coba muat ulang.`);
+    }
     if(source){const blob=await response.blob();if(!blob.size)throw new Error('File sumber kosong. Hubungi pengelola untuk memeriksa sumber asli.');return blob;}
     const data=await response.json();
     if(path.endsWith('/process')&&typeof data?.job_id==='string'&&typeof data?.status==='string')return data;
@@ -69,7 +72,8 @@ async function requestReview(path:string,token:string,body?:unknown,source=false
   finally{clearTimeout(timer);}
 }
 
-export function SOPReviewPanel({documentId,token,onChanged}:{documentId:string;token:string;onChanged?:()=>Promise<unknown>}){
+export function SOPReviewPanel({documentId,token,autoProcess=false}:{documentId:string;token:string;autoProcess?:boolean}){
+  const processAttempt=useRef('');
   const [review,setReview]=useState<Review|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState('');
   const [pdf,setPdf]=useState(''),[inspect,setInspect]=useState(true),[chat,setChat]=useState(false);
   const [sourcePage,setSourcePage]=useState(1);
@@ -113,7 +117,7 @@ export function SOPReviewPanel({documentId,token,onChanged}:{documentId:string;t
   },[inspect,id,token,review?.version_id,review?.source_type,sourceRevision,sourcePage]);
   async function act(action:()=>Promise<unknown>){
     if(busy)return;setBusy(true);setError('');
-    try{await action();await load();setReport(null);setPublicationAction(null);setNote('');await onChanged?.();}
+    try{await action();await load();setReport(null);setPublicationAction(null);setNote('');}
     catch(e){setError(e instanceof Error?e.message:'Penyimpanan gagal. Muat ulang untuk memeriksa hasil.');}
     finally{setBusy(false);}
   }
@@ -125,7 +129,7 @@ export function SOPReviewPanel({documentId,token,onChanged}:{documentId:string;t
   if(!review)return <section className="panel" aria-label="Pemeriksaan SOP">{error?<p role="alert">{error}</p>:<p role="status">Memuat pemeriksaan SOP...</p>}<button onClick={()=>void act(load)} disabled={busy}>Muat ulang pemeriksaan</button></section>;
   const pageNumbers=Array.from(new Set([...Array.from({length:review.source_page_count??0},(_,i)=>i+1),...review.pages.map(p=>p.page),...(review.extracted_blocks??[]).flatMap(b=>b.page_numbers)])).sort((a,b)=>a-b);
   const pageBlocks=(review.extracted_blocks??[]).filter(b=>b.page_numbers.includes(sourcePage));
-  const unverifiedRatingCount=review.trials.filter(t=>t.rating?.principal==='shared-admin-token').length;
+  const requiredApprovalChecks=review.approval_requirements.filter(item=>!item.key.startsWith('case:')&&item.key!=='all_trials_reviewed');
   return <section className="panel" aria-label="Pemeriksaan SOP">
     <h2>{review.title}</h2><p><strong>{review.status}</strong></p>
     {!review.metadata_confirmed&&<p>Judul di atas masih petunjuk; konfirmasikan judul resmi dari sumber.</p>}
@@ -151,7 +155,7 @@ export function SOPReviewPanel({documentId,token,onChanged}:{documentId:string;t
         <button disabled={busy} onClick={()=>openReport('content')}>Laporkan kesalahan</button>
       </>}
       {review.comparison&&<details><summary>Perubahan dari hasil baca sebelumnya</summary><p>{review.comparison.changed_blocks} blok berubah. Periksa kembali PDF sebelum menyetujui; perubahan hasil baca tidak otomatis mengubah keputusan operator.</p><small>Versi sebelumnya: {review.comparison.previous_version_id}</small>{review.comparison.changes.map(change=><article key={change.block_id}><p>Halaman {change.pages.join(', ')} · {change.block_id}</p><p style={{whiteSpace:'pre-wrap'}}>Sebelumnya: {change.before||'(Tidak ada blok)'}</p><p style={{whiteSpace:'pre-wrap'}}>Sekarang: {change.after||'(Blok dihapus)'}</p>{change.excerpt_truncated&&<p>Cuplikan dipendekkan. Baca isi lengkap pada PDF.</p>}</article>)}{review.comparison.omitted_blocks>0&&<p>{review.comparison.omitted_blocks} blok lain tidak ditampilkan; periksa sumber lengkap.</p>}</details>}
-      </div><div className="sop-review-stage"><h3>2. Coba jawaban (opsional)</h3><p>Anda dapat mencoba jawaban dan melaporkan masalah. Uji chat manual tidak menjadi syarat persetujuan SOP.</p>
+      </div><div className="sop-review-stage"><h3>2. Coba dan nilai jawaban</h3><p>Tanyakan isi SOP, buka halaman sumber, lalu tandai apakah jawabannya sesuai.</p>
       <button disabled={busy||(review.source_type==='.pdf'?review.extraction?.status!=='COMPLETE':!review.content_ok)} onClick={()=>setChat(true)}>Coba chat SOP ini</button>
       {review.extraction?.status==='COMPLETE'&&<Link to="/" onClick={()=>{sessionStorage.setItem('nusantara-chat-document-pending',documentId);sessionStorage.setItem('nusantara-chat-sop-version-pending',review.version_id);}}>Uji di chat utama</Link>}
       {!review.content_ok&&<p>Persetujuan isi belum diberikan. Percobaan teknis tersedia setelah ekstraksi lengkap; keputusan isi tetap oleh operator.</p>}
@@ -169,14 +173,12 @@ export function SOPReviewPanel({documentId,token,onChanged}:{documentId:string;t
       </details></div><div className="sop-review-stage"><h3>3. Keputusan operator</h3><p>{review.content_ok?'Isi sudah Anda nyatakan sesuai.':'Pemeriksaan isi belum dikonfirmasi.'} {review.problems.length} masalah masih terbuka.</p>
       {review.problems.map(p=><article key={p.event_id}><p>Masalah terbuka: {p.note}</p><p>Kategori: {correctionCategories[p.category??'unknown']??p.category}</p><button disabled={busy} onClick={()=>openReport(`resolve:${p.event_id}`)}>Catat penyelesaian masalah</button></article>)}
       {report&&<div role="region" aria-label="Catatan masalah"><label>Kategori masalah<select value={category} disabled={busy} onChange={e=>setCategory(e.target.value)}>{Object.entries(correctionCategories).map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></label><label>Catatan wajib<textarea autoFocus value={note} maxLength={2000} onChange={e=>setNote(e.target.value)} disabled={busy}/></label><button disabled={busy||!note.trim()} onClick={()=>void act(()=>report==='content'?decide('problem'):report.startsWith('resolve:')?decide('resolve',report.slice(8)):requestReview(`${id}/trials/${report}/rating`,token,{version_id:review.version_id,ok:false,note,category}))}>Simpan catatan</button>{!note.trim()&&<p>Isi catatan sebelum menyimpan.</p>}<button disabled={busy} onClick={()=>setReport(null)}>Batal</button></div>}
-      <section className="panel" aria-label="Syarat persetujuan"><h4>Syarat persetujuan</h4><ul>{review.approval_requirements.map(item=><li key={item.key}>{item.satisfied?'Terpenuhi:':'Belum terpenuhi:'} {approvalLabel(item.key)}</li>)}</ul>
-        {unverifiedRatingCount>0&&<p role="note">{unverifiedRatingCount} rating tersimpan memakai token admin bersama; identitas penilainya tidak tercatat. Riwayat percobaan ini tersedia sebagai informasi pemeriksaan.</p>}
+      <section className="panel" aria-label="Syarat persetujuan"><h4>Syarat persetujuan</h4><ul>{requiredApprovalChecks.map(item=><li key={item.key}>{item.satisfied?'Terpenuhi:':'Belum terpenuhi:'} {approvalLabels[item.key]??item.key}</li>)}</ul>
       </section>
       <button disabled={busy||!review.can_approve||review.status==='Aktif'} onClick={()=>void act(()=>decide('approve'))}>Setujui untuk digunakan</button>
       <div role="group" aria-label="Keputusan penggunaan dokumen">{(Object.keys(publicationActions) as PublicationAction[]).filter(action=>action!=='revoke'||review.publication_decision?.kind==='approve'||review.status==='Aktif').map(action=><button key={action} disabled={busy} onClick={()=>{setPublicationAction(action);setReport(null);setNote('');}}>{publicationActions[action]}</button>)}</div>
       {publicationAction&&<section aria-label="Alasan keputusan operator"><p>{publicationActions[publicationAction]}: dokumen tidak akan dipakai untuk jawaban baru di Chat utama. Pratinjau pemeriksaan tetap tersedia.</p><label>Alasan keputusan<textarea autoFocus value={note} maxLength={2000} disabled={busy} onChange={e=>setNote(e.target.value)}/></label><button disabled={busy||!note.trim()} onClick={()=>void act(()=>requestReview(`${id}/decision`,token,{version_id:review.version_id,action:publicationAction,note}))}>Simpan keputusan</button><button disabled={busy} onClick={()=>{setPublicationAction(null);setNote('');}}>Batal keputusan</button></section>}
       {review.publication_decision?.note&&<p>Alasan: {review.publication_decision.note}</p>}
-      {!review.can_approve&&<p>Lengkapi pemeriksaan isi dan metadata, pastikan pembacaan dokumen dan indeks Knowledge siap, lalu selesaikan masalah terbuka sebelum menyetujui.</p>}
       {review.status==='Aktif'&&<><p>Persetujuan versi ini tersimpan.</p><Link to="/" onClick={()=>{sessionStorage.setItem('nusantara-chat-document-pending',documentId);sessionStorage.removeItem('nusantara-chat-sop-version-pending');}}>Buka chat</Link></>}
       </div>
     </>}

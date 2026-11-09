@@ -816,7 +816,6 @@ class HermesAgent:
             latency_ms = int((time.perf_counter() - started) * 1000)
 
         elif (await provider.health_check())["available"]:
-
             # ==========================================================
             # GATE 7 FINAL FAST PATH
             # ==========================================================
@@ -1143,9 +1142,23 @@ class HermesAgent:
                 grounding_result = recovered
                 model_status = 'evidence_fast_path'
             else:
-                response_text = ('Sumber dokumen tersedia, tetapi jawaban belum dapat dipastikan sesuai isinya.'
-                                 if evidence and grounding_result.reason != 'no_evidence' else
-                                 'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.')
+                # Last resort: use the retrieved evidence source text directly so
+                # the answer stays grounded in the original SOP content.
+                _src = ''
+                if evidence:
+                    _src = (getattr(evidence[0], 'chunk', None) or getattr(evidence[0], 'source', None) or '')
+                    _src = str(_src).strip()[:400]
+                _rec2 = None
+                if _src:
+                    _rec2 = _grounding_guard.validate(answer=_src, evidence=evidence, intent_name=intent_name)
+                if _rec2 is not None and _rec2.grounded:
+                    response_text = _src
+                    grounding_result = _rec2
+                    model_status = 'evidence_fast_path'
+                else:
+                    response_text = ('Sumber dokumen tersedia, tetapi jawaban belum dapat dipastikan sesuai isinya.'
+                                     if evidence and grounding_result.reason != 'no_evidence' else
+                                     'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.')
         # Pilot SOP: for missing-contact questions, ensure the answer is an
         # abstention; otherwise fall back to the verified abstention text.
         if (pilot_chat and service_facts is not None and service_facts.get('facet') == 'missing'

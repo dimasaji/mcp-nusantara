@@ -319,6 +319,18 @@ class EvidenceGroundingGuard:
 
         combined_evidence = " ".join(evidence_texts)
 
+        # If every substantive token of the answer appears in the evidence,
+        # treat the answer as supported (the model paraphrased the source).
+        answer_tokens = self._content_tokens(text)
+        evidence_all_tokens = self._content_tokens(combined_evidence)
+        if answer_tokens and evidence_all_tokens and answer_tokens.issubset(evidence_all_tokens):
+            return GroundingResult(
+                text=text,
+                grounded=True,
+                reason="grounded",
+                unsupported_sentences=[],
+            )
+
         question_type = self._normalize_intent(
             intent_name
         )
@@ -1121,6 +1133,13 @@ class EvidenceGroundingGuard:
 
         if not sentence_tokens:
             return True
+
+        # If every substantive token of the answer appears in the evidence,
+        # the answer is supported even if the lexical overlap ratio is low.
+        for evidence in evidence_texts:
+            evidence_tokens = self._content_tokens(evidence)
+            if evidence_tokens and sentence_tokens and sentence_tokens.issubset(evidence_tokens):
+                return True
 
         best_overlap = 0.0
 

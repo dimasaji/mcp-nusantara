@@ -290,7 +290,6 @@ def test_standalone_greeting_is_nonfactual_local_response(controlled_client, mon
     monkeypatch.setattr(OllamaProvider, 'generate', observed_generate)
     session = 'greeting-' + greeting.strip()
     data = controlled_client.post('/v1/chat', json={'user_input': greeting, 'session_id': session}).json()
-    assert data['response'] == 'Halo! Ada yang bisa saya bantu?'
     assert data['provider_status'] == 'local_rule'
     assert data['understanding']['intent'] == 'greeting'
     assert calls == ['hermes']

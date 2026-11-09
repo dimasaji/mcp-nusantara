@@ -28,7 +28,7 @@ def test_v1_live_chat_does_not_500():
     r = _post(
         "/v1/chat",
         {
-            "session_id": "smoke-live",
+            "session_id": "web-00000000-0000-0000-0000-000000000000",
             "user_input": "halo",
         },
     )
@@ -41,7 +41,7 @@ def test_v1_live_problem_analyze_does_not_500():
         "/v1/problem/analyze",
         {
             "user_input": "Bagaimana cara membuat KTP?",
-            "session_id": "smoke-live",
+            "session_id": "web-00000000-0000-0000-0000-000000000000",
         },
     )
     assert r.status_code == 200, r.text[:1000]
@@ -54,7 +54,7 @@ def test_v1_live_knowledge_search_does_not_500():
             "query": "Apa itu paspor?",
             "top_k": 3,
             "filter": {},
-            "session_id": "smoke-live",
+            "session_id": "web-00000000-0000-0000-0000-000000000000",
             "user_input": "Apa itu paspor?",
         },
     )

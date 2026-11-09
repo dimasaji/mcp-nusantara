@@ -82,7 +82,7 @@ function findFact(key:FieldName,blocks:ExtractedBlock[]):Fact{
       }
     }
   }
-  return {status:'not_stated',value:null,page_number:null,note:'Tidak tercantum dalam dokumen; operator dapat mengoreksi jika sumber menyebutkannya.'};
+  return {status:'unreadable',value:null,page_number:null,note:'Belum terdeteksi pada hasil pembacaan PDF.'};
 }
 function makeLogicalId(facts:Record<FieldName,Fact>,documentId:string){
   const number=facts.sop_number.value;
@@ -105,7 +105,7 @@ export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,extractedB
   const detected=(Object.keys(fields) as FieldName[]).filter(key=>draft[key].status==='present').length;
   const complete=!!draft.logical_sop_id.trim()&&!!draft.validity_note.trim()&&(Object.keys(fields) as FieldName[]).every(key=>{
     const fact=draft[key];
-    return fact.status==='present'?!!fact.value?.trim()&&(!pdf||!!fact.page_number):!!fact.note.trim();
+    return fact.status==='present'?!!fact.value?.trim()&&(!pdf||(Number.isInteger(fact.page_number)&&(fact.page_number??0)>0)):!!fact.note.trim();
   })&&draft.official_title.status==='present';
   function update(key:FieldName,change:Partial<Fact>){setDraft(old=>({...old,[key]:{...old[key],...change}}));}
   return <details open={!metadata}><summary>Metadata resmi SOP — {metadata?'sudah disimpan dan dikonfirmasi operator':'usulan otomatis, siap ditinjau'}</summary>
@@ -130,7 +130,7 @@ export function SOPMetadataForm({documentId,metadata,eventId,pdf,busy,extractedB
           <label>Status {label}<select value={draft[key].status} onChange={e=>update(key,{status:e.target.value as Fact['status'],value:null,page_number:null,note:e.target.value==='present'?'':'Informasi belum dikonfirmasi dari PDF.'})}>
             <option value="present">Tercantum</option><option value="not_stated">Tidak tercantum</option><option value="unreadable">Tidak terbaca</option>
           </select></label>
-          {draft[key].status==='present'?<><label>{label}<input value={draft[key].value??''} maxLength={1024} onChange={e=>update(key,{value:e.target.value||null})}/></label>
+          {draft[key].status==='present'?<><label>{label}<input type={key.endsWith('_on')?'date':'text'} value={draft[key].value??''} maxLength={1024} onChange={e=>update(key,{value:e.target.value||null})}/></label>
             {pdf&&<label>Halaman sumber {label}<input type="number" min={1} step={1} value={draft[key].page_number??''} onChange={e=>update(key,{page_number:e.target.value?Number(e.target.value):null})}/></label>}</>:
             <label>Catatan (diisi otomatis; ubah bila perlu)<input value={draft[key].note} maxLength={2000} onChange={e=>update(key,{note:e.target.value})}/></label>}
         </fieldset>)}

@@ -87,6 +87,20 @@ def test_review_changes_invalidate_approval_and_survive_restart(tmp_path):
     assert next(t for t in result['trials'] if t['trial_id'] == failed['trial_id'])['rating']['ok'] is False
 
 
+def test_operator_can_activate_sop_without_manual_chat_trials(tmp_path):
+    engine = engine_at(tmp_path / 'chat.db')
+    run = engine.process_knowledge_source('sop.txt', b'Persyaratan: Surat Permohonan. Prosedur: serahkan berkas. Waktu: 3 hari kerja.')
+    review = SOPReview(engine)
+    document_id = run['document_id']
+    detail = confirm_fixture_metadata(review, review.detail(document_id))
+    version = detail['version_id']
+    detail = review.decide(document_id, version, 'content_ok', 'admin-token', '')
+    assert detail['status'] == 'Siap disetujui'
+    approved = review.decide(document_id, version, 'approve', 'admin-token', '')
+    assert approved['status'] == 'Aktif'
+    assert SOPReview(engine_at(tmp_path / 'chat.db')).detail(document_id)['status'] == 'Aktif'
+
+
 def test_problem_requires_note_and_cannot_inherit_approval(tmp_path):
     engine = engine_at(tmp_path / 'chat.db')
     run = engine.process_knowledge_source('sop.txt', b'Persyaratan layanan dalam SOP uji. Serahkan surat permohonan kepada petugas.')

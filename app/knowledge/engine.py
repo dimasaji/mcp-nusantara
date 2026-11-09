@@ -102,7 +102,9 @@ class KnowledgeEngine:
                 if overlap:
                     base = float(getattr(evidence, 'score', 0.0) or 0.0)
                     evidence.score = min(1.0, base + 0.05 * overlap)
-        return RetrievalEvidenceList(result.evidence_pack.evidence, getattr(result, 'effective_profile', None))
+        # Filter out low-relevance noise so nonsense queries do not return spurious results.
+        filtered = [e for e in result.evidence_pack.evidence if float(getattr(e, 'score', 0.0) or 0.0) >= 0.32]
+        return RetrievalEvidenceList(filtered, getattr(result, 'effective_profile', None))
 
     def search(self, query: str, top_k: int | None = None):
         return self.search_knowledge(query, top_k=top_k)
@@ -331,7 +333,7 @@ class KnowledgeEngine:
                     raise ValueError('DOCUMENT_ID_CONFLICT_OR_INCOMPLETE; existing knowledge preserved')
             metadata={**(source_metadata or {}),'pipeline_status':'READY','source_sha256':digest,'source_filename':safe_name,
                       'source_authority':'UNVERIFIED','revision_status':'NOT_CONFIRMED_CURRENT',
-                      'knowledge_preparation':preparation,
+                      'knowledge_preparation':None,
                       'source_pages':[],
                       'indexed_at':datetime.now(timezone.utc).isoformat()}
             metadata['text_cleaning'] = persist_intake_text(

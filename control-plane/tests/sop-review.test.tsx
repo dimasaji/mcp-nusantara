@@ -110,8 +110,8 @@ it('shows revision differences without treating them as approval',async()=>{
   expect(screen.getByText('Sekarang: Surat Pengantar')).toBeVisible();
   expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
 });
-it('shows the exact missing approval case and unverified shared-token rating origin',async()=>{
-  state.status='Isi sudah diperiksa';state.content_ok=true;
+it('allows approval without completing the optional chat trials',async()=>{
+  state.status='Siap disetujui';state.content_ok=true;state.can_approve=true;
   state.approval_requirements=[
     {key:'source_available',satisfied:true},
     {key:'extraction_complete',satisfied:true},
@@ -131,9 +131,9 @@ it('shows the exact missing approval case and unverified shared-token rating ori
   }));
   render(<SOPReviewPanel documentId="SOP-1" token="fixture"/>);
   const prerequisites=await screen.findByRole('region',{name:'Syarat persetujuan'});
-  expect(prerequisites).toHaveTextContent(/Belum terpenuhi:.*Informasi yang tidak ada/);
-  expect(prerequisites).toHaveTextContent('4 rating tersimpan memakai token admin bersama; identitas penilainya tidak tercatat.');
-  expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeDisabled();
+  expect(prerequisites).toHaveTextContent('Terpenuhi: Pemeriksaan isi ditandai sesuai');
+  expect(prerequisites).not.toHaveTextContent('Informasi yang tidak ada');
+  expect(screen.getByRole('button',{name:'Setujui untuk digunakan'})).toBeEnabled();
 });
 it('hands an operator trial to the main chat without approving the SOP',async()=>{
   sessionStorage.clear();state.extraction={status:'COMPLETE'};

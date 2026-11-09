@@ -10,11 +10,11 @@ import re
 
 from fastapi import HTTPException
 
-CHAT_SESSION_PATTERN = r'^web-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$'
+CHAT_SESSION_PATTERN = r'^.{1,128}$'
 
 
 def valid_chat_session(value: str) -> bool:
-    return isinstance(value, str) and re.fullmatch(CHAT_SESSION_PATTERN, value) is not None
+    return isinstance(value, str) and 1 <= len(value) <= 128
 
 
 def v1_session_id(session_id: str, *, operator: bool) -> str:
