@@ -36,4 +36,3 @@ if __name__ == '__main__':
         sys.exit(1)
     data = json.load(open(sys.argv[1], encoding='utf-8'))
     fill_template(data, sys.argv[2])
-PY
