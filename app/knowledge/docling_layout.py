@@ -229,7 +229,7 @@ def ruled_grid_pipeline(detected_regions: dict[int, list[tuple]] | None = None, 
             self.original = original
 
         def __call__(self, result, pages):
-            regions = layout_grid_regions(result.input.file)
+            regions = activity_grid_regions(result.input.file)
             for page in self.original(result, pages):
                 page_regions = regions.get(page.page_no, []) or scanned_activity_grid_regions(page)
                 if page_regions and detected_regions is not None:
