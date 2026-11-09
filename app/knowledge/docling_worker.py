@@ -27,7 +27,8 @@ def convert(source: Path, output: Path):
         do_ocr=not digital, do_table_structure=configuration['tables'],
         accelerator_options=AcceleratorOptions(num_threads=configuration['threads'], device=AcceleratorDevice.CPU),
         ocr_options=TesseractCliOcrOptions(lang=configuration['languages'], force_full_page_ocr=configuration['force_full_page_ocr'],
-                                         tesseract_cmd=command, path=configuration['tessdata_path']))
+                                         tesseract_cmd=command, path=configuration['tessdata_path'],
+                                         psm=configuration.get('tesseract_psm', 6)))
     detected_regions: dict[int, list[tuple]] = {}
     source_headers: dict[int, list[dict]] = {}
     converter = DocumentConverter(format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=options, pipeline_cls=ruled_grid_pipeline(detected_regions, source_headers))})
