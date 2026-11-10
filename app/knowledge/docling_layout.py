@@ -61,15 +61,48 @@ def scanned_activity_grid_regions(page) -> list[tuple]:
 def activity_grid_regions(source: Path) -> dict[int, list[tuple]]:
     import pymupdf
     regions = {}
+    # Header keywords that indicate an activity/procedure grid (flexible).
+    _HEADER_KEYS = {'no', 'no.', 'nomor', 'kegiatan', 'aktivitas', 'uraian',
+                    'uraian kegiatan', 'prosedur', 'langkah', 'pelaksana',
+                    'kelengkapan', 'mutu baku', 'waktu', 'output', 'keterangan'}
     with pymupdf.open(source) as pdf:
         for number, page in enumerate(pdf):
-            for table in page.find_tables(strategy='lines_strict').tables:
-                for index, row in enumerate(table.extract()):
-                    labels = {' '.join((v or '').split()).casefold() for v in row}
-                    if {'no.', 'uraian kegiatan'}.issubset(labels):
-                        # Include both levels of headings and the whole ruled body.
-                        y = min(c[1] for c in table.rows[index].cells if c)
-                        regions.setdefault(number + 1, []).append((table.bbox[0], y, table.bbox[2], table.bbox[3]))
+            found = False
+            for strategy in ('lines_strict', 'lines', 'text'):
+                try:
+                    tables = page.find_tables(strategy=strategy).tables
+                except Exception:
+                    tables = []
+                for table in tables:
+                    if len(table.rows) < 2 or (table.rows and len(table.rows[0].cells) < 3):
+                        continue
+                    for index, row in enumerate(table.extract()):
+                        labels = {' '.join((v or '').split()).casefold() for v in row}
+                        # Accept if at least 2 header keywords match (flexible).
+                        if len(labels & _HEADER_KEYS) >= 2:
+                            try:
+                                y = min(c[1] for c in table.rows[index].cells if c)
+                            except Exception:
+                                y = table.bbox[1]
+                            regions.setdefault(number + 1, []).append(
+                                (table.bbox[0], y, table.bbox[2], table.bbox[3]))
+                            found = True
+                            break
+                    if found:
+                        break
+                if found:
+                    break
+            # Fallback: any table with >= 3 rows and >= 3 cols (no header match).
+            if not found:
+                try:
+                    tables = page.find_tables(strategy='lines').tables
+                except Exception:
+                    tables = []
+                for table in tables:
+                    if len(table.rows) >= 2 and (table.rows and len(table.rows[0].cells) >= 3):
+                        regions.setdefault(number + 1, []).append(
+                            (table.bbox[0], table.bbox[1], table.bbox[2], table.bbox[3]))
+                        found = True
                         break
     return regions
 
