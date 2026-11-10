@@ -307,6 +307,18 @@ def embed_texts(
     tokenizer,
     model,
 ):
+    # Validate input: ensure all items are non-empty strings.
+    if not isinstance(texts, (list, tuple)):
+        texts = [texts]
+    validated = []
+    for item in texts:
+        if item is None:
+            validated.append('')
+        elif isinstance(item, str):
+            validated.append(item)
+        else:
+            validated.append(str(item))
+    texts = validated
 
     encoded = tokenizer(
         texts,
