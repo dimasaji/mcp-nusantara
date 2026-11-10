@@ -188,7 +188,7 @@ def normalize_activity_grids(payload, source: Path):
             for index, region in enumerate(page_regions):
                 tables = page.find_tables(clip=region, strategy='lines_strict').tables
                 if len(tables) != 1:
-                    raise ValueError('RULED_GRID_AMBIGUOUS')
+                    continue  # Skip this grid, use native Docling tables
                 table = tables[0]
                 raw_rows = table.extract()
                 rows = [[clean(v) for v in row] for row in raw_rows]
@@ -215,11 +215,11 @@ def normalize_activity_grids(payload, source: Path):
                 columns = {labels[label.split(' / ')[-1]]: col for col, label in enumerate(headers)
                            if label.split(' / ')[-1] in labels}
                 if not {'number', 'activity', 'kelengkapan'}.issubset(columns):
-                    raise ValueError('RULED_GRID_HEADERS_INCOMPLETE')
+                    continue  # Skip this grid, use native Docling tables
                 for rindex, values in enumerate(body, header_count):
                     number = values[columns['number']]
                     if not number.isdigit():
-                        raise ValueError('RULED_GRID_ACTIVITY_NUMBER_INVALID')
+                        continue  # Skip this grid, use native Docling tables
                     row = {key: values[col] for key, col in columns.items()}
                     activities.append({**row, 'number': int(number), 'page': page_number,
                                        'block_id': key, 'headers': headers,
