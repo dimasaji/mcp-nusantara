@@ -7,6 +7,48 @@ import sys
 from pathlib import Path
 
 
+def _preprocess_pdf(source: Path) -> Path:
+    """Deskew and binarize scanned PDF pages for better OCR. Returns temp PDF path."""
+    import cv2
+    import numpy as np
+    import pymupdf
+
+    with pymupdf.open(source) as pdf:
+        out = pymupdf.open()
+        for page in pdf:
+            pix = page.get_pixmap(dpi=300)
+            img = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, pix.n)
+            if pix.n == 4:
+                gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
+            else:
+                gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+            # Deskew
+            coords = np.column_stack(np.where(gray < 128))
+            if len(coords) > 100:
+                angle = cv2.minAreaRect(coords)[-1]
+                if angle < -45:
+                    angle = -(90 + angle)
+                else:
+                    angle = -angle
+                if abs(angle) < 15:
+                    (h, w) = gray.shape
+                    center = (w // 2, h // 2)
+                    M = cv2.getRotationMatrix2D(center, angle, 1.0)
+                    gray = cv2.warpAffine(gray, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+            # Binarize
+            binary = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+            # Save as image and insert into new PDF
+            tmp_img = source.parent / (source.stem + '_preprocessed.png')
+            cv2.imwrite(str(tmp_img), binary)
+            new_page = out.new_page(width=page.rect.width, height=page.rect.height)
+            new_page.insert_image(new_page.rect, filename=str(tmp_img))
+            tmp_img.unlink(missing_ok=True)
+        tmp_pdf = source.parent / (source.stem + '_preprocessed.pdf')
+        out.save(str(tmp_pdf))
+        out.close()
+    return tmp_pdf
+
+
 def convert(source: Path, output: Path):
     from docling.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
     from docling.datamodel.base_models import InputFormat
@@ -23,16 +65,29 @@ def convert(source: Path, output: Path):
     import pymupdf
     with pymupdf.open(source) as pdf:
         digital = all(len(page.get_text().strip()) >= 40 for page in pdf)
+    from docling.datamodel.pipeline_options import TableStructureOptions
+    table_opts = TableStructureOptions(
+        do_cell_matching=configuration.get('table_cell_matching', True),
+        mode=configuration.get('table_mode', 'accurate'),
+    )
     options = PdfPipelineOptions(artifacts_path=project / 'nusantara-models/docling',
         do_ocr=not digital, do_table_structure=configuration['tables'],
+        table_structure_options=table_opts,
         accelerator_options=AcceleratorOptions(num_threads=configuration['threads'], device=AcceleratorDevice.CPU),
         ocr_options=TesseractCliOcrOptions(lang=configuration['languages'], force_full_page_ocr=configuration['force_full_page_ocr'],
                                          tesseract_cmd=command, path=configuration['tessdata_path'],
                                          psm=configuration.get('tesseract_psm', 6)))
     detected_regions: dict[int, list[tuple]] = {}
     source_headers: dict[int, list[dict]] = {}
+    # Preprocessing: for scanned PDFs, deskew + binarize pages to improve OCR.
+    convert_source = source
+    if not digital and configuration.get('preprocess_images', False):
+        try:
+            convert_source = _preprocess_pdf(source)
+        except Exception:
+            convert_source = source
     converter = DocumentConverter(format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=options, pipeline_cls=ruled_grid_pipeline(detected_regions, source_headers))})
-    result = converter.convert(source)
+    result = converter.convert(convert_source)
     doc = result.document
     blocks = []
     warnings = [str(error) for error in result.errors]
