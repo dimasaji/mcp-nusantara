@@ -51,4 +51,4 @@ if __name__ == '__main__':
     print('Total time: %.1fs (%.1f min)' % (total, total/60))
     print('Avg time per SOP: %.1fs' % (total/len(results)))
     print('Peak memory: N/A (psutil not available)')
-    json.dump({'results':results,'total_s':round(total,1),'avg_s':round(total/len(results),1)}, open('E:/NusantaraData/SOP/perf_baseline.json','w'), indent=2)
+    json.dump({'results':results,'total_s':round(total,1),'avg_s':round(total/len(results),1)}, open('C:/Users/dmaza/mcp-starter/output/perf_baseline.json','w'), indent=2)

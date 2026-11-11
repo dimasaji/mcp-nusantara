@@ -9,7 +9,10 @@ from __future__ import annotations
 import os
 from typing import TypedDict, Optional, Literal
 
-LANGGRAPH_ENABLED = os.getenv('NUS_LANGGRAPH_ENABLED', 'false').lower() == 'true'
+def _is_enabled():
+    return os.getenv('NUS_LANGGRAPH_ENABLED', 'false').lower() == 'true'
+
+LANGGRAPH_ENABLED = _is_enabled()
 
 
 class SOPWorkflowState(TypedDict, total=False):
@@ -28,7 +31,7 @@ class SOPWorkflowState(TypedDict, total=False):
 
 def create_workflow():
     """Create a LangGraph StateGraph for SOP processing. Returns None if disabled."""
-    if not LANGGRAPH_ENABLED:
+    if not _is_enabled():
         return None
     try:
         from langgraph.graph import StateGraph, END
@@ -116,4 +119,4 @@ def create_workflow():
 
 
 def is_enabled() -> bool:
-    return LANGGRAPH_ENABLED
+    return _is_enabled()
