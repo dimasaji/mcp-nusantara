@@ -115,7 +115,30 @@ Some of these may have "NAMA SOP" labels that OCR failed to capture. Others may 
 
 ---
 
-## 5. Fix Options (for operator decision)
+## 5. Fix Applied
+
+### Code Fix (committed: 4648bd0f)
+Modified `_source_title` in `app/knowledge/engine.py`:
+- Added `(` to allowed prefix characters (handles two-column header layout)
+- Required captured title to start with capital letter (prevents procedure steps from being captured)
+- Made colon/semicolon/hyphen optional (handles scans that omit punctuation)
+
+**Regex before:** `r'(?:^|[\t |])Nama\s+S\.?O\.?P\.?\s*[:;\-]?\s+([^\r\n|]+)'`
+**Regex after:**  `r'(?:^|[\t |(])Nama\s+S\.?O\.?P\.?\s*[:;\-]?\s+([A-Z][^\r\n|]*)'`
+
+### Verification
+- DAFDUK_22.pdf: title now extracts as "Penerbitan Surat Keterangan Tempat Tinggal Terbatas(SKTT) Bagi WNA" (was "DAFDUK_22.pdf")
+- DAFDUK_24_new24.pdf: title remains "DAFDUK_24_new24.pdf" (no false positive from procedure steps)
+- Test `test_upload_uses_explicit_sop_title_without_promoting_authority`: PASS
+- All 31 tests in test_knowledge_pipeline + test_sop_review + test_langchain_hardening: PASS
+
+### Existing Documents
+- Database titles restored to original state (version bindings preserved)
+- DAFDUK_22's stored title remains "DAFDUK_22.pdf" (no review-state impact)
+- Operator can set the correct official title via the review UI (metadata confirmation)
+- Future ingestions will extract titles correctly
+
+## 5. Fix Options (for operator decision) [SUPERSEDED]
 
 ### Option A: Re-process with improved OCR
 - Re-run Docling with deskew/binarize preprocessing on DAFDUK_22.pdf
