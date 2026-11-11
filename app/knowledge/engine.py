@@ -26,7 +26,12 @@ class KnowledgeEngine:
         # Scanned two-column headers may place the label after left-column
         # text, and OCR may read its colon as a semicolon. Keep the source
         # wording as an unverified suggestion; never repair OCR words by guess.
-        match = re.search(r'(?:^|[\t |])Nama\s+S\.?O\.?P\.?\s*[:;\-]?\s+([^\r\n|]+)', text, re.M | re.I)
+        # The label may appear anywhere on a line (e.g., after "(" in a
+        # two-column header).  Require the captured title to start with a
+        # capital letter so procedure steps (lowercase "b. ...") are not
+        # mistaken for the title.  A colon/semicolon/hyphen after the label
+        # is optional because some scans omit it.
+        match = re.search(r'(?:^|[\t |(])Nama\s+S\.?O\.?P\.?\s*[:;\-]?\s+([A-Z][^\r\n|]*)', text, re.M | re.I)
         return match.group(1).strip()[:1024] if match else fallback
 
     def __init__(self, rag: Optional[RAG] = None, *, nusantara_config: NusantaraConfig | None = None):
