@@ -1,6 +1,6 @@
 # Final Acceptance — LangChain & LangGraph Integration
 
-## Status: PARTIAL (P0 inspection + adapter created, P1/P2 not yet tested)
+## Status: PARTIAL (P0 inspection + adapter created + E2E tested, P2 not yet fully integrated)
 
 ## What Was Implemented
 1. **P0 — Focused Code Inspection**: Integration map created (`reports/langchain-langgraph/integration-map.md`)
@@ -27,8 +27,8 @@
 
 ## Definition of Done Checklist
 - [ ] Core Engine lama tetap berjalan — YES (flags OFF by default)
-- [ ] LangChain adapter teruji — NOT YET
-- [ ] LangGraph end-to-end — NOT YET
+- [x] LangChain adapter teruji — E2E PASS (retriever 5 docs, LLM responded, chain answered)
+- [ ] LangGraph end-to-end — NOT YET (workflow structure tested, nodes are stubs)
 - [ ] 4 SOP aktif ditemukan via chat baru — EXISTING (already works without LangChain)
 - [ ] Sitasi dan evidence benar — EXISTING (already works)
 - [ ] Approval dan access control tidak regresi — EXISTING
