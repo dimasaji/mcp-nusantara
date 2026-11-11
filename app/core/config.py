@@ -30,6 +30,8 @@ class Settings(BaseSettings):
     chunk_overlap: int = 64
     retrieval_top_k: int = 5
     privacy_filter_enabled: bool = True
+    nus_langchain_enabled: bool = False
+    nus_langgraph_enabled: bool = False
     log_level: str = 'INFO'
     _effective_configuration: NusantaraConfig | None = PrivateAttr(default=None)
     _bootstrap_configuration: NusantaraConfig | None = PrivateAttr(default=None)
