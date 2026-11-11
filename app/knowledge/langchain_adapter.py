@@ -9,13 +9,16 @@ import os
 from typing import List, Optional, Any
 
 # Feature flags (default OFF)
-LANGCHAIN_ENABLED = os.getenv('NUS_LANGCHAIN_ENABLED', 'false').lower() == 'true'
+def _lc_enabled():
+    return os.getenv('NUS_LANGCHAIN_ENABLED', 'false').lower() == 'true'
+
+LANGCHAIN_ENABLED = _lc_enabled()
 LANGGRAPH_ENABLED = os.getenv('NUS_LANGGRAPH_ENABLED', 'false').lower() == 'true'
 
 
 def create_llm(model: str = 'llama3.2:1b', base_url: str = 'http://localhost:11434'):
     """Create a LangChain ChatOllama instance wrapping the existing Ollama."""
-    if not LANGCHAIN_ENABLED:
+    if not _lc_enabled():
         return None
     try:
         from langchain_ollama import ChatOllama
@@ -26,7 +29,7 @@ def create_llm(model: str = 'llama3.2:1b', base_url: str = 'http://localhost:114
 
 def create_retriever(knowledge_engine, top_k: int = 5):
     """Wrap existing KnowledgeEngine.search_knowledge as a LangChain retriever."""
-    if not LANGCHAIN_ENABLED:
+    if not _lc_enabled():
         return None
     try:
         from langchain_core.retrievers import BaseRetriever
@@ -63,7 +66,7 @@ def create_retriever(knowledge_engine, top_k: int = 5):
 
 def create_chain(knowledge_engine, model: str = 'llama3.2:1b', base_url: str = 'http://localhost:11434'):
     """Create a LangChain RAG chain wrapping existing retriever + Ollama."""
-    if not LANGCHAIN_ENABLED:
+    if not _lc_enabled():
         return None
     try:
         from langchain_core.prompts import ChatPromptTemplate
@@ -94,7 +97,7 @@ def create_chain(knowledge_engine, model: str = 'llama3.2:1b', base_url: str = '
 
 
 def is_enabled() -> bool:
-    return LANGCHAIN_ENABLED
+    return _lc_enabled()
 
 
 def is_graph_enabled() -> bool:
