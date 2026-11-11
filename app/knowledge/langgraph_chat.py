@@ -81,14 +81,12 @@ def create_chat_workflow(knowledge_engine, language_engine, provider, grounding_
                 prompt = "Jawab berdasarkan evidence berikut:\n%s\n\nPertanyaan: %s" % (evidence_text[:2000], state.get('query', ''))
                 coro = provider.generate({'system': 'Jawab singkat dalam Bahasa Indonesia.', 'prompt': prompt, 'temperature': 0.1, 'max_tokens': 200})
                 try:
-                    loop = asyncio.get_event_loop()
-                    if loop.is_running():
-                        with concurrent.futures.ThreadPoolExecutor() as pool:
-                            result = pool.submit(asyncio.run, coro).result(timeout=60)
-                    else:
-                        result = loop.run_until_complete(coro)
-                except RuntimeError:
                     result = asyncio.run(coro)
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                    result = loop.run_until_complete(coro)
+                    loop.close()
                 answer = str(result.get('content', '')).strip()
                 return {**state, 'answer': answer}
             except Exception as e:

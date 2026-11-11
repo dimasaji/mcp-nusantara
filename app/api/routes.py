@@ -1272,6 +1272,41 @@ async def _chat_completed(request: ChatRequest, *, operator: bool = False):
         else:
             provider = OllamaProvider(nusantara_config=configuration)
 
+        # LangGraph Chat path (feature-flagged, default OFF)
+        _langgraph_enabled = getattr(settings, 'nus_langgraph_enabled', False)
+        if _langgraph_enabled:
+            try:
+                from app.knowledge.langgraph_chat import create_chat_workflow
+                _wf = create_chat_workflow(_knowledge, _language, provider, _grounding_guard, _gate_integration, _trust_engine)
+                if _wf is not None:
+                    _wf_result = _wf.invoke({'query': request.user_input, 'operator': operator})
+                    _lg_answer = str(_wf_result.get('answer', '')).strip()
+                    _lg_evidence = _wf_result.get('evidence', [])
+                    _lg_grounded = _wf_result.get('grounded', False)
+                    _lg_citations = _wf_result.get('citations', [])
+                    public = _project_v1_chat_response({
+                        'session_id': request.session_id,
+                        'response': _lg_answer or 'Informasi tersebut belum tersedia dalam dokumen yang ada.',
+                        'trust': {'supports_claim': _lg_grounded, 'confidence': 0.8 if _lg_grounded else 0.0,
+                                  'risk_level': 'low' if _lg_grounded else 'high', 'requires_human': not _lg_grounded,
+                                  'evidence_count': len(_lg_evidence), 'evidence_available': len(_lg_evidence) > 0},
+                        'model': getattr(provider, 'model', 'ollama'),
+                        'provider_status': 'ollama',
+                        'latency_ms': 0,
+                        'grounding': {'enabled': True, 'grounded': _lg_grounded, 'reason': 'grounded' if _lg_grounded else 'possible_unsupported_content'},
+                        'understanding': {'intent': _wf_result.get('intent', 'unknown')},
+                        'problem': {'goal': None},
+                        'evidence': [{'document_id': e.get('document_id'), 'title': e.get('title', ''), 'chunk': '', 'score': e.get('score', 0.0), 'pages': e.get('pages', [])} for e in _lg_evidence],
+                        'timestamp': __import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat(),
+                    }, intent_name=_wf_result.get('intent', 'unknown'))
+                    # Skip validate_response in LangGraph path (versions not tracked)
+                    if not _record_chat_result(request.session_id, request.user_input, request_id=request_id, answer=public,
+                                               source_versions={}):
+                        raise HTTPException(503, 'HISTORY_PERSISTENCE_FAILED')
+                    return public
+            except Exception as _lg_exc:
+                import logging
+                logging.getLogger(__name__).warning('LangGraph chat failed, falling back to legacy: %s', type(_lg_exc).__name__)
         agent = HermesAgent(provider=provider, language_engine=_language)
         core = await agent.execute_v1(request, knowledge=knowledge, gates=_gate_integration,
             trust=_trust_engine, grounding=_grounding_guard, developer_core=_developer_core,
