@@ -276,7 +276,7 @@ class SOPReview:
             if detail['metadata_event_id'] != expected_event_id:
                 raise ValueError('Metadata berubah. Muat ulang sebelum menyimpan.')
             if detail['source_type'] == '.pdf':
-                if detail['extraction_status'] != 'COMPLETE':
+                if detail['extraction_status'] not in ('COMPLETE', 'PARTIAL'):
                     raise ValueError('Selesaikan ekstraksi sebelum mengonfirmasi metadata PDF.')
                 from pypdf import PdfReader
                 import io

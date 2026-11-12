@@ -31,7 +31,7 @@ class KnowledgeEngine:
         # capital letter so procedure steps (lowercase "b. ...") are not
         # mistaken for the title.  A colon/semicolon/hyphen after the label
         # is optional because some scans omit it.
-        match = re.search(r'(?:^|[\t |(])Nama\s+S\.?O\.?P\.?\s*[:;\-]?\s+([A-Z][^\r\n|]*)', text, re.M | re.I)
+        match = re.search(r'Nama\s*S\.?O\.?P\.?\s*[:;\-]?\s+([A-Z][^\r\n|]*)', text, re.M | re.I)
         return match.group(1).strip()[:1024] if match else fallback
 
     def __init__(self, rag: Optional[RAG] = None, *, nusantara_config: NusantaraConfig | None = None):
