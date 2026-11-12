@@ -187,7 +187,7 @@ class SOPReview:
         resolved = {e['problem_id'] for e in events if e['kind'] == 'resolve'}
         problems = [p for p in problems if p['event_id'] not in resolved]
         content_ok = any(e['kind'] == 'content_ok' for e in events)
-        extraction_ready = not is_pdf or extraction['status'] == 'COMPLETE'
+        extraction_ready = not is_pdf or extraction['status'] in ('COMPLETE', 'PARTIAL')
         index_ready = (not is_pdf) or (doc.metadata.get('pipeline_status') == 'READY')
         metadata_event = next((e for e in reversed(events) if e['kind'] == 'official_metadata'), None)
         metadata = SOPMetadata.model_validate(metadata_event['metadata']) if metadata_event else None
@@ -359,7 +359,7 @@ class SOPReview:
                     raise ValueError('Hanya dokumen aktif yang dapat dicabut.')
             elif action != 'content_ok':
                 raise ValueError('Tindakan tidak dikenal.')
-            if action == 'content_ok' and detail['source_type'] == '.pdf' and detail['extraction_status'] != 'COMPLETE':
+            if action == 'content_ok' and detail['source_type'] == '.pdf' and detail['extraction_status'] not in ('COMPLETE', 'PARTIAL'):
                 raise ValueError('Selesaikan ekstraksi Docling sebelum memeriksa isi PDF.')
             self._event(conn, document_id, version, action,
                 {'note': note.strip(), 'problem_id': problem_id,
