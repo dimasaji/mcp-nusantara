@@ -32,7 +32,7 @@ def _document_progress(engine, document, review, tools):
                     continue
         is_pdf = detail['source_type'] == '.pdf'
         extracting = is_pdf and extraction['status'] in {'QUEUED', 'PROCESSING'}
-        extraction_failed = is_pdf and extraction['status'] in {'FAILED', 'PARTIAL', 'STOPPING'}
+        extraction_failed = is_pdf and extraction['status'] in {'FAILED', 'STOPPING'}
         indexed = document['status'] == 'READY' and document['chunks_count'] > 0
         clean_profile = (payload or {}).get('text_cleaning') if is_pdf else document.get('text_cleaning')
         requirements = {item['key']: item['satisfied'] for item in detail['approval_requirements']}
@@ -54,7 +54,7 @@ def _document_progress(engine, document, review, tools):
         stages = {
             'source': 'SUCCEEDED' if detail['source_available'] else 'FAILED',
             'extraction': ('FAILED' if extraction_failed else 'RUNNING' if extracting else
-                           'SUCCEEDED' if not is_pdf or extraction['status'] == 'COMPLETE' else 'WAITING'),
+                           'SUCCEEDED' if not is_pdf or extraction['status'] in ('COMPLETE', 'PARTIAL') else 'WAITING'),
             'cleaning': 'SUCCEEDED' if clean_profile else 'WAITING' if extracting else 'UNKNOWN',
             'indexing': 'SUCCEEDED' if indexed else 'WAITING',
             'review': 'SUCCEEDED' if reviewed else 'FAILED' if detail['problems'] else 'WAITING',
