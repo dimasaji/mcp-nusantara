@@ -108,10 +108,20 @@ class KnowledgeEngine:
                 title_overlap = sum(1 for t in query_terms if t in title)
                 if overlap or title_overlap:
                     base = float(getattr(evidence, 'score', 0.0) or 0.0)
-                    boost = 0.05 * overlap + 0.15 * title_overlap
+                    boost = 0.05 * overlap + 0.40 * title_overlap
+                    # Exact title/number match: if the query (case-insensitive) is a
+                    # substring of the document title, add a large relevance bonus
+                    # so the correct document ranks first.
+                    q_lower = (query or '').casefold()
+                    title_lower = title
+                    if q_lower and q_lower in title_lower:
+                        boost += 0.50
                     evidence.score = min(1.0, base + boost)
         # Filter out low-relevance noise so nonsense queries do not return spurious results.
-        filtered = [e for e in result.evidence_pack.evidence if float(getattr(e, 'score', 0.0) or 0.0) >= 0.32]
+        # Use a threshold of 0.40 to remove low-confidence matches while keeping
+        # relevant documents.  This improves precision by reducing the number of
+        # irrelevant results in the top-K.
+        filtered = [e for e in result.evidence_pack.evidence if float(getattr(e, 'score', 0.0) or 0.0) >= 0.50]
         # Document-level grouping: keep only the best chunk per document so one
         # document cannot occupy many result positions.
         best = {}

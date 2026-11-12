@@ -686,8 +686,8 @@ class RAG:
             lexical_score = item["lexical_score"]
 
             hybrid_score = (
-                0.70 * semantic_score
-                + 0.30 * lexical_score
+                0.50 * semantic_score
+                + 0.50 * lexical_score
             )
 
             fused.append(
@@ -768,8 +768,8 @@ class RAG:
 
         evidence_list = self._apply_relevance_gate(
             evidence_list,
-            min_score=0.30,
-            relative_threshold=0.50,
+            min_score=0.35,
+            relative_threshold=0.65,
         )
         trace['gate_status'] = 'EXECUTED' if trace['before_gate_count'] else 'NOT_APPLICABLE_EMPTY'
 
