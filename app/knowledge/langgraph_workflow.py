@@ -29,8 +29,12 @@ class SOPWorkflowState(TypedDict, total=False):
     error_category: str  # TRANSIENT / PERMANENT / NEEDS_HUMAN / POLICY_DENIED
 
 
-def create_workflow():
-    """Create a LangGraph StateGraph for SOP processing. Returns None if disabled."""
+def create_workflow(knowledge_engine=None):
+    """Create a LangGraph StateGraph for SOP processing. Returns None if disabled.
+
+    When knowledge_engine is provided, nodes call real Nusantara services.
+    When None, nodes return stub status (for testing/structure validation).
+    """
     if not _is_enabled():
         return None
     try:
@@ -45,8 +49,25 @@ def create_workflow():
             return {**state, 'quality_check': 'PASS'}
 
         def extract(state: SOPWorkflowState) -> SOPWorkflowState:
-            # Delegate to existing Docling worker (not reimplemented)
-            return {**state, 'extraction_status': 'QUEUED'}
+            if knowledge_engine is None:
+                return {**state, 'extraction_status': 'QUEUED'}
+            # Delegate to existing Docling extraction via DocumentTools
+            try:
+                from .document_tools import DocumentTools
+                tools = DocumentTools(knowledge_engine, operator=True)
+                doc_id = state.get('document_id', '')
+                version_id = state.get('version_id', '')
+                if not doc_id or not version_id:
+                    return {**state, 'extraction_status': 'FAILED',
+                            'extraction_error': 'MISSING_DOCUMENT_OR_VERSION',
+                            'error_category': 'PERMANENT'}
+                result = tools.process(doc_id, version_id, force=True)
+                status = result.get('status', 'FAILED') if isinstance(result, dict) else 'FAILED'
+                return {**state, 'extraction_status': status}
+            except Exception as e:
+                return {**state, 'extraction_status': 'FAILED',
+                        'extraction_error': str(e)[:300],
+                        'error_category': 'TRANSIENT'}
 
         def quality_check(state: SOPWorkflowState) -> SOPWorkflowState:
             status = state.get('extraction_status', '')
