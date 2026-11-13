@@ -482,12 +482,14 @@ class LanguageEngine:
         aspects={
             'requirements':r'\b(?:syarat(?:nya)?|persyaratan(?:nya)?|bawa|dibawa|berkas(?:nya)?|dokumen(?:nya)?|perlu|butuh|siapkan|disiapkan)\b',
             'procedure':r'\b(?:proses(?:nya)?|alur(?:nya)?|langkah(?:nya)?|tahapan?|prosedur(?:nya)?|cara(?:nya)?)\b',
-            'duration':r'\b(?:lama(?:nya)?|durasi|waktu(?:nya)?|kapan|selesai)\b',
+            'duration':r'\b(?:lama(?:nya)?|durasi|waktu(?:nya)?|kapan|selesai|hari(?:nya)?|kerjanya)\b',
+            'cost':r'\b(?:biaya(?:nya)?|tarif(?:nya)?|harga(?:nya)?|gratis|pungutan|retribusi)\b',
+            'who':r'\b(?:siapa|pelaksana(?:nya)?|petugas(?:nya)?|menangani|penanggung\s+jawab)\b',
             'channel':r'\b(?:online|daring|internet|website|aplikasi|offline|langsung)\b',
         }
         # Specific time/channel questions may also contain the generic word
         # "proses" or "cara". Let the requested aspect control retrieval.
-        facet=next((name for name in ('duration','channel','requirements','procedure')
+        facet=next((name for name in ('duration','cost','who','channel','requirements','procedure')
                     if re.search(aspects[name],normalized)),None)
         if facet is None and intent=='ask_document_requirements':facet='requirements'
         stop={'apa','saja','yang','saya','aku','anda','mau','ingin','minta','meminta','tolong','untuk','kalau','kalo','bagaimana','gimana',
@@ -498,7 +500,7 @@ class LanguageEngine:
         words=[w for w in re.findall(r'\w+',normalized) if w not in stop and not re.fullmatch(markers,w)]
         hint=' '.join(words)
         topic=hint or previous_topic
-        prefixes={'requirements':'persyaratan permohonan','procedure':'prosedur','duration':'waktu penyelesaian','channel':'cara pengajuan'}
+        prefixes={'requirements':'persyaratan permohonan','procedure':'prosedur','duration':'waktu penyelesaian','channel':'cara pengajuan','cost':'biaya','who':'pelaksana'}
         ambiguous=not facet and not hint and bool(previous_topic)
         channel=re.search(r'\b(?:online|daring|internet|website|aplikasi|offline|langsung)\b',normalized)
         return {'facet':facet,'channel':channel[0] if channel else '', 'topic_hint':hint,'topic':topic,'uses_context':bool(facet and not hint and previous_topic),

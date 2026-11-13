@@ -637,7 +637,7 @@ class HermesAgent:
         elif service_facts and not service_facts.get('clarify'):
             intent_name={'requirements':'ask_document_requirements','procedure':'ask_procedure',
                                'duration':'ask_processing_time','channel':'ask_general_info',
-                               'cost':'ask_general_info','product':'ask_general_info','missing':'ask_general_info'}[service_facts['facet']]
+                               'cost':'ask_general_info','who':'ask_general_info','product':'ask_general_info','missing':'ask_general_info'}[service_facts['facet']]
 
         # ----------------------------------------------------------
         # INTENT / PROBLEM RECONCILIATION

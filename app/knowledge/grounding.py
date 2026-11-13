@@ -43,6 +43,45 @@ def extract_requirement_statement(question: str, evidence: Any) -> str | None:
     return None
 
 
+def _cost_absence_fact(item: Any) -> dict | None:
+    """General Path C abstention for a fee question on a validated SOP table.
+
+    Mirrors document_answers: only when the full source states no fee at all.
+    An empty cost column never implies the service is free.
+    """
+    get=lambda key,default='':item.get(key,default) if isinstance(item,dict) else getattr(item,key,default)
+    metadata=get('metadata',{}) or {}
+    rows=metadata.get('sop_rows',[])
+    full=metadata.get('full_document_text','')
+    if not full or re.search(r'\b(?:biaya|tarif|harga|rupiah|rp|idr|pungutan|retribusi|pembayaran|gratis|bebas)\b|\d[\d.]+,\s*-',full,re.I):
+        return None
+    return {'topic':get('title'),'title':get('title'),'document_id':get('document_id'),
+            'source':full,'quote':full,'rewrite_quote':full,
+            'fallback':'Informasi biaya belum tercantum dalam SOP ini.','facet':'cost','unknown':True,
+            'score':get('score',0),'pages':sorted({row['page'] for row in rows}),
+            'proof':[{'title':get('title'),'chunk':full,'score':get('score',0)}],'table_derived':True}
+
+
+def _who_absence_fact(item: Any) -> dict | None:
+    """General Path C abstention for an actor question on a validated SOP table.
+
+    The activity table exposes no per-row actor, so a specific handler cannot be
+    verified. Abstain with a citation instead of dumping table context or inventing
+    a name from a swimlane position.
+    """
+    get=lambda key,default='':item.get(key,default) if isinstance(item,dict) else getattr(item,key,default)
+    metadata=get('metadata',{}) or {}
+    rows=metadata.get('sop_rows',[])
+    full=metadata.get('full_document_text','')
+    if not full or not rows:
+        return None
+    return {'topic':get('title'),'title':get('title'),'document_id':get('document_id'),
+            'source':full,'quote':full,'rewrite_quote':full,
+            'fallback':'Informasi pelaksana belum tersedia dalam SOP ini.','facet':'who','unknown':True,
+            'score':get('score',0),'pages':sorted({row['page'] for row in rows}),
+            'proof':[{'title':get('title'),'chunk':full,'score':get('score',0)}],'table_derived':True}
+
+
 def service_answer_facts(turn: dict, evidence: Any, previous: dict | None = None) -> dict | None:
     """Select one service and one aspect from current evidence, not model memory.
 
@@ -76,6 +115,12 @@ def service_answer_facts(turn: dict, evidence: Any, previous: dict | None = None
     if len(table_matches)==1:
         selected_table=table_facts(turn,table_matches)
         if selected_table is not None:return selected_table
+        if turn.get('facet')=='cost':
+            absent=_cost_absence_fact(table_matches[0])
+            if absent is not None:return absent
+        elif turn.get('facet')=='who':
+            absent=_who_absence_fact(table_matches[0])
+            if absent is not None:return absent
     candidates={}
     for item in evidence or []:
         get=lambda key,default='':item.get(key,default) if isinstance(item,dict) else getattr(item,key,default)
@@ -118,12 +163,17 @@ def service_answer_facts(turn: dict, evidence: Any, previous: dict | None = None
         quote=next((line.strip() for line in source.splitlines() if re.search(r'\b\d+\s+(?:hari|jam|menit)(?:\s+kerja)?\b',line,re.I)), '')
         duration=re.search(r'\b\d+\s+(?:hari|jam|menit)(?:\s+kerja)?\b',quote,re.I)
         fallback='Menurut SOP, waktunya '+duration[0].lower()+'.' if duration else ''
-    else:
+    elif facet=='cost':
+        quote=next((line.strip() for line in source.splitlines() if re.search(r'\b(?:biaya|tarif|harga)\b',line,re.I)), '')
+        fallback=quote
+    elif facet=='channel':
         quote=next((line.strip() for line in source.splitlines() if re.search(r'pengajuan|mengunggah|mengisi',line,re.I)
                     and re.search(r'online|daring|website|aplikasi|loket',line,re.I)), '')
         fallback=quote
+    else:
+        quote=''
     if not quote:
-        subject={'procedure':'alur layanan','duration':'waktu penyelesaian','channel':'kanal '+turn.get('channel','layanan')}.get(facet,'persyaratan')
+        subject={'procedure':'alur layanan','duration':'waktu penyelesaian','cost':'biaya','who':'pelaksana','channel':'kanal '+turn.get('channel','layanan')}.get(facet,'persyaratan')
         fallback=f'Informasi {subject} belum tersedia dalam SOP ini.'
     return {**selected,'facet':facet,'quote':quote or source,'rewrite_quote':rewrite_quote or quote,'fallback':fallback,'unknown':not bool(quote),
             'proof':[{'title':selected['title'],'chunk':source,'score':selected['score']}]}

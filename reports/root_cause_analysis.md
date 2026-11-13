@@ -174,53 +174,86 @@ Runtime proof (Stage A, §9): before D the warm-worker run passed only T01/T02
 T03 and T06 follows conversation-classified T05 — both now restore scope because
 D preserved the identity through those turns.
 
-## 8. Defect E — facet-recognition gaps → unscoped 1B generation (DIAGNOSED, out of authorized scope)
+## 8. Defect E — facet-recognition gaps → unscoped 1B generation (FIXED, general; runtime-proven, Stage A 7/10)
 
-Several short follow-ups are not recognised as a service facet, so
-`uses_context=False` (`engine.py:504`), scope is never restored, retrieval returns
-`ev=0`, and the unscoped `llama3.2:1b` path echoes or fabricates:
+Several short follow-ups were not recognised as a service facet, so
+`uses_context=False` (`engine.py:504`), scope was never restored, retrieval returned
+`ev=0`, and the unscoped `llama3.2:1b` path echoed or fabricated:
 
-| Turn | Question | Recognised? | Result |
+| Turn | Question | Before E | After E (runtime-proven) |
 |---|---|---|---|
-| T02 | "Berapa lama?" | duration ✓ | fast path, grounded "3 Hari Kerja" |
-| T08 | "Berapa hari kerjanya?" | **no** (intent=unknown) | unscoped 1B "3 hari" (ungrounded) |
-| T03 | "Biayanya?" | **no** (ask_general_info) | unscoped 1B echo |
-| T05 | "Siapa yang menangani?" | **no** (intent=unknown) | unscoped 1B echo |
+| T02 | "Berapa lama?" | duration ✓ fast path | unchanged |
+| T08 | "Berapa hari kerjanya?" | **no** → unscoped 1B "3 hari" (ungrounded) | duration ✓ → table fast path "3 Hari Kerja" p2, ev=1 |
+| T03 | "Biayanya?" | **no** → unscoped 1B echo | cost ✓ → Path C abstention "biaya belum tercantum" + citation, ev=1 |
+| T05 | "Siapa yang menangani?" | **no** → unscoped 1B echo | who ✓ → Path C abstention "pelaksana belum tersedia" + citation, ev=1 |
 
-This is contract problem #3 (wrong/missing evidence) and #4 (unsupported info)
-on the residual turns. The operator explicitly chose NOT to fix Defect E in this
-pass (authorization limited to the minimal Defect D fix). It is recorded here as
-the proven remaining root cause; fixing it requires general facet/context
-recognition work (PASAL 5/7), not a model change (PASAL 14).
+Root cause: `service_turn` recognised only requirements/procedure/duration/channel;
+"biaya", "siapa/menangani", and the "hari/kerjanya" duration phrasing fell through to
+`facet=None`, leaving residual words in `topic_hint` so `uses_context=False`.
 
-## 9. Stage A runtime results (real llama3.2:1b, warm worker, after Defect D fix)
+Minimal GENERAL fix (operator-authorized "Commit, then fix Defect E"; no model change,
+no PIAK-03-only rule — PASAL 3.7/14):
+- `app/language/engine.py` `service_turn`: add `cost` (biaya/tarif/harga/gratis/pungutan/
+  retribusi) and `who` (siapa/pelaksana/petugas/menangani/penanggung jawab) aspects;
+  extend `duration` with `hari(?:nya)?`/`kerjanya` (NOT bare "kerja", so "cara kerja"
+  stays procedure); facet priority `duration,cost,who,channel,requirements,procedure`;
+  prefixes `cost:'biaya'`, `who:'pelaksana'`.
+- `app/hermes/agent.py:640`: add `'who':'ask_general_info'` to the intent map (KeyError guard).
+- `app/knowledge/grounding.py`: `_cost_absence_fact` mirrors the proven general rule in
+  `document_answers.py:48-50` — abstain only when the full source states no fee at all
+  (never infer "free" from an empty cost column, PASAL 7 Path C); `_who_absence_fact`
+  abstains with a citation when the activity table exposes no per-row actor (never
+  invent a handler from a swimlane position, and never dump raw table-context
+  scaffolding to the user). Both hooks fire only on a single scoped table match.
+  Prose branch separates `cost`/`channel` so cost/who never reuse the channel quote;
+  abstention subject map adds `cost:'biaya'`, `who:'pelaksana'`. `table_facts` still
+  excludes cost/who (no invented cells).
+
+Tests: `tests/test_language_service_turn_facets.py` 15/15 (RED→GREEN, generic table fixture,
+not PIAK-03; who test strengthened to require a clean cited abstention, not a clarify-dump).
+Targeted regression `-k "service_answer or grounding or service_turn or facet or abstention
+or clarify or table_facts or pdf_sop or document_answer"`: 70 passed, 1 failed — the single
+failure is the pre-existing langgraph wrapper test (§10), not a new regression. Full-suite
+identical-scope HEAD comparison (zero new failures from E) and live Stage A re-run recorded
+in §9 / acceptance report.
+
+## 9. Stage A runtime results (real llama3.2:1b, warm worker, after Defect E fix)
 
 `reports/repro/stage_a_piak03_runtime.json`, session
-`web-f2787751-05cb-4331-be17-955c6fc83014`, operator GENERAL chat (no binding),
-genuine PIAK-03 SOP `…d9ae50f8` (Aktif, score 1.0). Ground truth from
-`piak03_capil01_versions.json` (Row 1 → "Surat Permohonan" p1; Row 15 → "3 Hari
-Kerja" p2; no Biaya column; 15-step flow).
+`web-d27dd551-f4f5-4ee7-9047-f951806b4a76`, build `sha256:9809dcd9…`, pid 9276,
+operator GENERAL chat (no binding), genuine PIAK-03 SOP `…d9ae50f8` (Aktif, score 1.0).
+Ground truth from `piak03_capil01_versions.json` (Row 1 → "Surat Permohonan" p1;
+Row 15 → "3 Hari Kerja" p2; no Biaya column; no per-row actor; 15-step flow).
 
 | Turn | Question | provider_status | grounded | ev / doc | Response (abridged) | wall_ms | Verdict |
 |---|---|---|---|---|---|---|---|
-| T01 | Apa persyaratan permohonan data pribadi? | evidence_fast_path | True | 1 / d9ae50f8 p1 | "Siapkan Surat Permohonan." | 14225 | **PASS** |
-| T02 | Berapa lama? | evidence_fast_path | True | 1 / d9ae50f8 p2 | "Menurut SOP: 3 Hari Kerja." | 2845 | **PASS** |
-| T03 | Biayanya? | ollama | False | 0 | "Biaya permohonan data pribadi?" (echo) | 3205 | FAIL (E; no fabricated cost) |
-| T04 | Bagaimana prosedurnya? | evidence_fast_path | True | 1 / d9ae50f8 p1+2 | full 15-step procedure | 10820 | **PASS** |
-| T05 | Siapa yang menangani? | ollama | False | 0 | "User: Siapa yang menangani?" (echo) | 2388 | FAIL (E) |
-| T06 | Apa yang harus dibawa? | evidence_fast_path | True | 1 / d9ae50f8 p1 | "Siapkan Surat Permohonan." | 4008 | **PASS** |
-| T07 | Kalau persyaratannya kurang? | ollama | False | 0 | "…Assistant: Tidak." | 2729 | FAIL (E; unsupported) |
-| T08 | Berapa hari kerjanya? | ollama | False | 0 | "Hari kerjanya adalah 3 hari." | 1439 | FAIL (E; ungrounded, value coincidentally correct) |
-| T09 | Bisa dijelaskan lebih sederhana? | ollama | False | 0 | safe abstention | 8221 | FAIL-helpfulness / SAFE |
-| T10 | Dari halaman berapa informasi tersebut? | ollama | False | 0 | safe abstention | 4631 | FAIL-helpfulness / SAFE |
+| T01 | Apa persyaratan permohonan data pribadi? | evidence_fast_path | True | 1 / d9ae50f8 p1 | "Siapkan Surat Permohonan." | 5660 | **PASS** |
+| T02 | Berapa lama? | evidence_fast_path | True | 1 / d9ae50f8 p2 | "Menurut SOP: 3 Hari Kerja." | 1721 | **PASS** |
+| T03 | Biayanya? | evidence_fast_path | True | 1 / d9ae50f8 p1+2 | "Informasi biaya belum tercantum dalam SOP ini." | 373 | **PASS** (Path C abstention + citation) |
+| T04 | Bagaimana prosedurnya? | evidence_fast_path | True | 1 / d9ae50f8 p1+2 | full 15-step procedure | 11675 | **PASS** |
+| T05 | Siapa yang menangani? | evidence_fast_path | True | 1 / d9ae50f8 p1+2 | "Informasi pelaksana belum tersedia dalam SOP ini." | 294 | **PASS** (Path C abstention + citation) |
+| T06 | Apa yang harus dibawa? | evidence_fast_path | True | 1 / d9ae50f8 p1 | "Siapkan Surat Permohonan." | 5106 | **PASS** |
+| T07 | Kalau persyaratannya kurang? | ollama | False | 0 | "Saya tidak memiliki informasi tentang SOP ini." | 2683 | FAIL-helpfulness / SAFE (conditional, not a facet) |
+| T08 | Berapa hari kerjanya? | evidence_fast_path | True | 1 / d9ae50f8 p2 | "Menurut SOP: 3 Hari Kerja." | 2267 | **PASS** |
+| T09 | Bisa dijelaskan lebih sederhana? | ollama | False | 0 | safe abstention | 3164 | FAIL-helpfulness / SAFE (conversational) |
+| T10 | Dari halaman berapa informasi tersebut? | ollama | False | 0 | safe abstention | 4658 | FAIL-helpfulness / SAFE (citation follow-up) |
 
-**Golden set: 4/10 PASS (T01, T02, T04, T06).** Core problems #1 (first/follow-up),
-#2 (SOP context) and #6 (Active SOP accuracy) are FIXED for the
-requirements/duration/procedure fast-path facets, with correct page citations.
-Residual 6 failures are Defect E (§8). Unsupported factual claims: T07 ("Tidak."),
-T08 ("3 hari" ungrounded) = 2 (target 0 NOT met). T09/T10 produced the safe
-abstention text (no fabrication). 0 crashes, 0 cross-session leaks (single session),
-0 unauthorized SOP changes. Per PASAL 11, <100% golden set ⇒ **PARTIAL**, not PASS.
+**Golden set: 7/10 PASS (T01, T02, T03, T04, T05, T06, T08)** — up from 4/10 after D.
+Core problems #1 (first/follow-up), #2 (SOP context), #3 (wrong/missing evidence) and
+#6 (Active SOP accuracy) are FIXED for every service-facet follow-up
+(requirements/duration/procedure/cost/who), with correct page citations.
+**Unsupported factual claims: 0** (target MET) — T07 now abstains instead of the
+pre-E "Tidak."; T08 is grounded "3 Hari Kerja" p2 instead of the pre-E ungrounded
+"3 hari". T07/T09/T10 produce the safe abstention text (no fabrication,
+`requires_human=True`). 0 crashes, 0 cross-session leaks (single session),
+0 unauthorized SOP changes.
+
+Residual 3 failures (T07 conditional "kalau persyaratan kurang", T09 simplification
+request, T10 page-citation follow-up) are **conversational/meta follow-ups, not service
+facets** — outside Defect E's facet-recognition scope. They need broader PASAL 5/7
+conversational-follow-up handling (recognise a conditional/simplification/citation
+follow-up and re-use the prior grounded answer), not a model change (PASAL 14).
+Per PASAL 11, <100% golden set ⇒ **PARTIAL**, not PASS.
 
 ## 10. Pre-existing langgraph test failure (attributed to HEAD, NOT caused by A/B/C/D)
 
@@ -249,11 +282,13 @@ under pressure (not in top 15), which contributes to first-request cold-load
 latency after idle. The 1B model footprint (~1 GB) is appropriate for 8 GB; the
 saturation is environmental contention + IndoBERT residency + compression overhead.
 
-Latency (Stage A wall_ms): non-LLM fast path T02=2845, T06=4008 (<5 s steady state),
-but T01=14225 (first-turn cold residue) and T04=10820 (15-step procedure) exceed the
-PASAL 11 p95<5 s non-LLM target ⇒ target NOT met on this run. IndoBERT cold load
-~30.6 s exceeds the 30 s stage timeout; warm-up (`warmup_worker.py`) is required
-before acceptance runs. No model reload per request; worker stays resident.
+Latency (Stage A wall_ms, post-E run §9): non-LLM fast path T03=373, T05=294,
+T02=1721, T08=2267 (<5 s steady state); T01=5660 and T06=5106 marginally exceed 5 s
+(first-turn cold residue / requirements rendering), and T04=11675 (15-step procedure
+rendering) exceeds the PASAL 11 p95<5 s non-LLM target ⇒ target NOT met on this run
+(the heavy procedure turn dominates p95). IndoBERT cold load ~30.6 s exceeds the 30 s
+stage timeout; warm-up (`warmup_worker.py`) is required before acceptance runs. No
+model reload per request; worker stays resident.
 
 ## 12. Current status (13 Nov 2026)
 
@@ -263,11 +298,17 @@ before acceptance runs. No model reload per request; worker stays resident.
 - Defect C (proxy-env HTTP 500): FIXED, runtime-proven (HTTP 200, llama3.2:1b).
 - Defect D (conversation follow-up erases identity): FIXED, runtime-proven —
   Stage A improved 2/10 → 4/10 (T04, T06 now pass).
-- Defect E (facet-recognition gaps): DIAGNOSED (§8), operator chose not to fix now.
+- Defect E (facet-recognition gaps): FIXED, general, runtime-proven (§8/§9) —
+  cost/who/duration-phrasing follow-ups restore SOP scope; Stage A 4/10 → 7/10,
+  unsupported factual claims 2 → 0. Residual T07/T09/T10 are conversational/meta
+  follow-ups (conditional, simplification, page-citation), outside facet scope.
 - Pre-existing langgraph wrapper failure: attributed to HEAD (§10), out of scope.
 - SOP approval: only `…d9ae50f8` approved (operator-authorized, prior session).
   Empty Aktif stub `…75d5b40d` left untouched (no unauthorized status/source change).
 - Model freeze intact: llama3.2:1b via local Ollama; no swap, no embedding change,
   no paid API, no new service/UI/DB.
-- Acceptance: **PARTIAL** (Stage A 4/10; Stage B/C and metrics in the acceptance
+- Acceptance: **PARTIAL** (Stage A 7/10; Stage B/C and metrics in the acceptance
   report). NOT production-ready; PASAL 11 full pass requires 100% golden set.
+- Defect E code (engine.py, agent.py, grounding.py + facet tests) is applied in the
+  working tree, NOT yet committed — the prior commit authorization covered only the
+  A/B/C/D bundle (61ffd389). Committing E requires fresh operator confirmation.
