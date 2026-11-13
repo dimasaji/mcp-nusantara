@@ -537,6 +537,10 @@ class HermesAgent:
             service_facts = await _run_sync_v1(fact_reader, request.user_input, evidence)
         answer_evidence=evidence
         service_context={} if conversation or (turn.get('facet') and turn.get('topic_hint')) else None
+        # PASAL 5: a conversation-classified follow-up stores no new identity;
+        # {} would shadow the prior SOP identity in memory.service_context().
+        if conversation and previous.get('document_id'):
+            service_context = previous
         if _cari_handled:
             service_context = previous        # ==============================================================
         # PHASE 4 - TRUST ASSESSMENT
@@ -1078,6 +1082,22 @@ class HermesAgent:
                     "Maaf, saya belum mendapatkan jawaban "
                     "dari sistem. Silakan coba kembali."
                 )
+
+            # PASAL 5 (NUS-V1-LLAMA-RAG-001): maintain the SOP identity being
+            # discussed. The verified fast path already stores it; the general
+            # model path must persist the same identity from confident retrieval
+            # so a short follow-up ("Berapa lama?") can restore document scope.
+            # Conversation/general-knowledge turns carry no SOP and are skipped,
+            # and an identity already set by another branch is never overridden.
+            if not conversation and service_context in (None, {}) and evidence:
+                top = evidence[0]
+                if isinstance(top, dict):
+                    top_id, top_title = top.get('document_id'), top.get('title', '')
+                else:
+                    top_id, top_title = getattr(top, 'document_id', None), getattr(top, 'title', '')
+                if top_id:
+                    service_context = {'topic': turn.get('topic') or top_title,
+                                       'document_id': top_id, 'title': top_title}
 
             system_prompt = (
                 _build_system_prompt()

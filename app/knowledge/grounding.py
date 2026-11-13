@@ -58,6 +58,24 @@ def service_answer_facts(turn: dict, evidence: Any, previous: dict | None = None
     ignored={'permohonan','pengajuan','pelayanan','layanan','penerbitan','untuk','bagi','sop',
              'menurut','berdasarkan','sesuai','dalam','dokumen'}
     hint=set(re.findall(r'\w+',turn.get('topic_hint','').casefold()))-ignored
+    # General multi-document retrieval: a pilot SOP activity table is authoritative
+    # for its own service. Use it only when exactly one retrieved document carries
+    # activity rows AND matches the requested service (by title, or by restored
+    # document scope for a short follow-up), so facts never mix across services.
+    table_matches=[]
+    for item in evidence or []:
+        get=lambda key,default='':item.get(key,default) if isinstance(item,dict) else getattr(item,key,default)
+        if not (get('metadata',{}) or {}).get('sop_rows'):continue
+        identifier=get('document_id')
+        if not identifier:continue
+        if turn.get('uses_context'):
+            if identifier!=previous.get('document_id'):continue
+        elif hint and not hint.issubset(set(re.findall(r'\w+',str(get('title')).casefold()))):continue
+        table_matches.append(item)
+    if len(table_matches)>1:return {'clarify':True,'missing':False}
+    if len(table_matches)==1:
+        selected_table=table_facts(turn,table_matches)
+        if selected_table is not None:return selected_table
     candidates={}
     for item in evidence or []:
         get=lambda key,default='':item.get(key,default) if isinstance(item,dict) else getattr(item,key,default)

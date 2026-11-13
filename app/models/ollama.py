@@ -116,6 +116,10 @@ class OllamaProvider(LLMProvider):
                 base_url=self.base_url,
                 timeout=httpx.Timeout(self.timeout),
                 follow_redirects=True,
+                # Local-only provider: never inherit ambient proxy env vars.
+                # A NO_PROXY entry like '[::1]' otherwise makes httpx build an
+                # invalid URLPattern mount and raise InvalidURL (NUS-V1-LLAMA-RAG-001).
+                trust_env=False,
             )
         return self._client
 
