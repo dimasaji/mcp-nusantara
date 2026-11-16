@@ -177,7 +177,11 @@ class V1KnowledgeBoundary:
         for offset in range(0, len(eligible), 20):
             evidence.extend(self._engine.search_knowledge(query, top_k=window,
                 filter={'document_ids': eligible[offset:offset + 20]}))
-        evidence = sorted(evidence, key=lambda item: item.score, reverse=True)[:limit]
+        # Boosted relevance primary; raw hybrid score breaks ties so an exact
+        # service-title match outranks a partial-title competitor that also
+        # saturates at 1.0 (otherwise batch order decides arbitrarily).
+        evidence = sorted(evidence, key=lambda item: (item.score, (item.metadata or {}).get('hybrid_score', 0.0)),
+                          reverse=True)[:limit]
         result, hydrated = [], set()
         for item in evidence:
             if not review.is_pilot(item.document_id):
@@ -188,7 +192,19 @@ class V1KnowledgeBoundary:
             hydrated.add(item.document_id)
             detail = review.detail(item.document_id)
             if detail['status'] == 'Aktif':
-                extracted = review.evidence(item.document_id, detail['version_id'], self._document_query or query)
+                try:
+                    extracted = review.evidence(item.document_id, detail['version_id'], self._document_query or query)
+                except HTTPException as exc:
+                    # An unreadable pilot (partial extraction) must not abort the
+                    # whole general search; skip it so readable evidence still
+                    # answers and the router abstains if nothing readable remains.
+                    if exc.status_code == 409 and str(exc.detail).startswith('Masalah pembacaan SOP:'):
+                        continue
+                    raise
+                except ValueError:
+                    # Context-budget read failure (e.g. a single oversized block):
+                    # skip likewise rather than failing the entire retrieval.
+                    continue
                 for citation in extracted:
                     citation.score = item.score
                 result.extend(extracted)

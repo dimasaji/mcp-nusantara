@@ -497,3 +497,121 @@ regressions from F+G+H.** Two earlier full-suite attempts were killed mid-run
 by host RAM saturation / concurrent orphaned pytest trees sharing one log
 (logs truncated, no summary) — not test failures; the successful run was
 executed with the backend temporarily stopped to free RAM.
+
+## 17. Defects I/J/K — retrieval window, context-dump recovery, hydration fail-safe (Stage B)
+
+**Context.** Stage B (CAPIL-01, doc `f9ad8a5d`, Aktif) failed at build `bb166b4a`:
+B01 retrieved five boilerplate neighbours (KK/Biodata/Akta Perkawinan/CAK3P/Kematian,
+all boosted 1.0) instead of CAPIL-01; B02–B05 returned raw context block-dumps
+("Konteks bagian terpilih; 342 blok lain tidak dimuat…") labelled `grounded=True`.
+Ground truth captured first (`reports/repro/capil01_ground_truth.json`,
+`docdump_f9ad8a5d.txt`): 6 persyaratan, "4 Hari Kerja", 17-step prosedur, no cost.
+
+**Defect I — per-batch candidate cutoff before boost (proven).**
+`V1KnowledgeBoundary.search_knowledge` searches the eligible catalog in batches of
+20 with `top_k=limit` PER BATCH. `KnowledgeEngine.search_knowledge` cuts to `top_k`
+by RAW hybrid score and only THEN applies the title/keyword boost. CAPIL-01
+(hybrid 0.527, exact-service title) was cut from its 20-doc batch at `limit=5`
+before it could earn the boost. Proof: `reports/repro/search_probe_b01.json` —
+at `top_k=10` CAPIL-01 ranks **#1** (hybrid 0.526849 → boosted 1.0).
+Fix: widen the per-batch window to `max(limit*4, 20)` so survivors reach the boost.
+
+**Tie-break regression caught and fixed.** Widening alone REGRESSED Stage A: the
+wrong SOP `a926fcf9` ("PERMOHONAN INFORMASI DATA PENDUDUK UNTUK OPD/INSTANSI")
+outran PIAK-03 `d9ae50f8` ("PERMOHONAN DATA PRIBADI") — both saturate at boosted
+1.0 and the merge sorted by score only, so batch order decided arbitrarily
+(Stage A T02 became "7 Hari Kerja" instead of "3 Hari Kerja"). Fix: merge sort key
+`(score, metadata.hybrid_score)` — boosted relevance primary, RAW hybrid tie-break.
+The exact-title PIAK-03 is a perfect lexical match (3/3 query content words) vs the
+partial-title competitor (2/3, misses "pribadi"), so its raw hybrid is higher and it
+wins the tie. Stage A restored to **10/10** (`stage_a_piak03_runtime.json`, build
+`719b0d18`); CAPIL-01 now ranks #1 in Stage B. General, not SOP-specific.
+
+**Defect J — last-resort recovery dumped context as an answer (proven).**
+`app/hermes/agent.py` post-router recovery returned `evidence[0].chunk[:400]`
+verbatim; for pilot hydration that chunk is a rendered context selection (note +
+"[blok …]" headers), and the grounding guard trivially validated the source against
+itself → block-dumps presented as `grounded=True` answers (Stage B B02–B05).
+Fix: skip the raw-dump recovery when the evidence carries `docling_blocks` /
+`omitted_block_ids` metadata (a selection rendering, not prose); abstain instead
+(Path C). Genuine prose chunks still recover (guard test preserved).
+
+**Defect K — one unreadable pilot aborted the whole search (proven).**
+After widening, an Aktif pilot whose extraction cannot be rendered entered the
+merged top-k and raised during hydration: `select_blocks` ValueError ("satu
+blok/tabel melebihi anggaran", doc `c86f35ed`) or `DOCUMENT_EXTRACTION_PARTIAL`
+409 (6 other pilots). Neither is a `DocumentReadError`, so it escaped as
+503 `RETRIEVAL_UNAVAILABLE` / 409 for the ENTIRE query even though readable
+evidence existed. Diagnostic: `reports/repro/diag_hydration_valueerror.py` —
+of 44 Aktif pilots, **7 fail hydration** (1 ValueError, 6 partial-extraction 409);
+PIAK-03, CAPIL-01 and the stub hydrate OK. Fix: in the general-search hydration
+loop, skip a pilot whose `review.evidence` raises a read failure (409 "Masalah
+pembacaan SOP:" or ValueError); the explicitly bound single-document path still
+propagates its read error (unchanged). Fail-closed per document, not per query.
+
+**Tests (PASAL 10 layers A/B).** `tests/test_v1_search_candidate_window.py`
+(3: cutoff survival, bounded/sorted, hybrid tie-break),
+`tests/test_v1_recovery_context_dump.py` (2: abstain on selection, prose still
+recovers), `tests/test_v1_hydration_failsafe.py` (3: ValueError skip, 409 skip,
+readable pilots still hydrate). Focused regression: **100 passed, 3 failed** —
+the 3 are pre-existing at HEAD (`test_chat_source_recovery.py` canonical-retrieval
+/ failed-validation / multiline-list; confirmed by stashing the I/J/K edits and
+re-running at HEAD). Zero new regressions in the affected paths.
+
+**Stage B answer abstention — document-quality root cause (NOT a code defect).**
+With retrieval fixed, B01 still abstains (`grounded=False`, "Informasi tersebut
+belum tersedia secara cukup…"). Proven cause (`reports/repro/diag_capil01_facts.py`
++ evidence dump): CAPIL-01's OCR shattered the PDF into **342 word-level blocks**
+(`sop_rows=0`). For B01, `select_blocks` selects 29 fragmented keyword blocks
+("persyaratan", "Aplikasi", "Tangerang", "Akta", "Kelahiran", "Live/Portal"…) and
+OMITS the 281 blocks holding the requirements prose; no clean `Persyaratan X: Y`
+line survives, so `service_answer_facts`/`document_answer_facts` cannot build a
+validatable fallback and the router honestly abstains (Path C). The coherent prose
+exists in `full_document_text`, but block selection picks fragments. This is an
+extraction/document-preparation limitation: grounding was NOT loosened (would risk
+fabrication, PASAL 7) and source PDFs were NOT changed (PASAL 3). Grounded Stage B
+answers require CAPIL-01 re-extraction or a context-selection/LLM-path change —
+PASAL 14 stop-and-ask territory. Stage B verdict: **PARTIAL** (retrieval correct,
+answer blocked by source extraction quality).
+
+**Model-freeze incident (operator-approved restoration).** An external concurrent
+actor switched `.env` `LLM_MODEL` to `gemma3n:e2b-it-q4_K_M` (14:48:45) and started
+a foreign backend (pid 21192/23016) on port 8000. Per the operator's explicit
+choice ("Pulihkan llama3.2:1b"), `.env` was restored to `llama3.2:1b`, the foreign
+backend stopped, and the local backend relaunched on the committed code. Ollama
+(pid 18064) still serves `llama3.2:1b`; no model swap, no paid API, no embedding
+change. Build drift from the actor's edits to the DISABLED
+`app/knowledge/langgraph_workflow.py` (features.langgraph_workflow=False) does not
+affect the V1 path; current verified build `sha256:719b0d18…`.
+
+**Stage A re-verification + latency regression (honest).** Stage A was re-run on
+build `719b0d18` (pid 11664, session `web-222175f6…`,
+`reports/repro/stage_a_piak03_runtime.json`): **10/10 grounded=True**, all turns
+doc `d9ae50f8` with correct pages and the same answers as the `f86b1318` run. The
+hybrid tie-break was essential: window widening ALONE regressed T02/T08 to the
+partial-title competitor `a926fcf9` ("7 Hari Kerja") because both saturate at
+boosted 1.0 and the merge sorted by score only (batch order decided); the
+`(score, hybrid_score)` key restores the exact-title `d9ae50f8` (perfect lexical
+3/3) to #1. **Latency cost:** this run's non-LLM p95 ≈ **11.0 s** (T04 procedure
+11008 ms, T01 7653 ms, T06 4290 ms; reuse T09 288 ms / T10 183 ms) — **ABOVE** the
+PASAL 11 p95<5 s target, vs ≈3.9 s on `f86b1318`. The wider per-batch window
+(`max(limit*4,20)`) increases retrieval cost and the host was RAM-variable.
+Accuracy target MET, latency target NOT met on this build — a dedicated 8 GB
+re-measurement + PASAL 8 config experiments (smaller window / `num_ctx` /
+`num_predict`) are needed; NOT applied here (problem #5).
+
+**Full-suite regression attribution (I/J/K).** `reports/repro/fullsuite_ijk.log`
+(build `719b0d18` working tree, single clean run): **89 failed, 1535 passed, 10
+skipped, 2 errors** (201.1 s). +8 passed vs the F+G+H run (1527) = the 8 new I/J/K
+tests. Normalized FAILED-set `comm` vs `regression_F_rebind.log` (89): 89 = 89,
+4 only-in-current / 4 only-in-baseline. The 4 only-in-current
+(`test_backend_runtime_fixture::test_backend_process_ingestion_retrieval_chat_and_history`,
+`test_knowledge_pipeline_api::test_pdf_approval_activates_operator_retrieval_without_manual_chat`,
+`test_v1_operator_control::test_standalone_greeting_is_nonfactual_local_response[Selamat pagi]`
+and `[  HALLO!  ]`): the pipeline-api test passes in isolation (ordering-flaky);
+the other 3 **fail in isolation at current HEAD with the uncommitted tie-break/K
+change stashed** (stash attribution run: 3 failed, 3 passed) ⇒ pre-existing at HEAD
+(`edd3807c`), NOT caused by this change. **ZERO new failures from the I/J/K
+tie-break + Defect K.** HEAD moved since the F+G+H baseline via the owner's
+`d1af1069` (I+J), `edd3807c`, `430a8fba`, `f33c6d74`; the identical-scope baseline
+for the uncommitted change is current HEAD, verified by the stash run.
