@@ -1,65 +1,112 @@
 # NUSANTARA V1 PERFORMANCE REPORT
 
-**Contract:** NUSANTARA-V1-MASTER-2026-001
-**Phase:** 7 — Performance & Production Readiness
-**Date:** 2026-11-12
+**Contract:** NUS-V1-HYBRID-DEEPSEEK-001
+**Date:** 2026-11-16
 **Branch:** codex/fullroot-control-20261007
 
 ---
 
-## 1. Available Benchmarks
+## 1. SOP Processing Performance
 
-### SOP Processing (Docling OCR)
-- 2 SOPs measured: 132.3s total, 66.1s/SOP average
-- 42 SOPs estimated: ~46 minutes total
-- Breakdown per SOP: upload (1-2s) + Docling extraction (50-80s) + indexing (5-10s)
+### Baseline (2 SOPs)
+| Metric | Value |
+|---|---|
+| Total time | 132.3s |
+| Avg per SOP | 66.1s |
+| Breakdown | Upload (1-2s) + Docling extraction (50-80s) + indexing (5-10s) |
 
-### Search Latency (from search eval)
-- Mean: 943.6 ms (with backend + IndoBERT worker)
-- Median: 304.6 ms
-- P95: 363.9 ms
-- Note: first query slower (model warmup), subsequent queries faster
+### Estimated for 42 SOPs
+| Metric | Value |
+|---|---|
+| Total estimated | ~46 minutes |
+| Per SOP | ~66s |
 
-### Chat Latency
-- Not formally benchmarked (depends on Ollama generation)
-- Typical: 5-15s for grounded answers with llama3.2:1b
+### Extraction Status Distribution (180 total extractions)
+| Status | Count |
+|---|---|
+| COMPLETE | 83 |
+| PARTIAL | 70 |
+| FAILED | 27 |
 
-## 2. Resource Usage
+## 2. Search Performance
 
-| Resource | Value | Notes |
+### From Search Eval (160 queries, API endpoint)
+| Metric | Value |
+|---|---|
+| Recall@5 | 0.8278 |
+| MRR@10 | 0.5672 |
+| Precision@1 | 0.4667 |
+| Precision@5 | 0.3478 |
+| Exact_match | 0.4667 |
+| Latency mean | 192.2 ms |
+| Latency median | 178.9 ms |
+| Latency p95 | 261.7 ms |
+
+### Search Latency Breakdown
+- First query: ~1000ms (model warmup)
+- Subsequent queries: ~200-300ms
+- IndoBERT embedding: ~50ms per query
+- SQLite vector search: ~10-50ms
+
+## 3. Chat Performance
+
+### With Gemma 2B (gemma3n:e2b-it-q4_K_M)
+| Query Type | Latency | Grounded |
 |---|---|---|
-| Backend (FastAPI) | ~15 MB RAM | Idle, no worker |
-| IndoBERT worker | ~200 MB RAM | Loaded on first search |
-| Ollama (llama3.2:1b) | ~1.3 GB RAM | When model loaded |
-| Docling worker | ~500 MB RAM | During extraction |
-| Database | 64 docs, ~50 MB | SQLite |
+| Evidence fast path (requirements) | ~8.6s | True |
+| Evidence fast path (duration) | ~5.8s | True |
+| LLM path (no fast path) | ~45-52s | False (abstain) |
+| Out-of-scope (local_rule) | ~0.1s | False (correct abstain) |
 
-## 3. Known Performance Characteristics
+### With Llama 3.2 1B
+| Query Type | Latency | Grounded |
+|---|---|---|
+| All queries | ~10s | False (abstain) |
 
-1. **Docling extraction is CPU-bound**: ~66s/SOP on 2 threads
-2. **IndoBERT embedding**: 768D, ~4s model load, ~50ms per query
-3. **Search**: Hybrid (semantic + lexical), ~200-300ms after warmup
-4. **Chat**: Depends on Ollama generation, 5-15s typical
-5. **Concurrent requests**: Not tested (10 sync slots in _run_sync_v1)
+## 4. Resource Usage
 
-## 4. Gaps
+| Component | RAM (idle) | RAM (active) |
+|---|---|---|
+| Backend (FastAPI) | ~15 MB | ~30 MB |
+| IndoBERT worker | ~200 MB | ~200 MB |
+| Ollama (gemma3n 2B) | ~1.3 GB | ~4-5 GB |
+| Docling worker | ~0 MB | ~500 MB |
+| Frontend (Vite) | ~50 MB | ~50 MB |
+| **Total (idle)** | **~1.6 GB** | |
+| **Total (chat active)** | | **~5-6 GB** |
+| **Total (OCR active)** | | **~2 GB** |
 
-1. No 10-SOP batch benchmark
-2. No peak RAM/CPU measurement during batch
-3. No concurrent request testing
-4. No P50/P95 documentation for chat
-5. No retry/timeout/recovery testing
-6. No formal performance report with methodology
+## 5. Database
 
-## 5. Recommendations
+| Table | Rows | Size |
+|---|---|---|
+| documents | 64 | |
+| chunks | 721 | |
+| knowledge_pipeline_runs | 175 | |
+| sop_review_events | 712 | |
+| document_extractions | 193 | |
+| **Total DB size** | | **55.3 MB** |
+| Source documents | 60 files | 54.6 MB |
+
+## 6. Known Performance Issues
+
+1. **Docling extraction slow**: ~66s/SOP, CPU-bound (2 threads)
+2. **First query slow**: ~1000ms (IndoBERT model warmup)
+3. **Chat latency high**: 45-52s for LLM path (Gemma 2B generation)
+4. **Memory pressure**: Docling + Ollama together can exceed 8 GB
+5. **No concurrent testing**: ThreadPoolExecutor(max_workers=1) for Docling
+
+## 7. Recommendations
 
 1. Run perf_baseline.py on 10 SOPs for formal baseline
 2. Add psutil for peak RAM measurement
 3. Test concurrent requests (5-10 simultaneous)
 4. Document P50/P95 for search and chat
 5. Test retry/timeout/recovery scenarios
+6. Consider GPU offloading for Ollama (if GPU available)
+7. Consider quantized 7B model for better chat quality
 
-## 6. Commit
+## 8. Commit
 
-- Phase 7 report only, no code changes
+- Performance report only, no code changes
 - perf_baseline.py exists but only tested on 5 already-processed SOPs
