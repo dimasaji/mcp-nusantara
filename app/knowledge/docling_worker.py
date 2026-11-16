@@ -130,12 +130,27 @@ def convert(source: Path, output: Path):
     if covered != set(doc.pages):
         warnings.append('Halaman tanpa blok teks/tabel: ' + str(sorted(set(doc.pages) - covered)))
     success = str(result.status.value) == 'success' and bool(blocks) and not warnings
+    # Compute basic OCR quality metrics
+    total_text = ' '.join(b.get('content', '') for b in blocks)
+    ocr_confidence = None
+    if not digital and total_text.strip():
+        # Heuristic: character diversity ratio (unique chars / total chars)
+        # Higher diversity = better OCR quality. Range 0.0-1.0.
+        chars = [c for c in total_text if c.isalnum()]
+        if chars:
+            diversity = len(set(chars)) / len(chars)
+            # Normalize: typical good OCR has diversity 0.05-0.15
+            ocr_confidence = min(1.0, diversity / 0.15)
     payload = {'status': 'COMPLETE' if success else 'PARTIAL' if blocks else 'FAILED',
                'warnings': warnings, 'blocks': blocks, 'page_count': len(doc.pages),
                'markdown': doc.export_to_markdown(), 'docling_json': doc.export_to_dict(),
                'effective_options': {'do_ocr': not digital, 'native_text_first': digital, 'device': 'cpu',
                                      'activity_grid_pages': sorted(detected_regions),
-                                     'activity_grid_regions': detected_regions}}
+                                     'activity_grid_regions': detected_regions},
+               'ocr_quality': {'confidence': round(ocr_confidence, 3) if ocr_confidence is not None else None,
+                               'total_chars': len(total_text),
+                               'table_count': sum(1 for b in blocks if b.get('type') == 'table'),
+                               'text_block_count': sum(1 for b in blocks if b.get('type') == 'text')}}
     temporary = output.with_suffix('.tmp')
     temporary.write_text(json.dumps(payload, ensure_ascii=False), encoding='utf-8')
     temporary.replace(output)
