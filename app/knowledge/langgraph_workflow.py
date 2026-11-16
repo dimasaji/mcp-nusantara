@@ -125,9 +125,21 @@ def create_workflow(knowledge_engine=None):
         def generate_embeddings(state: SOPWorkflowState) -> SOPWorkflowState:
             if knowledge_engine is None:
                 return {**state, 'index_status': 'PENDING'}
-            # Embeddings are generated during RAG ingestion (process_knowledge_source).
-            # Mark as pending; actual embedding happens in index_document.
-            return {**state, 'index_status': 'PENDING'}
+            try:
+                doc_id = state.get('document_id', '')
+                if not doc_id:
+                    return {**state, 'index_status': 'FAILED', 'error_category': 'PERMANENT'}
+                # Verify embeddings exist in store
+                chunks = knowledge_engine.rag._store.get_chunks_by_document(doc_id)
+                if not chunks:
+                    return {**state, 'index_status': 'FAILED', 'error_category': 'PERMANENT'}
+                has_embedding = any(c.embedding is not None and c.embedding.dimension > 0 for c in chunks)
+                if not has_embedding:
+                    return {**state, 'index_status': 'FAILED', 'error_category': 'TRANSIENT'}
+                return {**state, 'index_status': 'EMBEDDED'}
+            except Exception as e:
+                return {**state, 'index_status': 'FAILED', 'error_category': 'TRANSIENT',
+                        'extraction_error': str(e)[:200]}
 
         def index_document(state: SOPWorkflowState) -> SOPWorkflowState:
             if knowledge_engine is None:
