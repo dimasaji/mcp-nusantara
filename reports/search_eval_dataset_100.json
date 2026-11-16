@@ -1,0 +1,1117 @@
+[
+  {
+    "query": "PIAK-04",
+    "expected": [
+      "sop_d67da533691f74f7a06d9d7353e17a28"
+    ],
+    "type": "exact_number"
+  },
+  {
+    "query": "PIAK-02",
+    "expected": [
+      "sop_0dfde8390c4af6ff0d1c30edc4db6ec7"
+    ],
+    "type": "exact_number"
+  },
+  {
+    "query": "DAFDUK-01",
+    "expected": [
+      "sop_79b22403df26ea591f937e9b96d652f8"
+    ],
+    "type": "exact_number"
+  },
+  {
+    "query": "DAFDUK-24",
+    "expected": [
+      "sop_279ad62f929ce585b7486fb2e3c7ce35"
+    ],
+    "type": "exact_number"
+  },
+  {
+    "query": "CAPIL-02",
+    "expected": [
+      "sop_47e25699d2fcadfc1c0d4c506ca90c02"
+    ],
+    "type": "exact_number"
+  },
+  {
+    "query": "SOP Permohonan Data Pribadi",
+    "expected": [
+      "sop_e4d43334bc32fa5a97972fb64bb34e9c",
+      "DOC-SHA256-75d5b40df368e826f8dc5eace35ccc0daaaf26499b241a278962832334e8db50",
+      "DOC-SHA256-0e63a46b2e94389c1ac2250eee5ef10cd82bb0a8f77f740b30e7114c49279a46"
+    ],
+    "type": "exact_title"
+  },
+  {
+    "query": "Permohonan Data Pribadi",
+    "expected": [
+      "sop_e4d43334bc32fa5a97972fb64bb34e9c"
+    ],
+    "type": "partial_title"
+  },
+  {
+    "query": "KTP-el baru website Sobat Dukcapil",
+    "expected": [
+      "sop_79b22403df26ea591f937e9b96d652f8"
+    ],
+    "type": "natural_language"
+  },
+  {
+    "query": "akta kelahiran online rumah sakit",
+    "expected": [
+      "sop_47e25699d2fcadfc1c0d4c506ca90c02"
+    ],
+    "type": "natural_language"
+  },
+  {
+    "query": "permohonan data informasi administrasi kependudukan individu",
+    "expected": [
+      "sop_0dfde8390c4af6ff0d1c30edc4db6ec7"
+    ],
+    "type": "natural_language"
+  },
+  {
+    "query": "data penduduk untuk OPD instansi swasta",
+    "expected": [
+      "sop_d67da533691f74f7a06d9d7353e17a28"
+    ],
+    "type": "natural_language"
+  },
+  {
+    "query": "KTP-el dengan keterbatasan",
+    "expected": [
+      "sop_279ad62f929ce585b7486fb2e3c7ce35"
+    ],
+    "type": "natural_language"
+  },
+  {
+    "query": "Penerbitan KTP-el Baru",
+    "expected": [
+      "sop_279ad62f929ce585b7486fb2e3c7ce35",
+      "sop_79b22403df26ea591f937e9b96d652f8"
+    ],
+    "type": "partial_title"
+  },
+  {
+    "query": "permohonan informasi data penduduk",
+    "expected": [
+      "sop_d67da533691f74f7a06d9d7353e17a28"
+    ],
+    "type": "synonym"
+  },
+  {
+    "query": "Bagaimana cara mengajukan permohonan data pribadi?",
+    "expected": [
+      "sop_e4d43334bc32fa5a97972fb64bb34e9c"
+    ],
+    "type": "procedure_question"
+  },
+  {
+    "query": "syarat permohonan data pribadi",
+    "expected": [
+      "sop_e4d43334bc32fa5a97972fb64bb34e9c"
+    ],
+    "type": "requirements_question"
+  },
+  {
+    "query": "berapa lama proses permohonan data pribadi",
+    "expected": [
+      "sop_e4d43334bc32fa5a97972fb64bb34e9c"
+    ],
+    "type": "time_question"
+  },
+  {
+    "query": "Test Paspor",
+    "expected": [
+      "BENCH-PASPOR-001"
+    ],
+    "type": "exact_title"
+  },
+  {
+    "query": "Test Resep Nasi Goreng",
+    "expected": [
+      "BENCH-MASAK-001"
+    ],
+    "type": "exact_title"
+  },
+  {
+    "query": "Test Perubahan Alamat",
+    "expected": [
+      "BENCH-ALAMAT-001"
+    ],
+    "type": "exact_title"
+  },
+  {
+    "query": "Test API KTP",
+    "expected": [
+      "API-TEST-001"
+    ],
+    "type": "exact_title"
+  },
+  {
+    "query": "Test KTP",
+    "expected": [
+      "DOC-FC9058E1-1a08"
+    ],
+    "type": "exact_title"
+  },
+  {
+    "query": "CAPIL",
+    "expected": [
+      "sop_47e25699d2fcadfc1c0d4c506ca90c02",
+      "DOC-SHA256-f9ad8a5dbdc7e16570122966ccad6dcfc3c36f447385789ae9b051a0838d7f1f"
+    ],
+    "type": "partial_title"
+  },
+  {
+    "query": "xyznonexistentquery12345",
+    "expected": [],
+    "type": "no_result"
+  },
+  {
+    "query": "cuaca hari ini",
+    "expected": [],
+    "type": "no_result"
+  },
+  {
+    "query": "Pelayanan Publik",
+    "expected": [
+      "DOC-SHA256-f9ad8a5dbdc7e16570122966ccad6dcfc3c36f447385789ae9b051a0838d7f1f",
+      "sop_279ad62f929ce585b7486fb2e3c7ce35",
+      "sop_79b22403df26ea591f937e9b96d652f8"
+    ],
+    "type": "partial_title"
+  },
+  {
+    "query": "Pencatatan Sipil",
+    "expected": [
+      "DOC-SHA256-f9ad8a5dbdc7e16570122966ccad6dcfc3c36f447385789ae9b051a0838d7f1f",
+      "DOC-SHA256-282658f23a8578ca50b1135a589449635681cdadb725fc957e52355b959a7244"
+    ],
+    "type": "partial_title"
+  },
+  {
+    "query": "Permohonan Informasi Data Penduduk",
+    "expected": [
+      "sop_d67da533691f74f7a06d9d7353e17a28"
+    ],
+    "type": "partial_title"
+  },
+  {
+    "query": "KTP-el baru Sobat Dukcapil",
+    "expected": [
+      "sop_79b22403df26ea591f937e9b96d652f8"
+    ],
+    "type": "natural_language"
+  },
+  {
+    "query": "Akta Kelahiran Online Rumah Sakit",
+    "expected": [
+      "sop_47e25699d2fcadfc1c0d4c506ca90c02"
+    ],
+    "type": "natural_language"
+  },
+  {
+    "query": "Apa persyaratan PERMOHONAN DATA PRIBADI?",
+    "expected": [
+      "DOC-SHA256-75d5b40df368e826f8dc5eace35ccc0daaaf26499b241a278962832334e8db50"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur PERMOHONAN DATA PRIBADI?",
+    "expected": [
+      "DOC-SHA256-75d5b40df368e826f8dc5eace35ccc0daaaf26499b241a278962832334e8db50"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses PERMOHONAN DATA PRIBADI?",
+    "expected": [
+      "DOC-SHA256-75d5b40df368e826f8dc5eace35ccc0daaaf26499b241a278962832334e8db50"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Penerbitan Akta Kelahiran bagi WNI Via Aplikasi Tangerang Live dan Portal?",
+    "expected": [
+      "DOC-SHA256-f9ad8a5dbdc7e16570122966ccad6dcfc3c36f447385789ae9b051a0838d7f1f"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Penerbitan Akta Kelahiran bagi WNI Via Aplikasi Tangerang Live dan Portal?",
+    "expected": [
+      "DOC-SHA256-f9ad8a5dbdc7e16570122966ccad6dcfc3c36f447385789ae9b051a0838d7f1f"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Penerbitan Akta Kelahiran bagi WNI Via Aplikasi Tangerang Live dan Portal?",
+    "expected": [
+      "DOC-SHA256-f9ad8a5dbdc7e16570122966ccad6dcfc3c36f447385789ae9b051a0838d7f1f"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan Kartu Identitas Anak (KIA) melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-70c209a002c0544b517cd63831f72acefb3680fd8af1bf472a6e9aa10e4c773f"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan Kartu Identitas Anak (KIA) melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-70c209a002c0544b517cd63831f72acefb3680fd8af1bf472a6e9aa10e4c773f"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan Kartu Identitas Anak (KIA) melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-70c209a002c0544b517cd63831f72acefb3680fd8af1bf472a6e9aa10e4c773f"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Akta Kelahiran Online Rumah Sakit/Klinik/Bidan bagi WNI?",
+    "expected": [
+      "DOC-SHA256-282658f23a8578ca50b1135a589449635681cdadb725fc957e52355b959a7244"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Akta Kelahiran Online Rumah Sakit/Klinik/Bidan bagi WNI?",
+    "expected": [
+      "DOC-SHA256-282658f23a8578ca50b1135a589449635681cdadb725fc957e52355b959a7244"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Akta Kelahiran Online Rumah Sakit/Klinik/Bidan bagi WNI?",
+    "expected": [
+      "DOC-SHA256-282658f23a8578ca50b1135a589449635681cdadb725fc957e52355b959a7244"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan CAK3P Akta Kelahiran Online Kelurahan bagi WNI?",
+    "expected": [
+      "DOC-SHA256-bbf7f8c791af94dd1ea2184b0e6af23da38a8b763a5acf7d8348a3c5bf118924"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan CAK3P Akta Kelahiran Online Kelurahan bagi WNI?",
+    "expected": [
+      "DOC-SHA256-bbf7f8c791af94dd1ea2184b0e6af23da38a8b763a5acf7d8348a3c5bf118924"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan CAK3P Akta Kelahiran Online Kelurahan bagi WNI?",
+    "expected": [
+      "DOC-SHA256-bbf7f8c791af94dd1ea2184b0e6af23da38a8b763a5acf7d8348a3c5bf118924"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Pelaporan Kelahiran Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-b8a5ba5335343c342d8564da6b7dbc3a1c8835ad6080125085009bcee03a237c"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Pelaporan Kelahiran Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-b8a5ba5335343c342d8564da6b7dbc3a1c8835ad6080125085009bcee03a237c"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Pelaporan Kelahiran Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-b8a5ba5335343c342d8564da6b7dbc3a1c8835ad6080125085009bcee03a237c"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Kutipan ke II dan seterusnya Akta Kelahiran bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-d39f5a4d4cc0f3f7fb686d4923a67a1670ada364a989179fb9b61c1d3d0fea38"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Kutipan ke II dan seterusnya Akta Kelahiran bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-d39f5a4d4cc0f3f7fb686d4923a67a1670ada364a989179fb9b61c1d3d0fea38"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Kutipan ke II dan seterusnya Akta Kelahiran bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-d39f5a4d4cc0f3f7fb686d4923a67a1670ada364a989179fb9b61c1d3d0fea38"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Pencatatan Pengesahan Anak via Loket?",
+    "expected": [
+      "DOC-SHA256-cf9c27ef9a127cdc4f222ec1366df3c29f05cf1c01c965839c4937d8846f5847"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Pencatatan Pengesahan Anak via Loket?",
+    "expected": [
+      "DOC-SHA256-cf9c27ef9a127cdc4f222ec1366df3c29f05cf1c01c965839c4937d8846f5847"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Pencatatan Pengesahan Anak via Loket?",
+    "expected": [
+      "DOC-SHA256-cf9c27ef9a127cdc4f222ec1366df3c29f05cf1c01c965839c4937d8846f5847"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Pencatatan Pengakuan Anak via Loket?",
+    "expected": [
+      "DOC-SHA256-47d7dc6abfb9efc8e3a9de7c50731b4a96122576c820c0cf16e5e090edad07aa"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Pencatatan Pengakuan Anak via Loket?",
+    "expected": [
+      "DOC-SHA256-47d7dc6abfb9efc8e3a9de7c50731b4a96122576c820c0cf16e5e090edad07aa"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Pencatatan Pengakuan Anak via Loket?",
+    "expected": [
+      "DOC-SHA256-47d7dc6abfb9efc8e3a9de7c50731b4a96122576c820c0cf16e5e090edad07aa"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Catatan Pinggir Perubahan Nama Via Loket?",
+    "expected": [
+      "DOC-SHA256-75c3753c18161a45bdc62f2ae77d14706337eed7fd697378da40780953195ca2"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Catatan Pinggir Perubahan Nama Via Loket?",
+    "expected": [
+      "DOC-SHA256-75c3753c18161a45bdc62f2ae77d14706337eed7fd697378da40780953195ca2"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Catatan Pinggir Perubahan Nama Via Loket?",
+    "expected": [
+      "DOC-SHA256-75c3753c18161a45bdc62f2ae77d14706337eed7fd697378da40780953195ca2"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Pencatatan Kematian Via Website atau Aplikasi Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-f682f85c876b2f7a791af6d727776de57525cf2d00bf69e8394e0867802c7ab3"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Pencatatan Kematian Via Website atau Aplikasi Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-f682f85c876b2f7a791af6d727776de57525cf2d00bf69e8394e0867802c7ab3"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Pencatatan Kematian Via Website atau Aplikasi Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-f682f85c876b2f7a791af6d727776de57525cf2d00bf69e8394e0867802c7ab3"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan CAK3P Akta Kematian Online Kelurahan bagi WNI?",
+    "expected": [
+      "DOC-SHA256-97d22340a35af502e49490caca37787ecbb1505abe3fb28f7554f515cae984e8"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan CAK3P Akta Kematian Online Kelurahan bagi WNI?",
+    "expected": [
+      "DOC-SHA256-97d22340a35af502e49490caca37787ecbb1505abe3fb28f7554f515cae984e8"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan CAK3P Akta Kematian Online Kelurahan bagi WNI?",
+    "expected": [
+      "DOC-SHA256-97d22340a35af502e49490caca37787ecbb1505abe3fb28f7554f515cae984e8"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Pelaporan Kematian Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-4a4299ca45b38bc74f68b526885598dd28b6be398a10edf28453885e5629ed94"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Pelaporan Kematian Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-4a4299ca45b38bc74f68b526885598dd28b6be398a10edf28453885e5629ed94"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Pelaporan Kematian Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-4a4299ca45b38bc74f68b526885598dd28b6be398a10edf28453885e5629ed94"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Kutipan ke II dan seterusnya Akta Kematian bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-fc18f736690dc598f8835dc23bd114efe74a1628b3605e93de1a5cb0ecca44de"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Kutipan ke II dan seterusnya Akta Kematian bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-fc18f736690dc598f8835dc23bd114efe74a1628b3605e93de1a5cb0ecca44de"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Kutipan ke II dan seterusnya Akta Kematian bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-fc18f736690dc598f8835dc23bd114efe74a1628b3605e93de1a5cb0ecca44de"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Pembatalan Perkawinan bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-7392fda99ceb2b7dfa209c7a8f28bac8dc8ea75220626a93aa2476fecfad4421"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Pembatalan Perkawinan bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-7392fda99ceb2b7dfa209c7a8f28bac8dc8ea75220626a93aa2476fecfad4421"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Pembatalan Perkawinan bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-7392fda99ceb2b7dfa209c7a8f28bac8dc8ea75220626a93aa2476fecfad4421"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Kutipan ke II dan seterusnya Akta Perkawinan bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-d219d3cf94c7a528df0b7b0326574e006002f4fd6b20e4cdcd5554e0b0859d37"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Kutipan ke II dan seterusnya Akta Perkawinan bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-d219d3cf94c7a528df0b7b0326574e006002f4fd6b20e4cdcd5554e0b0859d37"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Kutipan ke II dan seterusnya Akta Perkawinan bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-d219d3cf94c7a528df0b7b0326574e006002f4fd6b20e4cdcd5554e0b0859d37"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Pelaporan Perkawinan Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-44ca04908a66af03f944d3e42f1df70add5ed72d87a150e8f4595692d76fc808"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Pelaporan Perkawinan Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-44ca04908a66af03f944d3e42f1df70add5ed72d87a150e8f4595692d76fc808"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Pelaporan Perkawinan Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-44ca04908a66af03f944d3e42f1df70add5ed72d87a150e8f4595692d76fc808"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Pembatalan Perceraian bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-cee5f68459c2c664654d5fac57deda419c1d44a08836c2a9d065f2aa3cf87c59"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Pembatalan Perceraian bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-cee5f68459c2c664654d5fac57deda419c1d44a08836c2a9d065f2aa3cf87c59"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Pembatalan Perceraian bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-cee5f68459c2c664654d5fac57deda419c1d44a08836c2a9d065f2aa3cf87c59"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Kutipan ke II dan seterusnya Akta Perceraian bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-e01ea0890155a64d880da410caa2efbf8fadaed8d56764e458f92ed488cdfd37"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Kutipan ke II dan seterusnya Akta Perceraian bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-e01ea0890155a64d880da410caa2efbf8fadaed8d56764e458f92ed488cdfd37"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Kutipan ke II dan seterusnya Akta Perceraian bagi WNI/WNA Via Loket?",
+    "expected": [
+      "DOC-SHA256-e01ea0890155a64d880da410caa2efbf8fadaed8d56764e458f92ed488cdfd37"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Pelaporan Perceraian Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-bcf8fd46ee58077bd320e52baf9ec222df0435cbb1b786192016254abd3567dd"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Pelaporan Perceraian Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-bcf8fd46ee58077bd320e52baf9ec222df0435cbb1b786192016254abd3567dd"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Pelaporan Perceraian Luar Negeri Via Loket?",
+    "expected": [
+      "DOC-SHA256-bcf8fd46ee58077bd320e52baf9ec222df0435cbb1b786192016254abd3567dd"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Legalisir Akta-Akta Pencatatan Sipil?",
+    "expected": [
+      "DOC-SHA256-9d3556a569103012f2baff2fd1d75c3f335225dbbdf8e3bf6316d928336436ee"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Legalisir Akta-Akta Pencatatan Sipil?",
+    "expected": [
+      "DOC-SHA256-9d3556a569103012f2baff2fd1d75c3f335225dbbdf8e3bf6316d928336436ee"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Legalisir Akta-Akta Pencatatan Sipil?",
+    "expected": [
+      "DOC-SHA256-9d3556a569103012f2baff2fd1d75c3f335225dbbdf8e3bf6316d928336436ee"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan KTP-el Baru Untuk WNI Melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-99f19c95d30e73929a26f3ce845f9d4283961f9aec84112870de61c3a2fa4405"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan KTP-el Baru Untuk WNI Melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-99f19c95d30e73929a26f3ce845f9d4283961f9aec84112870de61c3a2fa4405"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan KTP-el Baru Untuk WNI Melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-99f19c95d30e73929a26f3ce845f9d4283961f9aec84112870de61c3a2fa4405"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan KTP-el Baru Untuk WNA Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-c6386e50569ca546d1a613b1c1583ce383fd8f555ee6832186d830d435134302"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan KTP-el Baru Untuk WNA Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-c6386e50569ca546d1a613b1c1583ce383fd8f555ee6832186d830d435134302"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan KTP-el Baru Untuk WNA Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-c6386e50569ca546d1a613b1c1583ce383fd8f555ee6832186d830d435134302"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan KTP-el karena Perubahan Foto atau Tanda Tangan Untuk WNI Melalui?",
+    "expected": [
+      "DOC-SHA256-d3698677eaf125158236fa59a3199cfe2b08c1a9eb7b7f99620f07a59af6aef5"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan KTP-el karena Perubahan Foto atau Tanda Tangan Untuk WNI Melalui?",
+    "expected": [
+      "DOC-SHA256-d3698677eaf125158236fa59a3199cfe2b08c1a9eb7b7f99620f07a59af6aef5"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan KTP-el karena Perubahan Foto atau Tanda Tangan Untuk WNI Melalui?",
+    "expected": [
+      "DOC-SHA256-d3698677eaf125158236fa59a3199cfe2b08c1a9eb7b7f99620f07a59af6aef5"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan KTP-el Karena Rusak/Hilang/Perubahan Data Untuk WNA Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-155ba1e4f098b6e3723c652dfab9394b3a0fa71829c458a292070eec56065396"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan KTP-el Karena Rusak/Hilang/Perubahan Data Untuk WNA Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-155ba1e4f098b6e3723c652dfab9394b3a0fa71829c458a292070eec56065396"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan KTP-el Karena Rusak/Hilang/Perubahan Data Untuk WNA Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-155ba1e4f098b6e3723c652dfab9394b3a0fa71829c458a292070eec56065396"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan KTP-el Karena Rusak/Hilang/Perubahan Data Untuk WNI Melalui?",
+    "expected": [
+      "DOC-SHA256-c2b5e9c1276dfcd2f2dc23cfb0aa041297bdd2de17ea7d709bbf989f7d66a52a"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan KTP-el Karena Rusak/Hilang/Perubahan Data Untuk WNI Melalui?",
+    "expected": [
+      "DOC-SHA256-c2b5e9c1276dfcd2f2dc23cfb0aa041297bdd2de17ea7d709bbf989f7d66a52a"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan KTP-el Karena Rusak/Hilang/Perubahan Data Untuk WNI Melalui?",
+    "expected": [
+      "DOC-SHA256-c2b5e9c1276dfcd2f2dc23cfb0aa041297bdd2de17ea7d709bbf989f7d66a52a"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan KTP-el Luar Domisili Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-4ab8530d97dea45210cd0210e1b06fc4d505f37d2003961a7ce723f0aa91b463"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan KTP-el Luar Domisili Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-4ab8530d97dea45210cd0210e1b06fc4d505f37d2003961a7ce723f0aa91b463"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan KTP-el Luar Domisili Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-4ab8530d97dea45210cd0210e1b06fc4d505f37d2003961a7ce723f0aa91b463"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Legalisir Kartu Tanda Penduduk-elektronik (KTP-el) Melalui Dropbox?",
+    "expected": [
+      "DOC-SHA256-1f3d6ae3cb4a1953aa918e13d841e99a389247663957ea300367755a2451d1be"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Legalisir Kartu Tanda Penduduk-elektronik (KTP-el) Melalui Dropbox?",
+    "expected": [
+      "DOC-SHA256-1f3d6ae3cb4a1953aa918e13d841e99a389247663957ea300367755a2451d1be"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Legalisir Kartu Tanda Penduduk-elektronik (KTP-el) Melalui Dropbox?",
+    "expected": [
+      "DOC-SHA256-1f3d6ae3cb4a1953aa918e13d841e99a389247663957ea300367755a2451d1be"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Perpindahan Penduduk WNI dalam NKRI (SKPWNI) Melalui Website Sobat?",
+    "expected": [
+      "DOC-SHA256-164f2bbacaa081a7b6d02b850c993cb749df6c9b8d92da8e239d8d08dff2798a"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Perpindahan Penduduk WNI dalam NKRI (SKPWNI) Melalui Website Sobat?",
+    "expected": [
+      "DOC-SHA256-164f2bbacaa081a7b6d02b850c993cb749df6c9b8d92da8e239d8d08dff2798a"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Perpindahan Penduduk WNI dalam NKRI (SKPWNI) Melalui Website Sobat?",
+    "expected": [
+      "DOC-SHA256-164f2bbacaa081a7b6d02b850c993cb749df6c9b8d92da8e239d8d08dff2798a"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Perpindahan Penduduk WNI dalam NKRI (Datang) Melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-2237aefdc4410fb4b73429b4c8d02fb59e7726f0e0b1fe8c95a9e23f5abf42bf"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Perpindahan Penduduk WNI dalam NKRI (Datang) Melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-2237aefdc4410fb4b73429b4c8d02fb59e7726f0e0b1fe8c95a9e23f5abf42bf"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Perpindahan Penduduk WNI dalam NKRI (Datang) Melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-2237aefdc4410fb4b73429b4c8d02fb59e7726f0e0b1fe8c95a9e23f5abf42bf"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Perpindahan Penduduk WNA dalam NKRI (Datang) Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-d2ce440c3df0173885908ef1780d6ead2bcec9c7c93207ac9a76631a22b16b29"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Perpindahan Penduduk WNA dalam NKRI (Datang) Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-d2ce440c3df0173885908ef1780d6ead2bcec9c7c93207ac9a76631a22b16b29"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Perpindahan Penduduk WNA dalam NKRI (Datang) Melalui Loket?",
+    "expected": [
+      "DOC-SHA256-d2ce440c3df0173885908ef1780d6ead2bcec9c7c93207ac9a76631a22b16b29"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Pelayanan Pembatalan Perpindahan Penduduk WNI dalam NKRI (SKPWNI)?",
+    "expected": [
+      "DOC-SHA256-b50639dfb7465ec6793f22b505bc32ffc862b1613cc06d512f449c42234d5a3f"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Pelayanan Pembatalan Perpindahan Penduduk WNI dalam NKRI (SKPWNI)?",
+    "expected": [
+      "DOC-SHA256-b50639dfb7465ec6793f22b505bc32ffc862b1613cc06d512f449c42234d5a3f"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Pelayanan Pembatalan Perpindahan Penduduk WNI dalam NKRI (SKPWNI)?",
+    "expected": [
+      "DOC-SHA256-b50639dfb7465ec6793f22b505bc32ffc862b1613cc06d512f449c42234d5a3f"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan Kartu Keluarga Baru bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-e490bcbe862ae427f0fbe75968e3b235556f15037eddf6e62d46496edfa67c95"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan Kartu Keluarga Baru bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-e490bcbe862ae427f0fbe75968e3b235556f15037eddf6e62d46496edfa67c95"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan Kartu Keluarga Baru bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-e490bcbe862ae427f0fbe75968e3b235556f15037eddf6e62d46496edfa67c95"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan Kartu Keluarga Karena Perubahan Data Bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-5cc314cec238828b42bc223f7634d7e95d9fde939c7e503b041c4d33b64cc2e3"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan Kartu Keluarga Karena Perubahan Data Bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-5cc314cec238828b42bc223f7634d7e95d9fde939c7e503b041c4d33b64cc2e3"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan Kartu Keluarga Karena Perubahan Data Bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-5cc314cec238828b42bc223f7634d7e95d9fde939c7e503b041c4d33b64cc2e3"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan Kartu Keluarga Karena Hilang atau Rusak Bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-5681eea10151224ae46fe65663918d502dfb1f7bf6e7bc53d52308d4b195e7ac"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan Kartu Keluarga Karena Hilang atau Rusak Bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-5681eea10151224ae46fe65663918d502dfb1f7bf6e7bc53d52308d4b195e7ac"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan Kartu Keluarga Karena Hilang atau Rusak Bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-5681eea10151224ae46fe65663918d502dfb1f7bf6e7bc53d52308d4b195e7ac"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan Kartu Keluarga Karena Pengurangan Anggota Keluarga Dalam Kartu Keluarga Bagi?",
+    "expected": [
+      "DOC-SHA256-a8bbb0946f695c548ff73621492912bdef13960574f9c384eecc159f7cde8338"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan Kartu Keluarga Karena Pengurangan Anggota Keluarga Dalam Kartu Keluarga Bagi?",
+    "expected": [
+      "DOC-SHA256-a8bbb0946f695c548ff73621492912bdef13960574f9c384eecc159f7cde8338"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan Kartu Keluarga Karena Pengurangan Anggota Keluarga Dalam Kartu Keluarga Bagi?",
+    "expected": [
+      "DOC-SHA256-a8bbb0946f695c548ff73621492912bdef13960574f9c384eecc159f7cde8338"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan Biodata Bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-83dca050c3f403cf066a53e5c7af8716c30e6a95311e52f96d6499db410c2f1a"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan Biodata Bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-83dca050c3f403cf066a53e5c7af8716c30e6a95311e52f96d6499db410c2f1a"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan Biodata Bagi WNI melalui Website Sobat Dukcapil?",
+    "expected": [
+      "DOC-SHA256-83dca050c3f403cf066a53e5c7af8716c30e6a95311e52f96d6499db410c2f1a"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan Surat Keterangan Tempat Tinggal Terbatas(SKTT) Bagi WNA?",
+    "expected": [
+      "DOC-SHA256-8b27502b43a7e659a12cbacb436b60d3a51e533c3d3e2ce61acfcb5e32c7ed19"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan Surat Keterangan Tempat Tinggal Terbatas(SKTT) Bagi WNA?",
+    "expected": [
+      "DOC-SHA256-8b27502b43a7e659a12cbacb436b60d3a51e533c3d3e2ce61acfcb5e32c7ed19"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan Surat Keterangan Tempat Tinggal Terbatas(SKTT) Bagi WNA?",
+    "expected": [
+      "DOC-SHA256-8b27502b43a7e659a12cbacb436b60d3a51e533c3d3e2ce61acfcb5e32c7ed19"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Penerbitan KTP-el Baru Untuk WNI dengan keterbatasan?",
+    "expected": [
+      "DOC-SHA256-c86f35edf735c7ed5447f59be647100d74890117aaca8c75f31cf77fa0bbd26c"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Penerbitan KTP-el Baru Untuk WNI dengan keterbatasan?",
+    "expected": [
+      "DOC-SHA256-c86f35edf735c7ed5447f59be647100d74890117aaca8c75f31cf77fa0bbd26c"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Penerbitan KTP-el Baru Untuk WNI dengan keterbatasan?",
+    "expected": [
+      "DOC-SHA256-c86f35edf735c7ed5447f59be647100d74890117aaca8c75f31cf77fa0bbd26c"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan Dasar Hukum Kualifikasi Pelaksana?",
+    "expected": [
+      "DOC-SHA256-55e8c2f39d6bb93d52609607432aef6c0f5f36c6f8d3b4c6dcf111f55383ea51"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur Dasar Hukum Kualifikasi Pelaksana?",
+    "expected": [
+      "DOC-SHA256-55e8c2f39d6bb93d52609607432aef6c0f5f36c6f8d3b4c6dcf111f55383ea51"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses Dasar Hukum Kualifikasi Pelaksana?",
+    "expected": [
+      "DOC-SHA256-55e8c2f39d6bb93d52609607432aef6c0f5f36c6f8d3b4c6dcf111f55383ea51"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan PERMOHONAN INFORMASI DATA PENDUDUK ( UNTUK OPD / INSTANSI / SWASTA)?",
+    "expected": [
+      "DOC-SHA256-a926fcf949a2daee961039c52187b51fc775f47114559beab29934bf219a1434"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur PERMOHONAN INFORMASI DATA PENDUDUK ( UNTUK OPD / INSTANSI / SWASTA)?",
+    "expected": [
+      "DOC-SHA256-a926fcf949a2daee961039c52187b51fc775f47114559beab29934bf219a1434"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses PERMOHONAN INFORMASI DATA PENDUDUK ( UNTUK OPD / INSTANSI / SWASTA)?",
+    "expected": [
+      "DOC-SHA256-a926fcf949a2daee961039c52187b51fc775f47114559beab29934bf219a1434"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Apa persyaratan PERMOHONAN LAYANAN DATA OLAHAN UNTUK OPD?",
+    "expected": [
+      "DOC-SHA256-54f26e3e727cef80f7379d361762adc0e091dae7512e728ccb973ea5fbc9f8f2"
+    ],
+    "type": "requirements"
+  },
+  {
+    "query": "Bagaimana prosedur PERMOHONAN LAYANAN DATA OLAHAN UNTUK OPD?",
+    "expected": [
+      "DOC-SHA256-54f26e3e727cef80f7379d361762adc0e091dae7512e728ccb973ea5fbc9f8f2"
+    ],
+    "type": "procedure"
+  },
+  {
+    "query": "Berapa lama proses PERMOHONAN LAYANAN DATA OLAHAN UNTUK OPD?",
+    "expected": [
+      "DOC-SHA256-54f26e3e727cef80f7379d361762adc0e091dae7512e728ccb973ea5fbc9f8f2"
+    ],
+    "type": "time"
+  },
+  {
+    "query": "Cuaca hari ini bagaimana?",
+    "expected": [],
+    "type": "no_result"
+  },
+  {
+    "query": "Siapa presiden Indonesia?",
+    "expected": [],
+    "type": "no_result"
+  },
+  {
+    "query": "Berapa harga beras?",
+    "expected": [],
+    "type": "no_result"
+  },
+  {
+    "query": "Jam berapa kantor buka?",
+    "expected": [],
+    "type": "no_result"
+  }
+]
