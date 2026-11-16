@@ -487,12 +487,12 @@ class RAG:
         known_reranker = getattr(self._simple_rerank, '__func__', None) is RAG._simple_rerank
         algorithm = ('simple_keyword_overlap' if known_reranker else 'NOT_VERIFIED') if rerank and kb.reranker_enabled else 'NOT_APPLICABLE'
         values = {
-            'top_k': top_k, 'semantic_weight': 0.70, 'lexical_weight': 0.30,
+            'top_k': top_k, 'semantic_weight': 0.50, 'lexical_weight': 0.50,
             'candidate_count': candidate_k, 'retrieval_mode': 'hybrid',
             'semantic_normalization': 'cosine_without_rescaling' if sqlite_store else 'NOT_VERIFIED',
             'lexical_normalization': 'token_overlap/query_tokens_capped_at_1' if sqlite_store else 'NOT_VERIFIED',
-            'missing_stage_score': 0.0, 'absolute_relevance_gate': 0.30,
-            'relative_threshold': 0.50, 'rerank_requested': bool(rerank),
+            'missing_stage_score': 0.0, 'absolute_relevance_gate': 0.35,
+            'relative_threshold': 0.65, 'rerank_requested': bool(rerank),
             'rerank_enabled': kb.reranker_enabled,
             'actual_reranker': algorithm,
             'knowledge_source': {'implementation': type(self._store).__module__ + '.' + type(self._store).__qualname__,
@@ -555,7 +555,7 @@ class RAG:
             'reranker_identity': {'algorithm': values['actual_reranker'], 'configured_label': kb.reranker_model,
                                   'model_identity': 'NOT_APPLICABLE' if known_reranker else 'NOT_VERIFIED', 'requested': bool(rerank),
                                   'enabled': kb.reranker_enabled},
-            'thresholds': {'absolute_relevance_gate': 0.30, 'relative_threshold': 0.50,
+            'thresholds': {'absolute_relevance_gate': 0.35, 'relative_threshold': 0.65,
                            'score_space': 'keyword_overlap' if algorithm == 'simple_keyword_overlap' else 'NOT_VERIFIED' if algorithm == 'NOT_VERIFIED' else 'hybrid'},
             'provenance': provenance,
         }
@@ -763,7 +763,7 @@ class RAG:
 
         trace['stage'] = 'relevance_gate'
         trace['before_gate_count'] = len(evidence_list)
-        trace['resolved_relevance_gate'] = (max(0.30, max(float(ev.score) for ev in evidence_list) * 0.50)
+        trace['resolved_relevance_gate'] = (max(0.35, max(float(ev.score) for ev in evidence_list) * 0.65)
                                             if evidence_list else None)
 
         evidence_list = self._apply_relevance_gate(
@@ -794,8 +794,8 @@ class RAG:
             ),
             retrieval_method="hybrid",
             metadata={
-                "semantic_weight": 0.70,
-                "lexical_weight": 0.30,
+                "semantic_weight": 0.50,
+                "lexical_weight": 0.50,
                 "candidate_k": candidate_k,
             },
         )

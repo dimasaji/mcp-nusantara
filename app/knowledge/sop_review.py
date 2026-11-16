@@ -421,9 +421,13 @@ class SOPReview:
             return False
         metadata = doc.metadata
         title = metadata.get('source_title') or doc.title
-        # Legacy knowledge ingested through /v1/documents/ingest or process_knowledge_source
-        # is operator knowledge, not an unapproved SOP. Only genuine SOP candidates
-        # (real authority/status, or SOP-like title) require review before Chat use.
+        # Any document ingested through the pipeline (has source_filename or
+        # pipeline_status) is operator knowledge that requires review before
+        # Chat use, regardless of authority level.  Only legacy knowledge
+        # ingested manually (no pipeline metadata) is exempt.
+        if metadata.get('source_filename') or metadata.get('pipeline_status'):
+            return True
+        # Legacy knowledge with verified authority requires review.
         authority = (metadata.get('source_authority') or metadata.get('authority') or '').strip()
         source_status = (metadata.get('source_status') or '').strip()
         if authority and authority != 'UNVERIFIED':
