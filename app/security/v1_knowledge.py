@@ -170,8 +170,12 @@ class V1KnowledgeBoundary:
         evidence = []
         # Keep the existing bounded document-scope interface. Publication
         # eligibility precedes scoring/top-k, including catalogs over 20 docs.
+        # The engine applies title/keyword boosts AFTER its own top-k cutoff,
+        # so each batch must return a wider candidate window; cutting to the
+        # final limit here would drop exact-title matches on raw hybrid rank.
+        window = max(limit * 4, 20)
         for offset in range(0, len(eligible), 20):
-            evidence.extend(self._engine.search_knowledge(query, top_k=limit,
+            evidence.extend(self._engine.search_knowledge(query, top_k=window,
                 filter={'document_ids': eligible[offset:offset + 20]}))
         evidence = sorted(evidence, key=lambda item: item.score, reverse=True)[:limit]
         result, hydrated = [], set()

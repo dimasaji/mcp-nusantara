@@ -1250,13 +1250,18 @@ class HermesAgent:
                 model_status = 'evidence_fast_path'
             else:
                 # Last resort: use the retrieved evidence source text directly so
-                # the answer stays grounded in the original SOP content.
+                # the answer stays grounded in the original SOP content. A rendered
+                # context selection (block dump carrying docling_blocks/omitted ids)
+                # is model context, not an answer; abstain instead of dumping it.
                 _src = ''
+                _selection = False
                 if evidence:
+                    _meta = getattr(evidence[0], 'metadata', None) or {}
+                    _selection = bool(_meta.get('docling_blocks') or _meta.get('omitted_block_ids'))
                     _src = (getattr(evidence[0], 'chunk', None) or getattr(evidence[0], 'source', None) or '')
                     _src = str(_src).strip()[:400]
                 _rec2 = None
-                if _src:
+                if _src and not _selection:
                     _rec2 = _grounding_guard.validate(answer=_src, evidence=evidence, intent_name=intent_name)
                 if _rec2 is not None and _rec2.grounded:
                     response_text = _src
