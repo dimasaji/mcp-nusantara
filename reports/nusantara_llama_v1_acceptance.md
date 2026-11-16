@@ -10,7 +10,7 @@ Conclusion: **PARTIAL** (see §F). NOT production-ready. No automatic model chan
 | Item | Value |
 |---|---|
 | Tanggal | 2026-11-13 → 2026-11-16 (verifikasi runtime terakhir) |
-| Commit SHA (base) | `61ffd389` (A/B/C/D); `5fe714f0` (E); `ae8d4549` (F+G+H). Defect I (candidate window) + J (no context-dump self-validation) committed by the repo owner as `d1af1069`; `edd3807c` restricts `CHAT_SESSION_PATTERN`. The hybrid tie-break + Defect K (fail-safe pilot hydration) + I/J/K regression tests + these reports are committed in this pass under the operator's run-all authorization (**no push**). |
+| Commit SHA (base) | `61ffd389` (A/B/C/D); `5fe714f0` (E); `ae8d4549` (F+G+H). Defect I (candidate window) + J (no context-dump self-validation) committed by the repo owner as `d1af1069`; `edd3807c` restricts `CHAT_SESSION_PATTERN`. The hybrid tie-break + Defect K (fail-safe pilot hydration) + I/J/K regression tests + these reports are committed as `ee9bd224` (this pass) under the operator's run-all authorization (**no push**). |
 | Branch | `codex/fullroot-control-20261007` |
 | Model runtime | `llama3.2:1b` via local Ollama, `127.0.0.1:11434` (serve pid 18064; runner `llama-server` pid 13824). An external actor briefly switched `.env` to `gemma3n:e2b-it-q4_K_M`; restored to `llama3.2:1b` per the operator's explicit choice (root_cause §17). |
 | Model params (current, measured — NOT optimized this pass) | `num_ctx` 4096 default (`settings.llm_context_tokens`, `app/core/config.py:24`); `num_predict` 512 default; `keep_alive` "10m" (`app/models/ollama.py:154`); retrieval `top_k` 5 (`nusantara_config.py:106`); temperature from config (low/None) |
@@ -235,7 +235,7 @@ general). No SOP source/approval change beyond the authorized `d9ae50f8`.
 were committed by the repo owner as `d1af1069`**; `edd3807c` restricts
 `CHAT_SESSION_PATTERN` to safe characters. The **hybrid tie-break + Defect K
 (fail-safe pilot hydration) + the 3 I/J/K regression test files + these reports**
-are committed in this pass under the operator's "Jalankan semua yang belum
+are committed as `ee9bd224` (this pass) under the operator's "Jalankan semua yang belum
 selesai" run-all authorization (which includes backend restarts and focused
 commits). **Not pushed** (push requires separate authorization). I/J/K are
 runtime-verified on build `719b0d18` (Stage A 10/10 restored after the tie-break;
@@ -391,7 +391,7 @@ Rekomendasi (tanpa pergantian model otomatis, PASAL 14):
 1. ~~Restart + re-run Stage A for T09/T10~~ **DONE** — runtime 10/10 verified
    (Defect G/H found and fixed); F+G+H committed `ae8d4549`, not pushed.
 2. ~~Stage B retrieval~~ **DONE (Defect I/J/K)** — CAPIL-01 top #1, no dumps, no
-   503; I+J committed by owner `d1af1069`, tie-break+K committed this pass, not
+   503; I+J committed by owner `d1af1069`, tie-break+K committed `ee9bd224`, not
    pushed. **Stage B ANSWER still blocked** — see decision point below.
 3. **Stage B decision (PASAL 14 stop-and-ask):** authorize CAPIL-01 re-extraction
    (document preparation, no source-PDF change) OR a context-selection/LLM-path
@@ -426,7 +426,7 @@ and Browser E2E remain unverified, and the latency target is not met on build
 1. Runtime baseline — `reports/runtime_baseline.md` (P0).
 2. Multi-turn reproduction — `reports/repro/repro_operator_general_multiturn*.json`.
 3. Root-cause analysis — `reports/root_cause_analysis.md` (Defects A–H, §10 langgraph, §13–14 Defect F, §15 historical, §16 G/H + runtime 10/10, **§17 I/J/K + Stage B OCR document-quality root cause + model-freeze restoration**).
-4. Focused code fixes — `app/hermes/agent.py`, `app/language/engine.py`, `app/knowledge/grounding.py`, `app/models/ollama.py`, `app/security/v1_knowledge.py`, `app/language/semantic/indobert_client.py` (A/B/C/D `61ffd389`; E `5fe714f0`; F+G+H `ae8d4549`; I+J owner `d1af1069`; tie-break+K committed this pass, **not pushed**).
+4. Focused code fixes — `app/hermes/agent.py`, `app/language/engine.py`, `app/knowledge/grounding.py`, `app/models/ollama.py`, `app/security/v1_knowledge.py`, `app/language/semantic/indobert_client.py` (A/B/C/D `61ffd389`; E `5fe714f0`; F+G+H `ae8d4549`; I+J owner `d1af1069`; tie-break+K `ee9bd224`, **not pushed**).
 5. Context Resolver / Retrieval tests — `tests/test_hermes_v1_context_*.py`, `tests/test_service_facts_table_multipath.py`, `tests/test_language_service_turn_facets.py` (E, 15), `tests/test_hermes_v1_contextual_followup.py` (F+G, 17), `tests/test_v1_knowledge_reuse_rebind.py` (G, 4), `tests/test_indobert_worker_proxy_env.py` (H, 1), **`tests/test_v1_search_candidate_window.py` (I, 3), `tests/test_v1_recovery_context_dump.py` (J, 2), `tests/test_v1_hydration_failsafe.py` (K, 3)**.
 6. Real llama3.2:1b runtime results — `reports/repro/stage_a_piak03_runtime.json` (build `719b0d18`, 10/10); prior runs `stage_a_piak03_runtime_f86b1318.json`, `stage_a_piak03_runtime_bb166b4a.json`.
 7. PIAK-03 / CAPIL-01 results — Stage A (§B), **`reports/repro/stage_b_capil01_runtime.json` (I/J/K re-run, retrieval fixed / answer abstains)**; prior `reports/repro/stage_bc_runtime.json` (stage_b); diagnostics `search_probe_b01.json`, `diag_capil01_facts.py`, `diag_hydration_valueerror.py`.
