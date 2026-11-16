@@ -8,7 +8,7 @@
 
 ## 1. SOP Processing Performance
 
-### Baseline (2 SOPs)
+### Baseline (2 SOPs — CAPIL_04, CAPIL_02)
 | Metric | Value |
 |---|---|
 | Total time | 132.3s |
@@ -28,6 +28,16 @@
 | PARTIAL | 70 |
 | FAILED | 27 |
 
+### Docling Worker Performance
+| Metric | Value |
+|---|---|
+| Avg extraction time | ~60-80s per SOP |
+| Pages per SOP | 2-6 |
+| Blocks per SOP | 100-500 |
+| Tables per SOP | 1-3 |
+| CPU threads | 1 (reduced from 2 for stability) |
+| Memory per extraction | ~500 MB |
+
 ## 2. Search Performance
 
 ### From Search Eval (160 queries, API endpoint)
@@ -43,7 +53,7 @@
 | Latency p95 | 261.7 ms |
 
 ### Search Latency Breakdown
-- First query: ~1000ms (model warmup)
+- First query: ~1000ms (IndoBERT model warmup)
 - Subsequent queries: ~200-300ms
 - IndoBERT embedding: ~50ms per query
 - SQLite vector search: ~10-50ms
@@ -78,27 +88,28 @@
 
 ## 5. Database
 
-| Table | Rows | Size |
-|---|---|---|
-| documents | 64 | |
-| chunks | 721 | |
-| knowledge_pipeline_runs | 175 | |
-| sop_review_events | 712 | |
-| document_extractions | 193 | |
-| **Total DB size** | | **55.3 MB** |
-| Source documents | 60 files | 54.6 MB |
+| Table | Rows |
+|---|---|
+| documents | 64 |
+| chunks | 721 |
+| knowledge_pipeline_runs | 175 |
+| sop_review_events | 712 |
+| document_extractions | 193 |
+| **Total DB size** | **55.3 MB** |
+| Source documents | 60 files, 54.6 MB |
 
 ## 6. Known Performance Issues
 
-1. **Docling extraction slow**: ~66s/SOP, CPU-bound (2 threads)
+1. **Docling extraction slow**: ~66s/SOP, CPU-bound (1 thread)
 2. **First query slow**: ~1000ms (IndoBERT model warmup)
 3. **Chat latency high**: 45-52s for LLM path (Gemma 2B generation)
 4. **Memory pressure**: Docling + Ollama together can exceed 8 GB
 5. **No concurrent testing**: ThreadPoolExecutor(max_workers=1) for Docling
+6. **No 10-SOP batch benchmark**: Only 2 SOPs measured
 
 ## 7. Recommendations
 
-1. Run perf_baseline.py on 10 SOPs for formal baseline
+1. Run perf_baseline.py on 10 new SOPs for formal baseline (only 1 unprocessed SOP available)
 2. Add psutil for peak RAM measurement
 3. Test concurrent requests (5-10 simultaneous)
 4. Document P50/P95 for search and chat
@@ -108,5 +119,6 @@
 
 ## 8. Commit
 
-- Performance report only, no code changes
-- perf_baseline.py exists but only tested on 5 already-processed SOPs
+- Performance report updated
+- perf_baseline.py exists but only tested on 5 already-processed SOPs (all DUPLICATE)
+- No new SOPs available for batch benchmark (41/42 processed)
