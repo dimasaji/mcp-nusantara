@@ -46,6 +46,12 @@ def create_workflow(knowledge_engine=None):
             path = Path(state.get('pdf_path', ''))
             if not path.exists():
                 return {**state, 'error_category': 'PERMANENT', 'quality_check': 'FAIL'}
+            if path.suffix.lower() not in ('.pdf', '.docx', '.txt', '.md', '.html', '.htm'):
+                return {**state, 'error_category': 'PERMANENT', 'quality_check': 'FAIL'}
+            if path.stat().st_size > 20 * 1024 * 1024:
+                return {**state, 'error_category': 'PERMANENT', 'quality_check': 'FAIL'}
+            if path.stat().st_size == 0:
+                return {**state, 'error_category': 'PERMANENT', 'quality_check': 'FAIL'}
             return {**state, 'quality_check': 'PASS'}
 
         def extract(state: SOPWorkflowState) -> SOPWorkflowState:
@@ -71,7 +77,7 @@ def create_workflow(knowledge_engine=None):
 
         def quality_check(state: SOPWorkflowState) -> SOPWorkflowState:
             status = state.get('extraction_status', '')
-            if status == 'COMPLETE':
+            if status in ('COMPLETE', 'PARTIAL'):
                 return {**state, 'quality_check': 'PASS'}
             return {**state, 'quality_check': 'FAIL'}
 
