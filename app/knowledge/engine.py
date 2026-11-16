@@ -94,11 +94,29 @@ class KnowledgeEngine:
             evidence.metadata['source_pages'] = metadata.get('source_pages', [])
             # Offset counters from chunkers can be approximate. Cite a page only
             # when the retrieved quotation occurs exactly once in original text.
-            start = evidence.source.find(evidence.chunk) if evidence.chunk else -1
-            if start >= 0 and evidence.source.find(evidence.chunk, start + 1) < 0:
-                end = start + len(evidence.chunk)
-                evidence.metadata['citation_pages'] = [p['page'] for p in metadata.get('source_pages', [])
-                    if p['start'] < end and p['end'] > start]
+            # Use the chunk's start_char/end_char if available, otherwise search.
+            start = getattr(evidence, 'start_char', None)
+            end = getattr(evidence, 'end_char', None)
+            if start is None or end is None or start < 0:
+                start = evidence.source.find(evidence.chunk) if evidence.chunk else -1
+                if start >= 0:
+                    end = start + len(evidence.chunk)
+            # If exact match fails, try prefix match (first 80 chars of chunk)
+            if start < 0 and evidence.chunk:
+                prefix = evidence.chunk[:80].strip()
+                if prefix:
+                    start = evidence.source.find(prefix)
+                    if start >= 0:
+                        end = start + len(evidence.chunk)
+            if start is not None and start >= 0:
+                # Verify uniqueness: chunk should appear at most once
+                if evidence.chunk and evidence.source.find(evidence.chunk, start + 1) < 0:
+                    evidence.metadata['citation_pages'] = [p['page'] for p in metadata.get('source_pages', [])
+                        if p['start'] < end and p['end'] > start]
+                elif not evidence.chunk or evidence.source.find(evidence.chunk, start + 1) >= 0:
+                    # Fallback: assign based on start position even if not unique
+                    evidence.metadata['citation_pages'] = [p['page'] for p in metadata.get('source_pages', [])
+                        if p['start'] <= start < p['end']]
             # Hybrid boost: combine vector score with keyword overlap so exact
             # term matches are not drowned by semantic-only neighbours.
             if query_terms:

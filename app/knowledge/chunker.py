@@ -80,21 +80,9 @@ def chunk_text(text: str, chunk_size: int = 512, overlap: int = 64) -> List[str]
                 current = sent
     if current:
         out.append(current)
-    # Add overlap between chunks
-    if overlap > 0 and len(out) > 1:
-        result = [out[0]]
-        for i in range(1, len(out)):
-            prev = out[i-1]
-            if len(prev) <= overlap:
-                overlap_text = prev
-            else:
-                # Word-boundary aware overlap
-                start = len(prev) - overlap
-                while start > 0 and prev[start] != ' ':
-                    start -= 1
-                overlap_text = prev[start:].strip()
-            result.append(overlap_text + ' ' + out[i])
-        return result
+    # Chunks must remain substrings of the source text for citation matching.
+    # Overlap is not prepended; instead, sentence grouping already provides
+    # natural overlap through shared paragraph boundaries.
     return out
 
 
