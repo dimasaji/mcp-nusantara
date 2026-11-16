@@ -435,6 +435,110 @@ and Browser E2E remain unverified, and the latency target is not met on build
 
 ---
 
+## G. Lanjutan 16 Nov 2026 (sore) — OCR GT, ground truth golden set, evaluasi retrieval offline
+
+Status kontrak tetap **PARTIAL**. Pekerjaan lanjutan hari ini (tanpa perubahan
+kode produksi, tanpa restart layanan operator, tanpa push):
+
+### G.1 Evaluasi OCR ground truth (5 SOP)
+
+`scripts/ocr_gt_batch_eval.py` menjalankan jalur ekstraksi live
+(`KnowledgeEngine._extract_pdf_pages`, pypdf + tesseract ind+eng) dan membandingkan
+header halaman 1 dengan transkripsi manual `reports/ocr_gt/*_gt.txt`.
+Sinyal kualitas = `header_mean_line_cer` (best-window match per baris GT;
+CER halaman-penuh vs GT header-only inflated by construction, hanya referensi).
+Hasil (`reports/ocr_gt/cer_wer_report.json`):
+
+| SOP | header_mean_line_cer | Catatan |
+|---|---|---|
+| CAPIL_01 | 0.0122 | header terbaca sangat baik |
+| CAPIL_02 | 0.0444 | baik |
+| CAPIL_04 | 0.1293 | cukup; beberapa sel header terpecah |
+| DAFDUK_01 | 0.0548 | baik |
+| DAFDUK_22 | 0.1852 | judul SOP tercampur teks dasar hukum (reading order) |
+
+Implikasi: kualitas OCR header bukan akar masalah Stage B; akar masalah tetap
+word-shattering blok isi (342 blok kata untuk CAPIL-01, §17 RCA). Teks OCR
+halaman 1 tersimpan di `reports/ocr_gt/*_page1_ocr.txt`.
+
+### G.2 Pengisian ground truth golden set enhanced (64 dokumen)
+
+`scripts/fill_golden_ground_truth.py` (read-only terhadap
+`data/knowledge/nusantara_knowledge.db`) mengisi `expected_answer` HANYA dengan
+kutipan verbatim `documents.source` + halaman dari payload
+`document_extractions` terbaru. Tanpa parafrase, tanpa fabrikasi.
+Hasil (`reports/golden_set_ground_truth_fill.json`):
+
+- **23 partial** — sebagian butir terverifikasi (mis. PIAK-03 `d9ae50f8`:
+  durasi "3 Hari Kerja" hal. 2 cocok dengan ground truth Stage A; biaya
+  benar-benar tidak ada → `must_abstain=true` terverifikasi).
+- **38 blocked_extraction** — ekstraksi word-shattered (>60% blok ≤2 kata);
+  ground truth tidak boleh ditebak; menunggu keputusan re-ekstraksi (PASAL 14).
+- **3 blocked_no_source** — sumber tidak tersaji.
+- Butir yang tidak ditemukan faktanya dibiarkan placeholder + tidak ditandai
+  verified; pertanyaan tier-C yang ternyata disebut sumbernya ditandai perlu
+  review manusia, bukan otomatis dibalik.
+
+Catatan: judul golden set sebagian berupa nama file mentah (`CAPIL_02.pdf`,
+`DAFDUK_24_new24.pdf`) — pertanyaan yang dibangun dari judul itu bukan queries
+pengguna realistis dan dipisahkan dalam metrik G.3.
+
+### G.3 Evaluasi retrieval offline golden set (tanpa LLM)
+
+`scripts/golden_set_retrieval_eval.py` — 40 pertanyaan terverifikasi non-abstain
+dari 23 dokumen, jalur `KnowledgeEngine.search_knowledge` (sama dengan
+`run_search_eval.py`), 0 error, median 283.6 ms
+(`reports/golden_set_retrieval_eval.json`):
+
+| Subset | n | p@1 | recall@5 |
+|---|---|---|---|
+| Semua | 40 | 0.40 | 0.625 |
+| Judul layanan asli | 27 | 0.519 | 0.778 |
+| Judul nama-file mentah | 13 | 0.154 | 0.308 |
+
+Kegagalan terkonsentrasi pada (a) pertanyaan berjudul nama-file, dan
+(b) duplikat PIAK-03 yang saling bersaing untuk judul layanan yang sama —
+konsisten dengan masalah retrieval-hygiene yang sudah tercatat (menunggu
+keputusan operator, rekomendasi #5). Ini lapisan retrieval saja; bukan bukti
+jawaban chat.
+
+### G.4 Kondisi runtime (diperbarui setelah otorisasi operator)
+
+- Operator mengotorisasi start layanan runtime lokal (16 Nov ~19:00 WIB).
+  Ollama lokal (`ollama/ollama.exe serve`) dan FastAPI
+  (`.venv uvicorn app.main:app --host 127.0.0.1 --port 8000`) dijalankan;
+  `/health` 200, build `sha256:719b0d18…` (sama dengan run Stage A 10/10
+  sebelumnya). Model freeze intact: `llama3.2:1b`, provider ollama, tanpa
+  pergantian model.
+- Port 5180 tetap dipegang proses node.exe (frontend Vite control-plane);
+  tidak disentuh.
+- **Peringatan artefak:** `good_changes.patch` di root adalah export commit
+  `d19925ea` yang justru MENGHAPUS 961 baris fix Defect F/G/I/J/K (157 insertions,
+  961 deletions) dan sudah di-reset keluar branch oleh operator. HEAD saat ini
+  (`d101fc4a`) memuat kode yang benar. **Jangan apply patch ini.**
+
+### G.4a Re-verifikasi Stage A runtime (16 Nov malam, build 719b0d18)
+
+`reports/repro/run_live_multiturn.py` dijalankan ulang terhadap backend hidup;
+bukti baru `reports/repro/stage_a_piak03_runtime.json` (run sebelumnya diarsipkan
+ke `stage_a_piak03_runtime_pre_20261116_evening.json`). Hasil: **10/10 PASS**,
+semua turn `evidence_fast_path`, grounded, top doc `d9ae50f8` (PIAK-03 asli):
+T01 "Siapkan Surat Permohonan." (29.7 s cold), T02/T08 "Menurut SOP: 3 Hari
+Kerja.", T03/T05/T07 abstain jujur, T04 prosedur 3 langkah, T09 reuse Path A
+(390 ms), T10 sitasi halaman 2 (361 ms). Konsisten dengan run 10/10 sebelumnya.
+
+### G.5 Yang masih menunggu
+
+1. Keputusan operator Stage B: **DITUNDA** (operator, 16 Nov) — re-ekstraksi
+   CAPIL-01 vs context-selection belum diotorisasi; Stage B tetap abstain jujur.
+2. Keputusan retrieval-hygiene duplikat PIAK-03 (PASAL 6) — masih menunggu.
+3. Stage C full batch 170 skenario + Browser E2E — belum dijalankan; RAM headroom
+   perlu dipantau.
+4. Target latensi <5 s: T01 cold 29.7 s; turn hangat 0.3–13.8 s — sebagian sudah
+   di bawah 5 s, cold-start belum; eksperimen konfigurasi menunggu otorisasi.
+
+---
+
 ## Deliverable index (PASAL 15)
 
 1. Runtime baseline — `reports/runtime_baseline.md` (P0).
@@ -447,3 +551,4 @@ and Browser E2E remain unverified, and the latency target is not met on build
 8. Active SOP report — `reports/repro/sop_inventory.json` (44 Aktif), `stage_bc_runtime.json` (stage_c).
 9. Speed / RAM metrics — §D, `reports/repro/ram_snapshot.json`; I/J/K regression `reports/repro/fullsuite_ijk.log` (89 failed, 1535 passed).
 10. Final PASS/PARTIAL/FAIL + recommendations — this report (**PARTIAL**).
+11. Lanjutan 16 Nov sore (§G) — `reports/ocr_gt/cer_wer_report.json` + `*_page1_ocr.txt`; `scripts/ocr_gt_batch_eval.py`; `scripts/fill_golden_ground_truth.py` + `reports/golden_set_ground_truth_fill.json` (64 golden set di `output/`); `scripts/golden_set_retrieval_eval.py` + `reports/golden_set_retrieval_eval.json`.
