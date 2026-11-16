@@ -60,6 +60,31 @@ class V1KnowledgeBoundary:
         return {item['document_id']: self._versions[item['document_id']]
                 for item in answer.get('evidence', [])}
 
+    def reuse_prior_citation(self, document_id):
+        """Re-bind a prior grounded citation for contextual reuse (PASAL 5/7).
+
+        Fail closed: the source must still be accessible now, and the CURRENT
+        version is recorded so validate_response keeps its version guarantee
+        even when this turn's retrieval returned no evidence.
+        """
+        if not self._operator or self._provider != 'ollama':
+            raise HTTPException(409, 'CHAT_SOURCE_ACCESS_CHANGED')
+        from app.knowledge.sop_review import SOPReview
+        review = SOPReview(self._engine)
+        if review.is_pilot(document_id):
+            detail = review.detail(document_id)
+            if self._review_trial:
+                if self._sop_version != detail['version_id']:
+                    raise HTTPException(409, 'CHAT_SOURCE_APPROVAL_OR_VERSION_CHANGED')
+            elif detail['status'] != 'Aktif':
+                raise HTTPException(409, 'CHAT_SOURCE_APPROVAL_OR_VERSION_CHANGED')
+            self._versions[document_id] = detail['version_id']
+            return
+        document = self._engine.rag.get_document_info(document_id)
+        if document is None:
+            raise HTTPException(409, 'CHAT_SOURCE_VERSION_UNAVAILABLE')
+        self._versions[document_id] = self._legacy_version(document)
+
     def document_answer_facts(self, question, evidence):
         """Approved document chat invokes the same registered core skill."""
         if self._review_trial:

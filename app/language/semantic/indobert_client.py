@@ -70,7 +70,12 @@ class IndoBERTClient:
             # Parent pipe encoding does not configure the child interpreter.
             # Windows otherwise decodes UTF-8 PDF text using its ANSI codepage,
             # which can create surrogates rejected by the tokenizer.
-            env={**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"},
+            # The worker is local/offline (cached model); ambient proxy vars
+            # (e.g. NO_PROXY=[::1]) crash huggingface_hub's import-time httpx
+            # client, so they must never reach the child (Defect C class).
+            env={key: value for key, value in
+                 {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}.items()
+                 if key.lower() not in {"http_proxy", "https_proxy", "all_proxy", "no_proxy"}},
             creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
         )
 

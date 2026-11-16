@@ -120,6 +120,47 @@ _CONTEXTUAL_FOLLOWUP = re.compile(
     re.IGNORECASE,
 )
 
+# Defect F (PASAL 5): general anaphora for non-facet/conditional follow-ups.
+_CONDITIONAL_FOLLOWUP = re.compile(
+    r"\b(?:kalau|kalo|jika|bila|apabila|seandainya|umpama)\b", re.IGNORECASE)
+_POSSESSIVE_FACET = re.compile(
+    r"\b(?:persyaratan|prosedur|biaya|waktu|pelaksana|syarat|alur|langkah|tarif|harga|dokumen|berkas|petugas)nya\b",
+    re.IGNORECASE)
+# Residual words that condition/modify the prior topic rather than name a new
+# service. A new-service hint ("akta kelahiran") must never restore prior scope.
+_FOLLOWUP_MODIFIERS = frozenset({
+    'kurang', 'tidak', 'lengkap', 'belum', 'kosong', 'salah', 'keliru', 'terlambat',
+    'lewat', 'batas', 'habis', 'ditolak', 'gagal', 'batal', 'cukup', 'lebih', 'telat',
+    'kadaluarsa', 'expired', 'dibayar', 'bayar', 'unggah', 'upload', 'jika', 'kalau',
+    'kalo', 'bila', 'apabila', 'seandainya', 'umpama', 'misal', 'misalnya', 'andaikan'})
+
+
+def _contextual_scope_followup(text: str, turn: dict) -> bool:
+    """Recognise a non-facet/conditional follow-up that refers to the prior SOP.
+
+    General anaphora only: an explicit reference marker, a possessive facet
+    ("-nya"), or a conditional whose residual hint is a modifier rather than a
+    new service name. Never restores scope for a new-service topic hint.
+    """
+    if _CONTEXTUAL_FOLLOWUP.search(text):
+        return True
+    hint_words = turn.get('topic_hint', '').split()
+    if hint_words and not all(w in _FOLLOWUP_MODIFIERS for w in hint_words):
+        return False
+    if _POSSESSIVE_FACET.search(text):
+        return True
+    return bool(turn.get('facet') and _CONDITIONAL_FOLLOWUP.search(text))
+
+
+# Defect F residual (PASAL 5/7): a recognised contextual follow-up asking for the
+# prior answer's citation or a simpler restatement reuses the last grounded answer
+# deterministically (Path A). General markers, not a PIAK-03-only rule.
+_CITATION_REQUEST = re.compile(
+    r"\b(?:halaman|sumber(?:nya)?|dari\s+mana|referensi|rujukan)\b", re.IGNORECASE)
+_SIMPLIFY_REQUEST = re.compile(
+    r"\b(?:lebih\s+sederhana|sederhana|disederhanakan|permudah|ringkas|ringkasan|jelaskan\s+lagi)\b",
+    re.IGNORECASE)
+
 
 def _contextual_followup(text: str, history: list[dict]) -> bool:
     """Allow anaphoric follow-ups only when this session has prior chat turns."""
@@ -326,7 +367,8 @@ class HermesAgent:
         problem = core['problem']
         initial_intent,_ = _extract_intent(_extract_understanding_data(understanding))
         turn=LanguageEngine.service_turn(request.user_input,previous.get('topic',''),initial_intent)
-        if not scoped_document_ids and previous.get('document_id') and turn['uses_context']:
+        if (not scoped_document_ids and previous.get('document_id')
+                and (turn['uses_context'] or _contextual_scope_followup(request.user_input, turn))):
             scoped_document_ids = [previous['document_id']]
             search_scope = {'filter': {'document_ids': scoped_document_ids}}
         repeated_text = _repeat_text(request.user_input)
@@ -807,6 +849,51 @@ class HermesAgent:
             trust_input=[{'relevance':facts['score']}]
             model_used=provider.model;latency_ms=int((time.perf_counter()-started)*1000)
 
+        elif (previous.get('last_answer') and scoped_document_ids
+              and _contextual_scope_followup(request.user_input, turn)
+              and (_CITATION_REQUEST.search(request.user_input)
+                   or _SIMPLIFY_REQUEST.search(request.user_input))):
+            # PASAL 7 Path A: reuse the last grounded answer for a citation or
+            # simplification follow-up. No re-retrieval, no LLM, no new facts.
+            from types import SimpleNamespace
+            from fastapi import HTTPException
+            snapshot = previous['last_answer']
+            reused_document_id = snapshot.get('document_id') or previous['document_id']
+            rebind = getattr(_knowledge, 'reuse_prior_citation', None)
+            try:
+                if rebind is None:
+                    raise HTTPException(409, 'CHAT_SOURCE_VERSION_UNAVAILABLE')
+                rebind(reused_document_id)
+            except HTTPException:
+                # The prior source cannot be re-validated this turn; abstain
+                # instead of emitting a citation the boundary cannot bind.
+                response_text = 'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.'
+                grounding_result = GroundingResult(response_text, False, 'no_evidence', [])
+                answer_evidence = []
+                model_status = 'local_rule'
+                model_used = provider.model
+                latency_ms = int((time.perf_counter() - started) * 1000)
+            else:
+                pages = [p for p in snapshot.get('pages', []) if isinstance(p, int)]
+                title = snapshot.get('title') or previous.get('title', '')
+                if _CITATION_REQUEST.search(request.user_input):
+                    response_text = (
+                        f"Informasi tersebut berasal dari {title}, halaman "
+                        + ", ".join(str(p) for p in pages) + "."
+                        if pages else f"Informasi tersebut berasal dari {title}.")
+                else:
+                    response_text = snapshot.get('text') or previous.get('topic', '')
+                grounding_result = GroundingResult(response_text, True, 'grounded', [])
+                answer_evidence = [SimpleNamespace(
+                    document_id=reused_document_id,
+                    title=title, source=snapshot.get('source', ''),
+                    chunk=snapshot.get('chunk', ''), score=snapshot.get('score', 0),
+                    metadata={'citation_pages': pages, 'block_ids': []})]
+                service_context = previous
+                model_status = 'evidence_fast_path'
+                model_used = provider.model
+                latency_ms = int((time.perf_counter() - started) * 1000)
+
         # ==============================================================
         # 7. OLLAMA / HERMES
         # ==============================================================
@@ -1193,6 +1280,25 @@ class HermesAgent:
         if grounding_result is not None:
             trust_assessment = _trust_engine.evaluate(
                 evidence=trust_input, claim=request.user_input, grounded=grounding_result.grounded)
+        # PASAL 5/7: persist a compact snapshot of the grounded answer so a
+        # recognised contextual follow-up (citation/simplification) can reuse it
+        # without re-retrieval. Keyed on document identity; general, not SOP-specific.
+        if (isinstance(service_context, dict) and service_context.get('document_id')
+                and grounding_result is not None and grounding_result.grounded
+                and answer_evidence):
+            _top = answer_evidence[0]
+            _get = ((lambda k, d=None: _top.get(k, d)) if isinstance(_top, dict)
+                    else (lambda k, d=None: getattr(_top, k, d)))
+            _pages = (_get('metadata', {}) or {}).get('citation_pages') or []
+            service_context = {**service_context, 'last_answer': {
+                'text': response_text,
+                'pages': [p for p in _pages if isinstance(p, int)],
+                'title': _get('title', '') or service_context.get('title', ''),
+                'document_id': service_context['document_id'],
+                'source': str(_get('source', '') or '')[:2000],
+                'chunk': str(_get('chunk', '') or '')[:1000],
+                'score': _get('score', 0),
+            }}
         remember_kwargs={'session_id':request.session_id,'response':response_text}
         if service_context is not None:remember_kwargs['service_context']=service_context
         await _run_sync_v1(_gate_integration.remember_response, **remember_kwargs)

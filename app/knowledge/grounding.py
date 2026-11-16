@@ -82,6 +82,41 @@ def _who_absence_fact(item: Any) -> dict | None:
             'proof':[{'title':get('title'),'chunk':full,'score':get('score',0)}],'table_derived':True}
 
 
+def _conditional_absence(turn: dict, evidence: Any, previous: dict | None) -> dict | None:
+    """Path C: a hypothetical/conditional follow-up is not stated by the SOP.
+
+    Abstain with a citation instead of answering a facet cell or inventing a
+    policy. General — fires for any validated SOP table, never service-specific.
+    Only used when a prior SOP scope was restored (a follow-up, not a first turn).
+    """
+    previous = previous or {}
+    matches = []
+    for item in evidence or []:
+        get = lambda key, default='': item.get(key, default) if isinstance(item, dict) else getattr(item, key, default)
+        if not (get('metadata', {}) or {}).get('sop_rows'):
+            continue
+        identifier = get('document_id')
+        if not identifier or identifier != previous.get('document_id'):
+            continue
+        matches.append(item)
+    if len(matches) != 1:
+        return None
+    item = matches[0]
+    get = lambda key, default='': item.get(key, default) if isinstance(item, dict) else getattr(item, key, default)
+    metadata = get('metadata', {}) or {}
+    rows = metadata.get('sop_rows', [])
+    full = metadata.get('full_document_text', '') or str(get('source') or get('chunk'))
+    if not full:
+        return None
+    return {'topic': get('title'), 'title': get('title'), 'document_id': get('document_id'),
+            'source': full, 'quote': full, 'rewrite_quote': full,
+            'fallback': 'Informasi ketentuan belum tercantum dalam SOP ini.',
+            'facet': turn['facet'], 'unknown': True, 'score': get('score', 0),
+            'pages': sorted({row['page'] for row in rows}),
+            'proof': [{'title': get('title'), 'chunk': full, 'score': get('score', 0)}],
+            'table_derived': True}
+
+
 def service_answer_facts(turn: dict, evidence: Any, previous: dict | None = None) -> dict | None:
     """Select one service and one aspect from current evidence, not model memory.
 
@@ -89,6 +124,10 @@ def service_answer_facts(turn: dict, evidence: Any, previous: dict | None = None
     or a duration from a service name, and never mix requirements across services.
     """
     if not turn.get('facet'): return None
+    if turn.get('conditional') and (previous or {}).get('document_id'):
+        abstention = _conditional_absence(turn, evidence, previous)
+        if abstention is not None:
+            return abstention
     from .pdf_sop import table_facts
     selected_table = table_facts(turn, evidence)
     if selected_table is not None:

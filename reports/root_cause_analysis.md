@@ -309,6 +309,191 @@ model reload per request; worker stays resident.
   no paid API, no new service/UI/DB.
 - Acceptance: **PARTIAL** (Stage A 7/10; Stage B/C and metrics in the acceptance
   report). NOT production-ready; PASAL 11 full pass requires 100% golden set.
-- Defect E code (engine.py, agent.py, grounding.py + facet tests) is applied in the
-  working tree, NOT yet committed — the prior commit authorization covered only the
-  A/B/C/D bundle (61ffd389). Committing E requires fresh operator confirmation.
+- Defect E code (engine.py, agent.py, grounding.py + facet tests): COMMITTED as
+  `5fe714f0` (operator-authorized "Commit E (no push)"); A/B/C/D bundle is `61ffd389`.
+  Not pushed.
+
+## 13. Defect F — conversational/meta follow-ups drop SOP scope (CORE FIXED; T09/T10 residual)
+
+The 3 residual Stage A failures (T07/T09/T10) are NOT service facets; they are
+conversational/meta follow-ups. Root cause (code-traced, `app/hermes/agent.py`):
+
+- Scope restoration (L329-331) is gated on `turn['uses_context']`, which requires a
+  service facet (`engine.py:504`). A non-facet follow-up never restores the prior SOP
+  scope even when `previous['document_id']` exists.
+- **T09** "Bisa dijelaskan lebih sederhana?" and **T10** "Dari halaman berapa informasi
+  tersebut?" match `_CONTEXTUAL_FOLLOWUP` (L118: "lebih sederhana", "tersebut"), so
+  L351-353 sets `conversation=False` — but `scoped_document_ids` stays `[]` (L329 not
+  triggered) → unscoped retrieval → `ev=0` → general ollama abstention. Recognised as a
+  follow-up, yet the scope is dropped.
+- **T07** "Kalau persyaratannya kurang?" → `facet=requirements`, but the conditional
+  modifier "kurang" leaves `topic_hint={'kurang'}` → `uses_context=False`; and
+  `_CONTEXTUAL_FOLLOWUP` does not match conditionals → scope not restored → unscoped →
+  `ev=0` → abstention.
+
+Runtime evidence (`stage_a_piak03_runtime.json`): T07/T09/T10 all `provider_status=ollama`,
+`grounded=False`, `ev=0`, safe abstention (no fabrication). `previous.document_id` is
+`d9ae50f8` (restored by T08), so the identity EXISTS but is not re-used for these turns.
+This is contract problem #1/#2 on the residual conversational turns (PASAL 5).
+
+Minimal GENERAL fix proposal (no model change, no PIAK-03-only rule — PASAL 3.7/14):
+1. Restore prior SOP scope for a recognised contextual follow-up even without a facet:
+   extend L329 to also fire when `previous['document_id']` and
+   `_CONTEXTUAL_FOLLOWUP.search(user_input)` (T09/T10). Scoped retrieval then returns the
+   prior SOP evidence; VERIFY the general path answers the citation/simplification
+   grounded (a small citation/rephrase fast-path may still be needed — restoring scope is
+   the necessary first step, not proven sufficient).
+2. Recognise conditional follow-ups ("kalau/jika … kurang/tidak lengkap") as
+   context-bearing (T07), restoring scope. The SOP does not state the conditional, so the
+   correct outcome is a GROUNDED abstention (ev>0, cited), never a fabricated policy.
+   Higher risk; needs careful grounding tests (PASAL 7 Path C).
+
+Operator authorized "Authorize + implement F" (this session). Implemented as a
+minimal GENERAL fix (no model/embedding change, no PIAK-03-only rule — PASAL 3.7/14):
+- `app/language/engine.py` `service_turn`: add a general `conditional` flag
+  (kalau/kalo/jika/bila/apabila/seandainya/umpama/misal).
+- `app/hermes/agent.py`: `_contextual_scope_followup()` recognises anaphoric
+  (`_CONTEXTUAL_FOLLOWUP`), possessive-facet ("-nya"), and conditional follow-ups
+  whose residual hint is a modifier (not a new service name); the scope-restoration
+  gate (L329) now also fires for these, so the prior SOP scope is restored. A
+  new-service hint ("akta kelahiran") never restores prior scope (PASAL 5 switch).
+- `app/knowledge/grounding.py`: `_conditional_absence()` — Path C cited abstention
+  for a conditional follow-up on a validated SOP table ("Informasi ketentuan belum
+  tercantum dalam SOP ini."), never a facet cell or invented policy.
+
+TDD: `tests/test_hermes_v1_contextual_followup.py` (12 tests, RED→GREEN, generic
+fixtures). Focused suites 113/113 green; broad scope 41 failed = identical
+pre-existing HEAD set, zero failures in F-changed areas, +12 new tests pass.
+
+## 14. Defect F runtime results (real llama3.2:1b, warm worker, build 53b6d3c0)
+
+`reports/repro/stage_a_piak03_runtime.json` regenerated, backend pid 17780, build
+`sha256:53b6d3c053a436f2a05e3ecf48e15a729298de9651a967984ab08a4b1f4cebba`.
+
+**Stage A 7/10 → 8/10.** T07 "Kalau persyaratannya kurang?" now PASS:
+`evidence_fast_path`, grounded=True, ev=1, doc d9ae50f8, cited abstention
+"Informasi ketentuan belum tercantum dalam SOP ini." T01–T08 all grounded with the
+correct SOP + page citations; **0 unsupported factual claims**.
+
+Residual T09/T10 (still FAIL, safe): scope IS restored (scoped_document_ids=
+[d9ae50f8]) but the contextual re-retrieval query (prior question + current
+message) returns ev=0 → the scoped-no-evidence `local_rule` branch (agent.py:846)
+abstains "Informasi tersebut tidak ditemukan dalam dokumen yang dipilih."
+Restoring scope is necessary but NOT sufficient: a simplification (T09) or page
+citation (T10) must be answered from the PRIOR turn's evidence, not a fresh
+retrieval. Next step (further extension, needs authorization): reuse the prior
+SOP evidence for a recognised contextual follow-up and add a grounded
+citation/rephrase fast-path. The 1B model's ability to produce a grounded
+simplification/citation is unverified; not claimed as fixed.
+
+## 15. Defect F residual — prior-answer reuse IMPLEMENTED (test-layer verified; runtime PENDING)
+
+The §14 next step is now coded under the operator's "Authorize + implement F"
+(T09/T10 are part of F). Minimal, general change in `app/hermes/agent.py` only:
+
+1. **Grounded-answer snapshot persistence** (before `remember_response`, ~L1276):
+   when a turn produces a grounded answer with evidence and a `document_id`,
+   `service_context` gains a compact `last_answer` {text, pages, title, document_id,
+   source[:2000], chunk[:1000], score}. Keyed on document identity — not SOP-specific.
+2. **Deterministic Path-A reuse fast-path** (~L852, before the scoped-no-evidence
+   `local_rule` branch): for a recognised contextual follow-up
+   (`_contextual_scope_followup`) with restored scope AND a prior `last_answer`,
+   a citation request (`_CITATION_REQUEST`: halaman/sumber/dari mana/referensi/rujukan)
+   answers "Informasi tersebut berasal dari {title}, halaman {pages}." and a
+   simplification request (`_SIMPLIFY_REQUEST`: lebih sederhana/ringkas/…) reuses the
+   prior grounded answer text. No re-retrieval, no LLM, no new facts; grounded=True,
+   `evidence_fast_path`, citation evidence reconstructed from the snapshot.
+
+This directly removes the §14 ev=0 dead-end: T09/T10 no longer depend on a fresh
+contextual re-retrieval. General markers; a new-service hint still never restores
+prior scope (guard test retained). No model/embedding/architecture change.
+
+**Test-layer evidence (PASAL 10 A/B):**
+- Focused: `tests/test_hermes_v1_contextual_followup.py` + context persistence/
+  preservation = **20 passed** (0.90 s), including 3 new reuse tests
+  (simplification reuses prior text; citation reuses prior pages [2,3]; no prior
+  answer ⇒ no fabricated citation). File total 12 → **15 green**.
+- Full suite: **92 failed, 1518 passed, 9 skipped, 2 errors** (223 s). Normalized
+  FAILED-set `comm` vs the prior full-suite baseline `reports/repro/full_suite_e2.log`
+  (92 failed, 1503 passed): **identical 92 = 92, zero only-in-baseline, zero
+  only-in-current**. The +15 passed are exactly the new contextual-followup tests.
+  **Attribution: ZERO new regressions from F core + residual.** Log:
+  `reports/repro/regression_F_residual.log`.
+
+**Runtime status: PENDING / BLOCKED (honest, PASAL 3.9).** The live backend
+(pid 17780, build `sha256:53b6d3c0…`) loads code once at import and still runs the
+F-core build, NOT this residual edit. Re-verifying T09/T10 against real llama3.2:1b
+requires restarting that backend; the operator **declined** the restart this pass,
+so no runtime re-run was performed. T09/T10 are therefore proven at the test layer
+only and are **NOT claimed as runtime PASS**. Stage A runtime remains **8/10** until
+a restart + Stage A re-run confirms the reuse path end-to-end. F (core + residual)
+remains **uncommitted** (implementation authorized; commit not authorized).
+
+## 16. Defect F residual — runtime 409 diagnosed + fixed; Stage A 10/10 (real runtime)
+
+Supersedes §15's "runtime PENDING". The operator's "Jalankan semua yang belum
+selesai" authorized the restart + re-run. Two distinct runtime defects surfaced
+and were fixed minimally (TDD RED→GREEN for each):
+
+**Defect G — reuse citation not bound by the knowledge boundary (HTTP 409).**
+First restart (build `03f05cb8`): T01–T08 PASS, but T09/T10 returned **HTTP 409**
+(~230 ms). Diagnosis (no traceback; route-level): persisted history for session
+`web-51ffd922…` shows both turns reserved `NEW` then `FAILED HTTP_409_UNKNOWN`
+(`reports/repro/hist_51ffd922.json`) ⇒ the 409 was raised DURING processing, not
+by the idempotency gate. Source: `routes.py:1328 knowledge.validate_response(public)`
+→ `v1_knowledge.py` `CHAT_SOURCE_VERSION_UNAVAILABLE`: the reuse fast-path cited
+the prior SOP although this turn's scoped re-retrieval returned ev=0, so the
+boundary's retrieval-time `_versions` map had no entry for the cited document.
+The §15 reuse path was functionally right but violated the boundary's
+fail-closed version guarantee.
+
+Fix (general, security-preserving):
+- `app/security/v1_knowledge.py`: new `V1KnowledgeBoundary.reuse_prior_citation(document_id)`
+  — re-validates the source NOW (operator + local ollama; pilot ⇒ status Aktif /
+  trial version match; non-pilot ⇒ document exists) and records the CURRENT
+  version, so `validate_response` keeps its guarantee. Missing/inactive source ⇒
+  409 (fail closed).
+- `app/hermes/agent.py` reuse branch: calls the rebind BEFORE emitting the reused
+  citation; on rejection falls back to the safe scoped `local_rule` abstention
+  (no unbound citation ever leaves the agent).
+- Tests: `tests/test_v1_knowledge_reuse_rebind.py` (4: bind+validate, missing
+  source 409, operator/local-model guard, source-change detection) and 2 new
+  agent tests (ev=0 follow-up + successful rebind ⇒ reuse fires; rejected rebind
+  ⇒ abstain, no evidence, `local_rule`). Harnesses gained a rebind stub.
+
+**Defect H — worker subprocess inherits ambient proxy env (Defect C class).**
+After the G fix, warmup still failed (503, embedding RuntimeError). The backend
+hides worker stderr (DEVNULL); direct worker diagnostic
+(`reports/repro/diag_worker_stderr.py`) captured the real crash: at import time
+`huggingface_hub` builds a global httpx client that parses ambient
+`NO_PROXY=localhost,…,[::1],::1` → `httpx.InvalidURL: Invalid port: ':1]'`.
+The worker died before loading the model; every embedding failed.
+Fix: `app/language/semantic/indobert_client.py` `start()` strips all proxy
+variables (HTTP(S)_PROXY/ALL_PROXY/NO_PROXY, both cases) from the child env —
+the worker is local/offline with a cached model and never needs them.
+Test: `tests/test_indobert_worker_proxy_env.py` (spawn-env capture). No model,
+embedding-dimension, or architecture change.
+
+**Runtime proof (PASAL 10 layer C — real Ollama llama3.2:1b, warm worker).**
+Backend build `sha256:f86b1318…` (pid 18552), probe 200/ev=1/d9ae50f8, then
+Stage A re-run (`reports/repro/stage_a_piak03_runtime.json`, session in file;
+log `reports/repro/backend_f_rebind2.log`): **10/10 PASS**, all turns grounded,
+ev=1, doc d9ae50f8, **0 unsupported claims**, all POST 200, 0 tracebacks/409/500.
+- T09 "Bisa dijelaskan lebih sederhana?" → `evidence_fast_path`, reuses the prior
+  grounded answer ("Menurut SOP: 3 Hari Kerja."), 144 ms, no LLM, no new facts.
+- T10 "Dari halaman berapa informasi tersebut?" → "Informasi tersebut berasal
+  dari PERMOHONAN DATA PRIBADI, halaman 2.", 153 ms, correct SOP + page citation.
+Progression: 2/10 → 4/10 → 7/10 → 8/10 → **10/10**.
+
+**Regression (PASAL 10 layer B):** final clean full suite after G+H
+(`reports/repro/regression_F_rebind.log`, Ollama running, single run):
+**89 failed, 1527 passed, 10 skipped, 2 errors** (224.7 s) vs identical-scope
+HEAD baseline (`full_suite_e2.log`, 92 failed). Normalized FAILED-set `comm`:
+**zero only-in-current**; 3 only-in-baseline
+(`test_pdf_approval_activates_operator_retrieval_without_manual_chat`,
+`test_create_retriever`, `test_knowledge_search_still_works`) — the langchain
+pair is the documented ordering-flaky one (passes in isolation). **ZERO new
+regressions from F+G+H.** Two earlier full-suite attempts were killed mid-run
+by host RAM saturation / concurrent orphaned pytest trees sharing one log
+(logs truncated, no summary) — not test failures; the successful run was
+executed with the backend temporarily stopped to free RAM.

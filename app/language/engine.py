@@ -504,6 +504,7 @@ class LanguageEngine:
         ambiguous=not facet and not hint and bool(previous_topic)
         channel=re.search(r'\b(?:online|daring|internet|website|aplikasi|offline|langsung)\b',normalized)
         return {'facet':facet,'channel':channel[0] if channel else '', 'topic_hint':hint,'topic':topic,'uses_context':bool(facet and not hint and previous_topic),
+                'conditional':bool(re.search(r'\b(?:kalau|kalo|jika|bila|apabila|seandainya|umpama|misal(?:nya)?)\b',normalized)),
                 'detailed':bool(re.search(r'\b(?:rinci|detail|lengkap|semua|seluruh)\b',normalized)),
                 'needs_clarification':bool(facet and not topic) or ambiguous,
                 'query':f'{prefixes[facet]} {topic}'.strip() if facet and topic else text}

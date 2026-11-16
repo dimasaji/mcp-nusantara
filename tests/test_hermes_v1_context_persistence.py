@@ -55,7 +55,8 @@ def _parts(answer="Silakan siapkan KTP-el dan Kartu Keluarga.", intent="ask_docu
         return fn(*args, **kwargs)
 
     projector, helpers = projection_and_helpers()
-    services = {"knowledge": SimpleNamespace(search_knowledge=search),
+    services = {"knowledge": SimpleNamespace(search_knowledge=search,
+                                             reuse_prior_citation=lambda document_id: None),
                 "gates": gates, "trust": TrustEngine(), "grounding": EvidenceGroundingGuard(),
                 "developer_core": SimpleNamespace(runtime_snapshot=lambda **kwargs: {}),
                 "run_sync": run_sync, "helpers": helpers}
