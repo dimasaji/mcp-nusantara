@@ -139,11 +139,7 @@ class KnowledgeEngine:
         # Use a threshold of 0.40 to remove low-confidence matches while keeping
         # relevant documents.  This improves precision by reducing the number of
         # irrelevant results in the top-K.
-        # Contentless evidence (no quotable chunk) cannot ground an answer (PASAL 7);
-        # exclude it so an empty Aktif stub never wins top grounding via title boost.
-        filtered = [e for e in result.evidence_pack.evidence
-                    if float(getattr(e, 'score', 0.0) or 0.0) >= 0.50
-                    and (getattr(e, 'chunk', '') or '').strip()]
+        filtered = [e for e in result.evidence_pack.evidence if float(getattr(e, 'score', 0.0) or 0.0) >= 0.50]
         # Document-level grouping: keep only the best chunk per document so one
         # document cannot occupy many result positions.
         best = {}

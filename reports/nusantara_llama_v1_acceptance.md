@@ -25,7 +25,8 @@ Conclusion: **PARTIAL** (see §F). NOT production-ready. No automatic model chan
 Model freeze intact (PASAL 2): no model swap, no OpenRouter/paid API, no large
 download, no embedding change. Architecture intact (PASAL 3): no new
 service/UI/DB; only the genuine PIAK-03 SOP `…d9ae50f8` was approved
-(operator-authorized, prior session); empty Aktif stub `…75d5b40d` left untouched.
+(operator-authorized, prior session); Aktif duplicate `…75d5b40d` left untouched
+(no unauthorized status/source/data change).
 
 ---
 
@@ -158,10 +159,16 @@ truth is not available for the whole corpus). Titles in inventory are truncated.
 The 29 error responses coincide with backend 503/504 (retrieval-unavailable /
 stage-timeout) under sequential batch load on a RAM-saturated host — a
 runtime/performance stability finding (problem #5), not a code regression (§E).
-Among evidence-bearing rows, wrong top documents include the empty Aktif stub
-`…75d5b40d` and `…155ba1e4f` acting as attractors (problem #3). Methodology caveat:
+Among evidence-bearing rows, wrong top documents include the Aktif duplicate
+`…75d5b40d` and `…155ba1e4f` acting as attractors (problem #3). **CORRECTION
+(2026-11-16):** `…75d5b40d` is NOT an empty/contentless stub — direct DB inspection
+shows a 947-char content-bearing PIAK-03 text summary (`blocks=[]` but synthesized
+`text`), a duplicate of genuine `d9ae50f8`. The attractor is generic keyword title
+boost on a duplicate doc, not contentless evidence; the `b9cb44ae` empty-chunk
+filter was a no-op (runtime probe: stub still top-1, `grounded=False`) and was
+**REVERTED** (see root_cause_analysis.md §3a). Methodology caveat:
 the fixed "Apa persyaratan <truncated title>?" template and the duplicate
-"PERMOHONAN DATA PRIBADI" entries (genuine `d9ae50f8` vs empty stub `75d5b40d`)
+"PERMOHONAN DATA PRIBADI" entries (genuine `d9ae50f8` vs text-only duplicate `75d5b40d`)
 make precision@1 a harsh probe; it measures retrieval availability, not answer
 accuracy. **Stage C = PARTIAL inventory + smoke; full 170-scenario batch NOT executed.**
 
@@ -172,8 +179,8 @@ accuracy. **Stage C = PARTIAL inventory + smoke; full 170-scenario batch NOT exe
 | Category | Findings |
 |---|---|
 | **Context resolution error** | Defect D (FIXED): conversation-classified follow-up stored `{}`, shadowing prior SOP identity (`memory/engine.py:187`); fixed at `agent.py:540-543`. Defect E (FIXED): "Biayanya?" (T03→cost), "Siapa yang menangani?" (T05→who), "Berapa hari kerjanya?" (T08→duration) now recognised as facets → `uses_context=True` → scope restored → fast path. Defect F (FIXED): non-facet follow-ups — conditional T07, simplification T09, page-citation T10 — restore prior SOP scope via `_contextual_scope_followup()`; T09/T10 reuse the prior grounded answer through Path A with fail-closed source rebind (Defect G). All 9 Stage A follow-ups now correct. |
-| **Retrieval error** | **Defect I (FIXED):** the boundary searched each 20-doc batch with `top_k=limit`, so the engine cut by RAW hybrid rank BEFORE applying the title/keyword boost — an exact-service-title match below its batch cutoff never got the boost that would rank it first overall. CAPIL-01 B01 previously retrieved a KK doc; with the wider window (`max(limit*4,20)`) CAPIL-01 `f9ad8a5d` is now **top #1 (score 1.0)**. **Tie-break (FIXED):** widening alone let partial-title `a926fcf9` outrank exact-title `d9ae50f8` (both saturate at boosted 1.0, merge sorted by score only → batch order decided); merge key is now `(score, metadata.hybrid_score)` so the perfect-lexical exact title wins — Stage A restored to 10/10. Stage C precision@1 4/44 (prior smoke, not re-measured after I); empty stub `75d5b40d` and `155ba1e4f` still attract unrelated queries (problem #3, retrieval hygiene task). |
-| **Extraction/source error** | **CAPIL-01 OCR word-shattering (root cause of Stage B abstention, NOT a code defect):** the PDF was extracted into 342 word-level blocks (`sop_rows=0`); `select_blocks` picks 29 fragmented keyword blocks and omits 281 carrying the requirements prose, so no clean "Persyaratan X: Y" line exists → `document_answer_facts` returns None → honest Path C abstention. Fixing needs CAPIL-01 re-extraction or a context-selection/LLM-path change (PASAL 14 stop-and-ask). Empty Aktif stub `…75d5b40d` (source_len 61, empty chunk) ranks first via exact-title boost. Genuine PIAK-03 `d9ae50f8` extraction is good (15 rows, 2 pages) but carries no per-row actor and no Biaya column. **Defect K (FIXED):** 7 of 44 Aktif pilots fail hydration (1 ValueError oversized-block, 6 DOCUMENT_EXTRACTION_PARTIAL 409); previously one unreadable pilot aborted the entire general search (503/409) — now skipped per-document so readable evidence still answers. |
+| **Retrieval error** | **Defect I (FIXED):** the boundary searched each 20-doc batch with `top_k=limit`, so the engine cut by RAW hybrid rank BEFORE applying the title/keyword boost — an exact-service-title match below its batch cutoff never got the boost that would rank it first overall. CAPIL-01 B01 previously retrieved a KK doc; with the wider window (`max(limit*4,20)`) CAPIL-01 `f9ad8a5d` is now **top #1 (score 1.0)**. **Tie-break (FIXED):** widening alone let partial-title `a926fcf9` outrank exact-title `d9ae50f8` (both saturate at boosted 1.0, merge sorted by score only → batch order decided); merge key is now `(score, metadata.hybrid_score)` so the perfect-lexical exact title wins — Stage A restored to 10/10. Stage C precision@1 4/44 (prior smoke, not re-measured after I); text-only duplicate `75d5b40d` and `155ba1e4f` still attract unrelated queries via generic keyword title boost (problem #3; see §3a correction — NOT contentless evidence, `b9cb44ae` filter reverted). |
+| **Extraction/source error** | **CAPIL-01 OCR word-shattering (root cause of Stage B abstention, NOT a code defect):** the PDF was extracted into 342 word-level blocks (`sop_rows=0`); `select_blocks` picks 29 fragmented keyword blocks and omits 281 carrying the requirements prose, so no clean "Persyaratan X: Y" line exists → `document_answer_facts` returns None → honest Path C abstention. Fixing needs CAPIL-01 re-extraction or a context-selection/LLM-path change (PASAL 14 stop-and-ask). Aktif duplicate `…75d5b40d` (`blocks=[]`, but a 947-char synthesized text summary — content-bearing, NOT empty) ranks first via generic keyword title boost. Genuine PIAK-03 `d9ae50f8` extraction is good (15 rows, 2 pages) but carries no per-row actor and no Biaya column. **Defect K (FIXED):** 7 of 44 Aktif pilots fail hydration (1 ValueError oversized-block, 6 DOCUMENT_EXTRACTION_PARTIAL 409); previously one unreadable pilot aborted the entire general search (503/409) — now skipped per-document so readable evidence still answers. |
 | **Generation error** | RESOLVED for all Stage A turns: pre-E unscoped echoes/fabrications (T05 "User: …", T07 "Tidak.", T08 ungrounded "3 hari") are gone — T05/T08 grounded fast-path, T07 cited Path C abstention (Defect F), T09/T10 deterministic Path-A reuse of the prior grounded answer/citation (Defect F+G, no LLM, no new facts). **Defect J (FIXED):** the last-resort recovery no longer returns a rendered context-selection block dump ("Konteks bagian terpilih; N blok lain…") as a self-validated "answer" — Stage B B02–B05 now abstain honestly instead of dumping model context. **Unsupported factual claims: 0.** |
 | **Citation error** | T03/T05/T07 Path C abstentions carry a citation (d9ae50f8 p1+2, ev=1). Fast-path citations correct for T01 (p1), T02/T08 (p2), T04 (p1+2), T06 (p1). T10 (page-citation follow-up) FIXED: re-cites the prior answer's page (p2) via the re-bound `last_answer` snapshot — 10/10 correct document + page. Minor residual: T09/T10 `trust.evidence_count=0` projection lag (see §B caveat); final evidence list is correct. |
 | **Runtime/performance error** | Stage A re-verified on build `719b0d18` (I/J/K): 10/10 grounded, but non-LLM **p95 ≈ 11.0 s** (T04 procedure 11008 ms, T01 7653 ms) — **ABOVE** the PASAL 11 p95<5 s target, vs ≈3.9 s on the prior `f86b1318` run. The wider candidate window (`max(limit*4,20)` per batch, Defect I) increases retrieval cost; host RAM variable. **Accuracy target MET, latency target NOT met on this build/run** (problem #5). REMAINING: Stage C 29/44 errors (503/504) under sequential batch load on a RAM-saturated host (prior smoke); IndoBERT cold load ~30.6 s > 30 s stage timeout (warm-up required); frontend dev server HTTP-unresponsive under memory pressure → Browser E2E BLOCKED. Batch-load p95 not re-measured this pass; the window-widening latency cost needs a dedicated 8 GB measurement (PASAL 8 config experiments, not applied). |
@@ -375,10 +382,12 @@ Gap yang tersisa (honest):
   smoke (p@1 4/44, grounded 2/44, 29/44 errors under RAM-saturated batch load),
   not re-measured after Defect I. Per-SOP ground truth for the 44 Aktif SOPs is
   not yet captured; 7 of 44 pilots fail hydration (now skipped by K).
-- **Retrieval precision** poor corpus-wide; empty Aktif stub `75d5b40d` and
-  `155ba1e4f` act as attractors; duplicate/synthesized PIAK-03 entries
+- **Retrieval precision** poor corpus-wide; text-only Aktif duplicate `75d5b40d`
+  (content-bearing, NOT empty — see §3a correction) and `155ba1e4f` act as
+  attractors via generic keyword title boost; duplicate/synthesized PIAK-03 entries
   (`sop_e4d43334`, `0e63a46b` .txt) compete with the genuine `d9ae50f8`
-  (problem #3, retrieval hygiene task — no deletion, PASAL 3.8/13).
+  (problem #3 — fix needs ranking/duplicate decision + authorization, no deletion,
+  PASAL 3.8/13; the `b9cb44ae` contentless filter was reverted as a no-op).
 - **RAM/performance at batch scale** (problem #5): host saturated (0.07 GB free
   in prior measurements), IndoBERT cold load >30 s stage timeout, Stage C 29/44
   errors under sequential batch load; batch p95/stability unverified.
@@ -400,10 +409,15 @@ Rekomendasi (tanpa pergantian model otomatis, PASAL 14):
 4. **Stage C ground truth + full batch** — capture verified per-SOP ground truth
    and adequate extraction, then run the full 170-scenario batch on a warmed
    backend; re-measure p@1 after Defect I.
-5. **Retrieval hygiene** — exclude contentless evidence so the empty Aktif stub
-   `75d5b40d` can never be cited as top grounding (general, data-free); investigate
-   title-boost attractors and duplicate PIAK-03 entries. Do NOT mass-reindex before
-   cause proven (PASAL 6.9); do NOT delete SOPs (PASAL 3.8/13).
+5. **Retrieval hygiene (CORRECTED — operator decision needed)** — the "exclude
+   contentless stub" premise was disproven (§3a): `75d5b40d` is a content-bearing
+   text-only duplicate, and the `b9cb44ae` empty-chunk filter was a no-op (reverted).
+   The real attractor is generic keyword title boost (`0.40 × title_overlap`) on
+   duplicate PIAK-03 entries. Candidate fixes — down-weight generic-term title
+   overlap, or retire the redundant UNVERIFIED duplicate — touch PASAL 6 ranking
+   policy and/or SOP data and risk Stage A regression, so they need operator
+   authorization + focused regression. Do NOT mass-reindex before cause proven
+   (PASAL 6.9); do NOT delete SOPs or change approval status (PASAL 3.8/13).
 6. **RAM/perf at batch scale + window-widening latency cost** — measure on a
    dedicated 8 GB runtime (close co-resident apps, operator action); consider a
    smaller candidate window or `num_ctx` 2048 / `num_predict` 128–256 experiments

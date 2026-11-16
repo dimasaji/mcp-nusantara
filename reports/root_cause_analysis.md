@@ -18,10 +18,13 @@ Session `web-0ba54109-b54c-4092-90dc-929b1674195d`, operator GENERAL chat (no SO
 | T04 | Bagaimana prosedurnya? | none | local_rule | "Layanan apa yang Anda maksud?" | 164 ms |
 
 CORRECTION (proven by `reports/repro/diag_defect_b.py` + `diag_piak03_docs.py`,
-13 Nov 2026): the score-1.0 top hit `…75d5b40d` is an **empty stub**, NOT the right
+13 Nov 2026) **[SUPERSEDED by §3a (2026-11-16): the "empty stub" label was wrong —
+`…75d5b40d` is a content-bearing text-only duplicate; see §3a]**: the score-1.0 top
+hit `…75d5b40d` is a duplicate, NOT the right
 document. Retrieval ranks it first only because of the exact-title boost
-(`engine.py:117-118`). The genuine PIAK-03 SOP is a *different* document that is
-**not Aktif**, so it is excluded from chat retrieval. See §3 for the full chain.
+(`engine.py:117-118`). The genuine PIAK-03 SOP is a *different* document that was
+**not Aktif** at the time, so it was excluded from chat retrieval (since approved).
+See §3 for the full chain and §3a for the correction.
 The context-persistence failure (Defect A) is real and independent of this.
 
 ## 2. Confirmed causal chain (Defect A — primary, context persistence)
@@ -84,9 +87,12 @@ Causal chain for the T01 abstention:
 1. The boundary eligibility gate (`app/security/v1_knowledge.py:138-141`) admits a
    pilot SOP only when `review.detail(...)['status'] == 'Aktif'`. `…d9ae50f8` is
    "Siap disetujui", so the **real source is correctly excluded** from chat.
-2. The empty Aktif stub `…75d5b40d` matches the query title exactly and receives the
-   +0.50 title boost (`engine.py:117-118`) → score 1.0 → ranks first, but its chunk
-   and source are empty, so it grounds nothing.
+2. The Aktif duplicate `…75d5b40d` matches the query title exactly and receives the
+   +0.50 title boost (`engine.py:117-118`) → score 1.0 → ranks first. **[CORRECTED
+   §3a: its engine chunk is NOT empty — 947 chars of content-bearing PIAK-03 text;
+   the historical "chunk and source are empty" referred to `blocks=[]`, not the
+   embedded chunk. It can ground its own PIAK-03 query; for unrelated queries
+   grounding correctly abstains.]**
 3. `service_answer_facts` / `extract_requirement_statement` only recognise the prose
    `^Persyaratan <scope>: …` line. The pilot table projection instead renders
    `Kelengkapan pemohon pada tahap pengajuan: …` (`document_context.py:38-39`), and
@@ -103,14 +109,55 @@ PASAL 14 retrieval/approval/ground-truth were checked first and no model change 
 warranted.
 
 Resolution blocker (authorization): approving `…d9ae50f8` (or re-activating the
-correct PIAK-03 source and retiring the empty stub) is an **SOP approval-status
+correct PIAK-03 source and retiring the duplicate stub) is an **SOP approval-status
 change**, forbidden without operator authorization (PASAL 3.8, PASAL 11 "0
 unauthorized SOP changes"). It must NOT be done unilaterally, and the approval gate
-must NOT be bypassed in code. A general, data-free hygiene improvement (excluding
-contentless evidence so an empty Aktif stub can never be cited as top grounding) is
-safe but does NOT by itself restore PIAK-03 accuracy, because the genuine source
-remains unapproved. Full Stage-A golden-set accuracy is therefore BLOCKED on this
-operator decision.
+must NOT be bypassed in code. Full Stage-A golden-set accuracy was BLOCKED on this
+operator decision; `…d9ae50f8` was subsequently approved (operator-authorized) and
+Stage A now grounds 10/10 to it.
+
+### 3a. CORRECTION (2026-11-16) — the "empty/contentless stub" premise was WRONG
+
+Direct SQLite inspection (`data/knowledge/nusantara_knowledge.db`) disproves the
+"empty stub" characterization used above and in the retrieval-hygiene task:
+
+- `chunks` row for `…75d5b40d`: **947 chars of coherent PIAK-03 prose** (`SOP
+  Permohonan Data Pribadi (PIAK-03) … Persyaratan permohonan data pribadi: Surat
+  Permohonan. … 3 Hari Kerja …`), `tokens_estimate=189`, embedded. The engine
+  chunk is **content-bearing**, NOT empty.
+- `document_extractions` payload for `…75d5b40d`: `{"blocks": [], "text": "SOP
+  Permohonan Data Pribadi (PIAK-03)…"}`. The historical "`source_len=61`, extracted
+  chunk EMPTY, `sop_rows=0`" referred to **`blocks=[]`** (no structured SOP table),
+  while a synthesized **text-only summary** was stored as the engine chunk. Both
+  observations were true about different fields; the actionable conclusion drawn
+  from them ("exclude contentless evidence to remove the attractor") was false.
+
+Consequences, runtime-verified on the live backend (127.0.0.1:8000):
+1. The contentless-evidence filter committed as `b9cb44ae` (`engine.py`, exclude
+   evidence whose `.chunk.strip()` is empty) is a **no-op on real data** — no Aktif
+   document has an empty engine chunk. Targeted probe
+   (`reports/repro/probe_contentless_hygiene.py`) shows `…75d5b40d` **still top-1**
+   for both attracted queries (OPD `54f26e3e`, SURAT+JALAN `6123c96b`),
+   `grounded=False`, honest Path C abstention. **`b9cb44ae` was REVERTED** (engine.py
+   restored byte-identical to `ee9bd224`); its false-premise unit test
+   (`tests/test_v1_contentless_evidence.py`, fixture `chunk=""`) was removed.
+2. The REAL attractor mechanism is **duplicate-document + generic keyword title
+   boost**: `…75d5b40d` is a text-only duplicate of the genuine PIAK-03 `…d9ae50f8`.
+   Its title `PERMOHONAN_DATA_PRIBADI.pdf` shares generic terms (`permohonan`,
+   `data`, `surat`) with many unrelated queries, earning `0.40 × title_overlap`
+   (`engine.py:129`) → score saturates at 1.0 and outranks the semantically-correct
+   doc. The probe's "intended" mapping is itself unreliable: `54f26e3e` is actually
+   `PIAK_01_TEST_RAG.pdf` (a test doc) and `6123c96b` is a 342-char cover letter with
+   no `persyaratan` — both weak matches, so grounding correctly abstains.
+3. A genuine fix is a **retrieval-ranking / duplicate-handling decision** (e.g.
+   down-weight generic-term title overlap, or retire the redundant UNVERIFIED
+   text-only duplicate). Both touch PASAL 6 retrieval policy and/or SOP data and
+   risk Stage A regression (which relies on the exact-title boost for `d9ae50f8`),
+   so they require operator authorization and careful regression — NOT the
+   "exclude contentless stub" action originally authorized. Surfaced to operator.
+4. Stage A re-verified **10/10** on the reverted build (pid 21392, session
+   `web-0cd0cf21`, `reports/repro/stage_a_piak03_runtime.json`) — the revert causes
+   no accuracy regression.
 
 ## 4. Minimal fix (P3, Defect A)
 
