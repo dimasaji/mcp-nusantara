@@ -76,9 +76,11 @@ All 44 SOP documents are Aktif with:
 
 - Search: Recall@5=0.8278, MRR=0.5672, P@1=0.4667
 - Chat: LangGraph path grounded=True, Hermes path abstain
+- Browser general chat (non-SOP): VERIFIED 2026-11-17 — natural answers + 2-turn context resolution (see forensic evidence). This does NOT prove SOP-grounded answering; SOP-grounded chat still abstains (LLM too small).
 - Citation: E2E verified (status 200, PDF 1.1MB)
 - Abstention: Works for no-evidence queries
 - Unit tests: 35 passed, 5 env failures
+- Per-SOP 8-question matrix (FR-02) NOT fully executed; SOP-grounded generation blocked by abstention (F-01).
 
 ## 5. Known Issues
 

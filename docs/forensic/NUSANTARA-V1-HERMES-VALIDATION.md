@@ -27,9 +27,10 @@ User Input → Language Engine → Problem Engine → Knowledge Engine → Deter
 - Status: PARTIAL
 
 ### Browser Execution
-- Not tested (no browser automation available)
-- Frontend connects to backend via HTTP
-- Status: NOT TESTED
+- VERIFIED 2026-11-17 (read-only): in-app browser chat E2E works. POST /v1/chat→200 ndjson via 5180→8000 proxy; natural general-chat answer from gemma3n via ollama; 2-turn context resolution confirmed; honest metadata (model/jalur/latency/timestamp).
+- General chat answers naturally; SOP-grounded answers still abstain (LLM too small).
+- Evidence: docs/forensic/evidence/browser-*.png, browser-chat-multiturn-20261117.json.
+- Status: PASS for browser chat E2E (general conversation); SOP-grounded browser execution PARTIAL (abstains).
 
 ### Windows Host
 - Backend runs on Windows (port 8000)
@@ -54,4 +55,4 @@ User Input → Language Engine → Problem Engine → Knowledge Engine → Deter
 
 ---
 
-**Status: PARTIAL (desktop works, browser/Linux/Docker not tested)**
+**Status: PARTIAL (desktop + browser chat E2E verified; SOP-grounded answers abstain; Linux/Docker not tested)**

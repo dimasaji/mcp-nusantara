@@ -67,7 +67,7 @@ User → Frontend (5180) → Backend API (8000) → Hermes → Knowledge Engine 
 
 ## 4. Models
 
-- LLM: gemma3n:e2b-it-q4_K_M (2B, 7.8 GB) via Ollama
+- LLM: gemma3n:e2b-it-q4_K_M (Ollama reports parameter_size 4.5B total / ~2B active; 7.8 GB) via Ollama
 - Embedding: indobenchmark/indobert-base-p1 (768D)
 - OCR: Tesseract (ind+eng, PSM 6)
 

@@ -127,7 +127,17 @@ User → Frontend (5180) → Backend API (8000) → Hermes → Knowledge Engine 
 
 ## 7. Control Plane (R1-R21)
 
-Control Plane is implemented in control-plane/ (React + Vite). R1-R21 mapped to technical controls. AC1-AC15 mapped to acceptance criteria.
+Control Plane is implemented in control-plane/ (React + Vite).
+
+**CORRECTION (2026-11-17 continuation, live evidence):** The earlier claim "R1-R21 mapped to technical controls, AC1-AC15 mapped to acceptance criteria" OVERSTATES the implementation. The actual runtime registry in `app/core/control_plane_projection.py:75-82` defines only **6 phases**: R1 (Configuration Intelligence), R2 (Provider/Model Runtime Identity), R3 (Effective RAG Profile), R4 (Embedding/Index Compatibility), R5 (Runtime Enforcement), MDE10 (Master Developer Engine). The master command `docs/commands/MDA-MASTER-R1-MDE10-001.md` defines R1–R6 + MDE10. There is NO literal 21-item R registry in code; "R1–R21" is a PRD/contract label (see `control-plane/src/operator.tsx:130` TechnicalPage header "Detail Teknis R1–R21" which renders the 6-phase projection).
+
+Live `GET /v1/control-plane/snapshot` (HEAD de5dc52b) returns:
+- phases: R1=UNKNOWN, R2=NOT_VERIFIED, R3=R3_IMPLEMENTATION_PASS_WITH_CONDITIONS, R4=LOCKED, R5=LOCKED, MDE10=NOT_AUTHORIZED
+- gates: 14 (R3.1–R3.14)
+- verification: focused=PASS, regression=PASS, query-parity=PASS (FIXTURE/historical evidence, not live attestation)
+- warnings: r1/r2/r2-owner/r2-runtime evidence files FileNotFoundError (`.dev/MDA_R1_*`, `.dev/MDA_R2_*` missing)
+
+**AC1–AC15:** The only literal AC-01..AC-15 list is the service/startup acceptance registry in `docs/operational/NUSANTARA-V1-AUTOSTART-REPORT.md` (ports, listeners, chat, autostart) — NOT product acceptance criteria. Product human acceptance is `control-plane/src/acceptance.ts` (8 humanCases + 5 stages System/Evidence/Test/Review/Decision), which is not numbered AC1-AC15. See finding F-14.
 
 ## 8. Code Quality
 
@@ -164,6 +174,58 @@ Control Plane is implemented in control-plane/ (React + Vite). R1-R21 mapped to 
 
 ---
 
-**Status: FORENSIC AUDIT COMPLETE**
+## 11. Continuation Audit — 2026-11-17 (READ-ONLY, HEAD de5dc52b)
 
-**Next step: Awaiting operator approval for remediation phase.**
+Baseline: branch `codex/fullroot-control-20261007`, HEAD `de5dc52b` (3 commits ahead of prior audit baseline d101fc4a: docs deliverables, grounding fail-closed echo fix d860c241, acceptance report 6261f998). Working tree has untracked files (scripts, docs/audit, service/, .venv-laya, nusantara-models). Services live: backend 8000, frontend 5180, Ollama 11434.
+
+### 11.1 Browser E2E (FR-08) — CONFIRMED working (was NOT TESTED)
+- Browser (in-app) renders AI Workspace at http://127.0.0.1:5180/.
+- Chat question "Apa itu KTP-el dan apa fungsinya?" → natural correct answer from gemma3n:e2b-it-q4_K_M via ollama.
+- Network log: `POST /v1/chat → 200 (application/x-ndjson)` via 5180→8000 proxy; `GET /v1/control-plane/model-status → 200`; `GET /v1/chat/history → 200`. Real backend, NOT mock.
+- Answer detail panel shows honest runtime metadata: model, Jalur=ollama, Latensi=45372ms, timestamp, and label "Jawaban percakapan; tidak dinilai sebagai validasi dokumen resmi."
+- Evidence: `evidence/browser-01-home-20261117.png`, `evidence/browser-02-chat-response-20261117.png`, `evidence/browser-chat-multiturn-20261117.json`.
+
+### 11.2 Multi-turn conversation (FR-01) — context resolution CONFIRMED (2 turns; 10-message PASS criterion NOT fully executed)
+- Turn 2 follow-up "Apa kepanjangan dari singkatan yang kamu sebutkan tadi?" correctly resolved "singkatan ... tadi" to KTP-el from turn 1. Answer: "KTP-el adalah singkatan dari Kartu Tanda Penduduk elektronik."
+- Session continuity: same session_id across 4 context messages; both turns status=SUCCEEDED. Latency 45372ms / 10951ms.
+- Both turns honestly labeled grounding grounded=false reason=not_evaluated, intent=ask_general_info, evidence_count=0 (general chat not grounded in official SOP).
+- Persisted to `data/knowledge/chat-history/v1-chat-473fe2f4....json` (FR-04 persistence confirmed).
+- Status: PARTIAL toward FR-01 full PASS (needs 10 sequential messages + topic-switch test); core follow-up/reference capability CONFIRMED.
+
+### 11.3 Security probes (S-03/S-04) — non-destructive, TESTED
+| Probe | Result | Verdict |
+|---|---|---|
+| Privileged source/detail without token | 403 "admin token diperlukan" | fail-closed CONFIRMED |
+| Valid source with token | 200 PDF 462551 bytes | baseline OK |
+| Path traversal (5 payloads: single/double-encoded, backslash) | 404 (routing or DB-key lookup) | protection CONFIRMED |
+| SQL injection `' OR 1=1; DROP TABLE documents;--` | 200 empty results; DB intact (64 docs, 9 tables) | parameterized CONFIRMED |
+| Citation session `../evil` | 403 CHAT_SESSION_CAPABILITY_REQUIRED | session validation CONFIRMED |
+| Secret leakage in snapshot/model-status/health-detail | none | CONFIRMED |
+| Search semantic query (normal) | TimeoutError 25s | IndoBERT worker slow (perf, known F-05) |
+
+- `source()` defense-in-depth confirmed at `app/knowledge/sop_review.py:112-130`: document_id is a DB key (not a path), symlink rejection, resolved-parent==source-documents containment, SHA-256 integrity, 20MB cap.
+- S-04 upgraded OPEN→TESTED/CONFIRMED. S-03: targeted manual probes done; full OWASP ZAP/Burp scan NOT performed → PARTIAL.
+
+### 11.4 Recovery (FR-10) — mechanism PROVEN, live backup STALE
+- Safe backup→restore round-trip of CURRENT live DB in temp: integrity_check=ok, 64 docs/721 chunks, backup==restored SHA-256 match. Temp cleaned. Production untouched.
+- Existing on-disk live-DB backup `data/knowledge/nusantara_knowledge.sqlite.backup` (Oct 22, 274KB) is STALE: 21 docs/45 chunks vs live 64/721. Restoring it would lose ~67% of documents / ~94% of chunks.
+- Legacy `production_knowledge.db` has multiple backups (Oct 1-2) but is a different/legacy DB, not the live one.
+- FR-10: PARTIAL (restore mechanism works; NO current backup of live data). See F-13.
+
+### 11.5 New findings
+| ID | Finding | Risk | Status |
+|---|---|---|---|
+| F-13 | Live-DB backup stale (Oct 22: 21 docs/45 chunks vs live 64/721); restore would lose most data | High | OPEN |
+| F-14 | R1–R21/AC1–AC15 mapping overstated; actual registry R1–R5+MDE10 (6 phases)+R3.1–R3.14; AC-01..15 only autostart criteria; R1/R2 evidence files missing | Medium | OPEN (doc/registry gap) |
+| S-09 | Raw exception interpolated into HTTP 500 detail at routes.py:1424,1510,1561 (contradicts "generic error messages"); info-disclosure risk | Low | OPEN |
+| F-15 | Chat latency high (45.4s turn1, 11s turn2); search semantic timeout 25s (IndoBERT worker) | Medium | OPEN (perf) |
+| F-16 | Doc says model 2B; Ollama reports gemma3n:e2b parameter_size=4.5B (e2b=2B active/4.5B total) | Low | DOC CORRECTION |
+
+### 11.6 Model identity correction
+Ollama `/api/tags` reports gemma3n:e2b-it-q4_K_M `parameter_size: 4.5B` (effective-2B active, 4.5B total). Prior docs state "2B". Corrected here; does not change the abstention finding (F-01) for SOP-grounded answers.
+
+---
+
+**Status: FORENSIC AUDIT COMPLETE + CONTINUATION (read-only) 2026-11-17.**
+
+**Next step: Awaiting operator approval for remediation phase. New remediation candidates: F-13 (current backup), F-14 (R/AC registry honesty), S-09 (generic error messages), F-15 (performance).**

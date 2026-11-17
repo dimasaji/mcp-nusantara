@@ -45,6 +45,16 @@
 | R-24 | Multi-step questions | Create questions | 2h | DONE |
 | R-25 | OCR confidence scoring | Add to payload | 1h | DONE |
 
+## Priority 0b — Continuation findings 2026-11-17 (read-only audit; awaiting approval)
+
+| ID | Issue | Fix | Effort | Status |
+|---|---|---|---|---|
+| R-26 | Live-DB backup stale (F-13): Oct 22 backup 21 docs/45 chunks vs live 64/721 | Create current backup of nusantara_knowledge.db + verify restore; schedule backups | 1h | OPEN (High) |
+| R-27 | R1–R21/AC registry overstated (F-14): actual R1–R5+MDE10; R1/R2 evidence missing | Align docs/UI labels to actual registry OR restore missing R1/R2 evidence; do not fabricate 21 items | 2h | OPEN (Medium) |
+| R-28 | Raw exception in 500 detail (S-09) routes.py:1424,1510,1561 | Generic client message + server-side log | 30m | OPEN (Low) |
+| R-29 | Chat/search latency (F-15): 45s chat, 25s search timeout | Profile IndoBERT worker + Ollama; consider warm worker / smaller embed batch | 4h | OPEN (Medium) |
+| R-30 | FR-01 10-message + topic-switch not fully executed | Run 10-turn browser conversation + topic-switch regression | 1h | OPEN (test) |
+
 ## Summary
 
 - **DONE:** 16 items

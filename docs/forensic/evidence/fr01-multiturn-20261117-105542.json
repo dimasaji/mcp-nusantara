@@ -1,0 +1,146 @@
+{
+  "run_id": "FR01-20261117035542",
+  "session_id": "fr01-regress-cd179838e9528cd346ea878fc0b8aa73",
+  "timestamp": "2026-11-17T03:55:42.577844+00:00",
+  "http": [
+    {
+      "turn": 1,
+      "question": "Halo, apa kabar?",
+      "http_status": 200,
+      "elapsed_s": 64.2
+    },
+    {
+      "turn": 2,
+      "question": "Apa itu KTP-el?",
+      "http_status": 200,
+      "elapsed_s": 6.0
+    },
+    {
+      "turn": 3,
+      "question": "Apa kepanjangan dari singkatan tadi?",
+      "http_status": 200,
+      "elapsed_s": 5.6
+    },
+    {
+      "turn": 4,
+      "question": "Sebutkan satu fungsinya saja.",
+      "http_status": 200,
+      "elapsed_s": 6.2
+    },
+    {
+      "turn": 5,
+      "question": "Sekarang ganti topik: apa itu nasi goreng?",
+      "http_status": 200,
+      "elapsed_s": 6.2
+    },
+    {
+      "turn": 6,
+      "question": "Bahan utamanya apa?",
+      "http_status": 200,
+      "elapsed_s": 6.4
+    },
+    {
+      "turn": 7,
+      "question": "Kembali ke topik sebelumnya: dokumen identitas tadi namanya apa?",
+      "http_status": 200,
+      "elapsed_s": 6.6
+    },
+    {
+      "turn": 8,
+      "question": "Jelaskan singkat saja.",
+      "http_status": 200,
+      "elapsed_s": 5.6
+    },
+    {
+      "turn": 9,
+      "question": "Terima kasih, cukup.",
+      "http_status": 200,
+      "elapsed_s": 5.7
+    },
+    {
+      "turn": 10,
+      "question": "Sampai jumpa.",
+      "http_status": 200,
+      "elapsed_s": 5.6
+    }
+  ],
+  "answers": [
+    {
+      "question": "Halo, apa kabar?",
+      "response": "Halo! Saya baik-baik saja, terima kasih sudah bertanya. Sebagai asisten AI, saya siap membantu Anda dengan percakapan, penulisan, penjelasan, dan coding dalam Bahasa Indonesia.",
+      "status": "SUCCEEDED",
+      "latency_ms": 63999,
+      "intent": "ask_document_status"
+    },
+    {
+      "question": "Apa itu KTP-el?",
+      "response": "KTP-el adalah Kartu Tanda Penduduk elektronik. Ini adalah versi digital dari KTP fisik, yang berisi data identitas Anda.",
+      "status": "SUCCEEDED",
+      "latency_ms": 5944,
+      "intent": "ask_general_info"
+    },
+    {
+      "question": "Apa kepanjangan dari singkatan tadi?",
+      "response": "KTP-el adalah singkatan dari Kartu Tanda Penduduk elektronik. Ini adalah versi digital dari KTP fisik, yang berisi data identitas Anda.",
+      "status": "SUCCEEDED",
+      "latency_ms": 5564,
+      "intent": "ask_general_info"
+    },
+    {
+      "question": "Sebutkan satu fungsinya saja.",
+      "response": "Fungsi KTP-el adalah sebagai identitas digital yang dapat digunakan untuk berbagai keperluan. Ini memudahkan verifikasi identitas dan akses layanan publik.",
+      "status": "SUCCEEDED",
+      "latency_ms": 6168,
+      "intent": "unknown"
+    },
+    {
+      "question": "Sekarang ganti topik: apa itu nasi goreng?",
+      "response": "Nasi goreng adalah hidangan nasi yang dimasak dengan bumbu dan bahan tambahan lainnya. Ini adalah makanan yang populer di Indonesia dan banyak negara lain.",
+      "status": "SUCCEEDED",
+      "latency_ms": 6162,
+      "intent": "ask_general_info"
+    },
+    {
+      "question": "Bahan utamanya apa?",
+      "response": "Bahan utama nasi goreng adalah nasi yang dimasak dengan bumbu dan bahan tambahan. Nasi adalah komponen dasar yang menjadi fondasi hidangan ini.",
+      "status": "SUCCEEDED",
+      "latency_ms": 6381,
+      "intent": "ask_general_info"
+    },
+    {
+      "question": "Kembali ke topik sebelumnya: dokumen identitas tadi namanya apa?",
+      "response": "Dokumen identitas yang dimaksud adalah KTP-el. KTP-el adalah identitas digital yang dapat digunakan untuk berbagai keperluan.",
+      "status": "SUCCEEDED",
+      "latency_ms": 6523,
+      "intent": "ask_document_requirements"
+    },
+    {
+      "question": "Jelaskan singkat saja.",
+      "response": "KTP-el adalah kartu identitas digital. Ini bisa digunakan untuk berbagai hal seperti mengakses layanan pemerintah.",
+      "status": "SUCCEEDED",
+      "latency_ms": 5568,
+      "intent": "ask_general_info"
+    },
+    {
+      "question": "Terima kasih, cukup.",
+      "response": "Sama-sama! Senang bisa membantu. Jika ada pertanyaan lain, jangan ragu untuk bertanya.",
+      "status": "SUCCEEDED",
+      "latency_ms": 5627,
+      "intent": "thank_you"
+    },
+    {
+      "question": "Sampai jumpa.",
+      "response": "Sampai jumpa! Senang bisa membantu. Jika ada pertanyaan lain, jangan ragu untuk bertanya.",
+      "status": "SUCCEEDED",
+      "latency_ms": 5599,
+      "intent": "goodbye"
+    }
+  ],
+  "checks": {
+    "ten_turns_recorded": true,
+    "all_succeeded": true,
+    "turn3_resolves_ktp": true,
+    "turn6_new_topic_nasi": true,
+    "turn7_switch_back_ktp": true
+  }
+}
