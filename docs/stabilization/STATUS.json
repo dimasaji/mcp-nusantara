@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-11-17T04:47:24.281896+00:00",
+  "git": {
+    "head": "89e41fa70966eb9f2c3fbb9103ab75eb8a039561",
+    "branch": "codex/fullroot-control-20261007"
+  },
+  "tests": {
+    "passed": 39,
+    "failed": 0,
+    "skipped": 0,
+    "failures": []
+  },
+  "eval": {
+    "set_version": "search_eval_160",
+    "recall_at_5": 0.824,
+    "mrr_at_10": 0.6377,
+    "precision_at_1": 0.55,
+    "precision_at_5": 0.265,
+    "exact_match": 0.55,
+    "latency_ms": {
+      "mean": 192.2,
+      "median": 178.9,
+      "p95": 261.7
+    }
+  },
+  "sop": {
+    "aktif": 43,
+    "total": 44,
+    "terindeks": 64
+  },
+  "backup": {
+    "last_backup_at": "2026-11-17T04:47:10Z",
+    "documents": 64,
+    "chunks": 721,
+    "restore_verified": true
+  },
+  "findings": [
+    {
+      "id": "S-09",
+      "status": "RESOLVED",
+      "evidence": "docs/forensic/NUSANTARA-V1-REMEDIATION-S09.md"
+    },
+    {
+      "id": "F-14",
+      "status": "PARTIAL",
+      "evidence": "docs/forensic/NUSANTARA-V1-REGISTRY-RAC.md"
+    },
+    {
+      "id": "F-15",
+      "status": "PARTIAL",
+      "evidence": "docs/forensic/NUSANTARA-V1-LATENCY-REPORT.md"
+    }
+  ],
+  "gates": {
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3": "PARTIAL",
+    "G4": "PENDING",
+    "G5": "PENDING"
+  }
+}
