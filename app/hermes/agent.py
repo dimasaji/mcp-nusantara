@@ -926,6 +926,23 @@ class HermesAgent:
                         fast_evidence_response = quote
                         fast_grounding_evidence = [candidate]
                         break
+                # Fallback: use SOP Field Composer for documents with structured
+                # SOP fields (title present). Only applies to real SOP documents.
+                if not fast_evidence_response and evidence:
+                    try:
+                        from app.knowledge.sop_fields import extract_sop_fields, compose_answer
+                        candidate = evidence[0]
+                        text = candidate.get('chunk', '') if isinstance(candidate, dict) else getattr(candidate, 'chunk', '')
+                        if not text:
+                            text = candidate.get('source', '') if isinstance(candidate, dict) else getattr(candidate, 'source', '')
+                        fields = extract_sop_fields(text)
+                        if fields.get('title'):
+                            composed = compose_answer(fields, request.user_input)
+                            if composed:
+                                fast_evidence_response = composed
+                                fast_grounding_evidence = [candidate]
+                    except Exception:
+                        pass
 
             if (
                 intent_name == "ask_document_status"
