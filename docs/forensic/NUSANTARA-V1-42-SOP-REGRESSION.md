@@ -7,10 +7,12 @@
 
 ## 1. SOP Inventory
 
-- Total SOP documents: 44 (CAPIL, DAFDUK, PIAK, PERMOHONAN)
-- Aktif: 44
+- Total SOP documents: 44 (CAPIL, DAFDUK, PIAK, PERMOHONAN) — includes 2 TEST files
+- Aktif: 43 (excluding 1 rejected test version)
 - Ditolak: 1 (PIAK-03 RAG test, deliberately rejected)
+- TEST files included: DAFDUK_23_TEST.pdf, DAFDUK_24_new24.pdf
 - Non-SOP documents: 20 (test files, audit.txt, legacy entries)
+- Note: Contract baseline says 44 Aktif but actual is 43 (1 deliberately rejected)
 
 ## 2. SOP Status
 
