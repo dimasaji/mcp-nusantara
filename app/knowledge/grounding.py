@@ -589,6 +589,14 @@ class EvidenceGroundingGuard:
             if self._is_low_information_sentence(sentence):
                 continue
 
+            # Negation mismatch check: if the answer contains a negation
+            # word that the evidence does not, and removing the negation
+            # would make the answer a subset of the evidence, reject it.
+            # This prevents "X is not Y" from being grounded in "X is Y".
+            if self._has_negation_mismatch(sentence, combined_evidence):
+                unsupported.append(sentence)
+                continue
+
             if self._contains_unsafe_claim(sentence):
                 if not self._claim_supported(
                     sentence,
@@ -1413,6 +1421,39 @@ class EvidenceGroundingGuard:
             marker in lower
             for marker in markers
         )
+
+    def _has_negation_mismatch(
+        self,
+        sentence: str,
+        evidence: str,
+    ) -> bool:
+        """Detect when the answer negates a claim present in the evidence.
+
+        If the answer contains a negation word (tidak, bukan, belum, tanpa)
+        that the evidence does not contain, and removing that negation word
+        from the answer would make the answer a subset of the evidence tokens,
+        then the answer is a negation of the evidence and must be rejected.
+        """
+        negation_words = {'tidak', 'bukan', 'belum', 'tanpa', 'jangan'}
+        sentence_tokens = self._content_tokens(sentence)
+        evidence_tokens = self._content_tokens(evidence)
+
+        # Find negation words in the answer that are NOT in the evidence
+        answer_negations = sentence_tokens & negation_words
+        evidence_negations = evidence_tokens & negation_words
+        novel_negations = answer_negations - evidence_negations
+
+        if not novel_negations:
+            return False
+
+        # Check if removing the negation words from the answer would make
+        # it a subset of the evidence (i.e., the answer is the negation
+        # of an evidence claim)
+        answer_without_negation = sentence_tokens - negation_words
+        if answer_without_negation and answer_without_negation.issubset(evidence_tokens):
+            return True
+
+        return False
 
     def _is_low_information_sentence(
         self,

@@ -22,7 +22,7 @@ from app.mcp.mcp import MCPServer, create_server
 from app.core.config import settings
 from app.core.runtime_identity import BUILD_ID
 from app.observability import metrics
-from app.exceptions import ProviderUnavailableError
+from app.exceptions import ProviderUnavailableError, internal_error
 from app.security.auth import require_admin
 from app.security.v1_knowledge import CHAT_SESSION_PATTERN, V1KnowledgeBoundary, v1_session_id, valid_chat_session
 from app.core.gate_integration import GateIntegration
@@ -77,6 +77,29 @@ if (_language.semantic_intent_engine is not None
         and _knowledge.rag._embedding_adapter.client is not None):
     _knowledge.rag._embedding_adapter.client = _language.semantic_intent_engine.client
 _sync_slots = threading.BoundedSemaphore(10)
+
+# Simple per-session rate limiter (S-02 fix)
+_rate_limit_lock = threading.Lock()
+_rate_limit_windows: dict[str, list[float]] = {}
+_RATE_LIMIT_MAX = 30  # max requests per window
+_RATE_LIMIT_WINDOW_S = 60.0  # window in seconds
+
+
+def _check_rate_limit(session_key: str) -> bool:
+    """Return True if request is allowed, False if rate limited."""
+    now = time.time()
+    with _rate_limit_lock:
+        if session_key not in _rate_limit_windows:
+            _rate_limit_windows[session_key] = []
+        # Remove expired entries
+        _rate_limit_windows[session_key] = [
+            t for t in _rate_limit_windows[session_key]
+            if now - t < _RATE_LIMIT_WINDOW_S
+        ]
+        if len(_rate_limit_windows[session_key]) >= _RATE_LIMIT_MAX:
+            return False
+        _rate_limit_windows[session_key].append(now)
+        return True
 
 
 async def _run_sync_v1(fn, *args, timeout_s=30.0, **kwargs):
@@ -1091,6 +1114,9 @@ async def chat(
     operator = isinstance(x_admin_token, str) and bool(x_admin_token)
     if operator:
         require_admin(x_admin_token)
+    # Rate limiting per session
+    if not _check_rate_limit(request.session_id):
+        raise HTTPException(status_code=429, detail="RATE_LIMIT_EXCEEDED")
     from app.knowledge.sop_review import SOPReview
     review = SOPReview(_knowledge) if operator else None
     binding = review.session_binding(v1_session_id(request.session_id, operator=True)) if review else None
@@ -1418,12 +1444,7 @@ async def analyze_problem(
 
     except Exception as exc:
 
-        raise HTTPException(
-            status_code=500,
-            detail=(
-                f"Problem analysis error: {exc}"
-            ),
-        ) from exc
+        raise internal_error("Problem analysis", exc) from exc
 
 
 # ============================================================================
@@ -1504,12 +1525,7 @@ async def ingest_document(
 
     except Exception as exc:
 
-        raise HTTPException(
-            status_code=500,
-            detail=(
-                f"Knowledge ingest error: {exc}"
-            ),
-        ) from exc
+        raise internal_error("Knowledge ingest", exc) from exc
 
 
 router.include_router(create_knowledge_pipeline_router(_run_sync_v1))
@@ -1555,12 +1571,7 @@ async def search_knowledge(
 
     except Exception as exc:
 
-        raise HTTPException(
-            status_code=500,
-            detail=(
-                f"Knowledge search error: {exc}"
-            ),
-        ) from exc
+        raise internal_error("Knowledge search", exc) from exc
 
 
 @router.get(
