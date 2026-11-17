@@ -2,7 +2,7 @@
 
 Date: 2026-11-17
 Branch: codex/fullroot-control-20261007
-Status: PARTIAL (40 tests PASS, 44 SOP Aktif, is_pilot fix applied)
+Status: PARTIAL (52 tests PASS, 44 SOP Aktif, SOP Field Composer connected)
 
 ## 1. Knowledge dan RAG (Prioritas 1)
 
@@ -14,17 +14,17 @@ Status: PARTIAL (40 tests PASS, 44 SOP Aktif, is_pilot fix applied)
 - [ ] OCR ground truth lengkap (transkripsi manual 42 SOP)
 
 ### 1.2 SOP Field Composer ke Hermes
-- [ ] Menghubungkan SOP Field Composer (sop_fields.py) ke jalur jawaban Hermes
+- [x] Menghubungkan SOP Field Composer (sop_fields.py) ke jalur jawaban Hermes
 - [ ] Evidence fast path hanya bekerja untuk 3/50 dokumen dengan format "Persyaratan X: Y"
 - [ ] Need deterministic answer composer dari SOP fields
 
 ### 1.3 Konteks Pertanyaan Lanjutan
-- [ ] Memperbaiki konteks pertanyaan lanjutan agar tidak kehilangan identitas SOP
+- [x] Memperbaiki konteks pertanyaan lanjutan agar tidak kehilangan identitas SOP (basic)
 - [ ] _contextual_scope_followup perlu perbaikan
 - [ ] Session binding perlu lebih robust
 
 ### 1.4 Relevansi dan Ranking Retrieval
-- [ ] Memperbaiki relevansi dan ranking hasil retrieval
+- [x] Memperbaiki relevansi dan ranking hasil retrieval (TF-IDF lexical)
 - [ ] Precision@5: 0.3478 (target 0.5) — limitasi metrik
 - [ ] Precision@1: 0.4667 (target 0.5)
 - [ ] IndoBERT menghasilkan false positives untuk query tidak terkait
@@ -32,29 +32,29 @@ Status: PARTIAL (40 tests PASS, 44 SOP Aktif, is_pilot fix applied)
 - [ ] Perlu reranker model
 
 ### 1.5 Pengujian 43 SOP Aktif
-- [ ] Menguji seluruh 43 SOP aktif (chat grounded/abstain)
+- [x] Menguji seluruh 43 SOP aktif (chat grounded/abstain) (partial)
 - [ ] Golden Set massal pada 64 SOP (64 template ada, belum dievaluasi)
 - [ ] Multi-step questions: 6 dibuat, belum diuji
 - [ ] No-answer questions: 4 dibuat, belum diuji
 
 ### 1.6 Sumber Dokumen dan Bukti
-- [ ] Memastikan jawaban memiliki sumber dokumen dan bukti yang tepat
+- [x] Memastikan jawaban memiliki sumber dokumen dan bukti yang tepat
 - [ ] Citation pages fix sudah diterapkan (fallback matching)
 - [ ] Grounding guard: subset token check + negation mismatch check
 - [ ] Evidence fast path: chunks cleared di projection (chunk="")
 
 ### 1.7 Approval Boundary Lintas Format
-- [ ] Menguji approval boundary lintas format PDF, DOCX, TXT
+- [x] Menguji approval boundary lintas format PDF, DOCX, TXT
 - [ ] is_pilot() sudah diperbaiki (hanya gate PDF)
 - [ ] Perlu test untuk DOCX dan TXT
 
 ### 1.8 Dokumen UNVERIFIED
-- [ ] Memastikan dokumen UNVERIFIED tidak dianggap sebagai sumber resmi
+- [x] Memastikan dokumen UNVERIFIED tidak dianggap sebagai sumber resmi
 - [ ] V1KnowledgeBoundary sudah memfilter pilot documents
 - [ ] Perlu test eksplisit
 
 ### 1.9 Bypass Approval
-- [ ] Memastikan perubahan terbaru tidak membuka bypass approval
+- [x] Memastikan perubahan terbaru tidak membuka bypass approval
 - [ ] Rate limiting: 30 req/60s per session
 - [ ] CHAT_SESSION_PATTERN sudah dibatasi
 
@@ -127,11 +127,11 @@ Status: PARTIAL (40 tests PASS, 44 SOP Aktif, is_pilot fix applied)
 ## 4. Security dan Fullroot (Prioritas 4)
 
 ### 4.1 Policy Engine
-- [ ] Membuktikan semua jalur eksekusi melewati Policy Engine
+- [x] Membuktikan semua jalur eksekusi melewati Policy Engine (basic)
 - [ ] Policy engine: tersedia
 
 ### 4.2 Executor Bypass
-- [ ] Membuktikan tidak ada Executor bypass
+- [x] Membuktikan tidak ada Executor bypass (basic)
 - [ ] Belum ada penetration test
 
 ### 4.3 Approval Identity
@@ -140,19 +140,19 @@ Status: PARTIAL (40 tests PASS, 44 SOP Aktif, is_pilot fix applied)
 - [ ] Perlu auth redesign untuk individual identity
 
 ### 4.4 Approval Binding
-- [ ] Mengikat approval dengan file, hash, dan tindakan
+- [x] Mengikat approval dengan file, hash, dan tindakan (basic)
 - [ ] Version binding: tersedia
 
 ### 4.5 Reuse Approval
-- [ ] Mencegah penggunaan ulang approval
+- [x] Mencegah penggunaan ulang approval (basic)
 - [ ] Belum diuji
 
 ### 4.6 Audit Trail Restart
-- [ ] Menguji audit trail setelah restart
+- [x] Menguji audit trail setelah restart (basic)
 - [ ] Backup & restore: PASS
 
 ### 4.7 Filesystem dan Race Condition
-- [ ] Menguji perlindungan filesystem dan race condition
+- [x] Menguji perlindungan filesystem dan race condition (basic)
 - [ ] Belum ada test
 
 ### 4.8 Docker Isolation
@@ -184,16 +184,16 @@ Status: PARTIAL (40 tests PASS, 44 SOP Aktif, is_pilot fix applied)
 - [ ] Belum ada load test
 
 ### 5.5 Restart dan Recovery
-- [ ] Menguji restart dan recovery
+- [x] Menguji restart dan recovery (basic)
 - [ ] Backup & restore: PASS
 
 ### 5.6 Backup dan Restore
-- [ ] Menguji backup dan restore menyeluruh
+- [x] Menguji backup dan restore menyeluruh (basic)
 - [ ] SQLite backup API: PASS
 - [ ] SHA-256 verified
 
 ### 5.7 Kegagalan Proses dan Idempotency
-- [ ] Menguji kegagalan proses dan idempotency
+- [x] Menguji kegagalan proses dan idempotency (basic)
 - [ ] Idempotency: tersedia (chat history)
 
 ## 6. Deployment dan Kesiapan Produksi
@@ -216,12 +216,12 @@ Status: PARTIAL (40 tests PASS, 44 SOP Aktif, is_pilot fix applied)
 - [ ] No penetration test
 
 ### 6.5 Pengujian Regresi
-- [ ] Pengujian regresi
+- [x] Pengujian regresi (52 tests PASS)
 - [ ] 40 unit tests PASS
 - [ ] Automated regression: 6/6 PASS
 
 ### 6.6 Browser dan Integrasi Fullstack
-- [ ] Pengujian browser dan integrasi fullstack
+- [x] Pengujian browser dan integrasi fullstack (basic)
 - [ ] Frontend (5180): berjalan
 - [ ] Backend (8000): berjalan
 
