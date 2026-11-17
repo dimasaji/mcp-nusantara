@@ -3,7 +3,7 @@ Exception Hierarchy & Handlers.
 """
 from typing import Any, Dict
 import logging
-from fastapi import Request
+from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse
 
 
@@ -121,4 +121,17 @@ def register_exception_handlers(app):
             status_code=500,
             content={"error": True, "message": "Terjadi kesalahan tidak diketahui", "path": str(request.url)}
         )
+
+
+def internal_error(operation: str, exc: Exception) -> HTTPException:
+    """S-09: log full detail server-side, return a generic client 500.
+
+    Keeps the existing {"detail": ...} HTTPException shape so frontend error
+    handling is unchanged, but never interpolates the raw exception text.
+    """
+    logging.getLogger(__name__).error("%s failed", operation, exc_info=exc)
+    return HTTPException(
+        status_code=500,
+        detail="Terjadi kesalahan internal layanan. Coba lagi atau hubungi operator.",
+    )
 

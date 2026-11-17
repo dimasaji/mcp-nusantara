@@ -10,6 +10,7 @@ def knowledge_api():
     import ast
     import asyncio
     import threading
+    import time
     from pathlib import Path
     from typing import Any, Dict
 
@@ -18,6 +19,7 @@ def knowledge_api():
 
     from app.knowledge.schemas import capture_retrieval
     from app.security.auth import require_admin
+    from app.exceptions import internal_error
 
     source = Path(__file__).resolve().parents[1] / "app/api/routes.py"
     tree = ast.parse(source.read_text(encoding="utf-8-sig"))
@@ -29,7 +31,8 @@ def knowledge_api():
     namespace = dict(BaseModel=BaseModel, Field=Field, Any=Any, Dict=Dict,
                      Header=Header, HTTPException=HTTPException, asyncio=asyncio,
                      router=APIRouter(prefix="/v1"), require_admin=require_admin,
-                     capture_retrieval=capture_retrieval,
+                     capture_retrieval=capture_retrieval, internal_error=internal_error,
+                     time=time,
                      _sync_slots=threading.BoundedSemaphore(2))
 
     def unexpected_backend(*args, **kwargs):
