@@ -71,3 +71,26 @@
 5. Run performance baseline on 10 SOPs
 6. Implement remaining LangGraph stubs
 7. Obtain OpenRouter API key for cost governance test
+
+
+---
+
+## Remediation Status Update (2026-11-17)
+
+### Completed
+- R-26: Backup & Restore — PASS (SHA-256 match, integrity ok)
+- S-09: Error 500 — RESOLVED (Ollama down, not backend bug)
+- S-05: Grounding negation — FIXED (negation mismatch check added)
+- S-02: Rate limiting — FIXED (per-session, 30 req/60s)
+- F-14: Registry R/AC — PASS (R1-R21 and AC1-AC15 all mapped)
+- F-15: Latensi — PARTIAL (search/chat/resource metrics documented)
+
+### Documented (requires further work)
+- S-01: Shared token — requires auth redesign (per-user tokens)
+
+### Remaining (requires external resources)
+- Model 7B+ download (no internet)
+- OpenRouter API key (no key)
+- OCR ground truth (manual transcription)
+- Security penetration test (no tools)
+- VPS deployment (no server)
