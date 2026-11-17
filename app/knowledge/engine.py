@@ -122,9 +122,15 @@ class KnowledgeEngine:
             if query_terms:
                 haystack = (getattr(evidence, 'chunk', '') or '').casefold()
                 title = (getattr(evidence, 'title', '') or '').casefold()
-                overlap = sum(1 for t in query_terms if t in haystack)
+                # TF-IDF-like lexical scoring
+                overlap = 0.0
+                for t in query_terms:
+                    if t in haystack:
+                        tf = haystack.count(t)
+                        idf = 1.0 / (1.0 + haystack.count(t) * 0.1)
+                        overlap += idf * min(tf, 3)
                 title_overlap = sum(1 for t in query_terms if t in title)
-                if overlap or title_overlap:
+                if overlap > 0 or title_overlap > 0:
                     base = float(getattr(evidence, 'score', 0.0) or 0.0)
                     boost = 0.05 * overlap + 0.40 * title_overlap
                     # Exact title/number match: if the query (case-insensitive) is a
