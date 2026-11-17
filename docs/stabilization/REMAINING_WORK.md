@@ -2,7 +2,7 @@
 
 Date: 2026-11-17
 Branch: codex/fullroot-control-20261007
-Status: PARTIAL (40 tests PASS, 44 SOP Aktif)
+Status: PARTIAL (40 tests PASS, 44 SOP Aktif, is_pilot fix applied)
 
 ## 1. Knowledge dan RAG (Prioritas 1)
 

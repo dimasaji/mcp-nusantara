@@ -37,4 +37,3 @@ def should_retry(category: ErrorCategory) -> bool:
 
 def needs_human(category: ErrorCategory) -> bool:
     return category in (ErrorCategory.NEEDS_HUMAN, ErrorCategory.PERMANENT)
-PY

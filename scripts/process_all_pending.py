@@ -91,4 +91,3 @@ for d in docs:
         print('%s: cannot approve (status=%s)' % (title, detail['status']))
 
 print('\nProcessed: %d' % processed)
-PY
