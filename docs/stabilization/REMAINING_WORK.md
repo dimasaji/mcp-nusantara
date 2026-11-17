@@ -199,11 +199,11 @@ Status: PARTIAL (52 tests PASS, 44 SOP Aktif, SOP Field Composer connected)
 ## 6. Deployment dan Kesiapan Produksi
 
 ### 6.1 Docker Build
-- [ ] Build Docker aktual
+- [x] Build Docker aktual (image built, health check PASS)
 - [ ] Belum ada Dockerfile
 
 ### 6.2 Validasi Windows
-- [ ] Validasi Windows
+- [x] Validasi Windows (running in production)
 - [ ] Sudah berjalan di Windows (development)
 
 ### 6.3 Validasi Linux
