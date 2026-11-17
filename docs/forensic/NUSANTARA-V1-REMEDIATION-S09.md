@@ -22,4 +22,11 @@ Ollama process died (likely due to memory pressure from Docling extraction). Bac
 2. Restart backend: `python -m uvicorn app.main:app --host 127.0.0.1 --port 8000`
 3. Verify: `curl http://127.0.0.1:8000/v1/health/detail` → should show `llm status: ok`
 
-## Status: RESOLVED (not a code bug, infrastructure issue)
+## Status: RESOLVED
+
+- S-09 original issue: `f"...{exc}"` in routes.py lines 1424, 1510, 1561 — ALREADY FIXED (internal_error() sanitizes exceptions, logs server-side only)
+- 500 errors from Ollama /api/tags — infrastructure issue (Ollama starting up), not a backend bug
+- Backend has 0 HTTP 500 lines in logs
+- 40 "Exception" lines are all `_ProactorBasePipeTransport._call_connection_lost()` (Windows async I/O cleanup)
+
+**Both sub-issues resolved.**
