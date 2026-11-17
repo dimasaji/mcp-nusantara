@@ -662,3 +662,143 @@ change stashed** (stash attribution run: 3 failed, 3 passed) ⇒ pre-existing at
 tie-break + Defect K.** HEAD moved since the F+G+H baseline via the owner's
 `d1af1069` (I+J), `edd3807c`, `430a8fba`, `f33c6d74`; the identical-scope baseline
 for the uncommitted change is current HEAD, verified by the stash run.
+## 18. Defect L — instruction/question echo on the Ollama path with false grounding (16 Nov 2026, DIAGNOSED, fix pending authorization)
+
+Found by the 152-question golden-set runtime evaluation
+(`reports/golden_set_runtime_eval.json`, §G.4b acceptance report): 9 must-abstain
+questions received `grounded=True` answers that are not answers at all:
+
+- **Question echo**: "Berapa biaya Sistem Pemerintahan Indonesia.txt?" and
+  "Berapa biaya Bahasa Indonesia.txt?" returned verbatim as the "answer"
+  (provider_status=ollama, grounded=True).
+- **Instruction paraphrase**: "Berikut adalah contoh jawaban singkat, natural,
+  dan langsung atas pertanyaan …" — the model narrates the prompt's FORMAT
+  instruction instead of answering. The exact phrase "Jawaban singkat, natural,
+  dan langsung." exists in the user-prompt template (`app/api/routes.py:875`,
+  FORMAT JAWABAN) and in the general-knowledge system prompt rule 6
+  (`app/hermes/agent.py:1026`). It is NOT a literal template leak into the
+  response pipeline; the 1B model regurgitates the instruction wording as an
+  answer prefix (grep confirms no such output string in code).
+- **Refusal misfire**: 4 normal SOP questions got "Maaf, saya tidak bisa
+  membantu dengan permintaan tersebut." (safety refusal on benign queries).
+
+Causal chain (proven parts):
+1. Prompt templates contain the attractor phrase (verified by grep, both sites).
+2. llama3.2:1b emits echo/paraphrase outputs on the evidence and general paths
+   (verified in runtime evidence JSON, provider_status=ollama).
+3. The grounding projection still reports `grounded=True` for these factless
+   echoes (verified in the same records) — the grounding guarantee does not
+   detect echo-of-question / instruction-regurgitation answers. This is the
+   security-relevant half: a false grounding claim, not just bad prose.
+
+Candidate minimal fixes (NOT applied — PASAL 14 stop-and-ask, operator decision
+pending; Stage B re-extraction was deferred by the operator on 16 Nov):
+- L1: reword the FORMAT JAWABAN instruction to remove the echo attractor and/or
+  add an explicit "jangan mengulang pertanyaan atau instruksi" rule; TDD with
+  the real model, regression on Stage A 10/10.
+- L2: fail-closed echo detector in the grounding/validation layer (response
+  equals/contains the question verbatim, or starts with instruction narration)
+  ⇒ honest abstention, never grounded=True. Must not loosen existing grounding.
+- Refusal misfire needs separate diagnosis (which guard fires on "kondisi
+  khusus"/"biaya" phrasing).
+
+Evidence: `reports/golden_set_runtime_eval.json` (filter verdict=FAIL,
+must_abstain=true), `logs/golden_runtime_eval_20261116.log`. No code changed in
+this pass; model freeze intact (llama3.2:1b).
+
+### 18.1 Fix applied — L2 fail-closed echo detector (16 Nov 2026, operator-approved)
+
+Operator approved the seam plan "guard + runtime": unit tests at
+`EvidenceGroundingGuard.validate(answer, evidence)` plus runtime `/v1/chat`
+re-run of the 9 must-abstain FAIL cases and Stage A 10/10. Fix without
+signature change; fail-closed; no grounding loosening. L1 (prompt rewording)
+was NOT applied — prompt templates unchanged.
+
+Implementation (`app/knowledge/grounding.py`, +67 lines, all inside
+`EvidenceGroundingGuard`):
+
+1. `question_echo` — `_is_question_echo(text)`: the whole answer is a single
+   interrogative sentence (ends `?`, one sentence, first word in
+   `INTERROGATIVE_WORDS` incl. "di mana" prefix). Checked BEFORE the
+   token-subset shortcut, so a verbatim question echo can never be certified
+   grounded just because its tokens exist in the evidence.
+2. `instruction_echo` — marker `"contoh jawaban"` (casefold) anywhere in the
+   answer. Checked before BOTH the token-subset shortcut and the
+   sentence-overlap path: the runtime G-07 pattern (narration prefix +
+   verbatim evidence quote) passes sentence overlap because the quote
+   dominates, so an early marker check is required.
+
+Both return `grounded=False` with the new reasons; every caller's existing
+fail-closed fallback turns that into an honest abstention. No caller or
+signature changed.
+
+TDD evidence (vertical slices, RED before GREEN, fixtures verbatim from
+`data/knowledge/nusantara_knowledge.db` and the baseline runtime report):
+
+- Slice 1 RED: "Berapa biaya Bahasa Indonesia.txt?" vs real document evidence
+  → `grounded=True reason=grounded` (token-subset shortcut). GREEN after
+  detector: `grounded=False reason=question_echo`.
+- Slice 2 RED: narration prefix + verbatim PIAK-03 chunk quote (runtime G-07
+  pattern) → `grounded=True reason=grounded` (sentence-overlap path). GREEN
+  after marker: `grounded=False reason=instruction_echo`.
+- Regression guards: normal grounded answer unchanged; valid abstention
+  still `grounded_abstention`; declarative answer ending in `?` not flagged.
+- `tests/test_grounding_echo_failsafe.py` 5/5 PASS;
+  `tests/test_v1_chat_rag_regression.py` 22/22 PASS (27/27 combined).
+- Wider batch (8 grounding-related files): 104 passed, 10 failed — the SAME
+  10 failures reproduce on HEAD without the fix (fixture wiring:
+  `SimpleNamespace` lacks `.rag` → 503 in `test_v1_response_projection.py` /
+  `test_chat_source_recovery.py`). Pre-existing, unrelated to Defect L.
+
+Scope note: of the 9 baseline must-abstain FAILs, 4 match the approved
+detector patterns (2 question echoes, 2 "contoh jawaban" narrations). The
+other 5 are out of the approved scope: 2 refusal misfires ("Maaf, saya tidak
+bisa membantu…" — separate defect), 1 declarative question-echo variant
+("Kondisi khusus … Pengguna mem…"), 2 narration variants without the marker
+("Baiklah, berikut adalah jawaban singkat…", "Jawaban untuk pertanyaan …").
+Runtime retest results: `reports/repro/defect_l_retest.json` (see §18.2).
+
+### 18.2 Runtime verification of the fix (16 Nov 2026)
+
+Backend restarted with the fix (build sha256:58fbd5c9…, was 719b0d18…);
+Ollama llama3.2:1b unchanged (model freeze intact).
+
+Retest of the 9 baseline must-abstain FAIL cases
+(`scripts/defect_l_retest.py`, fresh session per document, same verified
+question order as the baseline eval, identical scoring rules):
+**4 PASS / 5 FAIL** — `reports/repro/defect_l_retest.json`.
+
+Fixed (now honest abstentions, grounded=False):
+- G-04 "Berapa biaya Bahasa Indonesia.txt?" (DOC-SHA256-fbd491e8…)
+- G-04 "Berapa biaya Sistem Pemerintahan Indonesia.txt?" (DOC-SHA256-68ac3b7a…)
+- G-07 "kondisi khusus PERMOHONAN DATA PRIBADI" (DOC-SHA256-d9ae50f8…)
+- G-07 "kondisi khusus PERMOHONAN DATA PRIBADI" (sop_e4d43334…)
+
+Backend log confirms the detectors fired on the live path:
+3× `reason=instruction_echo`, 1× `reason=question_echo`
+(`logs/backend_20261116.log`). The other PASS cases abstained via the
+existing fail-closed fallback (model output varied between runs).
+
+Still FAIL — all outside the approved detector scope, NOT regressions:
+- 2× refusal misfire "Maaf, saya tidak bisa membantu dengan permintaan
+  tersebut." (DOC-SHA256-5cc314ce…, G-04/G-07) — separate defect, needs
+  its own diagnosis.
+- 1× declarative question-echo variant "Kondisi khusus SOP … Pengguna
+  meminta infor…" (DOC-SHA256-0e63a46b…, G-07) — not interrogative-only.
+- 2× narration variants WITHOUT the "contoh jawaban" marker
+  (sop_d67da533…, G-04/G-07): this run produced "Baiklah, berikut jawaban
+  singkat dari pertanyaan Anda…" and "Berikut adalah jawaban singkat,
+  natural, dan langsung atas pertanyaan…". The 1B model varies its
+  narration wording between runs, so a single literal marker is
+  whack-a-mole; broader narration detection needs operator approval
+  (PASAL 14) before extending scope.
+
+Stage A regression: **10/10 PASS**, responses identical to the pre-fix
+baseline (`reports/repro/stage_a_piak03_runtime.json`; pre-fix copy
+archived as `stage_a_piak03_runtime_pre_defect_l_fix.json`). The echo
+detector does not touch the evidence_fast_path answers.
+
+Conclusion: Defect L's false-grounding guarantee is closed for the two
+approved echo patterns, fail-closed, with no grounding loosening and no
+Stage A regression. Residual echo/narration variants and the refusal
+misfire remain open, operator-gated.

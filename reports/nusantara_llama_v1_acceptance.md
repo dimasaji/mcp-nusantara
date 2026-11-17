@@ -527,6 +527,85 @@ T01 "Siapkan Surat Permohonan." (29.7 s cold), T02/T08 "Menurut SOP: 3 Hari
 Kerja.", T03/T05/T07 abstain jujur, T04 prosedur 3 langkah, T09 reuse Path A
 (390 ms), T10 sitasi halaman 2 (361 ms). Konsisten dengan run 10/10 sebelumnya.
 
+### G.4b Evaluasi golden set terhadap chat runtime (152 pertanyaan, model asli)
+
+`scripts/golden_set_runtime_eval.py` — semua butir terverifikasi dari 23 dokumen
+non-blocked, sesi baru per dokumen, `/v1/chat` nyata dengan `llama3.2:1b`.
+Bukti: `reports/golden_set_runtime_eval.json`, log
+`logs/golden_runtime_eval_20261116.log`. Hasil: **112 PASS / 40 FAIL (73.7%)**.
+
+| Lapis | n | PASS | Catatan |
+|---|---|---|---|
+| Abstain (tier C + biaya/kondisi absen) | 112 | 103 (92%) | mayoritas abstain jujur |
+| Jawaban ber-fakta (non-abstain) | 40 | 9 (22.5%) | banyak abstain padahal fakta terverifikasi ada |
+
+Latency: p50 7.1 s, p95 36.0 s — target <5 s belum tercapai pada batch ini.
+
+Pola kegagalan (bukti di JSON, bukan dugaan):
+
+1. **Kluster PIAK-03 (11 FAIL)** — duplikat `…75d5b40d`/`…832334e8` bersaing
+   dengan SOP asli `d9ae50f8`; beberapa jawaban ter-ground ke dokumen duplikat
+   (cross-doc binding). Konsisten dengan masalah retrieval-hygiene yang menunggu
+   keputusan operator (§F rekomendasi 5).
+2. **Kebocoran prompt / echo (Defect baru, sebut saja L)** — pada jalur Ollama
+   general, respons berisi instruksi prompt ("Berikut adalah contoh jawaban
+   singkat, natural, dan langsung atas pertanyaan …") atau meng-echo pertanyaan
+   ("Berapa biaya Bahasa Indonesia.txt?") sebagai jawaban, dengan
+   `grounded=True`. 9 FAIL must-abstain berpola ini; 4 respons refusal "Maaf,
+   saya tidak bisa membantu…" untuk pertanyaan SOP normal. Ini cacat nyata
+   jalur general/LLM, bukan salah skor. **Diagnosis read-only selesai: RCA §18
+   (Defect L)** — frasa attractor ada di template prompt (`routes.py:875`,
+   `agent.py:1026`); model 1B meng-echo instruksi/pertanyaan dan grounding
+   tetap mengklaim `grounded=True` (false guarantee). **Fix diterapkan dan
+   terverifikasi di §G.4c** (otorisasi operator 16 Nov; RCA §18.1–18.2).
+3. **Judul nama-file mentah** (`CAPIL_02.pdf`, `DAFDUK_24_new24.pdf`, …) —
+   pertanyaan tidak realistis + judul tidak bisa di-match retrieval; sebagian
+   besar FAIL kelompok ini artefak kualitas golden set, bukan regresi kode.
+4. **Abstain jujur pada dokumen yang faktanya ada** — jalur general tidak
+   selalu merangkai fakta dari blok (mis. dasar hukum, prosedur) walau
+   `documents.source` memuatnya; terkait akar masalah ekstraksi/konteks Stage B.
+
+Kesimpulan pass ini: lapisan abstain kuat (92%), lapisan jawaban ber-fakta
+lemah (22.5%) pada korpus campuran (dokumen uji + SOP asli + duplikat).
+**Tidak ada klaim PRODUCTION READY**; angka ini baseline jujur untuk perbaikan
+berikutnya, bukan kelulusan PASAL 11.
+
+### G.4c Fix Defect L — echo detector fail-closed (16 Nov, otorisasi operator)
+
+Operator menyetujui seam "guard + runtime": fix tanpa ubah signature di
+`EvidenceGroundingGuard.validate` + re-run runtime 9 kasus FAIL must-abstain
++ regresi Stage A 10/10. Implementasi L2 (RCA §18.1): detektor
+`question_echo` (jawaban interrogatif-tunggal) dan `instruction_echo`
+(marker "contoh jawaban"), keduanya sebelum shortcut token-subset dan
+jalur overlap kalimat; fail-closed ke abstain jujur. Prompt TIDAK diubah
+(L1 tidak diterapkan); model freeze intact.
+
+Bukti TDD: `tests/test_grounding_echo_failsafe.py` 5/5 (RED→GREEN per slice,
+fixture verbatim dari DB dan laporan runtime); regresi
+`tests/test_v1_chat_rag_regression.py` 22/22. Batch luas 8 file grounding:
+104 lulus, 10 gagal — 10 kegagalan yang SAMA terbukti ada di HEAD tanpa fix
+(fixture `.rag` → 503), bukan regresi Defect L.
+
+Bukti runtime (build `58fbd5c9`, restart backend setelah fix):
+
+- Retest 9 kasus FAIL baseline (`scripts/defect_l_retest.py`,
+  `reports/repro/defect_l_retest.json`): **4 PASS / 5 FAIL**. Keempat kasus
+  dalam scope detektor (2 echo pertanyaan "Berapa biaya …", 2 narasi
+  "contoh jawaban") kini abstain jujur `grounded=False`. Log backend:
+  3× `instruction_echo`, 1× `question_echo` benar-benar fires di jalur live.
+- Sisa 5 FAIL di luar scope yang diotorisasi, bukan regresi: 2 refusal
+  misfire (defect terpisah), 1 varian echo deklaratif, 2 varian narasi tanpa
+  marker "contoh jawaban" (model 1B mengubah wording antar-run — deteksi
+  narasi lebih luas butuh otorisasi baru, PASAL 14).
+- Stage A: **10/10 PASS**, respons identik dengan baseline pre-fix
+  (`reports/repro/stage_a_piak03_runtime.json`, arsip
+  `stage_a_piak03_runtime_pre_defect_l_fix.json`).
+
+Kesimpulan: false-grounding guarantee Defect L tertutup untuk dua pola echo
+yang diotorisasi, tanpa loosening grounding dan tanpa regresi Stage A.
+Varian echo/narasi residual + refusal misfire tetap terbuka, operator-gated.
+Detail: RCA §18.1–18.2.
+
 ### G.5 Yang masih menunggu
 
 1. Keputusan operator Stage B: **DITUNDA** (operator, 16 Nov) — re-ekstraksi
@@ -536,6 +615,11 @@ Kerja.", T03/T05/T07 abstain jujur, T04 prosedur 3 langkah, T09 reuse Path A
    perlu dipantau.
 4. Target latensi <5 s: T01 cold 29.7 s; turn hangat 0.3–13.8 s — sebagian sudah
    di bawah 5 s, cold-start belum; eksperimen konfigurasi menunggu otorisasi.
+5. **Defect L (§G.4b, §G.4c)** — fix echo detector fail-closed SUDAH diterapkan
+   dan terverifikasi runtime (4/9 kasus FAIL baseline kini abstain jujur;
+   Stage A 10/10). Yang masih terbuka: varian narasi/echo di luar marker yang
+   diotorisasi + refusal misfire (defect terpisah) — menunggu otorisasi
+   operator (PASAL 14). Jangan loosen grounding.
 
 ---
 
@@ -543,7 +627,7 @@ Kerja.", T03/T05/T07 abstain jujur, T04 prosedur 3 langkah, T09 reuse Path A
 
 1. Runtime baseline — `reports/runtime_baseline.md` (P0).
 2. Multi-turn reproduction — `reports/repro/repro_operator_general_multiturn*.json`.
-3. Root-cause analysis — `reports/root_cause_analysis.md` (Defects A–H, §10 langgraph, §13–14 Defect F, §15 historical, §16 G/H + runtime 10/10, **§17 I/J/K + Stage B OCR document-quality root cause + model-freeze restoration**).
+3. Root-cause analysis — `reports/root_cause_analysis.md` (Defects A–H, §10 langgraph, §13–14 Defect F, §15 historical, §16 G/H + runtime 10/10, **§17 I/J/K + Stage B OCR document-quality root cause + model-freeze restoration**, **§18 Defect L diagnosis + fix + runtime verification**).
 4. Focused code fixes — `app/hermes/agent.py`, `app/language/engine.py`, `app/knowledge/grounding.py`, `app/models/ollama.py`, `app/security/v1_knowledge.py`, `app/language/semantic/indobert_client.py` (A/B/C/D `61ffd389`; E `5fe714f0`; F+G+H `ae8d4549`; I+J owner `d1af1069`; tie-break+K `ee9bd224`, **not pushed**).
 5. Context Resolver / Retrieval tests — `tests/test_hermes_v1_context_*.py`, `tests/test_service_facts_table_multipath.py`, `tests/test_language_service_turn_facets.py` (E, 15), `tests/test_hermes_v1_contextual_followup.py` (F+G, 17), `tests/test_v1_knowledge_reuse_rebind.py` (G, 4), `tests/test_indobert_worker_proxy_env.py` (H, 1), **`tests/test_v1_search_candidate_window.py` (I, 3), `tests/test_v1_recovery_context_dump.py` (J, 2), `tests/test_v1_hydration_failsafe.py` (K, 3)**.
 6. Real llama3.2:1b runtime results — `reports/repro/stage_a_piak03_runtime.json` (build `719b0d18`, 10/10); prior runs `stage_a_piak03_runtime_f86b1318.json`, `stage_a_piak03_runtime_bb166b4a.json`.
@@ -552,3 +636,5 @@ Kerja.", T03/T05/T07 abstain jujur, T04 prosedur 3 langkah, T09 reuse Path A
 9. Speed / RAM metrics — §D, `reports/repro/ram_snapshot.json`; I/J/K regression `reports/repro/fullsuite_ijk.log` (89 failed, 1535 passed).
 10. Final PASS/PARTIAL/FAIL + recommendations — this report (**PARTIAL**).
 11. Lanjutan 16 Nov sore (§G) — `reports/ocr_gt/cer_wer_report.json` + `*_page1_ocr.txt`; `scripts/ocr_gt_batch_eval.py`; `scripts/fill_golden_ground_truth.py` + `reports/golden_set_ground_truth_fill.json` (64 golden set di `output/`); `scripts/golden_set_retrieval_eval.py` + `reports/golden_set_retrieval_eval.json`.
+12. Lanjutan 16 Nov malam (§G.4a–G.4b) — re-verifikasi Stage A `reports/repro/stage_a_piak03_runtime.json` (10/10, arsip run lama `stage_a_piak03_runtime_pre_20261116_evening.json`); `scripts/golden_set_runtime_eval.py` + `reports/golden_set_runtime_eval.json` (152 pertanyaan, 112/40) + `logs/golden_runtime_eval_20261116.log`.
+13. Fix Defect L (§G.4c, RCA §18.1–18.2) — `app/knowledge/grounding.py` (+67 baris, echo detector fail-closed, belum di-commit); `tests/test_grounding_echo_failsafe.py` (5); `scripts/defect_l_retest.py` + `reports/repro/defect_l_retest.json` (4/9); Stage A build `58fbd5c9` 10/10 (`reports/repro/stage_a_piak03_runtime.json`, arsip pre-fix `stage_a_piak03_runtime_pre_defect_l_fix.json`).

@@ -358,6 +358,28 @@ class EvidenceGroundingGuard:
         re.UNICODE,
     )
 
+    INTERROGATIVE_WORDS = {
+        "apa",
+        "apakah",
+        "berapa",
+        "berapakah",
+        "bagaimana",
+        "bagaimanakah",
+        "siapa",
+        "siapakah",
+        "kapan",
+        "kapankah",
+        "mengapa",
+        "kenapa",
+        "dimana",
+        "mana",
+        "manakah",
+        "bisakah",
+        "bolehkah",
+        "dapatkah",
+        "adakah",
+    }
+
     SENTENCE_PATTERN = re.compile(
         r"(?<=[.!?])\s+|\n+",
         re.UNICODE,
@@ -425,6 +447,33 @@ class EvidenceGroundingGuard:
         ]
 
         combined_evidence = " ".join(evidence_texts)
+
+        # Defect L: a factless echo of the user's question must never be
+        # certified grounded just because its tokens exist in the evidence.
+        if self._is_question_echo(text):
+            logger.warning(
+                "Grounding rejected answer: reason=question_echo"
+            )
+            return GroundingResult(
+                text=text,
+                grounded=False,
+                reason="question_echo",
+                unsupported_sentences=[text],
+            )
+
+        # Defect L: narration of the prompt instruction ("Berikut adalah
+        # contoh jawaban ...") is not an answer, even when it quotes
+        # evidence verbatim and would pass the overlap checks below.
+        if "contoh jawaban" in text.casefold():
+            logger.warning(
+                "Grounding rejected answer: reason=instruction_echo"
+            )
+            return GroundingResult(
+                text=text,
+                grounded=False,
+                reason="instruction_echo",
+                unsupported_sentences=[text],
+            )
 
         # If every substantive token of the answer appears in the evidence,
         # treat the answer as supported (the model paraphrased the source).
@@ -847,6 +896,24 @@ class EvidenceGroundingGuard:
             for part in parts
             if part.strip()
         ]
+
+    def _is_question_echo(
+        self,
+        text: str,
+    ) -> bool:
+        stripped = text.strip()
+        if not stripped.endswith("?"):
+            return False
+        if len(self._split_sentences(stripped)) != 1:
+            return False
+        lowered = stripped.casefold()
+        if lowered.startswith("di mana"):
+            return True
+        first_word = re.match(r"\w+", lowered)
+        return bool(
+            first_word
+            and first_word.group(0) in self.INTERROGATIVE_WORDS
+        )
 
     def _content_tokens(
         self,
