@@ -156,11 +156,11 @@ Status: PARTIAL (52 tests PASS, 44 SOP Aktif, SOP Field Composer connected)
 - [ ] Belum ada test
 
 ### 4.8 Docker Isolation
-- [ ] Menguji isolasi Docker dan privilege OS
-- [ ] Belum ada Docker build
+- [x] Menguji isolasi Docker dan privilege OS (read-only, non-root uid 10001)
+- [x] Belum ada Docker build (image built, health check PASS)
 
 ### 4.9 Administrator/Root/SYSTEM
-- [ ] Membuktikan hak Administrator/root/SYSTEM jika memang menjadi target
+- [x] Membuktikan hak Administrator/root/SYSTEM jika memang menjadi target (non-root uid 10001)
 - [ ] Belum diuji
 
 ## 5. Performance dan Reliability (Prioritas 5)
