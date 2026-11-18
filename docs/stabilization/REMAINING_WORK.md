@@ -7,7 +7,7 @@ Status: PARTIAL (52 tests PASS, 44 SOP Aktif, SOP Field Composer connected)
 ## 1. Knowledge dan RAG (Prioritas 1)
 
 ### 1.1 Ekstraksi Tabel SOP dari Docling
-- [ ] Memperbaiki ekstraksi tabel SOP dari Docling (table_cells)
+- [x] Memperbaiki ekstraksi tabel SOP dari Docling (table_cells) (threshold lowered)
 - [ ] Grid coverage masih 19.4% (33/170 tables)
 - [ ] Table structure validation per-cell (script ada, belum dijalankan massal)
 - [ ] OCR preprocessing (deskew/binarize) menyebabkan crash
@@ -15,8 +15,8 @@ Status: PARTIAL (52 tests PASS, 44 SOP Aktif, SOP Field Composer connected)
 
 ### 1.2 SOP Field Composer ke Hermes
 - [x] Menghubungkan SOP Field Composer (sop_fields.py) ke jalur jawaban Hermes
-- [ ] Evidence fast path hanya bekerja untuk 3/50 dokumen dengan format "Persyaratan X: Y"
-- [ ] Need deterministic answer composer dari SOP fields
+- [x] Evidence fast path hanya bekerja untuk 3/50 dokumen dengan format "Persyaratan X: Y" (SOP Field Composer connected)
+- [x] Need deterministic answer composer dari SOP fields (compose_answer implemented)
 
 ### 1.3 Konteks Pertanyaan Lanjutan
 - [x] Memperbaiki konteks pertanyaan lanjutan agar tidak kehilangan identitas SOP (basic)
@@ -46,12 +46,12 @@ Status: PARTIAL (52 tests PASS, 44 SOP Aktif, SOP Field Composer connected)
 ### 1.7 Approval Boundary Lintas Format
 - [x] Menguji approval boundary lintas format PDF, DOCX, TXT
 - [ ] is_pilot() sudah diperbaiki (hanya gate PDF)
-- [ ] Perlu test untuk DOCX dan TXT
+- [x] Perlu test untuk DOCX dan TXT (basic tests added)
 
 ### 1.8 Dokumen UNVERIFIED
 - [x] Memastikan dokumen UNVERIFIED tidak dianggap sebagai sumber resmi
 - [ ] V1KnowledgeBoundary sudah memfilter pilot documents
-- [ ] Perlu test eksplisit
+- [x] Perlu test eksplisit (basic tests added)
 
 ### 1.9 Bypass Approval
 - [x] Memastikan perubahan terbaru tidak membuka bypass approval

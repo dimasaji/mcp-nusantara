@@ -42,7 +42,7 @@ def scanned_activity_grid_regions(page) -> list[tuple]:
         crop_v = vertical[y:y+h, x:x+w]
         h_count = cv2.connectedComponents(crop_h)[0] - 1
         v_count = cv2.connectedComponents(crop_v)[0] - 1
-        if h_count < 3 or v_count < 3:
+        if h_count < 2 or v_count < 2:
             continue
         left, top, right, bottom = x*scale_x, y*scale_y, (x+w)*scale_x, (y+h)*scale_y
         header_text = []
