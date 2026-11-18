@@ -20,8 +20,8 @@ Status: PARTIAL (52 tests PASS, 44 SOP Aktif, SOP Field Composer connected)
 
 ### 1.3 Konteks Pertanyaan Lanjutan
 - [x] Memperbaiki konteks pertanyaan lanjutan agar tidak kehilangan identitas SOP (basic)
-- [ ] _contextual_scope_followup perlu perbaikan
-- [ ] Session binding perlu lebih robust
+- [x] _contextual_scope_followup perlu perbaikan (improved)
+- [x] Session binding perlu lebih robust (basic)
 
 ### 1.4 Relevansi dan Ranking Retrieval
 - [x] Memperbaiki relevansi dan ranking hasil retrieval (TF-IDF lexical)
