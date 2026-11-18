@@ -149,6 +149,13 @@ def _contextual_scope_followup(text: str, turn: dict) -> bool:
         return False
     if _POSSESSIVE_FACET.search(text):
         return True
+    # Additional: check for implicit follow-up markers
+    if turn.get('facet') and _CONDITIONAL_FOLLOWUP.search(text):
+        return True
+    # Preserve SOP identity: if previous document exists and text is short,
+    # treat as follow-up
+    if turn.get('uses_context') and len(text.split()) < 10:
+        return True
     return bool(turn.get('facet') and _CONDITIONAL_FOLLOWUP.search(text))
 
 
