@@ -11,7 +11,7 @@ ENV NUSANTARA_INDOBERT_PYTHON=/opt/indobert/bin/python \
     NUSANTARA_INDOBERT_WORKER=/app/nusantara-models/indobert_worker.py \
     HF_HOME=/app/data/huggingface
 COPY app ./app
-# COPY control-plane/dist ./control-plane/dist  # Optional, build separately
+COPY control-plane/dist ./control-plane/dist
 COPY docs ./docs
 COPY .env.example ./
 COPY scripts/healthcheck.py ./scripts/healthcheck.py

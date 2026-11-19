@@ -10,6 +10,16 @@ import pytest
 
 runner = sys.modules["__main__"]
 
+# These checks bind directly to the guard functions installed by the isolated
+# evidence runner. Under a plain `pytest` collection `__main__` is pytest, not
+# the runner, so the guards do not exist and every assertion below would fail
+# for the wrong reason. Skip instead, and exercise them through their real
+# entry point: `python tests/run_evidence_tests_isolated.py`.
+pytestmark = pytest.mark.skipif(
+    not hasattr(runner, "guarded_open"),
+    reason="guards live in tests/run_evidence_tests_isolated.py; run via that entry point",
+)
+
 
 def test_output_writes_are_allowed_and_outside_writes_blocked():
     target = runner.output / "guard-write-check.txt"

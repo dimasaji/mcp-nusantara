@@ -1,0 +1,368 @@
+[
+ {
+  "method": "GET",
+  "path": "/health",
+  "file": "app\\main.py",
+  "line": 110
+ },
+ {
+  "method": "GET",
+  "path": "/",
+  "file": "app\\main.py",
+  "line": 117
+ },
+ {
+  "method": "GET",
+  "path": "/ui",
+  "file": "app\\main.py",
+  "line": 118
+ },
+ {
+  "method": "GET",
+  "path": "/assistant",
+  "file": "app\\main.py",
+  "line": 119
+ },
+ {
+  "method": "GET",
+  "path": "/cost-summary",
+  "file": "app\\api\\control_plane.py",
+  "line": 17
+ },
+ {
+  "method": "GET",
+  "path": "/model-status",
+  "file": "app\\api\\control_plane.py",
+  "line": 61
+ },
+ {
+  "method": "GET",
+  "path": "/models",
+  "file": "app\\api\\control_plane.py",
+  "line": 112
+ },
+ {
+  "method": "POST",
+  "path": "/model-selection",
+  "file": "app\\api\\control_plane.py",
+  "line": 141
+ },
+ {
+  "method": "GET",
+  "path": "/snapshot",
+  "file": "app\\api\\control_plane.py",
+  "line": 170
+ },
+ {
+  "method": "GET",
+  "path": "/knowledge-status",
+  "file": "app\\api\\control_plane.py",
+  "line": 202
+ },
+ {
+  "method": "GET",
+  "path": "/evidence-package",
+  "file": "app\\api\\control_plane.py",
+  "line": 246
+ },
+ {
+  "method": "POST",
+  "path": "/decisions",
+  "file": "app\\api\\control_plane.py",
+  "line": 255
+ },
+ {
+  "method": "GET",
+  "path": "/decisions",
+  "file": "app\\api\\control_plane.py",
+  "line": 288
+ },
+ {
+  "method": "POST",
+  "path": "/intention",
+  "file": "app\\api\\control_plane.py",
+  "line": 307
+ },
+ {
+  "method": "GET",
+  "path": "/execution-context",
+  "file": "app\\api\\control_plane.py",
+  "line": 374
+ },
+ {
+  "method": "POST",
+  "path": "/execute-reviewed",
+  "file": "app\\api\\control_plane.py",
+  "line": 384
+ },
+ {
+  "method": "GET",
+  "path": "/history",
+  "file": "app\\api\\control_plane.py",
+  "line": 397
+ },
+ {
+  "method": "GET",
+  "path": "/operations-summary",
+  "file": "app\\api\\control_plane.py",
+  "line": 411
+ },
+ {
+  "method": "GET",
+  "path": "/hermes/connection",
+  "file": "app\\api\\control_plane.py",
+  "line": 481
+ },
+ {
+  "method": "POST",
+  "path": "/hermes/connection",
+  "file": "app\\api\\control_plane.py",
+  "line": 488
+ },
+ {
+  "method": "POST",
+  "path": "/dev/inspection-preview",
+  "file": "app\\api\\inspection_preview.py",
+  "line": 20
+ },
+ {
+  "method": "GET",
+  "path": "/reviews/{document_id}/citation",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 60
+ },
+ {
+  "method": "GET",
+  "path": "/reviews/{document_id}",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 105
+ },
+ {
+  "method": "POST",
+  "path": "/reviews/{document_id}/process",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 141
+ },
+ {
+  "method": "POST",
+  "path": "/reviews/{document_id}/metadata",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 150
+ },
+ {
+  "method": "GET",
+  "path": "/reviews/{document_id}/source",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 159
+ },
+ {
+  "method": "POST",
+  "path": "/reviews/{document_id}/decision",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 187
+ },
+ {
+  "method": "POST",
+  "path": "/reviews/{document_id}/trials/{trial_id}/rating",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 196
+ },
+ {
+  "method": "POST",
+  "path": "/documents",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 205
+ },
+ {
+  "method": "POST",
+  "path": "/runs/{run_id}/retry",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 226
+ },
+ {
+  "method": "GET",
+  "path": "/status",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 235
+ },
+ {
+  "method": "POST",
+  "path": "/watch",
+  "file": "app\\api\\knowledge_pipeline.py",
+  "line": 243
+ },
+ {
+  "method": "GET",
+  "path": "/health",
+  "file": "app\\api\\routes.py",
+  "line": 979
+ },
+ {
+  "method": "GET",
+  "path": "/health/detail",
+  "file": "app\\api\\routes.py",
+  "line": 988
+ },
+ {
+  "method": "GET",
+  "path": "/chat/history",
+  "file": "app\\api\\routes.py",
+  "line": 1067
+ },
+ {
+  "method": "POST",
+  "path": "/chat",
+  "file": "app\\api\\routes.py",
+  "line": 1102
+ },
+ {
+  "method": "POST",
+  "path": "/problem/analyze",
+  "file": "app\\api\\routes.py",
+  "line": 1415
+ },
+ {
+  "method": "POST",
+  "path": "/workflow/create",
+  "file": "app\\api\\routes.py",
+  "line": 1455
+ },
+ {
+  "method": "GET",
+  "path": "/workflow/{workflow_id}",
+  "file": "app\\api\\routes.py",
+  "line": 1475
+ },
+ {
+  "method": "POST",
+  "path": "/documents/ingest",
+  "file": "app\\api\\routes.py",
+  "line": 1508
+ },
+ {
+  "method": "POST",
+  "path": "/knowledge/search",
+  "file": "app\\api\\routes.py",
+  "line": 1536
+ },
+ {
+  "method": "GET",
+  "path": "/knowledge/documents",
+  "file": "app\\api\\routes.py",
+  "line": 1577
+ },
+ {
+  "method": "POST",
+  "path": "/human/handoff",
+  "file": "app\\api\\routes.py",
+  "line": 1594
+ },
+ {
+  "method": "GET",
+  "path": "/metrics",
+  "file": "app\\api\\routes.py",
+  "line": 1644
+ },
+ {
+  "method": "GET",
+  "path": "/developer-core",
+  "file": "app\\api\\routes.py",
+  "line": 1675
+ },
+ {
+  "method": "GET",
+  "path": "/readiness",
+  "file": "app\\api\\runtime_readiness.py",
+  "line": 58
+ },
+ {
+  "method": "POST",
+  "path": "/{name}/run",
+  "file": "app\\api\\skills.py",
+  "line": 26
+ },
+ {
+  "method": "GET",
+  "path": "/review",
+  "file": "app\\api\\v2_routes.py",
+  "line": 44
+ },
+ {
+  "method": "GET",
+  "path": "/health",
+  "file": "app\\api\\v2_routes.py",
+  "line": 80
+ },
+ {
+  "method": "POST",
+  "path": "/chat",
+  "file": "app\\api\\v2_routes.py",
+  "line": 85
+ },
+ {
+  "method": "POST",
+  "path": "/memory/sessions",
+  "file": "app\\api\\v2_routes.py",
+  "line": 182
+ },
+ {
+  "method": "POST",
+  "path": "/memory/delete",
+  "file": "app\\api\\v2_routes.py",
+  "line": 195
+ },
+ {
+  "method": "GET",
+  "path": "/metrics",
+  "file": "app\\api\\v2_routes.py",
+  "line": 203
+ },
+ {
+  "method": "GET",
+  "path": "/approvals/pending",
+  "file": "app\\api\\v2_routes.py",
+  "line": 208
+ },
+ {
+  "method": "POST",
+  "path": "/approvals/{approval_id}/decision",
+  "file": "app\\api\\v2_routes.py",
+  "line": 216
+ },
+ {
+  "method": "GET",
+  "path": "/audit/verify",
+  "file": "app\\api\\v2_routes.py",
+  "line": 227
+ },
+ {
+  "method": "POST",
+  "path": "/feedback",
+  "file": "app\\api\\v2_routes.py",
+  "line": 241
+ },
+ {
+  "method": "GET",
+  "path": "/experience/analysis",
+  "file": "app\\api\\v2_routes.py",
+  "line": 253
+ },
+ {
+  "method": "POST",
+  "path": "/research/proposals",
+  "file": "app\\api\\v2_routes.py",
+  "line": 288
+ },
+ {
+  "method": "POST",
+  "path": "/discovery/candidates",
+  "file": "app\\api\\v2_routes.py",
+  "line": 308
+ },
+ {
+  "method": "POST",
+  "path": "/dev",
+  "file": "app\\api\\v2_routes.py",
+  "line": 326
+ }
+]

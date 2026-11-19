@@ -72,7 +72,7 @@ async function requestReview(path:string,token:string,body?:unknown,source=false
   finally{clearTimeout(timer);}
 }
 
-export function SOPReviewPanel({documentId,token,autoProcess=false}:{documentId:string;token:string;autoProcess?:boolean}){
+export function SOPReviewPanel({documentId,token,autoProcess=false,onChanged}:{documentId:string;token:string;autoProcess?:boolean;onChanged?:()=>void}){
   const processAttempt=useRef('');
   const [review,setReview]=useState<Review|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState('');
   const [pdf,setPdf]=useState(''),[inspect,setInspect]=useState(true),[chat,setChat]=useState(false);
@@ -117,7 +117,7 @@ export function SOPReviewPanel({documentId,token,autoProcess=false}:{documentId:
   },[inspect,id,token,review?.version_id,review?.source_type,sourceRevision,sourcePage]);
   async function act(action:()=>Promise<unknown>){
     if(busy)return;setBusy(true);setError('');
-    try{await action();await load();setReport(null);setPublicationAction(null);setNote('');}
+    try{await action();await load();setReport(null);setPublicationAction(null);setNote('');onChanged?.();}
     catch(e){setError(e instanceof Error?e.message:'Penyimpanan gagal. Muat ulang untuk memeriksa hasil.');}
     finally{setBusy(false);}
   }

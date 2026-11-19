@@ -9,6 +9,8 @@ import asyncio
 import json
 import re
 import socket
+import threading
+import time
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, Literal
@@ -58,17 +60,28 @@ def api(monkeypatch, tmp_path):
     tree = ast.parse(Path('app/api/routes.py').read_text(encoding='utf-8-sig'))
     names = {'ChatRequest', 'chat', 'chat_history', '_chat_completed',
              '_record_chat_result', '_project_v1_chat_response', 'KnowledgeSearchRequest',
-             'search_knowledge', 'list_knowledge_documents'}
+             'search_knowledge', 'list_knowledge_documents', '_check_rate_limit'}
     nodes = [n for n in tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
              and (n.name in names or n.name.startswith('_Public'))]
     # Include production boundary imports without executing runtime composition.
     imports = [n for n in tree.body if isinstance(n, ast.ImportFrom)
                and n.module == 'app.security.v1_knowledge']
+    # The per-session rate limiter is module state, not a function. Carry its
+    # declarations across as well, otherwise the compiled chat() raises
+    # NameError instead of exercising the real limiter.
+    rate_state = {'_rate_limit_lock', '_rate_limit_windows',
+                  '_RATE_LIMIT_MAX', '_RATE_LIMIT_WINDOW_S'}
+    state = [n for n in tree.body
+             if (isinstance(n, ast.AnnAssign) and getattr(n.target, 'id', None) in rate_state)
+             or (isinstance(n, ast.Assign)
+                 and any(getattr(t, 'id', None) in rate_state for t in n.targets))]
     ns = dict(BaseModel=BaseModel, ConfigDict=ConfigDict, Field=Field, Any=Any,
               Dict=Dict, Literal=Literal, Header=Header, HTTPException=HTTPException,
               router=APIRouter(prefix='/v1'), asyncio=asyncio, re=re,
-              capture_retrieval=capture_retrieval, uuid4=uuid4)
-    exec(compile(ast.Module(body=imports + nodes, type_ignores=[]), 'offline-v1-route', 'exec'), ns)
+              capture_retrieval=capture_retrieval, uuid4=uuid4,
+              threading=threading, time=time)
+    exec(compile(ast.Module(body=imports + state + nodes, type_ignores=[]),
+                 'offline-v1-route', 'exec'), ns)
     calls = {'search': 0, 'model': 0, 'construct': 0, 'auth': 0}
     configuration = SimpleNamespace(llm=SimpleNamespace(provider='ollama', model='fixture-local'))
     ns['settings'] = SimpleNamespace(configuration_snapshot=lambda: (configuration, 1),

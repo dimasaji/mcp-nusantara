@@ -1,0 +1,43 @@
+# pytest inventory
+
+active test modules: 160
+disabled .bak modules: 5
+total lines: 18476
+total test functions: 877
+
+## modules with zero collected tests (helpers)
+  inspection_preview_isolated_runner.py                 109 lines
+  run_evidence_tests_isolated.py                        308 lines
+  serve_v1_review_fixture.py                             52 lines
+  test_language_normalizer.py                           126 lines
+  v1_baseline.py                                         17 lines
+  v1_execution_fixture.py                                67 lines
+
+## top 20 modules by test count
+  test_web_evidence_pipeline.py                         609 lines  45 tests
+  test_configuration_contract.py                        258 lines  20 tests
+  test_effective_rag_profile.py                         345 lines  19 tests
+  test_provider_identity.py                             497 lines  19 tests
+  test_runtime_authorization.py                         426 lines  19 tests
+  test_v1_sop_boundary.py                               369 lines  19 tests
+  test_runtime_verification.py                          427 lines  17 tests
+  test_ncp_v1_chat_contract.py                          224 lines  16 tests
+  test_openrouter_provider.py                           318 lines  16 tests
+  test_v1_operator_control.py                           454 lines  16 tests
+  test_developer_core_engine_contract.py                205 lines  14 tests
+  test_runtime_correlation.py                           210 lines  14 tests
+  test_langchain_hardening.py                           194 lines  13 tests
+  test_runtime_build_provenance.py                      153 lines  13 tests
+  test_control_plane_attestation_binding.py             231 lines  12 tests
+  test_hermes_v1_conversation.py                        204 lines  12 tests
+  test_sop_table_core.py                                272 lines  12 tests
+  test_weip_rag_adapter.py                              227 lines  12 tests
+  test_configuration_integration.py                     244 lines  11 tests
+  test_hermes_v1_contextual_followup.py                 224 lines  11 tests
+
+## disabled modules
+  test_chat_openrouter_route_wiring_v1.bak-20261016-143602.py
+  test_chat_openrouter_route_wiring_v1.bak-20261016-143857.py
+  test_chat_openrouter_route_wiring_v1.bak-20261016-152032.py
+  test_chat_openrouter_route_wiring_v1.bak-20261016-152159.py
+  test_chat_openrouter_route_wiring_v1.bak-20261016-152329.py

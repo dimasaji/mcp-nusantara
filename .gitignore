@@ -66,7 +66,13 @@ ollama/
 
 # Generated reports, caches, and temp directories
 graphify-out/
-reports/
+# `reports/` used to be excluded wholesale, which also excluded the V1 audit
+# deliverables. Exclude the directory's contents instead so the evidence
+# directory can be tracked while scratch reports stay untracked.
+reports/*
+!reports/audit/
+# Screenshots are the browser-level evidence required by the audit contract.
+!reports/audit/v1-restructure/evidence/*.png
 audit_reports/
 .dev/
 .tmp-build/
