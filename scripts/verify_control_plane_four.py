@@ -37,7 +37,7 @@ async def verify():
         temporary=OUT/'browser-tmp'
         temporary.mkdir(exist_ok=True)
         env=dict(os.environ,NUSANTARA_BACKEND_URL=f'http://127.0.0.1:{port}',NCP_OPERATOR_TOKEN=os.environ['NUSANTARA_ADMIN_TOKEN'],NUSANTARA_VITE_CACHE_DIR=str(OUT/'vite-cache'),TEMP=str(temporary),TMP=str(temporary))
-        node=await asyncio.create_subprocess_exec('node',str(ROOT/'scripts/verify_control_plane_four.cjs'),cwd=ROOT,env=env,stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
+        node=await asyncio.create_subprocess_exec('node',str(ROOT/'tools/verification/verify_control_plane_four.cjs'),cwd=ROOT,env=env,stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
         stdout,stderr=await node.communicate()
         (OUT/'browser-run.txt').write_bytes(stdout)
         return {'status':'PASS' if node.returncode==0 and not calls else 'FAIL','browser_exit':node.returncode,'paid_dispatch_attempts':len(calls),'production_restarted':False,'ingestion_watcher_started':False,'backend_port':port}

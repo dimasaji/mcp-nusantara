@@ -12,5 +12,21 @@ build
 .tox
 .nox
 
+# Local runtime state and heavyweight assets are never part of the image.
+# The Dockerfile copies only app/, control-plane/dist, docs/, scripts/healthcheck.py
+# and nusantara-models/indobert_worker.py.
+model
+data
+reports
+logs
+tests
+docs/reports
+node_modules
+control-plane/node_modules
+.audit_tmp
+.tmp-build
+.tmp
+*.log
+
 !control-plane/dist/
 !control-plane/dist/**

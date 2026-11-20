@@ -64,6 +64,10 @@ ollama/
 *.bak*
 
 
+# Vite/esbuild scratch directories are recreated on every build; they were
+# tracked by accident and showed up as modified/deleted after each `npm run build`.
+control-plane/.vite-temp/
+control-plane/.build-temp-*/
 # Generated reports, caches, and temp directories
 graphify-out/
 # `reports/` used to be excluded wholesale, which also excluded the V1 audit

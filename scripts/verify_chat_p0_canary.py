@@ -48,7 +48,7 @@ async def verify():
             NCP_CHAT_EVIDENCE_TAG='sop-after-fix' if no_paid else 'canary-after-fix',NCP_CHAT_TEMP_BACKEND=f'http://127.0.0.1:{port}',NCP_CHAT_NO_PAID_SERVER_GUARD='1' if no_paid else '0',
             NCP_OPERATOR_TOKEN=os.environ['NUSANTARA_ADMIN_TOKEN'],TEMP=str(temporary),TMP=str(temporary),
             NUSANTARA_VITE_CACHE_DIR=str(OUT/'vite-cache'))
-        child=await asyncio.create_subprocess_exec('node',str(ROOT/'scripts/verify_chat_p0.cjs'),cwd=ROOT,env=env,
+        child=await asyncio.create_subprocess_exec('node',str(ROOT/'tools/verification/verify_chat_p0.cjs'),cwd=ROOT,env=env,
             stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
         stdout,stderr=await child.communicate()
         (OUT/'canary-run.txt').write_bytes(stdout)

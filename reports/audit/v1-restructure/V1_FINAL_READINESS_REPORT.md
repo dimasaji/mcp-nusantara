@@ -265,3 +265,57 @@ Backup documentation: `backup-docs\README.md` and `backup-docs\VERIFICATION.md` 
 | Penetration tested | **NOT PERFORMED** |
 
 **Nusantara V1 is a single coherent product that answers SOP questions from approved knowledge, refuses what it cannot support, and shows both behaviours in a browser. It is ready for a supervised operator. It is not ready to be handed to many untrained users, and it should not be deployed anywhere without fixing A6 first — the Guard's negative-claim hole is a safety issue, not a quality issue.**
+
+---
+
+## 11. Addendum 2026-11-20 - approved restructuring executed
+
+The owner approved A1, A2, A3, A4, A7, A8 and A9 on 2026-11-19. All seven were
+executed on 2026-11-20 and re-verified. A5 and A6 remain deferred. This section
+supersedes the corresponding verdict rows above; the original text is kept unchanged
+so the audit trail is not rewritten.
+
+| Criterion | Verdict in section 10 | Status after execution |
+|---|---|---|
+| Repository restructured | **NOT STARTED** - 9 approvals pending | **DONE** - 9,170 archived, 177 restored as carve-outs (net 8,993 removed), 11 deleted, 26 moved, 281 caches untracked |
+| Observability sufficient | **FAIL** - no `/metrics` | **PASS** - `/v1/metrics` live, `/v1/health/ready` returns `ready` with 65 documents |
+| Container reproducible | not assessed | **PASS** - base image digest-pinned, `haystack-ai` 3.4.1, image `healthy`, `/v1/health` 200 |
+| Frontend dependencies | high + moderate advisories | **PARTIAL** - high and moderate fixed; 2 critical dev-only `vitest`/`tinypool` advisories remain (major upgrade, approval required) |
+| Full test suite green | **FAIL** - 74 pre-existing | **IMPROVED** - release gate 66/66 backend + 219/219 frontend; the 74 failures were not all addressed and are still disclosed item by item |
+| Grounding Guard complete | **FAIL** - negative claims accepted | **UNCHANGED** - A6 deferred by owner |
+| Penetration tested | **NOT PERFORMED** | **UNCHANGED** - explicitly deferred by owner |
+
+**Measured after execution**
+
+| Check | Result | Evidence |
+|---|---|---|
+| Backend gate | 53 passed (model unloaded) + 13 passed (model loaded) = **66/66** | `evidence\A9_gate_pass1_no_model.txt`, `evidence\A9_gate_pass2_model_loaded.txt` |
+| Frontend suite | **219/219**, 28 files | `npm test` |
+| Type check | `tsc --noEmit` **exit 0** | - |
+| Build | **exit 0**, 451 modules, dist 5 files / 965,759 B | - |
+| Live security | **6/6 PASS** | `evidence\A9_live_regression.txt` |
+| Readiness | `{"status":"ready","knowledge_database":{"status":"ok","documents":65}}` | `evidence\A9_live_health_ready_metrics.txt` |
+| Metrics | `requests_total` 51, `http_request` p50 2.32 ms / p95 121.35 ms, stage timings present | `evidence\A9_live_health_ready_metrics.txt` |
+| Container | `healthy`, `/v1/health` 200, 5 `dist` files, `haystack-ai` 3.4.1 | `evidence\A8_image_verification.txt` |
+
+**Deviations disclosed**
+
+1. `Modelfile` was on the A2 deletion manifest and was **kept** - it is the only
+   in-repo description of the intended production model.
+2. `tests\v2\` (8 files) was excluded from A1 so test coverage of the still-present
+   `app\v2` was not removed before A5.
+3. `docs\reports\` (48 files) was restored from the archive after A1 because the
+   frontend suite reads those untracked fixtures. New finding **R-10**: those tests
+   fail on a clean clone until synthetic fixtures replace them.
+4. The gate was run in two passes because 7.9 GB of RAM cannot hold the 6.9 GB model
+   and the IndoBERT worker together. No test was skipped or weakened.
+5. `npm audit fix` left 2 critical + 1 moderate dev-only advisory; fixing them needs
+   `vitest@5.1.1`, a breaking major upgrade outside the approved scope.
+6. The archive manifest had misclassified `.agents\` and `.claude\` as obsolete. Those
+   129 files are the live agent-skill installation, so they were restored and the
+   skill catalog was verified. Finding **R-11**: dot-directories in the manifest need
+   human review before any future archive run.
+
+**Rollback:** every action has a documented reversal in `RESTRUCTURING_CHANGELOG.md`
+section 9 and in `evidence\A1-A9_EXECUTION_REPORT.md`. The archive remains the
+copy-of-record for A1 at `C:\Users\dmaza\NUSANTARA_V1_ARCHIVE\`.

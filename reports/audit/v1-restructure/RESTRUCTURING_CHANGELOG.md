@@ -303,3 +303,57 @@ Nothing in the tree was removed, so file counts are unchanged. All movement is r
 | Coverage | **INCREASED** — 19 boundary tests now execute |
 | Deliverables committable | **YES** — `.gitignore` fixed |
 | Pending approvals listed | **YES** — 9 items |
+
+---
+
+## 9. Execution record - 2026-11-20
+
+A1, A2, A3, A4, A7, A8 and A9 were executed after owner approval. A5 and A6 remain
+deferred. Full measurements are in `evidence\A1-A9_EXECUTION_REPORT.md`; this section
+records what changed and how to undo it.
+
+| # | Status | What was done | Verification | Rollback |
+|---|---|---|---|---|
+| A1 | **EXECUTED** | 9,170 files copied, SHA-256 verified and removed to `C:\Users\dmaza\NUSANTARA_V1_ARCHIVE\`; 5 absent, 8 excluded, 177 restored as carve-outs (net 8,993 removed) | 0 failed; archive 290 MB | copy back from the archive mirror |
+| A2 | **EXECUTED** | 11 root shell accidents deleted; `Modelfile` deliberately kept | hash verified against `E:\NUSANTARA_BACKUP\02_source\` | `git checkout --` or copy from backup |
+| A3 | **EXECUTED** | 26 `git mv`: 13 contracts -> `docs\contracts\`, 13 verifiers -> `tools\verification\` | 0 failed; 3 references repaired | reverse the moves |
+| A4 | **EXECUTED** | `npm audit fix`: `zod` 4.6.7, `seroval` 1.8.2; rebuilt `dist\` | 5 vulns -> 3 (dev only); 219/219 tests, `tsc` 0, build 0 | restore `.audit_tmp\package-lock.before-A4.json`, `npm ci`, rebuild |
+| A7 | **EXECUTED** | 281 cache files untracked (`.vite-temp` 156, `.build-temp-*` 125), kept on disk | `.gitignore` updated, build still passes | `git add -f` and revert `.gitignore` |
+| A8 | **EXECUTED** | `python:3.12-slim@sha256:5e2bdb...` pinned; `haystack-ai==3.4.1`; `requirements-lock.txt` (98 pins); `.dockerignore` tightened | image `healthy`, `/v1/health` 200, 5 `dist` files, digest matches | revert `Dockerfile`/`.dockerignore`, delete lock |
+| A9 | **EXECUTED** | `GET /v1/metrics` and a readiness probe that reads the real document count | gate 66/66 (two passes), live regression 6/6, `ready` + 65 documents | remove the two routes |
+
+### 9.1 Deviations, stated plainly
+
+1. `Modelfile` was on the A2 manifest and was kept - it is the only in-repo pointer to
+   the intended production GGUF.
+2. `tests\v2\` (8 files) was excluded from A1 to preserve coverage of the still-present
+   `app\v2` until A5 is approved.
+3. `docs\reports\` (48 files) was restored from the archive after A1 broke 3 frontend
+   tests that read those untracked fixtures. New finding **R-10**: the frontend suite
+   depends on untracked evidence and fails on a clean clone until synthetic fixtures
+   replace it.
+4. The backend gate ran in two passes because 7.9 GB of RAM cannot hold the 6.9 GB
+   Ollama model and the 0.7 GB IndoBERT worker at once: 53 passed without the model,
+   13 with it. No test was skipped or edited.
+5. Three advisories remain (`vitest`, `tinypool`, `@vitest/mocker`, 2 critical + 1
+   moderate). They are dev-only and need `vitest@5.1.1`, a breaking major upgrade
+   outside the approved `npm audit fix` scope. Not executed without approval.
+6. The archive manifest had classified `.agents\` and `.claude\` as
+   `obsolete-experiments`. That was wrong - `.agents\skills\` is the live skill
+   installation used by the development workflow. All 129 files were restored and the
+   skill catalog was verified. New finding **R-11**: the manifest's bucket assignment
+   is not trustworthy for dot-directories and must be reviewed before any future
+   archive run.
+
+### 9.2 Final gate after execution
+
+| Check | Result |
+|---|---|
+| Backend gate | 66/66 (53 + 13) |
+| Frontend suite | 219/219 |
+| `tsc --noEmit` | exit 0 |
+| `vite build` | exit 0 |
+| Live security regression | 6/6 |
+| `/v1/health/ready` | `ready`, 65 documents, provider 200 |
+| `/v1/metrics` | live, latency histogram populated |
+| Container | `healthy`, `/v1/health` 200 |

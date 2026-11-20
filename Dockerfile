@@ -1,8 +1,11 @@
-FROM python:3.12-slim
+FROM python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY pyproject.toml .
-RUN pip install --no-cache-dir fastapi uvicorn[standard] pydantic pydantic-settings python-dotenv httpx haystack-ai==2.31.1
+# Runtime dependencies, aligned with the tested environment (requirements-lock.txt,
+# haystack-ai 3.4.1). The previous pin (haystack-ai==2.31.1) installed a different
+# major version inside the image than the one the test suite exercises.
+RUN pip install --no-cache-dir fastapi uvicorn[standard] pydantic pydantic-settings python-dotenv httpx haystack-ai==3.4.1
 ENV HAYSTACK_TELEMETRY_ENABLED=False
 RUN python -m venv /opt/indobert \
     && /opt/indobert/bin/pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \

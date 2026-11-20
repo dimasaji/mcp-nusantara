@@ -114,6 +114,71 @@ async def health_check():
     return {"status": "ok", "version": "0.1.0", "build_id": BUILD_ID}
 
 
+@app.get("/v1/metrics")
+async def v1_metrics():
+    """In-process counters and latency, projected into the V1 contract shape.
+
+    `/health` reports process liveness only; this endpoint is what makes the
+    difference between "the process is up" and "the product is being used".
+    """
+    snap = metrics.snapshot()
+    return {
+        "status": "ok",
+        "metrics": {
+            "version": "0.1.0",
+            "uptime_seconds": snap["uptime_s"],
+            "requests_total": snap["counters"].get("requests_total", 0),
+            "latency": snap["latency"],
+            "counters": snap["counters"],
+        },
+    }
+
+
+@app.get("/v1/health/ready")
+async def readiness_check():
+    """Readiness probe that exercises the two dependencies whose failure turned
+    `/v1/chat` into a generic 500 while `/v1/health` still reported `ok`.
+
+    It deliberately does not call the model: a readiness probe that generates
+    tokens is a cost and latency trap. It verifies the knowledge database is
+    queryable and the provider endpoint answers.
+    """
+    import urllib.request
+
+    components: dict[str, object] = {}
+    database: dict[str, object] = {"status": "unknown"}
+    try:
+        from app.api.routes import _knowledge
+
+        # `_knowledge.list_documents()` is the public V1 accessor used by the
+        # routes themselves; it performs a real read-only database query, so a
+        # reachable-but-empty or corrupt database is distinguishable from a
+        # healthy one without starting the embedding worker.
+        listing = _knowledge.list_documents()
+        total = getattr(listing, "total", None)
+        if total is None:
+            total = len(getattr(listing, "documents", None) or [])
+        database = {
+            "status": "ok" if total else "empty",
+            "documents": int(total),
+        }
+    except Exception as exc:  # noqa: BLE001 - probe reports, never raises
+        database = {"status": "error", "error": type(exc).__name__}
+    components["knowledge_database"] = database
+
+    base_url = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+    provider: dict[str, object] = {"status": "unknown"}
+    try:
+        with urllib.request.urlopen(f"{base_url}/api/tags", timeout=2) as response:  # noqa: S310 - fixed loopback URL
+            provider = {"status": "ok" if response.status == 200 else "error", "http_status": response.status}
+    except Exception as exc:  # noqa: BLE001
+        provider = {"status": "unavailable", "error": type(exc).__name__}
+    components["provider"] = provider
+
+    ready = all(component.get("status") == "ok" for component in components.values())
+    return {"status": "ready" if ready else "degraded", "components": components}
+
+
 @app.get("/", include_in_schema=False)
 @app.get("/ui", include_in_schema=False)
 @app.get("/assistant", include_in_schema=False)

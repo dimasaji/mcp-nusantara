@@ -10,7 +10,7 @@ profil indobenchmark/indobert-base-p1, dimensi 768. Tidak ada konfigurasi embedd
 .\.venv\Scripts\python.exe scripts/ingest_v1_sops.py
 .\.venv\Scripts\python.exe scripts/ingest_v1_sops.py --all --prepare-only
 .\.venv\Scripts\python.exe scripts/ingest_v1_sops.py --all
-node scripts/verify_sop_chat_ui.cjs
+node tools/verification/verify_sop_chat_ui.cjs
 ```
 
 Prasyarat: backend 8765 dan frontend 5179, token admin yang telah dikonfigurasi,
