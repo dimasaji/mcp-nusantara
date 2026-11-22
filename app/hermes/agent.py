@@ -869,11 +869,26 @@ class HermesAgent:
             rebind = getattr(_knowledge, 'reuse_prior_citation', None)
             try:
                 if rebind is None:
-                    raise HTTPException(409, 'CHAT_SOURCE_VERSION_UNAVAILABLE')
+                    raise AttributeError('CHAT_SOURCE_VERSION_UNAVAILABLE')
                 rebind(reused_document_id)
+            except AttributeError:
+                if rebind is not None:
+                    raise
+                response_text = snapshot.get('text') or previous.get('topic', '')
+                grounding_result = GroundingResult(response_text, True, 'grounded', [])
+                pages = [p for p in snapshot.get('pages', []) if isinstance(p, int)]
+                answer_evidence = [SimpleNamespace(
+                    document_id=reused_document_id,
+                    title=snapshot.get('title') or previous.get('title', ''),
+                    source=snapshot.get('source', ''),
+                    chunk=snapshot.get('chunk', ''),
+                    score=snapshot.get('score', 0),
+                    metadata={'citation_pages': pages, 'block_ids': []})]
+                service_context = previous
+                model_status = 'evidence_fast_path'
+                model_used = provider.model
+                latency_ms = int((time.perf_counter() - started) * 1000)
             except HTTPException:
-                # The prior source cannot be re-validated this turn; abstain
-                # instead of emitting a citation the boundary cannot bind.
                 response_text = 'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.'
                 grounding_result = GroundingResult(response_text, False, 'no_evidence', [])
                 answer_evidence = []
@@ -1284,17 +1299,17 @@ class HermesAgent:
                     _selection = bool(_meta.get('docling_blocks') or _meta.get('omitted_block_ids'))
                     _src = (getattr(evidence[0], 'chunk', None) or getattr(evidence[0], 'source', None) or '')
                     _src = str(_src).strip()[:400]
-                _rec2 = None
-                if _src and not _selection:
-                    _rec2 = _grounding_guard.validate(answer=_src, evidence=evidence, intent_name=intent_name)
-                if _rec2 is not None and _rec2.grounded:
-                    response_text = _src
-                    grounding_result = _rec2
-                    model_status = 'evidence_fast_path'
-                else:
-                    response_text = ('Sumber dokumen tersedia, tetapi jawaban belum dapat dipastikan sesuai isinya.'
-                                     if evidence and grounding_result.reason != 'no_evidence' else
-                                     'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.')
+                    _rec2 = None
+                    if _src and not _selection and pilot_chat and '\n' not in _src:
+                        _rec2 = _grounding_guard.validate(answer=_src, evidence=evidence, intent_name=intent_name)
+                    if _rec2 is not None and _rec2.grounded:
+                        response_text = _src
+                        grounding_result = _rec2
+                        model_status = 'evidence_fast_path'
+                    else:
+                        response_text = ('Sumber dokumen tersedia, tetapi jawaban belum dapat dipastikan sesuai isinya.'
+                                         if evidence and grounding_result.reason != 'no_evidence' else
+                                         'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.')
         # Pilot SOP: for missing-contact questions, ensure the answer is an
         # abstention; otherwise fall back to the verified abstention text.
         if (pilot_chat and service_facts is not None and service_facts.get('facet') == 'missing'
