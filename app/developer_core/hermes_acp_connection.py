@@ -47,9 +47,12 @@ def _command():
             raise ValueError('HERMES_ROOT_MUST_BE_ABSOLUTE')
     else:
         local = os.environ.get('LOCALAPPDATA')
-        if os.name != 'nt' or not local:
-            raise ValueError('HERMES_ROOT_NOT_CONFIGURED')
-        root = Path(local) / 'hermes' / 'hermes-agent'
+        if os.name == 'nt' and local:
+            root = Path(local) / 'hermes' / 'hermes-agent'
+        else:
+            root = Path.home() / '.local/share/hermes/hermes-agent'
+            if not root.exists():
+                raise ValueError('HERMES_ROOT_NOT_CONFIGURED')
     root = root.resolve(strict=True)
     python = root / 'venv' / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
     entry = root / 'hermes_cli' / 'main.py'

@@ -80,6 +80,19 @@ Perubahan Sprint 1 tidak menambah service/framework/arsitektur dan tidak memakai
 
 Flaky order-dependent `test_pdf_approval_activates_operator_retrieval_without_manual_chat` sebelumnya gagal dengan `409 {"detail":"DOCUMENT_VERSION_NOT_FOUND"}` karena upload PDF auto-prepare async mengganti version before GET/POST. Test kini menunggu `prepared['extraction_status'] in {'COMPLETE', 'PARTIAL', 'FAILED'}` sebelum memakai `source_version`.
 
+## Sprint 2 runtime portability (belum di-commit saat verifikasi)
+
+Fokus: resolusi runtime Linux tanpa data PC. DB path sengaja tidak diubah karena `docs/MDE02_EFFECTIVE_CONFIGURATION_CONTRACT.md` menetapkan path relatif terhadap cwd.
+
+| Perubahan | Red sebelum fix | Green sesudah fix |
+| --- | --- | --- |
+| `app/knowledge/docling_config.py`: helper `tesseract_command()` dengan prioritas `NUSANTARA_TESSERACT_CMD` → `shutil.which('tesseract')` → legacy Windows jika file ada; `effective_config()` degradation bila tidak ada Tesseract | `FileNotFoundError: .../C:/Program Files/Tesseract-OCR/tesseract.exe` | `test_effective_config_degrades_without_tesseract` PASS; `tesseract_cmd=''`, hash `None` |
+| `app/knowledge/engine.py`: memakai helper yang sama, duplikasi fallback Windows dihapus | Refactor desain, bukan perilaku baru | `test_capil01_knowledge.py` → `10 passed, 1 skipped` |
+| `app/developer_core/hermes_acp_connection.py` + patch payload: default Linux `~/.local/share/hermes/hermes-agent` bila `NUSANTARA_HERMES_ROOT`/`LOCALAPPDATA` tidak ada | `ValueError: HERMES_ROOT_NOT_CONFIGURED` | `test_hermes_command_uses_linux_default` dan kecocokan patch payload PASS |
+| `Dockerfile`: hapus `COPY nusantara-models/indobert_worker.py`; worker diharapkan via volume/env `/opt/indobert-worker/indobert_worker.py` | assert COPY gagal | `test_dockerfile_does_not_copy_missing_indobert_worker` PASS |
+
+Feedback loop: `.venv/bin/python -m pytest tests/test_runtime_portability.py -q` → `6 passed`. Regresi OCR: `.venv/bin/python -m pytest tests/test_runtime_portability.py tests/test_capil01_knowledge.py -q` → `12 passed, 1 skipped`. Broad targeted regression gabungan Sprint 1+Sprint 2 → `79 passed, 1 skipped, 1 failed` dari `81`; failure tunggal adalah R2 historis `NOT_VERIFIED`. Saat Tesseract tidak tersedia, snapshot kini juga menandai `ocr='disabled'`. Targeted ruff tidak menambah temuan baru pada file yang disentuh; `tests/test_runtime_portability.py` bersih. `docker build` tidak dijalankan; bukti Docker hanya statis, bukan klaim image build. Graphify tidak dijalankan karena `graphify-out/graph.json` dan CLI tidak ada; skip ini sudah dicatat sejak audit awal.
+
 ## Kesimpulan gate
 
 | Gate | Status |

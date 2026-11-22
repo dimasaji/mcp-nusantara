@@ -74,6 +74,20 @@ Verifikasi Sprint 1: `6 passed` untuk git/origin + synthetic, `7 passed` untuk a
 
 Status kesiapan produksi tidak berubah: `NOT READY`. Blocker runtime/data (worker IndoBERT, Ollama, PDF/DB nyata, artifact historis, secret scan, session drift P2-3) tetap seperti daftar di atas dan bukan diselesaikan Sprint 1.
 
+## Sprint 2 update (belum di-commit saat verifikasi)
+
+Sprint 2 melanjutkan portabilitas runtime Linux:
+
+1. Resolusi Tesseract dipusatkan di `docling_config.tesseract_command()`: env `NUSANTARA_TESSERACT_CMD`, lalu `PATH`, lalu legacy Windows hanya jika file benar-benar ada. `effective_config()` kini mengembalikan nilai kosong/`None` saat Tesseract tidak tersedia, bukan melempar `FileNotFoundError`.
+2. `KnowledgeEngine` memakai helper yang sama, sehingga tidak ada dua aturan resolusi Tesseract.
+3. Hermes ACP memakai default Linux `~/.local/share/hermes/hermes-agent` bila env root tidak di-set; patch payload disamakan.
+4. `Dockerfile` tidak lagi menyalin worker IndoBERT yang tidak ada di checkout. Worker diharapkan disediakan lewat volume/env pada `/opt/indobert-worker/indobert_worker.py`.
+5. DB path tidak diubah: kontrak MDE-02 mensyaratkan path relatif terhadap cwd dan env `NUSANTARA_KNOWLEDGE_DB` sudah tersedia.
+
+Verifikasi: `tests/test_runtime_portability.py` → `6 passed`; bersama `tests/test_capil01_knowledge.py` → `12 passed, 1 skipped`. `docker build` belum dijalankan, jadi perbaikan Dockerfile baru terbukti secara statis.
+
+Status produksi tetap `NOT READY`. Sprint 2 tidak menyediakan worker IndoBERT, model cache, Ollama, PDF/DB nyata, atau artifact historis; semua blocker itu masih berlaku.
+
 ## Kesimpulan akhir
 
 VPS saat ini berhasil menjadi **bukti lingkungan kerja**, bukan bukti produk siap rilis. Status akhir: `NOT READY`. Gunakan laporan ini sebagai baseline untuk iterasi berikutnya, dan jangan menaikkan status tanpa bukti pengujian baru.

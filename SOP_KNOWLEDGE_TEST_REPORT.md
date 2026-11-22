@@ -84,6 +84,14 @@ Flake `409 {"detail":"DOCUMENT_VERSION_NOT_FOUND"}` terjadi karena upload PDF me
 
 Ini membuktikan retrieval/evidence/answer-context dengan data buatan, **bukan** membuktikan IndoBERT worker, OCR/Docling, LLM/Ollama, atau PDF SOP nyata. Status `SOP/RAG END-TO-END: BLOCKED / NOT VERIFIED` tetap berlaku.
 
+## Sprint 2 runtime portability (belum di-commit saat verifikasi)
+
+Resolusi OCR kini portabel: `docling_config.tesseract_command()` memakai `NUSANTARA_TESSERACT_CMD`, lalu `shutil.which('tesseract')`, lalu path legacy Windows hanya jika benar-benar ada. Jika tidak ada Tesseract, `effective_config()` mengembalikan `tesseract_cmd=''`, `tesseract_sha256=None`, dan `language_sha256={}` alih-alih melempar `FileNotFoundError`. `KnowledgeEngine` memakai helper yang sama.
+
+Bukti: `tests/test_runtime_portability.py` `6 passed`; `tests/test_runtime_portability.py tests/test_capil01_knowledge.py` `12 passed, 1 skipped`. Ini hanya membuktikan resolusi path dan OCR fixture, bukan OCR native nyata.
+
+Tidak ada perbaikan untuk worker IndoBERT, model cache, atau Ollama. Status `SOP/RAG END-TO-END: BLOCKED / NOT VERIFIED` tetap berlaku.
+
 ## Kesimpulan
 
 `SOP_KNOWLEDGE_TEST_REPORT` menyatakan alur SOP/RAG penuh **BLOCKED**. Bukti yang ada cukup untuk menyebut batas kegagalan, bukan untuk menyatakan fitur berfungsi.

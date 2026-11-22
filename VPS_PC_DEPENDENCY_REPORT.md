@@ -214,3 +214,14 @@ Bagian 1–8 adalah catatan audit read-only pada HEAD `52c5350c`. Setelah lapora
 Tidak ada perubahan untuk item lain: OCR/Tesseract, IndoBERT worker, model cache, Ollama, PDF SOP, DB berisi, graphify/checkpoint artifact, Hermes root, credential-like literal, atau Windows automation scripts. Tidak ada data PC yang disalin dan tidak ada service baru yang dibuat.
 
 Verifikasi portabilitas Sprint 1: `npm run build` PASS, `npm test -- tests/vite-config.test.ts` PASS, git/origin + synthetic targeted `6 passed`, adapter + synthetic `7 passed`, broad targeted regression 68 item dengan hanya failure historis R2, dan `npm test` penuh `218 passed, 3 failed` dari `221`.
+
+## 10. Sprint 2 addendum (runtime portability, 2026-11-22)
+
+| Item audit lama | Status Sprint 2 | Bukti |
+| --- | --- | --- |
+| Tesseract default Windows di `docling_config.py` dan `engine.py` | DIPERBAIKI | `tesseract_command()` memakai env → `shutil.which` → legacy Windows jika ada; `effective_config()` degradation bila tidak ada; engine memakai helper sama |
+| Hermes root `%LOCALAPPDATA%` | DIPERBAIKI | default Linux `~/.local/share/hermes/hermes-agent`; file patch payload disamakan |
+| `Dockerfile:18` COPY worker yang hilang | DIPERBAIKI secara statis | COPY dihapus; env worker diarahkan ke `/opt/indobert-worker/indobert_worker.py`; `docker build` belum dijalankan |
+| DB path relatif cwd | SENGAJA TIDAK DIUBAH | `docs/MDE02_EFFECTIVE_CONFIGURATION_CONTRACT.md` menetapkan kontrak tersebut; override `NUSANTARA_KNOWLEDGE_DB` sudah ada |
+
+Verifikasi Sprint 2: `tests/test_runtime_portability.py` `6 passed`; regresi OCR `12 passed, 1 skipped`. Tidak ada data PC yang disalin, tidak ada service baru, dan tidak ada perubahan kontrak DB.
