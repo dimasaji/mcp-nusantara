@@ -7,7 +7,6 @@ import html
 import sqlite3
 import os
 import re
-import shutil
 import subprocess
 import zipfile
 from contextlib import contextmanager
@@ -15,6 +14,7 @@ from threading import Lock
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .docling_config import tesseract_command
 from .rag import RAG, create_rag
 from app.core.nusantara_config import NusantaraConfig
 from .schemas import RetrievalEvidenceList
@@ -265,10 +265,7 @@ class KnowledgeEngine:
                          or (not pages[index].strip() and document[index].get_drawings())]
             if not needs_ocr:
                 return pages
-            command = os.getenv('NUSANTARA_TESSERACT_CMD') or shutil.which('tesseract')
-            if not command:
-                candidate = Path('C:/Program Files/Tesseract-OCR/tesseract.exe')
-                command = str(candidate) if candidate.is_file() else None
+            command = tesseract_command()
             if not command:
                 raise ValueError('OCR_NOT_AVAILABLE_FOR_SCANNED_PDF')
             for index in needs_ocr:
