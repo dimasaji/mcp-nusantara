@@ -235,3 +235,14 @@ Verifikasi Sprint 2: `tests/test_runtime_portability.py` `6 passed`; regresi OCR
 | Worker IndoBERT / Ollama / PDF-DB nyata | TETAP BLOCKED | `test_langchain_hardening.py` masih `9 passed, 4 failed`; `SOP/RAG END-TO-END: BLOCKED / NOT VERIFIED` |
 
 Tidak ada service, framework, atau kontrak DB baru. Regresi 14 file yang menyentuh sesi menghasilkan `153 passed, 3 skipped, 12 failed, 18 errors`; failure/error tersebut sudah ada sebelum Sprint 4. Targeted ruff pada 9 file yang disentuh tidak menambah temuan baru. Code review dua axis terhadap working tree dengan fixed point `a3a197cb` tercatat di `BUILD_AND_TEST_REPORT.md`: Standards 2 findings, Spec 6 findings; perbaikan dan penerimaan alasan sudah dicatat di sana.
+
+## 12. Sprint 5 addendum (fixture stabilization, 2026-11-22)
+
+| Item audit lama | Status Sprint 5 | Bukti |
+| --- | --- | --- |
+| 18 error setup `app.state.configuration_owner` | DIPERBAIKI | direct assignment + restore eksplisit di fixture operator; `test_v1_operator_control.py` `26 passed` |
+| 7 failure `test_v1_response_projection.py` | DIPERBAIKI | fixture SQLite `tmp_path` + adapter engine; `27 passed` |
+| `test_session_isolation` `422 DOCUMENT_NOT_INDEXED` | DIPERBAIKI | fixture dokumen/provider sintetis; `test_langchain_hardening.py` `10 passed, 3 failed` |
+| Worker IndoBERT / Ollama / PDF-DB nyata | TETAP BLOCKED | 3 failure tersisa: `503`, `503`, `500` dari path worker/Ollama yang tidak ada |
+
+Regresi 14 file akhir `183 passed, 3 failed, 104 warnings`; targeted 3 file `63 passed, 3 failed`; secret gate `1 passed`; ruff pada 3 file tidak menambah temuan. Tidak ada PC data, source produksi, service, framework, arsitektur, atau kontrak DB baru. Code review dua axis dengan fixed point `c5a87ac0` tercatat di `BUILD_AND_TEST_REPORT.md`: Standards 4 findings (0 hard), Spec 7 findings; perbaikan dan penerimaan alasan sudah dicatat di sana.

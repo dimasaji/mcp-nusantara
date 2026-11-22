@@ -1,7 +1,9 @@
 """Outbound privacy tests with synthetic internal state; no model/DB mutation."""
 from copy import deepcopy
+from contextlib import contextmanager
 from types import SimpleNamespace
 import json
+import sqlite3
 
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
@@ -141,7 +143,8 @@ def controlled_pipeline(monkeypatch, tmp_path):
                            "entities": []}, "input": PRIVATE, "metadata": PRIVATE}
 
     citation = SimpleNamespace(document_id="PUBLIC-1", title="Public citation",
-                               chunk="Public citation.", source=PRIVATE, score=.9)
+                               chunk="Public citation.", chunk_id="PUBLIC-CHUNK-1",
+                               source=PRIVATE, metadata={}, score=.9)
 
     def trust(**kwargs):
         count = len(kwargs["evidence"])
@@ -157,6 +160,17 @@ def controlled_pipeline(monkeypatch, tmp_path):
     def remember(**kwargs):
         state["remembered"] += 1
 
+    db_path = tmp_path / 'projection.db'
+
+    @contextmanager
+    def pipeline_db():
+        connection = sqlite3.connect(db_path)
+        connection.row_factory = sqlite3.Row
+        try:
+            yield connection
+        finally:
+            connection.close()
+
     monkeypatch.setattr(routes, "OllamaProvider", Provider)
     class FixtureHermes(routes.HermesAgent):
         def __init__(self, **kwargs):
@@ -167,8 +181,19 @@ def controlled_pipeline(monkeypatch, tmp_path):
             self.reasoning = ReasoningEngine()
     monkeypatch.setattr(routes, "HermesAgent", FixtureHermes)
     monkeypatch.setattr(routes, "_knowledge", SimpleNamespace(
+        rag=SimpleNamespace(
+            _store=SimpleNamespace(db_path=db_path),
+            get_document_info=lambda identifier: SimpleNamespace(
+                title='Fixture document', source='isolated-fixture', metadata={},
+            ),
+        ),
+        list_documents=lambda: SimpleNamespace(
+            documents=[SimpleNamespace(document_id="PUBLIC-1")],
+        ),
+        retrieval_top_k=5,
         search_knowledge=lambda *args, **kwargs: [] if state["empty"] else [citation],
         scan_knowledge_watch=lambda: None,
+        _pipeline_db=pipeline_db,
     ))
 
     class FixtureSOPReview:
@@ -202,7 +227,7 @@ def controlled_pipeline(monkeypatch, tmp_path):
             unsupported_sentences=[PRIVATE],
         ),
     ))
-    return state
+    yield state
 
 
 @pytest.mark.parametrize("branch", ["local_rule", "fast", "ollama", "offline", "unsupported",

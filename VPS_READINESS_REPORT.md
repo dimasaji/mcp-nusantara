@@ -111,6 +111,14 @@ Verifikasi: `tests/test_v1_session_contract.py tests/test_approval_boundary.py` 
 
 Status produksi tetap `NOT READY`. Sprint 4 menyelesaikan kontrak sesi, bukan blocker runtime/data: worker IndoBERT, Ollama, PDF/DB nyata, artifact historis R2, dan build Docker nyata masih terbuka.
 
+## Sprint 5 update (stabilisasi fixture, 2026-11-22)
+
+Sprint 5 menyelesaikan 27 failure/error lama pada 3 file test: `test_v1_response_projection.py` (`27 passed`), `test_v1_operator_control.py` (`26 passed`), dan `test_session_isolation` di `test_langchain_hardening.py`. Targeted 3 file → `63 passed, 3 failed`; broad 14 file → `183 passed, 3 failed, 104 warnings`. Secret gate tetap `1 passed`; ruff pada 3 file tidak menambah temuan. Code review dua axis (fixed point `c5a87ac0`) tercatat di `BUILD_AND_TEST_REPORT.md`.
+
+Tiga failure tersisa bersifat environment/worker, bukan regresi: dua `503 PROVIDER_UNAVAILABLE` karena Ollama tidak berjalan dan satu `500` karena `FileNotFoundError: /data/home/mcp-nusantara/nusantara-models/.venv/bin/python`. Tidak ada source produksi, service, framework, arsitektur, atau DB produksi yang diubah.
+
+Status produksi tetap `NOT READY FOR PRODUCTION / NOT READY FOR PUBLIC EXPOSURE`.
+
 ## Kesimpulan akhir
 
 VPS saat ini berhasil menjadi **bukti lingkungan kerja**, bukan bukti produk siap rilis. Status akhir: `NOT READY`. Gunakan laporan ini sebagai baseline untuk iterasi berikutnya, dan jangan menaikkan status tanpa bukti pengujian baru.

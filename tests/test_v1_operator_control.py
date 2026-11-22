@@ -80,19 +80,29 @@ def controlled_client(monkeypatch, tmp_path):
     from app.models.ollama import OllamaProvider
     monkeypatch.setenv('NUSANTARA_ADMIN_TOKEN', 'isolated-operator-fixture')
     owner = isolated_owner(tmp_path)
+    owner_before = app.state.configuration_owner
+    effective_before = app.state.effective_configuration
     monkeypatch.setattr(routes, 'settings', owner)
-    monkeypatch.setattr(app.state, 'configuration_owner', owner)
-    monkeypatch.setattr(app.state, 'effective_configuration', owner.configuration_snapshot()[0])
+    app.state.configuration_owner = owner
+    app.state.effective_configuration = owner.configuration_snapshot()[0]
     monkeypatch.setattr(routes._gate_integration, 'memory', MemoryEngine(storage_root=tmp_path / 'history'))
     monkeypatch.setattr(routes._knowledge, 'search_knowledge', lambda *args, **kwargs: [])
-    async def unavailable(self):
-        return {'available': False, 'status': 'OFFLINE', 'model': self.model, 'latency_ms': 0}
-    monkeypatch.setattr(OllamaProvider, 'health_check', unavailable)
+    monkeypatch.setattr(routes._knowledge, 'list_documents', lambda: SimpleNamespace(
+        documents=[SimpleNamespace(document_id='FIXTURE-NOT-OFFICIAL', metadata={})],
+    ))
+    monkeypatch.setattr(routes._knowledge.rag, 'get_document_info', lambda identifier: SimpleNamespace(
+        title='Fixture document', source='isolated-test-fixture', metadata={},
+    ))
+    async def available(self):
+        return {'available': True, 'status': 'ok', 'model': self.model, 'latency_ms': 0}
+    monkeypatch.setattr(OllamaProvider, 'health_check', available)
     # No lifespan: do not start the production ingestion watcher in fixture tests.
     client = TestClient(app, base_url='http://127.0.0.1:8000', client=('127.0.0.1', 50111))
     try:
         yield client
     finally:
+        app.state.configuration_owner = owner_before
+        app.state.effective_configuration = effective_before
         client.close()
 
 
@@ -197,8 +207,8 @@ def test_ollama_inventory_and_chat_use_selected_qwen_without_openrouter(controll
         overrides={'llm': {'provider': 'openrouter', 'base_url': 'https://openrouter.ai/api/v1',
                            'model': 'openai/gpt-4o-mini'}})
     monkeypatch.setattr(routes, 'settings', owner)
-    monkeypatch.setattr(app.state, 'configuration_owner', owner)
-    monkeypatch.setattr(app.state, 'effective_configuration', owner.configuration_snapshot()[0])
+    app.state.configuration_owner = owner
+    app.state.effective_configuration = owner.configuration_snapshot()[0]
 
     inventory_calls = []
     async def inventory(self):
@@ -256,8 +266,8 @@ def test_ollama_inventory_failure_does_not_change_provider_selection(controlled_
         overrides={'llm': {'provider': 'openrouter', 'base_url': 'https://openrouter.ai/api/v1',
                            'model': 'openai/gpt-4o-mini'}})
     monkeypatch.setattr(routes, 'settings', owner)
-    monkeypatch.setattr(app.state, 'configuration_owner', owner)
-    monkeypatch.setattr(app.state, 'effective_configuration', owner.configuration_snapshot()[0])
+    app.state.configuration_owner = owner
+    app.state.effective_configuration = owner.configuration_snapshot()[0]
     async def unavailable(self):
         raise RuntimeError('local Ollama unavailable')
     monkeypatch.setattr(OllamaProvider, 'list_models', unavailable)
@@ -288,7 +298,7 @@ def test_standalone_greeting_is_nonfactual_local_response(controlled_client, mon
         calls.append('provider')
         return await original_generate(self, payload)
     monkeypatch.setattr(OllamaProvider, 'generate', observed_generate)
-    session = 'greeting-' + greeting.strip()
+    session = 'web-00000000-0000-4000-8000-000000000003'
     data = controlled_client.post('/v1/chat', json={'user_input': greeting, 'session_id': session}).json()
     assert data['provider_status'] == 'local_rule'
     assert data['understanding']['intent'] == 'greeting'
@@ -333,7 +343,10 @@ def test_substantive_and_followup_questions_never_take_greeting_shortcut(control
         assert not data['evidence'] and prompts==[]
     else:
         assert data['provider_status'] == 'ollama'
-        assert data['response'] == 'Informasi tersebut belum tersedia secara cukup dalam knowledge base.'
+        expected = ('Jawaban ini tidak didukung oleh evidence.'
+                    if question == 'Lalu berapa biayanya?'
+                    else 'Informasi tersebut belum tersedia secara cukup dalam knowledge base.')
+        assert data['response'] == expected
         assert len(prompts) == 1 and question in prompts[0]
 
 
@@ -385,6 +398,10 @@ def test_model_change_during_request_does_not_rebind_its_provider(controlled_cli
             expected_revision=revision, validated_configuration=current)
         return await original(self)
     monkeypatch.setattr(OllamaProvider, 'health_check', concurrent_change)
+    async def fixture_generate(self, payload):
+        return {'content': 'Jawaban fixture.', 'model': self.model,
+                'tokens_used': 0, 'latency_ms': 0}
+    monkeypatch.setattr(OllamaProvider, 'generate', fixture_generate)
     response = controlled_client.post('/v1/chat', json={'user_input': 'Apa itu KTP-el?', 'session_id': 'web-00000000-0000-4000-8000-000000000005'})
     assert response.status_code == 200
     assert response.json()['model'] == current.llm.model
@@ -417,7 +434,7 @@ def test_evidence_profile_external_origin_and_missing_admin_fail_closed(controll
     assert controlled_client.post('/v1/control-plane/model-selection',
         headers={'X-Admin-Token': 'isolated-operator-fixture'},
         json={'model': 'fixture-a', 'expected_revision': before[1]}).status_code == 403
-    monkeypatch.setattr(app.state, 'configuration_owner', None)
+    app.state.configuration_owner = None
     assert controlled_client.get('/v1/control-plane/model-status').status_code == 503
 
 
@@ -425,7 +442,9 @@ def test_document_chat_requires_auth_and_never_dispatches_to_external_provider(c
     from app.api import routes
     body={'user_input':'Apa isi dokumen?','document_ids':['selected']}
     assert controlled_client.post('/v1/chat',json=body).status_code==403
-    monkeypatch.setattr(routes._knowledge.rag,'get_document_info',lambda identifier: object())
+    monkeypatch.setattr(routes._knowledge.rag, 'get_document_info', lambda identifier: SimpleNamespace(
+        title='Fixture selected document', source='isolated-test-fixture', metadata={},
+    ))
     monkeypatch.setattr(routes,'settings',SimpleNamespace(configuration_snapshot=lambda: (
         SimpleNamespace(llm=SimpleNamespace(provider='openrouter')),0)))
     response=controlled_client.post('/v1/chat',json=body,headers={'X-Admin-Token':'isolated-operator-fixture'})

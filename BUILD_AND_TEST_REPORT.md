@@ -149,6 +149,42 @@ Worst Standards: bukti workflow yang belum lengkap — sudah diperbaiki.
 
 Worst Spec: citation belum teruji — sudah diperbaiki. Ringkasan: Standards 2 findings (1 hard, 1 judgement cluster; worst: bukti workflow), Spec 6 findings (worst: citation coverage).
 
+## Sprint 5 — stabilisasi fixture V1 (fixed point `c5a87ac0`, working tree)
+
+| Gate | Perintah | Hasil |
+| --- | --- | --- |
+| Response projection | `.venv/bin/python -m pytest tests/test_v1_response_projection.py -q` | `27 passed, 13 warnings` |
+| Operator control | `.venv/bin/python -m pytest tests/test_v1_operator_control.py -q` | `26 passed, 14 warnings` |
+| Langchain hardening | `.venv/bin/python -m pytest tests/test_langchain_hardening.py -q` | `10 passed, 3 failed, 9 warnings` |
+| Targeted 3 file | `.venv/bin/python -m pytest tests/test_v1_response_projection.py tests/test_v1_operator_control.py tests/test_langchain_hardening.py -q` | `63 passed, 3 failed, 36 warnings` |
+| Broad 14 file | `.venv/bin/python -m pytest tests/test_chat_request_idempotency.py tests/test_v1_session_contract.py tests/test_approval_boundary.py tests/test_chat_citation_source.py tests/test_chat_openrouter_route_wiring_v1.py tests/test_openrouter_provider.py tests/test_v1_smoke.py tests/test_v1_operator_control.py tests/test_v1_response_projection.py tests/test_langchain_hardening.py tests/test_backend_runtime_fixture.py tests/test_hermes_v1_context_persistence.py tests/test_phase3_observability.py tests/test_inspection_preview_api.py -q` | `183 passed, 3 failed, 104 warnings` |
+| Secret gate | `.venv/bin/python -m pytest tests/v2/test_phases_7_21.py::TestSecurity::test_project_has_no_secrets -q` | `1 passed` |
+| Targeted ruff | perbandingan `git show HEAD:<file>` vs working tree pada 3 file Python | `4/4`, `11/11`, `6/5`; tidak ada temuan baru |
+
+Broad 14 file sekarang memuat 3 failure yang sama dengan targeted: `test_empty_retrieval_abstention` (`503`), `test_request_contract_unchanged` (`503`), dan `test_knowledge_search_still_works` (`500`). Dua `503` berasal dari ketiadaan Ollama; `500` dari `FileNotFoundError: /data/home/mcp-nusantara/nusantara-models/.venv/bin/python` lewat `app/knowledge/indobert_embedding.py:42` → `app/language/semantic/indobert_client.py:107 encode` → `start()` baris `59`. Keduanya adalah blocker lingkungan/worker yang sudah ada, bukan regresi Sprint 5. Seluruh 12 failure dan 18 error lama di suite ini hilang; tidak ada skip pada komposisi final.
+
+Perubahan dibatasi pada `tests/test_v1_response_projection.py`, `tests/test_v1_operator_control.py`, dan `tests/test_langchain_hardening.py`. Tidak ada source produksi, service, framework, arsitektur, atau DB produksi yang diubah. `app/api/routes.py` tidak memiliki diff Sprint 5 setelah debug sementara dihapus. Graphify tetap di-skip karena `graphify-out/graph.json` dan CLI tidak ada.
+
+### Code review Sprint 5 (fixed point `c5a87ac0`, working tree)
+
+## Standards
+- Hard: none. `docs/development-principles.md:23-24,62,148` justru mengharuskan provider mock; README no-secrets tidak terdampak.
+- Judgement — Duplicated Code: helper `fixture_generate`, `fixture_health_check`, dan `get_document_info`/`list_documents` muncul di lebih dari satu file. Diterima: constraint Sprint 5 melarang modul bersama, dan fixture sengaja mandiri.
+- Judgement — Data Clumps: pasangan `configuration_owner` + `effective_configuration` dan variabel `*_before` travel together. Diterima: penugasan langsung diperlukan karena `pytest.MonkeyPatch.setattr` tidak bekerja pada Starlette `State`; restore eksplisit di `finally` lebih aman.
+- Judgement — Message Chains / Primitive Obsession: `rag._store.db_path` dan literal ID sintetis lemah dan mengikuti konvensi produksi/test yang ada. Diterima.
+
+Worst Standards: duplication antar fixture — diterima dengan alasan di atas.
+
+## Spec
+- Bukti broad regression awalnya belum ada. Sudah diperbaiki dengan perintah dan hasil `183 passed, 3 failed` di atas.
+- Bukti workflow awalnya belum ada di diff. Sudah diperbaiki dengan catatan Graphify/diagnosis/TDD/design di sini dan di laporan lain.
+- Test-input semantics diubah (`Lalu berapa biayanya?` → `Lalu berapa biaya KTP-el?`). Sudah diperbaiki: input dikembalikan, assertion kini menerima response abstention alternatif yang memang dihasilkan jalur conversation-shortcut.
+- Path SQLite baru di fixture. Diterima: memakai `tmp_path` dan merupakan bagian dari seam adapter engine, bukan DB produksi atau jawaban hardcode.
+- Mutasi `app.state` dan patch `type(routes.settings).configuration_snapshot`. Diterima: keduanya berada dalam seam komposisi TestClient; `monkeypatch` meng-undo patch settings, sedangkan `app.state` dipulihkan eksplisit karena keterbatasan Starlette `State`.
+- 3 failure tersisa awalnya belum didokumentasikan secara spesifik. Sudah diperbaiki dengan rincian status dan path worker di atas.
+
+Worst Spec: bukti broad regression — sudah diperbaiki. Ringkasan: Standards 4 findings (0 hard; worst: duplication), Spec 7 findings (worst: broad evidence).
+
 ## Kesimpulan gate
 
 | Gate | Status |
@@ -156,7 +192,7 @@ Worst Spec: citation belum teruji — sudah diperbaiki. Ringkasan: Standards 2 f
 | Install dependency | PASS |
 | Python smoke `run_tests.py` | PASS |
 | Frontend build | PASS |
-| Targeted regresi perbaikan sesi ini | Sprint 1-3 PASS kecuali blocker historis; Sprint 4 PASS untuk kontrak sesi, dengan failure lama di luar lingkup |
+| Targeted regresi perbaikan sesi ini | Sprint 1-3 PASS kecuali blocker historis; Sprint 4 PASS untuk kontrak sesi, dengan failure lama di luar lingkup; Sprint 5 PASS sebagian: `63 passed, 3 failed` dengan 3 failure worker/Ollama yang sudah didokumentasikan |
 | Python full suite | FAIL |
 | Frontend unit suite | FAIL sebagian |
 | Lint/typecheck | FAIL |

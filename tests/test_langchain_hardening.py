@@ -1,9 +1,14 @@
 """P3 hardening tests for LangChain/LangGraph integration."""
 import os
+from types import SimpleNamespace
+
 import pytest
 from fastapi.testclient import TestClient
-from app.main import app
+
+from app.api import routes
 from app.core.config import settings
+from app.main import app
+from app.models.ollama import OllamaProvider
 
 # Default: flags OFF
 os.environ.pop('NUS_LANGCHAIN_ENABLED', None)
@@ -106,15 +111,35 @@ def test_no_evidence_abstention():
 
 # --- C. Session and Security ---
 
-def test_session_isolation():
+def test_session_isolation(monkeypatch):
     """Different sessions don't share evidence."""
     client = TestClient(app)
     token = os.environ['NUSANTARA_ADMIN_TOKEN']
     import uuid
+    document_id = 'DOC-SYNTHETIC-SESSION'
+    configuration = SimpleNamespace(llm=SimpleNamespace(
+        provider='ollama', base_url='http://127.0.0.1:11434',
+        model='fixture-model', connection_timeout_s=1.0,
+    ))
+    monkeypatch.setattr(type(routes.settings), 'configuration_snapshot', lambda self: (configuration, 0))
+    monkeypatch.setattr(routes._knowledge.rag, 'get_document_info', lambda identifier: SimpleNamespace(
+        title='Fixture document', metadata={},
+    ))
+    monkeypatch.setattr(routes._knowledge, 'list_documents', lambda: SimpleNamespace(
+        documents=[SimpleNamespace(document_id=document_id, metadata={})],
+    ))
+    monkeypatch.setattr(routes._knowledge, 'search_knowledge', lambda *args, **kwargs: [])
+    async def fixture_health_check(self):
+        return {'status': 'ok', 'model': self.model, 'available': True, 'latency_ms': 0}
+    async def fixture_generate(self, payload):
+        return {'content': 'Jawaban fixture.', 'model': self.model,
+                'tokens_used': 0, 'latency_ms': 0}
+    monkeypatch.setattr(OllamaProvider, 'health_check', fixture_health_check)
+    monkeypatch.setattr(OllamaProvider, 'generate', fixture_generate)
     sid1 = 'web-' + str(uuid.uuid4())
     sid2 = 'web-' + str(uuid.uuid4())
-    body1 = {'session_id': sid1, 'user_input': 'halo', 'document_ids': ['DOC-SHA256-282658f23a8578ca50b1135a589449635681cdadb725fc957e52355b959a7244']}
-    body2 = {'session_id': sid2, 'user_input': 'halo', 'document_ids': ['DOC-SHA256-282658f23a8578ca50b1135a589449635681cdadb725fc957e52355b959a7244']}
+    body1 = {'session_id': sid1, 'user_input': 'halo', 'document_ids': [document_id]}
+    body2 = {'session_id': sid2, 'user_input': 'halo', 'document_ids': [document_id]}
     r1 = client.post('/v1/chat', json=body1, headers={'X-Admin-Token': token})
     r2 = client.post('/v1/chat', json=body2, headers={'X-Admin-Token': token})
     assert r1.status_code == 200

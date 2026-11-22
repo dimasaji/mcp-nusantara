@@ -98,6 +98,14 @@ Catatan lama tentang 3 failure session-id `web`/`other` kini superseded. `CHAT_S
 
 Ini tidak mengubah status SOP/RAG: worker IndoBERT dan DB/PDF nyata tetap tidak tersedia, sehingga `SOP/RAG END-TO-END: BLOCKED / NOT VERIFIED` tetap berlaku.
 
+## Sprint 5 fixture stabilization (2026-11-22)
+
+Fixture test untuk `test_v1_response_projection.py`, `test_v1_operator_control.py`, dan `test_session_isolation` di `test_langchain_hardening.py` sudah distabilisasi memakai seam TestClient + adapter engine sintetis. Hasil: `27 passed`, `26 passed`, dan langchain `10 passed, 3 failed`; targeted 3 file `63 passed, 3 failed`; broad 14 file `183 passed, 3 failed`.
+
+Tiga failure tersisa justru menegaskan blocker SOP/RAG yang sudah ada: 2 `503` karena Ollama tidak berjalan dan 1 `500` karena `FileNotFoundError: /data/home/mcp-nusantara/nusantara-models/.venv/bin/python` dari `indobert_client.py:107 encode` → `start()` baris `59`. Worker/model tidak dibuat-buat, fallback tidak ditambahkan, dan DB produksi tidak disentuh.
+
+Status `SOP/RAG END-TO-END: BLOCKED / NOT VERIFIED` tetap berlaku.
+
 ## Kesimpulan
 
 `SOP_KNOWLEDGE_TEST_REPORT` menyatakan alur SOP/RAG penuh **BLOCKED**. Bukti yang ada cukup untuk menyebut batas kegagalan, bukan untuk menyatakan fitur berfungsi.
