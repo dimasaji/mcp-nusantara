@@ -352,22 +352,14 @@ class KnowledgeEngine:
         try:
             pdf_pages = self._extract_pdf_pages(raw) if Path(safe_name).suffix.lower() == '.pdf' else None
             text = '\n'.join(pdf_pages) if pdf_pages is not None else self._extract_pipeline_text(safe_name, raw)
+            from .preparation import normalize_knowledge_text, prepare_knowledge_text
             from .text_cleaning import clean_text, persist_intake_text
             raw_text, raw_pages = text, pdf_pages
-            if pdf_pages is not None:
-                pdf_pages = [clean_text(page) for page in pdf_pages]
-                text = '\n'.join(pdf_pages)
-            else:
-                text = clean_text(text)
-            normalized=' '.join(text.split())
-            if len(normalized)<40:
-                raise ValueError('EXTRACTED_TEXT_TOO_SHORT_OR_SCANNED; OCR_REQUIRED')
-            # Character diversity is only a low-information screen, not an OCR
-            # accuracy score. Bound the sample so long, readable SOPs are not
-            # rejected merely because their alphabet stays the same.
-            quality_sample = normalized[:2048]
-            if len(set(quality_sample))/len(quality_sample)<0.015:
-                raise ValueError('EXTRACTED_TEXT_QUALITY_CHECK_FAILED')
+            cleaned_pages = [clean_text(page) for page in pdf_pages] if pdf_pages is not None else None
+            joined = '\n'.join(cleaned_pages) if cleaned_pages is not None else clean_text(text)
+            text, preparation = prepare_knowledge_text(joined)
+            if cleaned_pages is not None:
+                pdf_pages = [normalize_knowledge_text(page) for page in cleaned_pages]
             digest_id=document_id or 'DOC-SHA256-'+digest
             from .store import SQLiteVectorStore
             if isinstance(self.rag._store,SQLiteVectorStore):
@@ -383,7 +375,7 @@ class KnowledgeEngine:
                     raise ValueError('DOCUMENT_ID_CONFLICT_OR_INCOMPLETE; existing knowledge preserved')
             metadata={**(source_metadata or {}),'pipeline_status':'READY','source_sha256':digest,'source_filename':safe_name,
                       'source_authority':'UNVERIFIED','revision_status':'NOT_CONFIRMED_CURRENT',
-                      'knowledge_preparation':None,
+                      'knowledge_preparation':preparation,
                       'source_pages':[],
                       'indexed_at':datetime.now(timezone.utc).isoformat()}
             metadata['text_cleaning'] = persist_intake_text(
