@@ -3,7 +3,9 @@ import time, json, urllib.request, os
 from app.knowledge.engine import KnowledgeEngine
 from app.knowledge.sop_review import SOPReview
 
-TOKEN = 'R4H4Si4.'
+TOKEN = os.getenv('NUSANTARA_ADMIN_TOKEN')
+if not TOKEN:
+    raise SystemExit('NUSANTARA_ADMIN_TOKEN is required')
 BASE = 'http://127.0.0.1:8000'
 
 def api(method, path, data=None):

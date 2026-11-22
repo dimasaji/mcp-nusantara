@@ -12,8 +12,11 @@ def extract_pymupdf_tables(pdf_path):
                 tables.append({'page': page_num, 'rows': len(rows), 'cols': len(rows[0]) if rows else 0, 'cells': sum(len(r) for r in rows)})
     return tables
 
-def extract_docling_tables(doc_id, base_url='http://127.0.0.1:8000', token='R4H4Si4.'):
+def extract_docling_tables(doc_id, base_url='http://127.0.0.1:8000', token=None):
     import urllib.request
+    token = token or os.environ.get('NUSANTARA_ADMIN_TOKEN')
+    if not token:
+        raise SystemExit('NUSANTARA_ADMIN_TOKEN is required')
     req = urllib.request.Request(base_url+'/v1/knowledge/pipeline/reviews/'+doc_id, headers={'X-Admin-Token':token})
     d = json.loads(urllib.request.urlopen(req, timeout=60).read())
     blocks = d.get('extracted_blocks', [])

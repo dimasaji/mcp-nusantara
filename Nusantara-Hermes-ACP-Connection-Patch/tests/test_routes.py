@@ -29,7 +29,8 @@ class BoundaryTests(unittest.TestCase):
                 raise HTTPError(403,'admin token diperlukan')
         self.env['_admin_reviewer']=admin
         exec(compile(ast.Module(body=selected,type_ignores=[]),'<uploaded-boundaries>','exec'),self.env)
-    def request(self,token='test-token',host='127.0.0.1',origin='http://127.0.0.1:5179',profile='NORMAL',method='POST',content_type='application/json'):
+    def request(self,token=None,host='127.0.0.1',origin='http://127.0.0.1:5179',profile='NORMAL',method='POST',content_type='application/json'):
+        token = token or os.environ.get('NUSANTARA_ADMIN_TOKEN', '')
         return SimpleNamespace(client=SimpleNamespace(host=host),url=SimpleNamespace(hostname='127.0.0.1'),
             headers={'origin':origin,'content-type':content_type,'x-admin-token':token},method=method,
             app=SimpleNamespace(state=SimpleNamespace(runtime_profile=profile)))

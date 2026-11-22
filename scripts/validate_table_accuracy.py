@@ -14,8 +14,11 @@ def extract_pdf_text(pdf_path):
             return None  # Will use Docling's markdown instead
         return text
 
-def validate(pdf_path, doc_id, base_url='http://127.0.0.1:8000', token='R4H4Si4.'):
+def validate(pdf_path, doc_id, base_url='http://127.0.0.1:8000', token=None):
     import urllib.request
+    token = token or os.environ.get('NUSANTARA_ADMIN_TOKEN')
+    if not token:
+        raise SystemExit('NUSANTARA_ADMIN_TOKEN is required')
     # Get Docling extraction
     req = urllib.request.Request(base_url+'/v1/knowledge/pipeline/reviews/'+doc_id, headers={'X-Admin-Token':token})
     d = json.loads(urllib.request.urlopen(req, timeout=60).read())

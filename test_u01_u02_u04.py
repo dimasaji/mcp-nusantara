@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
+import os
+
 import httpx
+
+TOKEN = os.environ.get('NUSANTARA_ADMIN_TOKEN', '')
 
 print("=" * 90)
 print("NCP-V1-HERMES-E2E-001: Uji Coba U01, U02, U04")
@@ -60,7 +64,7 @@ print("\n" + "=" * 90)
 print("U04: Pembacaan PDF")
 try:
     resp_docs = httpx.get('http://127.0.0.1:8000/v1/knowledge/documents',
-                          headers={"X-Admin-Token": "R4H4Si4."}, timeout=30)
+                          headers={"X-Admin-Token": TOKEN}, timeout=30)
     docs = resp_docs.json()
     target = None
     for d in docs.get('documents', []):
@@ -75,7 +79,7 @@ try:
 
         resp_search = httpx.post(
             'http://127.0.0.1:8000/v1/knowledge/search',
-            headers={"X-Admin-Token": "R4H4Si4."},
+            headers={"X-Admin-Token": TOKEN},
             json={"query": "permasalahan", "top_k": 5},
             timeout=30
         )

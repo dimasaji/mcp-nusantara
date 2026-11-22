@@ -29,7 +29,7 @@ Laporan ini melengkapi `RELEASE_READINESS_REPORT.md` (status `FAIL`) dengan bukt
 | Frontend unit suite | FAIL sebagian | 3 failed, 218 passed dari 221 |
 | Lint/typecheck | FAIL | ruff 5692 errors; mypy 1113 errors |
 | SOP ingest/search/chat nyata | BLOCKED | worker IndoBERT tidak ada; Ollama off |
-| Secret exposure gate | FAIL / perlu klasifikasi | 15 findings pada `tests/v2/test_phases_7_21.py` |
+| Secret exposure gate | PASS | 15 findings dihapus; `test_project_has_no_secrets` → `1 passed` |
 | Data produksi | TIDAK DIVERIFIKASI | tidak ada DB; tidak ada data nyata dipakai |
 
 ## Perbaikan yang sudah dibuat
@@ -46,7 +46,7 @@ Semua perubahan bersifat minimal dan tidak mengubah arsitektur, endpoint publik,
 - Tidak ada `data/knowledge/nusantara_knowledge.db` dan tidak ada artifact graphify/evidence yang diharapkan sebagian test.
 - 3 failure session-id `web`/`other` masih merupakan drift kontrak lama (P2-3).
 - 1 failure langchain dan beberapa failure grounding bersifat data-dependent dengan knowledge store kosong.
-- 15 temuan secret scan belum dibedakan antara fixture test dan secret nyata.
+- Secret scan sudah bersih; 15 literal token lokal di test/script diganti env atau fixture self-contained. Konfirmasi operator tetap diperlukan bila token lama pernah dipakai di lingkungan bersama.
 - Utang ruff/mypy sangat besar dan bukan diperkenalkan sesi ini; memaksa perbaikan massal akan melanggar prinsip inkremental.
 
 ## Syarat minimum untuk berubah menjadi READY
@@ -54,7 +54,7 @@ Semua perubahan bersifat minimal dan tidak mengubah arsitektur, endpoint publik,
 1. Sediakan/verifikasi artifact worker IndoBERT dan environment python yang diharapkan, atau minta keputusan eksplisit untuk mengubah kontrak worker.
 2. Pulihkan atau ganti dengan persetujuan artifact evidence historis yang jadi dependensi test; jangan mengarang file.
 3. Selesaikan atau terima secara tertulis session-id drift P2-3.
-4. Klasifikasikan 15 temuan secret scan; perbaiki hanya temuan nyata.
+4. Secret scan sudah hijau; pastikan token lokal lama tidak dipakai ulang di lingkungan bersama.
 5. Tentukan baseline ruff/mypy yang disetujui, lalu jalankan gate tersebut secara konsisten.
 6. Ulangi synthetic SOP ingest → search → chat setelah prerequisite ada; catat hasilnya di `SOP_KNOWLEDGE_TEST_REPORT.md`.
 7. Jalankan ulang semua gate di `BUILD_AND_TEST_REPORT.md` dan pastikan tidak ada FAIL yang belum dijelaskan.
@@ -72,7 +72,7 @@ Sprint 1 menyelesaikan dua dependensi kode PC yang paling langsung mengganggu VP
 
 Verifikasi Sprint 1: `6 passed` untuk git/origin + synthetic, `7 passed` untuk adapter + fixture, `68 items` pada broad targeted regression dengan hanya failure historis R2 `NOT_VERIFIED`, `npm test -- tests/vite-config.test.ts` PASS, `npm run build` PASS, dan `npm test` penuh `218 passed, 3 failed`.
 
-Status kesiapan produksi tidak berubah: `NOT READY`. Blocker runtime/data (worker IndoBERT, Ollama, PDF/DB nyata, artifact historis, secret scan, session drift P2-3) tetap seperti daftar di atas dan bukan diselesaikan Sprint 1.
+Status kesiapan produksi tidak berubah: `NOT READY`. Blocker runtime/data (worker IndoBERT, Ollama, PDF/DB nyata, artifact historis, session drift P2-3) tetap seperti daftar di atas dan bukan diselesaikan Sprint 1.
 
 ## Sprint 2 update (belum di-commit saat verifikasi)
 
@@ -87,6 +87,21 @@ Sprint 2 melanjutkan portabilitas runtime Linux:
 Verifikasi: `tests/test_runtime_portability.py` → `6 passed`; bersama `tests/test_capil01_knowledge.py` → `12 passed, 1 skipped`. `docker build` belum dijalankan, jadi perbaikan Dockerfile baru terbukti secara statis.
 
 Status produksi tetap `NOT READY`. Sprint 2 tidak menyediakan worker IndoBERT, model cache, Ollama, PDF/DB nyata, atau artifact historis; semua blocker itu masih berlaku.
+
+## Sprint 3 update (belum di-commit saat verifikasi)
+
+Sprint 3 menuntaskan secret exposure gate tanpa menambah rahasia baru:
+
+1. Klasifikasi 15 temuan `hardcoded_credential`: 8 di `tests/test_langchain_hardening.py` (fixture test), 6 di `scripts/` (token dev lokal), 1 di `Nusantara-Hermes-ACP-Connection-Patch/tests/test_routes.py` (default argumen fixture). `.env` tidak pernah ter-track dan `.env.example` hanya berisi placeholder.
+2. Token module-level di `scripts/*` dan `fix_sop_chat.py` sekarang diambil dari `NUSANTARA_ADMIN_TOKEN` dan gagal jelas bila tidak diset.
+3. Helper `validate(...)`/`extract_docling_tables(...)` menerima `token=None`, lalu memakai env; tidak ada default literal di signature.
+4. `tests/test_langchain_hardening.py` kini menyetel token fixture lewat `monkeypatch`, sehingga tidak lagi bergantung `.env` lokal; `token = os.environ[...]` dipakai di request.
+5. `Nusantara-Hermes-ACP-Connection-Patch/tests/test_routes.py` memakai token dari env bila argumen tidak diberikan.
+6. Review Spec menemukan 15 kemunculan literal lain yang tidak tertangkap regex scanner: `fix_sop_chat.py`, `scripts/process_sop.py`, 3 skrip `test_u01*.py`, 6 contoh curl di `reports/langchain-langgraph/p4-final-knowledge-acceptance.md`, dan `app/ui/index.html`. Semuanya sudah diganti env, `$NUSANTARA_ADMIN_TOKEN`, atau `localStorage`. Pencarian literal di source ter-track sekarang kosong.
+
+Verifikasi: secret gate `1 passed`; `tests/v2/test_phases_7_21.py` `31 passed`; patch routes `8 passed`; `tests/test_langchain_hardening.py` `9 passed, 4 failed` dari 13; broad targeted 11 file → `127 passed, 1 skipped, 5 failed` dari `133` (5 failure semuanya lama: R2 + 4 langchain). `py_compile` 4 skrip tambahan PASS. Targeted ruff tidak menambah temuan; empat file justru turun satu temuan. Graphify tetap di-skip karena graph/CLI tidak ada.
+
+Status produksi tetap `NOT READY`. Sprint 3 hanya menutup secret exposure gate; blocker runtime/data dan session drift tidak berubah.
 
 ## Kesimpulan akhir
 

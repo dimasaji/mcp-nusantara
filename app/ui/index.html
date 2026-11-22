@@ -3089,7 +3089,7 @@
           "/v1/knowledge/search",
           {
             method: "POST",
-            headers: { "X-Admin-Token": "R4H4Si4.", "Content-Type": "application/json" }
+            headers: { "X-Admin-Token": localStorage.getItem('nusantara_admin_token') || "", "Content-Type": "application/json" },
             body:
               JSON.stringify({
                 query:

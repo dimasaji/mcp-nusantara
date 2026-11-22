@@ -30,7 +30,9 @@ ENGINE_OUTPUT_DIR = ROOT / "data" / "knowledge" / "sop" / "engine_output"
 DB_PATH = ROOT / "data" / "knowledge" / "nusantara_knowledge.db"
 
 # Admin token
-ADMIN_TOKEN = os.getenv("NUSANTARA_ADMIN_TOKEN", "R4H4Si4.")
+ADMIN_TOKEN = os.getenv("NUSANTARA_ADMIN_TOKEN")
+if not ADMIN_TOKEN:
+    raise SystemExit("NUSANTARA_ADMIN_TOKEN is required")
 
 # Title to use in knowledge base
 DOC_TITLE = "SOP Permohonan Data Pribadi (PIAK-03)"

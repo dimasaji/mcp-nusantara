@@ -1,8 +1,10 @@
 """Security testing script for Nusantara V1."""
-import json, urllib.request
+import json, os, urllib.request
 
 BASE = 'http://127.0.0.1:8000'
-TOKEN = 'R4H4Si4.'
+TOKEN = os.getenv('NUSANTARA_ADMIN_TOKEN')
+if not TOKEN:
+    raise SystemExit('NUSANTARA_ADMIN_TOKEN is required')
 results = []
 
 def test(name, fn):

@@ -1,7 +1,7 @@
 """Automated SOP processing via Nusantara pipeline API."""
 import sys, json, time, urllib.request, hashlib, os
 
-TOKEN = os.environ.get('NUSANTARA_TEST_ADMIN_TOKEN', 'R4H4Si4.')
+TOKEN = os.environ.get('NUSANTARA_ADMIN_TOKEN')
 BASE = 'http://127.0.0.1:8000'
 
 def api(method, path, data=None, headers=None):

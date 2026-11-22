@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
+import os
+
 import httpx
+
+TOKEN = os.environ.get('NUSANTARA_ADMIN_TOKEN', '')
 
 print("=" * 90)
 print("NCP-V1-HERMES-E2E-001: Uji Coba U01, U02, U03")
@@ -61,7 +65,7 @@ print("\n" + "=" * 90)
 print("U03: UPLOAD / KNOWLEDGE PIPELINE")
 try:
     resp = httpx.get('http://127.0.0.1:8000/v1/knowledge/pipeline/status',
-                     headers={"X-Admin-Token": "R4H4Si4."}, timeout=30)
+                     headers={"X-Admin-Token": TOKEN}, timeout=30)
     if resp.status_code == 200:
         print(f"  HTTP GET /v1/knowledge/pipeline/status -> {resp.status_code}")
         print(f"  Knowledge pipeline status: READY")
@@ -74,7 +78,7 @@ except Exception as e:
     u03 = "FAIL"
 
 resp2 = httpx.get('http://127.0.0.1:8000/v1/knowledge/documents',
-                  headers={"X-Admin-Token": "R4H4Si4."}, timeout=30)
+                  headers={"X-Admin-Token": TOKEN}, timeout=30)
 docs = resp2.json()
 print(f"  Total documents in database: {docs.get('total', 0)}")
 print(f"  Result: U03 = {u03}")

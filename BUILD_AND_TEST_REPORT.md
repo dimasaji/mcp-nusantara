@@ -59,7 +59,7 @@ Perbandingan pytest penuh: failure turun `160 → 137`, passed naik `1381 → 14
 3. **Worker/model knowledge tidak ada.** `nusantara-models/` kosong/tidak ada; `Dockerfile` merujuk worker yang tidak ter-track. Detail di `SOP_KNOWLEDGE_TEST_REPORT.md`.
 4. **Session-id drift sudah terdokumentasi.** `test_v1_session_contract.py` mengharapkan `web`/`other` ditolak, tetapi aplikasi menerimanya. Ini temuan P2-3 lama; tidak diubah tanpa keputusan kompatibilitas.
 5. **Grounding/data-dependent failures.** Misalnya `assert 0 >= 1` dan `assert not True` pada test retrieval/grounding dengan knowledge store kosong.
-6. **Secret scan masih 15 findings** pada `tests/v2/test_phases_7_21.py::TestSecurity::test_project_has_no_secrets`; perlu klasifikasi fixture vs temuan nyata sebelum diubah.
+6. **Secret scan sudah hijau** setelah 15 literal token lokal di test/script diganti env atau fixture; `test_project_has_no_secrets` → `1 passed`.
 7. **Utang statis besar.** `ruff` dan `mypy` gagal dengan ribuan temuan yang bukan diperkenalkan sesi ini.
 
 ## Sprint 1 stabilization (2026-11-22, belum di-commit saat verifikasi)
@@ -93,6 +93,27 @@ Fokus: resolusi runtime Linux tanpa data PC. DB path sengaja tidak diubah karena
 
 Feedback loop: `.venv/bin/python -m pytest tests/test_runtime_portability.py -q` → `6 passed`. Regresi OCR: `.venv/bin/python -m pytest tests/test_runtime_portability.py tests/test_capil01_knowledge.py -q` → `12 passed, 1 skipped`. Broad targeted regression gabungan Sprint 1+Sprint 2 → `79 passed, 1 skipped, 1 failed` dari `81`; failure tunggal adalah R2 historis `NOT_VERIFIED`. Saat Tesseract tidak tersedia, snapshot kini juga menandai `ocr='disabled'`. Targeted ruff tidak menambah temuan baru pada file yang disentuh; `tests/test_runtime_portability.py` bersih. `docker build` tidak dijalankan; bukti Docker hanya statis, bukan klaim image build. Graphify tidak dijalankan karena `graphify-out/graph.json` dan CLI tidak ada; skip ini sudah dicatat sejak audit awal.
 
+## Sprint 3 secret exposure gate (belum di-commit saat verifikasi)
+
+Fokus: hapus credential-like literal dari source ter-track tanpa menambah rahasia atau mengubah endpoint.
+
+| Gate | Perintah | Hasil |
+| --- | --- | --- |
+| Secret scan (red → green) | `.venv/bin/python -m pytest tests/v2/test_phases_7_21.py::TestSecurity::test_project_has_no_secrets -q` | 15 findings → `1 passed` |
+| V2 regression | `.venv/bin/python -m pytest tests/v2/test_phases_7_21.py -q` | `31 passed` |
+| Patch boundary routes | `.venv/bin/python -m pytest Nusantara-Hermes-ACP-Connection-Patch/tests/test_routes.py -q` | `8 passed` |
+| LangChain hardening | `.venv/bin/python -m pytest tests/test_langchain_hardening.py -q` | `9 passed, 4 failed`; 4 failure lama di luar lingkup (worker, session drift, retrieval data-dependent) |
+| Broad targeted gabungan | `.venv/bin/python -m pytest ...11 file-... -q` | `127 passed, 1 skipped, 5 failed` dari `133`; 5 failure semuanya lama (R2 + 4 langchain) |
+| Targeted ruff | perbandingan `git show HEAD:<file>` vs working tree pada 13 file Python | tidak ada temuan baru; 4 file turun 1 temuan |
+
+Klasifikasi 15 temuan: 8 fixture di `tests/test_langchain_hardening.py`, 6 token dev lokal di `scripts/`, 1 default argumen fixture di patch routes. Review Spec menemukan 15 kemunculan literal lain di luar jangkauan regex scanner (`fix_sop_chat.py`, `scripts/process_sop.py`, 3 skrip `test_u01*.py`, 6 contoh curl, dan `app/ui/index.html`); semuanya ikut dibersihkan. Pencarian literal di source ter-track sekarang kosong.
+
+Token dengan demikian tidak lagi tersimpan di source: script memakai `os.getenv('NUSANTARA_ADMIN_TOKEN')` dengan `SystemExit` bila kosong; helper validator memakai argumen `token=None` lalu env; test memakai fixture `monkeypatch.setenv` atau env boundary; doc curl memakai `$NUSANTARA_ADMIN_TOKEN`; UI memakai `localStorage.getItem('nusantara_admin_token')`. Nilai lama tidak dipakai ulang dalam perubahan ini. `py_compile` untuk 4 skrip tambahan PASS.
+
+Bukti workflow: Graphify di-skip karena `graphify-out/graph.json` dan CLI tidak ada; Diagnosing Bugs terbukti dari red `15 findings` dan blind-spot scanner yang ditemukan review Spec; TDD terbukti dari red→green pada gate secret; Codebase Design sengaja tidak menambah modul bersama—guard 3 baris diduplikasi agar skrip tetap berdiri sendiri di luar paket `app`, clump `base_url`/`token` pada helper validator dibiarkan karena mengubahnya melampaui lingkup gate, dan duplikasi narasi dua laporan diterima agar tiap laporan tetap lengkap. Temuan Standards `Mysterious Name` pada fixture diperbaiki dengan rename `reset_flags_and_token`; sisanya adalah judgement call yang diterima dengan alasan di atas.
+
+Graphify tidak dijalankan karena `graphify-out/graph.json` dan CLI tidak ada; skip sudah tercatat sejak audit awal.
+
 ## Kesimpulan gate
 
 | Gate | Status |
@@ -104,4 +125,5 @@ Feedback loop: `.venv/bin/python -m pytest tests/test_runtime_portability.py -q`
 | Python full suite | FAIL |
 | Frontend unit suite | FAIL sebagian |
 | Lint/typecheck | FAIL |
+| Secret exposure gate | PASS |
 | Kesiapan rilis | FAIL / NOT READY |

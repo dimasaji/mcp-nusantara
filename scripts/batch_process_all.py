@@ -1,7 +1,9 @@
 """Batch process all remaining SOPs: upload, extract, approve, fill template, golden set."""
 import os, sys, time, json, urllib.request, hashlib, subprocess
 
-TOKEN = 'R4H4Si4.'
+TOKEN = os.getenv('NUSANTARA_ADMIN_TOKEN')
+if not TOKEN:
+    raise SystemExit('NUSANTARA_ADMIN_TOKEN is required')
 BASE = 'http://127.0.0.1:8000'
 SOP_DIR = 'E:/SOP'
 OUT_DIR = 'E:/NusantaraData/SOP'
