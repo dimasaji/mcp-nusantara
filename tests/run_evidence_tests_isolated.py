@@ -14,6 +14,9 @@ if any((parent/'FINALIZED.json').exists() for parent in (output,*output.parents)
 if not output.is_dir():
     raise SystemExit('isolated output directory is not readable')
 repository = Path(__file__).resolve(strict=False).parents[1]
+candidate_root = None
+candidate_data_root = None
+candidate_readonly_artifacts = frozenset()
 sys.path.insert(0, str(repository))
 sys.dont_write_bytecode = True
 
@@ -52,12 +55,12 @@ def writing(flags: object) -> bool:
     return any(char in str(flags) for char in "wax+")
 
 
-# Planning metadata that control-plane/evidence-requirements.json declares as an
-# offline evidence source (AC10). It is a bounded read-only document, not the active
-# store, so evidence collection may read exactly this file while every other /data/
-# path and every database sidecar stays blocked. Exact-file match only: a directory
-# or any other file under /data/ cannot pass through this exemption.
+# Declared offline evidence sources (AC10). Reads stay bounded to these exact
+# planning documents, fixture sources outside their data directory and the
+# isolated output; active databases and every other /data/ path stay blocked.
 READONLY_DATA_ARTIFACTS = frozenset({(repository / "data/developer_core/change_plan.json").resolve()})
+repository_root = repository.resolve()
+data_root = (repository / "data").resolve()
 
 
 def check_database(value: object, for_write: bool = False) -> None:
@@ -67,17 +70,25 @@ def check_database(value: object, for_write: bool = False) -> None:
     text = raw.replace("\\", "/").lower()
     if text.endswith((".db", ".db-wal", ".db-shm")):
         blocked("open", value, "active_database_or_sidecar")
-    if "/data/" not in f"/{text.strip('/')}/":
-        return
-    # The declared read-only planning artifact stays readable. Every other /data/
-    # path outside the isolated run stays blocked; a fixture data directory inside
-    # the run is not an external effect and is already bounded by the output rule.
-    if not for_write:
-        try:
-            if Path(raw).resolve(strict=False) in READONLY_DATA_ARTIFACTS:
+    has_data_segment = "/data/" in f"/{text.strip('/')}/"
+    resolved = None
+    try:
+        resolved = Path(raw).resolve(strict=False)
+    except OSError:
+        pass
+    if resolved is not None and resolved.is_relative_to(repository_root):
+        if not resolved.is_relative_to(data_root):
+            if not for_write:
                 return
-        except OSError:
-            pass
+            blocked("open", value, "outside_output_directory")
+    elif not has_data_segment:
+        return
+    if not for_write:
+        if resolved in READONLY_DATA_ARTIFACTS or resolved in candidate_readonly_artifacts:
+            return
+        if candidate_root is not None and resolved is not None and resolved.is_relative_to(candidate_root):
+            if candidate_data_root is None or not resolved.is_relative_to(candidate_data_root):
+                return
     if within_output(raw):
         return
     blocked("open", value, "active_database_or_sidecar")
@@ -294,6 +305,9 @@ if len(sys.argv) == 4 and sys.argv[2] == '--candidate':
     candidate = Path(sys.argv[3]).resolve()
     if not within_output(candidate) or not candidate.is_file():
         raise SystemExit('candidate test must be inside isolated output directory')
+    candidate_root = candidate.parent.parent
+    candidate_data_root = (candidate_root / "data").resolve()
+    candidate_readonly_artifacts = frozenset({(candidate_data_root / "developer_core/change_plan.json").resolve()})
     test_paths = [str(candidate)]
 
 raise SystemExit(pytest.main([

@@ -9,6 +9,10 @@ import pytest
 
 
 runner = sys.modules["__main__"]
+pytestmark = pytest.mark.skipif(
+    not hasattr(runner, "guarded_open"),
+    reason="guards are installed only by the isolated evidence runner",
+)
 
 
 def test_output_writes_are_allowed_and_outside_writes_blocked():

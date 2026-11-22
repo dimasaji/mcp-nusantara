@@ -131,9 +131,12 @@ class DeveloperCoreEngine:
                 return False
             # Deny protected roots too, including credential/config directories.
             root_parts = [part.casefold() for part in self.project_root.parts]
-            if any(part in self.PROTECTED_NAMES or part.startswith(".env") or
+            if any(part in self.PROTECTED_NAMES - {"data"} or part.startswith(".env") or
                    part in {"windows", "program files", "program files (x86)"}
                    for part in root_parts):
+                return False
+            root_is_vps_workspace = str(self.project_root).replace("\\", "/").lower().startswith("/data/")
+            if "data" in root_parts and not root_is_vps_workspace:
                 return False
             absolute.resolve().relative_to(self.project_root.resolve())
             for item in [self.project_root, *absolute.parents, absolute]:
