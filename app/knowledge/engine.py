@@ -117,6 +117,8 @@ class KnowledgeEngine:
                     # Fallback: assign based on start position even if not unique
                     evidence.metadata['citation_pages'] = [p['page'] for p in metadata.get('source_pages', [])
                         if p['start'] <= start < p['end']]
+            base_score = float(getattr(evidence, 'score', 0.0) or 0.0)
+            rank_score = base_score
             # Hybrid boost: combine vector score with keyword overlap so exact
             # term matches are not drowned by semantic-only neighbours.
             if query_terms:
@@ -131,7 +133,6 @@ class KnowledgeEngine:
                         overlap += idf * min(tf, 3)
                 title_overlap = sum(1 for t in query_terms if t in title)
                 if overlap > 0 or title_overlap > 0:
-                    base = float(getattr(evidence, 'score', 0.0) or 0.0)
                     boost = 0.05 * overlap + 0.40 * title_overlap
                     # Exact title/number match: if the query (case-insensitive) is a
                     # substring of the document title, add a large relevance bonus
@@ -140,23 +141,23 @@ class KnowledgeEngine:
                     title_lower = title
                     if q_lower and q_lower in title_lower:
                         boost += 0.50
-                    evidence.score = min(1.0, base + boost)
-        # Filter out low-relevance noise so nonsense queries do not return spurious results.
-        # Use a threshold of 0.40 to remove low-confidence matches while keeping
-        # relevant documents.  This improves precision by reducing the number of
-        # irrelevant results in the top-K.
-        filtered = [e for e in result.evidence_pack.evidence if float(getattr(e, 'score', 0.0) or 0.0) >= 0.50]
-        # Document-level grouping: keep only the best chunk per document so one
-        # document cannot occupy many result positions.
-        best = {}
-        for e in filtered:
-            did = getattr(e, 'document_id', None)
-            if did not in best or float(getattr(e, 'score', 0.0) or 0.0) > float(getattr(best[did], 'score', 0.0) or 0.0):
-                best[did] = e
-        grouped = sorted(best.values(), key=lambda e: float(getattr(e, 'score', 0.0) or 0.0), reverse=True)
+                    rank_score = min(1.0, base_score + boost)
+            evidence.metadata['retrieval_rank_score'] = rank_score
+            evidence.score = base_score
+        filtered = list(result.evidence_pack.evidence)
+        def rank(item):
+            return (float((item.metadata or {}).get('retrieval_rank_score', getattr(item, 'score', 0.0)) or 0.0),
+                    float(getattr(item, 'score', 0.0) or 0.0))
         if top_k:
-            grouped = grouped[:top_k]
-        return RetrievalEvidenceList(grouped, getattr(result, 'effective_profile', None))
+            best = {}
+            for item in filtered:
+                did = getattr(item, 'document_id', None)
+                if did not in best or rank(item) > rank(best[did]):
+                    best[did] = item
+            filtered = sorted(best.values(), key=rank, reverse=True)[:top_k]
+        else:
+            filtered.sort(key=rank, reverse=True)
+        return RetrievalEvidenceList(filtered, getattr(result, 'effective_profile', None))
 
     def search(self, query: str, top_k: int | None = None):
         return self.search_knowledge(query, top_k=top_k)

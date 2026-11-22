@@ -177,10 +177,9 @@ class V1KnowledgeBoundary:
         for offset in range(0, len(eligible), 20):
             evidence.extend(self._engine.search_knowledge(query, top_k=window,
                 filter={'document_ids': eligible[offset:offset + 20]}))
-        # Boosted relevance primary; raw hybrid score breaks ties so an exact
-        # service-title match outranks a partial-title competitor that also
-        # saturates at 1.0 (otherwise batch order decides arbitrarily).
-        evidence = sorted(evidence, key=lambda item: (item.score, (item.metadata or {}).get('hybrid_score', 0.0)),
+        evidence = sorted(evidence,
+                          key=lambda item: ((item.metadata or {}).get('retrieval_rank_score', item.score),
+                                            (item.metadata or {}).get('hybrid_score', item.score)),
                           reverse=True)[:limit]
         result, hydrated = [], set()
         for item in evidence:
