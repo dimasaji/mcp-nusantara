@@ -142,3 +142,39 @@ def test_query_parity_missing_or_malformed_stays_unverified(parity):
     from app.core.control_plane_projection import _project_query_parity
     result = _project_query_parity(parity)
     assert result['status'] == 'NOT_VERIFIED' and result['evidence'] == []
+
+
+def test_projection_git_executable_honours_environment_override(monkeypatch):
+    from types import SimpleNamespace
+
+    import app.core.control_plane_projection as projection
+
+    monkeypatch.setenv('NUSANTARA_GIT_CMD', '/opt/nusantara-git')
+    seen = []
+    outputs = {'--short': '', '--show-current': 'branch', 'HEAD': 'abc123'}
+
+    def fake_run(args, **kwargs):
+        seen.append(args)
+        return SimpleNamespace(returncode=0, stdout=outputs[args[-1]], stderr='')
+
+    monkeypatch.setattr(projection.subprocess, 'run', fake_run)
+    state = project()
+    assert seen and seen[0][0] == '/opt/nusantara-git'
+    assert state['worktree']['status'] != 'UNKNOWN'
+
+
+def test_projection_git_executable_defaults_to_path(monkeypatch):
+    import app.core.control_plane_projection as projection
+
+    monkeypatch.delenv('NUSANTARA_GIT_CMD', raising=False)
+    assert projection.git_executable() == 'git'
+
+
+def test_intention_origin_allowlist_includes_configured_frontend(monkeypatch):
+    from app.api import control_plane
+
+    monkeypatch.delenv('NUSANTARA_FRONTEND_ORIGIN', raising=False)
+    origins = control_plane.intention_origins()
+    assert 'http://127.0.0.1:5180' in origins
+    assert 'http://127.0.0.1:8000' in origins
+    assert 'http://evil.example' not in origins

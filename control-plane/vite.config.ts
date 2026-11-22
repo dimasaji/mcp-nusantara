@@ -5,7 +5,8 @@ import {readFileSync, readdirSync} from 'node:fs';
 import {join} from 'node:path';
 import {execFileSync} from 'node:child_process';
 function sources(dir: string): string[] {return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?sources(join(dir,e.name)):[join(dir,e.name)]).sort();}
-function commit(){try{return execFileSync('C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/git/cmd/git.exe',['rev-parse','HEAD'],{cwd:'..',encoding:'utf8'}).trim();}catch{return 'NOT_VERIFIED';}}
+const gitExecutable = () => process.env.NUSANTARA_GIT_CMD || 'git';
+function commit(){try{return execFileSync(gitExecutable(),['rev-parse','HEAD'],{cwd:'..',encoding:'utf8'}).trim();}catch{return 'NOT_VERIFIED';}}
 const localServices = JSON.parse(readFileSync(new URL('../config/local-services.json', import.meta.url), 'utf8'));
 const backendTarget = process.env.NUSANTARA_BACKEND_URL || `http://${localServices.host}:${localServices.backendPort}`;
 export default defineConfig(({mode})=>({plugins:[react()], cacheDir:process.env.NUSANTARA_VITE_CACHE_DIR || 'node_modules/.vite', server:{host:localServices.host,port:localServices.frontendPort,strictPort:true,proxy:{'^/v1/chat(/history)?$':{target:backendTarget,changeOrigin:true},'^/v1/runtime/readiness([?]|$)':{target:backendTarget,changeOrigin:true},'^/v1/dev/inspection-preview$':{target:backendTarget,changeOrigin:true},'^/v1/knowledge/pipeline/(documents|status|watch|runs/[^/]+/retry|reviews/[^/?]+(/source|/citation|/process|/decision|/metadata|/trials/[^/?]+/rating)?)([?]|$)':{target:backendTarget,changeOrigin:true},'/v1/control-plane':{target:backendTarget,changeOrigin:true},'/health':{target:backendTarget,changeOrigin:true}}},preview:{host:localServices.host},

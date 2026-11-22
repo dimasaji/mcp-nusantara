@@ -132,9 +132,16 @@ def test_pdf_approval_activates_operator_retrieval_without_manual_chat(client, m
     monkeypatch.setattr('app.knowledge.document_tools.effective_config', lambda: {'fixture': True})
     identifier = upload(client, pdf_bytes()).json()['document_id']
     url = '/v1/knowledge/pipeline/reviews/' + identifier
+    deadline = time.monotonic() + 10
+    while time.monotonic() < deadline:
+        prepared = client.get(url, headers=AUTH).json()
+        if prepared['extraction_status'] in {'COMPLETE', 'PARTIAL', 'FAILED'}:
+            break
+        time.sleep(.01)
     detail = client.get(url, headers=AUTH).json()
-    assert client.post(url + '/process', headers=AUTH,
-                       json={'version_id': detail['version_id']}).status_code == 200
+    processed = client.post(url + '/process', headers=AUTH,
+                            json={'version_id': detail['version_id']})
+    assert processed.status_code == 200, processed.text
     deadline = time.monotonic() + 10
     while time.monotonic() < deadline:
         detail = client.get(url, headers=AUTH).json()

@@ -26,7 +26,7 @@ Laporan ini melengkapi `RELEASE_READINESS_REPORT.md` (status `FAIL`) dengan bukt
 | Python smoke | PASS | `run_tests.py` 19/19 |
 | Targeted regresi sesi ini | PASS sebagian | 19 SOP boundary, 37 OpenRouter, 7 langchain/langgraph; 3 session drift + 1 data-dependent tetap fail |
 | Python full suite | FAIL | 137 failed, 1421 passed, 64 errors |
-| Frontend unit suite | FAIL sebagian | 3 failed, 216 passed dari 219 |
+| Frontend unit suite | FAIL sebagian | 3 failed, 218 passed dari 221 |
 | Lint/typecheck | FAIL | ruff 5692 errors; mypy 1113 errors |
 | SOP ingest/search/chat nyata | BLOCKED | worker IndoBERT tidak ada; Ollama off |
 | Secret exposure gate | FAIL / perlu klasifikasi | 15 findings pada `tests/v2/test_phases_7_21.py` |
@@ -59,6 +59,20 @@ Semua perubahan bersifat minimal dan tidak mengubah arsitektur, endpoint publik,
 6. Ulangi synthetic SOP ingest → search → chat setelah prerequisite ada; catat hasilnya di `SOP_KNOWLEDGE_TEST_REPORT.md`.
 7. Jalankan ulang semua gate di `BUILD_AND_TEST_REPORT.md` dan pastikan tidak ada FAIL yang belum dijelaskan.
 8. Baru setelah gates hijau, lakukan security review dan keputusan eksposur. Jangan publish ke internet sebelum itu.
+
+## Sprint 1 update (belum di-commit saat verifikasi)
+
+Sprint 1 menyelesaikan dua dependensi kode PC yang paling langsung mengganggu VPS:
+
+1. `app/core/control_plane_projection.py` memakai `os.getenv('NUSANTARA_GIT_CMD') or 'git'`; konstanta path `git.exe` PC dihapus.
+2. `control-plane/vite.config.ts` memakai `process.env.NUSANTARA_GIT_CMD || 'git'`; regression test statis ditambahkan di `control-plane/tests/vite-config.test.ts`.
+3. `app/api/control_plane.py` memakai `intention_origins()` yang membaca allowlist frontend `5180` dari `config/local-services.json` dan tetap menerima legacy `5173`; guard `/v1/control-plane/intention` tidak lagi hard-coded `5173`.
+4. `tests/test_synthetic_rag_fixture.py` menyediakan `build_synthetic_engine(tmp_path)` dengan `SQLiteVectorStore`, embedding deterministik, dan dokumen `synthetic-sop-1`; `tests/test_langchain_adapter.py` memakai helper tersebut sehingga retrieval tidak lagi bergantung DB kosong.
+5. `tests/test_knowledge_pipeline_api.py` menunggu auto-preparation PDF selesai sebelum GET/POST version, menghilangkan flake `DOCUMENT_VERSION_NOT_FOUND` pada urutan synthetic → metadata_http → pdf_approval.
+
+Verifikasi Sprint 1: `6 passed` untuk git/origin + synthetic, `7 passed` untuk adapter + fixture, `68 items` pada broad targeted regression dengan hanya failure historis R2 `NOT_VERIFIED`, `npm test -- tests/vite-config.test.ts` PASS, `npm run build` PASS, dan `npm test` penuh `218 passed, 3 failed`.
+
+Status kesiapan produksi tidak berubah: `NOT READY`. Blocker runtime/data (worker IndoBERT, Ollama, PDF/DB nyata, artifact historis, secret scan, session drift P2-3) tetap seperti daftar di atas dan bukan diselesaikan Sprint 1.
 
 ## Kesimpulan akhir
 

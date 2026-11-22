@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import subprocess
 from datetime import datetime, timezone
@@ -10,7 +11,10 @@ from pathlib import Path
 from xml.etree import ElementTree
 
 ROOT = Path(__file__).resolve().parents[2]
-GIT = Path('C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/git/cmd/git.exe')
+
+
+def git_executable() -> str:
+    return os.getenv('NUSANTARA_GIT_CMD') or 'git'
 
 
 def digest(path: Path) -> str:
@@ -100,7 +104,7 @@ def project(root: Path = ROOT) -> dict:
     gates = [{'id':key,'status':value,'evidence':['r3']} for key,value in r3.get('gate_statuses',{}).items()]
 
     def git(*args):
-        proc = subprocess.run([str(GIT),'-c','core.quotepath=false',*args],cwd=root,capture_output=True,text=True,encoding='utf-8',timeout=5)
+        proc = subprocess.run([git_executable(),'-c','core.quotepath=false',*args],cwd=root,capture_output=True,text=True,encoding='utf-8',timeout=5)
         if proc.returncode:
             raise ValueError('git unavailable')
         if proc.stderr:
