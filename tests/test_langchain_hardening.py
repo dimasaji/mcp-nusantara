@@ -11,7 +11,8 @@ os.environ.pop('NUS_LANGGRAPH_ENABLED', None)
 
 
 @pytest.fixture(autouse=True)
-def reset_flags():
+def reset_flags_and_token(monkeypatch):
+    monkeypatch.setenv('NUSANTARA_ADMIN_TOKEN', 'fixture-only-token')
     settings.nus_langchain_enabled = False
     settings.nus_langgraph_enabled = False
     os.environ.pop('NUS_LANGCHAIN_ENABLED', None)
@@ -28,7 +29,7 @@ def reset_flags():
 def test_flags_off_legacy_path():
     """Both flags OFF: legacy path works (default)."""
     client = TestClient(app)
-    token = 'R4H4Si4.'
+    token = os.environ['NUSANTARA_ADMIN_TOKEN']
     import uuid
     body = {'session_id': 'web-' + str(uuid.uuid4()), 'user_input': 'halo'}
     r = client.post('/v1/chat', json=body, headers={'X-Admin-Token': token})
@@ -80,7 +81,7 @@ def test_flags_evaluated_at_call_time():
 def test_empty_retrieval_abstention():
     """Empty retrieval results -> abstention."""
     client = TestClient(app)
-    token = 'R4H4Si4.'
+    token = os.environ['NUSANTARA_ADMIN_TOKEN']
     import uuid
     body = {'session_id': 'web-' + str(uuid.uuid4()), 'user_input': 'xyznonexistentquery99999'}
     r = client.post('/v1/chat', json=body, headers={'X-Admin-Token': token})
@@ -93,7 +94,7 @@ def test_empty_retrieval_abstention():
 def test_no_evidence_abstention():
     """Query with no relevant docs -> abstention or no evidence."""
     client = TestClient(app)
-    token = 'R4H4Si4.'
+    token = os.environ['NUSANTARA_ADMIN_TOKEN']
     import uuid
     body = {'session_id': 'web-' + str(uuid.uuid4()), 'user_input': 'cuaca hari ini bagaimana?'}
     r = client.post('/v1/chat', json=body, headers={'X-Admin-Token': token})
@@ -108,7 +109,7 @@ def test_no_evidence_abstention():
 def test_session_isolation():
     """Different sessions don't share evidence."""
     client = TestClient(app)
-    token = 'R4H4Si4.'
+    token = os.environ['NUSANTARA_ADMIN_TOKEN']
     import uuid
     sid1 = 'web-' + str(uuid.uuid4())
     sid2 = 'web-' + str(uuid.uuid4())
@@ -147,7 +148,7 @@ def test_no_stack_trace_in_error():
 def test_response_schema_compatible():
     """Response has all required fields."""
     client = TestClient(app)
-    token = 'R4H4Si4.'
+    token = os.environ['NUSANTARA_ADMIN_TOKEN']
     import uuid
     body = {'session_id': 'web-' + str(uuid.uuid4()), 'user_input': 'halo'}
     r = client.post('/v1/chat', json=body, headers={'X-Admin-Token': token})
@@ -161,7 +162,7 @@ def test_response_schema_compatible():
 def test_request_contract_unchanged():
     """Request contract unchanged."""
     client = TestClient(app)
-    token = 'R4H4Si4.'
+    token = os.environ['NUSANTARA_ADMIN_TOKEN']
     import uuid
     body = {'session_id': 'web-' + str(uuid.uuid4()), 'user_input': 'test', 'model': None, 'stream': False}
     r = client.post('/v1/chat', json=body, headers={'X-Admin-Token': token})
@@ -173,7 +174,7 @@ def test_request_contract_unchanged():
 def test_hermes_v1_conversation():
     """Existing Hermes V1 conversation still works."""
     client = TestClient(app)
-    token = 'R4H4Si4.'
+    token = os.environ['NUSANTARA_ADMIN_TOKEN']
     import uuid
     body = {'session_id': 'web-' + str(uuid.uuid4()), 'user_input': 'halo'}
     r = client.post('/v1/chat', json=body, headers={'X-Admin-Token': token})
@@ -185,7 +186,7 @@ def test_hermes_v1_conversation():
 def test_knowledge_search_still_works():
     """Knowledge search still works."""
     client = TestClient(app)
-    token = 'R4H4Si4.'
+    token = os.environ['NUSANTARA_ADMIN_TOKEN']
     body = {'query': 'CAPIL', 'top_k': 5}
     r = client.post('/v1/knowledge/search', json=body, headers={'X-Admin-Token': token})
     assert r.status_code == 200

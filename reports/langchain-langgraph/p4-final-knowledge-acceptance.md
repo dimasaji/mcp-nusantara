@@ -81,22 +81,22 @@
 curl http://127.0.0.1:8000/health
 
 # Upload SOP
-curl -X POST http://127.0.0.1:8000/v1/knowledge/pipeline/documents -H "X-Admin-Token: R4H4Si4." -H "X-Document-Name: SOP.pdf" --data-binary @SOP.pdf
+curl -X POST http://127.0.0.1:8000/v1/knowledge/pipeline/documents -H "X-Admin-Token: $NUSANTARA_ADMIN_TOKEN" -H "X-Document-Name: SOP.pdf" --data-binary @SOP.pdf
 
 # Review detail
-curl http://127.0.0.1:8000/v1/knowledge/pipeline/reviews/{doc_id} -H "X-Admin-Token: R4H4Si4."
+curl http://127.0.0.1:8000/v1/knowledge/pipeline/reviews/{doc_id} -H "X-Admin-Token: $NUSANTARA_ADMIN_TOKEN"
 
 # Process (OCR/Docling)
-curl -X POST http://127.0.0.1:8000/v1/knowledge/pipeline/reviews/{doc_id}/process -H "X-Admin-Token: R4H4Si4." -d '{"version_id":"..."}'
+curl -X POST http://127.0.0.1:8000/v1/knowledge/pipeline/reviews/{doc_id}/process -H "X-Admin-Token: $NUSANTARA_ADMIN_TOKEN" -d '{"version_id":"..."}'
 
 # Approve
-curl -X POST http://127.0.0.1:8000/v1/knowledge/pipeline/reviews/{doc_id}/decision -H "X-Admin-Token: R4H4Si4." -d '{"version_id":"...","action":"approve","note":"..."}'
+curl -X POST http://127.0.0.1:8000/v1/knowledge/pipeline/reviews/{doc_id}/decision -H "X-Admin-Token: $NUSANTARA_ADMIN_TOKEN" -d '{"version_id":"...","action":"approve","note":"..."}'
 
 # Search
-curl -X POST http://127.0.0.1:8000/v1/knowledge/search -H "X-Admin-Token: R4H4Si4." -d '{"query":"...","top_k":5}'
+curl -X POST http://127.0.0.1:8000/v1/knowledge/search -H "X-Admin-Token: $NUSANTARA_ADMIN_TOKEN" -d '{"query":"...","top_k":5}'
 
 # Chat
-curl -X POST http://127.0.0.1:8000/v1/chat -H "X-Admin-Token: R4H4Si4." -d '{"session_id":"web-...","user_input":"...","document_ids":["..."]}'
+curl -X POST http://127.0.0.1:8000/v1/chat -H "X-Admin-Token: $NUSANTARA_ADMIN_TOKEN" -d '{"session_id":"web-...","user_input":"...","document_ids":["..."]}'
 
 # Search eval
 python scripts/run_search_eval.py
