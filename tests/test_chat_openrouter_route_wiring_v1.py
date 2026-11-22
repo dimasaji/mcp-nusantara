@@ -78,7 +78,7 @@ def test_chat_wires_governed_openrouter():
                 try:
                     await routes.chat(
                         ChatRequest(
-                            session_id="isolated-test",
+                            session_id="web-00000000-0000-4000-8000-000000000007",
                             user_input="Uji integrasi OpenRouter",
                             stream=False,
                         )
@@ -98,7 +98,7 @@ def test_chat_wires_governed_openrouter():
                 response = client.post(
                     "/v1/chat",
                     json={
-                        "session_id": "isolated-test",
+                        "session_id": "web-00000000-0000-4000-8000-000000000007",
                         "user_input": "Uji integrasi OpenRouter",
                         "stream": False,
                     },

@@ -57,6 +57,15 @@ def test_citation_opens_bound_pdf_page_with_auth_and_no_token_in_url(source_clie
     assert client.get(source_url(identifier), headers=other).status_code == 404
 
 
+@pytest.mark.parametrize('session', ['web', 'other', 'session_1', ''])
+def test_citation_rejects_non_capability_session_before_review(source_client, session):
+    client, _, identifier = source_client
+    headers = {'X-Admin-Token': 'source-fixture', 'X-Chat-Session': session}
+    result = client.get(source_url(identifier), headers=headers)
+    assert result.status_code == 403
+    assert result.json()['detail'] == 'CHAT_SESSION_CAPABILITY_REQUIRED'
+
+
 @pytest.mark.parametrize('action', ['reject', 'defer', 'revoke'])
 def test_citation_rejects_source_after_publication_is_withdrawn(source_client, action):
     client, engine, identifier = source_client

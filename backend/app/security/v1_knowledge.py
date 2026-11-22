@@ -10,7 +10,7 @@ import re
 
 from fastapi import HTTPException
 
-CHAT_SESSION_PATTERN = r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$'
+CHAT_SESSION_PATTERN = r'^web-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
 
 
 def valid_chat_session(value: str) -> bool:
