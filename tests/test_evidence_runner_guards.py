@@ -9,6 +9,10 @@ import pytest
 
 
 runner = sys.modules["__main__"]
+pytestmark = pytest.mark.skipif(
+    not hasattr(runner, "guarded_open"),
+    reason="guards are installed only by the isolated evidence runner",
+)
 
 # These checks bind directly to the guard functions installed by the isolated
 # evidence runner. Under a plain `pytest` collection `__main__` is pytest, not
