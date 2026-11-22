@@ -11,6 +11,7 @@ from app.core.nusantara_config import ConfigurationError, load_nusantara_config
 from app.models.openrouter import OpenRouterError, OpenRouterProvider
 from app.models.ollama import OllamaProvider
 from app.models.router import ModelRouter
+from app.security.v1_knowledge import CHAT_SESSION_PATTERN
 
 
 @pytest.fixture(autouse=True)
@@ -283,6 +284,7 @@ def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen
         assert kwargs["provider_status"] == chosen
     namespace = {"BaseModel": BaseModel, "ConfigDict": ConfigDict, "Field": Field,
         "Any": typing.Any, "Literal": typing.Literal, "HTTPException": HTTPException,
+        "CHAT_SESSION_PATTERN": CHAT_SESSION_PATTERN,
         "V1KnowledgeBoundary": V1KnowledgeBoundary,
         "_record_chat_result": lambda *args, **kwargs: True,
         "ProviderUnavailableError": ProviderUnavailableError,

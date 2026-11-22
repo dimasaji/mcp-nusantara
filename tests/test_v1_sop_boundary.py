@@ -80,6 +80,7 @@ def api(monkeypatch, tmp_path):
         if token != 'operator-fixture':
             raise HTTPException(403, 'DENIED')
     ns['require_admin'] = authorize
+    ns['_check_rate_limit'] = lambda *_: True
 
     def search(*_args, **_kwargs):
         calls['search'] += 1
