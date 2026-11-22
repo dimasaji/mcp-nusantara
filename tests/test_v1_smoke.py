@@ -29,7 +29,7 @@ def test_v1_chat_does_not_500():
         r = c.post(
             "/v1/chat",
             json={
-                "session_id": "smoke",
+                "session_id": "web-00000000-0000-4000-8000-000000000008",
                 "user_input": "halo",
                 "request_id": "req-smoke-1",
             },

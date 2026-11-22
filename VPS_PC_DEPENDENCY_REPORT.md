@@ -225,3 +225,13 @@ Verifikasi portabilitas Sprint 1: `npm run build` PASS, `npm test -- tests/vite-
 | DB path relatif cwd | SENGAJA TIDAK DIUBAH | `docs/MDE02_EFFECTIVE_CONFIGURATION_CONTRACT.md` menetapkan kontrak tersebut; override `NUSANTARA_KNOWLEDGE_DB` sudah ada |
 
 Verifikasi Sprint 2: `tests/test_runtime_portability.py` `6 passed`; regresi OCR `12 passed, 1 skipped`. Tidak ada data PC yang disalin, tidak ada service baru, dan tidak ada perubahan kontrak DB.
+
+## 11. Sprint 4 addendum (session-id contract, 2026-11-22)
+
+| Item audit lama | Status Sprint 4 | Bukti |
+| --- | --- | --- |
+| Session drift P2-3 (`web`/`other` diterima, History menolak) | DIPERBAIKI | `CHAT_SESSION_PATTERN` hanya `web-UUID`; `tests/test_v1_session_contract.py` + `tests/test_approval_boundary.py` `15 passed` |
+| Fixture HTTP memakai ID sembarang | DIPERBAIKI | `test_v1_response_projection.py`, `test_v1_operator_control.py`, `test_openrouter_provider.py`, `test_chat_openrouter_route_wiring_v1.py`, dan sesi `/v1/chat` pada `test_v1_smoke.py` memakai `web-UUID` |
+| Worker IndoBERT / Ollama / PDF-DB nyata | TETAP BLOCKED | `test_langchain_hardening.py` masih `9 passed, 4 failed`; `SOP/RAG END-TO-END: BLOCKED / NOT VERIFIED` |
+
+Tidak ada service, framework, atau kontrak DB baru. Regresi 14 file yang menyentuh sesi menghasilkan `153 passed, 3 skipped, 12 failed, 18 errors`; failure/error tersebut sudah ada sebelum Sprint 4. Targeted ruff pada 9 file yang disentuh tidak menambah temuan baru. Code review dua axis terhadap working tree dengan fixed point `a3a197cb` tercatat di `BUILD_AND_TEST_REPORT.md`: Standards 2 findings, Spec 6 findings; perbaikan dan penerimaan alasan sudah dicatat di sana.

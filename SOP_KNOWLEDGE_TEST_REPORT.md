@@ -92,6 +92,12 @@ Bukti: `tests/test_runtime_portability.py` `6 passed`; `tests/test_runtime_porta
 
 Tidak ada perbaikan untuk worker IndoBERT, model cache, atau Ollama. Status `SOP/RAG END-TO-END: BLOCKED / NOT VERIFIED` tetap berlaku.
 
+## Sprint 4 session-id contract (2026-11-22)
+
+Catatan lama tentang 3 failure session-id `web`/`other` kini superseded. `CHAT_SESSION_PATTERN` hanya menerima `web-UUID`; test kontrak positif dan negatif di `tests/test_v1_session_contract.py` serta assertion pola di `tests/test_approval_boundary.py` sudah `15 passed`. Fixture HTTP positif di file lain ikut memakai `web-UUID`, termasuk `test_openrouter_provider.py` yang naik menjadi `37 passed`. `tests/test_chat_citation_source.py` kini `11 passed`, termasuk 4 test yang menolak session non-capability sebelum review. Code review dua axis terhadap working tree dengan fixed point `a3a197cb` tercatat di `BUILD_AND_TEST_REPORT.md`; temuan Spec berupa citation yang belum teruji sudah diperbaiki.
+
+Ini tidak mengubah status SOP/RAG: worker IndoBERT dan DB/PDF nyata tetap tidak tersedia, sehingga `SOP/RAG END-TO-END: BLOCKED / NOT VERIFIED` tetap berlaku.
+
 ## Kesimpulan
 
 `SOP_KNOWLEDGE_TEST_REPORT` menyatakan alur SOP/RAG penuh **BLOCKED**. Bukti yang ada cukup untuk menyebut batas kegagalan, bukan untuk menyatakan fitur berfungsi.

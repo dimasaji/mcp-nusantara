@@ -114,6 +114,41 @@ Bukti workflow: Graphify di-skip karena `graphify-out/graph.json` dan CLI tidak 
 
 Graphify tidak dijalankan karena `graphify-out/graph.json` dan CLI tidak ada; skip sudah tercatat sejak audit awal.
 
+## Sprint 4 session-id contract (2026-11-22)
+
+Sprint 4 menyatukan kontrak Chat/History/citation ke `web-UUID` sesuai `docs/NUSANTARA-V1-FOUNDATION-20261030.md`. `CHAT_SESSION_PATTERN` sekarang `^web-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`; sesi bersama `web`, `other`, dan ID sembarang ditolak oleh validasi sebelum retrieval/model.
+
+| Gate | Perintah | Hasil |
+| --- | --- | --- |
+| Kontrak sesi | `.venv/bin/python -m pytest tests/test_v1_session_contract.py tests/test_approval_boundary.py -q` | `15 passed` |
+| Citation | `.venv/bin/python -m pytest tests/test_chat_citation_source.py -q` | `11 passed` (4 test gate sesi baru) |
+| Route wiring | `.venv/bin/python -m pytest tests/test_chat_openrouter_route_wiring_v1.py -q` | `1 passed` |
+| Regresi sesi 14 file | `.venv/bin/python -m pytest tests/test_chat_request_idempotency.py ... tests/test_inspection_preview_api.py -q` | `153 passed, 3 skipped, 12 failed, 18 errors` |
+| Targeted ruff | perbandingan `git show HEAD:<file>` vs working tree pada 9 file Python | tidak ada temuan baru |
+
+Regresi sesi 14 file memuat 12 failure dan 18 error yang semuanya sudah ada sebelum Sprint 4: 7 `test_v1_response_projection.py` gagal karena fixture `SimpleNamespace` tanpa `rag`/`_pipeline_db`, 1 `test_v1_operator_control.py` gagal pada grounding data-dependent, 4 `test_langchain_hardening.py` gagal karena worker/retrieval data-dependent, dan 18 error setup `app.state.configuration_owner` pada file operator yang sama. Tidak ada lagi `422` baru akibat session-id: `test_openrouter_provider.py` naik dari `35 passed, 2 failed` menjadi `37 passed` setelah fixture `session_id="fixture"` diganti `web-UUID`.
+
+Fixture HTTP positif yang ikut diselaraskan: `tests/test_v1_response_projection.py`, `tests/test_v1_operator_control.py`, `tests/test_openrouter_provider.py`, `tests/test_chat_openrouter_route_wiring_v1.py`, dan sesi `/v1/chat` pada `tests/test_v1_smoke.py`. Sesi pada `/v1/problem/analyze` dan `/v1/knowledge/search` sengaja dibiarkan karena endpoint tersebut tidak memakai `CHAT_SESSION_PATTERN`. Tidak ada perubahan frontend, jadi build/unit frontend tidak dijalankan ulang di Sprint 4. Graphify tetap di-skip karena graph/CLI tidak ada.
+
+### Code review Sprint 4 (fixed point `a3a197cb`, working tree)
+
+## Standards
+- Hard — laporan Sprint 4 awalnya belum memuat bukti review terpisah, exit code/cwd, dan perintah regresi lengkap (AGENTS.md:13; workflow §5). Sudah diperbaiki dengan bagian ini dan baris bukti di atas; semua perintah dijalankan dari `/data/home/mcp-nusantara` dengan exit code `0` untuk gate hijau dan exit code `1` untuk regresi yang memang mengandung failure lama.
+- Judgement — Duplicated Code pada helper test sesi. Diterima: dua kasus kecil lebih jelas jika ditulis eksplisit.
+- Judgement — Primitive Obsession / Shotgun Surgery pada literal `web-UUID` yang tersebar. Diterima: constraint Sprint 4 melarang modul bersama/abstraksi baru; fixture memakai literal agar tetap mandiri.
+
+Worst Standards: bukti workflow yang belum lengkap — sudah diperbaiki.
+
+## Spec
+- Citation belum diuji oleh suite kontrak baru. Sudah diperbaiki: 4 test gate sesi ditambahkan ke `tests/test_chat_citation_source.py` (`11 passed`).
+- Frontend capability rotation tidak dibuktikan oleh diff. Diterima: sudah ada di HEAD (`sop-review.tsx`, `assistant.tsx`) dan Sprint 4 tidak mengubah frontend.
+- Scope creep pada 2 session id di smoke test. Sudah diperbaiki dengan mengembalikan `smoke` untuk `/v1/problem/analyze` dan `/v1/knowledge/search`.
+- Validator hanya mengecek bentuk, bukan entropy capability. Diterima: kontrak menetapkan format `web-UUID`; keunikan capability adalah tanggung jawab pemanggil/frontend, dan literal nol sudah menjadi konvensi fixture repo.
+- Assertion pola memakai `re.match`, bukan `re.fullmatch`. Sudah diperbaiki di `tests/test_approval_boundary.py`.
+- Nama test positif berlebihan. Sudah diperbaiki menjadi `test_web_uuid_session_is_allowed` tanpa klaim "before work" yang tidak dibuktikan fixture.
+
+Worst Spec: citation belum teruji — sudah diperbaiki. Ringkasan: Standards 2 findings (1 hard, 1 judgement cluster; worst: bukti workflow), Spec 6 findings (worst: citation coverage).
+
 ## Kesimpulan gate
 
 | Gate | Status |
@@ -121,7 +156,7 @@ Graphify tidak dijalankan karena `graphify-out/graph.json` dan CLI tidak ada; sk
 | Install dependency | PASS |
 | Python smoke `run_tests.py` | PASS |
 | Frontend build | PASS |
-| Targeted regresi perbaikan sesi ini | PASS kecuali session drift P2-3 dan data-dependent retrieval |
+| Targeted regresi perbaikan sesi ini | Sprint 1-3 PASS kecuali blocker historis; Sprint 4 PASS untuk kontrak sesi, dengan failure lama di luar lingkup |
 | Python full suite | FAIL |
 | Frontend unit suite | FAIL sebagian |
 | Lint/typecheck | FAIL |

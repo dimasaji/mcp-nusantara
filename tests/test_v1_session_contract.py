@@ -1,5 +1,6 @@
 """Chat, history and citations share a session capability contract."""
 import asyncio
+from uuid import uuid4
 
 import httpx
 import pytest
@@ -19,4 +20,18 @@ def test_shared_or_malformed_session_is_denied_before_work(api, session):
             assert chat.status_code == 422
             assert history.status_code == 403
             assert api.calls['construct'] == api.calls['search'] == api.calls['model'] == 0
+    asyncio.run(exercise())
+
+
+def test_web_uuid_session_is_allowed(api):
+    session = 'web-' + str(uuid4())
+    app = FastAPI()
+    app.include_router(api.ns['router'])
+
+    async def exercise():
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://fixture') as client:
+            chat = await client.post('/v1/chat', json={'session_id': session, 'user_input': 'Halo'})
+            history = await client.get('/v1/chat/history', headers={'X-Chat-Session': session})
+            assert chat.status_code == 200
+            assert history.status_code == 200
     asyncio.run(exercise())

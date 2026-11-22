@@ -103,6 +103,14 @@ Verifikasi: secret gate `1 passed`; `tests/v2/test_phases_7_21.py` `31 passed`; 
 
 Status produksi tetap `NOT READY`. Sprint 3 hanya menutup secret exposure gate; blocker runtime/data dan session drift tidak berubah.
 
+## Sprint 4 update (session-id contract, 2026-11-22)
+
+Bagian ini menggantikan catatan lama yang menyebut 3 failure session-id `web`/`other` sebagai drift P2-3. Setelah keputusan user, drift itu diperbaiki: `CHAT_SESSION_PATTERN` di `app/security/v1_knowledge.py` sekarang menerima hanya `web-UUID` lowercase dan menolak shared `web`/ID sembarang sebelum retrieval/model. `tests/test_v1_session_contract.py` kini punya test positif `web-UUID` di samping test negatif lama.
+
+Verifikasi: `tests/test_v1_session_contract.py tests/test_approval_boundary.py` `15 passed`; `tests/test_chat_openrouter_route_wiring_v1.py` `1 passed`; regresi 14 file yang menyentuh sesi `153 passed, 3 skipped, 12 failed, 18 errors`, dengan seluruh failure/error sudah ada sebelum Sprint 4 (fixture pipeline/state operator, worker IndoBERT, dan retrieval data-dependent). Ruff pada 9 file yang disentuh tidak menambah temuan baru. Code review dua axis terhadap working tree dengan fixed point `a3a197cb`: Standards 2 findings (1 hard berupa bukti laporan, sudah dilengkapi di `BUILD_AND_TEST_REPORT.md`; 1 judgement diterima), Spec 6 findings (5 diperbaiki termasuk 4 test citation gate; 1 diterima karena frontend sudah memenuhi kontrak di HEAD). Detail ada di `BUILD_AND_TEST_REPORT.md`.
+
+Status produksi tetap `NOT READY`. Sprint 4 menyelesaikan kontrak sesi, bukan blocker runtime/data: worker IndoBERT, Ollama, PDF/DB nyata, artifact historis R2, dan build Docker nyata masih terbuka.
+
 ## Kesimpulan akhir
 
 VPS saat ini berhasil menjadi **bukti lingkungan kerja**, bukan bukti produk siap rilis. Status akhir: `NOT READY`. Gunakan laporan ini sebagai baseline untuk iterasi berikutnya, dan jangan menaikkan status tanpa bukti pengujian baru.

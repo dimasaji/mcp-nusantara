@@ -218,8 +218,9 @@ def test_http_branch_projection_preserves_public_behavior_and_excludes_internal_
     if branch == "local_rule":
         monkeypatch.setattr(routes, "_deterministic_response", lambda **kwargs: "Public answer.")
     before = deepcopy(state["context"])
+    session = "web-00000000-0000-4000-8000-000000000001"
     with TestClient(app) as client:
-        response = client.post("/v1/chat", json={"session_id": "current-request",
+        response = client.post("/v1/chat", json={"session_id": session,
             "user_input": "Hapus record" if branch == "policy_sensitive" else "Apa status permohonan saya?"},
             headers={"X-Admin-Token": "projection-fixture"})
     if branch == 'offline':
@@ -231,7 +232,7 @@ def test_http_branch_projection_preserves_public_behavior_and_excludes_internal_
     data = response.json()
     assert_public(data)
     assert response.headers["X-Request-ID"]
-    assert data["session_id"] == "current-request"
+    assert data["session_id"] == session
     assert state["closed"] == state["remembered"] == 1
     assert state["context"] == before
     assessment = state["assessment"]

@@ -164,7 +164,7 @@ def test_operator_model_is_used_by_real_hermes_and_public_projection(controlled_
 
     monkeypatch.setattr(OllamaProvider, "health_check", fixture_health_check)
     monkeypatch.setattr(OllamaProvider, "generate", fixture_generate)
-    session = 'operator-memory-preservation'
+    session = 'web-00000000-0000-4000-8000-000000000002'
     from app.security.v1_knowledge import v1_session_id
     memory_session = v1_session_id(session, operator=True)
     existing = list(routes._gate_integration.memory.context(memory_session))
@@ -242,7 +242,7 @@ def test_ollama_inventory_and_chat_use_selected_qwen_without_openrouter(controll
         raise ProviderUnavailableError('ollama')
     monkeypatch.setattr(OllamaProvider, 'generate', local_failure)
     failed = controlled_client.post('/v1/chat', json={
-        'user_input': 'Explain this local service briefly.', 'session_id': 'ollama-no-cloud-fallback'})
+        'user_input': 'Explain this local service briefly.', 'session_id': 'web-00000000-0000-4000-8000-000000000003'})
     assert failed.status_code == 503
 
 
@@ -325,7 +325,7 @@ def test_substantive_and_followup_questions_never_take_greeting_shortcut(control
         }
     monkeypatch.setattr(OllamaProvider, "health_check", fixture_health_check)
     monkeypatch.setattr(OllamaProvider, "generate", fixture_generate)
-    data = controlled_client.post('/v1/chat', json={'user_input': question, 'session_id': 'followup-regression'}).json()
+    data = controlled_client.post('/v1/chat', json={'user_input': question, 'session_id': 'web-00000000-0000-4000-8000-000000000004'}).json()
     assert not data['grounding']['grounded']
     if question=='Apa syaratnya?':
         assert data['provider_status']=='local_rule'
@@ -385,7 +385,7 @@ def test_model_change_during_request_does_not_rebind_its_provider(controlled_cli
             expected_revision=revision, validated_configuration=current)
         return await original(self)
     monkeypatch.setattr(OllamaProvider, 'health_check', concurrent_change)
-    response = controlled_client.post('/v1/chat', json={'user_input': 'Apa itu KTP-el?', 'session_id': 'in-flight'})
+    response = controlled_client.post('/v1/chat', json={'user_input': 'Apa itu KTP-el?', 'session_id': 'web-00000000-0000-4000-8000-000000000005'})
     assert response.status_code == 200
     assert response.json()['model'] == current.llm.model
     assert owner.configuration_snapshot()[0].llm.model != current.llm.model

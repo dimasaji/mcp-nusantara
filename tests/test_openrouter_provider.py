@@ -308,7 +308,7 @@ def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen
         async with httpx.AsyncClient(transport=httpx.MockTransport(lambda request:
                 httpx.Response(200, json=result()))) as client:
             public = await namespace["_chat_completed"](namespace["ChatRequest"](
-                user_input="fixture question", session_id="fixture", model=None))
+                user_input="fixture question", session_id="web-00000000-0000-4000-8000-000000000006", model=None))
             assert public["provider_status"] == chosen
             assert set(public) == {"session_id", "response", "trust", "model", "provider_status", "latency_ms",
                 "grounding", "understanding", "problem", "evidence", "timestamp"}
