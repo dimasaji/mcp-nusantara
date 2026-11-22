@@ -38,6 +38,7 @@ Worker tidak dibuat-buat dan fallback tidak ditambahkan tanpa persetujuan, karen
 | Subset V1 yang memakai fixture together | — | `34 passed, 3 failed`; 3 failure = session-id drift P2-3 (`web`, `other`, `web-aaaa...`) |
 | `tests/test_openrouter_provider.py` | `2 failed` karena `CHAT_SESSION_PATTERN` tidak ada di namespace AST | `37 passed` |
 | `tests/test_langchain_adapter.py` + `tests/test_langgraph_workflow.py` | adapter `None` / `AttributeError` | `7 passed, 1 failed`; failure tersisa `assert 0 >= 1` karena knowledge store kosong |
+| `tests/test_langchain_adapter.py` + `tests/test_synthetic_rag_fixture.py` | data-dependent retrieval gagal dengan store kosong | `7 passed`; fixture sintetis mengisi store dengan dokumen uji `synthetic-sop-1` |
 
 Perbaikan yang dilakukan bersifat test harness, bukan produksi:
 - `_check_rate_limit` stub disuntik di namespace AST `tests/test_v1_sop_boundary.py`.
@@ -68,6 +69,20 @@ Tidak boleh diklaim PASS:
 2. Nyalakan Ollama/local model atau konfigurasikan provider yang disetujui untuk uji chat nyata.
 3. Ulangi synthetic ingest → synthetic search → synthetic chat dengan sumber dokumen uji, lalu catat status, latency, dan kutipan sumber.
 4. Putuskan secara eksplisit apakah session-id drift P2-3 diperbaiki atau diterima sebagai kontrak saat ini.
+
+## Sprint 1 synthetic RAG fixture (belum di-commit saat verifikasi)
+
+`tests/test_synthetic_rag_fixture.py` sekarang menyediakan `build_synthetic_engine(tmp_path)`, dipakai bersama oleh fixture pytest dan `tests/test_langchain_adapter.py`. Engine memakai `SQLiteVectorStore(tmp_path/'fixture.db')`, embedding deterministik `[1.0, 0.0, 0.0]`, serta dokumen `synthetic-sop-1`. Ini menghilangkan kegagalan `assert 0 >= 1` akibat store kosong tanpa memakai data PC.
+
+Bukti yang dijalankan:
+
+- `.venv/bin/python -m pytest tests/test_langchain_adapter.py tests/test_synthetic_rag_fixture.py -q` → `7 passed`.
+- `.venv/bin/python -m pytest tests/test_synthetic_rag_fixture.py tests/test_knowledge_pipeline_api.py -q -k "synthetic or metadata_http or pdf_approval"` → PASS; 5 test.
+- Broad targeted regression 68 item → `tests/test_knowledge_pipeline_api.py ............`; satu failure historis R2 di luar knowledge pipeline.
+
+Flake `409 {"detail":"DOCUMENT_VERSION_NOT_FOUND"}` terjadi karena upload PDF memicu `prepare_uploaded_source` → `documents.prepare` → `DocumentTools.process` secara async; test lama langsung GET/POST dengan `source_version` sebelum extraction selesai. Perbaikan test menunggu `prepared['extraction_status'] in {'COMPLETE', 'PARTIAL', 'FAILED'}` sebelum GET/POST.
+
+Ini membuktikan retrieval/evidence/answer-context dengan data buatan, **bukan** membuktikan IndoBERT worker, OCR/Docling, LLM/Ollama, atau PDF SOP nyata. Status `SOP/RAG END-TO-END: BLOCKED / NOT VERIFIED` tetap berlaku.
 
 ## Kesimpulan
 

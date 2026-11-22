@@ -14,6 +14,20 @@ from app.core.evidence_registry import (EvidenceRegistryError, append_decision_a
 router = APIRouter(prefix='/v1/control-plane', tags=['engineering-control-plane'])
 
 
+def intention_origins() -> set[str]:
+    legacy = {'http://127.0.0.1:5173', 'http://127.0.0.1:8000'}
+    override = os.getenv('NUSANTARA_FRONTEND_ORIGIN')
+    if override:
+        return legacy | {override.rstrip('/')}
+    config = Path(__file__).resolve().parents[2] / 'config' / 'local-services.json'
+    try:
+        services = json.loads(config.read_text(encoding='utf-8'))
+        frontend = f"http://{services.get('host', '127.0.0.1')}:{services.get('frontendPort', 5180)}"
+    except (OSError, ValueError, TypeError):
+        frontend = 'http://127.0.0.1:5180'
+    return legacy | {frontend}
+
+
 @router.get('/cost-summary')
 def cost_summary(request: Request):
     from datetime import datetime, timezone
@@ -313,7 +327,7 @@ async def intention(request: Request):
     from app.approval.runtime_authorization import AuthorizationError, SCOPE
     if (not request.client or request.client.host not in {'127.0.0.1', '::1'}
             or request.headers.get('host') != '127.0.0.1:8000'
-            or request.headers.get('origin') not in {'http://127.0.0.1:5173', 'http://127.0.0.1:8000'}
+            or request.headers.get('origin') not in intention_origins()
             or request.headers.get('content-type') != 'application/json'):
         raise HTTPException(403, 'BROWSER_BOUNDARY_REJECTED')
     raw = bytearray()

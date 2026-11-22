@@ -8,7 +8,7 @@ Branch: `codex/fullroot-control-20261007`
 
 `FRONTEND BUILD: PASS` setelah satu perbaikan prop TypeScript.  
 `PYTHON TEST SUITE: FAIL` — masih ada 137 failed dan 64 errors dari 1658 items.  
-`FRONTEND UNIT TESTS: FAIL sebagian` — 3 failed dari 219 tests karena artifact laporan historis tidak ada di checkout.  
+`FRONTEND UNIT TESTS: FAIL sebagian` — 3 failed dari 221 tests karena artifact laporan historis tidak ada di checkout.  
 `STATIC ANALYSIS: FAIL` — utang teknis besar sudah ada sebelumnya; tidak diubah dalam sesi ini.
 
 Tidak ada klaim hijau keseluruhan. Setiap angka di bawah berasal dari perintah yang benar-benar dijalankan.
@@ -46,7 +46,7 @@ Perubahan ini tidak mengubah endpoint produksi, skema DB, arsitektur, atau data.
 | OpenRouter provider | `.venv/bin/python -m pytest tests/test_openrouter_provider.py -q` | `37 passed` |
 | Langchain/langgraph | `.venv/bin/python -m pytest tests/test_langchain_adapter.py tests/test_langgraph_workflow.py -q` | `7 passed, 1 failed`; sisa failure `assert 0 >= 1` karena knowledge store kosong |
 | Python penuh | `.venv/bin/python -m pytest -q` | `137 failed, 1421 passed, 36 skipped, 64 errors` dalam `28.81s` |
-| Frontend unit | `npm test` di `control-plane/` | `216 passed, 3 failed` dari `219` |
+| Frontend unit | `npm test` di `control-plane/` | `218 passed, 3 failed` dari `221` |
 | Lint Python | `.venv/bin/ruff check .` | `5692 errors`, `3538 fixable` |
 | Typecheck Python | `.venv/bin/mypy app` | `1113 errors` dari `140 files` (247 source files dicek) |
 
@@ -61,6 +61,24 @@ Perbandingan pytest penuh: failure turun `160 → 137`, passed naik `1381 → 14
 5. **Grounding/data-dependent failures.** Misalnya `assert 0 >= 1` dan `assert not True` pada test retrieval/grounding dengan knowledge store kosong.
 6. **Secret scan masih 15 findings** pada `tests/v2/test_phases_7_21.py::TestSecurity::test_project_has_no_secrets`; perlu klasifikasi fixture vs temuan nyata sebelum diubah.
 7. **Utang statis besar.** `ruff` dan `mypy` gagal dengan ribuan temuan yang bukan diperkenalkan sesi ini.
+
+## Sprint 1 stabilization (2026-11-22, belum di-commit saat verifikasi)
+
+Perubahan Sprint 1 tidak menambah service/framework/arsitektur dan tidak memakai data PC. Fokusnya adalah portabilitas Git, origin guard, dan fixture RAG sintetis.
+
+| Gate | Perintah | Hasil |
+| --- | --- | --- |
+| Git/origin targeted | `.venv/bin/python -m pytest tests/test_control_plane_readonly.py::test_projection_git_executable_honours_environment_override tests/test_control_plane_readonly.py::test_projection_git_executable_defaults_to_path tests/test_control_plane_readonly.py::test_intention_origin_allowlist_includes_configured_frontend tests/test_synthetic_rag_fixture.py -q` | `6 passed` |
+| RAG fixture + adapter | `.venv/bin/python -m pytest tests/test_langchain_adapter.py tests/test_synthetic_rag_fixture.py -q` | `7 passed` |
+| Order-dependent pipeline regression | `.venv/bin/python -m pytest tests/test_synthetic_rag_fixture.py tests/test_knowledge_pipeline_api.py -q -k "synthetic or metadata_http or pdf_approval"` | PASS; 5 test |
+| Broad targeted regression | `.venv/bin/python -m pytest tests/test_control_plane_readonly.py tests/test_synthetic_rag_fixture.py tests/test_langchain_adapter.py tests/test_knowledge_pipeline_api.py tests/test_document_answers.py tests/test_v1_sop_boundary.py -q` | 68 items; `test_knowledge_pipeline_api.py ............`; 1 failure historis R2 |
+| Frontend build | `npm run build` | PASS |
+| Frontend targeted | `npm test -- tests/vite-config.test.ts` | PASS |
+| Frontend unit penuh | `npm test` | `218 passed, 3 failed` dari `221`; 3 failure lama di `engineering-console.test.tsx` karena artifact historis tidak ada |
+| Targeted ruff | `.venv/bin/ruff check ...` pada 6 file yang disentuh | 20 temuan, semuanya baseline/pre-existing; sebelum perubahan 23 temuan pada file sama |
+| Diff ruff per file | perbandingan `git show HEAD:<file>` vs working tree | `test_langchain_adapter.py` turun `3 → 0`; file lain tidak berubah kode temuannya |
+
+Flaky order-dependent `test_pdf_approval_activates_operator_retrieval_without_manual_chat` sebelumnya gagal dengan `409 {"detail":"DOCUMENT_VERSION_NOT_FOUND"}` karena upload PDF auto-prepare async mengganti version before GET/POST. Test kini menunggu `prepared['extraction_status'] in {'COMPLETE', 'PARTIAL', 'FAILED'}` sebelum memakai `source_version`.
 
 ## Kesimpulan gate
 

@@ -1,6 +1,6 @@
 """Unit tests for LangChain adapter."""
-import os
-import pytest
+from test_synthetic_rag_fixture import build_synthetic_engine
+
 from app.knowledge.engine import KnowledgeEngine
 
 
@@ -10,15 +10,14 @@ def test_is_enabled(monkeypatch):
     assert is_enabled() is True
 
 
-def test_create_retriever(monkeypatch):
+def test_create_retriever(monkeypatch, tmp_path):
     monkeypatch.setenv('NUS_LANGCHAIN_ENABLED', 'true')
     from app.knowledge.langchain_adapter import create_retriever
-    ke = KnowledgeEngine()
-    r = create_retriever(ke, top_k=3)
+    r = create_retriever(build_synthetic_engine(tmp_path), top_k=3)
     assert r is not None
-    docs = r.invoke('permohonan data pribadi')
+    docs = r.invoke('Surat permohonan')
     assert len(docs) >= 1
-    assert docs[0].metadata.get('document_id') is not None
+    assert docs[0].metadata.get('document_id') == 'synthetic-sop-1'
 
 
 def test_create_llm(monkeypatch):

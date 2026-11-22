@@ -198,3 +198,19 @@ Berikut adalah daftar yang **perlu diputuskan/diubah setelah persetujuan**, buka
 - Status kesiapan tetap `NOT READY` untuk alur SOP/RAG penuh sampai artifact/service tersebut disediakan atau keputusan desain diambil.
 
 Sesuai instruksi, saya berhenti di sini dan menunggu persetujuan sebelum mengubah kode, memindahkan file, membuat service, atau menyalin data apa pun.
+
+## 9. Sprint 1 addendum (setelah audit, 2026-11-22)
+
+Bagian 1–8 adalah catatan audit read-only pada HEAD `52c5350c`. Setelah laporan itu disetujui, Sprint 1 mengubah sebagian kecil source sesuai rekomendasi audit. Status terbaru berikut menggantikan status lama hanya untuk item yang disebut.
+
+| Item audit | Status lama | Status Sprint 1 | Bukti |
+| --- | --- | --- | --- |
+| Git executable di `app/core/control_plane_projection.py:13` | PERLU DISESUAIKAN | DIPERBAIKI | `git_executable()` memakai `os.getenv('NUSANTARA_GIT_CMD') or 'git'`; konstanta `GIT` path `C:/Users/dmaza/...` dihapus |
+| Git executable di `control-plane/vite.config.ts:8` | PERLU DISESUAIKAN | DIPERBAIKI | `commit()` memakai `process.env.NUSANTARA_GIT_CMD || 'git'`; regression test statis di `control-plane/tests/vite-config.test.ts` |
+| Origin guard `5173` vs frontend aktual `5180` di `app/api/control_plane.py` | PERLU DISESUAIKAN | DIPERBAIKI | `intention_origins()` membaca `frontendPort` dari `config/local-services.json`, menambah `http://127.0.0.1:5180`, mempertahankan `http://127.0.0.1:5173` dan `http://127.0.0.1:8000` sebagai legacy |
+| Retrieval/knowledge tests bergantung DB kosong | BLOCKED oleh data | DIPERBAIKI untuk test-only | `build_synthetic_engine(tmp_path)` di `tests/test_synthetic_rag_fixture.py`; `7 passed` bersama `tests/test_langchain_adapter.py` |
+| Flake `DOCUMENT_VERSION_NOT_FOUND` | Tidak tercatat di audit | DIPERBAIKI di test | `tests/test_knowledge_pipeline_api.py` menunggu status extraction terminal sebelum GET/POST version |
+
+Tidak ada perubahan untuk item lain: OCR/Tesseract, IndoBERT worker, model cache, Ollama, PDF SOP, DB berisi, graphify/checkpoint artifact, Hermes root, credential-like literal, atau Windows automation scripts. Tidak ada data PC yang disalin dan tidak ada service baru yang dibuat.
+
+Verifikasi portabilitas Sprint 1: `npm run build` PASS, `npm test -- tests/vite-config.test.ts` PASS, git/origin + synthetic targeted `6 passed`, adapter + synthetic `7 passed`, broad targeted regression 68 item dengan hanya failure historis R2, dan `npm test` penuh `218 passed, 3 failed` dari `221`.
