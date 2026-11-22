@@ -7,8 +7,9 @@ Branch: `codex/fullroot-control-20261007`
 ## Status singkat
 
 `FRONTEND BUILD: PASS` setelah satu perbaikan prop TypeScript.  
-`PYTHON TEST SUITE: FAIL` — masih ada 137 failed dan 64 errors dari 1658 items.  
-`FRONTEND UNIT TESTS: FAIL sebagian` — 3 failed dari 221 tests karena artifact laporan historis tidak ada di checkout.  
+`PYTHON TEST SUITE: FAIL` — final kontrak stabilisasi: 100 failed, 1501 passed, 45 skipped, 30 errors dari 1676 items.
+`FRONTEND UNIT TESTS: FAIL sebagian` — 3 failed dari 221 tests karena artifact laporan historis tidak ada di checkout.
+`VPS OFFLINE STABILIZATION: PARTIAL` — 34 item bug/fixture Repro VPS diperbaiki; 93 item tersisa adalah blocker runtime/artefak historis yang harus diverifikasi di PC.
 `STATIC ANALYSIS: FAIL` — utang teknis besar sudah ada sebelumnya; tidak diubah dalam sesi ini.
 
 Tidak ada klaim hijau keseluruhan. Setiap angka di bawah berasal dari perintah yang benar-benar dijalankan.
@@ -198,3 +199,71 @@ Worst Spec: bukti broad regression — sudah diperbaiki. Ringkasan: Standards 4 
 | Lint/typecheck | FAIL |
 | Secret exposure gate | PASS |
 | Kesiapan rilis | FAIL / NOT READY |
+
+## Stabilisasi VPS offline — kontrak 2026-11-22 (commit `68e62fe4`)
+
+Fixed point: `5cd16f67`. Stabilization commit: `68e62fe452ffa6a811309542962bdcae331188bc`. Semua perintah dijalankan dari `/data/home/mcp-nusantara` kecuali frontend yang dijalankan dari `control-plane/`.
+
+### P0 — hasil terukur
+
+| Gate | Perintah | Hasil |
+| --- | --- | --- |
+| Baseline Python penuh | `.venv/bin/python -m pytest -q --tb=short` | `118 failed, 1475 passed, 36 skipped, 46 errors` |
+| Final Python penuh | `.venv/bin/python -m pytest -q --tb=short` | `100 failed, 1501 passed, 45 skipped, 30 errors` |
+| Red P0 targeted | `.venv/bin/python -m pytest -q --tb=short tests/test_evidence_runner_subprocess.py tests/test_v1_review_execution_api.py::test_unauthorized_execution_does_not_write tests/test_developer_core_engine_contract.py::test_initialization_and_legacy_dataclass tests/test_evidence_runner_guards.py` | `11 failed, 1 error` |
+| Green P0 targeted final | `.venv/bin/python -m pytest -q --tb=short tests/test_evidence_runner_subprocess.py tests/test_v1_review_execution_api.py tests/test_developer_core_engine_contract.py tests/test_evidence_runner_guards.py` | `40 passed, 9 skipped` |
+| Frontend penuh | `CI=1 npm test -- --reporter=basic` di `control-plane/` | `Test Files 1 failed | 28 passed (29)`; `Tests 3 failed | 218 passed (221)` |
+| Frontend red loop | `CI=1 npm test -- --reporter=basic -t 'binds displayed evidence|keeps distinct fingerprint|records actual subsequent'` | exit `1`; `3 failed`, `218 skipped` |
+
+Klasifikasi 164 item baseline: 52 bug kode/fixture yang benar-benar VPS-reproducible, 19 fixture rusak, 11 artefak historis hilang, 82 dependensi runtime tidak tersedia. Dari 71 item bug/fixture, 34 diperbaiki pada commit ini. Sisa 130 item final = 37 bug/fixture yang memerlukan keputusan spesifikasi + 93 blocker eksternal (82 runtime + 11 historical).
+
+### P0 — perbaikan dan regresi
+
+| Masalah | Bukti red | Perbaikan minimal | Regresi |
+| --- | --- | --- | --- |
+| Evidence runner mem-blok config pytest sendiri | `ISOLATED_CANDIDATE_TEST_FAILED ... pytest-evidence.ini reason=active_database_or_sidecar` | `check_database` membedakan root repo, `data` repo, output, dan path `/data` eksternal; reads config repo diizinkan, writes tetap diblok | `test_evidence_runner_subprocess.py`, `test_v1_review_execution_api.py` → 16 error hilang |
+| Candidate test tidak bisa membaca source fixture read-only | `safe-result.txt ... reason=active_database_or_sidecar` | `candidate_root` dibatasi ke induk output; source di luar `data` boleh dibaca, `data/developer_core/change_plan.json` tepat boleh dibaca, sidecar `.db*` tetap diblok | `test_v1_review_execution_api.py` → `16 passed` |
+| Guard tests gagal di outer pytest | `AttributeError: module '__main__' has no attribute 'guarded_open'` | `skipif` saat runner tidak memasang guard; cakupan asli tetap dijalankan subprocess | `test_evidence_runner_subprocess.py` → 9 cases PASS, 0 skipped |
+| DeveloperCore menolak root VPS di bawah `/data/` | `assert False` pada `graph_loaded` di `/data/tmp/pytest-of-user/...` | Pengecualian `data` hanya untuk root yang benar-benar di bawah `/data/`; relative `data` tetap terlindungi | `test_vps_data_root_allowed_without_allowing_relative_data` baru; `test_developer_core_engine_contract.py` → `23 passed` |
+
+Tidak ada assertion yang dilonggarkan. `assert len(cases) == 9` dikembalikan setelah test tambahan dihapus. Tidak ada artefak historis yang dibuat; 48 file yang dipulihkan sementara dari `0b48db2a^` sudah dihapus karena checksum tidak cocok.
+
+### P1 — integrasi offline
+
+| Gate | Perintah | Hasil |
+| --- | --- | --- |
+| API boot, SOP ingest SQLite temp, citation, read-only control plane | `.venv/bin/python -m pytest -q --tb=short tests/test_v1_smoke.py tests/test_knowledge_pipeline_api.py tests/test_sop_ingestion.py tests/test_v1_service_dialogue.py tests/test_chat_citation_source.py tests/test_control_plane_readonly.py -k 'not real_projection'` | `75 passed, 1 deselected` |
+| Chat dengan provider mock dan proyeksi respons | `.venv/bin/python -m pytest -q --tb=short tests/test_v1_response_projection.py tests/test_v1_operator_control.py` | `53 passed` |
+| Real projection R2 | `tests/test_control_plane_readonly.py::test_real_projection_no_database_worker_or_mutating_git` | MASIH FAIL: `NOT_VERIFIED != CLOSED_PASS`, artefak R2 historis tidak ada |
+
+P1 `PARTIAL`: boot TestClient, upload/ingest SOP sintetis ke SQLite `tmp_path`, chat mock, citation, dan control-plane read-only lolos. Real projection R2 tetap blocker PC.
+
+### P2 — keamanan, path, statis, review
+
+| Gate | Perintah | Hasil |
+| --- | --- | --- |
+| Secret exposure | `.venv/bin/python -m pytest -q tests/v2/test_phases_7_21.py::TestSecurity::test_project_has_no_secrets` | `1 passed` |
+| Ruff file tersentuh | `.venv/bin/python -m ruff check app/developer_core/engine.py tests/run_evidence_tests_isolated.py tests/test_evidence_runner_guards.py tests/test_evidence_runner_subprocess.py tests/test_developer_core_engine_contract.py` | `11 errors`, semuanya baseline/pre-existing; tidak ada temuan pada baris diff |
+| Mypy source tersentuh | `.venv/bin/python -m mypy app/developer_core/engine.py` | `4 errors`, semuanya `DirEntry` di luar baris diff |
+| Path Windows/default | pencarian `C:\\`, `C:/`, `D:/`, `/Users/`, `/home/dimas` di `app/` dan `tests/` | 1 konstanta legacy `LEGACY_TESSERACT` di `app/knowledge/docling_config.py:9`, sudah degrade via env/`shutil.which`; 4 literal di test, bukan default produksi |
+
+### Code review dua axis (fixed point `5cd16f67`, working tree sebelum commit)
+
+## Standards
+- Hard: none.
+- Judgement — Duplicated Code `.env` predicate, Mysterious Name `data_text`, duplicated `resolved is not None`, hidden `candidate_root` coupling, magic count. `data_text` sudah di-rename menjadi `has_data_segment`; count dikembalikan ke 9; sisanya diterima karena constraint tanpa modul bersama dan seam runner sudah eksplisit.
+
+Worst Standards: duplication kecil pada guard — diterima, bukan hard violation.
+
+## Spec
+- finding "no regression test for DeveloperCore" → diperbaiki dengan `test_vps_data_root_allowed_without_allowing_relative_data`.
+- finding "candidate read bypass terlalu luas" → diperbaiki dengan `candidate_data_root` dan exact-file `candidate_readonly_artifacts`.
+- finding "assertion diubah" → diperbaiki dengan mengembalikan count dan menghapus test tambahan.
+- finding "guard failures jadi skips" → diterima karena runner subprocess tetap mengeksekusi 9 guard test; skips tidak menyembunyikan failure.
+- finding "P0 blockers belum didokumentasikan" → diperbaiki di laporan ini dan `VPS_OFFLINE_STABILIZATION_REPORT.md`.
+
+Worst Spec: shallow read-bypass — sudah dipersempit. Ringkasan: Standards 5 judgement, 0 hard; Spec 5 findings, semua ditindaklanjuti atau diterima dengan alasan.
+
+### Workflow evidence
+
+Graphify di-skip: `graphify-out/graph.json` dan CLI tidak ada; hanya `graph-viewer/graph.json` yang tidak memenuhi kontrak. Diagnosing Bugs: tight red loop frontend dan Python dengan output `/data/tmp/opencode/fe_loop.txt` dan `/data/tmp/opencode/p0_red.txt`. TDD: red→green per slice pada 4 perbaikan di atas. Codebase Design: tidak ada modul/framework/service/domain baru; perbaikan tetap di seam runner dan engine yang sudah ada. Code Review: dua sub-agent paralel, Standards dan Spec, hasil di atas.
