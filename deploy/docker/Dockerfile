@@ -14,6 +14,8 @@ RUN python -m venv /opt/indobert \
 ENV NUSANTARA_INDOBERT_PYTHON=/opt/indobert/bin/python \
     NUSANTARA_INDOBERT_WORKER=/opt/indobert-worker/indobert_worker.py \
     HF_HOME=/app/data/huggingface
+# SOP PDF inspection/rendering dependencies match requirements-lock.txt.
+RUN pip install --no-cache-dir pypdf==6.20.1 pymupdf==1.28.2 Pillow==12.3.0
 COPY backend/app ./app
 COPY nusantara-models/indobert_worker.py /opt/indobert-worker/indobert_worker.py
 COPY frontend/dist ./frontend/dist
