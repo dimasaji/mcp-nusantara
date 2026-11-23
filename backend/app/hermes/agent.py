@@ -1291,9 +1291,14 @@ class HermesAgent:
                     _selection = bool(_meta.get('docling_blocks') or _meta.get('omitted_block_ids'))
                     _src = (getattr(evidence[0], 'chunk', None) or getattr(evidence[0], 'source', None) or '')
                     _src = str(_src).strip()[:400]
+                    _followup_recovery = bool(_SIMPLIFY_REQUEST.search(request.user_input)
+                                              or _CITATION_REQUEST.search(request.user_input))
+                    if _followup_recovery and not pilot_chat:
+                        _src = ' '.join(_src.split())
                     _rec2 = None
-                    if (_src and not _selection and pilot_chat and '\n' not in _src
-                            and not _CONTACT_REQUEST.search(request.user_input)):
+                    if (_src and not _selection and '\n' not in _src
+                            and not _CONTACT_REQUEST.search(request.user_input)
+                            and (pilot_chat or _followup_recovery)):
                         _rec2 = _grounding_guard.validate(answer=_src, evidence=evidence, intent_name=intent_name)
                     if _rec2 is not None and _rec2.grounded:
                         response_text = _src

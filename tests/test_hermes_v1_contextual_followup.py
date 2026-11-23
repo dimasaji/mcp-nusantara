@@ -232,6 +232,7 @@ def test_reuse_fails_closed_when_rebind_method_missing():
 
     if hasattr(services["knowledge"], "reuse_prior_citation"):
         del services["knowledge"].reuse_prior_citation
+    services["knowledge"].search_knowledge = lambda query, *args, **kwargs: []
 
     payload = _run(agent, services, "Dari halaman berapa informasi tersebut?", session).payload
     assert "berasal dari" not in payload["response"], payload["response"]
