@@ -12,7 +12,7 @@ from app.observability import metrics
 
 
 def stage_runner():
-    tree = ast.parse(Path('app/api/routes.py').read_text(encoding='utf-8-sig'))
+    tree = ast.parse(Path('backend/app/api/routes.py').read_text(encoding='utf-8-sig'))
     node = next(node for node in tree.body if isinstance(node, ast.AsyncFunctionDef) and node.name == '_run_sync_v1')
     namespace = {'asyncio': asyncio, 'time': time, 'HTTPException': HTTPException,
                  '_sync_slots': threading.BoundedSemaphore(1)}

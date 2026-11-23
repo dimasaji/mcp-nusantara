@@ -302,7 +302,7 @@ with TestClient(app) as client:
     assert response.headers['x-request-id'] == 'normal-caller-id'
 print(json.dumps({'profile':'NORMAL','evidence':'ISOLATED_COMPOSITION_WITH_STUB_API_OWNERS'}))
 '''
-    env = {**os.environ, 'PYTHONPATH': str(root), 'PYTHONDONTWRITEBYTECODE': '1',
+    env = {**os.environ, 'PYTHONPATH': str(root / 'backend'), 'PYTHONDONTWRITEBYTECODE': '1',
            'NUSANTARA_RUNTIME_PROFILE': 'NORMAL', 'NUSANTARA_CONTROL_PLANE_READ_ONLY': '0'}
     output = json.loads(subprocess.check_output([sys.executable, '-B', '-c', script],
                         cwd=tmp_path, env=env, text=True))
@@ -338,8 +338,8 @@ async def test_concurrent_cancelled_generation_consumes_reservation(tmp_path, mo
 def test_existing_public_v1_v2_configuration_and_control_plane_sources_untouched():
     root = Path(__file__).parents[1]
     evidence = json.loads((root/'docs/reports/r2-a8-remediation-20261008/PROFILE_BEFORE.json').read_text(encoding='utf-8-sig'))
-    protected = {'app/api/routes.py', 'app/api/v2_routes.py', 'app/core/config.py',
-                 'app/core/runtime_identity.py', 'app/core/control_plane_projection.py'}
+    protected = {'backend/app/api/routes.py', 'backend/app/api/v2_routes.py', 'backend/app/core/config.py',
+                 'backend/app/core/runtime_identity.py', 'backend/app/core/control_plane_projection.py'}
     for item in evidence['files']:
         if item['path'] in protected:
             from v1_baseline import assert_current_source
@@ -411,7 +411,7 @@ print(json.dumps({'verification_type':'ISOLATED_GUARDED_ASGI_WITH_MOCK_HTTP','li
     'profile':'ATTESTATION','dispatch_count':len(calls),'observation':observation,
     'foundation':app.state.runtime_authorization.evidence()}))
 '''
-    env = {**os.environ, 'PYTHONPATH': str(root), 'PYTHONDONTWRITEBYTECODE': '1',
+    env = {**os.environ, 'PYTHONPATH': str(root / 'backend'), 'PYTHONDONTWRITEBYTECODE': '1',
         'NUSANTARA_RUNTIME_PROFILE': 'ATTESTATION', 'NUSANTARA_CONTROL_PLANE_READ_ONLY': '0',
         'LLM_MODEL': 'fixture-model', 'LLM_BASE_URL': 'http://localhost:11434'}
     # Remove inherited aliases that could conflict with the explicitly isolated fixture snapshot.

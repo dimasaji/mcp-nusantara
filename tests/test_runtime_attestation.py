@@ -183,7 +183,7 @@ print(json.dumps(first.json()))
 def test_main_change_only_installs_attestation_and_preserves_existing_handlers():
     root = Path(__file__).parents[1]
     before = ast.parse((root/'docs/reports/r2-a7-runtime-attestation-20261008/main.py.before').read_text(encoding='utf-8-sig'))
-    after = ast.parse((root/'app/main.py').read_text(encoding='utf-8-sig'))
+    after = ast.parse((root/'backend/app/main.py').read_text(encoding='utf-8-sig'))
 
     def original_nodes(module):
         # Authorized composition/profile changes; original handler semantics stay intact.

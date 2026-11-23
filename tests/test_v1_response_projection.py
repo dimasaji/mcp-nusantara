@@ -141,7 +141,7 @@ def controlled_pipeline(monkeypatch, tmp_path):
                            "entities": []}, "input": PRIVATE, "metadata": PRIVATE}
 
     citation = SimpleNamespace(document_id="PUBLIC-1", title="Public citation",
-                               chunk="Public citation.", source=PRIVATE, score=.9)
+                               chunk="Public citation.", source=PRIVATE, score=.9, metadata={})
 
     def trust(**kwargs):
         count = len(kwargs["evidence"])
@@ -169,6 +169,9 @@ def controlled_pipeline(monkeypatch, tmp_path):
     monkeypatch.setattr(routes, "_knowledge", SimpleNamespace(
         search_knowledge=lambda *args, **kwargs: [] if state["empty"] else [citation],
         scan_knowledge_watch=lambda: None,
+        list_documents=lambda: SimpleNamespace(documents=[SimpleNamespace(document_id="PUBLIC-1")]),
+        retrieval_top_k=5,
+        rag=SimpleNamespace(get_document_info=lambda document_id: SimpleNamespace(title="Public citation", source=PRIVATE, metadata={} )),
     ))
 
     class FixtureSOPReview:

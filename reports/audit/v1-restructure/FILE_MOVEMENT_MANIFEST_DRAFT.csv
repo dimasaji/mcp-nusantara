@@ -1,0 +1,17 @@
+# DRAFT — Restructuring plan (NOT executed)
+# Created: 2026-11-23. Author: OpenCode.
+# This is a planning artifact. No files have been moved.
+# Approval required before executing any row (contract 10/14).
+
+source,target,group,reason,risk,approved
+app/,backend/app/,core,Modular monolith target layout (contract 7/8),HIGH,NO
+control-plane/,frontend/,frontend,React/Vite control plane,MEDIUM,NO
+scripts/,scripts/,scripts,Already grouped; subfoldering optional,LOW,NO
+data/,data/,data,Already target location,LOW,NO
+config/,config/,config,Already target location,LOW,NO
+docs/,docs/,docs,Already target location,LOW,NO
+reports/,reports/,reports,Already target location,LOW,NO
+deploy/,deploy/,deploy,Not yet created; needs Docker/service config migration,HIGH,NO
+tools/,tools/,tools,Already target location,LOW,NO
+tests/,tests/,tests,Already target location; subfoldering optional,LOW,NO
+"

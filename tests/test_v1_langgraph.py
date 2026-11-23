@@ -18,7 +18,7 @@ from app.workflow.v1_langgraph import V1LangGraphWorkflow, V1WorkflowError
 
 
 def projection_and_helpers():
-    tree = ast.parse(Path("app/api/routes.py").read_text(encoding="utf-8-sig"))
+    tree = ast.parse(Path("backend/app/api/routes.py").read_text(encoding="utf-8-sig"))
     helpers = {"_extract_understanding_data", "_extract_intent", "_reconcile_problem_with_intent",
         "_extract_entities", "_get_problem_value", "_build_evidence_text", "_deterministic_response", "_arithmetic_response",
         "_build_system_prompt", "_build_user_prompt", "_model_dump"}

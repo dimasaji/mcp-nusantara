@@ -73,5 +73,5 @@ def test_browser_fullstack():
     """Frontend and backend should be compatible."""
     # Basic check that both use same API
     import os
-    assert os.path.exists('app/api/routes.py')
+    assert os.path.exists('backend/app/api/routes.py')
     assert os.path.exists('frontend') or os.path.exists('ui') or True

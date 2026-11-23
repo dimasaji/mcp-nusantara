@@ -40,7 +40,7 @@ def test_no_evidence_handoff_uses_the_classified_intent():
 
 @pytest.mark.parametrize('adapter_present', [False, True])
 def test_startup_shares_worker_only_when_rag_has_an_embedding_adapter(adapter_present):
-    source = Path('app/api/routes.py').read_text(encoding='utf-8-sig')
+    source = Path('backend/app/api/routes.py').read_text(encoding='utf-8-sig')
     tree = ast.parse(source)
     wiring = next(node for node in tree.body if isinstance(node, ast.If)
                   and '_language.semantic_intent_engine' in ast.unparse(node.test))

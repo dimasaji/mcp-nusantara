@@ -191,7 +191,7 @@ def test_no_commands_writes_database_or_engine_import(tmp_path, monkeypatch):
     monkeypatch.setattr(sqlite3, "connect", forbidden)
     for name in ["write_text", "write_bytes", "mkdir", "unlink", "rename", "replace"]:
         monkeypatch.setattr(Path, name, forbidden)
-    module_path = Path(__file__).parents[1] / "app/core/nusantara_config.py"
+    module_path = Path(__file__).parents[1] / "backend/app/core/nusantara_config.py"
     source = module_path.read_text(encoding="utf-8")
     assert not any(f"from {prefix}" in source for prefix in ["app.api", "app.knowledge", "app.models", "app.main"])
     config = load_nusantara_config(project_root=tmp_path)

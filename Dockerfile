@@ -13,7 +13,7 @@ RUN python -m venv /opt/indobert \
 ENV NUSANTARA_INDOBERT_PYTHON=/opt/indobert/bin/python \
     NUSANTARA_INDOBERT_WORKER=/app/nusantara-models/indobert_worker.py \
     HF_HOME=/app/data/huggingface
-COPY app ./app
+COPY backend/app ./app
 COPY control-plane/dist ./control-plane/dist
 COPY docs ./docs
 COPY .env.example ./

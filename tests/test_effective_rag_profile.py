@@ -245,7 +245,7 @@ def source_tree(path):
 
 
 def test_actual_v1_chat_retrieval_and_filter_block(tmp_path):
-    tree = source_tree('app/hermes/agent.py')
+    tree = source_tree('backend/app/hermes/agent.py')
     owner = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'HermesAgent')
     chat = next(n for n in owner.body if isinstance(n, ast.AsyncFunctionDef) and n.name == 'execute_v1')
     # Run the actual retrieval/filter statements, omitting unrelated generation owners.
@@ -286,7 +286,7 @@ def test_actual_v1_chat_retrieval_and_filter_block(tmp_path):
 
 
 def test_actual_v2_callback_public_shape_and_internal_linkage(tmp_path, caplog):
-    tree = source_tree('app/api/v2_routes.py')
+    tree = source_tree('backend/app/api/v2_routes.py')
     callback = next(n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == 'retrieve')
     ns = {'capture_retrieval': capture_retrieval, 'Any': object,
           '_knowledge': KnowledgeEngine(rag=make_rag(tmp_path))}
@@ -302,7 +302,7 @@ def test_actual_v2_callback_public_shape_and_internal_linkage(tmp_path, caplog):
 @pytest.mark.parametrize('request_values,source', [({}, 'REQUEST_DEFAULT'), ({'top_k': 5}, 'REQUEST_EXPLICIT')])
 def test_actual_v1_search_default_override_and_response(tmp_path, caplog, request_values, source):
     from fastapi import APIRouter, Header, HTTPException
-    tree = source_tree('app/api/routes.py')
+    tree = source_tree('backend/app/api/routes.py')
     endpoint = next(n for n in tree.body if isinstance(n, ast.AsyncFunctionDef) and n.name == 'search_knowledge')
     request_class = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'KnowledgeSearchRequest')
     from pydantic import BaseModel, Field
@@ -328,7 +328,7 @@ def test_actual_v1_search_default_override_and_response(tmp_path, caplog, reques
 
 
 def test_dev_endpoint_has_no_rag_claim():
-    tree = source_tree('app/api/v2_routes.py')
+    tree = source_tree('backend/app/api/v2_routes.py')
     endpoint = next(n for n in tree.body if isinstance(n, ast.AsyncFunctionDef) and n.name == 'dev_chat')
     text = ast.unparse(endpoint)
     assert 'capture_retrieval' not in text and '_knowledge' not in text

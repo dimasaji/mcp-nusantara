@@ -8,9 +8,9 @@ Status: PARTIAL (52 tests PASS, 44 SOP Aktif, SOP Field Composer connected)
 
 ### 1.1 Ekstraksi Tabel SOP dari Docling
 - [x] Memperbaiki ekstraksi tabel SOP dari Docling (table_cells) (threshold lowered)
+- [x] cv2 terpasang di .venv (disalin dari .venv-docling); _preprocess_pdf robust (guard pixmap kecil/kosong, try/except)
 - [ ] Grid coverage masih 19.4% (33/170 tables)
 - [ ] Table structure validation per-cell (script ada, belum dijalankan massal)
-- [ ] OCR preprocessing (deskew/binarize) menyebabkan crash
 - [ ] OCR ground truth lengkap (transkripsi manual 42 SOP)
 
 ### 1.2 SOP Field Composer ke Hermes
@@ -230,7 +230,15 @@ Status: PARTIAL (52 tests PASS, 44 SOP Aktif, SOP Field Composer connected)
 - [x] 12 remediation deliverables: selesai
 - [x] V1 status: PARTIAL (79%)
 
-## Ringkasan
+## Sesi ini (2026-11-20) — remaining work yang ditutup
+
+- `app/knowledge/sop_fields.py`: perbaikan ekstraksi `legal_basis` (nilai inline `Dasar Hukum: X` kini ditangkap; sebelumnya hanya mengambil baris berikutnya). Ditambah `import json`.
+- `tests/test_sop_fields.py` (baru): 8 test (extract + compose) — PASS.
+- `developer.py` (root): dibuat ulang, `tests/test_developer_control.py` 8/8 PASS.
+- `.dev/PROJECT_STATE.json`, `.dev/TASKS.json`: dibuat.
+- `graphify update .`: dijalankan (14245 node).
+
+Item REMAINING_WORK yang masih terbuka: lihat daftar di atas (grid coverage, OCR, pen-test, load test, Linux, model 7B+).
 
 | Prioritas | Item | Selesai | Total | % |
 |---|---|---|---|---|

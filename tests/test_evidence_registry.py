@@ -23,7 +23,7 @@ def test_each_criterion_links_sources_and_tests():
 def test_collector_records_real_artifact_references():
     package = registry.collect_review_package()
     paths = {item["path"] for item in package["evidence"]}
-    assert "app/core/evidence_registry.py" in paths
+    assert "backend/app/core/evidence_registry.py" in paths
     assert "control-plane/evidence-requirements.json" in paths
     assert all(item["path"] and item["classification"] in registry.SOURCE_CLASSES for item in package["evidence"])
 

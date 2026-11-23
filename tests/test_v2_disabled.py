@@ -60,7 +60,7 @@ def test_boot_does_not_import_or_expose_v2_and_preserves_v1(monkeypatch, read_on
         return original_import(name, *args, **kwargs)
 
     monkeypatch.setattr(builtins, '__import__', deny_v2_import)
-    source = Path(__file__).resolve().parents[1] / 'app/main.py'
+    source = Path(__file__).resolve().parents[1] / 'backend/app/main.py'
     spec = importlib.util.spec_from_file_location('_nusantara_boot_test', source)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

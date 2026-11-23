@@ -57,7 +57,7 @@ def api(monkeypatch, tmp_path):
         raise AssertionError('NETWORK_FORBIDDEN')
     monkeypatch.setattr(socket, 'socketpair', event_loop_socketpair)
     monkeypatch.setattr(socket.socket, 'connect', deny_network)
-    tree = ast.parse(Path('app/api/routes.py').read_text(encoding='utf-8-sig'))
+    tree = ast.parse(Path('backend/app/api/routes.py').read_text(encoding='utf-8-sig'))
     names = {'ChatRequest', 'chat', 'chat_history', '_chat_completed',
              '_record_chat_result', '_project_v1_chat_response', 'KnowledgeSearchRequest',
              'search_knowledge', 'list_knowledge_documents', '_check_rate_limit'}

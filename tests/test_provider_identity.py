@@ -39,7 +39,7 @@ def test_request_context_binds_distinct_invocations_to_one_instance():
 def test_runtime_instances_differ_in_real_subprocesses(tmp_path):
     script = ('import json; from app.core.runtime_identity import current_runtime_instance; '
               'from dataclasses import asdict; print(json.dumps(asdict(current_runtime_instance())))')
-    environment = {**os.environ, 'PYTHONPATH': str(Path(__file__).parents[1])}
+    environment = {**os.environ, 'PYTHONPATH': str(Path(__file__).parents[1] / 'backend')}
     observations = [json.loads(subprocess.check_output(
         [sys.executable, '-B', '-c', script], cwd=tmp_path, env=environment, text=True))
         for _ in range(2)]
@@ -95,7 +95,7 @@ def test_actual_http_middleware_binds_header_to_fixture_provider_receipt(incomin
     from types import SimpleNamespace
     from fastapi import FastAPI
     from fastapi.testclient import TestClient
-    source = Path(__file__).parents[1] / 'app/main.py'
+    source = Path(__file__).parents[1] / 'backend/app/main.py'
     module = ast.parse(source.read_text(encoding='utf-8-sig'))
     middleware = next(node for node in module.body
                       if isinstance(node, ast.AsyncFunctionDef) and node.name == 'request_id_middleware')
@@ -362,7 +362,7 @@ def test_gateway_does_not_silently_failover_or_rewrite_foreign_receipt():
 def test_public_request_response_models_and_routes_unchanged():
     root = Path(__file__).parents[1]
     baseline = root / '.dev/checkpoints/r2-20261007/source-before'
-    for name in ['app/api/routes.py', 'app/api/v2_routes.py']:
+    for name in ['backend/app/api/routes.py', 'backend/app/api/v2_routes.py']:
         def surface(path):
             module = ast.parse(path.read_text(encoding='utf-8-sig'))
             current = path == root/name
@@ -388,14 +388,14 @@ def test_public_request_response_models_and_routes_unchanged():
                         retained.append(field)
                     assert approved_fields.keys() <= {field.target.id for field in node.body if isinstance(field, ast.AnnAssign)}
                     node.body = retained
-                if current and name == 'app/api/routes.py' and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in {
+                if current and name == 'backend/app/api/routes.py' and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in {
                     'chat', 'search_knowledge', 'list_knowledge_documents'}:
                     assert ast.dump(node.args.args[-1]) == ast.dump(token_args.args[0])
                     assert ast.dump(node.args.defaults[-1]) == ast.dump(token_args.defaults[0])
                     node.args.args.pop()
                     node.args.defaults.pop()
             history = [node for node in module.body if isinstance(node, ast.FunctionDef) and node.name == 'chat_history']
-            if current and name == 'app/api/routes.py':
+            if current and name == 'backend/app/api/routes.py':
                 assert len(history) == 1
                 assert ast.unparse(history[0].decorator_list[0]) == "router.get('/chat/history')"
                 expected = ast.parse("def history(x_chat_session: str = Header(default=''), x_admin_token: str | None = Header(default=None)): pass").body[0]
@@ -471,7 +471,7 @@ def test_public_health_distinguishes_inventory_identity_and_preserves_legacy_fie
     prior = root / '.dev/checkpoints/r2-20261007/health-gate/source-before/app/api/routes.py'
     with _health_endpoint_client(prior, Provider) as client:
         old = client.get('/v1/health/detail')
-    with _health_endpoint_client(root/'app/api/routes.py', Provider) as client:
+    with _health_endpoint_client(root/'backend/app/api/routes.py', Provider) as client:
         new = client.get('/v1/health/detail')
     assert old.status_code == new.status_code == 200
     before, after = old.json(), new.json()

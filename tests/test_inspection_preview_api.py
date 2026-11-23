@@ -104,7 +104,7 @@ async def test_other_methods_and_paths_unavailable(app):
 
 def test_preview_is_registered_in_v1_without_loading_v2():
     root = Path(__file__).resolve().parents[1]
-    tree = ast.parse((root / "app/main.py").read_text(encoding="utf-8-sig"))
+    tree = ast.parse((root / "backend/app/main.py").read_text(encoding="utf-8-sig"))
     imports = [node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom)]
     assert "app.api.inspection_preview" in imports
     assert "app.api.v2_routes" not in imports

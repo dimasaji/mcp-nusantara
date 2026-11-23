@@ -172,7 +172,7 @@ def test_optional_existing_workflow_preserves_honest_non_evidence_policy(text):
 def test_actual_public_endpoint_sanitizes_provider_failure_without_retry():
     parts = fixture(empty=True, failure="error")
     configuration, agent, services, projector, provider, observed = parts
-    tree = ast.parse(Path("app/api/routes.py").read_text(encoding="utf-8-sig"))
+    tree = ast.parse(Path("backend/app/api/routes.py").read_text(encoding="utf-8-sig"))
     node = next(n for n in tree.body if isinstance(n, ast.AsyncFunctionDef) and n.name == "_chat_completed")
     node.decorator_list = []
     async def close():

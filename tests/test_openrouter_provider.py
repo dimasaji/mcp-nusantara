@@ -213,7 +213,7 @@ def test_existing_chat_projection_contract_without_importing_application():
     # worker or application. This verifies schema, not live /v1 registration.
     import typing
     from pydantic import BaseModel, ConfigDict, Field
-    tree = ast.parse(Path("app/api/routes.py").read_text(encoding="utf-8-sig"))
+    tree = ast.parse(Path("backend/app/api/routes.py").read_text(encoding="utf-8-sig"))
     targets = {"_project_v1_chat_response"}
     targets.update(node.name for node in tree.body if isinstance(node, ast.ClassDef) and
                    node.name.startswith("_Public"))
@@ -242,12 +242,12 @@ def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen
     from pydantic import BaseModel, ConfigDict, Field
     from app.hermes.agent import V1CoreResult
     from app.exceptions import ProviderUnavailableError
-    from app.security.v1_knowledge import V1KnowledgeBoundary
+    from app.security.v1_knowledge import CHAT_SESSION_PATTERN, V1KnowledgeBoundary
     import app.models.cost_ledger as cost_module
     import app.models.openrouter_cost_policy as policy_module
     monkeypatch.setattr(cost_module, "CostLedger", lambda *args, **kwargs: governed_provider)
     monkeypatch.setattr(policy_module, "estimate_openrouter_cost", lambda *args, **kwargs: "0.01")
-    tree = ast.parse(Path("app/api/routes.py").read_text(encoding="utf-8-sig"))
+    tree = ast.parse(Path("backend/app/api/routes.py").read_text(encoding="utf-8-sig"))
     selected = [node for node in tree.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
                 and (node.name in {"_chat_completed", "ChatRequest", "_project_v1_chat_response"} or
                      node.name.startswith("_Public"))]
@@ -284,6 +284,7 @@ def test_actual_chat_endpoint_selects_only_explicit_provider_and_projects(chosen
     namespace = {"BaseModel": BaseModel, "ConfigDict": ConfigDict, "Field": Field,
         "Any": typing.Any, "Literal": typing.Literal, "HTTPException": HTTPException,
         "V1KnowledgeBoundary": V1KnowledgeBoundary,
+        "CHAT_SESSION_PATTERN": CHAT_SESSION_PATTERN,
         "_record_chat_result": lambda *args, **kwargs: True,
         "ProviderUnavailableError": ProviderUnavailableError,
         "OllamaProvider": local_factory, "OpenRouterProvider": cloud_factory,

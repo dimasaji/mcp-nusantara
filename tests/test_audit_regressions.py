@@ -21,7 +21,7 @@ def knowledge_api():
     from app.security.auth import require_admin
     from app.exceptions import internal_error
 
-    source = Path(__file__).resolve().parents[1] / "app/api/routes.py"
+    source = Path(__file__).resolve().parents[1] / "backend/app/api/routes.py"
     tree = ast.parse(source.read_text(encoding="utf-8-sig"))
     names = {"DocumentIngestRequest", "KnowledgeSearchRequest", "_run_sync_v1",
              "ingest_document", "search_knowledge"}
