@@ -1512,8 +1512,9 @@ async def ingest_document(
 ):
     require_admin(x_admin_token)
     try:
+        source_metadata={**request.metadata,'ingest_channel':'admin_api'}
         result=await _run_sync_v1(_knowledge.process_knowledge_source,
-            request.title+'.txt',request.content.encode('utf-8'),request.id or None,request.metadata)
+            request.title+'.txt',request.content.encode('utf-8'),request.id or None,source_metadata)
         if result['status'] not in {'READY','DUPLICATE'}:
             raise HTTPException(400,detail=result.get('reason') or 'INGEST_FAILED')
         return {'success':True,'document_id':result['document_id'],'title':request.title,
