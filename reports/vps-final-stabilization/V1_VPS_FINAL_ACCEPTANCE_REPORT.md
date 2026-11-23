@@ -4,6 +4,8 @@
 - Code under review: `d2cfc60a0d88c93ce561f40c01d67e5f53910770`
 - Branch: `codex/vps-final-stabilization-20261123`
 - Base/active commit: `b44b01e7d24efbd5ff7f4830cc71624b5aa4bf7f`
+- Evidence bundle commit: `aed48220cc8e0088a2a5aa66191cc4d9a6886f6c`
+- Pull request: #18 — https://github.com/dimasaji/mcp-nusantara/pull/18
 - Evidence: `/data/workspace/nus-v1-vps-final-20261123/evidence/`
 - Generated: 2026-11-23T22:24:30Z
 
