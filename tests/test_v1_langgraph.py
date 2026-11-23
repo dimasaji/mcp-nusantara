@@ -176,7 +176,9 @@ def test_failure_and_timeout_never_retry_or_expose_private_exception(failure, co
 @pytest.mark.parametrize("empty,answer", [(True, None), (False, "Wajib membayar biaya 900 rupiah.")])
 def test_existing_grounding_rejects_missing_evidence_and_unsupported_claim(empty, answer):
     parts = fixture(empty=empty, answer=answer)
-    public = asyncio.run(workflow(parts).execute(request()))
+    req = request()
+    req.user_input = 'Apa persyaratan penerbitan KTP-el?'
+    public = asyncio.run(workflow(parts).execute(req))
     assert public["grounding"]["grounded"] is False
     assert public["response"] == "Informasi tersebut belum tersedia secara cukup dalam knowledge base."
     assert parts[4].calls == 1 and parts[5]["gated"] == 1
@@ -230,3 +232,24 @@ def test_cancellation_does_not_replay_paid_request():
             await task
     asyncio.run(run())
     assert parts[4].calls == 1 and parts[5]["remembered"] == 0
+
+@graph_available
+def test_general_definition_fallback_is_preserved_without_claiming_grounding():
+    parts = fixture(empty=True)
+    public = asyncio.run(workflow(parts).execute(request()))
+    assert public['response'] == 'KTP-el adalah identitas penduduk.'
+    assert public['grounding']['grounded'] is False
+    assert public['grounding']['reason'] == 'not_evaluated'
+    assert public['evidence'] == []
+    assert public['trust']['supports_claim'] is False
+    assert public['trust']['requires_human'] is True
+    assert public['trust']['confidence'] == 0.0
+    assert parts[4].calls == 1 and parts[5]['gated'] == 1
+
+@graph_available
+def test_definition_fallback_cannot_escape_explicit_document_scope():
+    parts = fixture(empty=True)
+    req = request()
+    req.document_ids = ['fixture-ktp']
+    with pytest.raises(V1WorkflowError, match='UNGROUNDED_RESULT'):
+        asyncio.run(workflow(parts).execute(req))

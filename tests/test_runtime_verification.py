@@ -273,7 +273,7 @@ async def test_failed_final_asgi_send_is_not_recorded_as_delivery(tmp_path, monk
     assert controller.receipt.application_response_sent is False
 
 
-def test_normal_app_composition_preserves_existing_routers_and_caller_ids(tmp_path):
+def test_normal_v1_app_composition_preserves_caller_ids_and_keeps_v2_disabled(tmp_path):
     root = Path(__file__).parents[1]
     # Only API owner modules are substituted to avoid their DB initialization in this unit test.
     script = r'''
@@ -295,7 +295,8 @@ assert app.state.runtime_profile == 'NORMAL'
 assert not hasattr(app.state, 'runtime_verification')
 assert not hasattr(app.state, 'runtime_authorization')
 paths = set(app.openapi()['paths'])
-assert {'/v1/chat','/v2/chat','/v2/dev'} <= paths
+assert '/v1/chat' in paths
+assert not any(path == '/v2' or path.startswith('/v2/') for path in paths)
 assert '/v1/runtime/verification' not in paths
 with TestClient(app) as client:
     response = client.post('/v1/chat', headers={'X-Request-ID':'normal-caller-id'})

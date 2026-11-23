@@ -1,15 +1,38 @@
 """E2E test for LangChain adapter with real Ollama + retriever."""
 import os
-os.environ['NUS_LANGCHAIN_ENABLED'] = 'true'
-os.environ['NUS_LANGGRAPH_ENABLED'] = 'true'
 
 import pytest
 from app.knowledge.engine import KnowledgeEngine
 from app.knowledge.langchain_adapter import create_retriever, create_llm, create_chain
 
 
-def test_retriever_e2e():
-    ke = KnowledgeEngine()
+@pytest.fixture(autouse=True)
+def enabled_for_this_test(monkeypatch):
+    # Other modules must not control this test through collection-time globals.
+    monkeypatch.setenv('NUS_LANGCHAIN_ENABLED', 'true')
+    monkeypatch.setenv('NUS_LANGGRAPH_ENABLED', 'true')
+
+
+@pytest.fixture
+def live_engine(tmp_path):
+    from app.knowledge.indobert_embedding import IndoBERTEmbeddingAdapter
+    from app.knowledge.rag import RAG
+    from app.knowledge.schemas import KnowledgeBaseConfig
+    from app.knowledge.store import SQLiteVectorStore
+    adapter = IndoBERTEmbeddingAdapter()
+    engine = KnowledgeEngine(rag=RAG(config=KnowledgeBaseConfig(),
+        vector_store=SQLiteVectorStore(str(tmp_path / 'adapter-only.db')), embedding_func=adapter))
+    try:
+        run = engine.process_knowledge_source('fixture.txt',
+            b'Fixture pengujian, bukan SOP produksi. Persyaratan permohonan data pribadi: Surat Permohonan.')
+        assert run['status'] == 'READY'
+        yield engine
+    finally:
+        adapter.stop()
+
+
+def test_retriever_e2e(live_engine):
+    ke = live_engine
     r = create_retriever(ke, top_k=5)
     assert r is not None
     docs = r.invoke('permohonan data pribadi')
@@ -27,8 +50,8 @@ def test_llm_e2e():
     print('PASS: LLM responded: %s' % str(resp.content)[:80])
 
 
-def test_chain_e2e():
-    ke = KnowledgeEngine()
+def test_chain_e2e(live_engine):
+    ke = live_engine
     chain = create_chain(ke)
     assert chain is not None
     answer = chain.invoke('Apa syarat permohonan data pribadi?')

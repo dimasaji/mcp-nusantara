@@ -178,3 +178,18 @@ def test_intention_origin_allowlist_includes_configured_frontend(monkeypatch):
     assert 'http://127.0.0.1:5180' in origins
     assert 'http://127.0.0.1:8000' in origins
     assert 'http://evil.example' not in origins
+
+@pytest.mark.parametrize('layout', ['frontend', 'control-plane'])
+def test_projection_reads_metadata_from_existing_ui_layout(tmp_path, layout):
+    ui = tmp_path / layout
+    ui.mkdir()
+    (ui / 'evidence-sources.json').write_text(json.dumps({'r3_audit': str(tmp_path / 'absent-history')}), encoding='utf-8')
+    (ui / 'CPLANE_OWNER_AUTHORIZATION.json').write_text(json.dumps({'status': 'NOT_AUTHORIZED'}), encoding='utf-8')
+    state = project(tmp_path)
+    by_id = {item['id']: item for item in state['evidence']}
+    assert by_id['sources']['status'] == 'VERIFIED_ARTIFACT'
+    assert Path(by_id['sources']['reference']) == ui / 'evidence-sources.json'
+    assert by_id['cplane-owner']['status'] == 'VERIFIED_ARTIFACT'
+    assert state['runtime']['current_status'] == 'NOT_VERIFIED'
+    assert state['governance']['read_only'] is True
+    assert next(item for item in state['phases'] if item['id'] == 'R2')['status'] == 'NOT_VERIFIED'

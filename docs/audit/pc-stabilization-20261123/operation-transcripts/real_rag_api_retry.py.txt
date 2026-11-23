@@ -1,0 +1,77 @@
+import json
+import os
+import sys
+import time
+from pathlib import Path
+from uuid import uuid4
+
+repo = Path(r'C:\Users\dmaza\mcp-starter')
+out = repo / '.tmp-build/pc-stabilization-20261123/real-rag-trial-02'
+sys.path.insert(0, str(repo / 'backend'))
+os.environ['HF_HUB_OFFLINE'] = '1'
+os.environ['TRANSFORMERS_OFFLINE'] = '1'
+os.environ['NUSANTARA_ADMIN_TOKEN'] = uuid4().hex + uuid4().hex
+from app.core.config import settings
+settings.compose_configuration(project_root=repo, dotenv_environment={}, environment={}, overrides={
+    'llm': {'provider': 'ollama', 'base_url': 'http://127.0.0.1:11434', 'model': 'llama3.2:1b'},
+    'knowledge': {'root': str(out / 'knowledge'), 'database': str(out / 'knowledge/knowledge.db')}})
+from app.api.routes import _knowledge as engine, _language
+from app.knowledge.sop_review import SOPReview
+from app.main import app
+from fastapi.testclient import TestClient
+
+report = {'status': 'RUNNING', 'uses_existing_isolated_trial_database': True, 'publication_performed': False}
+started = time.monotonic()
+try:
+    identifier = 'DOC-SHA256-155ba1e4f098b6e3723c652dfab9394b3a0fa71829c458a292070eec56065396'
+    review = SOPReview(engine)
+    detail = review.detail(identifier)
+    report['native_extraction_version'] = detail['version_id']
+    session = 'web-' + str(uuid4())
+    request_id = uuid4().hex
+    headers = {'X-Admin-Token': os.environ['NUSANTARA_ADMIN_TOKEN']}
+    with TestClient(app) as client:
+        response = client.post('/v1/chat', headers=headers, json={
+            'session_id': session, 'request_id': request_id, 'document_ids': [identifier],
+            'sop_version': detail['version_id'], 'sop_case': 'requirements',
+            'user_input': 'Apa persyaratan menurut SOP ini?'})
+        report['http_status'] = response.status_code
+        if response.status_code == 200:
+            body = response.json()
+            report['grounded'] = body.get('grounding', {}).get('grounded', False)
+            report['grounding_reason'] = body.get('grounding', {}).get('reason')
+            report['provider_status'] = body.get('provider_status')
+            report['model'] = body.get('model')
+            report['evidence_count'] = len(body.get('evidence', []))
+            pages = sorted({page for item in body.get('evidence', []) for page in item.get('pages', [])})
+            report['citation_pages'] = pages
+            if pages:
+                citation = client.get('/v1/knowledge/pipeline/reviews/' + identifier + '/citation',
+                    params={'request_id': request_id, 'page_number': pages[0]},
+                    headers={**headers, 'X-Chat-Session': session})
+                report['citation_http_status'] = citation.status_code
+            history = client.get('/v1/chat/history', headers={**headers, 'X-Chat-Session': session})
+            report['history_http_status'] = history.status_code
+            report['status'] = 'PASS' if report['grounded'] and report.get('citation_http_status') == 200 else 'PARTIAL'
+        else:
+            report['status'] = 'FAIL'
+            # Error vocabulary only; never write response headers or private payloads.
+            detail_value = response.json().get('detail')
+            if isinstance(detail_value, str) and detail_value.replace('_', '').isalnum():
+                report['error_code'] = detail_value
+    report['approval_state_after_trial'] = review.detail(identifier)['status']
+    if report['approval_state_after_trial'] == 'Aktif':
+        raise RuntimeError('Unexpected publication')
+except Exception as exc:
+    report.update(status='FAIL', exception=type(exc).__name__)
+finally:
+    adapter = getattr(engine.rag, '_embedding_adapter', None)
+    if adapter is not None:
+        adapter.stop()
+    semantic = getattr(_language, 'semantic_intent_engine', None)
+    if semantic is not None and callable(getattr(semantic, 'stop', None)):
+        semantic.stop()
+    report['seconds'] = round(time.monotonic() - started, 2)
+    (out / 'API_RETRY_RESULT.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+    print(json.dumps(report), flush=True)
+raise SystemExit(0 if report['status'] == 'PASS' else 1)

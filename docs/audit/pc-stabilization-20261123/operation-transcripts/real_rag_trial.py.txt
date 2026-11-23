@@ -1,0 +1,113 @@
+"""Real scanned-document pipeline and operator review-trial; no publication."""
+import hashlib
+import json
+import os
+import sqlite3
+import sys
+import time
+from pathlib import Path
+from uuid import uuid4
+
+repo = Path(r'C:\Users\dmaza\mcp-starter')
+out = repo / '.tmp-build/pc-stabilization-20261123' / (sys.argv[1] if len(sys.argv) > 1 else 'real-rag-trial')
+out.mkdir(exist_ok=False)
+sys.path.insert(0, str(repo / 'backend'))
+os.environ['HF_HUB_OFFLINE'] = '1'
+os.environ['TRANSFORMERS_OFFLINE'] = '1'
+os.environ['NUSANTARA_ADMIN_TOKEN'] = uuid4().hex + uuid4().hex
+os.environ['HAYSTACK_TELEMETRY_ENABLED'] = 'False'
+from app.core.config import settings
+
+settings.compose_configuration(project_root=repo, dotenv_environment={}, environment={}, overrides={
+    'llm': {'provider': 'ollama', 'base_url': 'http://127.0.0.1:11434', 'model': 'llama3.2:1b'},
+    'knowledge': {'root': str(out / 'knowledge'), 'database': str(out / 'knowledge/knowledge.db')}})
+from app.api.routes import _knowledge as engine
+from app.knowledge.document_tools import DocumentTools
+from app.knowledge.sop_review import SOPReview
+from app.security.v1_knowledge import V1KnowledgeBoundary
+
+report = {'status': 'RUNNING', 'data_isolated': True, 'publication_performed': False}
+phase = 'INGESTION'
+started = time.monotonic()
+try:
+    source = repo / 'data/knowledge/source-documents/155ba1e4f098b6e3723c652dfab9394b3a0fa71829c458a292070eec56065396.pdf'
+    raw = source.read_bytes()
+    report['source_sha256'] = hashlib.sha256(raw).hexdigest()
+    if report['source_sha256'] != source.stem:
+        raise RuntimeError('Source hash mismatch')
+    run = engine.process_knowledge_source(source.name, raw)
+    if run['status'] != 'READY':
+        report['ingestion_status'] = run['status']
+        raise RuntimeError('Real ingestion failed')
+    identifier = run['document_id']
+    report['ingestion'] = 'PASS'
+    chunks = engine.rag._store.get_chunks_by_document(identifier)
+    report['chunks'] = len(chunks)
+    report['embedding_dimension'] = chunks[0].embedding.dimension if chunks else 0
+    if not chunks or report['embedding_dimension'] != 768:
+        raise RuntimeError('Embedding dimension or chunks invalid')
+    result = engine.search_knowledge('Apa persyaratan penerbitan KTP-el untuk WNA?', top_k=3)
+    report['retrieved'] = len(result)
+    report['retrieval_citation_pages'] = sorted({p for item in result for p in item.metadata.get('citation_pages', [])})
+    if not result or not report['retrieval_citation_pages']:
+        raise RuntimeError('Real retrieval or page provenance missing')
+    boundary = V1KnowledgeBoundary(engine, operator=True, provider='ollama', document_ids=[identifier])
+    if boundary.search_knowledge('Persyaratan'):
+        raise RuntimeError('Unapproved upload leaked into ordinary chat')
+    report['pending_source_denied'] = True
+    phase = 'NATIVE_DOCLING'
+    review = SOPReview(engine)
+    detail = review.detail(identifier)
+    tools = DocumentTools(engine, operator=True)
+    tools.process(identifier, detail['version_id'])
+    deadline = time.monotonic() + 240
+    while tools.status(identifier)['status'] in {'QUEUED', 'PROCESSING'} and time.monotonic() < deadline:
+        time.sleep(.5)
+    status = tools.status(identifier)['status']
+    report['native_docling'] = status
+    if status != 'COMPLETE':
+        raise RuntimeError('Native Docling did not complete')
+    detail = review.detail(identifier)
+    phase = 'REAL_API_REVIEW_TRIAL'
+    from app.main import app
+    from fastapi.testclient import TestClient
+    session = 'web-' + str(uuid4())
+    request_id = uuid4().hex
+    headers = {'X-Admin-Token': os.environ['NUSANTARA_ADMIN_TOKEN']}
+    with TestClient(app) as client:
+        response = client.post('/v1/chat', headers=headers, json={
+            'session_id': session, 'request_id': request_id,
+            'document_ids': [identifier], 'sop_version': detail['version_id'],
+            'sop_case': 'requirements', 'user_input': 'Apa persyaratan menurut SOP ini?'})
+        report['chat_http_status'] = response.status_code
+        if response.status_code != 200:
+            raise RuntimeError('Review trial HTTP failed')
+        body = response.json()
+        report['grounded'] = body.get('grounding', {}).get('grounded', False)
+        report['grounding_reason'] = body.get('grounding', {}).get('reason')
+        report['model'] = body.get('model')
+        report['provider_status'] = body.get('provider_status')
+        report['evidence_count'] = len(body.get('evidence', []))
+        pages = sorted({p for item in body.get('evidence', []) for p in item.get('pages', [])})
+        report['chat_citation_pages'] = pages
+        if pages:
+            citation = client.get('/v1/knowledge/pipeline/reviews/' + identifier + '/citation',
+                params={'request_id': request_id, 'page_number': pages[0]},
+                headers={**headers, 'X-Chat-Session': session})
+            report['citation_http_status'] = citation.status_code
+        report['history_http_status'] = client.get('/v1/chat/history',
+            headers={**headers, 'X-Chat-Session': session}).status_code
+    report['approval_state_after_trial'] = review.detail(identifier)['status']
+    if report['approval_state_after_trial'] == 'Aktif':
+        raise RuntimeError('Trial unexpectedly published source')
+    report['status'] = 'PASS' if report['grounded'] and report.get('citation_http_status') == 200 else 'PARTIAL'
+except Exception as exc:
+    report.update(status='FAIL', failed_phase=phase, exception=type(exc).__name__)
+finally:
+    adapter = getattr(engine.rag, '_embedding_adapter', None)
+    if adapter is not None:
+        adapter.stop()
+    report['seconds'] = round(time.monotonic() - started, 2)
+    (out / 'RESULT.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+    print(json.dumps(report), flush=True)
+raise SystemExit(0 if report['status'] == 'PASS' else 1)

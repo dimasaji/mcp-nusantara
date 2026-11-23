@@ -1,0 +1,13 @@
+# Lima failure final yang belum ditutup
+
+Semua status berikut tetap FAIL pada suite-06 (1673 passed, 5 failed, 19 skipped). Tidak melakukan skip atau repin untuk membuat hijau.
+
+| Test | Bukti/diagnosis | Langkah berikut yang diperlukan |
+| --- | --- | --- |
+| test_r1_preserves_out_of_scope_protected_sources | Path helper sudah mengarah backend/app; source protected berbeda dari hash lama. Trace 41 object lokal menemukan 6/8 asal pin, dua belum ditemukan. | Review perubahan per file/commit dan asal dua pin yang belum ditemukan; pertahankan historical_reports. Persetujuan baseline baru hanya setelah delta yang diizinkan jelas, bukan memperbarui semua hash secara otomatis. |
+| test_real_projection_no_database_worker_or_mutating_git | Lookup frontend sudah diperbaiki dan dua regression layout lulus. Status historical phase belum memenuhi CLOSED_PASS yang diasumsikan test. | Cocokkan checkpoint, acceptance record dan hash artefak yang benar. Metadata hilang/drift harus tetap NOT_VERIFIED; jangan memulihkan approval lama sebagai approval runtime saat ini. |
+| test_vps_data_root_allowed_without_allowing_relative_data | Fixture adalah direktori Windows bernama data, sedangkan pengecualian source hanya untuk lokasi Linux /data/. | Validasi positif pada Linux/container terisolasi dan negatif pada Windows; tidak memperluas izin akses direktori data demi memenuhi simulasi VPS yang salah. VPS tetap tidak disentuh. |
+| test_public_request_response_models_and_routes_unchanged | Ekspektasi AST lama belum mencakup UUID session pattern dan perlu dipetakan terhadap perubahan API/P0 yang disahkan. | Buat diff permukaan API dan delta security yang eksplisit, lalu revisi fixture sesuai acceptance; jangan menghapus pattern keamanan atau mengganti seluruh baseline tanpa review. |
+| test_main_change_only_installs_attestation_and_preserves_existing_handlers | Perbandingan AST menunjukkan readiness_check/v1_metrics ditambah, dashboard/lifespan berubah dibanding fixture. main.py tidak diubah oleh increment stabilisasi ini. | Review fitur bundle/health/lifecycle yang sudah ada dan kelengkapan cakupan tes; tetapkan perubahan yang diizinkan secara eksplisit sebelum memperbarui fixture. |
+
+Tambahan di luar lima unit failure: actual SOP requirements trial masih grounded=false/possible_unsupported_content meskipun API, citation dan history 200. Perlu pemeriksaan konten/ekstraksi dan expected answers yang benar, bukan pelonggaran guard. Hermes owner/Admin handshake CONNECTED, tetapi konteks proses GPT masih permission-blocked dan task execution tetap disabled. Backup/restore sudah dibuktikan pada snapshot terisolasi, termasuk 60/60 sumber DB yang mempunyai hash; boot dari restore, clean-clone dan kandidat Docker/Linux final belum dibuktikan.

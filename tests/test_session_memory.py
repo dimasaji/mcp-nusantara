@@ -67,8 +67,11 @@ def test_bounded_and_redacted(tmp_path):
 
 def test_http_opt_in_and_delete(monkeypatch, tmp_path):
     from fastapi.testclient import TestClient
-    from app.main import app
+    from fastapi import FastAPI
     from app.api import v2_routes as routes
+    # Exercise retained legacy memory handlers without mounting them in V1.
+    app = FastAPI()
+    app.include_router(routes.router)
 
     memory = SessionMemory(tmp_path)
     monkeypatch.setattr(routes, "_memory", memory)

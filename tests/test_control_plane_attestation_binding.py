@@ -220,7 +220,7 @@ assert owner._permit is None and owner.evidence()['live_actions'] == 'LOCKED'
 print(json.dumps({'isolated_in_process':True,'live_http':False,'dispatch_count':0,'state':'PENDING','live_actions':'LOCKED',
     'snapshot':state,'intention':response.json()}))
 '''
-    env = {**os.environ,'PYTHONPATH':str(root),'PYTHONDONTWRITEBYTECODE':'1',
+    env = {**os.environ,'PYTHONPATH':str(root / 'backend'),'PYTHONDONTWRITEBYTECODE':'1',
         'NUSANTARA_RUNTIME_PROFILE':'ATTESTATION','NUSANTARA_CONTROL_PLANE_READ_ONLY':'0','PORT':'8000'}
     env.pop('NUSANTARA_RUNTIME_PORT', None)
     result = json.loads(subprocess.check_output([sys.executable,'-B','-c',script],cwd=tmp_path,env=env,text=True))

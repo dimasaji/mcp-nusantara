@@ -48,7 +48,8 @@ def project(root: Path = ROOT) -> dict:
     r1 = read('r1', root/'.dev/MDA_R1_OFFICIAL_CLOSURE_20261007_143016.json')
     r2 = read('r2', root/'.dev/MDA_R2_IMPLEMENTATION_CHECKPOINT.json')
     owner = read('r2-owner', root/'.dev/checkpoints/r2-20261007/FINAL_OWNER_ACCEPTANCE_RECORD.json', r2.get('administrative_acceptance_sha256'), pinned=True)
-    sources = read('sources', root/'control-plane/evidence-sources.json')
+    ui_root = root / 'frontend' if (root / 'frontend').is_dir() else root / 'control-plane'
+    sources = read('sources', ui_root/'evidence-sources.json')
     allowed_audit = Path(sources.get('r3_audit', '__missing__'))
     r3 = read('r3', allowed_audit/'closure-manifest.json', sources.get('r3_manifest_sha256'), pinned=True)
     # A matching manifest is insufficient if its accepted report is missing/drifted.
@@ -63,7 +64,7 @@ def project(root: Path = ROOT) -> dict:
     expected_hashes = sources.get('expected_hashes', {})
     profile = read('rag-profile', allowed_audit/'actual-profile.json', expected_hashes.get('actual-profile.json'), pinned=True) if r3 else {}
     integrity = read('r3-integrity', allowed_audit/'integrity-final.json', expected_hashes.get('integrity-final.json'), pinned=True) if r3 else {}
-    authorization = read('cplane-owner', root/'control-plane/CPLANE_OWNER_AUTHORIZATION.json')
+    authorization = read('cplane-owner', ui_root/'CPLANE_OWNER_AUTHORIZATION.json')
     contract_path = root/'docs/commands/MDA-CPLANE-UI-AUTH-001.md'
     try:
         contract = contract_path.read_text(encoding='utf-8-sig')

@@ -1,11 +1,11 @@
 # Nusantara repository map
 
-Updated 2026-11-23 against primary PC repository baseline 71b1e1bf.
-Current source locations below describe the existing layout, not the newly requested final target.
-The user has superseded the previous folder addendum with the contract Pasal 3.2 target:
-[target decision and migration checkpoint](audit/contract-physical-target-20261123/TARGET_DECISION.md).
-The previous [folder addendum](contracts/NUSANTARA-V1-FOLDER-TARGET-ADDENDUM-20261123.md) remains historical evidence.
-No application source has been migrated to that new target yet.
+Initial location verification: 71b1e1bf. Active stabilization baseline: 29e71a81 (2026-11-23).
+Approved physical target is again backend/app, frontend and deploy/docker.
+The user accepted retaining the existing layout, then authorized stabilization steps 1–4.
+Migration M1 and the Pasal 3.2 physical-target proposal are deferred; no source was moved.
+Current decision: [stabilization checkpoint](audit/pc-stabilization-20261123/TARGET_DECISION.md).
+The original [folder addendum](contracts/NUSANTARA-V1-FOLDER-TARGET-ADDENDUM-20261123.md) applies again.
 The supplied [NUS-CONTRACT-RECON-001](contracts/NUS-CONTRACT-RECON-001.md) remains DRAFT;
 its conceptual tree does not itself authorize new services or data migrations.
 
