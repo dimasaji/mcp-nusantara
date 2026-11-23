@@ -42,6 +42,33 @@ Seluruh ID `FAILED` dan 46 ID runtime `ERROR` identik dengan baseline. Tiga erro
 - Tidak ada test yang dinonaktifkan atau di-skip paksa.
 - Tidak ada perbaikan kode yang diterapkan; perbaikan hanya boleh dilakukan jika defect terbukti dan disetujui.
 
+## Deep-dive tambahan — baseline terpisah
+
+Tree `b268da1e` di-archive ke `/tmp/nus-base-b268-audit` dan dijalankan dengan environment/perintah identik.
+
+| Metrik | Base `b268da1e` | Head PR #16 `58f07307` | Delta |
+|---|---:|---:|---:|
+| Failed | 119 | 89 | -30 |
+| Passed | 1434 | 1466 | +32 |
+| Skipped | 62 | 62 | 0 |
+| Errors | 49 | 49 | 0 |
+
+Tidak ada ID kegagalan baru di head; 3 error koleksi muncul di kedua tree. Ini mengonfirmasi perbaikan PR #16 dan menyingkirkan regresi kode baru.
+
+## Akar dominan dengan bukti log
+
+| Pola | Bukti | Kategori |
+|---|---|---|
+| `WINDOWS_REQUIRED` (68 kemunculan) | `backend/app/security/local_operator.py:118`, lewat fixture `tests/test_runtime_authorization.py:60` | Environment dependency (fixture Windows di Linux) |
+| `ISOLATED_CANDIDATE_TEST_FAILED` / `EVIDENCE_TEST_EXTERNAL_EFFECT_BLOCKED` | guard `tests/run_evidence_tests_isolated.py:94` memblokir `_pytest/main.py` sebagai `active_database_or_sidecar` | Environment dependency (isolated runner terlalu agresif) |
+| `Configured operator credential unavailable` | `scripts/run_eval.py:11` | Environment dependency |
+| `FileNotFoundError` (20 kemunculan) | `developer.py`, `reports/CONFIGURATION_BASELINE_20261006.json`, `control-plane/evidence-*.json`, `.dev/checkpoints/...`, `docs/reports/...`, `data/knowledge/official_sources/ktp_el/manifest.json` | Missing fixture; semuanya juga absen di base `b268da1e` |
+| `ModuleNotFoundError: app.knowledge.sqlite_backup` (4) | import di `backend/app/knowledge/official_knowledge_ingestion.py:42`; modul tidak ada di base maupun head | **Actual code defect, pre-existing** |
+| `assert 404 == 403` / `404 == 200` (4) | endpoint `/v2/dev/*` sudah tidak ada | API surface drift, pre-existing |
+| `assert 'NOT_VERIFIED' == 'CLOSED_PASS'` | bukti R2 tidak tersedia | Missing evidence |
+
+Catatan penting: satu **actual code defect** memang terbukti (`sqlite_backup` import), tetapi sudah ada di `b268da1e` dan tidak diperkenalkan PR #16. Tidak ada perbaikan yang diterapkan tanpa approval.
+
 ## Verdict
 
 **REGRESSION: PASS relatif terhadap baseline, dengan residual yang sudah dikenal.** Ini bukan PASS produksi; lihat `VPS_RUNTIME_ACCEPTANCE_REPORT.md` untuk blocker runtime.

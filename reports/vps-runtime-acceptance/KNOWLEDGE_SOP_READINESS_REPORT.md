@@ -24,6 +24,22 @@ Aturan: dokumen sintetis tidak digunakan sebagai bukti keberhasilan SOP nyata
 - `backend/nusantara-models/indobert_worker.py` tidak ada di working tree; algoritma `source_build_id` tetap memasukkan path tersebut bila ada.
 - Tidak ada koneksi ke PDF SOP asli, admin token, atau kredensial operator yang tersedia untuk verifikasi end-to-end.
 
+## Deep-dive — jejak kode dan artefak
+
+| Tahap | Referensi kode | Kondisi nyata |
+|---|---|---|
+| Manifest SOP asli | `backend/app/knowledge/official_knowledge_ingestion.py:55-68` → `data/knowledge/official/manifest/official_sources.json` | DIRECTORY/FILE MISSING |
+| Validasi offline | `validate_operational_manifest()` di baris 1144: butuh `schema_version=1`, dokumen, URL HTTPS publik, authority, jurisdiction, tanggal terbit/efektif, `sha256`, `local_path`, dan answer-oracle quote/case | Tidak bisa dijalankan: import gagal lebih awal dengan `ModuleNotFoundError: app.knowledge.sqlite_backup` (baris 42), defect pre-existing di base maupun head |
+| Extraction | `backend/app/knowledge/document_tools.py:238-269` → `.venv-docling/bin/python`, `app.knowledge.docling_worker`, `nusantara-models/docling` | Semua MISSING; `tesseract` juga tidak terpasang (`shutil.which` = None) |
+| Embedding | `backend/app/knowledge/indobert_embedding.py:21-39` → provider `indobert`, `indobenchmark/indobert-base-p1`, dimensi 768, worker path | `nusantara-models/` MISSING |
+| Indexing | `backend/app/knowledge/production_embedding_bridge.py:13-19` → `data/knowledge/production_knowledge.db`, model IndoBERT | DB produksi MISSING; DB aktif `nusantara_knowledge.db` memiliki 0 dokumen/chunk |
+| Retrieval → citation | `backend/app/knowledge/langgraph_chat.py:95-133` → sitasi hanya dari evidence, jika tidak ada maka `abstain` | Dengan 0 chunk, jalur yang benar adalah abstain, bukan jawaban SOP |
+
+Artefak sintetis yang ditemukan (tidak dipakai sebagai bukti):
+- `data/knowledge/source-documents/933875...txt` — 151 byte, berisi "Sintetis Verifikasi".
+- 2 file turunan di `data/knowledge/text-extractions/` untuk hash yang sama.
+- DB tetap `documents=0`, `chunks=0`, `document_extractions=0`.
+
 ## Verdict
 
 **KNOWLEDGE SOP READINESS: BLOCKED.**

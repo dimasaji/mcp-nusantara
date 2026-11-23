@@ -27,6 +27,12 @@ Baseline: PR #16 — Final Consolidation
 4. Regresi tidak memburuk: `89 failed / 1466 passed / 62 skipped / 49 errors`, identik dengan baseline PR #16; tidak ada defect baru yang terbukti.
 5. SOP nyata tidak tersedia: 0 PDF, 0 dokumen, 0 chunk, model embedding tidak ada.
 
+## Catatan deep-dive
+
+- Baseline `b268da1e` di tree terpisah: `119 failed / 1434 passed / 62 skipped / 49 errors`; head PR #16: `89 failed / 1466 passed / 62 skipped / 49 errors`. 30 instance perbaikan, 0 ID regresi baru.
+- Satu actual code defect terbukti tetapi **pre-existing**: `official_knowledge_ingestion.py:42` meng-import `app.knowledge.sqlite_backup` yang tidak ada di base maupun head. Tidak diperbaiki tanpa approval.
+- Validator SOP tidak bisa dijalankan karena defect tersebut; PDF, manifest, `.venv-docling`, `nusantara-models/docling`, dan `production_knowledge.db` semuanya tidak ada. Satu file `.txt` sintetis tidak digunakan sebagai bukti.
+
 ## Keputusan
 
 **FINAL STABILIZATION: NO-GO.**
