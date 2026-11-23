@@ -85,18 +85,17 @@ class CostLedger:
                     updated_at TEXT NOT NULL
                 )
             """)
+            db.execute(
+                "INSERT OR IGNORE INTO cost_policy "
+                "(singleton, currency, budget_cents, cap_cents) "
+                "VALUES (1, 'USD', ?, ?)",
+                (self.budget_cents, self.cap_cents),
+            )
             row = db.execute(
                 "SELECT currency, budget_cents, cap_cents "
                 "FROM cost_policy WHERE singleton = 1"
             ).fetchone()
-            if row is None:
-                db.execute(
-                    "INSERT INTO cost_policy "
-                    "(singleton, currency, budget_cents, cap_cents) "
-                    "VALUES (1, 'USD', ?, ?)",
-                    (self.budget_cents, self.cap_cents),
-                )
-            elif row != ("USD", self.budget_cents, self.cap_cents):
+            if row != ("USD", self.budget_cents, self.cap_cents):
                 raise CostGovernanceDenied("POLICY_MISMATCH")
 
     @contextmanager
