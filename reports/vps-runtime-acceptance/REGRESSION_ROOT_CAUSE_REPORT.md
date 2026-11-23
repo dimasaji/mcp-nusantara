@@ -69,6 +69,52 @@ Tidak ada ID kegagalan baru di head; 3 error koleksi muncul di kedua tree. Ini m
 
 Catatan penting: satu **actual code defect** memang terbukti (`sqlite_backup` import), tetapi sudah ada di `b268da1e` dan tidak diperkenalkan PR #16. Tidak ada perbaikan yang diterapkan tanpa approval.
 
+## Final staging update — 2026-11-23
+
+Fase ini menjalankan ulang regression dari RC immutable `6f037ab491d0ae2793db69d380b0d3e82ec88872` di worktree staging terpisah:
+
+- Worktree: `/data/workspace/nus-v1-staging-6f037ab4/repo`
+- Python: `/data/workspace/nus-v1-staging-6f037ab4/env/bin/python`
+- Targeted log: `/data/workspace/nus-v1-staging-6f037ab4/runtime/regression-targeted.log`
+- Full log: `/data/workspace/nus-v1-staging-6f037ab4/runtime/regression-full.log`
+
+| Pemeriksaan | Hasil |
+|---|---|
+| Targeted 12 file | `138 passed, 119 warnings in 1.87s`, exit `0` |
+| Full suite | `86 failed, 1478 passed, 62 skipped, 48 errors in 26.51s`, exit `1` |
+
+Perbandingan ID kegagalan:
+
+| Perbandingan | ID baru | ID fixed | Interpretasi |
+|---|---:|---:|---|
+| Base `b268da1e` → RC | 0 | 28 | Tidak ada regresi kode baru; perbaikan RC menurunkan jumlah kegagalan |
+| RC sebelum fix sqlite → RC final | 2 | 3 | 3 error sqlite hilang; 2 error koleksi environment/fixture muncul |
+| Setelah fix sqlite → RC final | 0 | 0 | Stabil untuk kode yang sama |
+
+Dua ID baru terhadap RC sebelum fix bukan regresi kode:
+
+- `tests/evaluation/test_live_harness.py` — `Configured operator credential unavailable`.
+- `tests/test_developer_control.py` — `developer.py` tidak ada di worktree bersih.
+
+Kelompok residual pada RC final:
+
+| File | Jumlah ID | Kategori dominan |
+|---|---:|---|
+| `tests/test_runtime_authorization.py` | 38 | Windows-native actor proof (`WINDOWS_REQUIRED`) di Linux |
+| `tests/test_control_plane_attestation_binding.py` | 31 | Windows/attestation guard dan fixture OS-specific |
+| `tests/test_v1_review_execution_api.py` | 16 | evidence/runtime fixture tidak lengkap |
+| `tests/test_audit_regressions.py` | 4 | V2/dev API surface expectations |
+| `tests/test_evidence_finalization.py` | 4 | file evidence historis tidak ada |
+| `tests/test_evidence_registry.py` | 4 | registry evidence tidak lengkap |
+| `tests/test_provider_identity.py` | 4 | public route/identity expectations |
+| `tests/test_web_evidence_pipeline.py` | 4 | official manifest tidak ada |
+| `tests/test_langchain_e2e.py`, `hardening.py`, `adapter.py`, `langgraph_workflow.py` | 10 | optional LangChain/Indobert dependency tidak tersedia |
+| `tests/test_phase3_metrics_integration.py` | 3 | metrics wiring expectation |
+| `tests/test_runtime_verification.py` | 3 | protected historical source/checkpoint tidak ada |
+| Lainnya | 8 | kredensial, `developer.py`, SOP source pages, synthetic RAG, session memory |
+
+Tidak ada test yang di-skip paksa atau diubah untuk menurunkan angka kegagalan. Tidak ada perbaikan kode baru dalam fase staging ini. Defect `sqlite_backup` yang sebelumnya tercatat sebagai actual code defect sudah diperbaiki di `2278719c` dan terverifikasi oleh 5 test `tests/test_sqlite_backup_wal.py`.
+
 ## Verdict
 
-**REGRESSION: PASS relatif terhadap baseline, dengan residual yang sudah dikenal.** Ini bukan PASS produksi; lihat `VPS_RUNTIME_ACCEPTANCE_REPORT.md` untuk blocker runtime.
+**REGRESSION: PARTIAL.** Relatif terhadap baseline `b268da1e`, RC `6f037ab4` memperbaiki 28 ID dan tidak memperkenalkan ID kegagalan kode baru. Namun full suite masih menghasilkan 86 failures dan 48 errors, sehingga ini bukan PASS produksi. Residual terklasifikasi sebagai environment/fixture dan pre-existing; SOP real E2E tetap BLOCKED menurut `KNOWLEDGE_SOP_READINESS_REPORT.md`.
