@@ -1,0 +1,15 @@
+=== health ===
+{"status":"ok","version":"0.1.0","build_id":"sha256:a0753f141aa1eb8a19f98265f80d59a0b96b0cb5df0d8b2dbdef85767416858d"}
+HTTP 200
+=== readyz ===
+{"status":"degraded","components":{"knowledge_database":{"status":"empty","documents":0},"provider":{"status":"ok","http_status":200}}}
+HTTP 200
+=== model_status ===
+{"provider":"ollama","model":"llama3.2:1b","selectable_providers":["ollama"],"revision":0,"selected_at":null,"selection_source":"BOOTSTRAP","consistency_scope":"CURRENT_PROCESS_ONLY","process_id":1,"availability":"INFERENCE_OBSERVED","status":"INFERENCE_VERIFIED","checked_at":"2026-11-23T22:52:41.919858+00:00","verified_at":"2026-11-23T22:52:19.998290+00:00","verification_scope":"CURRENT_MODEL_REVISION_PROCESS_300_SECONDS","selection_enabled":true,"last_request":{"revision":0,"model":"llama3.2:1b","provider_status":"ollama","grounded":false,"stages":["HERMES_RUN","KNOWLEDGE","TRUST","GATES","GROUNDING","PUBLIC_PROJECTION"],"timestamp":"2026-11-23T22:52:19.998290+00:00"},"source_build_id":"sha256:a0753f141aa1eb8a19f98265f80d59a0b96b0cb5df0d8b2dbdef85767416858d","memory":"LEGACY_BEHAVIOR_PRESERVED_TEMPORARILY","memory_governance":"REVIEW_REQUIRED","knowledge":"NOT_VERIFIED","official_oracle":"REVIEW_REQUIRED","approval":"REVIEW_REQUIRED","execution_mode":"V1_DEFAULT"}
+HTTP 200
+=== admin_negative ===
+{"detail":"admin token diperlukan"}
+HTTP 403
+=== ollama_chat ===
+{"session_id":"web-00000000-0000-4000-8000-0000000000d2","response":"Saya tidak bisa membantu dengan permintaan tersebut.","trust":{"supports_claim":false,"confidence":0.0,"risk_level":"high","requires_human":true,"evidence_count":0,"evidence_available":false},"model":"llama3.2:1b","provider_status":"ollama","latency_ms":452,"grounding":{"enabled":true,"grounded":false,"reason":"not_evaluated"},"understanding":{"intent":"unknown"},"problem":{"goal":"Membantu permintaan percakapan pengguna; tidak diverifikasi oleh knowledge base."},"evidence":[],"timestamp":"2026-11-23T22:52:42.382304+00:00"}
+HTTP 200

@@ -1,0 +1,7 @@
+services:
+  nusantara-api:
+    volumes:
+      - ${NUSANTARA_INDOBERT_WORKER_DIR:?set NUSANTARA_INDOBERT_WORKER_DIR to the approved worker directory}:/opt/indobert-worker:ro
+    environment:
+      NUSANTARA_INDOBERT_PYTHON: /opt/indobert/bin/python
+      NUSANTARA_INDOBERT_WORKER: /opt/indobert-worker/indobert_worker.py

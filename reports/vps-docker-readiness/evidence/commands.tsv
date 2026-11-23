@@ -1,0 +1,53 @@
+2026-11-23T22:45:56Z	pr18	0	gh pr view 18 --repo dimasaji/mcp-nusantara --json number,state,url,mergeCommit,mergedAt
+2026-11-23T22:45:56Z	baseline_head	0	git rev-parse HEAD
+2026-11-23T22:45:56Z	docker_version	0	docker version --format {{.Server.Version}}
+2026-11-23T22:45:56Z	compose_version	0	docker compose version
+2026-11-23T22:46:57Z	targeted_tests	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest tests/test_docker_deployment_readiness.py tests/test_runtime_portability.py -q
+2026-11-23T22:46:57Z	ruff_changed	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m ruff check scripts/healthcheck.py tests/test_docker_deployment_readiness.py
+2026-11-23T22:46:57Z	mypy_changed	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m mypy scripts/healthcheck.py tests/test_docker_deployment_readiness.py
+2026-11-23T22:47:13Z	targeted_tests_rerun	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest tests/test_docker_deployment_readiness.py tests/test_runtime_portability.py -q
+2026-11-23T22:47:14Z	ruff_changed_rerun	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m ruff check scripts/healthcheck.py tests/test_docker_deployment_readiness.py
+2026-11-23T22:47:14Z	mypy_changed_rerun	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m mypy scripts/healthcheck.py tests/test_docker_deployment_readiness.py
+2026-11-23T22:47:25Z	targeted_tests_final	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest tests/test_docker_deployment_readiness.py tests/test_runtime_portability.py -q
+2026-11-23T22:47:40Z	compose_config	0	docker compose -f deploy/docker/docker-compose.yml config --quiet
+2026-11-23T22:47:40Z	compose_audit_config	0	docker compose -f deploy/docker/docker-compose.yml -f deploy/docker/docker-compose.audit.yml config --quiet
+2026-11-23T22:47:40Z	compose_indobert_config	0	env NUSANTARA_INDOBERT_WORKER_DIR=/tmp/nusantara-indobert-worker docker compose -f deploy/docker/docker-compose.yml -f deploy/docker/docker-compose.indobert.yml config --quiet
+2026-11-23T22:47:40Z	docker_build	0	docker build --progress=plain -f deploy/docker/Dockerfile -t nusantara-v1:docker-readiness-545137e8 .
+2026-11-23T22:49:33Z	staging_start	0	docker run -d --name nusantara-docker-readiness-staging -p 127.0.0.1:18213:18201 --add-host host.docker.internal:host-gateway --env-file /data/workspace/nus-v1-docker-readiness-20261123/evidence/staging.env -e LLM_BASE_URL=http://host.docker.internal:11434 -e OLLAMA_BASE_URL=http://host.docker.internal:11434 --read-only --tmpfs /tmp nusantara-v1:docker-readiness-545137e8
+2026-11-23T22:49:34Z	staging_wait	1	bash -lc for i in $(seq 1 60); do code=$(curl --noproxy "*" -sS --max-time 5 -o /dev/null -w "%{http_code}" http://127.0.0.1:18213/health || true); [ "$code" = 200 ] && exit 0; sleep 0.5; done; exit 1
+2026-11-23T22:50:04Z	staging_smoke	1	bash /data/workspace/nus-v1-docker-readiness-20261123/evidence/staging_smoke.sh
+2026-11-23T22:50:04Z	staging_inspect	0	docker inspect --format {{.State.Health.Status}} {{.State.Running}} {{.Config.User}} nusantara-docker-readiness-staging
+2026-11-23T22:50:04Z	staging_logs	0	docker logs --tail 80 nusantara-docker-readiness-staging
+2026-11-23T22:50:18Z	staging_start_v2	0	docker run -d --name nusantara-docker-readiness-staging -p 127.0.0.1:18213:18201 --add-host host.docker.internal:host-gateway --env-file /data/workspace/nus-v1-docker-readiness-20261123/evidence/staging.env -e LLM_BASE_URL=http://host.docker.internal:11434 -e OLLAMA_BASE_URL=http://host.docker.internal:11434 --read-only --tmpfs /tmp -v nusantara-docker-readiness-data:/app/data nusantara-v1:docker-readiness-545137e8
+2026-11-23T22:50:18Z	staging_wait_v2	0	bash -lc for i in $(seq 1 60); do code=$(curl --noproxy "*" -sS --max-time 5 -o /dev/null -w "%{http_code}" http://127.0.0.1:18213/health || true); [ "$code" = 200 ] && exit 0; sleep 0.5; done; exit 1
+2026-11-23T22:50:19Z	staging_smoke_v2	1	bash /data/workspace/nus-v1-docker-readiness-20261123/evidence/staging_smoke.sh
+2026-11-23T22:50:19Z	staging_inspect_v2	0	docker inspect --format {{.State.Health.Status}} {{.State.Running}} {{.Config.User}} nusantara-docker-readiness-staging
+2026-11-23T22:50:19Z	staging_logs_v2	0	docker logs --tail 80 nusantara-docker-readiness-staging
+2026-11-23T22:50:46Z	ollama_host_probe	0	curl --noproxy * -sS --max-time 20 -o /dev/null -w HTTP %{http_code}\n http://127.0.0.1:11434/api/tags
+2026-11-23T22:50:46Z	staging_start_v3	0	docker run -d --name nusantara-docker-readiness-staging --network host --env-file /data/workspace/nus-v1-docker-readiness-20261123/evidence/staging.env -e LLM_BASE_URL=http://127.0.0.1:11434 -e OLLAMA_BASE_URL=http://127.0.0.1:11434 -e LLM_MODEL=llama3.2:1b -e NUSANTARA_HEALTHCHECK_PORT=18213 --read-only --tmpfs /tmp -v nusantara-docker-readiness-data:/app/data nusantara-v1:docker-readiness-545137e8 uvicorn app.main:app --host 127.0.0.1 --port 18213 --log-level info
+2026-11-23T22:50:46Z	staging_wait_v3	0	bash -lc for i in $(seq 1 60); do code=$(curl --noproxy "*" -sS --max-time 5 -o /dev/null -w "%{http_code}" http://127.0.0.1:18213/health || true); [ "$code" = 200 ] && exit 0; sleep 0.5; done; exit 1
+2026-11-23T22:50:47Z	staging_smoke_v3	1	bash /data/workspace/nus-v1-docker-readiness-20261123/evidence/staging_smoke.sh
+2026-11-23T22:50:47Z	staging_inspect_v3	0	docker inspect --format {{.State.Health.Status}} {{.State.Running}} {{.HostConfig.NetworkMode}} {{.Config.User}} nusantara-docker-readiness-staging
+2026-11-23T22:50:47Z	staging_logs_v3	0	docker logs --tail 120 nusantara-docker-readiness-staging
+2026-11-23T22:51:36Z	staging_smoke_v4	1	bash /data/workspace/nus-v1-docker-readiness-20261123/evidence/staging_smoke.sh
+2026-11-23T22:51:36Z	staging_logs_v4	0	docker logs --tail 120 nusantara-docker-readiness-staging
+2026-11-23T22:52:16Z	staging_start_v4	0	docker run -d --name nusantara-docker-readiness-staging --network host --env-file /data/workspace/nus-v1-docker-readiness-20261123/evidence/staging.env -e LLM_BASE_URL=http://127.0.0.1:11434 -e OLLAMA_BASE_URL=http://127.0.0.1:11434 -e LLM_MODEL=llama3.2:1b -e NUSANTARA_HEALTHCHECK_PORT=18213 --read-only --tmpfs /tmp -v nusantara-docker-readiness-data:/app/data -v nusantara-docker-readiness-home:/home/appuser nusantara-v1:docker-readiness-545137e8 uvicorn app.main:app --host 127.0.0.1 --port 18213 --log-level info
+2026-11-23T22:52:16Z	staging_wait_v4	0	bash -lc for i in $(seq 1 60); do code=$(curl --noproxy "*" -sS --max-time 5 -o /dev/null -w "%{http_code}" http://127.0.0.1:18213/health || true); [ "$code" = 200 ] && exit 0; sleep 0.5; done; exit 1
+2026-11-23T22:52:17Z	staging_smoke_v5	1	bash /data/workspace/nus-v1-docker-readiness-20261123/evidence/staging_smoke.sh
+2026-11-23T22:52:20Z	staging_inspect_v4	0	docker inspect --format {{.State.Health.Status}} {{.State.Running}} {{.HostConfig.NetworkMode}} {{.Config.User}} nusantara-docker-readiness-staging
+2026-11-23T22:52:20Z	staging_logs_v5	0	docker logs --tail 120 nusantara-docker-readiness-staging
+2026-11-23T22:52:41Z	staging_smoke_final	0	bash /data/workspace/nus-v1-docker-readiness-20261123/evidence/staging_smoke.sh
+2026-11-23T22:52:42Z	staging_inspect_final	0	docker inspect --format {{.State.Health.Status}} {{.State.Running}} {{.HostConfig.NetworkMode}} {{.Config.User}} nusantara-docker-readiness-staging
+2026-11-23T22:52:42Z	staging_logs_final	0	docker logs --tail 120 nusantara-docker-readiness-staging
+2026-11-23T22:53:27Z	healthcheck_direct	0	docker exec nusantara-docker-readiness-staging python scripts/healthcheck.py
+2026-11-23T22:53:27Z	health_wait	0	bash -lc for i in $(seq 1 90); do status=$(docker inspect --format "{{.State.Health.Status}}" nusantara-docker-readiness-staging); [ "$status" = healthy ] && exit 0; sleep 1; done; exit 1
+2026-11-23T22:53:27Z	staging_inspect_healthy	0	docker inspect --format {{.State.Health.Status}} {{.State.Running}} {{.HostConfig.NetworkMode}} {{.Config.User}} nusantara-docker-readiness-staging
+2026-11-23T22:53:27Z	full_regression	2	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=no
+2026-11-23T22:53:37Z	full_regression_continue	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=no --continue-on-collection-errors
+2026-11-23T22:54:13Z	regression_new_ids	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=short tests/test_backend_runtime_fixture.py::test_backend_process_ingestion_retrieval_chat_and_history tests/test_control_plane_readonly.py::test_evidence_only_real_entrypoint_skips_production_owners tests/test_knowledge_cleaning.py::test_intake_disables_haystack_telemetry_before_import tests/test_mcp_stdio.py::test_real_stdio_discovery_call_rejection_and_audit
+2026-11-23T22:54:23Z	full_regression_pythonpath	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=no --continue-on-collection-errors
+2026-11-23T22:54:56Z	staging_cleanup	0	bash -lc docker rm -f nusantara-docker-readiness-staging >/dev/null 2>&1; docker volume rm nusantara-docker-readiness-data nusantara-docker-readiness-home >/dev/null 2>&1; exit 0
+2026-11-23T22:54:56Z	ports_after_cleanup	0	ss -ltnp
+2026-11-23T22:54:56Z	active_health_after	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/health
+2026-11-23T22:54:56Z	active_ready_after	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/readyz
+2026-11-23T22:54:56Z	image_digest	0	docker image inspect nusantara-v1:docker-readiness-545137e8 --format {{.Id}} {{json .RepoTags}}
