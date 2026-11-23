@@ -1,0 +1,642 @@
+Updating b44b01e7..b77c9c6e
+Fast-forward
+ backend/app/main.py                                |      1 +
+ .../GIT_RELEASE_RECONCILIATION.md                  |     82 +
+ .../KNOWLEDGE_VPS_BOUNDARY_REPORT.md               |     87 +
+ .../PC_PIAK03_ACCEPTANCE_HANDOFF.md                |     59 +
+ .../REGRESSION_ROOT_CAUSE_AND_FIX_REPORT.md        |     68 +
+ reports/vps-final-stabilization/TEST_RESULTS.json  |     88 +
+ .../V1_VPS_FINAL_ACCEPTANCE_REPORT.md              |     75 +
+ .../VPS_FORENSIC_BASELINE.md                       |    116 +
+ .../VPS_RELEASE_AND_ROLLBACK_PLAN.md               |     60 +
+ .../VPS_RUNTIME_RECOVERY_REPORT.md                 |     59 +
+ .../VPS_SECURITY_AND_DATA_INTEGRITY_REPORT.md      |     74 +
+ .../evidence/a_active_backend_health.err           |      0
+ .../evidence/a_active_backend_health.out           |      2 +
+ .../evidence/a_active_backend_ready.err            |      0
+ .../evidence/a_active_backend_ready.out            |      1 +
+ .../evidence/a_active_db_path.err                  |      0
+ .../evidence/a_active_db_path.out                  |      1 +
+ .../evidence/a_active_frontend_health.err          |      0
+ .../evidence/a_active_frontend_health.out          |      1 +
+ .../evidence/a_active_frontend_root.err            |      0
+ .../evidence/a_active_frontend_root.out            |      1 +
+ .../evidence/a_app_db_pragmas.err                  |      0
+ .../evidence/a_app_db_pragmas.out                  |      3 +
+ .../evidence/a_backend_cwd.err                     |      0
+ .../evidence/a_backend_cwd.out                     |      1 +
+ .../evidence/a_backend_env_keys.err                |      0
+ .../evidence/a_backend_env_keys.out                |      2 +
+ .../evidence/a_backend_git.err                     |      0
+ .../evidence/a_backend_git.out                     |      2 +
+ .../vps-final-stabilization/evidence/a_compose.err |      0
+ .../vps-final-stabilization/evidence/a_compose.out |      1 +
+ reports/vps-final-stabilization/evidence/a_cpu.err |      0
+ reports/vps-final-stabilization/evidence/a_cpu.out |      1 +
+ .../evidence/a_db_pragmas.err                      |      0
+ .../evidence/a_db_pragmas.out                      |    140 +
+ .../vps-final-stabilization/evidence/a_disk.err    |      0
+ .../vps-final-stabilization/evidence/a_disk.out    |      4 +
+ .../vps-final-stabilization/evidence/a_docker.err  |      0
+ .../vps-final-stabilization/evidence/a_docker.out  |      1 +
+ .../evidence/a_filesystem_scan.err                 |      0
+ .../evidence/a_filesystem_scan.out                 |    216 +
+ .../evidence/a_frontend_cwd.err                    |      0
+ .../evidence/a_frontend_cwd.out                    |      1 +
+ .../evidence/a_frontend_git.err                    |      0
+ .../evidence/a_frontend_git.out                    |      2 +
+ .../evidence/a_git_branch.err                      |      0
+ .../evidence/a_git_branch.out                      |     29 +
+ .../evidence/a_git_diff_check.err                  |      0
+ .../evidence/a_git_diff_check.out                  |      0
+ .../evidence/a_git_head.err                        |      0
+ .../evidence/a_git_head.out                        |      1 +
+ .../vps-final-stabilization/evidence/a_git_log.err |      0
+ .../vps-final-stabilization/evidence/a_git_log.out |     20 +
+ .../evidence/a_git_remote.err                      |      0
+ .../evidence/a_git_remote.out                      |      2 +
+ .../evidence/a_git_status.err                      |      0
+ .../evidence/a_git_status.out                      |      1 +
+ .../evidence/a_git_worktree.err                    |      0
+ .../evidence/a_git_worktree.out                    |     29 +
+ .../vps-final-stabilization/evidence/a_host.err    |      0
+ .../vps-final-stabilization/evidence/a_host.out    |      1 +
+ .../evidence/a_identity.err                        |      0
+ .../evidence/a_identity.out                        |      1 +
+ .../evidence/a_log_inventory.err                   |      0
+ .../evidence/a_log_inventory.out                   |    159 +
+ .../vps-final-stabilization/evidence/a_memory.err  |      0
+ .../vps-final-stabilization/evidence/a_memory.out  |      3 +
+ .../vps-final-stabilization/evidence/a_node.err    |      0
+ .../vps-final-stabilization/evidence/a_node.out    |      1 +
+ reports/vps-final-stabilization/evidence/a_npm.err |      0
+ reports/vps-final-stabilization/evidence/a_npm.out |      1 +
+ .../evidence/a_ollama_api.err                      |      0
+ .../evidence/a_ollama_api.out                      |      1 +
+ .../evidence/a_ollama_models.err                   |      0
+ .../evidence/a_ollama_models.out                   |      2 +
+ .../evidence/a_ollama_version.err                  |      0
+ .../evidence/a_ollama_version.out                  |      1 +
+ .../vps-final-stabilization/evidence/a_ports.err   |      0
+ .../vps-final-stabilization/evidence/a_ports.out   |      8 +
+ .../vps-final-stabilization/evidence/a_pr_14.err   |      0
+ .../vps-final-stabilization/evidence/a_pr_14.out   |      1 +
+ .../vps-final-stabilization/evidence/a_pr_15.err   |      0
+ .../vps-final-stabilization/evidence/a_pr_15.out   |      1 +
+ .../vps-final-stabilization/evidence/a_pr_16.err   |      0
+ .../vps-final-stabilization/evidence/a_pr_16.out   |      1 +
+ .../vps-final-stabilization/evidence/a_pr_17.err   |      0
+ .../vps-final-stabilization/evidence/a_pr_17.out   |      1 +
+ .../vps-final-stabilization/evidence/a_pr_list.err |      0
+ .../vps-final-stabilization/evidence/a_pr_list.out |      1 +
+ .../evidence/a_processes.err                       |      0
+ .../evidence/a_processes.out                       |    126 +
+ .../evidence/a_proxy_config.err                    |      0
+ .../evidence/a_proxy_config.out                    |      0
+ .../vps-final-stabilization/evidence/a_python.err  |      0
+ .../vps-final-stabilization/evidence/a_python.out  |      1 +
+ .../vps-final-stabilization/evidence/a_systemd.err |      0
+ .../vps-final-stabilization/evidence/a_systemd.out |     18 +
+ .../vps-final-stabilization/evidence/a_umask.err   |      0
+ .../vps-final-stabilization/evidence/a_umask.out   |      1 +
+ .../vps-final-stabilization/evidence/a_uname.err   |      0
+ .../vps-final-stabilization/evidence/a_uname.out   |      1 +
+ .../evidence/b_ancestor_pr14.err                   |      0
+ .../evidence/b_ancestor_pr14.out                   |      1 +
+ .../evidence/b_ancestor_pr15.err                   |      0
+ .../evidence/b_ancestor_pr15.out                   |      1 +
+ .../evidence/b_ancestor_pr17_base.err              |      0
+ .../evidence/b_ancestor_pr17_base.out              |      1 +
+ .../evidence/b_diff_names.err                      |      0
+ .../evidence/b_diff_names.out                      |     11 +
+ .../evidence/b_diff_stat.err                       |      0
+ .../evidence/b_diff_stat.out                       |     12 +
+ .../evidence/b_entrypoints.err                     |      0
+ .../evidence/b_entrypoints.out                     |     10 +
+ .../vps-final-stabilization/evidence/b_layout.err  |      0
+ .../vps-final-stabilization/evidence/b_layout.out  |      5 +
+ .../evidence/b_legacy_refs.err                     |      0
+ .../evidence/b_legacy_refs.out                     |    539 +
+ .../evidence/b_merge_base_pr14.err                 |      0
+ .../evidence/b_merge_base_pr14.out                 |      1 +
+ .../evidence/b_merge_base_pr15.err                 |      0
+ .../evidence/b_merge_base_pr15.out                 |      1 +
+ .../evidence/b_no_root_app.err                     |      0
+ .../evidence/b_no_root_app.out                     |      1 +
+ .../evidence/b_no_root_control.err                 |      0
+ .../evidence/b_no_root_control.out                 |      1 +
+ .../evidence/b_pr14_reports.err                    |      0
+ .../evidence/b_pr14_reports.out                    |      0
+ .../evidence/b_pr14_vs_rc.err                      |      0
+ .../evidence/b_pr14_vs_rc.out                      |   1253 +
+ .../evidence/b_pr15_cost.err                       |      0
+ .../evidence/b_pr15_cost.out                       |      2 +
+ .../evidence/b_pr15_vs_rc.err                      |      0
+ .../evidence/b_pr15_vs_rc.out                      |   1241 +
+ .../vps-final-stabilization/evidence/b_range.err   |      0
+ .../vps-final-stabilization/evidence/b_range.out   |      6 +
+ .../vps-final-stabilization/evidence/b_rc_head.err |      0
+ .../vps-final-stabilization/evidence/b_rc_head.out |      1 +
+ .../evidence/b_rc_status.err                       |      0
+ .../evidence/b_rc_status.out                       |      1 +
+ .../evidence/b_top_level.err                       |      0
+ .../evidence/b_top_level.out                       |     40 +
+ .../evidence/b_worktree_add.err                    |      1 +
+ .../evidence/b_worktree_add.out                    |      1 +
+ .../evidence/b_worktree_head.err                   |      0
+ .../evidence/b_worktree_head.out                   |      1 +
+ .../evidence/b_worktree_status.err                 |      0
+ .../evidence/b_worktree_status.out                 |      1 +
+ .../evidence/c_active_db_documents.err             |      0
+ .../evidence/c_active_db_documents.out             |      2 +
+ .../evidence/c_active_runtime_untouched.err        |      0
+ .../evidence/c_active_runtime_untouched.out        |      2 +
+ .../evidence/c_backend_health.err                  |      0
+ .../evidence/c_backend_health.out                  |      2 +
+ .../evidence/c_backend_metrics.err                 |      0
+ .../evidence/c_backend_metrics.out                 |      2 +
+ .../evidence/c_backend_v1_health.err               |      0
+ .../evidence/c_backend_v1_health.out               |      2 +
+ .../evidence/c_chat_history_valid.err              |      0
+ .../evidence/c_chat_history_valid.out              |      2 +
+ .../evidence/c_chat_pong.err                       |      0
+ .../evidence/c_chat_pong.out                       |      2 +
+ .../evidence/c_chat_pong_valid.err                 |      0
+ .../evidence/c_chat_pong_valid.out                 |      2 +
+ .../vps-final-stabilization/evidence/c_copy_db.err |      1 +
+ .../vps-final-stabilization/evidence/c_copy_db.out |      0
+ .../evidence/c_copy_db_check.err                   |      0
+ .../evidence/c_copy_db_check.out                   |      2 +
+ .../evidence/c_frontend_health_proxy.err           |      0
+ .../evidence/c_frontend_health_proxy.out           |      2 +
+ .../evidence/c_frontend_root.err                   |      0
+ .../evidence/c_frontend_root.out                   |      1 +
+ .../evidence/c_import_path.err                     |      0
+ .../evidence/c_import_path.out                     |      1 +
+ .../evidence/c_isolated_processes.err              |      0
+ .../evidence/c_isolated_processes.out              |      3 +
+ .../evidence/c_model_status.err                    |      0
+ .../evidence/c_model_status.out                    |      2 +
+ .../evidence/c_model_status_canonical.err          |      0
+ .../evidence/c_model_status_canonical.out          |      2 +
+ .../evidence/c_model_status_frontend_proxy.err     |      0
+ .../evidence/c_model_status_frontend_proxy.out     |      2 +
+ .../evidence/c_node_modules_link.err               |      0
+ .../evidence/c_node_modules_link.out               |      1 +
+ .../evidence/c_ollama_version.err                  |      0
+ .../evidence/c_ollama_version.out                  |      2 +
+ .../evidence/c_ports_active.err                    |      0
+ .../evidence/c_ports_active.out                    |     10 +
+ .../evidence/c_ports_after_isolated.err            |      0
+ .../evidence/c_ports_after_isolated.out            |     10 +
+ .../evidence/c_ports_available.err                 |      0
+ .../evidence/c_ports_available.out                 |      0
+ .../evidence/c_python_version.err                  |      0
+ .../evidence/c_python_version.out                  |      1 +
+ .../evidence/c_readyz_alias.err                    |      0
+ .../evidence/c_readyz_alias.out                    |      2 +
+ .../evidence/c_start_backend.err                   |      0
+ .../evidence/c_start_backend.out                   |      0
+ .../evidence/c_start_frontend.err                  |      0
+ .../evidence/c_start_frontend.out                  |      0
+ .../evidence/c_v1_ready.err                        |      0
+ .../evidence/c_v1_ready.out                        |      2 +
+ .../evidence/c_wait_ready.err                      |      0
+ .../evidence/c_wait_ready.out                      |      0
+ .../vps-final-stabilization/evidence/commands.tsv  |    224 +
+ .../evidence/d2_copy_test_db.err                   |      0
+ .../evidence/d2_copy_test_db.out                   |      0
+ .../evidence/d2_frontend_build.err                 |     17 +
+ .../evidence/d2_frontend_build.out                 |     15 +
+ .../evidence/d2_frontend_test.err                  |   1722 +
+ .../evidence/d2_frontend_test.out                  |     58 +
+ .../evidence/d2_full_regression.err                |      4 +
+ .../evidence/d2_full_regression.out                |     32 +
+ .../evidence/d2_full_regression_continue.err       |      4 +
+ .../evidence/d2_full_regression_continue.out       |   2326 +
+ .../vps-final-stabilization/evidence/d2_mypy.err   |      1 +
+ .../vps-final-stabilization/evidence/d2_mypy.out   |      0
+ .../evidence/d2_mypy_app.err                       |      0
+ .../evidence/d2_mypy_app.out                       |   1497 +
+ .../evidence/d2_mypy_app_baseline.err              |      0
+ .../evidence/d2_mypy_app_baseline.out              |   1497 +
+ .../evidence/d2_mypy_scoped.err                    |      0
+ .../evidence/d2_mypy_scoped.out                    |      7 +
+ .../evidence/d2_mypy_scoped_baseline.err           |      0
+ .../evidence/d2_mypy_scoped_baseline.out           |      7 +
+ .../vps-final-stabilization/evidence/d2_ruff.err   |      0
+ .../vps-final-stabilization/evidence/d2_ruff.out   | 168626 ++++++++++++++++++
+ .../evidence/d2_ruff_scoped.err                    |      0
+ .../evidence/d2_ruff_scoped.out                    |   2099 +
+ .../evidence/d2_ruff_scoped_baseline.err           |      0
+ .../evidence/d2_ruff_scoped_baseline.out           |   2099 +
+ .../evidence/d2_synthetic_chat.err                 |      0
+ .../evidence/d2_synthetic_chat.out                 |      2 +
+ .../evidence/d2_synthetic_ingest.err               |      0
+ .../evidence/d2_synthetic_ingest.out               |      2 +
+ .../evidence/d2_synthetic_langchain.err            |      4 +
+ .../evidence/d2_synthetic_langchain.out            |     52 +
+ .../evidence/d2_synthetic_search.err               |      0
+ .../evidence/d2_synthetic_search.out               |      2 +
+ .../evidence/d2_targeted.err                       |      4 +
+ .../evidence/d2_targeted.out                       |    131 +
+ .../evidence/d_readyz_diffcheck.err                |      0
+ .../evidence/d_readyz_diffcheck.out                |      0
+ .../evidence/d_readyz_green.err                    |      4 +
+ .../evidence/d_readyz_green.out                    |     13 +
+ .../evidence/d_readyz_red.err                      |      4 +
+ .../evidence/d_readyz_red.out                      |     19 +
+ .../evidence/e_active_after_stop.err               |      0
+ .../evidence/e_active_after_stop.out               |      2 +
+ .../evidence/e_auth_cost_no_token.err              |      0
+ .../evidence/e_auth_cost_no_token.out              |      2 +
+ .../evidence/e_auth_cost_valid_token.err           |      0
+ .../evidence/e_auth_cost_valid_token.out           |      2 +
+ .../evidence/e_auth_ingest_invalid_token.err       |      0
+ .../evidence/e_auth_ingest_invalid_token.out       |      2 +
+ .../evidence/e_auth_ingest_no_token.err            |      0
+ .../evidence/e_auth_ingest_no_token.out            |      2 +
+ .../evidence/e_cleanup_symlink.err                 |      0
+ .../evidence/e_cleanup_symlink.out                 |      0
+ .../vps-final-stabilization/evidence/e_db_hash.err |      0
+ .../vps-final-stabilization/evidence/e_db_hash.out |      2 +
+ .../evidence/e_db_pragmas.err                      |      0
+ .../evidence/e_db_pragmas.out                      |      2 +
+ .../vps-final-stabilization/evidence/e_db_stat.err |      0
+ .../vps-final-stabilization/evidence/e_db_stat.out |      2 +
+ .../evidence/e_git_diff_check.err                  |    130 +
+ .../evidence/e_git_diff_check.out                  |      0
+ .../evidence/e_git_diff_check_scoped.err           |      0
+ .../evidence/e_git_diff_check_scoped.out           |      0
+ .../evidence/e_git_status.err                      |      2 +
+ .../evidence/e_git_status.out                      |      0
+ .../evidence/e_git_status_scoped.err               |      0
+ .../evidence/e_git_status_scoped.out               |      1 +
+ .../evidence/e_ports_after_stop.err                |      0
+ .../evidence/e_ports_after_stop.out                |      9 +
+ .../evidence/e_secret_diff.err                     |      0
+ .../evidence/e_secret_diff.out                     |      2 +
+ .../evidence/e_secret_diff_precise.err             |      0
+ .../evidence/e_secret_diff_precise.out             |      2 +
+ .../evidence/e_secret_reports.err                  |      0
+ .../evidence/e_secret_reports.out                  |      1 +
+ .../evidence/e_secret_reports_precise.err          |      0
+ .../evidence/e_secret_reports_precise.out          |      0
+ .../evidence/e_security_tests.err                  |      4 +
+ .../evidence/e_security_tests.out                  |     72 +
+ .../evidence/e_status_clean.err                    |      0
+ .../evidence/e_status_clean.out                    |      0
+ .../evidence/e_stop_isolated.err                   |      0
+ .../evidence/e_stop_isolated.out                   |      0
+ .../evidence/e_wait_stopped.err                    |      0
+ .../evidence/e_wait_stopped.out                    |      0
+ .../evidence/f_missing_artifacts.err               |      0
+ .../evidence/f_missing_artifacts.out               |      6 +
+ .../evidence/f_ollama_model.err                    |      0
+ .../evidence/f_ollama_model.out                    |      2 +
+ .../evidence/f_pc_artifacts.err                    |      0
+ .../evidence/f_pc_artifacts.out                    |      4 +
+ .../evidence/g_active_commit.err                   |      0
+ .../evidence/g_active_commit.out                   |      1 +
+ .../evidence/g_deploy_facts.err                    |      0
+ .../evidence/g_deploy_facts.out                    |     61 +
+ .../evidence/g_release_diff.err                    |      0
+ .../evidence/g_release_diff.out                    |      5 +
+ .../evidence/h_bundle_count.err                    |      0
+ .../evidence/h_bundle_count.out                    |      1 +
+ .../evidence/h_bundle_evidence.err                 |      0
+ .../evidence/h_bundle_evidence.out                 |      1 +
+ .../evidence/h_bundle_refresh.err                  |      0
+ .../evidence/h_bundle_refresh.out                  |      0
+ .../evidence/h_final_diff_check.err                |      0
+ .../evidence/h_final_diff_check.out                |      0
+ .../evidence/h_final_json.err                      |      0
+ .../evidence/h_final_json.out                      |    176 +
+ .../evidence/h_final_readiness.err                 |      4 +
+ .../evidence/h_final_readiness.out                 |     11 +
+ .../evidence/h_final_report_count.err              |      0
+ .../evidence/h_final_report_count.out              |     11 +
+ .../evidence/h_final_ruff.err                      |      0
+ .../evidence/h_final_ruff.out                      |    191 +
+ reports/vps-final-stabilization/evidence/run.sh    |     15 +
+ tests/test_readyz_contract.py                      |     34 +
+ 320 files changed, 185987 insertions(+)
+ create mode 100644 reports/vps-final-stabilization/GIT_RELEASE_RECONCILIATION.md
+ create mode 100644 reports/vps-final-stabilization/KNOWLEDGE_VPS_BOUNDARY_REPORT.md
+ create mode 100644 reports/vps-final-stabilization/PC_PIAK03_ACCEPTANCE_HANDOFF.md
+ create mode 100644 reports/vps-final-stabilization/REGRESSION_ROOT_CAUSE_AND_FIX_REPORT.md
+ create mode 100644 reports/vps-final-stabilization/TEST_RESULTS.json
+ create mode 100644 reports/vps-final-stabilization/V1_VPS_FINAL_ACCEPTANCE_REPORT.md
+ create mode 100644 reports/vps-final-stabilization/VPS_FORENSIC_BASELINE.md
+ create mode 100644 reports/vps-final-stabilization/VPS_RELEASE_AND_ROLLBACK_PLAN.md
+ create mode 100644 reports/vps-final-stabilization/VPS_RUNTIME_RECOVERY_REPORT.md
+ create mode 100644 reports/vps-final-stabilization/VPS_SECURITY_AND_DATA_INTEGRITY_REPORT.md
+ create mode 100644 reports/vps-final-stabilization/evidence/a_active_backend_health.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_active_backend_health.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_active_backend_ready.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_active_backend_ready.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_active_db_path.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_active_db_path.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_active_frontend_health.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_active_frontend_health.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_active_frontend_root.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_active_frontend_root.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_app_db_pragmas.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_app_db_pragmas.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_backend_cwd.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_backend_cwd.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_backend_env_keys.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_backend_env_keys.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_backend_git.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_backend_git.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_compose.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_compose.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_cpu.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_cpu.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_db_pragmas.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_db_pragmas.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_disk.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_disk.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_docker.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_docker.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_filesystem_scan.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_filesystem_scan.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_frontend_cwd.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_frontend_cwd.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_frontend_git.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_frontend_git.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_branch.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_branch.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_diff_check.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_diff_check.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_head.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_head.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_log.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_log.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_remote.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_remote.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_status.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_status.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_worktree.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_git_worktree.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_host.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_host.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_identity.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_identity.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_log_inventory.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_log_inventory.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_memory.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_memory.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_node.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_node.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_npm.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_npm.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_ollama_api.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_ollama_api.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_ollama_models.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_ollama_models.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_ollama_version.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_ollama_version.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_ports.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_ports.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_pr_14.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_pr_14.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_pr_15.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_pr_15.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_pr_16.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_pr_16.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_pr_17.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_pr_17.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_pr_list.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_pr_list.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_processes.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_processes.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_proxy_config.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_proxy_config.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_python.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_python.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_systemd.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_systemd.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_umask.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_umask.out
+ create mode 100644 reports/vps-final-stabilization/evidence/a_uname.err
+ create mode 100644 reports/vps-final-stabilization/evidence/a_uname.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_ancestor_pr14.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_ancestor_pr14.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_ancestor_pr15.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_ancestor_pr15.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_ancestor_pr17_base.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_ancestor_pr17_base.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_diff_names.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_diff_names.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_diff_stat.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_diff_stat.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_entrypoints.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_entrypoints.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_layout.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_layout.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_legacy_refs.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_legacy_refs.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_merge_base_pr14.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_merge_base_pr14.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_merge_base_pr15.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_merge_base_pr15.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_no_root_app.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_no_root_app.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_no_root_control.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_no_root_control.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_pr14_reports.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_pr14_reports.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_pr14_vs_rc.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_pr14_vs_rc.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_pr15_cost.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_pr15_cost.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_pr15_vs_rc.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_pr15_vs_rc.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_range.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_range.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_rc_head.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_rc_head.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_rc_status.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_rc_status.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_top_level.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_top_level.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_worktree_add.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_worktree_add.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_worktree_head.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_worktree_head.out
+ create mode 100644 reports/vps-final-stabilization/evidence/b_worktree_status.err
+ create mode 100644 reports/vps-final-stabilization/evidence/b_worktree_status.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_active_db_documents.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_active_db_documents.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_active_runtime_untouched.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_active_runtime_untouched.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_backend_health.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_backend_health.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_backend_metrics.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_backend_metrics.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_backend_v1_health.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_backend_v1_health.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_chat_history_valid.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_chat_history_valid.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_chat_pong.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_chat_pong.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_chat_pong_valid.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_chat_pong_valid.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_copy_db.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_copy_db.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_copy_db_check.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_copy_db_check.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_frontend_health_proxy.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_frontend_health_proxy.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_frontend_root.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_frontend_root.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_import_path.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_import_path.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_isolated_processes.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_isolated_processes.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_model_status.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_model_status.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_model_status_canonical.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_model_status_canonical.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_model_status_frontend_proxy.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_model_status_frontend_proxy.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_node_modules_link.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_node_modules_link.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_ollama_version.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_ollama_version.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_ports_active.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_ports_active.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_ports_after_isolated.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_ports_after_isolated.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_ports_available.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_ports_available.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_python_version.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_python_version.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_readyz_alias.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_readyz_alias.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_start_backend.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_start_backend.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_start_frontend.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_start_frontend.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_v1_ready.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_v1_ready.out
+ create mode 100644 reports/vps-final-stabilization/evidence/c_wait_ready.err
+ create mode 100644 reports/vps-final-stabilization/evidence/c_wait_ready.out
+ create mode 100644 reports/vps-final-stabilization/evidence/commands.tsv
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_copy_test_db.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_copy_test_db.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_frontend_build.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_frontend_build.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_frontend_test.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_frontend_test.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_full_regression.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_full_regression.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_full_regression_continue.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_full_regression_continue.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_mypy.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_mypy.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_mypy_app.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_mypy_app.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_mypy_app_baseline.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_mypy_app_baseline.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_mypy_scoped.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_mypy_scoped.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_mypy_scoped_baseline.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_mypy_scoped_baseline.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_ruff.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_ruff.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_ruff_scoped.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_ruff_scoped.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_ruff_scoped_baseline.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_ruff_scoped_baseline.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_synthetic_chat.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_synthetic_chat.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_synthetic_ingest.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_synthetic_ingest.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_synthetic_langchain.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_synthetic_langchain.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_synthetic_search.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_synthetic_search.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_targeted.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d2_targeted.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d_readyz_diffcheck.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d_readyz_diffcheck.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d_readyz_green.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d_readyz_green.out
+ create mode 100644 reports/vps-final-stabilization/evidence/d_readyz_red.err
+ create mode 100644 reports/vps-final-stabilization/evidence/d_readyz_red.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_active_after_stop.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_active_after_stop.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_auth_cost_no_token.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_auth_cost_no_token.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_auth_cost_valid_token.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_auth_cost_valid_token.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_auth_ingest_invalid_token.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_auth_ingest_invalid_token.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_auth_ingest_no_token.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_auth_ingest_no_token.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_cleanup_symlink.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_cleanup_symlink.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_db_hash.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_db_hash.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_db_pragmas.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_db_pragmas.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_db_stat.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_db_stat.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_git_diff_check.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_git_diff_check.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_git_diff_check_scoped.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_git_diff_check_scoped.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_git_status.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_git_status.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_git_status_scoped.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_git_status_scoped.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_ports_after_stop.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_ports_after_stop.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_secret_diff.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_secret_diff.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_secret_diff_precise.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_secret_diff_precise.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_secret_reports.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_secret_reports.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_secret_reports_precise.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_secret_reports_precise.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_security_tests.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_security_tests.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_status_clean.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_status_clean.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_stop_isolated.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_stop_isolated.out
+ create mode 100644 reports/vps-final-stabilization/evidence/e_wait_stopped.err
+ create mode 100644 reports/vps-final-stabilization/evidence/e_wait_stopped.out
+ create mode 100644 reports/vps-final-stabilization/evidence/f_missing_artifacts.err
+ create mode 100644 reports/vps-final-stabilization/evidence/f_missing_artifacts.out
+ create mode 100644 reports/vps-final-stabilization/evidence/f_ollama_model.err
+ create mode 100644 reports/vps-final-stabilization/evidence/f_ollama_model.out
+ create mode 100644 reports/vps-final-stabilization/evidence/f_pc_artifacts.err
+ create mode 100644 reports/vps-final-stabilization/evidence/f_pc_artifacts.out
+ create mode 100644 reports/vps-final-stabilization/evidence/g_active_commit.err
+ create mode 100644 reports/vps-final-stabilization/evidence/g_active_commit.out
+ create mode 100644 reports/vps-final-stabilization/evidence/g_deploy_facts.err
+ create mode 100644 reports/vps-final-stabilization/evidence/g_deploy_facts.out
+ create mode 100644 reports/vps-final-stabilization/evidence/g_release_diff.err
+ create mode 100644 reports/vps-final-stabilization/evidence/g_release_diff.out
+ create mode 100644 reports/vps-final-stabilization/evidence/h_bundle_count.err
+ create mode 100644 reports/vps-final-stabilization/evidence/h_bundle_count.out
+ create mode 100644 reports/vps-final-stabilization/evidence/h_bundle_evidence.err
+ create mode 100644 reports/vps-final-stabilization/evidence/h_bundle_evidence.out
+ create mode 100644 reports/vps-final-stabilization/evidence/h_bundle_refresh.err
+ create mode 100644 reports/vps-final-stabilization/evidence/h_bundle_refresh.out
+ create mode 100644 reports/vps-final-stabilization/evidence/h_final_diff_check.err
+ create mode 100644 reports/vps-final-stabilization/evidence/h_final_diff_check.out
+ create mode 100644 reports/vps-final-stabilization/evidence/h_final_json.err
+ create mode 100644 reports/vps-final-stabilization/evidence/h_final_json.out
+ create mode 100644 reports/vps-final-stabilization/evidence/h_final_readiness.err
+ create mode 100644 reports/vps-final-stabilization/evidence/h_final_readiness.out
+ create mode 100644 reports/vps-final-stabilization/evidence/h_final_report_count.err
+ create mode 100644 reports/vps-final-stabilization/evidence/h_final_report_count.out
+ create mode 100644 reports/vps-final-stabilization/evidence/h_final_ruff.err
+ create mode 100644 reports/vps-final-stabilization/evidence/h_final_ruff.out
+ create mode 100644 reports/vps-final-stabilization/evidence/run.sh
+ create mode 100644 tests/test_readyz_contract.py

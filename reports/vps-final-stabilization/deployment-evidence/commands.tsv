@@ -1,0 +1,245 @@
+2026-11-23T22:08:38Z	a_host	0	date -u +%Y-%m-%dT%H:%M:%SZ
+2026-11-23T22:08:38Z	a_uname	0	uname -a
+2026-11-23T22:08:38Z	a_cpu	0	nproc
+2026-11-23T22:08:38Z	a_memory	0	free -h
+2026-11-23T22:08:38Z	a_disk	0	df -h /data /data/workspace /tmp
+2026-11-23T22:08:38Z	a_identity	0	id
+2026-11-23T22:08:38Z	a_umask	0	umask
+2026-11-23T22:08:38Z	a_git_status	0	git status --short --branch
+2026-11-23T22:08:38Z	a_git_head	0	git rev-parse HEAD
+2026-11-23T22:08:38Z	a_git_branch	0	git branch -avv
+2026-11-23T22:08:38Z	a_git_worktree	0	git worktree list --porcelain
+2026-11-23T22:08:38Z	a_git_remote	0	git remote -v
+2026-11-23T22:08:38Z	a_git_log	0	git log --oneline --decorate -20
+2026-11-23T22:08:38Z	a_git_diff_check	0	git diff --check
+2026-11-23T22:08:38Z	a_python	0	python3 --version
+2026-11-23T22:08:38Z	a_node	0	node --version
+2026-11-23T22:08:38Z	a_npm	0	npm --version
+2026-11-23T22:08:38Z	a_docker	0	docker version --format {{.Server.Version}}
+2026-11-23T22:08:38Z	a_compose	0	docker compose version
+2026-11-23T22:08:38Z	a_systemd	0	systemctl list-units --type=service --state=running --no-pager
+2026-11-23T22:08:38Z	a_ports	0	ss -ltnp
+2026-11-23T22:08:38Z	a_processes	0	ps -eo pid,ppid,etime,user,cmd --sort=pid
+2026-11-23T22:08:50Z	a_backend_cwd	0	bash -lc readlink -f /proc/7680/cwd
+2026-11-23T22:08:50Z	a_backend_git	0	bash -lc git -C "$(readlink -f /proc/7680/cwd)" rev-parse HEAD && git -C "$(readlink -f /proc/7680/cwd)" status --short --branch
+2026-11-23T22:08:50Z	a_frontend_cwd	0	bash -lc readlink -f /proc/7740/cwd
+2026-11-23T22:08:50Z	a_frontend_git	0	bash -lc git -C "$(readlink -f /proc/7740/cwd)" rev-parse HEAD && git -C "$(readlink -f /proc/7740/cwd)" status --short --branch
+2026-11-23T22:08:50Z	a_backend_env_keys	0	bash -lc /usr/bin/python3 - <<'PY'
+from pathlib import Path
+keys=[]
+raw=Path("/proc/7680/environ").read_bytes().split(b"\0")
+for item in raw:
+    if not item or b"=" not in item: continue
+    k=item.split(b"=",1)[0].decode("utf-8","replace")
+    if any(s in k.upper() for s in ("NUSANTARA","API","SECRET","TOKEN","KEY","DATABASE","OLLAMA","CORS","ENV")):
+        keys.append(k)
+print("\n".join(sorted(set(keys))))
+PY
+2026-11-23T22:08:50Z	a_ollama_models	0	ollama list
+2026-11-23T22:08:50Z	a_ollama_version	0	ollama --version
+2026-11-23T22:08:50Z	a_ollama_api	0	curl -fsS --max-time 5 http://127.0.0.1:11434/api/version
+2026-11-23T22:08:50Z	a_active_backend_health	0	curl -fsS -w \nHTTP_STATUS=%{http_code}\n --max-time 5 http://127.0.0.1:18201/health
+2026-11-23T22:08:50Z	a_active_backend_ready	0	curl -sS -o /dev/null -w HTTP_STATUS=%{http_code}\n --max-time 5 http://127.0.0.1:18201/readyz
+2026-11-23T22:08:50Z	a_active_frontend_root	0	curl -sS -o /dev/null -w HTTP_STATUS=%{http_code} SIZE=%{size_download}\n --max-time 5 http://127.0.0.1:15274/
+2026-11-23T22:08:50Z	a_active_frontend_health	0	curl -sS -o /dev/null -w HTTP_STATUS=%{http_code}\n --max-time 5 http://127.0.0.1:15274/health
+2026-11-23T22:09:02Z	a_filesystem_scan	0	bash -lc /usr/bin/python3 - <<'PY'
+import os, time
+from pathlib import Path
+roots=[Path("/data/workspace"),Path("/data/home")]
+skip={".git","node_modules","__pycache__",".venv","env","env-langchain","site-packages",".npm",".cache"}
+def walk(root):
+    for base,dirs,files in os.walk(root):
+        dirs[:]=[d for d in dirs if d not in skip and not d.startswith(".pytest_cache")]
+        for f in files:
+            p=Path(base)/f
+            low=p.name.lower()
+            if low.endswith((".db",".db-wal",".db-shm",".sqlite",".sqlite3")) or low.startswith(".env") or low in ("docker-compose.yml","docker-compose.yaml","compose.yml","compose.yaml") or low.endswith(".log"):
+                try: st=p.stat(); size=st.st_size; mtime=time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime(st.st_mtime))
+                except OSError: size=-1; mtime="unknown"
+                print(f"{p}\tsize={size}\tmtime={mtime}")
+for r in roots:
+    if r.exists(): walk(r)
+PY
+2026-11-23T22:09:02Z	a_db_pragmas	0	bash -lc /usr/bin/python3 - <<'PY'
+import os, sqlite3
+from pathlib import Path
+roots=[Path("/data/workspace"),Path("/data/home")]
+skip={".git","node_modules","__pycache__",".venv","env","env-langchain","site-packages"}
+seen=set()
+for root in roots:
+    for base,dirs,files in os.walk(root):
+        dirs[:]=[d for d in dirs if d not in skip]
+        for f in files:
+            if not (f.lower().endswith(".db") or f.lower().endswith(".sqlite") or f.lower().endswith(".sqlite3")): continue
+            p=Path(base)/f
+            if str(p) in seen: continue
+            seen.add(str(p))
+            try:
+                uri=f"file:{p}?mode=ro"
+                con=sqlite3.connect(uri,uri=True,timeout=2)
+                journal=con.execute("PRAGMA journal_mode").fetchone()[0]
+                integrity=con.execute("PRAGMA quick_check").fetchone()[0]
+                tables=con.execute("SELECT count(*) FROM sqlite_master WHERE type=table").fetchone()[0]
+                print(f"{p}\tjournal={journal}\tquick_check={integrity}\ttables={tables}")
+                con.close()
+            except Exception as e:
+                print(f"{p}\tERROR={type(e).__name__}:{e}")
+PY
+2026-11-23T22:09:12Z	a_proxy_config	0	bash -lc for d in /etc/nginx /etc/apache2 /etc/caddy /etc/haproxy; do if [ -d "$d" ]; then echo "== $d =="; rg -n --no-messages "proxy_pass|listen|server_name|upstream" "$d" || true; fi; done
+2026-11-23T22:09:12Z	a_log_inventory	0	bash -lc for d in /data/workspace/nus-v1-postmerge-ec76a9ed /data/workspace/nus-v1-integration-20261123 /data/workspace/nus-v1-staging-6f037ab4; do echo "== $d =="; rg --files "$d" -g "*.log" -g "*.jsonl" -g "!**/node_modules/**" -g "!**/.git/**" | sort; done
+2026-11-23T22:09:24Z	a_active_db_path	0	bash -lc /usr/bin/python3 - <<'PY'
+from pathlib import Path
+for item in Path("/proc/7680/environ").read_bytes().split(b"\0"):
+    if item.startswith(b"NUSANTARA_KNOWLEDGE_DB="):
+        print(item.split(b"=",1)[1].decode())
+PY
+2026-11-23T22:09:24Z	a_app_db_pragmas	0	bash -lc /usr/bin/python3 - <<'PY'
+import sqlite3
+from pathlib import Path
+paths=[
+Path("/data/workspace/nus-v1-postmerge-ec76a9ed/repo/data/knowledge/nusantara_knowledge.db"),
+Path("/data/workspace/nus-v1-postmerge-ec76a9ed/repo/backend/data/knowledge/nusantara_knowledge.db"),
+Path("/data/workspace/nus-v1-postmerge-ec76a9ed/runtime/staging-db/nusantara_knowledge.db"),
+]
+for p in paths:
+    if not p.exists(): print(p,"MISSING"); continue
+    con=sqlite3.connect(f"file:{p}?mode=ro",uri=True,timeout=2)
+    journal=con.execute("PRAGMA journal_mode").fetchone()[0]
+    integrity=con.execute("PRAGMA quick_check").fetchone()[0]
+    tables=con.execute("SELECT count(*) FROM sqlite_master WHERE type=?",("table",)).fetchone()[0]
+    print(f"{p}\tjournal={journal}\tquick_check={integrity}\ttables={tables}")
+    con.close()
+PY
+2026-11-23T22:09:24Z	a_pr_14	0	gh pr view 14 --repo dimasaji/mcp-nusantara --json number,title,state,mergeable,mergeStateStatus,baseRefName,headRefName,headRefOid,mergedAt,closedAt,url,commits,files --jq {number,title,state,mergeable,mergeStateStatus,baseRefName,headRefName,headRefOid,mergedAt,closedAt,url,commit_shas:[.commits[].oid],files:[.files[].path]}
+2026-11-23T22:09:24Z	a_pr_15	0	gh pr view 15 --repo dimasaji/mcp-nusantara --json number,title,state,mergeable,mergeStateStatus,baseRefName,headRefName,headRefOid,mergedAt,closedAt,url,commits,files --jq {number,title,state,mergeable,mergeStateStatus,baseRefName,headRefName,headRefOid,mergedAt,closedAt,url,commit_shas:[.commits[].oid],files:[.files[].path]}
+2026-11-23T22:09:25Z	a_pr_16	0	gh pr view 16 --repo dimasaji/mcp-nusantara --json number,title,state,mergeable,mergeStateStatus,baseRefName,headRefName,headRefOid,mergedAt,closedAt,url,commits,files --jq {number,title,state,mergeable,mergeStateStatus,baseRefName,headRefName,headRefOid,mergedAt,closedAt,url,commit_shas:[.commits[].oid],files:[.files[].path]}
+2026-11-23T22:09:26Z	a_pr_17	0	gh pr view 17 --repo dimasaji/mcp-nusantara --json number,title,state,mergeable,mergeStateStatus,baseRefName,headRefName,headRefOid,mergedAt,closedAt,url,commits,files --jq {number,title,state,mergeable,mergeStateStatus,baseRefName,headRefName,headRefOid,mergedAt,closedAt,url,commit_shas:[.commits[].oid],files:[.files[].path]}
+2026-11-23T22:09:26Z	a_pr_list	0	gh pr list --repo dimasaji/mcp-nusantara --state all --limit 100 --json number,title,state,baseRefName,headRefName,url
+2026-11-23T22:09:36Z	b_worktree_add	0	git worktree add -b codex/vps-final-stabilization-20261123 /data/workspace/nus-v1-vps-final-20261123/worktrees/release b44b01e7d24efbd5ff7f4830cc71624b5aa4bf7f
+2026-11-23T22:09:36Z	b_worktree_head	0	git -C /data/workspace/nus-v1-vps-final-20261123/worktrees/release rev-parse HEAD
+2026-11-23T22:09:36Z	b_worktree_status	0	git -C /data/workspace/nus-v1-vps-final-20261123/worktrees/release status --short --branch
+2026-11-23T22:10:33Z	d_readyz_red	1	env PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest tests/test_readyz_contract.py -q
+2026-11-23T22:10:46Z	d_readyz_green	0	env PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest tests/test_readyz_contract.py tests/test_v2_disabled.py tests/test_v1_smoke.py -q
+2026-11-23T22:10:46Z	d_readyz_diffcheck	0	git diff --check
+2026-11-23T22:11:02Z	b_ancestor_pr14	0	bash -lc git merge-base --is-ancestor 87a58034b8f9898850dc5a290b3f706552de0ea0 ec76a9ed01f160a28d1cbe34e263b3bbe9ccb075; echo "exit=$?"
+2026-11-23T22:11:02Z	b_ancestor_pr15	0	bash -lc git merge-base --is-ancestor 3a361c0358f27376c627d6132ac45a58f500ef1c ec76a9ed01f160a28d1cbe34e263b3bbe9ccb075; echo "exit=$?"
+2026-11-23T22:11:02Z	b_ancestor_pr17_base	0	bash -lc git merge-base --is-ancestor ec76a9ed01f160a28d1cbe34e263b3bbe9ccb075 d2cfc60a; echo "exit=$?"
+2026-11-23T22:11:02Z	b_range	0	git log --oneline ec76a9ed01f160a28d1cbe34e263b3bbe9ccb075..d2cfc60a
+2026-11-23T22:11:02Z	b_diff_stat	0	git diff --stat ec76a9ed01f160a28d1cbe34e263b3bbe9ccb075..d2cfc60a
+2026-11-23T22:11:02Z	b_diff_names	0	git diff --name-status ec76a9ed01f160a28d1cbe34e263b3bbe9ccb075..d2cfc60a
+2026-11-23T22:11:02Z	b_top_level	0	git ls-tree --name-only HEAD
+2026-11-23T22:11:02Z	b_layout	0	bash -lc for p in backend frontend deploy/docker reports docs/reports; do if [ -d "$p" ]; then echo "OK $p"; else echo "MISSING $p"; fi; done
+2026-11-23T22:11:02Z	b_legacy_refs	0	bash -lc rg -n --no-messages "(/|^)(app|control-plane|scripts)/" -g "!backend/app/**" -g "!frontend/node_modules/**" -g "!**/.git/**" -g "!reports/**" -g "!docs/reports/**" . || true
+2026-11-23T22:11:02Z	b_entrypoints	0	bash -lc rg -n --no-messages "app\\.main:app|uvicorn|npm run dev|vite|NUSANTARA_KNOWLEDGE_DB|OLLAMA_BASE_URL" backend frontend/package.json deploy/docker README.md -g "!frontend/node_modules/**" -g "!**/.git/**" || true
+2026-11-23T22:11:02Z	b_rc_head	0	git rev-parse HEAD
+2026-11-23T22:11:02Z	b_rc_status	0	git status --short --branch
+2026-11-23T22:11:17Z	b_merge_base_pr14	0	git merge-base 87a58034b8f9898850dc5a290b3f706552de0ea0 ec76a9ed01f160a28d1cbe34e263b3bbe9ccb075
+2026-11-23T22:11:17Z	b_merge_base_pr15	0	git merge-base 3a361c0358f27376c627d6132ac45a58f500ef1c ec76a9ed01f160a28d1cbe34e263b3bbe9ccb075
+2026-11-23T22:11:17Z	b_pr14_vs_rc	0	git diff --stat 87a58034b8f9898850dc5a290b3f706552de0ea0 d2cfc60a
+2026-11-23T22:11:18Z	b_pr15_vs_rc	0	git diff --stat 3a361c0358f27376c627d6132ac45a58f500ef1c d2cfc60a
+2026-11-23T22:11:18Z	b_pr15_cost	0	git diff --name-status 3a361c0358f27376c627d6132ac45a58f500ef1c d2cfc60a -- *cost_ledger*
+2026-11-23T22:11:18Z	b_pr14_reports	0	git diff --name-status 87a58034b8f9898850dc5a290b3f706552de0ea0 d2cfc60a -- docs/reports/ollama-runtime-v1/*
+2026-11-23T22:11:18Z	b_no_root_app	0	bash -lc test ! -d app && echo "NO_ROOT_APP_DIR"
+2026-11-23T22:11:18Z	b_no_root_control	0	bash -lc test ! -d control-plane && echo "NO_ROOT_CONTROL_PLANE_DIR"
+2026-11-23T22:14:16Z	c_ports_available	0	bash -lc ss -ltn | grep -E ':(18211|15284)[[:space:]]' || true
+2026-11-23T22:14:16Z	c_python_version	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python --version
+2026-11-23T22:14:16Z	c_import_path	0	env PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -c import app; print(app.__file__)
+2026-11-23T22:14:16Z	c_copy_db	127	bash -lc cp -n /data/workspace/nus-v1-postmerge-ec76a9ed/runtime/verify-final/staging-db/verify.db /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data/knowledge.db && sqlite3 /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data/knowledge.db 'PRAGMA quick_check;'
+2026-11-23T22:14:16Z	c_node_modules_link	0	bash -lc ln -sfn /data/workspace/nus-v1-postmerge-ec76a9ed/repo/frontend/node_modules /data/workspace/nus-v1-vps-final-20261123/worktrees/release/frontend/node_modules && ls -ld /data/workspace/nus-v1-vps-final-20261123/worktrees/release/frontend/node_modules
+2026-11-23T22:14:21Z	c_copy_db_check	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -c import sqlite3; db='/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data/knowledge.db'; con=sqlite3.connect('file:'+db+'?mode=ro',uri=True); print(con.execute('PRAGMA quick_check').fetchone()[0]); print(con.execute('select count(*) from sqlite_master where type="table"').fetchone()[0])
+2026-11-23T22:14:31Z	c_start_backend	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend NUSANTARA_DATA_DIR=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data NUSANTARA_KNOWLEDGE_DB=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data/knowledge.db NUSANTARA_ADMIN_TOKEN=$ADMIN_TOKEN OLLAMA_BASE_URL=http://127.0.0.1:11434 LLM_BASE_URL=http://127.0.0.1:11434 LLM_MODEL=llama3.2:1b nohup /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 18211 --log-level info > /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/logs/backend.log 2>&1 & echo $! > /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/backend.pid
+2026-11-23T22:14:31Z	c_start_frontend	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release/frontend && NUSANTARA_BACKEND_URL=http://127.0.0.1:18211 NUSANTARA_VITE_CACHE_DIR=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/vite-cache nohup npm run dev -- --port 15284 > /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/logs/frontend.log 2>&1 & echo $! > /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/frontend.pid
+2026-11-23T22:14:31Z	c_wait_ready	0	bash -lc for i in $(seq 1 60); do curl --noproxy '*' -fsS http://127.0.0.1:18211/health >/dev/null 2>&1 && exit 0; sleep 0.5; done; exit 1
+2026-11-23T22:14:31Z	c_ports_active	0	ss -ltnp
+2026-11-23T22:14:39Z	c_backend_health	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18211/health
+2026-11-23T22:14:39Z	c_backend_v1_health	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/health
+2026-11-23T22:14:39Z	c_readyz_alias	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18211/readyz
+2026-11-23T22:14:39Z	c_v1_ready	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/health/ready
+2026-11-23T22:14:39Z	c_backend_metrics	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/metrics
+2026-11-23T22:14:39Z	c_frontend_root	0	curl --noproxy * -sS --max-time 20 -o /dev/null -w HTTP %{http_code} size=%{size_download}\n http://127.0.0.1:15284/
+2026-11-23T22:14:40Z	c_frontend_health_proxy	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:15284/health
+2026-11-23T22:14:40Z	c_ollama_version	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:11434/api/version
+2026-11-23T22:14:40Z	c_model_status	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/frontend/model-status
+2026-11-23T22:14:40Z	c_chat_pong	0	curl --noproxy * -sS --max-time 120 -X POST -H Content-Type: application/json -d {"session_id":"web-vps-final-c","request_id":"c-vps-final-1","user_input":"Balas persis satu kata: PONG"} -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/chat
+2026-11-23T22:14:40Z	c_isolated_processes	0	bash -lc ps -o pid,ppid,etime,user,cmd -p $(cat /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/backend.pid),$(cat /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/frontend.pid)
+2026-11-23T22:14:40Z	c_ports_after_isolated	0	ss -ltnp
+2026-11-23T22:15:03Z	c_chat_pong_valid	0	curl --noproxy * -sS --max-time 120 -X POST -H Content-Type: application/json --data-binary {"session_id":"web-11111111-2222-4333-8444-555555555555","request_id":"abcdef0123456789abcdef0123456789","user_input":"Balas persis satu kata: PONG"} -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/chat
+2026-11-23T22:15:05Z	c_chat_history_valid	0	curl --noproxy * -sS --max-time 30 -H X-Chat-Session: web-11111111-2222-4333-8444-555555555555 -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/chat/history
+2026-11-23T22:15:05Z	c_model_status_canonical	0	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/control-plane/model-status
+2026-11-23T22:15:05Z	c_model_status_frontend_proxy	0	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code}\n http://127.0.0.1:15284/v1/control-plane/model-status
+2026-11-23T22:15:05Z	c_active_runtime_untouched	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/health
+2026-11-23T22:15:16Z	c_active_db_documents	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -c import sqlite3; db='/data/workspace/nus-v1-postmerge-ec76a9ed/runtime/verify-final/staging-db/verify.db'; con=sqlite3.connect('file:'+db+'?mode=ro',uri=True); print([r[0] for r in con.execute("select name from sqlite_master where type='table' and name like '%doc%'")]); print(con.execute('select count(*) from documents').fetchone()[0])
+2026-11-23T22:15:57Z	d2_copy_test_db	0	bash -lc cp -n /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data/knowledge.db /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/test-knowledge.db
+2026-11-23T22:15:57Z	d2_full_regression	2	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend NUSANTARA_DATA_DIR=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data NUSANTARA_KNOWLEDGE_DB=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/test-knowledge.db NUSANTARA_ADMIN_TOKEN=$ADMIN_TOKEN /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q
+2026-11-23T22:15:59Z	d2_targeted	1	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend NUSANTARA_DATA_DIR=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data NUSANTARA_KNOWLEDGE_DB=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/test-knowledge.db NUSANTARA_ADMIN_TOKEN=$ADMIN_TOKEN /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q tests/test_cost_ledger_v1.py tests/test_openrouter_cost_policy_v1.py tests/test_cost_ledger_initialization_race.py tests/test_knowledge_preparation.py tests/test_knowledge_cleaning.py tests/test_effective_rag_profile.py tests/test_hermes_v1_contextual_followup.py tests/test_v1_knowledge_reuse_rebind.py tests/test_runtime_portability.py tests/test_v1_chat_rag_regression.py tests/test_ncp_v1_chat_contract.py tests/test_backend_runtime_fixture.py tests/test_approval_boundary.py tests/test_audit_regressions.py tests/test_review_publication_v1.py tests/test_review_replay_v1.py tests/test_sop_review.py tests/test_knowledge_pipeline_api.py tests/test_v1_sop_boundary.py tests/test_selected_pdf_chat.py tests/test_chat_citation_source.py tests/test_synthetic_rag_fixture.py
+2026-11-23T22:16:06Z	d2_synthetic_langchain	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend /data/workspace/nus-v1-postmerge-ec76a9ed/env-langchain/bin/python -m pytest -q tests/test_synthetic_rag_fixture.py
+2026-11-23T22:16:07Z	d2_frontend_test	1	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release/frontend && NUSANTARA_VITE_CACHE_DIR=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/vite-cache npm test
+2026-11-23T22:16:15Z	d2_frontend_build	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release/frontend && NUSANTARA_VITE_CACHE_DIR=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/vite-cache npm run build
+2026-11-23T22:16:22Z	d2_ruff	1	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/ruff check .
+2026-11-23T22:16:22Z	d2_mypy	127	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/mypy backend/app
+2026-11-23T22:17:17Z	d2_full_regression_continue	1	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend NUSANTARA_DATA_DIR=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data NUSANTARA_KNOWLEDGE_DB=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/test-knowledge.db NUSANTARA_ADMIN_TOKEN=$ADMIN_TOKEN /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q -p no:cacheprovider --continue-on-collection-errors
+2026-11-23T22:17:42Z	d2_ruff_scoped	1	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/ruff check backend tests --output-format concise
+2026-11-23T22:17:42Z	d2_ruff_scoped_baseline	1	bash -lc cd /data/workspace/nus-v1-postmerge-ec76a9ed/independent-db32ee40 && /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/ruff check backend tests --output-format concise
+2026-11-23T22:17:42Z	d2_mypy_scoped	2	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m mypy --cache-dir=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/mypy-cache-current backend tests
+2026-11-23T22:17:42Z	d2_mypy_scoped_baseline	2	bash -lc cd /data/workspace/nus-v1-postmerge-ec76a9ed/independent-db32ee40 && PYTHONPATH=/data/workspace/nus-v1-postmerge-ec76a9ed/independent-db32ee40/backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m mypy --cache-dir=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/mypy-cache-baseline backend tests
+2026-11-23T22:18:04Z	d2_mypy_app	1	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m mypy --cache-dir=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/mypy-app-current backend/app
+2026-11-23T22:18:12Z	d2_mypy_app_baseline	1	bash -lc cd /data/workspace/nus-v1-postmerge-ec76a9ed/independent-db32ee40 && PYTHONPATH=/data/workspace/nus-v1-postmerge-ec76a9ed/independent-db32ee40/backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m mypy --cache-dir=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/mypy-app-baseline backend/app
+2026-11-23T22:19:20Z	d2_synthetic_ingest	0	curl --noproxy * -sS --max-time 120 -X POST -H Content-Type: application/json -H X-Admin-Token: $ADMIN_TOKEN --data-binary {"id":"vps-final-synthetic-1","title":"Catatan Uji Aurora V1","content":"Catatan Uji NUSANTARA V1. Kode proyek Aurora adalah MERAK-427. Warna kemasan biru.","metadata":{"ingest_channel":"upload"}} -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/documents/ingest
+2026-11-23T22:19:20Z	d2_synthetic_search	0	curl --noproxy * -sS --max-time 120 -X POST -H Content-Type: application/json -H X-Admin-Token: $ADMIN_TOKEN --data-binary {"query":"Apa kode proyek Aurora?","top_k":3} -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/knowledge/search
+2026-11-23T22:19:20Z	d2_synthetic_chat	0	curl --noproxy * -sS --max-time 120 -X POST -H Content-Type: application/json -H X-Admin-Token: $ADMIN_TOKEN --data-binary {"session_id":"web-22222222-3333-4444-8555-666666666666","request_id":"fedcba9876543210fedcba9876543210","user_input":"Apa kode proyek Aurora?","document_ids":["vps-final-synthetic-1"]} -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/chat
+2026-11-23T22:20:14Z	e_secret_diff	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && git diff --name-only -z ec76a9ed..d2cfc60a | xargs -0 -r rg -l --no-messages -g '*.py' -g '*.ts' -g '*.tsx' -g '*.json' -e 'sk-[A-Za-z0-9]{20,}' -e 'api[_-]?key' -e 'secret' -e 'console\.log' -e 'NUSANTARA_ADMIN_TOKEN[[:space:]]*=' || true
+2026-11-23T22:20:14Z	e_secret_reports	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && rg -l --no-messages -g '*.md' -g '*.json' -e 'sk-[A-Za-z0-9]{20,}' -e 'api[_-]?key' -e 'secret' -e 'console\.log' reports/vps-final-stabilization || true
+2026-11-23T22:20:14Z	e_auth_ingest_no_token	0	curl --noproxy * -sS --max-time 30 -X POST -H Content-Type: application/json --data-binary {"title":"Security probe","content":"synthetic only"} -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/documents/ingest
+2026-11-23T22:20:14Z	e_auth_ingest_invalid_token	0	curl --noproxy * -sS --max-time 30 -X POST -H Content-Type: application/json -H X-Admin-Token: invalid-probe --data-binary {"title":"Security probe","content":"synthetic only"} -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/documents/ingest
+2026-11-23T22:20:14Z	e_auth_cost_no_token	0	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/control-plane/cost-summary
+2026-11-23T22:20:14Z	e_auth_cost_valid_token	0	curl --noproxy * -sS --max-time 30 -H X-Admin-Token: $ADMIN_TOKEN -w \nHTTP %{http_code}\n http://127.0.0.1:18211/v1/control-plane/cost-summary
+2026-11-23T22:20:14Z	e_db_stat	0	bash -lc stat -c '%n size=%s mtime=%y' /data/workspace/nus-v1-postmerge-ec76a9ed/runtime/verify-final/staging-db/verify.db /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data/knowledge.db
+2026-11-23T22:20:14Z	e_db_hash	0	bash -lc sha256sum /data/workspace/nus-v1-postmerge-ec76a9ed/runtime/verify-final/staging-db/verify.db /data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data/knowledge.db
+2026-11-23T22:20:14Z	e_db_pragmas	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -c import sqlite3; paths=['/data/workspace/nus-v1-postmerge-ec76a9ed/runtime/verify-final/staging-db/verify.db','/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data/knowledge.db']; [print(p, 'quick_check='+sqlite3.connect('file:'+p+'?mode=ro',uri=True).execute('PRAGMA quick_check').fetchone()[0], 'tables='+str(sqlite3.connect('file:'+p+'?mode=ro',uri=True).execute('select count(*) from sqlite_master where type="table"').fetchone()[0])) for p in paths]
+2026-11-23T22:20:14Z	e_security_tests	1	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend NUSANTARA_DATA_DIR=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data NUSANTARA_KNOWLEDGE_DB=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/test-knowledge.db NUSANTARA_ADMIN_TOKEN=$ADMIN_TOKEN /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q tests/test_admin_token_source.py tests/test_audit_file_writers.py tests/test_audit_regressions.py tests/test_approval_boundary.py tests/test_backup_restore.py tests/test_sqlite_backup_wal.py tests/test_v1_sop_boundary.py
+2026-11-23T22:20:15Z	e_git_diff_check	129	git diff --check
+2026-11-23T22:20:15Z	e_git_status	128	git status --short
+2026-11-23T22:20:40Z	e_secret_diff_precise	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && git diff --name-only -z ec76a9ed..d2cfc60a | xargs -0 -r rg -l --no-messages -g '*.py' -g '*.ts' -g '*.tsx' -g '*.json' -e 'sk-[A-Za-z0-9]{20,}' -e 'api[_-]?key[[:space:]]*[:=]' -e 'NUSANTARA_ADMIN_TOKEN[[:space:]]*=' -e 'console\.log' || true
+2026-11-23T22:20:40Z	e_secret_reports_precise	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && rg -l --no-messages -g '*.md' -g '*.json' -e 'sk-[A-Za-z0-9]{20,}' -e 'api[_-]?key[[:space:]]*[:=]' -e 'NUSANTARA_ADMIN_TOKEN[[:space:]]*=' -e 'console\.log' reports/vps-final-stabilization || true
+2026-11-23T22:20:40Z	e_git_diff_check_scoped	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && git diff --check
+2026-11-23T22:20:40Z	e_git_status_scoped	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && git status --short
+2026-11-23T22:20:40Z	e_stop_isolated	0	bash -lc kill 15715 15740 15721 15714 15720 2>/dev/null || true
+2026-11-23T22:20:40Z	e_wait_stopped	0	bash -lc for i in $(seq 1 20); do ss -ltn | grep -E ':(18211|15284)[[:space:]]' >/dev/null || exit 0; sleep 0.5; done; exit 1
+2026-11-23T22:20:41Z	e_ports_after_stop	0	ss -ltnp
+2026-11-23T22:20:41Z	e_active_after_stop	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/health
+2026-11-23T22:20:55Z	e_cleanup_symlink	0	bash -lc rm -f /data/workspace/nus-v1-vps-final-20261123/worktrees/release/frontend/node_modules
+2026-11-23T22:20:55Z	e_status_clean	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && git status --short
+2026-11-23T22:22:27Z	f_missing_artifacts	0	bash -lc for p in /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/nusantara-models /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/nusantara-models/.venv/bin/python /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/nusantara-models/indobert_worker.py /data/workspace/nus-v1-postmerge-ec76a9ed/repo/backend/nusantara-models /data/workspace/nus-v1-postmerge-ec76a9ed/repo/backend/nusantara-models/.venv/bin/python /data/workspace/nus-v1-postmerge-ec76a9ed/repo/backend/nusantara-models/indobert_worker.py; do if [ -e "$p" ]; then echo "present $p"; else echo "MISSING $p"; fi; done
+2026-11-23T22:22:27Z	f_pc_artifacts	0	bash -lc for p in /data/workspace/SOP_R2_Verified_PDF_20261005.zip /data/workspace/data-pribadi-referential-manifest-20261005-160000.json /data/workspace/ops-print-normalisasi.csv /data/workspace/Nusantara-Hermes-ACP-Connection-Patch; do if [ -e "$p" ]; then echo "present $p"; else echo "MISSING $p"; fi; done
+2026-11-23T22:22:27Z	f_ollama_model	0	curl --noproxy * -sS --max-time 20 http://127.0.0.1:11434/api/show -H Content-Type: application/json --data-binary {"name":"llama3.2:1b"} -w \nHTTP %{http_code}\n
+2026-11-23T22:23:35Z	g_deploy_facts	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && printf '%s\n' '--- compose ---' && nl -ba deploy/docker/docker-compose.yml && printf '%s\n' '--- dockerfile ---' && nl -ba deploy/docker/Dockerfile && printf '%s\n' '--- healthcheck bytes ---' && wc -c scripts/healthcheck.py
+2026-11-23T22:23:35Z	g_release_diff	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && git diff --stat b44b01e7d24efbd5ff7f4830cc71624b5aa4bf7f..d2cfc60a0d88c93ce561f40c01d67e5f53910770 && git diff --name-status b44b01e7d24efbd5ff7f4830cc71624b5aa4bf7f..d2cfc60a0d88c93ce561f40c01d67e5f53910770
+2026-11-23T22:23:35Z	g_active_commit	0	bash -lc git -C /data/workspace/nus-v1-postmerge-ec76a9ed/repo rev-parse HEAD
+2026-11-23T22:24:38Z	h_bundle_evidence	0	bash -lc mkdir -p /data/workspace/nus-v1-vps-final-20261123/worktrees/release/reports/vps-final-stabilization/evidence && cp -a /data/workspace/nus-v1-vps-final-20261123/evidence/. /data/workspace/nus-v1-vps-final-20261123/worktrees/release/reports/vps-final-stabilization/evidence/ && du -sh /data/workspace/nus-v1-vps-final-20261123/worktrees/release/reports/vps-final-stabilization/evidence
+2026-11-23T22:24:38Z	h_bundle_count	0	bash -lc find /data/workspace/nus-v1-vps-final-20261123/worktrees/release/reports/vps-final-stabilization/evidence -maxdepth 1 -type f | wc -l
+2026-11-23T22:24:56Z	h_final_json	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m json.tool /data/workspace/nus-v1-vps-final-20261123/worktrees/release/reports/vps-final-stabilization/TEST_RESULTS.json
+2026-11-23T22:24:56Z	h_final_report_count	0	bash -lc find /data/workspace/nus-v1-vps-final-20261123/worktrees/release/reports/vps-final-stabilization -maxdepth 1 -type f \( -name '*.md' -o -name '*.json' \) | sort && find /data/workspace/nus-v1-vps-final-20261123/worktrees/release/reports/vps-final-stabilization -maxdepth 1 -type f \( -name '*.md' -o -name '*.json' \) | wc -l
+2026-11-23T22:24:56Z	h_final_readiness	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && PYTHONPATH=/data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend NUSANTARA_DATA_DIR=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/data NUSANTARA_KNOWLEDGE_DB=/data/workspace/nus-v1-vps-final-20261123/runtime/isolated/test-knowledge.db /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q tests/test_readyz_contract.py
+2026-11-23T22:24:57Z	h_final_ruff	1	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/ruff check backend/app/main.py tests/test_readyz_contract.py
+2026-11-23T22:24:57Z	h_final_diff_check	0	bash -lc cd /data/workspace/nus-v1-vps-final-20261123/worktrees/release && git diff --check
+2026-11-23T22:24:57Z	h_bundle_refresh	0	bash -lc cp -a /data/workspace/nus-v1-vps-final-20261123/evidence/. /data/workspace/nus-v1-vps-final-20261123/worktrees/release/reports/vps-final-stabilization/evidence/ && find /data/workspace/nus-v1-vps-final-20261123/worktrees/release/reports/vps-final-stabilization/evidence -maxdepth 1 -type f | wc -l
+2026-11-23T22:30:55Z	i_env_db	0	bash -lc tr '\0' '\n' < /proc/7680/environ | grep '^NUSANTARA_KNOWLEDGE_DB='
+2026-11-23T22:30:55Z	i_fetch	0	git -C /data/workspace/nus-v1-postmerge-ec76a9ed/repo fetch origin codex/restructure-20261123
+2026-11-23T22:30:55Z	i_ff	0	git -C /data/workspace/nus-v1-postmerge-ec76a9ed/repo merge --ff-only origin/codex/restructure-20261123
+2026-11-23T22:30:55Z	i_head	0	git -C /data/workspace/nus-v1-postmerge-ec76a9ed/repo rev-parse HEAD
+2026-11-23T22:30:55Z	i_pre_health	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/health
+2026-11-23T22:30:55Z	i_pre_readyz	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/readyz
+2026-11-23T22:30:55Z	i_pre_db	0	bash -lc sha256sum /data/workspace/nus-v1-postmerge-ec76a9ed/runtime/verify-final/staging-db/verify.db && stat -c 'size=%s mtime=%y' /data/workspace/nus-v1-postmerge-ec76a9ed/runtime/verify-final/staging-db/verify.db
+2026-11-23T22:31:13Z	i_restart_backend	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python /data/tmp/opencode/deploy_backend.py
+2026-11-23T22:31:13Z	i_wait_new	0	bash -lc for i in $(seq 1 60); do code=$(curl --noproxy '*' -sS --max-time 5 -o /dev/null -w '%{http_code}' http://127.0.0.1:18201/health || true); [ "$code" = 200 ] && exit 0; sleep 0.5; done; exit 1
+2026-11-23T22:31:14Z	i_health	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/health
+2026-11-23T22:31:14Z	i_readyz	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/readyz
+2026-11-23T22:31:14Z	i_v1_ready	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/v1/health/ready
+2026-11-23T22:31:24Z	i_frontend	0	curl --noproxy * -sS --max-time 20 -o /dev/null -w HTTP %{http_code}\n http://127.0.0.1:15274/
+2026-11-23T22:31:24Z	i_frontend_health	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:15274/health
+2026-11-23T22:31:24Z	i_model	0	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/v1/control-plane/model-status
+2026-11-23T22:31:24Z	i_ports	0	ss -ltnp
+2026-11-23T22:31:24Z	i_db_after	0	bash -lc sha256sum /data/workspace/nus-v1-postmerge-ec76a9ed/runtime/verify-final/staging-db/verify.db && stat -c 'size=%s mtime=%y' /data/workspace/nus-v1-postmerge-ec76a9ed/runtime/verify-final/staging-db/verify.db
+2026-11-23T22:31:24Z	i_head_after	0	git -C /data/workspace/nus-v1-postmerge-ec76a9ed/repo rev-parse HEAD
+2026-11-23T22:31:24Z	i_status_after	0	git -C /data/workspace/nus-v1-postmerge-ec76a9ed/repo status --short
+2026-11-23T22:31:24Z	i_new_process	0	ps -o pid,ppid,lstart,cmd -p 19130,7740

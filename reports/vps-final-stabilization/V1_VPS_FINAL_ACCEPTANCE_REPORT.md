@@ -5,13 +5,14 @@
 - Branch: `codex/vps-final-stabilization-20261123`
 - Base/active commit: `b44b01e7d24efbd5ff7f4830cc71624b5aa4bf7f`
 - Evidence bundle commit: `aed48220cc8e0088a2a5aa66191cc4d9a6886f6c`
-- Pull request: #18 — https://github.com/dimasaji/mcp-nusantara/pull/18
+- Pull request: #18 — https://github.com/dimasaji/mcp-nusantara/pull/18 (MERGED)
+- Post-review actions: `VPS_DEPLOYMENT_RECORD.md`
 - Evidence: `/data/workspace/nus-v1-vps-final-20261123/evidence/`
 - Generated: 2026-11-23T22:24:30Z
 
 ## Verdict rationale
 
-The RC is ready for code review: all must-pass stabilization gates are complete or explicitly bounded, no new regression was introduced, the `/readyz` fix is red→green, admin authorization is intact, active production state was never modified, and a reviewable branch/PR can be produced. Deployment is **not authorized** because official PIAK-03 acceptance is PC-bound and the Docker image needs review fixes before any deploy.
+The RC was ready for code review: all must-pass stabilization gates were complete or explicitly bounded, no new regression was introduced, the `/readyz` fix was red→green, admin authorization was intact, and a reviewable branch/PR was produced. At review time deployment was not authorized; after explicit owner confirmation, PR #18 and #17 were merged and an in-place deploy was executed and recorded in `VPS_DEPLOYMENT_RECORD.md`. The final verdict remains GO FOR REVIEW.
 
 ## Gate summary
 
@@ -55,9 +56,9 @@ The RC is ready for code review: all must-pass stabilization gates are complete 
 4. `scripts/verify_sop_conversation.py` expects legacy `/v1/frontend/model-status` (404 on RC); PC harness must use the canonical `/v1/control-plane/model-status` or an approved proxy route.
 5. Reports are ignored by `.gitignore:76 reports/*`; they must be force-added to the PR.
 
-## No unauthorized actions
+## Actions at acceptance time (before explicit later authorization)
 
-- No PR merged, closed, rebased, or force-pushed.
+- No PR merged, closed, rebased, or force-pushed at that time.
 - No shared history rewritten; no hard reset.
 - No active service restarted; no port changed.
 - No deploy performed; no image built or pushed.
@@ -66,10 +67,17 @@ The RC is ready for code review: all must-pass stabilization gates are complete 
 - No test disabled, skipped by edit, or weakened; no threshold lowered.
 - No new framework, service, or runtime dependency added.
 
+## Post-review actions (explicitly authorized)
+
+- PR #18 and PR #17 were merged with merge commits; integration branch reached `b77c9c6e3d547b1d5a34c633abd0fb01e5aef046`.
+- Active repo was fast-forwarded to that commit; backend was restarted in place on the same port `18201` with the same env and DB path; new PID `19130`.
+- Frontend PID `7740`, ports `15274`/`11434`, DB hash/mtime, and secrets were unchanged.
+- Docker compose was not used; official PIAK-03 acceptance remains PC-bound. Full detail: `VPS_DEPLOYMENT_RECORD.md`.
+
 ## Review handoff
 
-Reviewers should focus on the readiness alias, the contract test, the evidence bundle completeness, and the Docker deployment findings. After review, any deploy requires owner approval, PC PIAK-03 `GO`, and resolution of the Docker preconditions in `VPS_RELEASE_AND_ROLLBACK_PLAN.md`.
+Reviewers should focus on the readiness alias, the contract test, the evidence bundle completeness, and the Docker deployment findings. Owner approval for an in-place deploy was obtained after review and is recorded in `VPS_DEPLOYMENT_RECORD.md`; PC PIAK-03 `GO` and resolution of the Docker preconditions in `VPS_RELEASE_AND_ROLLBACK_PLAN.md` remain necessary for container/production rollout.
 
 ## Evidence index
 
-The full evidence bundle is included in this PR at `reports/vps-final-stabilization/evidence/` (308 files, including `commands.tsv` and all `a_*`, `b_*`, `c_*`, `d2_*`, `e_*`, `f_*`, `g_*`, `h_*` outputs). Original collection path: `/data/workspace/nus-v1-vps-final-20261123/evidence/`. Structured summary: `reports/vps-final-stabilization/TEST_RESULTS.json`.
+The full evidence bundle is included at `reports/vps-final-stabilization/evidence/` (308 files, including `commands.tsv` and all `a_*`, `b_*`, `c_*`, `d2_*`, `e_*`, `f_*`, `g_*`, `h_*` outputs). Deployment evidence is bundled separately at `reports/vps-final-stabilization/deployment-evidence/`. Original collection path: `/data/workspace/nus-v1-vps-final-20261123/evidence/`. Structured summary: `reports/vps-final-stabilization/TEST_RESULTS.json`.

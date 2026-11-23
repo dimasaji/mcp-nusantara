@@ -10,10 +10,15 @@
     "number": 18,
     "url": "https://github.com/dimasaji/mcp-nusantara/pull/18",
     "base": "codex/vps-eng-completion-20261123",
-    "state": "OPEN"
+    "state": "MERGED"
   },
+  "merged_pull_requests": [
+    {"number": 18, "merge_commit": "3e3eedcf82f326bc609df25056c50536d487807f", "merged_at": "2026-11-23T22:29:26Z"},
+    {"number": 17, "merge_commit": "b77c9c6e3d547b1d5a34c633abd0fb01e5aef046", "merged_at": "2026-11-23T22:30:10Z"}
+  ],
+  "integration_commit": "b77c9c6e3d547b1d5a34c633abd0fb01e5aef046",
   "final_verdict": "GO FOR REVIEW",
-  "deployment_authorized": false,
+  "deployment_authorized": true,
   "gates": [
     {"id": "A", "name": "forensic_baseline", "result": "COMPLETE"},
     {"id": "B", "name": "git_pr_reconciliation", "result": "PASS"},
@@ -21,7 +26,7 @@
     {"id": "D", "name": "regression_and_root_cause", "result": "PASS_NO_NEW_REGRESSION", "full_suite_green": false},
     {"id": "E", "name": "security_and_data_integrity", "result": "PASS"},
     {"id": "F", "name": "knowledge_boundary", "result": "BOUNDARY_VERIFIED", "official_acceptance": "PC_REQUIRED"},
-    {"id": "G", "name": "release_and_rollback", "result": "PLAN_COMPLETE", "deploy": "NOT_AUTHORIZED"},
+    {"id": "G", "name": "release_and_rollback", "result": "PLAN_COMPLETE", "deploy": "IN_PLACE_DEPLOYED"},
     {"id": "H", "name": "final_acceptance", "result": "GO FOR REVIEW"}
   ],
   "tests": {
@@ -60,6 +65,23 @@
     "tables": 9,
     "active_db_written": false
   },
+  "deployment": {
+    "record": "reports/vps-final-stabilization/VPS_DEPLOYMENT_RECORD.md",
+    "executed_at": "2026-11-23T22:31:13Z",
+    "method": "in_place_source_fast_forward_and_backend_restart",
+    "from_commit": "b44b01e7d24efbd5ff7f4830cc71624b5aa4bf7f",
+    "to_commit": "b77c9c6e3d547b1d5a34c633abd0fb01e5aef046",
+    "old_backend_pid": 7680,
+    "new_backend_pid": 19130,
+    "frontend_pid_unchanged": 7740,
+    "ports_unchanged": [18201, 15274, 11434],
+    "health": 200,
+    "readyz": 200,
+    "readyz_status": "degraded",
+    "db_hash_unchanged": true,
+    "docker_compose_used": false,
+    "rollback_target": "b44b01e7d24efbd5ff7f4830cc71624b5aa4bf7f"
+  },
   "blockers": [
     "Official PIAK-03 E2E requires owner PC artifacts and approval",
     "IndoBERT/Docling worker artifacts are absent from VPS",
@@ -79,10 +101,14 @@
     "PC_PIAK03_ACCEPTANCE_HANDOFF.md",
     "VPS_RELEASE_AND_ROLLBACK_PLAN.md",
     "V1_VPS_FINAL_ACCEPTANCE_REPORT.md",
+    "VPS_DEPLOYMENT_RECORD.md",
     "TEST_RESULTS.json"
   ],
   "evidence_root": "reports/vps-final-stabilization/evidence",
   "evidence_source_root": "/data/workspace/nus-v1-vps-final-20261123/evidence",
   "evidence_file_count": 308,
-  "command_log": "reports/vps-final-stabilization/evidence/commands.tsv"
+  "command_log": "reports/vps-final-stabilization/evidence/commands.tsv",
+  "deployment_evidence_root": "reports/vps-final-stabilization/deployment-evidence",
+  "deployment_evidence_file_count": 41,
+  "deployment_command_log": "reports/vps-final-stabilization/deployment-evidence/commands.tsv"
 }
