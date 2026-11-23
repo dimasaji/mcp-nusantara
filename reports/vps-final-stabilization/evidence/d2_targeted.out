@@ -1,0 +1,131 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0
+rootdir: /data/workspace/nus-v1-vps-final-20261123/worktrees/release
+configfile: pyproject.toml
+plugins: anyio-4.16.0, cov-7.1.0, asyncio-1.5.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 243 items
+
+tests/test_cost_ledger_v1.py .......                                     [  2%]
+tests/test_openrouter_cost_policy_v1.py ....                             [  4%]
+tests/test_cost_ledger_initialization_race.py .                          [  4%]
+tests/test_knowledge_preparation.py .........                            [  8%]
+tests/test_knowledge_cleaning.py ......                                  [ 11%]
+tests/test_effective_rag_profile.py .............................        [ 23%]
+tests/test_hermes_v1_contextual_followup.py ..................           [ 30%]
+tests/test_v1_knowledge_reuse_rebind.py ....                             [ 32%]
+tests/test_runtime_portability.py ......                                 [ 34%]
+tests/test_v1_chat_rag_regression.py ......................              [ 43%]
+tests/test_ncp_v1_chat_contract.py ...........................           [ 54%]
+tests/test_backend_runtime_fixture.py .                                  [ 55%]
+tests/test_approval_boundary.py ..........                               [ 59%]
+tests/test_audit_regressions.py ......F.F.F.....F........                [ 69%]
+tests/test_review_publication_v1.py ....                                 [ 71%]
+tests/test_review_replay_v1.py ...                                       [ 72%]
+tests/test_sop_review.py .............                                   [ 77%]
+tests/test_knowledge_pipeline_api.py ............                        [ 82%]
+tests/test_v1_sop_boundary.py ...................                        [ 90%]
+tests/test_selected_pdf_chat.py .........                                [ 94%]
+tests/test_chat_citation_source.py ...........                           [ 98%]
+tests/test_synthetic_rag_fixture.py .F.                                  [100%]
+
+=================================== FAILURES ===================================
+____ test_privileged_api_denies_before_access[False-None-/v2/dev-payload0] _____
+tests/test_audit_regressions.py:103: in test_privileged_api_denies_before_access
+    assert response.status_code == 403
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+_____ test_privileged_api_denies_before_access[True-None-/v2/dev-payload0] _____
+tests/test_audit_regressions.py:103: in test_privileged_api_denies_before_access
+    assert response.status_code == 403
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+___ test_privileged_api_denies_before_access[True-invalid-/v2/dev-payload0] ____
+tests/test_audit_regressions.py:103: in test_privileged_api_denies_before_access
+    assert response.status_code == 403
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+__________________ test_authorized_developer_lists_workspace ___________________
+tests/test_audit_regressions.py:162: in test_authorized_developer_lists_workspace
+    assert response.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+____________ test_synthetic_retriever_exposes_evidence_to_langchain ____________
+tests/test_synthetic_rag_fixture.py:56: in test_synthetic_retriever_exposes_evidence_to_langchain
+    assert retriever is not None
+E   assert None is not None
+=============================== warnings summary ===============================
+tests/test_knowledge_preparation.py: 10 warnings
+tests/test_knowledge_cleaning.py: 6 warnings
+tests/test_effective_rag_profile.py: 54 warnings
+tests/test_review_publication_v1.py: 10 warnings
+tests/test_review_replay_v1.py: 6 warnings
+tests/test_sop_review.py: 28 warnings
+tests/test_knowledge_pipeline_api.py: 20 warnings
+tests/test_v1_sop_boundary.py: 4 warnings
+tests/test_selected_pdf_chat.py: 14 warnings
+tests/test_chat_citation_source.py: 22 warnings
+tests/test_synthetic_rag_fixture.py: 6 warnings
+  /data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/pydantic/main.py:280: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/test_knowledge_preparation.py: 5 warnings
+tests/test_knowledge_cleaning.py: 3 warnings
+tests/test_review_publication_v1.py: 5 warnings
+tests/test_review_replay_v1.py: 3 warnings
+tests/test_sop_review.py: 15 warnings
+tests/test_knowledge_pipeline_api.py: 10 warnings
+tests/test_v1_sop_boundary.py: 2 warnings
+tests/test_selected_pdf_chat.py: 7 warnings
+tests/test_chat_citation_source.py: 12 warnings
+tests/test_synthetic_rag_fixture.py: 3 warnings
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:260: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    datetime.utcnow(),
+
+tests/test_knowledge_preparation.py: 5 warnings
+tests/test_knowledge_cleaning.py: 3 warnings
+tests/test_review_publication_v1.py: 5 warnings
+tests/test_review_replay_v1.py: 3 warnings
+tests/test_sop_review.py: 15 warnings
+tests/test_knowledge_pipeline_api.py: 10 warnings
+tests/test_v1_sop_boundary.py: 2 warnings
+tests/test_selected_pdf_chat.py: 7 warnings
+tests/test_chat_citation_source.py: 12 warnings
+tests/test_synthetic_rag_fixture.py: 3 warnings
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:262: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    datetime.utcnow().isoformat(),
+
+tests/test_knowledge_preparation.py: 22 warnings
+tests/test_knowledge_cleaning.py: 3 warnings
+tests/test_review_publication_v1.py: 5 warnings
+tests/test_review_replay_v1.py: 3 warnings
+tests/test_sop_review.py: 14 warnings
+tests/test_knowledge_pipeline_api.py: 10 warnings
+tests/test_v1_sop_boundary.py: 2 warnings
+tests/test_selected_pdf_chat.py: 7 warnings
+tests/test_chat_citation_source.py: 11 warnings
+tests/test_synthetic_rag_fixture.py: 9 warnings
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:221: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    getattr(chunk, "stored_at", datetime.utcnow()).isoformat(),
+
+tests/test_knowledge_preparation.py: 5 warnings
+tests/test_knowledge_cleaning.py: 3 warnings
+tests/test_review_publication_v1.py: 5 warnings
+tests/test_review_replay_v1.py: 3 warnings
+tests/test_sop_review.py: 14 warnings
+tests/test_knowledge_pipeline_api.py: 10 warnings
+tests/test_v1_sop_boundary.py: 2 warnings
+tests/test_selected_pdf_chat.py: 7 warnings
+tests/test_chat_citation_source.py: 11 warnings
+tests/test_synthetic_rag_fixture.py: 3 warnings
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:272: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    (int(count), datetime.utcnow().isoformat(), document_id),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[False-None-/v2/dev-payload0]
+FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[True-None-/v2/dev-payload0]
+FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[True-invalid-/v2/dev-payload0]
+FAILED tests/test_audit_regressions.py::test_authorized_developer_lists_workspace
+FAILED tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+================= 5 failed, 238 passed, 459 warnings in 6.75s ==================

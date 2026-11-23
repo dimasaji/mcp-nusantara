@@ -425,12 +425,9 @@ class SOPReview:
         # pipeline_status) is operator knowledge that requires review before
         # Chat use, regardless of authority level.  Only legacy knowledge
         # ingested manually (no pipeline metadata) is exempt.
-        if metadata.get('source_filename') or metadata.get('pipeline_status'):
-            # Only gate PDF documents (SOPs). Non-PDF text documents are not
-            # SOPs and follow the legacy title/authority gating below.
-            source_filename = str(metadata.get('source_filename') or '')
-            if source_filename.lower().endswith('.pdf'):
-                return True
+        admin_ingest = metadata.get('ingest_channel') == 'admin_api'
+        if not admin_ingest and (metadata.get('source_filename') or metadata.get('pipeline_status')):
+            return True
         # Legacy knowledge with verified authority requires review.
         authority = (metadata.get('source_authority') or metadata.get('authority') or '').strip()
         source_status = (metadata.get('source_status') or '').strip()

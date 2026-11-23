@@ -1,0 +1,72 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0
+rootdir: /data/workspace/nus-v1-vps-final-20261123/worktrees/release
+configfile: pyproject.toml
+plugins: anyio-4.16.0, cov-7.1.0, asyncio-1.5.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 69 items
+
+tests/test_admin_token_source.py ...                                     [  4%]
+tests/test_audit_file_writers.py ..                                      [  7%]
+tests/test_audit_regressions.py ......F.F.F.....F........                [ 43%]
+tests/test_approval_boundary.py ..........                               [ 57%]
+tests/test_backup_restore.py .....                                       [ 65%]
+tests/test_sqlite_backup_wal.py .....                                    [ 72%]
+tests/test_v1_sop_boundary.py ...................                        [100%]
+
+=================================== FAILURES ===================================
+____ test_privileged_api_denies_before_access[False-None-/v2/dev-payload0] _____
+tests/test_audit_regressions.py:103: in test_privileged_api_denies_before_access
+    assert response.status_code == 403
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+_____ test_privileged_api_denies_before_access[True-None-/v2/dev-payload0] _____
+tests/test_audit_regressions.py:103: in test_privileged_api_denies_before_access
+    assert response.status_code == 403
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+___ test_privileged_api_denies_before_access[True-invalid-/v2/dev-payload0] ____
+tests/test_audit_regressions.py:103: in test_privileged_api_denies_before_access
+    assert response.status_code == 403
+E   assert 404 == 403
+E    +  where 404 = <Response [404 Not Found]>.status_code
+__________________ test_authorized_developer_lists_workspace ___________________
+tests/test_audit_regressions.py:162: in test_authorized_developer_lists_workspace
+    assert response.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+=============================== warnings summary ===============================
+tests/test_v1_sop_boundary.py::test_ordinary_active_pilot_receives_the_same_version_bound_model_path
+tests/test_v1_sop_boundary.py::test_ordinary_active_pilot_receives_the_same_version_bound_model_path
+tests/test_v1_sop_boundary.py::test_knowledge_denial_happens_before_real_embedding_and_sqlite_retrieval
+tests/test_v1_sop_boundary.py::test_knowledge_denial_happens_before_real_embedding_and_sqlite_retrieval
+  /data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/pydantic/main.py:280: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/test_v1_sop_boundary.py::test_ordinary_active_pilot_receives_the_same_version_bound_model_path
+tests/test_v1_sop_boundary.py::test_knowledge_denial_happens_before_real_embedding_and_sqlite_retrieval
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:260: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    datetime.utcnow(),
+
+tests/test_v1_sop_boundary.py::test_ordinary_active_pilot_receives_the_same_version_bound_model_path
+tests/test_v1_sop_boundary.py::test_knowledge_denial_happens_before_real_embedding_and_sqlite_retrieval
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:262: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    datetime.utcnow().isoformat(),
+
+tests/test_v1_sop_boundary.py::test_ordinary_active_pilot_receives_the_same_version_bound_model_path
+tests/test_v1_sop_boundary.py::test_knowledge_denial_happens_before_real_embedding_and_sqlite_retrieval
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:221: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    getattr(chunk, "stored_at", datetime.utcnow()).isoformat(),
+
+tests/test_v1_sop_boundary.py::test_ordinary_active_pilot_receives_the_same_version_bound_model_path
+tests/test_v1_sop_boundary.py::test_knowledge_denial_happens_before_real_embedding_and_sqlite_retrieval
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:272: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    (int(count), datetime.utcnow().isoformat(), document_id),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[False-None-/v2/dev-payload0]
+FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[True-None-/v2/dev-payload0]
+FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[True-invalid-/v2/dev-payload0]
+FAILED tests/test_audit_regressions.py::test_authorized_developer_lists_workspace
+================== 4 failed, 65 passed, 12 warnings in 0.96s ===================

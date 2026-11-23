@@ -1,0 +1,32 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0
+rootdir: /data/workspace/nus-v1-vps-final-20261123/worktrees/release
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0, cov-7.1.0, asyncio-1.5.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 1675 items / 2 errors
+
+==================================== ERRORS ====================================
+____________ ERROR collecting tests/evaluation/test_live_harness.py ____________
+tests/evaluation/test_live_harness.py:12: in <module>
+    from scripts.run_eval import V1System, main
+scripts/run_eval.py:11: in <module>
+    assert token, 'Configured operator credential unavailable'
+           ^^^^^
+E   AssertionError: Configured operator credential unavailable
+_______________ ERROR collecting tests/test_developer_control.py _______________
+tests/test_developer_control.py:10: in <module>
+    spec.loader.exec_module(developer)
+<frozen importlib._bootstrap_external>:1022: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1159: in get_code
+    ???
+<frozen importlib._bootstrap_external>:1217: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/data/workspace/nus-v1-vps-final-20261123/worktrees/release/developer.py'
+=========================== short test summary info ============================
+ERROR tests/evaluation/test_live_harness.py - AssertionError: Configured oper...
+ERROR tests/test_developer_control.py - FileNotFoundError: [Errno 2] No such ...
+!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!!
+============================== 2 errors in 1.68s ===============================

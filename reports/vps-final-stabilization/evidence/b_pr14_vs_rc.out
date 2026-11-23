@@ -1,0 +1,1253 @@
+ '@ + $pkg + @'                                     |   449 -
+ .../candidate.json                                 |   270 -
+ .../nusantara-v1-chat.browser-check.json           |   721 -
+ .../nusantara-v1-chat.delivery.json                |    17 -
+ .../nusantara-v1-chat.finalize-summary.json        |    89 -
+ .../nusantara-v1-chat.finalize.json                |  1043 -
+ .../nusantara-v1-chat.html                         | 13779 -----------
+ .backup-embedding-identity-20261012-163112/rag.py  |   895 -
+ .../store.py                                       |   478 -
+ .backup-embedding-identity-20261012-163237/rag.py  |   895 -
+ .../store.py                                       |   478 -
+ .backup-v1-chat-rag-20261013/agent.py.orig         |   744 -
+ .backup-v1-chat-rag-20261013/grounding.py.orig     |  1030 -
+ .backup-v1-chat-rag-20261013/rag.py.orig           |   895 -
+ .backup-v1-chat-rag-20261013/routes.py.orig        |  1364 --
+ .codex/hooks.json                                  |    26 -
+ .../app/api/control_plane.py                       |   415 -
+ .../app/main.py                                    |   138 -
+ .../control-plane/src/operator.tsx                 |   105 -
+ .../restore-manifest.json                          |    27 -
+ .../app/developer_core/write_policy.py             |    74 -
+ .../20261030T021323Z/controlled-target.txt         |     2 -
+ .../operational/published/NUSANTARA-V1-OPERATOR.md |    64 -
+ .../20261030T020747Z/controlled-target.txt         |     2 -
+ .../20261030T021607Z/controlled-target.txt         |     2 -
+ .dockerignore                                      |    16 -
+ .gitignore                                         |    12 +-
+ ".json\357\200\242,"                               |    76 -
+ .nusantara/PROJECT_CONTEXT.md                      |   125 -
+ .nusantara/reports/health.json                     |     5 -
+ .nusantara/reports/setup_status.json               |     8 -
+ BUILD-NUSANTARA-GATE8-16.ps1                       |   984 -
+ BUILD_AND_TEST_REPORT.md                           |   269 -
+ CLAUDE_CONTRACT.MD                                 |   244 -
+ ECC_POST_VERIFICATION_REPORT.md                    |   101 -
+ FINAL_CONSOLIDATION_MANIFEST.csv                   |   448 +
+ Fix-NusantaraEmbeddingIdentity.ps1                 |   146 -
+ GATE7_MASTER.ps1                                   |    85 -
+ Get-ChildItem                                      |     0
+ INSTALL_GROUNDING_SAFETY.ps1                       |  1595 --
+ Invoke-NusantaraDukcapilGrounding.ps1              |   246 -
+ Invoke-NusantaraGroundingTests.ps1                 |    86 -
+ Invoke-NusantaraV1-AutoPilot.ps1                   |   119 -
+ Invoke-NusantaraV1-Readiness.ps1                   |   278 -
+ NUSANTARA MASTER DEVELOPER.md                      |  1112 -
+ NUSANTARA-MASTER-AUDIT-V2.ps1                      |   964 -
+ NUSANTARA-MASTER-AUDIT.ps1                         |  1181 -
+ NUSANTARA-TIGA-LAPISAN-TIGA-ALUR-SOP-V1.md         |   143 -
+ NUSANTARA_V1_ECC_FINAL_REPORT.md                   |   246 -
+ Nusantara V1 - safe local diagnos.ps1              |   119 -
+ Nusantara-Git-Safe.ps1                             |   153 -
+ .../Install-HermesConnection.ps1                   |    14 -
+ Nusantara-Hermes-ACP-Connection-Patch/README.md    |   109 -
+ .../Restore-HermesConnection.ps1                   |    29 -
+ .../TEST-RESULTS.txt                               |    36 -
+ .../install_patch.py                               |   100 -
+ .../manifest.json                                  |    30 -
+ .../payload/app/api/control_plane.py               |   442 -
+ .../app/developer_core/hermes_acp_connection.py    |   196 -
+ .../payload/app/main.py                            |   139 -
+ .../control-plane/src/hermes-connection.tsx        |    60 -
+ .../payload/control-plane/src/operator.tsx         |   106 -
+ .../tests/test_connection.py                       |    99 -
+ .../tests/test_installer.py                        |    75 -
+ .../tests/test_routes.py                           |    58 -
+ PROGRESS_REPORT.md                                 |   222 -
+ RAG_STABILIZATION_TEST_REPORT.md                   |   197 -
+ README.md                                          |    13 +-
+ SOP_KNOWLEDGE_TEST_REPORT.md                       |   111 -
+ Template/INSTRUKSI-CODEX-LOKAL.md                  |    69 -
+ Template/Install-LocalReference.ps1                |    92 -
+ Template/NUSANTARA-V1-LOCAL-UI.zip                 |   Bin 52726 -> 0 bytes
+ Template/README-LOKAL.md                           |    43 -
+ Template/checksums.json                            |    49 -
+ Template/reference/README.md                       |    17 -
+ Template/reference/package.json                    |     1 -
+ Template/reference/tests/core.test.mjs             |    58 -
+ Template/reference/tests/ui.test.mjs               |    55 -
+ Test-Chat-API.ps1                                  |   213 -
+ VPS_PC_DEPENDENCY_REPORT.md                        |   248 -
+ VPS_READINESS_REPORT.md                            |   124 -
+ _phase4_trust_baseline.py                          |    23 -
+ app/api/routes.py.backup                           |   235 -
+ app/api/routes.py.backup-20261001                  |  1223 -
+ app/api/routes.py.before-hermes-patch              |   235 -
+ app/developer_core/e2e_health_check.py             |    65 -
+ .../agent.py.backup-score-gate-20261013-151720     |   716 -
+ .../production_kb.before_authority_patch.py        |  1254 -
+ ...roduction_kb.before_metadata_authority_patch.py |  1254 -
+ ...emantic_retriever.before_authority_hydration.py |  1477 --
+ app/knowledge/schemas.py.backup-20261013-150417    |   313 -
+ app/language/engine.py.backup                      |  1314 --
+ app/language/engine.py.backup_1.3.0                |  1327 --
+ app/language/engine.py.backup_1.4.0                |  1393 --
+ app/language/intent.py.backup                      |   260 -
+ app/ui/index.html.backup-20261009-203332           |  3490 ---
+ app/ui/index.html.backup-labels-20261009-203537    |  3491 ---
+ archify-demo.html                                  | 13808 -----------
+ audit_engine.txt                                   |  1328 --
+ audit_gate7_deep.ps1                               |   202 -
+ audit_gate7_rag.ps1                                |   208 -
+ audit_grounding.py                                 |    54 -
+ audit_v1_phases_7_21.py                            |   327 -
+ autopilot.ps1                                      |   142 -
+ backend/__init__.py                                |     1 +
+ {app => backend/app}/__init__.py                   |     0
+ {app => backend/app}/action/__init__.py            |     0
+ {app => backend/app}/action/engine.py              |     0
+ {app => backend/app}/action/tool_bridge.py         |     0
+ {app => backend/app}/api/control_plane.py          |     0
+ {app => backend/app}/api/inspection_preview.py     |     0
+ {app => backend/app}/api/knowledge_pipeline.py     |     0
+ {app => backend/app}/api/routes.py                 |     3 +-
+ {app => backend/app}/api/runtime_readiness.py      |     0
+ {app => backend/app}/api/runtime_verification.py   |     0
+ {app => backend/app}/api/skills.py                 |     0
+ {app => backend/app}/api/v2_routes.py              |     2 +-
+ {app => backend/app}/approval/__init__.py          |     0
+ {app => backend/app}/approval/audit_trail.py       |     0
+ {app => backend/app}/approval/change_request.py    |     0
+ {app => backend/app}/approval/queue.py             |     0
+ {app => backend/app}/approval/recovery.py          |     0
+ .../app}/approval/runtime_authorization.py         |     0
+ {app => backend/app}/context/__init__.py           |     0
+ {app => backend/app}/context/context_builder.py    |     0
+ {app => backend/app}/context/engine.py             |     0
+ {app => backend/app}/context/schemas.py            |     0
+ {app => backend/app}/context/session.py            |     0
+ {app => backend/app}/core/__init__.py              |     0
+ {app => backend/app}/core/config.py                |     0
+ .../app}/core/control_plane_projection.py          |     2 +-
+ {app => backend/app}/core/error_taxonomy.py        |     0
+ {app => backend/app}/core/evidence_registry.py     |     2 +-
+ {app => backend/app}/core/gate_integration.py      |     0
+ {app => backend/app}/core/gate_pipeline.py         |     0
+ {app => backend/app}/core/hardening/__init__.py    |     0
+ .../app}/core/hardening/circuit_breaker.py         |     0
+ {app => backend/app}/core/hardening/retry.py       |     0
+ .../app}/core/hardening/safe_execution.py          |     0
+ {app => backend/app}/core/hardening/timeout.py     |     0
+ {app => backend/app}/core/hardening/validator.py   |     0
+ {app => backend/app}/core/nusantara_config.py      |     2 +-
+ {app => backend/app}/core/runtime_attestation.py   |     0
+ .../app}/core/runtime_build_provenance.py          |     0
+ {app => backend/app}/core/runtime_correlation.py   |     0
+ {app => backend/app}/core/runtime_identity.py      |     2 +-
+ .../app}/core/work_approval_contract.py            |     0
+ {app => backend/app}/devcore/__init__.py           |     0
+ {app => backend/app}/devcore/backend.py            |     0
+ {app => backend/app}/devcore/core.py               |     0
+ {app => backend/app}/devcore/facts.py              |     0
+ {app => backend/app}/devcore/grounding.py          |     0
+ {app => backend/app}/devcore/inspection.py         |     0
+ {app => backend/app}/devcore/router.py             |     0
+ {app => backend/app}/devcore/tools.py              |     0
+ {app => backend/app}/devcore/workspace.py          |     0
+ {app => backend/app}/developer_core/__init__.py    |     0
+ .../app}/developer_core/approval_controller.py     |     2 +-
+ .../developer_core/automatic_regression_gate.py    |     2 +-
+ {app => backend/app}/developer_core/change_plan.py |     0
+ .../app}/developer_core/change_plan_approval.py    |     0
+ .../app}/developer_core/change_plan_validator.py   |     0
+ .../app}/developer_core/claude_code_integration.py |     2 +-
+ .../app}/developer_core/context_router.py          |     2 +-
+ .../developer_core/controlled_patch_executor.py    |     0
+ .../app}/developer_core/controlled_write.py        |     2 +-
+ .../app/developer_core/e2e_health_check.py         |     2 +-
+ {app => backend/app}/developer_core/engine.py      |     0
+ .../app}/developer_core/execution_approval.py      |     0
+ .../app}/developer_core/execution_audit.py         |     0
+ .../developer_core/execution_audit_integration.py  |     2 +-
+ .../app}/developer_core/execution_boundary.py      |     0
+ .../app}/developer_core/execution_plan.py          |     0
+ {app => backend/app}/developer_core/gates.py       |     0
+ .../app}/developer_core/graph_bridge.py            |     0
+ .../app}/developer_core/hermes_acp_connection.py   |     0
+ {app => backend/app}/developer_core/impact.py      |     0
+ {app => backend/app}/developer_core/mapper.py      |     0
+ .../app}/developer_core/operational_run.py         |     2 +-
+ .../app}/developer_core/operationalization.py      |     2 +-
+ {app => backend/app}/developer_core/production.py  |     0
+ {app => backend/app}/developer_core/runtime.py     |     0
+ .../app}/developer_core/self_improvement_loop.py   |     2 +-
+ .../app}/developer_core/snapshot_manager.py        |     0
+ .../app}/developer_core/write_policy.py            |     2 +-
+ {app => backend/app}/evaluation/__init__.py        |     0
+ .../app}/evaluation/baselines/smoke_mock.json      |     0
+ .../app}/evaluation/datasets/smoke_id.json         |     0
+ .../app}/evaluation/datasets/v1_id.json            |     0
+ .../evaluation/datasets/v1_recovery_oracle.json    |     0
+ {app => backend/app}/evaluation/evaluator.py       |     0
+ {app => backend/app}/exceptions.py                 |     0
+ {app => backend/app}/execution/__init__.py         |     0
+ {app => backend/app}/execution/base.py             |     0
+ {app => backend/app}/execution/native.py           |     0
+ {app => backend/app}/experience/__init__.py        |     0
+ {app => backend/app}/experience/events.py          |     0
+ {app => backend/app}/experience/feedback.py        |     0
+ {app => backend/app}/governance/__init__.py        |     0
+ {app => backend/app}/governance/mcp_bridge.py      |     0
+ {app => backend/app}/governance/sandbox.py         |     0
+ {app => backend/app}/governance/tools.py           |     0
+ {app => backend/app}/handoff/engine.py             |     0
+ {app => backend/app}/handoff/schemas.py            |     0
+ {app => backend/app}/hermes/__init__.py            |     0
+ {app => backend/app}/hermes/agent.py               |    28 +-
+ {app => backend/app}/improvement/__init__.py       |     0
+ {app => backend/app}/improvement/gate.py           |     0
+ {app => backend/app}/improvement/release.py        |     0
+ {app => backend/app}/interfaces.py                 |     0
+ {app => backend/app}/knowledge/__init__.py         |     0
+ {app => backend/app}/knowledge/chunker.py          |     0
+ {app => backend/app}/knowledge/docling_config.py   |     2 +-
+ {app => backend/app}/knowledge/docling_layout.py   |     0
+ {app => backend/app}/knowledge/docling_worker.py   |    39 +-
+ {app => backend/app}/knowledge/document_answers.py |     0
+ .../app}/knowledge/document_citations.py           |     0
+ {app => backend/app}/knowledge/document_context.py |     0
+ {app => backend/app}/knowledge/document_tools.py   |     2 +-
+ {app => backend/app}/knowledge/embeddings.py       |     0
+ {app => backend/app}/knowledge/engine.py           |     4 -
+ {app => backend/app}/knowledge/grounding.py        |     0
+ .../app}/knowledge/indobert_embedding.py           |     0
+ .../app}/knowledge/langchain_adapter.py            |     0
+ {app => backend/app}/knowledge/langgraph_chat.py   |     0
+ .../app}/knowledge/langgraph_workflow.py           |     0
+ .../app}/knowledge/official_knowledge_ingestion.py |     2 +-
+ {app => backend/app}/knowledge/parser.py           |     0
+ {app => backend/app}/knowledge/pdf_sop.py          |     0
+ .../app}/knowledge/pipeline_overview.py            |     0
+ {app => backend/app}/knowledge/preparation.py      |     0
+ .../app}/knowledge/production_embedding_bridge.py  |     2 +-
+ .../app}/knowledge/production_hybrid_rag.py        |     2 +-
+ {app => backend/app}/knowledge/production_kb.py    |     2 +-
+ .../knowledge/production_semantic_retriever.py     |     2 +-
+ {app => backend/app}/knowledge/rag.py              |     0
+ {app => backend/app}/knowledge/reranker.py         |     0
+ .../app}/knowledge/retrieval_evidence.py           |     2 +-
+ {app => backend/app}/knowledge/retriever.py        |     0
+ {app => backend/app}/knowledge/schemas.py          |     0
+ {app => backend/app}/knowledge/sop_fields.py       |    67 +-
+ {app => backend/app}/knowledge/sop_metadata.py     |     0
+ {app => backend/app}/knowledge/sop_review.py       |     9 +-
+ {app => backend/app}/knowledge/sop_table_ocr.py    |     0
+ {app => backend/app}/knowledge/sop_tables.py       |     0
+ {app => backend/app}/knowledge/sqlite_backup.py    |    19 +-
+ {app => backend/app}/knowledge/store.py            |     0
+ {app => backend/app}/knowledge/text_cleaning.py    |     0
+ {app => backend/app}/knowledge/web_evidence.py     |     4 +-
+ {app => backend/app}/knowledge/worker_process.py   |     0
+ {app => backend/app}/language/__init__.py          |     0
+ {app => backend/app}/language/engine.py            |     0
+ .../app}/language/engine.py.before_fusion          |     0
+ .../app}/language/engine.py.before_tokenizer_fix   |     0
+ {app => backend/app}/language/engine.py.candidate  |     0
+ {app => backend/app}/language/engine.py.prepatch   |     0
+ {app => backend/app}/language/entity.py            |     0
+ {app => backend/app}/language/intent.py            |     0
+ {app => backend/app}/language/laya_intent.py       |     0
+ {app => backend/app}/language/normalizer.py        |     0
+ {app => backend/app}/language/normalizer_safe.py   |     0
+ {app => backend/app}/language/schemas.py           |     0
+ {app => backend/app}/language/semantic/__init__.py |     0
+ {app => backend/app}/language/semantic/fusion.py   |     0
+ .../app}/language/semantic/indobert_client.py      |     0
+ .../app}/language/semantic/intent_prototypes.py    |     0
+ .../app}/language/semantic/semantic_intent.py      |     0
+ {app => backend/app}/main.py                       |    75 +-
+ {app => backend/app}/mcp/mcp.py                    |     0
+ {app => backend/app}/mcp/schemas.py                |     0
+ {app => backend/app}/mcp/session.py                |     0
+ {app => backend/app}/mcp/stdio_server.py           |     0
+ {app => backend/app}/memory/__init__.py            |     0
+ {app => backend/app}/memory/engine.py              |     0
+ {app => backend/app}/memory/memory.py              |     0
+ {app => backend/app}/memory/session_adapter.py     |     0
+ {app => backend/app}/models/__init__.py            |     0
+ {app => backend/app}/models/base.py                |     0
+ {app => backend/app}/models/cost_ledger.py         |    15 +-
+ {app => backend/app}/models/gateway.py             |     0
+ {app => backend/app}/models/mock.py                |     0
+ {app => backend/app}/models/mock_provider.py       |     0
+ {app => backend/app}/models/ollama.py              |     0
+ {app => backend/app}/models/ollama_provider.py     |     0
+ {app => backend/app}/models/openai_compatible.py   |     0
+ {app => backend/app}/models/openrouter.py          |     0
+ .../app}/models/openrouter_cost_policy.py          |     0
+ {app => backend/app}/models/router.py              |     0
+ {app => backend/app}/models/schemas.py             |     0
+ {app => backend/app}/models/streaming.py           |     0
+ {app => backend/app}/observability/__init__.py     |     0
+ {app => backend/app}/observability/context.py      |     0
+ {app => backend/app}/observability/logging.py      |     0
+ {app => backend/app}/observability/metrics.py      |     0
+ {app => backend/app}/orchestration/__init__.py     |     0
+ {app => backend/app}/orchestration/engine.py       |     0
+ {app => backend/app}/policy/__init__.py            |     0
+ {app => backend/app}/policy/engine.py              |     0
+ {app => backend/app}/policy/policy_engine.py       |     0
+ {app => backend/app}/policy/schemas.py             |     0
+ {app => backend/app}/problem/__init__.py           |     0
+ {app => backend/app}/problem/classifier.py         |     0
+ {app => backend/app}/problem/detector.py           |     0
+ {app => backend/app}/problem/engine.py             |     0
+ {app => backend/app}/problem/problem_schema.py     |     0
+ {app => backend/app}/problem/schemas.py            |     0
+ {app => backend/app}/rag/__init__.py               |     0
+ {app => backend/app}/rag/store.py                  |     0
+ {app => backend/app}/reasoning/__init__.py         |     0
+ {app => backend/app}/reasoning/engine.py           |     0
+ {app => backend/app}/reasoning/evaluator.py        |     0
+ {app => backend/app}/reasoning/planner.py          |     0
+ {app => backend/app}/reasoning/schemas.py          |     0
+ {app => backend/app}/research/__init__.py          |     0
+ .../app}/research/evidence_collector.py            |     2 +-
+ {app => backend/app}/research/experiment.py        |     0
+ .../app}/research/experiment_evaluator.py          |     0
+ {app => backend/app}/research/experiments.py       |     0
+ {app => backend/app}/research/failure_analysis.py  |     0
+ {app => backend/app}/research/gap_detection.py     |     0
+ {app => backend/app}/research/gap_detector.py      |     0
+ {app => backend/app}/research/improvement.py       |     0
+ .../app}/research/knowledge_discovery.py           |     0
+ {app => backend/app}/research/root_cause.py        |     0
+ {app => backend/app}/research/source_fetcher.py    |     0
+ {app => backend/app}/runtime/indobert_cache.py     |     0
+ {app => backend/app}/security/__init__.py          |     0
+ {app => backend/app}/security/auth.py              |     0
+ {app => backend/app}/security/local_operator.py    |     0
+ {app => backend/app}/security/readiness.py         |     0
+ {app => backend/app}/security/scanner.py           |     0
+ {app => backend/app}/security/v1_knowledge.py      |     0
+ {app => backend/app}/skills/__init__.py            |     0
+ {app => backend/app}/skills/composition.py         |     0
+ {app => backend/app}/skills/runtime.py             |     0
+ {app => backend/app}/skills/sop/SKILL.md           |     0
+ .../app}/skills/sop_semantic/__init__.py           |     0
+ {app => backend/app}/skills/sop_semantic/engine.py |     0
+ {app => backend/app}/tools/__init__.py             |     0
+ {app => backend/app}/tools/base.py                 |     0
+ {app => backend/app}/tools/calculator.py           |     0
+ {app => backend/app}/tools/date_time.py            |     0
+ {app => backend/app}/tools/filesystem.py           |     0
+ {app => backend/app}/tools/registry.py             |     0
+ {app => backend/app}/tools/schemas.py              |     0
+ {app => backend/app}/trust/engine.py               |     0
+ {app => backend/app}/trust/schemas.py              |     0
+ {app => backend/app}/types.py                      |     0
+ {app => backend/app}/ui/index.html                 |     0
+ {app => backend/app}/ui/review.html                |     0
+ {app => backend/app}/v2/__init__.py                |     0
+ {app => backend/app}/v2/hermes_adapter.py          |     0
+ {app => backend/app}/v2/orchestrator.py            |     0
+ {app => backend/app}/v2/wiring.py                  |     0
+ {app => backend/app}/workflow/__init__.py          |     0
+ {app => backend/app}/workflow/engine.py            |     0
+ {app => backend/app}/workflow/schemas.py           |     0
+ {app => backend/app}/workflow/state.py             |     0
+ {app => backend/app}/workflow/v1_langgraph.py      |     0
+ {app => backend/app}/workflow/workflow_schema.py   |     0
+ backend/data/evidence/retrieval-receipts.jsonl     |    84 +
+ backup_indobert_20261001_091633/engine.py          |  1327 --
+ backup_indobert_20261001_091633/schemas.py         |   383 -
+ build_all.py                                       |  4419 ----
+ build_all.py.backup_20261001_192207                |  4418 ----
+ chat-grounding-check.json                          |   Bin 2030 -> 0 bytes
+ chat-grounding-ktp-check.json                      |   Bin 2844 -> 0 bytes
+ check_v1_default_knowledge_readonly.ps1            |   142 -
+ .../v22.23.3-x64-9ac5647c/01fdfb86                 |   Bin 2284 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/0428abea                 |   Bin 9028 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/06c04402                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/08022890                 |   Bin 4476 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/0b9a88d0                 |   Bin 1124 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/0e299ec4                 |   Bin 5540 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/101472b8                 |   Bin 3356 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/125c82f1                 |   Bin 1012 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/13f10466                 |   Bin 8092 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/1427c73a                 |   Bin 1628 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/1907cdc3                 |   Bin 4468 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/1961d347                 |   Bin 1796 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/23debd5f                 |   Bin 1492 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/23e813f0                 |   Bin 1100 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2538882c                 |   Bin 1060 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/28512626                 |   Bin 1484 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/28d42312                 |   Bin 1436 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2a66767e                 |   Bin 7484 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2b3e854b                 |   Bin 1204 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2b91ac82                 |   Bin 948 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2d060061                 |   Bin 2788 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2df72f2f                 |   Bin 1532 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2fd25d91                 |   Bin 6812 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/30119be5                 |   Bin 42988 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/32a75857                 |   Bin 2484 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/339a2e2c                 |   Bin 2900 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/33ed0292                 |   Bin 1060 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/34b77c3f                 |   Bin 4300 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/35313658                 |   Bin 1932 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/38b2f258                 |   Bin 144372 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3901db61                 |   Bin 1052 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3b6f0ab1                 |   Bin 7812 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3bc7f77f                 |   Bin 71796 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3cf77a9f                 |   Bin 2244 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3dcf2241                 |   Bin 4772 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3ebe372f                 |   Bin 1020 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3f47cd98                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3f69e8e7                 |   Bin 2172 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3ff4e43d                 |   Bin 5444 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/40176eed                 |   Bin 2348 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/41722bd6                 |   Bin 892 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/451d3460                 |   Bin 1652 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/46fdd8db                 |   Bin 2612 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/485916ed                 |   Bin 1252 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/4bdee750                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/4e0897bd                 |   Bin 1340 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/4fe0e625                 |   Bin 6124 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/520863e9                 |   Bin 8236 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/54770100                 |   Bin 1316 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/55803d5b                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/5ad1ffb8                 |   Bin 2252 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/5ba9a0e4                 |   Bin 2140 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/5d641d96                 |   Bin 321092 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/6390288a                 |   Bin 988 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/658a0255                 |   Bin 1316 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/68fbcbe9                 |   Bin 812 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/69bd4877                 |   Bin 13324 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/6e466304                 |   Bin 13140 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/6e64eea7                 |   Bin 2100 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/71107513                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/762f5f3a                 |   Bin 956 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/775e7f3a                 |   Bin 3524 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/77bb08e3                 |   Bin 3636 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/80cfc938                 |   Bin 980 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/83980536                 |   Bin 9836 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/85c91d76                 |   Bin 1220 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/8959dac4                 |   Bin 988 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/895bbc05                 |   Bin 18244 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/899affc6                 |   Bin 940 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/9685228a                 |   Bin 1100 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/98e00e1f                 |   Bin 1228 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/9ab2abbe                 |   Bin 2564 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/9da8afc5                 |   Bin 24012 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/9e48bd27                 |   Bin 956 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/a0d2163d                 |   Bin 290892 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/a5a4bdc8                 |   Bin 660 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/a7181c03                 |   Bin 876 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ab652f44                 |   Bin 1012 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ab6f83a1                 |   Bin 828 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ad0a0d2e                 |   Bin 892 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ad3909fc                 |   Bin 2460 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b0cdebe2                 |   Bin 3460 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b32f1f54                 |   Bin 1484 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b3ad49c0                 |   Bin 1340 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b40301a7                 |   Bin 1268 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b4cb21aa                 |   Bin 2260 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b72f33ed                 |   Bin 932 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b757a56f                 |   Bin 1132 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b8c740ef                 |   Bin 4244 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b9c3c5a5                 |   Bin 1060 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b9dcf0ad                 |   Bin 4084 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/bccf1a51                 |   Bin 1124 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/bdaf3f66                 |   Bin 1364 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/be80e3ee                 |   Bin 948 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c24a3edc                 |   Bin 1052 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c4262d13                 |   Bin 1276 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c5289f9e                 |   Bin 2500 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c606fa41                 |   Bin 2796 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c6316994                 |   Bin 1308 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c9374c19                 |   Bin 1124 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ca99fca0                 |   Bin 1428 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/cea63979                 |   Bin 756 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/d3c9d071                 |   Bin 884 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/d681df69                 |   Bin 892 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/d6a2bbec                 |   Bin 1322044 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/d930a2cd                 |   Bin 908 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/d9830236                 |   Bin 8484 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/da70b1c7                 |   Bin 916 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/dad36f40                 |   Bin 1948 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/db59daa4                 |   Bin 612 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/dc0dbc7c                 |   Bin 2260 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/e42a0608                 |   Bin 1076 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/e5db8443                 |   Bin 3564 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/e681da84                 |   Bin 2436 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/e796db04                 |   Bin 6436 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/e7d27c1e                 |   Bin 1092 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ebcc06a1                 |   Bin 2532 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/eeae4b9c                 |   Bin 1988 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f03d69d9                 |   Bin 5500 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f0741269                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f27092e1                 |   Bin 2500 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f73e1525                 |   Bin 916 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f7b8b94e                 |   Bin 2164 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f7d38634                 |   Bin 1476 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/fe7b33cd                 |   Bin 12356 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/01fdfb86                 |   Bin 2284 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/0428abea                 |   Bin 9028 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/06c04402                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/08022890                 |   Bin 4476 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/0b9a88d0                 |   Bin 1124 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/0e299ec4                 |   Bin 5540 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/101472b8                 |   Bin 3356 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/125c82f1                 |   Bin 1012 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/13f10466                 |   Bin 8092 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/1427c73a                 |   Bin 1628 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/1907cdc3                 |   Bin 4468 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/1961d347                 |   Bin 1796 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/20673fa4                 |   Bin 7516 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/23debd5f                 |   Bin 1492 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/23e813f0                 |   Bin 1100 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2538882c                 |   Bin 1060 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/28512626                 |   Bin 1484 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/28d42312                 |   Bin 1436 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2a66767e                 |   Bin 7484 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2b3e854b                 |   Bin 1204 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2b91ac82                 |   Bin 948 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2d060061                 |   Bin 2788 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2df72f2f                 |   Bin 1532 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/2fd25d91                 |   Bin 6812 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/30119be5                 |   Bin 43004 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/32a75857                 |   Bin 2484 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/339a2e2c                 |   Bin 2900 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/33ed0292                 |   Bin 1060 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/34b77c3f                 |   Bin 4300 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/35313658                 |   Bin 1932 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/38b2f258                 |   Bin 144348 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3901db61                 |   Bin 1052 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3b6f0ab1                 |   Bin 7812 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3bc7f77f                 |   Bin 71796 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3cf77a9f                 |   Bin 2244 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3dcf2241                 |   Bin 4772 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3ebe372f                 |   Bin 1020 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3f47cd98                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3f69e8e7                 |   Bin 2172 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/3ff4e43d                 |   Bin 5444 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/40176eed                 |   Bin 2348 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/41722bd6                 |   Bin 892 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/451d3460                 |   Bin 1652 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/46fdd8db                 |   Bin 2612 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/485916ed                 |   Bin 1252 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/4a7c6c7c                 |   Bin 1500 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/4bdee750                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/4e0897bd                 |   Bin 1340 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/4fe0e625                 |   Bin 6124 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/520863e9                 |   Bin 8236 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/54770100                 |   Bin 1316 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/55803d5b                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/5ad1ffb8                 |   Bin 2252 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/5ba9a0e4                 |   Bin 2140 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/5d641d96                 |   Bin 321092 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/6390288a                 |   Bin 988 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/658a0255                 |   Bin 1316 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/68fbcbe9                 |   Bin 812 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/69bd4877                 |   Bin 13324 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/6e466304                 |   Bin 13140 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/6e64eea7                 |   Bin 2100 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/71107513                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/762f5f3a                 |   Bin 956 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/775e7f3a                 |   Bin 3524 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/77bb08e3                 |   Bin 3636 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/7c5b9769                 |   Bin 1684 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/80cfc938                 |   Bin 980 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/83980536                 |   Bin 9836 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/85c91d76                 |   Bin 1220 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/8959dac4                 |   Bin 988 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/895bbc05                 |   Bin 18252 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/899affc6                 |   Bin 940 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/9685228a                 |   Bin 1100 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/98e00e1f                 |   Bin 1228 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/9ab2abbe                 |   Bin 2564 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/9cd86fb3                 |   Bin 7516 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/9da8afc5                 |   Bin 24004 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/9e48bd27                 |   Bin 956 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/a0d2163d                 |   Bin 290908 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/a5a4bdc8                 |   Bin 660 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/a7181c03                 |   Bin 876 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ab652f44                 |   Bin 1012 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ab6f83a1                 |   Bin 828 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ad0a0d2e                 |   Bin 892 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ad3909fc                 |   Bin 2460 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b0cdebe2                 |   Bin 3460 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b32f1f54                 |   Bin 1484 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b3ad49c0                 |   Bin 1340 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b40301a7                 |   Bin 1268 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b4cb21aa                 |   Bin 2260 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b72f33ed                 |   Bin 932 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b757a56f                 |   Bin 1132 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b8c740ef                 |   Bin 4244 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b9c3c5a5                 |   Bin 1060 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/b9dcf0ad                 |   Bin 4084 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/bccf1a51                 |   Bin 1124 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/bdaf3f66                 |   Bin 1364 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/be80e3ee                 |   Bin 948 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c24a3edc                 |   Bin 1052 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c4262d13                 |   Bin 1276 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c5289f9e                 |   Bin 2500 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c606fa41                 |   Bin 2796 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c6316994                 |   Bin 1308 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/c9374c19                 |   Bin 1124 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ca99fca0                 |   Bin 1428 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/cea63979                 |   Bin 756 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/d3c9d071                 |   Bin 884 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/d681df69                 |   Bin 892 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/d6a2bbec                 |   Bin 1322044 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/d930a2cd                 |   Bin 908 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/d9830236                 |   Bin 8484 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/da70b1c7                 |   Bin 916 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/dad36f40                 |   Bin 1948 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/db59daa4                 |   Bin 612 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/dc0dbc7c                 |   Bin 2260 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/e42a0608                 |   Bin 1076 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/e5db8443                 |   Bin 3564 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/e681da84                 |   Bin 2436 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/e7d27c1e                 |   Bin 1092 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/ebcc06a1                 |   Bin 2532 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/eeae4b9c                 |   Bin 1988 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f03d69d9                 |   Bin 5500 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f0741269                 |   Bin 924 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f27092e1                 |   Bin 2500 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f73e1525                 |   Bin 916 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f7b8b94e                 |   Bin 2164 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/f7d38634                 |   Bin 1476 -> 0 bytes
+ .../v22.23.3-x64-9ac5647c/fe7b33cd                 |   Bin 12340 -> 0 bytes
+ ...b46ae1dc3024e65828f76c9bbce745c0485946412fa.txt |     1 -
+ ...803884c779ba7ff6d6b4da6381a005575bba30eaad6.txt |     1 -
+ ...803884c779ba7ff6d6b4da6381a005575bba30eaad6.txt |     1 -
+ ...803884c779ba7ff6d6b4da6381a005575bba30eaad6.txt |     1 -
+ ...137d2a0eb9087af8147edd57a9da360017732c91b33.txt |     2 -
+ ...137d2a0eb9087af8147edd57a9da360017732c91b33.txt |     2 -
+ ...137d2a0eb9087af8147edd57a9da360017732c91b33.txt |     2 -
+ ...137d2a0eb9087af8147edd57a9da360017732c91b33.txt |     2 -
+ ...137d2a0eb9087af8147edd57a9da360017732c91b33.txt |     2 -
+ ...137d2a0eb9087af8147edd57a9da360017732c91b33.txt |     2 -
+ ...137d2a0eb9087af8147edd57a9da360017732c91b33.txt |     2 -
+ .../docling/fe646157a9ff4474a83ddb7b326cbe8a.json  |     1 -
+ ...64733c4bd03e13806b1beaca77b8aa9be2d04e9e7b6.pdf |   Bin 6830 -> 0 bytes
+ .../docling/5908a9d5290d47a2b3190dc592e0bd35.json  |     1 -
+ ...11db43052a66de37d2483e61d2fee9401401e7df85e.pdf |   Bin 6830 -> 0 bytes
+ ...75e82f033aac64ebb2c2d1b2608850efde7d61faf9e.txt |     1 -
+ ...57161bc35e9b9fb5033977d8bfef2071be274fdfe1f.txt |     1 -
+ ...803884c779ba7ff6d6b4da6381a005575bba30eaad6.txt |     1 -
+ ...803884c779ba7ff6d6b4da6381a005575bba30eaad6.txt |     1 -
+ ...803884c779ba7ff6d6b4da6381a005575bba30eaad6.txt |     1 -
+ ...4433671f814af88106da182ae5d6eaf1969e6b8931c.txt |     1 -
+ ...137d2a0eb9087af8147edd57a9da360017732c91b33.txt |     2 -
+ ...deca0585cae5f76d82910e285457e71dd29de8324d5.txt |     1 -
+ ...46b7b2de6b2d6f002a6d4f3afe9e06c6fe7a05d2806.txt |     1 -
+ ...137d2a0eb9087af8147edd57a9da360017732c91b33.txt |     2 -
+ ...137d2a0eb9087af8147edd57a9da360017732c91b33.txt |     2 -
+ ...803884c779ba7ff6d6b4da6381a005575bba30eaad6.txt |     1 -
+ ...n=2.9.1.0, Culture=neutral, PublicKeyToken=null |     5 -
+ .../guard-descriptor-check.txt                     |     1 -
+ .../guard-reuse-check.txt                          |     0
+ .../guard-write-check.txt                          |     1 -
+ .../decisions.jsonl.head.json                      |     1 -
+ .../control_plane/evidence_decisions.jsonl         |     1 -
+ .../evidence_decisions.jsonl.head.json             |     1 -
+ .../control-plane/evidence-requirements.json       |     1 -
+ .../control-plane/evidence-requirements.json       |     1 -
+ .../test_package_id_changes_when_e0/source.txt     |     1 -
+ .../control_plane/evidence_decisions.jsonl         |     1 -
+ .../evidence_decisions.jsonl.head.json             |     1 -
+ .../results-bundle.json                            |     1 -
+ .../test_test_run_manifest_is_boun0/results.txt    |     1 -
+ .../test_test_run_manifest_is_boun0/test-run.json  |     1 -
+ .../test_validator_distinguishes_a0/present.txt    |     1 -
+ .../ac15-hash-binding-20261010/python-results.xml  |     1 -
+ .../session-fix-20261010-182648-evidence.json      |    36 -
+ .../assets/graph-BnuhLJ6X.css                      |     1 -
+ .../assets/graph-CjYkENDk.js                       |     8 -
+ .../assets/index-BOLWnGKB.css                      |     1 -
+ .../assets/index-CSdgo_zW.js                       |    67 -
+ .../session-fix-20261010-182648/index.html         |     3 -
+ .../guard-descriptor-check.txt                     |     1 -
+ .../guard-reuse-check.txt                          |     0
+ .../guard-write-check.txt                          |     1 -
+ .../decisions.jsonl.head.json                      |     1 -
+ .../control_plane/evidence_decisions.jsonl         |     1 -
+ .../evidence_decisions.jsonl.head.json             |     1 -
+ .../control-plane/evidence-requirements.json       |     1 -
+ .../control-plane/evidence-requirements.json       |     1 -
+ .../test_package_id_changes_when_e0/source.txt     |     1 -
+ .../control_plane/evidence_decisions.jsonl         |     1 -
+ .../evidence_decisions.jsonl.head.json             |     1 -
+ .../results-bundle.json                            |     1 -
+ .../test_test_run_manifest_is_boun0/results.txt    |     1 -
+ .../test_test_run_manifest_is_boun0/test-run.json  |     1 -
+ .../test_validator_distinguishes_a0/present.txt    |     1 -
+ .../python-results.xml                             |     1 -
+ .../v1-etr-20261010-120500/current-test-run.json   |   142 -
+ .../v1-etr-20261010-120500/exit.txt                |     1 -
+ .../v1-etr-20261010-120500/git-status.txt          |   296 -
+ .../guard-descriptor-check.txt                     |     1 -
+ .../v1-etr-20261010-120500/guard-reuse-check.txt   |     0
+ .../v1-etr-20261010-120500/guard-write-check.txt   |     1 -
+ .../v1-etr-20261010-120500/manifest.json           |   206 -
+ .../decisions.jsonl.head.json                      |     1 -
+ .../control_plane/evidence_decisions.jsonl         |     1 -
+ .../evidence_decisions.jsonl.head.json             |     1 -
+ .../control-plane/evidence-requirements.json       |     1 -
+ .../control-plane/evidence-requirements.json       |     1 -
+ .../test_package_id_changes_when_e0/source.txt     |     1 -
+ .../control_plane/evidence_decisions.jsonl         |     1 -
+ .../evidence_decisions.jsonl.head.json             |     1 -
+ .../results-bundle.json                            |     1 -
+ .../test_test_run_manifest_is_boun0/results.txt    |     1 -
+ .../test_test_run_manifest_is_boun0/test-run.json  |     1 -
+ .../test_validator_distinguishes_a0/present.txt    |     1 -
+ .../v1-etr-20261010-120500/python-results.xml      |    82 -
+ .../v1-etr-20261010-120500/results-bundle.json     |    12 -
+ .../v1-etr-20261010-120500/test-run.json           |   142 -
+ .../v1-etr-20261010-120500/test-summary.json       |    43 -
+ .../guard-descriptor-check.txt                     |     1 -
+ .../guard-reuse-check.txt                          |     0
+ .../guard-write-check.txt                          |     1 -
+ .../decisions.jsonl.head.json                      |     1 -
+ .../control_plane/evidence_decisions.jsonl         |     1 -
+ .../evidence_decisions.jsonl.head.json             |     1 -
+ .../control-plane/evidence-requirements.json       |     1 -
+ .../control-plane/evidence-requirements.json       |     1 -
+ .../test_package_id_changes_when_e0/source.txt     |     1 -
+ .../control_plane/evidence_decisions.jsonl         |     1 -
+ .../evidence_decisions.jsonl.head.json             |     1 -
+ .../results-bundle.json                            |     1 -
+ .../test_test_run_manifest_is_boun0/results.txt    |     1 -
+ .../test_test_run_manifest_is_boun0/test-run.json  |     1 -
+ .../test_validator_distinguishes_a0/present.txt    |     1 -
+ .../v1-etr-20261010-verify-02/python-results.xml   |     1 -
+ curl                                               |     0
+ deploy/docker/.dockerignore                        |    32 +
+ Dockerfile => deploy/docker/Dockerfile             |    11 +-
+ .../docker/docker-compose.audit.yml                |     0
+ .../docker/docker-compose.yml                      |     4 +-
+ developer.py                                       |   245 -
+ developer_core_engine_SOURCE_BACKUP.txt            |  2250 --
+ ...PENCODE-PEKERJAAN-TERSISA-NUSANTARA-20261029.md |     0
+ ...AK-NCP-V1-KNOWLEDGE-OPERATOR-RUNTIME-E2E-001.md |     0
+ .../KONTRAK-NCP-V1-SOP-CHAT-GOLDEN-GATE-001.md     |     0
+ ...ONTRAK-OPENCODE-SENIOR-ENGINEER-NUSANTARA-V1.md |     0
+ .../contracts}/Kontrak-Hermes-Nusantara-V1.md      |     0
+ ...ak-Implementasi-Nusantara-Localhost-20261029.MD |     0
+ .../contracts}/NCP-V1-HERMES-CHAT-SOP-001.md       |     0
+ .../contracts}/NCP-V1-HERMES-DEVELOPER-001.md      |     0
+ ...1-KNOWLEDGE-CORE-OPERATOR-SIMPLIFICATION-001.md |     0
+ .../contracts}/NCP-V1-SOP-OPERATOR-001.md          |     0
+ .../contracts}/NUSANTARA-V1-MASTER-PRD.docx        |   Bin
+ .../contracts}/NUSANTARA-V1-MASTER-PRD.md          |     0
+ .../contracts}/NUSANTARA_E2E_CONTRACT_OPENCODE.md  |     0
+ docs/operational/SOP-INGESTION-V1.md               |     2 +-
+ docs/stabilization/REMAINING_WORK.md               |    12 +-
+ docs/v2/DEVCORE_COMPLIANCE.md                      |    36 -
+ docs/v2/ROADMAP_STATUS.md                          |    50 -
+ engine_source.txt                                  |  1327 --
+ fix_developer_core_source.py                       |   228 -
+ fix_graph_reference.py                             |    19 -
+ fix_sop_chat.py                                    |   282 -
+ {control-plane => frontend}/.gitignore             |     0
+ .../.r2-cplane-isolated-evidence.local.json        |     0
+ .../CPLANE_OWNER_AUTHORIZATION.json                |     0
+ {control-plane => frontend}/README.md              |     0
+ {control-plane => frontend}/SCOPE.json             |     0
+ .../vitest-results.json                            |     0
+ .../e2e/attestation.spec.ts                        |     0
+ .../e2e/chat-settings.spec.ts                      |     0
+ .../e2e/control-plane.spec.ts                      |     0
+ .../e2e/docling-live.spec.ts                       |     0
+ {control-plane => frontend}/e2e/human.spec.ts      |     0
+ .../e2e/knowledge-duplicate-live.spec.ts           |     0
+ .../e2e/knowledge-human-live.spec.ts               |     0
+ .../e2e/main-chat-docling-live.spec.ts             |     0
+ .../e2e/operator-contract.spec.ts                  |     0
+ .../e2e/operator-design.spec.ts                    |     0
+ .../e2e/operator-followup.spec.ts                  |     0
+ .../e2e/review-execution.spec.ts                   |     0
+ .../evidence-requirements.json                     |     0
+ {control-plane => frontend}/evidence-sources.json  |     0
+ {control-plane => frontend}/index.html             |     0
+ {control-plane => frontend}/package-lock.json      |    14 +-
+ {control-plane => frontend}/package.json           |     0
+ .../playwright.chat.config.ts                      |     0
+ {control-plane => frontend}/playwright.config.ts   |     0
+ .../playwright.followup.config.ts                  |     0
+ .../playwright.operator.config.ts                  |     0
+ .../playwright.review.config.ts                    |     0
+ {control-plane => frontend}/src/acceptance.ts      |     0
+ {control-plane => frontend}/src/api.ts             |     0
+ {control-plane => frontend}/src/assistant.tsx      |     0
+ {control-plane => frontend}/src/auth.tsx           |     0
+ {control-plane => frontend}/src/chat-citation.tsx  |     0
+ .../src/engineering-console.css                    |     0
+ .../src/engineering-console.tsx                    |     0
+ .../src/engineering-evidence.ts                    |     0
+ {control-plane => frontend}/src/graph.tsx          |     0
+ .../src/hermes-connection.tsx                      |     0
+ {control-plane => frontend}/src/human-control.tsx  |     0
+ {control-plane => frontend}/src/human.tsx          |     0
+ {control-plane => frontend}/src/main.tsx           |     0
+ .../src/operator-design.css                        |     0
+ .../src/operator-panels.tsx                        |     0
+ {control-plane => frontend}/src/operator.tsx       |     0
+ {control-plane => frontend}/src/overview.tsx       |     4 +-
+ {control-plane => frontend}/src/readiness.ts       |     0
+ {control-plane => frontend}/src/router.tsx         |     0
+ .../src/runtime-readiness.tsx                      |     0
+ {control-plane => frontend}/src/schemas.ts         |     0
+ {control-plane => frontend}/src/settings.tsx       |     0
+ {control-plane => frontend}/src/sidebar.tsx        |     0
+ {control-plane => frontend}/src/sop-metadata.tsx   |     0
+ {control-plane => frontend}/src/sop-progress.css   |     0
+ {control-plane => frontend}/src/sop-progress.tsx   |     0
+ {control-plane => frontend}/src/sop-review.tsx     |     4 +-
+ {control-plane => frontend}/src/sop-workspace.css  |     0
+ {control-plane => frontend}/src/styles.css         |     0
+ {control-plane => frontend}/src/technical-view.tsx |     0
+ {control-plane => frontend}/src/ui.tsx             |     0
+ {control-plane => frontend}/src/verification.tsx   |     0
+ .../src/work-approval-guide.tsx                    |     0
+ {control-plane => frontend}/src/workspace.css      |     0
+ {control-plane => frontend}/src/workspace.tsx      |     0
+ .../tests/acceptance.test.ts                       |     0
+ .../tests/api-health.test.ts                       |     0
+ {control-plane => frontend}/tests/api.test.ts      |     0
+ .../tests/assistant.test.tsx                       |     0
+ .../tests/attestation.test.tsx                     |     0
+ .../tests/chat-citation.test.tsx                   |     0
+ .../tests/chat-privacy.test.tsx                    |     0
+ .../tests/chat-proxy.integration.test.ts           |     0
+ .../tests/chat-stream.test.tsx                     |     0
+ .../tests/engineering-console.test.tsx             |    39 +-
+ .../tests/fixtures/README.md                       |     0
+ .../tests/fixtures/attestation-isolated.json       |     0
+ .../tests/fixtures/system-snapshot.json            |     0
+ .../tests/hermes-connection.test.tsx               |     0
+ {control-plane => frontend}/tests/human.test.tsx   |     0
+ .../tests/inspection-preview-network-guard.cjs     |     0
+ .../tests/inspection-preview.test.tsx              |     0
+ .../tests/knowledge-operations.test.tsx            |     0
+ .../tests/knowledge-proxy.test.ts                  |     0
+ .../tests/knowledge-upload.test.ts                 |     0
+ .../tests/ncp-chat-contract.test.tsx               |     0
+ .../tests/operator-followup.test.tsx               |     0
+ .../tests/operator.test.tsx                        |     0
+ .../tests/runtime-readiness.test.tsx               |     0
+ .../tests/settings.test.tsx                        |     0
+ {control-plane => frontend}/tests/setup.ts         |     0
+ .../tests/snapshot-file.test.ts                    |     0
+ {control-plane => frontend}/tests/snapshot-file.ts |     0
+ .../tests/sop-metadata.test.tsx                    |     0
+ .../tests/sop-progress.test.tsx                    |     0
+ .../tests/sop-review.test.tsx                      |     0
+ .../tests/ui-routing.test.tsx                      |     0
+ {control-plane => frontend}/tests/ui.test.tsx      |     0
+ .../tests/verification-pages.test.tsx              |     0
+ .../tests/vite-config.test.ts                      |     0
+ {control-plane => frontend}/tsconfig.json          |     0
+ {control-plane => frontend}/vite.config.ts         |     0
+ {control-plane => frontend}/vitest.config.ts       |     0
+ git                                                |     0
+ graph-viewer.ps1                                   |  1036 -
+ health-check-v1.json                               |    51 -
+ hermes/mcp-starter.zip                             |   Bin 32168 -> 0 bytes
+ human_acceptance_inspection.txt                    |   217 -
+ if                                                 |     0
+ master_engine_ai.py                                |  1022 -
+ ...8225f5e83acc31f225c69f424635702a34681a770f.json |   837 -
+ nusantara-v1-chat-diagnosis-20261010-192042.txt    |   383 -
+ nusantara_master_engine.py                         |  2622 ---
+ nusantara_master_engine_BACKUP_20261002_164634.py  |  2089 --
+ nusantara_master_pdf_sop_engine.py                 |  2768 ---
+ nusantara_sop_semantic_engine_v2.py                |  1412 --
+ patch_core.py                                      |    27 -
+ patch_developer_core_quality.py                    |   604 -
+ patch_developer_core_quality_v2.py                 |   407 -
+ patch_embedding_identity.py                        |    58 -
+ patch_graph_rag_production.py                      |   126 -
+ patch_graph_rag_safe.py                            |   175 -
+ patch_graph_rag_v2.py                              |   359 -
+ patch_graphify_adapter.py                          |   372 -
+ patch_master_integration.py                        |  1043 -
+ patch_parser.py                                    |    36 -
+ patch_production_integration.py                    |   281 -
+ patch_production_rag.py                            |   493 -
+ patch_source_filter.py                             |   163 -
+ phase2_bug_p2_001.ps1                              |   253 -
+ pyproject.toml                                     |    11 +-
+ readiness-script-error.txt                         |   Bin 774 -> 0 bytes
+ reports/audit/v1-restructure/.fail_buckets.txt     |   Bin 0 -> 26906 bytes
+ reports/audit/v1-restructure/.fail_detail.txt      |   Bin 0 -> 33672 bytes
+ reports/audit/v1-restructure/.npm_audit.txt        |   Bin 0 -> 1350 bytes
+ reports/audit/v1-restructure/.pytest_after.txt     |   413 +
+ reports/audit/v1-restructure/.pytest_core.txt      |   Bin 0 -> 7614 bytes
+ reports/audit/v1-restructure/.pytest_failures.txt  |   Bin 0 -> 268368 bytes
+ reports/audit/v1-restructure/.pytest_final.txt     |   404 +
+ reports/audit/v1-restructure/.pytest_full.txt      |   Bin 0 -> 983396 bytes
+ reports/audit/v1-restructure/.test_inventory.txt   |    43 +
+ reports/audit/v1-restructure/.vitest.txt           |   Bin 0 -> 47146 bytes
+ .../v1-restructure/AI_LEGACY_CLEANUP_REPORT.md     |   323 +
+ .../v1-restructure/AUDIT_HISTORY_RECONCILIATION.md |   269 +
+ .../audit/v1-restructure/BACKEND_FORENSIC_AUDIT.md |   166 +
+ reports/audit/v1-restructure/BACKUP_CHECKSUMS.csv  | 23033 +++++++++++++++++++
+ .../v1-restructure/BACKUP_VERIFICATION_REPORT.md   |   211 +
+ reports/audit/v1-restructure/BROWSER_E2E_PROOF.md  |   189 +
+ .../audit/v1-restructure/CLASSIFICATION_SUMMARY.md |    51 +
+ .../v1-restructure/CONTROL_PLANE_FORENSIC_AUDIT.md |   160 +
+ .../v1-restructure/DATABASE_SOP_FORENSIC_AUDIT.md  |   196 +
+ reports/audit/v1-restructure/DEPENDENCY_AUDIT.md   |   238 +
+ .../audit/v1-restructure/FILE_ARCHIVE_MANIFEST.csv |  9184 ++++++++
+ .../v1-restructure/FILE_DELETION_MANIFEST.csv      |    13 +
+ .../audit/v1-restructure/FILE_DEPENDENCY_MAP.md    |   211 +
+ reports/audit/v1-restructure/FILE_INVENTORY.csv    | 19805 ++++++++++++++++
+ .../v1-restructure/FILE_MOVEMENT_MANIFEST.csv      |    27 +
+ .../FILE_MOVEMENT_MANIFEST_DRAFT.csv               |    17 +
+ .../v1-restructure/FRONTEND_FORENSIC_AUDIT.md      |   285 +
+ .../v1-restructure/GENERATED_CACHE_AGGREGATES.csv  |     6 +
+ .../audit/v1-restructure/HERMES_FORENSIC_AUDIT.md  |   143 +
+ .../v1-restructure/KNOWLEDGE_RAG_FORENSIC_AUDIT.md |   173 +
+ .../audit/v1-restructure/MODULE_GRAPH_EDGES.csv    |   303 +
+ .../audit/v1-restructure/REGRESSION_TEST_REPORT.md |   234 +
+ .../v1-restructure/RESTRUCTURING_CHANGELOG.md      |   359 +
+ .../v1-restructure/ROLLBACK_AND_RESTORE_GUIDE.md   |   366 +
+ reports/audit/v1-restructure/ROUTE_INVENTORY.json  |   368 +
+ reports/audit/v1-restructure/RUNTIME_MODULE_MAP.md |   239 +
+ .../v1-restructure/SECURITY_FORENSIC_AUDIT.md      |   175 +
+ .../v1-restructure/SECURITY_REGRESSION_REPORT.md   |   196 +
+ .../audit/v1-restructure/SOURCE_BASELINE_REPORT.md |   248 +
+ .../v1-restructure/TARGET_REPOSITORY_STRUCTURE.md  |   227 +
+ reports/audit/v1-restructure/TEST_RUNTIME_AUDIT.md |   289 +
+ .../audit/v1-restructure/V1_FINAL_ARCHITECTURE.md  |   317 +
+ .../v1-restructure/V1_FINAL_READINESS_REPORT.md    |   321 +
+ .../v1-restructure/V1_REPOSITORY_INVENTORY.md      |   178 +
+ reports/audit/v1-restructure/backup-docs/README.md |    83 +
+ .../v1-restructure/backup-docs/VERIFICATION.md     |   105 +
+ .../evidence/A1-A9_EXECUTION_REPORT.md             |   325 +
+ .../v1-restructure/evidence/A1_archive_log.csv     |  9184 ++++++++
+ .../evidence/A1_restore_carveout.csv               |   178 +
+ .../v1-restructure/evidence/A2_deletion_log.csv    |    13 +
+ .../v1-restructure/evidence/A3_movement_log.csv    |    27 +
+ .../evidence/A4_npm_audit_after.json               |   163 +
+ .../evidence/A4_npm_audit_before.json              |   239 +
+ .../evidence/A8_image_verification.txt             |     8 +
+ .../evidence/A9_gate_pass1_no_model.txt            |   Bin 0 -> 6480 bytes
+ .../evidence/A9_gate_pass2_model_loaded.txt        |   Bin 0 -> 3226 bytes
+ .../evidence/A9_live_health_ready_metrics.txt      |     4 +
+ .../v1-restructure/evidence/A9_live_regression.txt |   Bin 0 -> 470 bytes
+ .../evidence/e2e-01-chat-greeting.png              |   Bin 0 -> 24017 bytes
+ .../evidence/e2e-02-chat-grounding-refusal.png     |   Bin 0 -> 36569 bytes
+ .../evidence/stream-direct-8000.ndjson             |     2 +
+ .../evidence/stream-via-proxy-5180.ndjson          |     2 +
+ .../INDEPENDENT_VERIFICATION_REPORT.md             |    99 +
+ .../final-consolidation/INTEGRATION_BASELINE.md    |    88 +
+ .../KNOWLEDGE_SYNTHETIC_E2E_REPORT.md              |    75 +
+ .../final-consolidation/PC_ACCEPTANCE_HANDOFF.md   |    75 +
+ .../final-consolidation/POST_MERGE_VERIFICATION.md |   113 +
+ .../REGRESSION_REMEDIATION_REPORT.md               |    84 +
+ reports/final-consolidation/RELEASE_GO_NO_GO.md    |    51 +
+ .../STAGING_ACCEPTANCE_REPORT.md                   |   109 +
+ reports/final-consolidation/V1_PC_SYNC_HANDOFF.md  |   121 +
+ .../final-consolidation/V1_PR16_MERGE_READINESS.md |    89 +
+ .../V1_VPS_ENGINEERING_HANDOFF.md                  |    84 +
+ .../final-consolidation/V1_VPS_REGRESSION_DELTA.md |    68 +
+ .../final-consolidation/VERIFICATION_SUMMARY.md    |    37 +
+ reports/stabilization/GITHUB_SYNC_REPORT.md        |    52 +
+ reports/stabilization/KNOWLEDGE_SOP_E2E_REPORT.md  |    58 +
+ reports/stabilization/REGRESSION_TRIAGE_REPORT.md  |    68 +
+ reports/stabilization/V1_NEXT_ACTION_PLAN.md       |    59 +
+ reports/stabilization/VPS_RUNTIME_VERIFICATION.md  |    57 +
+ reports/vps-recovery/VPS_BACKUP_INVENTORY.md       |    81 +
+ reports/vps-recovery/VPS_BASELINE_REPORT.md        |   159 +
+ reports/vps-recovery/VPS_BLOCKER_REGISTER.md       |    49 +
+ .../vps-recovery/VPS_DEPLOYMENT_ARCHITECTURE.md    |    95 +
+ reports/vps-recovery/VPS_ROLLBACK_PLAN.md          |    82 +
+ reports/vps-recovery/VPS_SECURITY_REPORT.md        |    94 +
+ reports/vps-recovery/VPS_STAGING_READINESS.md      |   102 +
+ .../KNOWLEDGE_SOP_READINESS_REPORT.md              |    47 +
+ .../REGRESSION_ROOT_CAUSE_REPORT.md                |   120 +
+ .../V1_INTEGRATION_ACCEPTANCE_REPORT.md            |    42 +
+ .../VPS_FINAL_STABILIZATION_REPORT.md              |    84 +
+ .../VPS_RUNTIME_ACCEPTANCE_REPORT.md               |    72 +
+ requirements-lock.txt                              |    98 +
+ restore_developer_core.py                          |    45 -
+ routes_current_backup.txt                          |  1224 -
+ run_debug.py                                       |    34 -
+ run_direct.py                                      |    57 -
+ run_direct2.py                                     |    72 -
+ run_direct3.py                                     |    61 -
+ run_direct4.py                                     |    71 -
+ run_semantic_rag_verification.ps1                  |   103 -
+ run_tests.py                                       |    71 -
+ scripts/Enable-RetrievalEvidence.ps1               |   377 -
+ scripts/Export-NusantaraV1Evidence.ps1             |    22 -
+ scripts/Install-NusantaraAutoStart.ps1             |     6 -
+ scripts/NUSANTARA-PHASE1-GATE.ps1                  |   511 +-
+ scripts/New-NusantaraAdminToken.ps1                |    75 +-
+ scripts/Nusantara-Git-Safe.ps1                     |   314 +-
+ scripts/Restart-NusantaraV1.ps1                    |   132 +-
+ scripts/Start-NusantaraV1.ps1                      |    22 +-
+ scripts/Start-V1CompletionTest.ps1                 |     2 +-
+ scripts/Status-NusantaraV1.ps1                     |    25 +-
+ scripts/Stop-NusantaraV1.ps1                       |    23 +-
+ scripts/Test-NusantaraEvidenceScoreContract.ps1    |    63 +-
+ scripts/Test-NusantaraStartup.ps1                  |    73 +-
+ scripts/Test-NusantaraV1Connection.ps1             |     2 +-
+ scripts/Test-NusantaraV1Execution.ps1              |    65 +-
+ scripts/Uninstall-NusantaraAutoStart.ps1           |    42 +-
+ scripts/add_developer_core_endpoint.py             |    27 -
+ scripts/audit_all_phases.ps1                       |   593 -
+ scripts/audit_deep.ps1                             |   542 -
+ scripts/backend_integration_guard.py               |   146 -
+ scripts/backup_nusantara.py                        |    90 -
+ scripts/baseline_rag_cache.py                      |   116 -
+ scripts/batch_golden_template.py                   |    33 -
+ scripts/batch_process_all.py                       |   121 -
+ scripts/build_gate14.py                            |   477 -
+ scripts/build_gate14_mapper.py                     |   769 -
+ scripts/check-workspace-scan-coverage.ps1          |    89 -
+ scripts/classify_configuration_phase2.py           |    90 -
+ scripts/cleanup_nusantara_git.ps1                  |   114 -
+ scripts/commit_nusantara_master.ps1                |   106 -
+ scripts/control-plane-final-check.ps1              |   177 -
+ scripts/developer_core_change_intelligence.py      |   162 -
+ scripts/developer_core_change_query.py             |   329 -
+ scripts/developer_core_directional_impact.py       |   220 -
+ scripts/developer_core_self_analysis.py            |   105 -
+ scripts/direct_guard_test.py                       |    73 -
+ scripts/eval_piak_local.py                         |   225 -
+ scripts/evaluate_laya_intent.py                    |    73 -
+ scripts/evaluate_laya_v1.py                        |   200 -
+ scripts/evaluate_sop_golden_gate.py                |    93 -
+ scripts/fill_template.py                           |    38 -
+ scripts/finalize_nusantara_git.ps1                 |    95 -
+ scripts/fix_gate10_memory.py                       |    37 -
+ scripts/fix_grounding_procedure_v4.py              |   159 -
+ scripts/fix_hermes_agent.py                        |   116 -
+ scripts/fix_hermes_reasoning_api.py                |   132 -
+ scripts/fix_ollama_validator.ps1                   |    13 -
+ scripts/fix_rag_bom_and_canonical.py               |   277 -
+ scripts/fix_routes_memory_final.py                 |    63 -
+ scripts/fix_routes_memory_final2.py                |    72 -
+ scripts/fix_validate_gate14.py                     |    34 -
+ scripts/generate_golden_set.py                     |    34 -
+ scripts/generate_golden_set_enhanced.py            |    92 -
+ scripts/healthcheck.py                             |     2 -
+ scripts/implement_v2_hermes_runtime.py             |   775 -
+ scripts/implement_v2_hermes_runtime_safe.py        |   447 -
+ scripts/ingest_v1_sops.py                          |   131 -
+ scripts/install_rag_cache.ps1                      |   176 -
+ scripts/integrate_gate14_runtime.py                |    68 -
+ scripts/load_test.py                               |   176 +-
+ scripts/nusantara_claude_workflow.ps1              |   129 +-
+ scripts/nusantara_dependency_truth.py              |   214 +-
+ scripts/nusantara_developer_core.py                |   138 +-
+ scripts/nusantara_master_engine.py                 |  3120 +--
+ scripts/nusantara_master_engine.v2.0.0.backup.py   |  1274 +-
+ scripts/nusantara_master_engine.v2.0.0.py          |  1274 +-
+ .../nusantara_master_engine.v3.0.0.pre-v2-audit.py |  2664 +--
+ scripts/nusantara_master_phase_runner.ps1          |   279 +-
+ scripts/nusantara_runtime_architecture.py          |   213 +-
+ scripts/ocr_ground_truth_eval.py                   |   117 +-
+ scripts/patch_e2e_deterministic.py                 |   147 +-
+ scripts/patch_e2e_prompt.py                        |   112 +-
+ scripts/patch_gate8_13_routes.py                   |   179 +-
+ scripts/patch_grounding_abstention.py              |   210 +-
+ scripts/patch_grounding_procedure.py               |   198 +-
+ scripts/patch_grounding_procedure_v2.py            |   130 +-
+ scripts/patch_grounding_procedure_v3.py            |   137 +-
+ scripts/patch_hermes_adapter_callable.py           |   108 +-
+ scripts/patch_rag_canonical.py                     |   306 +-
+ scripts/patch_reasoning_gate8.ps1                  |   124 +-
+ scripts/patch_v2_audit.py                          |   611 +-
+ scripts/patch_v2_orchestrator_hermes.py            |   286 +-
+ scripts/perf_baseline.py                           |    56 -
+ scripts/precision_impact.py                        |   138 +-
+ scripts/precision_impact_chain.py                  |   199 +-
+ scripts/precision_impact_v2.py                     |   182 +-
+ scripts/prepare_v1_operator_plan.py                |     4 +-
+ scripts/probe_laya_intent.py                       |    51 +-
+ scripts/process_all_pending.py                     |    95 -
+ scripts/production_healthcheck.py                  |   105 +-
+ scripts/production_indobert_hardening.py           |    86 +-
+ scripts/production_kb_hardening.py                 |    78 +-
+ scripts/reconcile_sop_knowledge.py                 |   171 +-
+ scripts/refresh_v1_evidence.py                     |    14 +-
+ scripts/release_check.py                           |   221 +-
+ scripts/repair_gate10_memory.py                    |   209 +-
+ scripts/repair_gate10_memory_v2.py                 |   254 +-
+ scripts/repair_gate14_runtime.py                   |   353 +-
+ scripts/restart-nusantara.bat                      |   129 +-
+ scripts/restore_e2e_final.py                       |   393 +-
+ scripts/restore_e2e_runner.py                      |   230 +-
+ scripts/run_docling_browser.py                     |     2 +-
+ scripts/run_eval.py                                |   170 +-
+ scripts/run_nusantara_validation.ps1               |    61 +-
+ scripts/run_search_eval.py                         |    96 +-
+ scripts/runtime_class_truth.py                     |   266 +-
+ scripts/runtime_e2e_lite.py                        |   170 +-
+ scripts/runtime_e2e_truth.py                       |   269 +-
+ scripts/runtime_object_truth.py                    |   234 +-
+ scripts/runtime_truth.py                           |   175 +-
+ scripts/runtime_truth_c.py                         |   227 +-
+ scripts/serve_laya_local.py                        |    58 +-
+ scripts/serve_v1_completion_isolated.py            |    41 +-
+ scripts/staging_drill.py                           |   110 +-
+ scripts/start-nusantara.bat                        |   106 +-
+ scripts/start_windows.ps1                          |    28 +-
+ scripts/status-nusantara.bat                       |    58 +-
+ scripts/stop-nusantara.bat                         |    48 +-
+ scripts/summarize_backend_runs.py                  |    44 +-
+ scripts/test_api_contract.py                       |   196 +-
+ scripts/test_chat_regression.py                    |   134 +-
+ scripts/test_e2e_grounding_ollama.py               |   290 +-
+ scripts/test_e2e_nusantara.py                      |   228 +-
+ scripts/test_grounding_hermes.py                   |   224 +-
+ scripts/test_grounding_ollama_api.py               |   261 +-
+ scripts/test_knowledge_grounding.py                |   209 +-
+ scripts/test_knowledge_retrieval.py                |   294 +-
+ scripts/test_v1_sop_boundary.py                    |    98 +-
+ scripts/validate_gate12_final.py                   |   261 +-
+ scripts/validate_gate14.py                         |   110 +-
+ scripts/validate_gate14_3_runtime_graph.py         |   100 +-
+ scripts/validate_gate14_5_self_analysis.py         |   114 +-
+ scripts/validate_gate14_6_2.py                     |   143 +-
+ scripts/validate_gate14_7_runtime_static.py        |   154 +-
+ scripts/validate_gate14_final.py                   |   222 +-
+ scripts/validate_gate14_mapper.py                  |   150 +-
+ scripts/validate_gate14_runtime_graph.py           |   175 +-
+ scripts/validate_gate15_1_runtime_health.py        |   176 +-
+ scripts/validate_gate15_2_engine_runtime.py        |   148 +-
+ scripts/validate_gate15_3_graph_operational.py     |   214 +-
+ scripts/validate_gate15_4_operational_truth.py     |   213 +-
+ scripts/validate_gate15_5_change_plan_schema.py    |   111 +-
+ scripts/validate_gate15_6_change_plan_validator.py |   127 +-
+ scripts/validate_gate15_7_approval_wiring.py       |   139 +-
+ scripts/validate_gate15_change_planning_final.py   |   169 +-
+ scripts/validate_gate15_final.py                   |   144 +-
+ scripts/validate_gate15_operational_final.py       |   304 +-
+ scripts/validate_gate16_1_sop_artifact.py          |   112 +-
+ scripts/validate_gate16_2_sop_pipeline.py          |   153 +-
+ scripts/validate_gate16_3_sop_rag_bridge.py        |   183 +-
+ scripts/validate_gate16_4_sop_retrieval.py         |   196 +-
+ scripts/validate_gate16_5_evidence_grounding.py    |   302 +-
+ scripts/validate_gate16_6_negative_abstention.py   |   159 +-
+ scripts/validate_gate16_7_1_grounded_answer.py     |   169 +-
+ scripts/validate_gate16_7_pdf_to_answer.py         |   246 +-
+ scripts/validate_gate16_approval.py                |   271 +-
+ scripts/validate_gate16_audit.py                   |   545 +-
+ scripts/validate_gate16_boundary.py                |   408 +-
+ scripts/validate_gate16_final.py                   |   473 +-
+ scripts/validate_gate16_graph.py                   |   463 +-
+ scripts/validate_gate16_patch.py                   |   250 +-
+ scripts/validate_gate16_regression.py              |   336 +-
+ scripts/validate_gate16_snapshot.py                |   296 +-
+ scripts/validate_gate16_validation.py              |   366 +-
+ scripts/validate_gate17_4.py                       |   308 +-
+ scripts/validate_gate17_evaluation.py              |   426 +-
+ scripts/validate_gate17_evidence.py                |   376 +-
+ scripts/validate_gate17_experiment.py              |   441 +-
+ scripts/validate_gate17_final.py                   |   151 +-
+ scripts/validate_gate17_gap.py                     |   313 +-
+ scripts/validate_gate17_proposal.py                |   660 +-
+ scripts/validate_gate17_root_cause.py              |   532 +-
+ scripts/validate_gates_8_16.py                     |   275 +-
+ scripts/validate_nusantara_master.ps1              |   349 +-
+ scripts/validate_table_accuracy.py                 |    77 -
+ scripts/validate_table_structure.py                |    60 -
+ scripts/verify_audit_runtime.py                    |   213 +-
+ scripts/verify_backend_deep.py                     |   305 +-
+ scripts/verify_chat_p0_canary.py                   |   104 +-
+ scripts/verify_control_plane_four.py               |     4 +-
+ scripts/verify_development_workflow.py             |    69 +-
+ scripts/verify_docker_runtime.py                   |   173 +-
+ scripts/verify_docling_live.py                     |   103 +-
+ scripts/verify_sop_conversation.py                 |     2 +-
+ scripts/verify_v1_dialogue_and_documents.py        |    12 +-
+ scripts/verify_v1_operational_data.py              |    96 +-
+ scripts/verify_v1_recovery_rag.py                  |   159 +-
+ scripts/verify_v1_recovery_runtime.py              |   154 +-
+ scripts/verify_v1_six.py                           |     2 +-
+ scripts/verify_v1_sop_source.py                    |   100 +-
+ scripts/wire_v2_chat_hermes.py                     |   210 +-
+ setup_nusantara_local_ai.ps1                       |   654 -
+ skills-lock.json                                   |   233 -
+ sop_cv_table_detector.py                           |   645 -
+ sop_governance_ocr_engine.py                       |   878 -
+ sop_ingestion_engine.py                            |   246 -
+ sop_ocr_layout_engine.py                           |   250 -
+ sop_parser_engine.py                               |   295 -
+ sop_parser_v2.py                                   |   410 -
+ sop_parser_v3.py                                   |   468 -
+ sop_parser_v4.py                                   |   656 -
+ sop_parser_v5.py                                   |   667 -
+ sop_pdf_geometry_inspector.py                      |   270 -
+ sop_table_reconstruction_engine.py                 |   883 -
+ sop_table_reconstruction_engine_v2.py              |  1373 --
+ sop_table_reconstruction_engine_v3.py              |  1090 -
+ sop_visual_evidence_inspector.py                   |   529 -
+ start-openwebui.ps1                                |    34 -
+ start_owui.sh                                      |     7 -
+ test-chat.json                                     |     1 -
+ test-general.json                                  |     6 -
+ test-grounding.json                                |     6 -
+ test-requirements.json                             |     6 -
+ test-status.json                                   |     6 -
+ test_chat.py                                       |    27 -
+ test_openwebui.py                                  |    17 -
+ test_u01_u02_u04.py                                |   119 -
+ test_u01_u03.py                                    |    64 -
+ test_u01u02u03.py                                  |    99 -
+ tests/diagnostic-check.txt                         |     0
+ tests/nevaluation/evaluation_legacy.py             |   210 -
+ tests/python-results.xml                           |     1 -
+ tests/response-projection-debug.txt                |  1813 --
+ tests/test_approval_boundary.py                    |    18 +-
+ tests/test_audit_regressions.py                    |    24 +-
+ tests/test_chat_policy_handoff_regression.py       |     2 +-
+ tests/test_configuration_contract.py               |     2 +-
+ tests/test_configuration_integration.py            |     3 +-
+ tests/test_cost_ledger_initialization_race.py      |    53 +
+ tests/test_effective_rag_profile.py                |     8 +-
+ ...effective_rag_profile.py.backup-20261013-154014 |   337 -
+ tests/test_evidence_registry.py                    |     2 +-
+ tests/test_evidence_runner_guards.py               |    10 +
+ tests/test_hermes_v1_contextual_followup.py        |    19 +-
+ tests/test_hermes_v1_conversation.py               |     2 +-
+ tests/test_inspection_preview_api.py               |     2 +-
+ tests/test_openrouter_provider.py                  |     7 +-
+ tests/test_output/guard-descriptor-check.txt       |     0
+ tests/test_output/guard-reuse-check.txt            |     0
+ tests/test_output/guard-write-check.txt            |     1 -
+ tests/test_provider_identity.py                    |    12 +-
+ tests/test_readyz_contract.py                      |    34 +
+ tests/test_restart_recovery.py                     |     2 +-
+ tests/test_runtime_attestation.py                  |     2 +-
+ tests/test_runtime_portability.py                  |    15 +-
+ tests/test_runtime_verification.py                 |     8 +-
+ tests/test_sop_fields.py                           |   105 +
+ tests/test_sqlite_backup_wal.py                    |    37 +
+ tests/test_v1_langgraph.py                         |     2 +-
+ tests/test_v1_sop_boundary.py                      |    21 +-
+ tests/test_v1_stage_timing.py                      |     2 +-
+ tests/test_v2_disabled.py                          |     2 +-
+ {scripts => tools/verification}/check_rea_mcp.cjs  |     0
+ .../verification}/check_v1_completion_live.cjs     |     0
+ .../verification}/check_v1_isolated_upload.cjs     |     0
+ .../verification}/inspect_knowledge_mobile.cjs     |     0
+ .../verification}/reproduce_knowledge_upload.cjs   |     0
+ {scripts => tools/verification}/verify_chat_p0.cjs |     0
+ .../verification}/verify_control_plane_four.cjs    |     0
+ .../verify_knowledge_pipeline_live.cjs             |     0
+ .../verify_knowledge_upload_entry.cjs              |     0
+ .../verification}/verify_ncp_autofix_ui.cjs        |     0
+ .../verification}/verify_sop_chat_ui.cjs           |     0
+ .../verification}/verify_sop_conversation_ui.cjs   |     0
+ .../verification}/verify_v1_review_live.cjs        |     0
+ ...272 add NUSANTARA regression tests\357\200\242" |    89 -
+ 1252 files changed, 79820 insertions(+), 152936 deletions(-)

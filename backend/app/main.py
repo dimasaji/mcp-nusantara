@@ -136,6 +136,7 @@ async def v1_metrics():
 
 
 @app.get("/v1/health/ready")
+@app.get("/readyz")
 async def readiness_check():
     """Readiness probe that exercises the two dependencies whose failure turned
     `/v1/chat` into a generic 500 while `/v1/health` still reported `ok`.

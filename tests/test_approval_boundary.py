@@ -2,7 +2,7 @@
 import re
 
 
-def test_unverified_document_not_official_source():
+def test_unverified_pipeline_document_is_review_gated():
     from app.knowledge.sop_review import SOPReview
     engine = MagicMock()
     engine._pipeline_db.return_value.__enter__.return_value.execute.return_value.fetchone.return_value = None
@@ -11,7 +11,21 @@ def test_unverified_document_not_official_source():
         title='Test Document', source='Test content',
     )
     review = SOPReview(engine)
-    assert review.is_pilot('test-doc') is False
+    assert review.is_pilot('test-doc') is True
+
+
+def test_admin_ingest_channel_exempt_from_pipeline_review_gate():
+    from app.knowledge.sop_review import SOPReview
+    engine = MagicMock()
+    engine._pipeline_db.return_value.__enter__.return_value.execute.return_value.fetchone.return_value = None
+    engine.rag.get_document_info.return_value = MagicMock(
+        metadata={'source_authority': 'UNVERIFIED', 'source_status': '',
+                  'source_filename': 'Layanan fixture.txt', 'pipeline_status': 'READY',
+                  'ingest_channel': 'admin_api'},
+        title='Layanan fixture', source='Test content',
+    )
+    review = SOPReview(engine)
+    assert review.is_pilot('admin-doc') is False
 
 
 def test_pdf_document_gated():

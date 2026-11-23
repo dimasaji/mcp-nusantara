@@ -1,0 +1,58 @@
+
+> nusantara-engineering-control-plane@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /data/workspace/nus-v1-vps-final-20261123/worktrees/release/frontend
+
+ ✓ tests/assistant.test.tsx (27 tests) 800ms
+ ✓ tests/sop-review.test.tsx (16 tests) 985ms
+ ✓ tests/verification-pages.test.tsx (10 tests) 302ms
+ ✓ tests/knowledge-operations.test.tsx (9 tests) 538ms
+ ✓ tests/human.test.tsx (21 tests) 2353ms
+ ❯ tests/engineering-console.test.tsx (13 tests | 3 failed) 540ms
+   ✓ read-only engineering console > uses the existing engineering overview without querying the application 88ms
+   ✓ read-only engineering console > renders all 22 phases without borrowing acceptance from WEIP 55ms
+   ✓ read-only engineering console > renders twelve gates and preserves the authorization boundary 23ms
+   ✓ read-only engineering console > preserves initial failure and counts exclusions separately from skip 75ms
+   ✓ read-only engineering console > does not invent a preservation cause or loaded runtime identity 14ms
+   ✓ read-only engineering console > offers navigation only, with no persistence or runtime requests 95ms
+   × read-only engineering console > binds displayed evidence to actual archive checksums and JUnit counts 6ms
+     → ENOENT: no such file or directory, open '/data/workspace/nus-v1-vps-final-20261123/worktrees/release/docs/reports/v1-functional-closure-20261009-101736/REMAINING_GATES.json'
+   ✓ read-only engineering console > shows the newer offline results without claiming runtime verification 56ms
+   ✓ read-only engineering console > separates verified temporary transactions from unverified runtime recovery 37ms
+   ✓ read-only engineering console > never counts incomplete JUnit as passing and retains later failures 48ms
+   × read-only engineering console > keeps distinct fingerprint scopes and report-bound gate evidence 0ms
+     → ENOENT: no such file or directory, open '/data/workspace/nus-v1-vps-final-20261123/worktrees/release/docs/reports/openrouter-workflow-20261009T184538/IMPLEMENTATION_REPORT.json'
+   ✓ read-only engineering console > explains API and local AI status in Indonesian without implying live health 23ms
+   × read-only engineering console > records actual subsequent owner consent without interpreting reply 1 as approval 18ms
+     → ENOENT: no such file or directory, open '/data/workspace/nus-v1-vps-final-20261123/worktrees/release/docs/reports/human-console-recovery-20261009T200537/OWNER_DECISION.json'
+ ✓ tests/attestation.test.tsx (15 tests) 319ms
+ ✓ tests/operator-followup.test.tsx (8 tests) 981ms
+ ✓ tests/operator.test.tsx (9 tests) 267ms
+ ✓ tests/inspection-preview.test.tsx (11 tests) 173ms
+ ✓ tests/settings.test.tsx (8 tests) 328ms
+ ✓ tests/chat-privacy.test.tsx (6 tests) 241ms
+ ✓ tests/sop-progress.test.tsx (6 tests) 244ms
+ ✓ tests/ui-routing.test.tsx (6 tests) 250ms
+ ✓ tests/acceptance.test.ts (11 tests) 18ms
+ ✓ tests/sop-metadata.test.tsx (3 tests) 131ms
+ ✓ tests/ncp-chat-contract.test.tsx (3 tests) 189ms
+ ✓ tests/chat-citation.test.tsx (4 tests) 113ms
+ ✓ tests/snapshot-file.test.ts (8 tests) 5ms
+ ✓ tests/hermes-connection.test.tsx (5 tests) 49ms
+ ✓ tests/chat-stream.test.tsx (2 tests) 123ms
+ ✓ tests/runtime-readiness.test.tsx (2 tests) 70ms
+ ✓ tests/api-health.test.ts (3 tests) 6ms
+ ✓ tests/ui.test.tsx (4 tests) 101ms
+ ✓ tests/knowledge-upload.test.ts (4 tests) 4ms
+ ✓ tests/vite-config.test.ts (2 tests) 2ms
+ ✓ tests/api.test.ts (3 tests) 6ms
+ ✓ tests/knowledge-proxy.test.ts (1 test) 139ms
+ ✓ tests/chat-proxy.integration.test.ts (1 test) 65ms
+
+ Test Files  1 failed | 28 passed (29)
+      Tests  3 failed | 218 passed (221)
+   Start at  22:16:07
+   Duration  8.21s (transform 980ms, setup 2.21s, collect 3.13s, tests 9.34s, environment 5.68s, prepare 1.20s)
+
