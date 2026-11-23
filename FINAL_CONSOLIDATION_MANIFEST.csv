@@ -438,8 +438,8 @@ control-plane/,temporary,DELETED,N/A,162957385,untracked leftover,9003 files; no
 .ruff_cache/,temporary,DELETED,N/A,42882,regenerable cache,33 files
 frontend/.vite-temp/,temporary,DELETED,N/A,2554969,regenerable cache,129 files
 **/__pycache__/,temporary,DELETED,N/A,5451908,regenerable cache,376 files
-PC/VPS commit alignment,sync,PENDING_PUSH_PR,N/A,0,origin/codex/restructure-20261123,checkout identical final SHA on both hosts after push/PR
-push + final PR,sync,PENDING_EXECUTION,N/A,0,contract,not executed; requires explicit approval
+PC/VPS commit alignment,sync,PUSHED_PC_CHECKOUT_PENDING,N/A,0,PR #16; d882d1dfdc2f842c83852cdcb1b53f7a8eab21ea,VPS already on target SHA; PC proxy b268da1e must checkout target after PR merge
+push + final PR,sync,PR_CREATED_OPEN,N/A,0,https://github.com/dimasaji/mcp-nusantara/pull/16,head codex/final-consolidation-20261123 @ d882d1df; base codex/restructure-20261123
 active services 8000/8100,runtime,NO_RESTART,N/A,0,STAGE_A_BASELINE.md,stale builds intentionally untouched
 verification/targeted,verification,KEEP_AS_EVIDENCE,N/A,0,final branch,133 passed; 11 targeted files from RC verification
 verification/full-regression,verification,KEEP_AS_EVIDENCE,N/A,0,final branch,89 failed/1466 passed/62 skipped/46 runtime errors; identical ID set to RC

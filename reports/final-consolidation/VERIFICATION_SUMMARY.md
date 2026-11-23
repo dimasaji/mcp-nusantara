@@ -32,4 +32,6 @@ Tiga ID tambahan di branch final hanyalah error koleksi di atas.
 
 Verifikasi **PASS** relatif terhadap baseline: 30 perbaikan dipertahankan, 0 regresi baru.
 Cleanup sudah dijalankan dan ditandai `DELETED` di `FINAL_CONSOLIDATION_MANIFEST.csv`.
-Push dan PR final masih **PENDING EXECUTION**.
+Push selesai dan PR final #16 sudah dibuat:
+`https://github.com/dimasaji/mcp-nusantara/pull/16` (open, head `d882d1df`, base `codex/restructure-20261123`).
+PC masih perlu checkout SHA yang sama setelah PR di-merge.
