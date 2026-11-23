@@ -50,6 +50,11 @@ _FALSE_VERIFICATION = re.compile(
     r"(?:menurut|sesuai|berdasarkan)\s+(?:knowledge\s*base|database|basis\s+data)", re.IGNORECASE,
 )
 
+_CONTACT_REQUEST = re.compile(
+    r"\b(?:whatsapp|wa|telepon|telp|hp|kontak|hubungi|email|e-mail)\b", re.I,
+)
+
+
 # Names such as KTP describe a topic; substantive official claims still need
 # sources. A definition must not be rejected merely for mentioning that topic.
 _SUBSTANTIVE_CLAIM = re.compile(
@@ -387,6 +392,10 @@ class HermesAgent:
         # intent. A definition can return to general chat without retrieving.
         if getattr(request, 'sop_version', None):
             conversation = False
+            repeated_text = None
+        if (scoped_document_ids and not getattr(request, 'sop_version', None)
+                and _general_definition(request.user_input)):
+            conversation = True
             repeated_text = None
         if scoped_document_ids and (turn.get('facet') or not (conversation and not _CONTEXTUAL_FOLLOWUP.search(
                 re.sub(r'\bapa\s+itu\b', '', request.user_input, flags=re.I)))):
@@ -1300,7 +1309,8 @@ class HermesAgent:
                     _src = (getattr(evidence[0], 'chunk', None) or getattr(evidence[0], 'source', None) or '')
                     _src = str(_src).strip()[:400]
                     _rec2 = None
-                    if _src and not _selection and pilot_chat and '\n' not in _src:
+                    if (_src and not _selection and pilot_chat and '\n' not in _src
+                            and not _CONTACT_REQUEST.search(request.user_input)):
                         _rec2 = _grounding_guard.validate(answer=_src, evidence=evidence, intent_name=intent_name)
                     if _rec2 is not None and _rec2.grounded:
                         response_text = _src
