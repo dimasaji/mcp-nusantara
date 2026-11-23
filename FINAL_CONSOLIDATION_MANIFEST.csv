@@ -441,3 +441,8 @@ frontend/.vite-temp/,temporary,DELETE_CANDIDATE_PENDING_APPROVAL,N/A,2554969,reg
 PC/VPS commit alignment,sync,PENDING_APPROVAL,N/A,0,origin/codex/restructure-20261123,checkout identical final SHA on both hosts after push/PR
 push + final PR,sync,PENDING_EXPLICIT_REQUEST,N/A,0,contract,not executed; requires explicit approval
 active services 8000/8100,runtime,NO_RESTART,N/A,0,STAGE_A_BASELINE.md,stale builds intentionally untouched
+verification/targeted,verification,KEEP_AS_EVIDENCE,N/A,0,final branch,133 passed; 11 targeted files from RC verification
+verification/full-regression,verification,KEEP_AS_EVIDENCE,N/A,0,final branch,89 failed/1466 passed/62 skipped/46 runtime errors; identical ID set to RC
+verification/ruff-scoped,verification,KEEP_AS_EVIDENCE,N/A,0,final branch,2052 findings vs baseline 2098; 46 fewer; no new category
+verification/compileall,verification,KEEP_AS_EVIDENCE,N/A,0,final branch,exit 0
+reports/final-consolidation/VERIFICATION_SUMMARY.md,verification,KEEP_AS_EVIDENCE,N/A,0,final branch,commands and results; force-added because reports/* is gitignored
