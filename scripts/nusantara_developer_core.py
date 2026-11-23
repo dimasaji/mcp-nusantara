@@ -1,102 +1,54 @@
-﻿from pathlib import Path
+"""Read-only frontend observation for master-contract forensic audit.
+
+GET endpoints only; no chat, no writes to services. Admin token read from
+.env and used solely as a request header, never printed. Responses are
+status metadata; saved locally as audit evidence.
+"""
 import json
-import subprocess
-import sys
+import urllib.request
+from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-
-STEPS = [
-    ("Health Check", ROOT / "app" / "developer_core" / "e2e_health_check.py"),
-    ("Regression Gate", ROOT / "app" / "developer_core" / "automatic_regression_gate.py"),
-    ("Execution Audit", ROOT / "app" / "developer_core" / "execution_audit_integration.py"),
-    ("Self Improvement", ROOT / "app" / "developer_core" / "self_improvement_loop.py"),
-]
+PROJECT = Path(__file__).resolve().parents[1]
+TOKEN = next(l.strip().split('=', 1)[1]
+             for l in (PROJECT / '.env').read_text(encoding='utf-8').splitlines()
+             if l.startswith('NUSANTARA_ADMIN_TOKEN='))
+BASE = 'http://127.0.0.1:8000/v1/frontend/'
+OUT = PROJECT / 'reports' / 'master-001'
 
 
-def run_step(name, script):
-    if not script.exists():
-        return {
-            "name": name,
-            "status": "FAIL",
-            "reason": f"Missing: {script.relative_to(ROOT)}",
-        }
-
+def get(ep):
+    req = urllib.request.Request(BASE + ep, headers={'x-admin-token': TOKEN})
     try:
-        result = subprocess.run(
-            [sys.executable, str(script)],
-            cwd=str(ROOT),
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        )
-
-        return {
-            "name": name,
-            "status": "PASS" if result.returncode == 0 else "FAIL",
-            "returncode": result.returncode,
-            "output": result.stdout[-3000:],
-            "error": result.stderr[-1000:] if result.stderr else "",
-        }
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())
     except Exception as exc:
-        return {
-            "name": name,
-            "status": "FAIL",
-            "reason": str(exc),
-        }
+        return {'error': f'{type(exc).__name__}: {exc}'}
 
 
 def main():
-    print("=" * 68)
-    print("NUSANTARA DEVELOPER CORE")
-    print("=" * 68)
+    evidence = {}
+    for ep in ('snapshot', 'model-status', 'knowledge-status',
+               'operations-summary', 'hermes/connection', 'history'):
+        evidence[ep] = get(ep)
+    (OUT / 'control_plane_observation.json').write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False), encoding='utf-8')
 
-    results = []
-
-    for name, script in STEPS:
-        result = run_step(name, script)
-        results.append(result)
-        print(f"{name:<22}: {result['status']}")
-
-        if result["status"] != "PASS":
-            print()
-            print(result.get("reason", result.get("error", "")))
-            break
-
-    security = {
-        "production_write": False,
-        "shell_execution": False,
-        "automatic_patch": False,
-        "fail_closed": True,
-    }
-
-    print()
-    print("SECURITY")
-    print(f"Production Write     : BLOCKED")
-    print(f"Shell Execution      : BLOCKED")
-    print(f"Automatic Patch      : BLOCKED")
-    print(f"Fail-Closed          : ENABLED")
-
-    overall = all(r["status"] == "PASS" for r in results)
-
-    report = {
-        "schema": "nusantara.developer_core.e2e.v1",
-        "status": "PASS" if overall else "FAIL",
-        "security": security,
-        "results": results,
-    }
-
-    out = ROOT / "data" / "developer_core" / "developer_core_e2e_report.json"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(
-        json.dumps(report, indent=2, ensure_ascii=False),
-        encoding="utf-8",
-    )
-
-    print()
-    print(f"REPORT               : {out}")
-    print(f"DEVELOPER CORE       : {'PASS' if overall else 'FAIL'}")
+    snap = evidence['snapshot']
+    print('SNAPSHOT status:', snap.get('status'))
+    for p in snap.get('phases', []):
+        print(p['id'], '|', p['name'][:46], '|', p['status'], '|', p.get('kind'))
+    ms = evidence['model-status']
+    print('MODEL:', ms.get('provider'), ms.get('model'), ms.get('status'))
+    ks = evidence['knowledge-status']
+    print('KNOWLEDGE keys:', sorted(ks.keys())[:12])
+    print('KNOWLEDGE summary:', json.dumps(
+        {k: ks[k] for k in list(ks)[:6]}, ensure_ascii=False)[:300])
+    hc = evidence['hermes/connection']
+    print('HERMES:', json.dumps(hc, ensure_ascii=False)[:250])
+    ops = evidence['operations-summary']
+    print('OPS:', json.dumps(ops, ensure_ascii=False)[:250])
+    print('SAVED', OUT / 'control_plane_observation.json')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

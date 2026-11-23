@@ -1,28 +1,19 @@
-"""Actual V1 application on isolated data; no operational uploads or paid calls."""
-from pathlib import Path
+"""Run the explicitly requested local live browser test without logging secrets."""
 import os
+import subprocess
 import sys
-ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT))
-RUN=ROOT/'artifacts/nusantara-e2e-20261016-1018/isolated-runtime'
-RUN.mkdir(parents=True,exist_ok=True)
-os.environ['HF_HUB_OFFLINE']='1'
-os.environ['TRANSFORMERS_OFFLINE']='1'
-os.environ['NUSANTARA_LAYA_ENABLED']='false'
-os.environ['NUSANTARA_DATA_DIR']=str(RUN/'data')
-os.environ['NUSANTARA_KNOWLEDGE_DB']=str(RUN/'knowledge/chat.db')
-os.environ['LLM_PROVIDER']='ollama'
-os.environ['LLM_BASE_URL']='http://127.0.0.1:11434'
-os.environ['PORT']='8766'
-os.environ.pop('NUSANTARA_RUNTIME_PORT',None)
+from pathlib import Path
+
 from dotenv import dotenv_values
-if not os.environ.get('NUSANTARA_ADMIN_TOKEN'):
-    value=dotenv_values(ROOT/'.env',interpolate=False).get('NUSANTARA_ADMIN_TOKEN')
-    if value:os.environ['NUSANTARA_ADMIN_TOKEN']=value
-from app.core.config import settings
-settings.compose_configuration(overrides={'knowledge':{'root':str(RUN/'knowledge'),
-    'database':str(RUN/'knowledge/chat.db')}})
-from app.main import app
-if __name__=='__main__':
-    import uvicorn
-    uvicorn.run(app,host='127.0.0.1',port=8766,log_level='warning')
+
+root = Path(__file__).resolve().parents[1]
+token = dotenv_values(root / '.env').get('NUSANTARA_ADMIN_TOKEN')
+assert token, 'Configured operator credential unavailable'
+node = Path('C:/Users/dmaza/AppData/Local/hermes/node/node.exe')
+temporary = root / 'artifacts/docling-ui/tmp'
+temporary.mkdir(parents=True, exist_ok=True)
+target = sys.argv[1] if len(sys.argv)>1 else 'e2e/docling-live.spec.ts'
+result = subprocess.run([str(node), 'node_modules/playwright/cli.js', 'test', target, '--workers=1'],
+    cwd=root / 'frontend', env={**os.environ, 'CPLANE_E2E_LIVE': '1', 'NUSANTARA_DOCLING_LIVE': '1',
+                                   'NUSANTARA_ADMIN_TOKEN': token, 'TEMP': str(temporary), 'TMP': str(temporary)}, shell=False)
+raise SystemExit(result.returncode)

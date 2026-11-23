@@ -1,76 +1,54 @@
-﻿from pathlib import Path
+"""Read-only frontend observation for master-contract forensic audit.
 
-p = Path(r".\app\knowledge\grounding.py")
-s = p.read_text(encoding="utf-8")
+GET endpoints only; no chat, no writes to services. Admin token read from
+.env and used solely as a request header, never printed. Responses are
+status metadata; saved locally as audit evidence.
+"""
+import json
+import urllib.request
+from pathlib import Path
 
-start_marker = '''    def _procedure_claim_supported(
-        self,
-        sentence: str,
-        evidence: str,
-    ) -> bool:
-'''
+PROJECT = Path(__file__).resolve().parents[1]
+TOKEN = next(l.strip().split('=', 1)[1]
+             for l in (PROJECT / '.env').read_text(encoding='utf-8').splitlines()
+             if l.startswith('NUSANTARA_ADMIN_TOKEN='))
+BASE = 'http://127.0.0.1:8000/v1/frontend/'
+OUT = PROJECT / 'reports' / 'master-001'
 
-start = s.find(start_marker)
 
-if start == -1:
-    raise SystemExit("ERROR: _procedure_claim_supported tidak ditemukan")
+def get(ep):
+    req = urllib.request.Request(BASE + ep, headers={'x-admin-token': TOKEN})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())
+    except Exception as exc:
+        return {'error': f'{type(exc).__name__}: {exc}'}
 
-end = s.find("\n    # ============================================================", start + len(start_marker))
 
-if end == -1:
-    raise SystemExit("ERROR: akhir blok PROCEDURE VALIDATION tidak ditemukan")
+def main():
+    evidence = {}
+    for ep in ('snapshot', 'model-status', 'knowledge-status',
+               'operations-summary', 'hermes/connection', 'history'):
+        evidence[ep] = get(ep)
+    (OUT / 'control_plane_observation.json').write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False), encoding='utf-8')
 
-new_method = '''    def _procedure_claim_supported(
-        self,
-        sentence: str,
-        evidence: str,
-    ) -> bool:
-        """
-        Procedure claims require explicit procedural evidence.
+    snap = evidence['snapshot']
+    print('SNAPSHOT status:', snap.get('status'))
+    for p in snap.get('phases', []):
+        print(p['id'], '|', p['name'][:46], '|', p['status'], '|', p.get('kind'))
+    ms = evidence['model-status']
+    print('MODEL:', ms.get('provider'), ms.get('model'), ms.get('status'))
+    ks = evidence['knowledge-status']
+    print('KNOWLEDGE keys:', sorted(ks.keys())[:12])
+    print('KNOWLEDGE summary:', json.dumps(
+        {k: ks[k] for k in list(ks)[:6]}, ensure_ascii=False)[:300])
+    hc = evidence['hermes/connection']
+    print('HERMES:', json.dumps(hc, ensure_ascii=False)[:250])
+    ops = evidence['operations-summary']
+    print('OPS:', json.dumps(ops, ensure_ascii=False)[:250])
+    print('SAVED', OUT / 'control_plane_observation.json')
 
-        Lexical overlap of one token is NOT sufficient.
-        Evidence must contain procedural language and provide
-        meaningful lexical support for the claimed action.
-        """
 
-        if not self._contains_procedure_claim(sentence):
-            return True
-
-        # Evidence must explicitly describe a procedure/action.
-        if not self._evidence_contains_procedure_claim(evidence):
-            return False
-
-        sentence_tokens = self._meaningful_tokens(sentence)
-        evidence_tokens = self._meaningful_tokens(evidence)
-
-        if not sentence_tokens or not evidence_tokens:
-            return False
-
-        overlap = sentence_tokens & evidence_tokens
-
-        # One shared token is too weak for a procedural claim.
-        # Require at least 2 meaningful overlapping tokens.
-        if len(overlap) < 2:
-            return False
-
-        # Require meaningful lexical coverage of the claim.
-        coverage = len(overlap) / max(len(sentence_tokens), 1)
-
-        # Procedure claims need stronger evidence than ordinary
-        # informational statements.
-        return coverage >= 0.30
-
-'''
-
-s = s[:start] + new_method + s[end:]
-
-p.write_text(s, encoding="utf-8")
-
-print("=" * 70)
-print("NUSANTARA GROUNDING PROCEDURE PATCH")
-print("=" * 70)
-print("STATUS : PATCHED")
-print("FILE   :", p.resolve())
-print("RULE   : procedure claim requires explicit evidence")
-print("RULE   : minimum 2 meaningful overlapping tokens")
-print("RULE   : minimum 30% lexical coverage")
+if __name__ == '__main__':
+    main()

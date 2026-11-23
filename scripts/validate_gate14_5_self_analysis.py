@@ -1,81 +1,37 @@
-﻿import json
-from pathlib import Path
-from datetime import datetime
-
-ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "graphify-out"
-
-graph = json.loads((OUT / "graph.json").read_text(encoding="utf-8"))
-truth = json.loads((OUT / "gate14_runtime_graph_truth.json").read_text(encoding="utf-8"))
-connectivity = json.loads((OUT / "gate14_3_runtime_graph_connectivity.json").read_text(encoding="utf-8"))
-manifest = json.loads((OUT / "gate14_4_runtime_graph_manifest.json").read_text(encoding="utf-8"))
-
-nodes = graph.get("nodes", [])
-links = graph.get("links", [])
-
-runtime_targets = truth.get("runtime_graph_targets", {})
-runtime_modules = truth.get("runtime", {}).get("modules", [])
-
-analysis = {
-    "gate": "14.5",
-    "engine": "Developer Core Self-Analysis",
-    "version": "14.5.0",
-    "timestamp": datetime.now().isoformat(),
-    "source_of_truth": str(ROOT),
-    "graph": {
-        "nodes": len(nodes),
-        "links": len(links),
-    },
-    "runtime": {
-        "module_count": len(runtime_modules),
-        "target_groups": len(runtime_targets),
-        "target_entries": sum(len(v) for v in runtime_targets.values()),
-    },
-    "connectivity": {
-        "status": connectivity.get("status", "UNKNOWN"),
-        "checks": connectivity.get("checks_passed", connectivity.get("checks", 3)),
-    },
-    "manifest": {
-        "status": "AVAILABLE",
-        "gate": manifest.get("gate"),
-    },
-    "self_analysis": {
-        "runtime_known": len(runtime_modules) > 0,
-        "graph_known": len(nodes) > 0 and len(links) > 0,
-        "connectivity_known": connectivity.get("status") == "PASS",
-        "manifest_known": manifest.get("gate") == "14.4",
-    },
+param([switch]$IncludeChat, [string]$EvidenceDirectory)
+. "$PSScriptRoot/../service/local-services.ps1"
+if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
+New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
+$results = @()
+foreach ($probe in @(
+    @{name='backend';url='http://127.0.0.1:8000/health'},
+    @{name='frontend';url='http://127.0.0.1:5180/'},
+    @{name='proxy';url='http://127.0.0.1:5180/health'},
+    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
+    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
+    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
+)) {
+    $ok = Test-Http $probe.url
+    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
 }
-
-checks = [
-    analysis["self_analysis"]["runtime_known"],
-    analysis["self_analysis"]["graph_known"],
-    analysis["self_analysis"]["connectivity_known"],
-    analysis["self_analysis"]["manifest_known"],
-]
-
-analysis["checks"] = {
-    "passed": sum(checks),
-    "total": len(checks),
+if ($IncludeChat) {
+    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
+    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
+        $session = 'web-' + [Guid]::NewGuid().ToString()
+        try {
+            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
+            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
+            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
+                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
+        } catch {
+            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
+        }
+    }
 }
-
-analysis["status"] = "PASS" if all(checks) else "FAIL"
-
-output = OUT / "gate14_5_self_analysis.json"
-output.write_text(
-    json.dumps(analysis, indent=2, ensure_ascii=False),
-    encoding="utf-8",
-)
-
-print("=" * 64)
-print("NUSANTARA GATE 14.5 - DEVELOPER CORE SELF-ANALYSIS")
-print("=" * 64)
-print(f"Runtime modules    : {len(runtime_modules)}")
-print(f"Runtime target     : {sum(len(v) for v in runtime_targets.values())}")
-print(f"Graph nodes        : {len(nodes)}")
-print(f"Graph links        : {len(links)}")
-print(f"Connectivity       : {connectivity.get('status', 'UNKNOWN')}")
-print(f"Manifest           : {manifest.get('gate', 'UNKNOWN')}")
-print(f"Checks             : {sum(checks)}/{len(checks)}")
-print(f"GATE 14.5 STATUS   : {analysis['status']}")
-print(f"Output             : {output}")
+$status = Get-LocalStatus
+$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
+$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
+$results | Format-Table -AutoSize
+if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }

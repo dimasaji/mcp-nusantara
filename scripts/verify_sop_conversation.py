@@ -10,7 +10,7 @@ folder=root/'artifacts/sop-conversation'/datetime.now(timezone.utc).strftime('%Y
 folder.mkdir(parents=True,exist_ok=False)
 turns=[]
 with httpx.Client(base_url='http://127.0.0.1:8765',timeout=90) as c:
-    assert c.get('/v1/control-plane/model-status').json()['provider']=='ollama','Local provider required'
+    assert c.get('/v1/frontend/model-status').json()['provider']=='ollama','Local provider required'
     session='sop-conversation-'+uuid4().hex
     for question in ['Mau minta data pribadi, bawa apa?','Kalau prosesnya?','Berapa lama?','Bisa online?']:
         response=c.post('/v1/chat',json={'user_input':question,'session_id':session})

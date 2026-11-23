@@ -1,89 +1,86 @@
-"""Evaluate frozen project oracles against an isolated snapshot of the V1 store.
-
-Never ingests or promotes production knowledge. Records missing/review-required
-oracles separately from fixture retrieval and unchanged grounding guard checks.
-"""
-from __future__ import annotations
-
-import argparse
-import hashlib
+"""Live API acceptance supplement; browser acceptance is recorded separately."""
 import json
-import sqlite3
-import sys
-import tempfile
-import gc
-from contextlib import closing
+import os
+import time
+import uuid
 from pathlib import Path
+from urllib.parse import quote
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+import httpx
+from dotenv import dotenv_values
 
-from app.knowledge.grounding import EvidenceGroundingGuard
-from app.knowledge.rag import RAG
-from app.knowledge.store import SQLiteVectorStore
-
-
-def run(output: Path) -> int:
-    spec_path = ROOT / "app/evaluation/datasets/v1_recovery_oracle.json"
-    raw = spec_path.read_bytes()
-    spec = json.loads(raw)
-    records = []
-    guard = EvidenceGroundingGuard()
-    with tempfile.TemporaryDirectory(prefix="v1-rag-", dir=ROOT / "reports") as temp:
-        snapshot = Path(temp) / "knowledge.db"
-        with closing(sqlite3.connect((ROOT / "data/knowledge/nusantara_knowledge.db").as_uri() + "?mode=ro", uri=True)) as source:
-            with closing(sqlite3.connect(snapshot)) as destination:
-                source.backup(destination)
-        rag = RAG(vector_store=SQLiteVectorStore(str(snapshot)))
-        try:
-            for case in spec["cases"]:
-                status = case["oracle_status"]
-                if status in {"MISSING", "REVIEW_REQUIRED"}:
-                    records.append({"id": case["id"], "status": status,
-                                    "runtime_knowledge_status": case.get("runtime_knowledge_status"),
-                                    "reason": case.get("missing_reason", "Human source/version review and approved V1 knowledge are required")})
-                    continue
-                evidence = rag.query(case["question"], top_k=5).evidence_pack.evidence
-                # Reproduce the route's unchanged relevance boundary.
-                authoritative = [e for e in evidence if e.score >= .50]
-                ids = [e.document_id for e in authoritative]
-                wrong = sorted(set(ids) & set(case["negative_documents"]))
-                if status == "NEGATIVE_CASE":
-                    passed = not wrong
-                    checks = {"unrelated_documents_not_authoritative": passed,
-                              "no_evidence_claim_rejected": not guard.validate("Persyaratan wajib membawa surat ZYX.", []).grounded}
-                else:
-                    expected = case["expected_document"]
-                    selected = [e for e in authoritative if e.document_id == expected]
-                    text = " ".join(e.chunk for e in selected)
-                    checks = {"expected_document_retrieved": expected in ids,
-                              "required_evidence_present": all(q in text for q in case["required_evidence"]),
-                              "unrelated_documents_not_authoritative": not wrong,
-                              "source_answer_passes_guard": guard.validate(case["expected_answer"], selected, case["intent"]).grounded}
-                    passed = all(checks.values())
-                records.append({"id": case["id"], "status": "PASS" if passed else "FAIL", "checks": checks,
-                                "authoritative_document_ids": ids, "wrong_domain_document_ids": wrong,
-                                "retrieved": [{"document_id": e.document_id, "score": round(e.score, 6)} for e in evidence]})
-            adversarial = []
-            for answer in ("Biaya paspor Rp 999999.", "KTP selesai dalam 99 hari.",
-                           "Persyaratan wajib membawa surat rahasia.", "Datang ke kantor ZYX di Jalan Fiktif 999."):
-                result = guard.validate(answer, [{"chunk": "KTP-el adalah dokumen identitas penduduk."}])
-                adversarial.append({"answer": answer, "rejected": not result.grounded, "reason": result.reason})
-        finally:
-            rag._embedding_adapter.stop()
-            gc.collect()  # release SQLite context-manager connection cycles on Windows
-    result = {"dataset": str(spec_path.relative_to(ROOT)), "dataset_sha256": hashlib.sha256(raw).hexdigest(),
-              "mode": "real_indobert_snapshot_retrieval", "records": records, "adversarial": adversarial,
-              "failures": sum(r["status"] == "FAIL" for r in records),
-              "missing_or_review_required": sum(r["status"] in {"MISSING", "REVIEW_REQUIRED"} for r in records),
-              "limitations": "Fixture retrieval and source-answer validation; no generated-answer correctness or production approval inferred"}
-    result["status"] = "FAIL" if result["failures"] or not all(r["rejected"] for r in adversarial) else "VERIFY"
-    output.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(json.dumps(result, ensure_ascii=False))
-    return int(result["status"] == "FAIL")
+OUT=Path('artifacts/v1-six')
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=ROOT / "reports/V1_RECOVERY_RAG.json")
-    raise SystemExit(run(parser.parse_args().output))
+def save(name,value):
+    (OUT/name).write_text(json.dumps(value,indent=2,ensure_ascii=False),encoding='utf-8')
+
+
+def main():
+    token=os.environ.get('NUSANTARA_ADMIN_TOKEN',dotenv_values('.env').get('NUSANTARA_ADMIN_TOKEN'))
+    headers={'X-Admin-Token':token}
+    with httpx.Client(base_url='http://127.0.0.1:5180',timeout=280,trust_env=False) as client:
+        model=client.get('/v1/frontend/model-status').raise_for_status().json()
+        assert model['provider']=='ollama', 'Do not send documents to an external provider'
+        session='web-'+str(uuid.uuid4());turns=[]
+        questions=['Jelaskan rekursi dalam satu kalimat.','Beri contoh sederhana untuk konsep tadi.',
+            'Ringkas penjelasan tadi menjadi satu kalimat.','Apa perbedaan konsep tadi dengan perulangan?',
+            'Tulis fungsi Python pendek untuk contoh tadi.','Jelaskan kode tadi dalam satu kalimat.',
+            'Apa masukan fungsi tadi?','Apa hasil fungsi tadi jika masukannya 3?',
+            'Sebutkan satu keterbatasan pendekatan tadi.','Ringkas percakapan tadi dalam dua kalimat.']
+        first_body=None
+        for number,question in enumerate(questions,1):
+            body=dict(session_id=session,request_id=uuid.uuid4().hex,user_input=question)
+            if first_body is None:first_body=body
+            start=time.perf_counter()
+            response=client.post('/v1/chat',json=body).raise_for_status()
+            answer=response.json();assert answer['model']==model['model']
+            assert answer['provider_status'] in ('ollama','local_rule','evidence_fast_path')
+            turns.append(dict(number=number,question=question,answer=answer,request_id=body['request_id'],
+                              elapsed_ms=round((time.perf_counter()-start)*1000)))
+            save('ten-turns.json',dict(session_id=session,model=model['model'],turns=turns))
+            print(f'Turn {number}/10 HTTP 200 model={answer["model"]}',flush=True)
+        history=client.get('/v1/chat/history',headers={'X-Chat-Session':session}).raise_for_status().json()
+        assert len(history['turns'])==10 and all(t['status']=='SUCCEEDED' for t in history['turns'])
+        replay=client.post('/v1/chat',json=first_body).raise_for_status().json()
+        assert replay==turns[0]['answer']
+        assert len(client.get('/v1/chat/history',headers={'X-Chat-Session':session}).json()['turns'])==10
+        save('ten-turns-history.json',dict(history=history,replay_without_duplicate=True))
+
+        raw='Catatan Uji NUSANTARA V1. Kode proyek Aurora adalah MERAK-427. Warna kemasan adalah biru. Tidak ada biaya yang tercantum.'
+        upload=client.post('/v1/knowledge/pipeline/documents',content=raw.encode(),headers={**headers,
+            'Content-Type':'application/octet-stream','X-Document-Name':quote('Catatan Uji Aurora V1.txt')}).raise_for_status().json()
+        assert upload['status'] in ('READY','DUPLICATE'),upload
+        document_session='web-'+str(uuid.uuid4())
+        doc_turns=[]
+        for question in ['Apa kode proyek Aurora?','Berapa biaya proyek Aurora dalam dokumen ini?']:
+            answer=client.post('/v1/chat',headers=headers,json=dict(session_id=document_session,
+                request_id=uuid.uuid4().hex,user_input=question,document_ids=[upload['document_id']])).raise_for_status().json()
+            assert all(e['document_id']==upload['document_id'] for e in answer['evidence'])
+            doc_turns.append(dict(question=question,answer=answer))
+        save('upload-chat.json',dict(upload=upload,turns=doc_turns))
+
+        sop_session='web-'+str(uuid.uuid4());sop=[]
+        for question in ['Apa persyaratan permohonan data pribadi?','Kalau prosesnya?','Berapa lama?','Bisa online?']:
+            answer=client.post('/v1/chat',headers=headers,json=dict(session_id=sop_session,
+                request_id=uuid.uuid4().hex,user_input=question,
+                document_ids=['sop_e4d43334bc32fa5a97972fb64bb34e9c'])).raise_for_status().json()
+            sop.append(dict(question=question,answer=answer));save('sop-dialogue.json',sop)
+        assert 'Surat Permohonan' in sop[0]['answer']['response']
+        assert '3 hari kerja' in sop[2]['answer']['response'].lower()
+        assert all(e['title']=='PERMOHONAN DATA PRIBADI' for turn in sop for e in turn['answer']['evidence'])
+        status=client.get('/v1/frontend/model-status').raise_for_status().json()
+        assert status['model']==model['model'] and status['provider']=='ollama'
+        save('runtime-final.json',status)
+        endpoints={}
+        for path in ['/health','/v1/frontend/models?provider=ollama','/v1/frontend/operations-summary',
+                     '/v1/frontend/cost-summary','/v1/frontend/execution-context','/v1/frontend/history',
+                     '/v1/frontend/evidence-package','/v1/knowledge/pipeline/status']:
+            response=client.get(path,headers=headers)
+            endpoints[path]=dict(status=response.status_code,body=response.json())
+        save('frontend-endpoints.json',endpoints)
+        print('API dialogue, history/replay, upload and SOP probes finished',flush=True)
+
+
+if __name__=='__main__':
+    main()

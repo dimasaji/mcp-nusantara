@@ -1,44 +1,21 @@
-$ErrorActionPreference = 'Stop'
-$Root = (Get-Location).Path
-
-$Files = @(
-    'app\hermes\agent.py',
-    'app\knowledge\engine.py',
-    'app\knowledge\rag.py',
-    'app\api\routes.py'
-)
-
-foreach ($Relative in $Files) {
-    $Path = Join-Path $Root $Relative
-    if (-not (Test-Path -LiteralPath $Path)) {
-        throw "ABORT: File tidak ditemukan: $Relative"
-    }
+param([switch]$Restart)
+$ErrorActionPreference='Stop'
+$root=Split-Path $PSScriptRoot -Parent
+$run=Join-Path $root 'artifacts/nusantara-e2e-20261016-1018'
+$stamp=Get-Date -Format 'yyyyMMdd-HHmmss'
+if($Restart){
+ $listener=Get-NetTCPConnection -State Listen -LocalPort 8766 -ErrorAction SilentlyContinue
+ if($listener){
+  $owned=Get-CimInstance Win32_Process -Filter "ProcessId=$($listener.OwningProcess)"
+  if($owned.CommandLine -notlike '*serve_v1_completion_isolated.py*'){throw 'Port 8766 is not owned by this test launcher.'}
+  Stop-Process -Id $listener.OwningProcess
+  Wait-Process -Id $listener.OwningProcess -Timeout 10 -ErrorAction SilentlyContinue
+ }
 }
-
-Write-Host "`n=== 1. GATE 7: SKOR YANG DIBACA ===" -ForegroundColor Cyan
-Select-String `
-    -Path '.\app\hermes\agent.py' `
-    -Pattern 'def _evidence_score|consumer_post_filter|_evidence_score\(item\)' `
-    -Context 2,8
-
-Write-Host "`n=== 2. ENGINE: KONVERSI HASIL RAG ===" -ForegroundColor Cyan
-Select-String `
-    -Path '.\app\knowledge\engine.py' `
-    -Pattern 'RetrievalEvidenceList|evidence_pack\.evidence|search_knowledge' `
-    -Context 2,5
-
-Write-Host "`n=== 3. MODEL EVIDENCE DI SELURUH APP ===" -ForegroundColor Cyan
-Get-ChildItem '.\app' -Recurse -File -Filter '*.py' |
-    Select-String `
-        -Pattern 'class Evidence\b|class RetrievalEvidenceList\b|score\s*:' `
-        -Context 2,6 |
-    ForEach-Object {
-        '{0}:{1}: {2}' -f $_.Path, $_.LineNumber, $_.Line.Trim()
-        $_.Context.PreContext
-        $_.Context.PostContext
-        ''
-    }
-
-Write-Host "`n=== 4. HASIL ===" -ForegroundColor Yellow
-Write-Host 'Pemeriksaan selesai. Source tidak diubah.'
-Write-Host 'Pastikan field skor Evidence kanonis sebelum menerapkan patch.'
+if ($Restart -or -not (Get-NetTCPConnection -State Listen -LocalPort 8766 -ErrorAction SilentlyContinue)) {
+ Start-Process -FilePath "$root/.venv/Scripts/python.exe" -ArgumentList @('scripts/serve_v1_completion_isolated.py') -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput "$run/isolated-backend-$stamp.stdout.log" -RedirectStandardError "$run/isolated-backend-$stamp.stderr.log"
+}
+if (-not (Get-NetTCPConnection -State Listen -LocalPort 5180 -ErrorAction SilentlyContinue)) {
+ $env:NUSANTARA_BACKEND_URL='http://127.0.0.1:8766'
+ Start-Process -FilePath 'C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe' -ArgumentList @('node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','5180') -WorkingDirectory "$root/frontend" -WindowStyle Hidden -RedirectStandardOutput "$run/isolated-frontend.stdout.log" -RedirectStandardError "$run/isolated-frontend.stderr.log"
+}

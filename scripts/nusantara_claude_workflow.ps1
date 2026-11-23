@@ -1,75 +1,54 @@
-﻿param(
-    [Parameter(Mandatory=$true)]
-    [string]$Task
-)
+"""Read-only frontend observation for master-contract forensic audit.
 
-$ErrorActionPreference = "Stop"
-$ROOT = Split-Path -Parent $PSScriptRoot
-Set-Location $ROOT
+GET endpoints only; no chat, no writes to services. Admin token read from
+.env and used solely as a request header, never printed. Responses are
+status metadata; saved locally as audit evidence.
+"""
+import json
+import urllib.request
+from pathlib import Path
 
-Write-Host ""
-Write-Host "====================================================================" -ForegroundColor Cyan
-Write-Host "NUSANTARA CLAUDE CODE CONTROLLED WORKFLOW" -ForegroundColor Cyan
-Write-Host "===================================================================="
-Write-Host "TASK : $Task" -ForegroundColor Yellow
-Write-Host ""
-
-function Run-Step {
-    param([string]$Name,[string]$Script)
-    Write-Host "[$Name]" -ForegroundColor Cyan
-    if (-not (Test-Path $Script)) { Write-Host "MISSING: $Script" -ForegroundColor Red; exit 1 }
-    python $Script
-    if ($LASTEXITCODE -ne 0) { Write-Host "FAILED: $Script" -ForegroundColor Red; exit 1 }
-    Write-Host "PASS: $Name" -ForegroundColor Green
-    Write-Host ""
-}
-
-Run-Step "DEVELOPER CORE" ".\scripts\nusantara_developer_core.py"
-python .\app\developer_core\context_router.py "$Task"
-Run-Step "CLAUDE CODE CONTEXT" ".\app\developer_core\claude_code_integration.py"
-
-$contextFile=".\data\developer_core\claude_code_context.json"
-if (-not (Test-Path $contextFile)) { Write-Host "BLOCKED: context tidak ditemukan." -ForegroundColor Red; exit 1 }
-
-$context=Get-Content $contextFile -Raw -Encoding UTF8 | ConvertFrom-Json
-
-Write-Host "====================================================================" -ForegroundColor Cyan
-Write-Host "CONTROL STATE" -ForegroundColor Cyan
-Write-Host "===================================================================="
-Write-Host "Role              : $($context.role)"
-Write-Host "Change ID         : $($context.change_id)"
-Write-Host "Approval          : $($context.approval_status)"
-Write-Host "Allowed Files     : $(@($context.allowed_files).Count)"
-Write-Host "Write Mode        : $($context.write_mode)"
-Write-Host ""
-Write-Host "SECURITY" -ForegroundColor Yellow
-Write-Host "Production Write  : $($context.execution.production_write)"
-Write-Host "Shell Execution   : $($context.execution.shell_execution)"
-Write-Host "Automatic Patch   : $($context.execution.automatic_patch)"
-Write-Host "Fail-Closed       : $($context.fail_closed)"
-
-if ($context.execution.production_write -eq $true -or $context.execution.shell_execution -eq $true -or $context.execution.automatic_patch -eq $true -or $context.fail_closed -ne $true) {
-    Write-Host ""
-    Write-Host "DEVELOPER CORE : BLOCKED" -ForegroundColor Red
-    exit 1
-}
-
-Write-Host ""
-Write-Host "====================================================================" -ForegroundColor Green
-Write-Host "CLAUDE CODE TASK CONTEXT" -ForegroundColor Green
-Write-Host "===================================================================="
-Write-Host ""
-Write-Host $Task
-Write-Host ""
-Write-Host "Context siap untuk Claude Code." -ForegroundColor Green
-Write-Host "Human approval tetap diperlukan sebelum Controlled Write." -ForegroundColor Yellow
-Write-Host ""
-Write-Host "Production Write : BLOCKED" -ForegroundColor Green
-Write-Host "Shell Execution  : BLOCKED" -ForegroundColor Green
-Write-Host "Automatic Patch  : BLOCKED" -ForegroundColor Green
-Write-Host "Fail-Closed      : ENABLED" -ForegroundColor Green
-Write-Host ""
-Write-Host "DEVELOPER CORE : READY" -ForegroundColor Green
+PROJECT = Path(__file__).resolve().parents[1]
+TOKEN = next(l.strip().split('=', 1)[1]
+             for l in (PROJECT / '.env').read_text(encoding='utf-8').splitlines()
+             if l.startswith('NUSANTARA_ADMIN_TOKEN='))
+BASE = 'http://127.0.0.1:8000/v1/frontend/'
+OUT = PROJECT / 'reports' / 'master-001'
 
 
+def get(ep):
+    req = urllib.request.Request(BASE + ep, headers={'x-admin-token': TOKEN})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())
+    except Exception as exc:
+        return {'error': f'{type(exc).__name__}: {exc}'}
 
+
+def main():
+    evidence = {}
+    for ep in ('snapshot', 'model-status', 'knowledge-status',
+               'operations-summary', 'hermes/connection', 'history'):
+        evidence[ep] = get(ep)
+    (OUT / 'control_plane_observation.json').write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False), encoding='utf-8')
+
+    snap = evidence['snapshot']
+    print('SNAPSHOT status:', snap.get('status'))
+    for p in snap.get('phases', []):
+        print(p['id'], '|', p['name'][:46], '|', p['status'], '|', p.get('kind'))
+    ms = evidence['model-status']
+    print('MODEL:', ms.get('provider'), ms.get('model'), ms.get('status'))
+    ks = evidence['knowledge-status']
+    print('KNOWLEDGE keys:', sorted(ks.keys())[:12])
+    print('KNOWLEDGE summary:', json.dumps(
+        {k: ks[k] for k in list(ks)[:6]}, ensure_ascii=False)[:300])
+    hc = evidence['hermes/connection']
+    print('HERMES:', json.dumps(hc, ensure_ascii=False)[:250])
+    ops = evidence['operations-summary']
+    print('OPS:', json.dumps(ops, ensure_ascii=False)[:250])
+    print('SAVED', OUT / 'control_plane_observation.json')
+
+
+if __name__ == '__main__':
+    main()

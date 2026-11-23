@@ -1,174 +1,37 @@
-﻿from pathlib import Path
-import json
-import sys
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(PROJECT_ROOT))
-
-from app.knowledge.engine import KnowledgeEngine
-
-print("=" * 80)
-print("NUSANTARA AI — KNOWLEDGE GROUNDING BENCHMARK")
-print("=" * 80)
-
-engine = KnowledgeEngine()
-
-tests = [
-    {
-        "id": "KTP-INFO",
-        "query": "Apa itu KTP-el?",
-        "expected_document": "Test KTP",
-        "expected_relevant": True,
-    },
-    {
-        "id": "KTP-STATUS",
-        "query": "Bagaimana cara mengecek status KTP?",
-        "expected_document": "Test KTP",
-        "expected_relevant": True,
-    },
-    {
-        "id": "PASPOR",
-        "query": "Apa itu paspor?",
-        "expected_document": "Test Paspor",
-        "expected_relevant": True,
-    },
-    {
-        "id": "ALAMAT",
-        "query": "Bagaimana cara perubahan alamat?",
-        "expected_document": "Test Perubahan Alamat",
-        "expected_relevant": True,
-    },
-    {
-        "id": "KTP-SYARAT",
-        "query": "Apa syarat membuat KTP-el?",
-        "expected_document": None,
-        "expected_relevant": False,
-    },
-]
-
-results = []
-
-for test in tests:
-
-    print()
-    print("-" * 80)
-    print(f"[{test['id']}] {test['query']}")
-
-    evidence = engine.search_knowledge(test["query"])
-
-    normalized = []
-
-    for item in evidence:
-        if hasattr(item, "model_dump"):
-            data = item.model_dump()
-        elif hasattr(item, "__dict__"):
-            data = dict(item.__dict__)
-        elif isinstance(item, dict):
-            data = item
-        else:
-            data = {"value": str(item)}
-
-        normalized.append(data)
-
-    print(f"Evidence count: {len(normalized)}")
-
-    for index, item in enumerate(normalized, 1):
-
-        title = item.get("title")
-        score = item.get("score")
-
-        metadata = item.get("metadata", {})
-
-        if isinstance(metadata, dict):
-            hybrid = metadata.get("hybrid_score")
-        else:
-            hybrid = None
-
-        print(
-            f"  {index}. title={title!r} "
-            f"score={score!r} "
-            f"hybrid={hybrid!r}"
-        )
-
-    # ------------------------------------------------------------
-    # VALIDATE EXPECTED DOCUMENT
-    # ------------------------------------------------------------
-
-    titles = [
-        str(item.get("title", ""))
-        for item in normalized
-    ]
-
-    if test["expected_relevant"]:
-
-        matched = (
-            test["expected_document"] in titles
-        )
-
-        status = "PASS" if matched else "FAIL"
-
-    else:
-
-        # Untuk pertanyaan yang knowledge-nya memang tidak tersedia,
-        # kita belum menganggap retrieval sebagai jawaban.
-        #
-        # Ini benchmark discovery:
-        # apakah expected document memang tidak tersedia?
-        matched = (
-            test["expected_document"] is None
-            and "Test KTP" not in titles
-            or test["expected_document"] is None
-        )
-
-        status = "PASS" if matched else "FAIL"
-
-    print(f"EXPECTED RELEVANT : {test['expected_relevant']}")
-    print(f"EXPECTED DOCUMENT : {test['expected_document']}")
-    print(f"RESULT            : {status}")
-
-    results.append(
-        {
-            "id": test["id"],
-            "query": test["query"],
-            "expected_document": test["expected_document"],
-            "expected_relevant": test["expected_relevant"],
-            "retrieved_titles": titles,
-            "evidence_count": len(normalized),
-            "status": status,
+param([switch]$IncludeChat, [string]$EvidenceDirectory)
+. "$PSScriptRoot/../service/local-services.ps1"
+if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
+New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
+$results = @()
+foreach ($probe in @(
+    @{name='backend';url='http://127.0.0.1:8000/health'},
+    @{name='frontend';url='http://127.0.0.1:5180/'},
+    @{name='proxy';url='http://127.0.0.1:5180/health'},
+    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
+    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
+    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
+)) {
+    $ok = Test-Http $probe.url
+    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+}
+if ($IncludeChat) {
+    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
+    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
+        $session = 'web-' + [Guid]::NewGuid().ToString()
+        try {
+            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
+            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
+            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
+                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
+        } catch {
+            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
         }
-    )
-
-# ---------------------------------------------------------------------------
-# SAVE
-# ---------------------------------------------------------------------------
-
-output = (
-    PROJECT_ROOT
-    / "data"
-    / "knowledge"
-    / "knowledge_grounding_benchmark.json"
-)
-
-output.write_text(
-    json.dumps(
-        results,
-        ensure_ascii=False,
-        indent=2,
-    ),
-    encoding="utf-8",
-)
-
-passed = sum(
-    1
-    for item in results
-    if item["status"] == "PASS"
-)
-
-print()
-print("=" * 80)
-print("BENCHMARK SELESAI")
-print("=" * 80)
-print(f"PASS : {passed}/{len(results)}")
-print(f"FAIL : {len(results) - passed}/{len(results)}")
-print(f"FILE : {output}")
-print("=" * 80)
+    }
+}
+$status = Get-LocalStatus
+$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
+$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
+$results | Format-Table -AutoSize
+if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }

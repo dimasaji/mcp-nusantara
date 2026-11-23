@@ -1,269 +1,128 @@
-﻿from pathlib import Path
-
-p = Path(r".\scripts\test_e2e_grounding_ollama.py")
-
-content = r'''"""
-Nusantara AI - E2E Grounding + Ollama Test
-
-Tests:
-1. Ollama health
-2. Supported factual answer
-3. Unsupported procedural/status claim
-4. Unsupported requirements hallucination
-"""
-
+"""Run, seal and publish V1 offline evidence. No decisions or provider calls."""
 from __future__ import annotations
-
-import asyncio
-import sys
+import hashlib
+import json
+import os
 from pathlib import Path
+import subprocess
+import sys
+from datetime import datetime, timezone
+from uuid import uuid4
+import xml.etree.ElementTree as ET
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-
-from app.knowledge.grounding import EvidenceGroundingGuard
-from app.models.base import GenerateRequest
-from app.models.ollama import OllamaProvider
-
-
-MODEL = "llama3.2:1b"
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from app.core.evidence_registry import collect_review_package, _safe_path, _cross_process_lock
 
 
-def extract_content(response) -> str:
-    if response is None:
-        return ""
-
-    if isinstance(response, dict):
-        value = response.get("content")
-        if value is not None:
-            return str(value)
-
-        value = response.get("text")
-        if value is not None:
-            return str(value)
-
-        value = response.get("response")
-        if value is not None:
-            return str(value)
-
-    for attr in ("content", "text", "response"):
-        value = getattr(response, attr, None)
-        if value is not None:
-            return str(value)
-
-    return str(response)
+def digest(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-async def generate_answer(
-    provider: OllamaProvider,
-    query: str,
-    evidence_context: str,
-) -> str:
-
-    system_instruction = """Jawab hanya berdasarkan EVIDENCE.
-Jangan menggunakan pengetahuan di luar EVIDENCE.
-Jangan membuat fakta, prosedur, syarat, angka, atau contoh baru.
-Jika informasi tidak tersedia dalam EVIDENCE, katakan bahwa informasi tersebut belum tersedia."""
-
-    prompt = f"""EVIDENCE:
-{evidence_context}
-
-PERTANYAAN:
-{query}
-
-JAWABAN:
-"""
-
-    request = GenerateRequest(
-        prompt=prompt,
-        system=system_instruction,
-        max_tokens=80,
-        temperature=0.0,
-        top_p=0.1,
-    )
-
-    response = await provider.generate(request)
-
-    return extract_content(response).strip()
+def write_once(path, value):
+    with Path(path).open('xb') as stream:
+        stream.write(json.dumps(value, sort_keys=True, indent=2, ensure_ascii=False).encode('utf-8') + b'\n')
+        stream.flush()
+        os.fsync(stream.fileno())
 
 
-async def run_case(
-    provider: OllamaProvider,
-    guard: EvidenceGroundingGuard,
-    case_id: str,
-    query: str,
-    evidence: list[str],
-    expected_grounded: bool,
-) -> bool:
-
-    print("=" * 70)
-    print(case_id)
-    print("=" * 70)
-
-    evidence_context = "\n".join(
-        f"- {item}" for item in evidence
-    )
-
-    # Untuk E2E-001 kita menggunakan fakta langsung dari evidence
-    # agar regression test tidak bergantung pada variasi generasi
-    # model 1B.
-    #
-    # E2E-002 dan E2E-003 menggunakan klaim unsupported sehingga
-    # Guard wajib menolaknya.
-
-    if case_id == "E2E-001":
-        answer = "KTP-el adalah dokumen identitas penduduk."
-
-    elif case_id == "E2E-002":
-        answer = (
-            "Untuk mengecek status KTP, pengguna harus melakukan "
-            "pemeriksaan status melalui sistem layanan."
-        )
-
-    elif case_id == "E2E-003":
-        answer = (
-            "Syarat membuat KTP-el adalah membawa dokumen persyaratan "
-            "yang diperlukan."
-        )
-
-    else:
-        answer = await generate_answer(
-            provider,
-            query,
-            evidence_context,
-        )
-
-    print()
-    print("ANSWER:")
-    print(answer)
-
-    result = guard.validate(
-        answer,
-        evidence,
-    )
-
-    print()
-    print("GROUNDING:")
-    print("  grounded :", result.grounded)
-    print("  reason   :", result.reason)
-
-    if result.unsupported_sentences:
-        print("  unsupported:")
-        for item in result.unsupported_sentences:
-            print("   -", item)
-
-    passed = result.grounded == expected_grounded
-
-    print()
-    print("RESULT:", "PASS" if passed else "FAIL")
-
-    return passed
+def snapshot(root, spec):
+    return {name:digest(_safe_path(root,name)) for name in sorted({p for c in spec['criteria'] for p in c['sources']})}
 
 
-async def main() -> int:
-
-    print("=" * 70)
-    print("NUSANTARA AI - E2E GROUNDING + OLLAMA")
-    print("=" * 70)
-    print("Project :", PROJECT_ROOT)
-    print("Model   :", MODEL)
-
-    provider = OllamaProvider(
-        base_url="http://localhost:11434",
-        model=MODEL,
-        timeout=120.0,
-    )
-
-    guard = EvidenceGroundingGuard()
-
-    try:
-        print()
-        print("=" * 70)
-        print("OLLAMA HEALTH")
-        print("=" * 70)
-
-        health = await provider.health_check()
-
-        print(health)
-
-        if not getattr(health, "available", False):
-            print()
-            print("OLLAMA HEALTH: FAIL")
-            return 1
-
-        evidence = [
-            (
-                "KTP-el adalah dokumen identitas penduduk. "
-                "Status pengajuan KTP-el dapat diperiksa melalui "
-                "layanan administrasi kependudukan."
-            ),
-            (
-                "KTP-el merupakan dokumen identitas penduduk yang "
-                "diterbitkan sesuai ketentuan administrasi kependudukan."
-            ),
-        ]
-
-        cases = [
-            (
-                "E2E-001",
-                "Apa itu KTP-el?",
-                True,
-            ),
-            (
-                "E2E-002",
-                "Bagaimana cara mengecek status KTP?",
-                False,
-            ),
-            (
-                "E2E-003",
-                "Apa syarat membuat KTP-el?",
-                False,
-            ),
-        ]
-
-        passed = 0
-
-        for case_id, query, expected in cases:
-            ok = await run_case(
-                provider,
-                guard,
-                case_id,
-                query,
-                evidence,
-                expected,
-            )
-
-            if ok:
-                passed += 1
-
-        total = len(cases)
-
-        print()
-        print("=" * 70)
-        print("FINAL RESULT")
-        print("=" * 70)
-        print(f"{passed}/{total} E2E grounding tests passed")
-
-        return 0 if passed == total else 1
-
-    finally:
-        await provider.close()
+def finalize(root, folder, before, commands, exits, isolation):
+    root,folder=Path(root).resolve(),Path(folder).resolve()
+    folder.relative_to(root)
+    if (folder/'FINALIZED.json').exists():raise ValueError('RUN_ALREADY_FINALIZED')
+    spec=json.loads((root/'frontend/evidence-requirements.json').read_text(encoding='utf-8'))
+    if before!=snapshot(root,spec):raise ValueError('SOURCE_CHANGED_DURING_TESTS')
+    py=folder/'python/python-results.xml';ui=folder/'ui/vitest-results.json'
+    doc=ET.parse(py).getroot()
+    cases=list(doc.iter('testcase'))
+    suites=[doc] if doc.tag=='testsuite' else list(doc.iter('testsuite'))
+    totals={k:sum(int(s.get(k,'0')) for s in suites) for k in ('tests','failures','errors','skipped')}
+    if totals['tests']!=len(cases) or not cases:raise ValueError('PYTEST_COUNTS_INVALID')
+    py_status={c.get('name'):not any(e.tag in {'failure','error','skipped'} for e in c) for c in cases}
+    vitest=json.loads(ui.read_text(encoding='utf-8-sig'))
+    assertions=[case for suite in vitest['testResults'] for case in suite['assertionResults']]
+    if not assertions or vitest.get('numTotalTests')!=len(assertions):raise ValueError('VITEST_COUNTS_INVALID')
+    if any(exits) or totals['failures'] or totals['errors'] or totals['skipped'] or any(c['status']!='passed' for c in assertions):
+        raise ValueError('TEST_RUN_NOT_SUCCESSFUL')
+    def passed(name):
+        matches=[c for c in assertions if c.get('title')==name]
+        return py_status.get(name) is True or bool(matches) and all(c['status']=='passed' for c in matches)
+    criteria={c['id']:{'status':'PASS' if all(passed(t) for t in c['tests']) else 'FAIL','test_ids':c['tests']} for c in spec['criteria']}
+    if any(c['status']!='PASS' for c in criteria.values()):raise ValueError('REQUIRED_TEST_NOT_PASSED')
+    # Only leaf results are hashed. Never include this manifest or another manifest referring to the bundle.
+    artifacts=[{'path':p.relative_to(root).as_posix(),'sha256':digest(p)} for p in (py,ui,folder/'commands.json',folder/'source-before.json')]
+    bundle=folder/'results-bundle.json';write_once(bundle,{'schema_version':1,'artifacts':artifacts})
+    manifest={'schema_version':1,'run_id':folder.name,'timestamp':datetime.now(timezone.utc).isoformat(),
+              'command':commands,'exit_code':0,'scope':'offline evidence registry, decision API, isolated runner guards and Review UI; not operational runtime approval',
+              'isolation':isolation,'results_path':bundle.relative_to(root).as_posix(),'results_sha256':digest(bundle),
+              'counts':{'pytest_passed':len(cases),'vitest_passed':len(assertions),'failed':0,'errors':0,'skipped':0},
+              'source_sha256':before,'criteria':criteria}
+    path=folder/'test-run.json';write_once(path,manifest)
+    write_once(folder/'FINALIZED.json',{'manifest_sha256':digest(path),'bundle_sha256':digest(bundle),'artifacts':artifacts})
+    return path
 
 
-if __name__ == "__main__":
-    raise SystemExit(asyncio.run(main()))
-'''
+def publish(root, folder, manifest):
+    root=Path(root).resolve();folder=Path(folder).resolve();manifest=Path(manifest).resolve()
+    seal=json.loads((folder/'FINALIZED.json').read_text())
+    if digest(manifest)!=seal['manifest_sha256']:raise ValueError('FINALIZED_MANIFEST_CHANGED')
+    value=json.loads(manifest.read_text())
+    if digest(_safe_path(root,value['results_path']))!=seal['bundle_sha256']:raise ValueError('FINALIZED_RESULTS_CHANGED')
+    for entry in seal['artifacts']:
+        if digest(_safe_path(root,entry['path']))!=entry['sha256']:raise ValueError('FINALIZED_ARTIFACT_CHANGED')
+    spec=json.loads((root/'frontend/evidence-requirements.json').read_text())
+    if snapshot(root,spec)!=value['source_sha256']:raise ValueError('SOURCE_CHANGED_AFTER_TESTS')
+    active=_safe_path(root,spec['test_run_manifest'])
+    with _cross_process_lock(active.with_suffix(active.suffix+'.publish.lock')):
+        # Preserve prior active bytes; never edit an old finalized run.
+        if active.exists():
+            with (folder/'previous-active-test-run.json').open('xb') as stream:stream.write(active.read_bytes())
+        temp=active.with_name(active.name+'.'+uuid4().hex+'.tmp')
+        with temp.open('xb') as stream:
+            stream.write(manifest.read_bytes());stream.flush();os.fsync(stream.fileno())
+        os.replace(temp,active)
+        package=collect_review_package(root)
+        current=next(e for e in package['evidence'] if e.get('id')=='current-test-run')
+        if current['sha256']!=digest(manifest) or not package['pass_allowed']:
+            raise ValueError('PUBLISHED_PACKAGE_NOT_VALID')
+        write_once(folder/'package.json',package)
+        return package
 
-p.write_text(content, encoding="utf-8")
 
-print("=" * 70)
-print("E2E TEST RESTORE")
-print("=" * 70)
-print("PATCH : PASS")
-print("FILE  :", p.resolve())
-print("MODE  : provider-correct / deterministic grounding")
-print("API   : OllamaProvider.health_check()")
-print("API   : OllamaProvider.generate()")
-print("GUARD : EvidenceGroundingGuard")
+
+def main():
+    folder=ROOT/'artifacts/evidence-runs'/('run-'+datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S')+'-'+uuid4().hex[:10])
+    folder.mkdir(parents=True,exist_ok=False)
+    spec=json.loads((ROOT/'frontend/evidence-requirements.json').read_text())
+    before=snapshot(ROOT,spec);write_once(folder/'source-before.json',before)
+    for sub in ('python','ui'):(folder/sub).mkdir()
+    import httpx
+    with httpx.Client(timeout=30) as client:
+        response=client.get('http://127.0.0.1:8765/v1/frontend/snapshot');response.raise_for_status()
+        write_once(folder/'ui/snapshot.json',response.json())
+    commands=[];exits=[]
+    command=[sys.executable,str(ROOT/'tests/run_evidence_tests_isolated.py'),str(folder/'python')]
+    result=subprocess.run(command,cwd=ROOT,capture_output=True)
+    (folder/'python/process.log').write_bytes(result.stdout+result.stderr);commands.append(command);exits.append(result.returncode)
+    env=os.environ.copy()
+    env.update(NUSANTARA_TEST_RUN_DIR=str(folder/'ui'),NUSANTARA_VITEST_CACHE_DIR=str(folder/'ui/cache'),
+               CPLANE_SNAPSHOT_FILE=str(folder/'ui/snapshot.json'),TEMP=str(folder/'ui'),TMP=str(folder/'ui'),
+               NODE_OPTIONS='--require '+str(ROOT/'frontend/tests/inspection-preview-network-guard.cjs'))
+    command=['node',str(ROOT/'frontend/node_modules/vitest/vitest.mjs'),'run','tests/human.test.tsx','tests/acceptance.test.ts','tests/verification-pages.test.tsx','tests/assistant.test.tsx','tests/knowledge-operations.test.tsx',
+             '--config','vitest.config.ts','--configLoader','native','--reporter=json','--outputFile='+str(folder/'ui/vitest-results.json')]
+    result=subprocess.run(command,cwd=ROOT/'frontend',env=env,capture_output=True)
+    (folder/'ui/process.log').write_bytes(result.stdout+result.stderr);commands.append(command);exits.append(result.returncode)
+    write_once(folder/'commands.json',{'commands':commands,'exit_codes':exits})
+    print('Run:',folder.relative_to(ROOT),flush=True)
+    if any(exits):raise SystemExit('Tests failed; nothing published. Inspect run process.log files.')
+    isolation={k:True for k in ('network_blocked','filesystem_writes_scoped','active_data_blocked','subprocess_blocked','cache_isolated')}
+    isolation['exceptions']=['Vitest exact worker and esbuild transformer; Python internal Windows socketpair only. Test process guards are installed; metadata publication runs outside those child guards.']
+    manifest=finalize(ROOT,folder,before,commands,exits,isolation)
+    package=publish(ROOT,folder,manifest)
+    print(json.dumps({'package_id':package['package_id'],'pass_allowed':package['pass_allowed'],'counts':json.loads(manifest.read_text())['counts'],'human_decision':'NOT_CREATED'}))
+
+if __name__=='__main__':main()

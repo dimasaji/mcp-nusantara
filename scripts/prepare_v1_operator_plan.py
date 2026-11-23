@@ -20,9 +20,9 @@ def main():
         documents={target: (ROOT / source).read_text(encoding='utf-8')},
         risk='LOW: satu file dokumentasi baru. Risiko isi panduan tidak sesuai kebutuhan operator; tinjau sebelum PASS.',
         tests_required=['test_normal_plan_prepares_without_human_approval', 'test_normal_plan_requires_complete_context_and_safe_targets',
-                        'tests/test_v1_review_execution_api.py', 'control-plane/e2e/review-execution.spec.ts'],
+                        'tests/test_v1_review_execution_api.py', 'frontend/e2e/review-execution.spec.ts'],
         rollback='Periksa History dan perubahan pengguna; pindahkan hanya file panduan baru ke arsip. Sumber panduan tetap tersedia. Jangan hapus database atau indeks.')
-    spec_path = ROOT / 'control-plane/evidence-requirements.json'
+    spec_path = ROOT / 'frontend/evidence-requirements.json'
     spec = json.loads(spec_path.read_text())
     criterion = next(c for c in spec['criteria'] if c['id'] == 'AC10')
     required = ['app/developer_core/controlled_write.py', 'tests/test_normal_plan.py', source,

@@ -1,54 +1,54 @@
-﻿from pathlib import Path
-import ast
-import shutil
-from datetime import datetime
+"""Read-only frontend observation for master-contract forensic audit.
 
-ROOT = Path(__file__).resolve().parents[1]
-TARGET = ROOT / "app" / "v2" / "hermes_adapter.py"
-BACKUP_DIR = ROOT / "docs" / "audit" / "backups"
+GET endpoints only; no chat, no writes to services. Admin token read from
+.env and used solely as a request header, never printed. Responses are
+status metadata; saved locally as audit evidence.
+"""
+import json
+import urllib.request
+from pathlib import Path
 
-source = TARGET.read_text(encoding="utf-8-sig")
-ast.parse(source, filename=str(TARGET))
+PROJECT = Path(__file__).resolve().parents[1]
+TOKEN = next(l.strip().split('=', 1)[1]
+             for l in (PROJECT / '.env').read_text(encoding='utf-8').splitlines()
+             if l.startswith('NUSANTARA_ADMIN_TOKEN='))
+BASE = 'http://127.0.0.1:8000/v1/frontend/'
+OUT = PROJECT / 'reports' / 'master-001'
 
-BACKUP_DIR.mkdir(parents=True, exist_ok=True)
-stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-backup = BACKUP_DIR / f"hermes_adapter.py.{stamp}.bak"
-shutil.copy2(TARGET, backup)
 
-old = '''    def run(
-        self,
-        *,
-        user_input: str,
-        session_id: str,
-        evidence: list[Any] | None = None,
-        context: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
-'''
+def get(ep):
+    req = urllib.request.Request(BASE + ep, headers={'x-admin-token': TOKEN})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())
+    except Exception as exc:
+        return {'error': f'{type(exc).__name__}: {exc}'}
 
-new = '''    def run(
-        self,
-        user_input: str,
-        session_id: str,
-        evidence: list[Any] | None = None,
-        context: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
-'''
 
-if old not in source:
-    raise RuntimeError("Signature adapter tidak ditemukan. Tidak ada perubahan.")
+def main():
+    evidence = {}
+    for ep in ('snapshot', 'model-status', 'knowledge-status',
+               'operations-summary', 'hermes/connection', 'history'):
+        evidence[ep] = get(ep)
+    (OUT / 'control_plane_observation.json').write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False), encoding='utf-8')
 
-source = source.replace(old, new, 1)
+    snap = evidence['snapshot']
+    print('SNAPSHOT status:', snap.get('status'))
+    for p in snap.get('phases', []):
+        print(p['id'], '|', p['name'][:46], '|', p['status'], '|', p.get('kind'))
+    ms = evidence['model-status']
+    print('MODEL:', ms.get('provider'), ms.get('model'), ms.get('status'))
+    ks = evidence['knowledge-status']
+    print('KNOWLEDGE keys:', sorted(ks.keys())[:12])
+    print('KNOWLEDGE summary:', json.dumps(
+        {k: ks[k] for k in list(ks)[:6]}, ensure_ascii=False)[:300])
+    hc = evidence['hermes/connection']
+    print('HERMES:', json.dumps(hc, ensure_ascii=False)[:250])
+    ops = evidence['operations-summary']
+    print('OPS:', json.dumps(ops, ensure_ascii=False)[:250])
+    print('SAVED', OUT / 'control_plane_observation.json')
 
-ast.parse(source, filename=str(TARGET))
-compile(source, str(TARGET), "exec")
 
-TARGET.write_text(source, encoding="utf-8", newline="")
-
-print("=" * 72)
-print("HERMES V2 ADAPTER CALLABLE PATCH")
-print("=" * 72)
-print("AST     : PASS")
-print("COMPILE : PASS")
-print(f"TARGET  : {TARGET}")
-print(f"BACKUP  : {backup}")
-print("PATCH   : COMPLETE")
+if __name__ == '__main__':
+    main()

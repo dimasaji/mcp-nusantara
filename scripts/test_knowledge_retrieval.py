@@ -1,257 +1,37 @@
-﻿from pathlib import Path
-import sys
-
-# ============================================================================
-# FORCE NUSANTARA PROJECT ROOT
-# ============================================================================
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-
-# Pastikan project aktif menjadi prioritas pertama.
-sys.path.insert(0, str(PROJECT_ROOT))
-
-# Hapus kemungkinan path project Nusantara lain yang mengganggu.
-sys.path[:] = [
-    p for p in sys.path
-    if str(Path(p).resolve()) != r"E:\nusantara\mcp-starter"
-]
-
-print("=" * 80)
-print("NUSANTARA AI — KNOWLEDGE ENGINE RETRIEVAL TEST")
-print("=" * 80)
-print()
-print("[PROJECT ROOT]", PROJECT_ROOT)
-print("[PYTHON]", sys.executable)
-
-# ============================================================================
-# IMPORT
-# ============================================================================
-try:
-    import app.knowledge.rag as rag_module
-
-    print()
-    print("[RAG MODULE]", rag_module.__file__)
-
-    # SAFETY CHECK
-    expected_rag = PROJECT_ROOT / "app" / "knowledge" / "rag.py"
-
-    actual_rag = Path(rag_module.__file__).resolve()
-
-    if actual_rag != expected_rag.resolve():
-        print()
-        print("[ERROR] Python masih mengambil rag.py dari lokasi yang salah.")
-        print("EXPECTED:", expected_rag)
-        print("ACTUAL  :", actual_rag)
-        raise SystemExit(1)
-
-    from app.knowledge.engine import KnowledgeEngine
-    from app.knowledge.grounding import EvidenceGroundingGuard
-
-    HybridRAG = getattr(rag_module, "HybridRAG", None)
-
-    if HybridRAG is None:
-        print()
-        print("[ERROR] HybridRAG tidak tersedia pada project aktif.")
-        print()
-        print("Class yang tersedia:")
-        for name in dir(rag_module):
-            obj = getattr(rag_module, name)
-            if isinstance(obj, type):
-                print("  -", name)
-
-        raise SystemExit(2)
-
-    print("[IMPORT] KnowledgeEngine : PASS")
-    print("[IMPORT] EvidenceGroundingGuard : PASS")
-    print("[IMPORT] HybridRAG       :", HybridRAG)
-
-except Exception:
-    import traceback
-    print()
-    print("[IMPORT] FAIL")
-    traceback.print_exc()
-    raise SystemExit(3)
-
-# ============================================================================
-# ENGINE
-# ============================================================================
-import inspect
-import json
-import traceback
-
-print()
-print("[ENGINE] constructor:")
-print(inspect.signature(KnowledgeEngine))
-
-try:
-    engine = KnowledgeEngine()
-    print("[ENGINE] initialization: PASS")
-except Exception:
-    print("[ENGINE] initialization: FAIL")
-    traceback.print_exc()
-    raise SystemExit(4)
-
-# ============================================================================
-# DISCOVER RETRIEVAL API
-# ============================================================================
-public_methods = [
-    name
-    for name in dir(engine)
-    if not name.startswith("_")
-]
-
-print()
-print("[ENGINE METHODS]")
-print(public_methods)
-
-# ============================================================================
-# TEST QUERIES
-# ============================================================================
-tests = [
-    {
-        "id": "ktp-001",
-        "query": "Apa itu KTP-el?",
-    },
-    {
-        "id": "ktp-002",
-        "query": "Apa syarat membuat KTP-el?",
-    },
-    {
-        "id": "ktp-003",
-        "query": "Bagaimana cara mengecek status KTP?",
-    },
-    {
-        "id": "paspor-001",
-        "query": "Apa persyaratan membuat paspor?",
-    },
-    {
-        "id": "alamat-001",
-        "query": "Bagaimana cara perubahan alamat?",
-    },
-]
-
-results = []
-
-print()
-print("=" * 80)
-print("RETRIEVAL TEST")
-print("=" * 80)
-
-# ============================================================================
-# RETRIEVAL METHOD DETECTION
-# ============================================================================
-retrieval_method = None
-
-for candidate in [
-    "search_knowledge",
-    "search",
-    "retrieve",
-    "query",
-]:
-    if hasattr(engine, candidate):
-        retrieval_method = candidate
-        break
-
-if retrieval_method is None:
-    print()
-    print("[ERROR] Tidak ditemukan API retrieval pada KnowledgeEngine.")
-    raise SystemExit(5)
-
-print()
-print("[RETRIEVAL API]", retrieval_method)
-
-# ============================================================================
-# EXECUTE TEST
-# ============================================================================
-for test in tests:
-
-    print()
-    print("-" * 80)
-    print(f"[TEST] {test['id']}")
-    print(f"QUERY : {test['query']}")
-
-    try:
-        method = getattr(engine, retrieval_method)
-
-        result = method(test["query"])
-
-        print("[RESULT TYPE]", type(result).__name__)
-
-        if isinstance(result, dict):
-            payload = result
-
-        elif isinstance(result, list):
-            payload = {
-                "items": result,
-            }
-
-        else:
-            payload = {
-                "value": str(result),
-            }
-
-        print(
-            json.dumps(
-                payload,
-                ensure_ascii=False,
-                indent=2,
-                default=str,
-            )[:12000]
-        )
-
-        results.append(
-            {
-                "id": test["id"],
-                "query": test["query"],
-                "status": "PASS",
-                "result": payload,
-            }
-        )
-
-    except Exception as exc:
-
-        print("[ERROR]", type(exc).__name__, str(exc))
-        traceback.print_exc()
-
-        results.append(
-            {
-                "id": test["id"],
-                "query": test["query"],
-                "status": "FAIL",
-                "error": str(exc),
-            }
-        )
-
-# ============================================================================
-# SAVE RESULT
-# ============================================================================
-output = PROJECT_ROOT / "data" / "knowledge" / "retrieval_test_result.json"
-output.parent.mkdir(parents=True, exist_ok=True)
-
-output.write_text(
-    json.dumps(
-        results,
-        ensure_ascii=False,
-        indent=2,
-        default=str,
-    ),
-    encoding="utf-8",
-)
-
-passed = sum(
-    1
-    for item in results
-    if item["status"] == "PASS"
-)
-
-failed = len(results) - passed
-
-print()
-print("=" * 80)
-print("RETRIEVAL TEST SELESAI")
-print("=" * 80)
-print(f"PROJECT : {PROJECT_ROOT}")
-print(f"RAG     : {rag_module.__file__}")
-print(f"RESULT  : {output}")
-print(f"PASS    : {passed}/{len(results)}")
-print(f"FAIL    : {failed}/{len(results)}")
-print("=" * 80)
+param([switch]$IncludeChat, [string]$EvidenceDirectory)
+. "$PSScriptRoot/../service/local-services.ps1"
+if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
+New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
+$results = @()
+foreach ($probe in @(
+    @{name='backend';url='http://127.0.0.1:8000/health'},
+    @{name='frontend';url='http://127.0.0.1:5180/'},
+    @{name='proxy';url='http://127.0.0.1:5180/health'},
+    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
+    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
+    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
+)) {
+    $ok = Test-Http $probe.url
+    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+}
+if ($IncludeChat) {
+    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
+    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
+        $session = 'web-' + [Guid]::NewGuid().ToString()
+        try {
+            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
+            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
+            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
+                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
+        } catch {
+            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
+        }
+    }
+}
+$status = Get-LocalStatus
+$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
+$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
+$results | Format-Table -AutoSize
+if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }

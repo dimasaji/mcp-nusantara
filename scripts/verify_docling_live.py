@@ -1,59 +1,54 @@
-"""Live backend verification using the existing configured provider and PDF."""
-import hashlib
+"""Temporary real app for browser verification; paid dispatch prohibited."""
+import asyncio
+import contextlib
+import io
 import json
+import os
 from pathlib import Path
-from uuid import uuid4
+import socket
+import sys
 
-import httpx
-from dotenv import dotenv_values
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
+OUT=ROOT/'artifacts/frontend-four-20261019'
 
+async def verify():
+    from dotenv import load_dotenv
+    load_dotenv(ROOT/'.env',override=False)
+    import httpx
+    import uvicorn
+    from app.models.openrouter import OpenRouterProvider,OpenRouterError
+    calls=[]
+    async def deny_paid(self,payload):
+        calls.append('PROHIBITED_PAID_DISPATCH')
+        raise OpenRouterError('DIAGNOSTIC_PAID_GENERATION_DISABLED')
+    OpenRouterProvider.generate=deny_paid
+    from app.main import app
+    sock=socket.socket();sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
+    server=uvicorn.Server(uvicorn.Config(app,host='127.0.0.1',port=port,lifespan='off',log_level='error',access_log=False))
+    serving=asyncio.create_task(server.serve(sockets=[sock]))
+    try:
+        while not server.started:
+            if serving.done():await serving
+            await asyncio.sleep(.05)
+        # Warm only retrieval, not inference, to test interaction separately from cold initialization.
+        async with httpx.AsyncClient(timeout=120,trust_env=False) as client:
+            await client.post(f'http://127.0.0.1:{port}/v1/knowledge/search',json={'query':'persyaratan permohonan data pribadi','top_k':3})
+        temporary=OUT/'browser-tmp'
+        temporary.mkdir(exist_ok=True)
+        env=dict(os.environ,NUSANTARA_BACKEND_URL=f'http://127.0.0.1:{port}',NCP_OPERATOR_TOKEN=os.environ['NUSANTARA_ADMIN_TOKEN'],NUSANTARA_VITE_CACHE_DIR=str(OUT/'vite-cache'),TEMP=str(temporary),TMP=str(temporary))
+        node=await asyncio.create_subprocess_exec('node',str(ROOT/'tools/verification/verify_control_plane_four.cjs'),cwd=ROOT,env=env,stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
+        stdout,stderr=await node.communicate()
+        (OUT/'browser-run.txt').write_bytes(stdout)
+        return {'status':'PASS' if node.returncode==0 and not calls else 'FAIL','browser_exit':node.returncode,'paid_dispatch_attempts':len(calls),'production_restarted':False,'ingestion_watcher_started':False,'backend_port':port}
+    finally:
+        server.should_exit=True
+        await serving
+        sock.close()
 
-def main():
-    token = dotenv_values('.env').get('NUSANTARA_ADMIN_TOKEN')
-    assert token, 'Configured operator credential unavailable'
-    document_id = 'DOC-SHA256-d9ae50f88383d4162181fca7761aaba122b6a4d77e908d5cae927d5b2ba7454b'
-    client = httpx.Client(base_url='http://127.0.0.1:8000', headers={'X-Admin-Token': token}, timeout=240)
-    base = '/v1/knowledge/pipeline/reviews/' + document_id
-    response = client.get(base); response.raise_for_status()
-    before = response.json()
-    assert before['extraction']['status'] == 'COMPLETE', before['extraction']
-    source = client.get(base + '/source', params={'version_id': before['version_id']})
-    source.raise_for_status()
-    assert hashlib.sha256(source.content).hexdigest() == before['source_sha256']
-    session = 'sop-live-' + uuid4().hex
-    cases = [('Apa persyaratannya?', 'requirements', 'surat permohonan', [1]),
-             ('Bawa apa saja?', 'requirements', 'surat permohonan', [1]),
-             ('Bagaimana prosesnya?', 'procedure', 'menyampaikan', [1, 2]),
-             ('Berapa lama?', 'time_cost', '3 hari kerja', [2]),
-             ('Berapa biayanya?', 'time_cost', 'belum tercantum', [1, 2]),
-             ('Apa hasil layanannya?', 'procedure', 'berkas data', [2]),
-             ('Lalu bagaimana?', 'followup', 'menyampaikan', [1, 2]),
-             ('Apakah SOP ini menyebutkan nomor WhatsApp petugas?', 'missing', 'belum tercantum', [1, 2]),
-             ('Apa persyaratannya?', 'requirements', 'surat permohonan', [1])]
-    results = []
-    for index, (question, case, expected, pages) in enumerate(cases):
-        body = {'user_input': question, 'session_id': session, 'request_id': uuid4().hex,
-                'document_ids': [document_id], 'sop_version': before['version_id'], 'sop_case': case}
-        # A followup with no supplied scope must recover the persisted binding.
-        if index == 6:
-            for field in ('document_ids', 'sop_version', 'sop_case'):
-                body.pop(field)
-        response = client.post('/v1/chat', json=body)
-        response.raise_for_status()
-        answer = response.json()
-        results.append({'question': question, 'answer': answer})
-        Path('artifacts/docling-live-chat.json').write_text(json.dumps({'session': session, 'results': results}, ensure_ascii=False, indent=2), encoding='utf-8')
-        assert answer['grounding']['grounded'], answer
-        assert expected in answer['response'].casefold(), answer
-        assert all(e['document_id'] == document_id for e in answer['evidence']), answer
-        actual_pages = sorted({p for e in answer['evidence'] for p in e.get('pages', [])})
-        assert actual_pages == pages, (question, actual_pages)
-        print(f"PASS {index + 1}: {question} | {answer['provider_status']} | pages={actual_pages}", flush=True)
-    after = client.get(base).json()
-    assert after['extraction']['job_id'] == before['extraction']['job_id'], 'Chat triggered extraction'
-    assert after['content_ok'] == before['content_ok'] and after['approval'] == before['approval'], 'Human approval changed'
-    print('PASS: source hash, nine turns, session binding, cached extraction, unchanged human approval', flush=True)
-
-
-if __name__ == '__main__':
-    main()
+with contextlib.redirect_stdout(io.StringIO()),contextlib.redirect_stderr(io.StringIO()):
+    try:result=asyncio.run(verify())
+    except Exception as exc:result={'status':'FAIL','error_type':type(exc).__name__}
+(OUT/'backend-browser.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
+print(json.dumps(result))
+raise SystemExit(0 if result['status']=='PASS' else 1)

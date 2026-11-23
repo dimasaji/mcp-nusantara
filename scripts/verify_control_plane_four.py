@@ -10,7 +10,7 @@ import sys
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-OUT=ROOT/'artifacts/control-plane-four-20261019'
+OUT=ROOT/'artifacts/frontend-four-20261019'
 
 async def verify():
     from dotenv import load_dotenv

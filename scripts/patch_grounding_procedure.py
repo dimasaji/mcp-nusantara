@@ -1,144 +1,54 @@
-﻿from pathlib import Path
+"""Read-only frontend observation for master-contract forensic audit.
 
-p = Path(r".\app\knowledge\grounding.py")
-s = p.read_text(encoding="utf-8")
+GET endpoints only; no chat, no writes to services. Admin token read from
+.env and used solely as a request header, never printed. Responses are
+status metadata; saved locally as audit evidence.
+"""
+import json
+import urllib.request
+from pathlib import Path
 
-old = '''    def _procedure_claim_supported(
-        self,
-        sentence: str,
-        evidence_text: str,
-    ) -> bool:
-'''
+PROJECT = Path(__file__).resolve().parents[1]
+TOKEN = next(l.strip().split('=', 1)[1]
+             for l in (PROJECT / '.env').read_text(encoding='utf-8').splitlines()
+             if l.startswith('NUSANTARA_ADMIN_TOKEN='))
+BASE = 'http://127.0.0.1:8000/v1/frontend/'
+OUT = PROJECT / 'reports' / 'master-001'
 
-if old not in s:
-    raise SystemExit("METHOD _procedure_claim_supported TIDAK DITEMUKAN")
 
-start = s.index(old)
+def get(ep):
+    req = urllib.request.Request(BASE + ep, headers={'x-admin-token': TOKEN})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())
+    except Exception as exc:
+        return {'error': f'{type(exc).__name__}: {exc}'}
 
-# Cari method berikutnya setelah procedure method
-next_def = s.find("\n    def ", start + len(old))
 
-if next_def == -1:
-    raise SystemExit("METHOD BERIKUTNYA TIDAK DITEMUKAN")
+def main():
+    evidence = {}
+    for ep in ('snapshot', 'model-status', 'knowledge-status',
+               'operations-summary', 'hermes/connection', 'history'):
+        evidence[ep] = get(ep)
+    (OUT / 'control_plane_observation.json').write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False), encoding='utf-8')
 
-old_method = s[start:next_def]
+    snap = evidence['snapshot']
+    print('SNAPSHOT status:', snap.get('status'))
+    for p in snap.get('phases', []):
+        print(p['id'], '|', p['name'][:46], '|', p['status'], '|', p.get('kind'))
+    ms = evidence['model-status']
+    print('MODEL:', ms.get('provider'), ms.get('model'), ms.get('status'))
+    ks = evidence['knowledge-status']
+    print('KNOWLEDGE keys:', sorted(ks.keys())[:12])
+    print('KNOWLEDGE summary:', json.dumps(
+        {k: ks[k] for k in list(ks)[:6]}, ensure_ascii=False)[:300])
+    hc = evidence['hermes/connection']
+    print('HERMES:', json.dumps(hc, ensure_ascii=False)[:250])
+    ops = evidence['operations-summary']
+    print('OPS:', json.dumps(ops, ensure_ascii=False)[:250])
+    print('SAVED', OUT / 'control_plane_observation.json')
 
-new_method = '''    def _procedure_claim_supported(
-        self,
-        sentence: str,
-        evidence_text: str,
-    ) -> bool:
-        """
-        Procedure claims require explicit procedural evidence.
 
-        A simple lexical overlap is not sufficient for claims such as:
-        - harus melakukan ...
-        - langkah ...
-        - cara ...
-        - pengguna harus ...
-        - dapat dilakukan dengan ...
-
-        Evidence that merely states a capability/status such as
-        "status dapat diperiksa melalui layanan" must not automatically
-        support a procedural instruction.
-        """
-
-        sentence_lower = self._normalize_text(sentence)
-        evidence_lower = self._normalize_text(evidence_text)
-
-        # Strong procedural markers.
-        procedure_markers = [
-            "langkah",
-            "cara",
-            "prosedur",
-            "tahapan",
-            "ikuti",
-            "lakukan",
-            "melakukan",
-            "masukkan",
-            "isi",
-            "unggah",
-            "upload",
-            "pilih",
-            "klik",
-            "buka",
-            "akses",
-            "datang",
-            "bawa",
-            "ajukan",
-            "mengajukan",
-            "periksa",
-            "cek",
-            "mengecek",
-        ]
-
-        # Requirement/obligation markers are also procedural when they
-        # describe what the user must do.
-        obligation_markers = [
-            "harus",
-            "wajib",
-            "perlu",
-            "diharuskan",
-        ]
-
-        claim_has_procedure_marker = any(
-            marker in sentence_lower
-            for marker in procedure_markers
-        )
-
-        claim_has_obligation = any(
-            marker in sentence_lower
-            for marker in obligation_markers
-        )
-
-        # Evidence must explicitly contain procedural language too.
-        evidence_has_procedure_marker = any(
-            marker in evidence_lower
-            for marker in procedure_markers
-        )
-
-        evidence_has_obligation = any(
-            marker in evidence_lower
-            for marker in obligation_markers
-        )
-
-        # If the sentence is procedural/obligatory but the evidence
-        # contains no procedural or obligation marker, reject it.
-        if claim_has_procedure_marker or claim_has_obligation:
-            if not (
-                evidence_has_procedure_marker
-                or evidence_has_obligation
-            ):
-                return False
-
-        # Preserve the existing lexical support rule as a secondary
-        # condition, but never allow lexical overlap alone to establish
-        # a procedural claim.
-        sentence_tokens = set(
-            self._tokenize(sentence_lower)
-        )
-
-        evidence_tokens = set(
-            self._tokenize(evidence_lower)
-        )
-
-        if not sentence_tokens:
-            return False
-
-        overlap = len(sentence_tokens & evidence_tokens)
-        ratio = overlap / max(len(sentence_tokens), 1)
-
-        return ratio >= self.min_sentence_overlap
-
-'''
-
-s = s[:start] + new_method + s[next_def:]
-
-p.write_text(s, encoding="utf-8")
-
-print("=" * 70)
-print("GROUNDING PROCEDURE HARDENING")
-print("=" * 70)
-print("PATCH : PASS")
-print("FILE  :", p.resolve())
-print("CHANGE: procedural claims require explicit procedural evidence")
+if __name__ == '__main__':
+    main()

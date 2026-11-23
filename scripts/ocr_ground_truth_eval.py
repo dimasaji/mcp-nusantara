@@ -1,79 +1,54 @@
-"""OCR Ground Truth Evaluation Framework.
+"""Read-only frontend observation for master-contract forensic audit.
 
-Measures CER (Character Error Rate) and WER (Word Error Rate)
-between OCR-extracted text and manually transcribed ground truth.
+GET endpoints only; no chat, no writes to services. Admin token read from
+.env and used solely as a request header, never printed. Responses are
+status metadata; saved locally as audit evidence.
 """
-import sys, os, json, re
-sys.path.insert(0, 'C:/Users/dmaza/mcp-starter')
+import json
+import urllib.request
+from pathlib import Path
 
-def levenshtein_distance(s1, s2):
-    """Compute Levenshtein distance between two strings."""
-    if len(s1) < len(s2):
-        return levenshtein_distance(s2, s1)
-    if len(s2) == 0:
-        return len(s1)
-    prev = range(len(s2) + 1)
-    for i, c1 in enumerate(s1):
-        curr = [i + 1]
-        for j, c2 in enumerate(s2):
-            insertions = prev[j + 1] + 1
-            deletions = curr[j] + 1
-            substitutions = prev[j] + (c1 != c2)
-            curr.append(min(insertions, deletions, substitutions))
-        prev = curr
-    return prev[-1]
+PROJECT = Path(__file__).resolve().parents[1]
+TOKEN = next(l.strip().split('=', 1)[1]
+             for l in (PROJECT / '.env').read_text(encoding='utf-8').splitlines()
+             if l.startswith('NUSANTARA_ADMIN_TOKEN='))
+BASE = 'http://127.0.0.1:8000/v1/frontend/'
+OUT = PROJECT / 'reports' / 'master-001'
 
-def compute_cer(ocr_text, ground_truth):
-    """Compute Character Error Rate."""
-    ocr = ocr_text.strip().lower()
-    gt = ground_truth.strip().lower()
-    if len(gt) == 0:
-        return 1.0 if len(ocr) > 0 else 0.0
-    dist = levenshtein_distance(ocr, gt)
-    return dist / len(gt)
 
-def compute_wer(ocr_text, ground_truth):
-    """Compute Word Error Rate."""
-    ocr_words = ocr_text.strip().lower().split()
-    gt_words = ground_truth.strip().lower().split()
-    if len(gt_words) == 0:
-        return 1.0 if len(ocr_words) > 0 else 0.0
-    # Word-level Levenshtein
-    dist = levenshtein_distance(' '.join(ocr_words), ' '.join(gt_words))
-    # Approximate WER using word-level
-    # Better: use sequence matching
-    import difflib
-    sm = difflib.SequenceMatcher(None, ocr_words, gt_words)
-    matches = sm.find_longest_match(0, len(ocr_words), 0, len(gt_words))
-    # Simple WER approximation
-    errors = abs(len(ocr_words) - len(gt_words))
-    # Count substitutions
-    for tag, i1, i2, j1, j2 in sm.get_opcodes():
-        if tag in ('replace', 'delete', 'insert'):
-            errors += max(i2-i1, j2-j1)
-    return min(1.0, errors / max(len(gt_words), 1))
+def get(ep):
+    req = urllib.request.Request(BASE + ep, headers={'x-admin-token': TOKEN})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())
+    except Exception as exc:
+        return {'error': f'{type(exc).__name__}: {exc}'}
 
-def evaluate_ocr(pdf_path, ground_truth_text):
-    """Evaluate OCR quality for a PDF."""
-    from app.knowledge.engine import KnowledgeEngine
-    ke = KnowledgeEngine()
-    raw = open(pdf_path, 'rb').read()
-    pages = ke._extract_pdf_pages(raw)
-    ocr_text = '\n'.join(pages)
-    cer = compute_cer(ocr_text, ground_truth_text)
-    wer = compute_wer(ocr_text, ground_truth_text)
-    return {
-        'cer': round(cer, 4),
-        'wer': round(wer, 4),
-        'ocr_chars': len(ocr_text),
-        'gt_chars': len(ground_truth_text),
-        'ocr_pages': len(pages),
-    }
+
+def main():
+    evidence = {}
+    for ep in ('snapshot', 'model-status', 'knowledge-status',
+               'operations-summary', 'hermes/connection', 'history'):
+        evidence[ep] = get(ep)
+    (OUT / 'control_plane_observation.json').write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False), encoding='utf-8')
+
+    snap = evidence['snapshot']
+    print('SNAPSHOT status:', snap.get('status'))
+    for p in snap.get('phases', []):
+        print(p['id'], '|', p['name'][:46], '|', p['status'], '|', p.get('kind'))
+    ms = evidence['model-status']
+    print('MODEL:', ms.get('provider'), ms.get('model'), ms.get('status'))
+    ks = evidence['knowledge-status']
+    print('KNOWLEDGE keys:', sorted(ks.keys())[:12])
+    print('KNOWLEDGE summary:', json.dumps(
+        {k: ks[k] for k in list(ks)[:6]}, ensure_ascii=False)[:300])
+    hc = evidence['hermes/connection']
+    print('HERMES:', json.dumps(hc, ensure_ascii=False)[:250])
+    ops = evidence['operations-summary']
+    print('OPS:', json.dumps(ops, ensure_ascii=False)[:250])
+    print('SAVED', OUT / 'control_plane_observation.json')
+
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
-        print('Usage: ocr_ground_truth_eval.py <pdf_path> <ground_truth_txt>')
-        sys.exit(1)
-    gt = open(sys.argv[2], encoding='utf-8').read()
-    result = evaluate_ocr(sys.argv[1], gt)
-    print(json.dumps(result, indent=2))
+    main()

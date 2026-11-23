@@ -19,7 +19,7 @@ def main():
     args = parser.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     with httpx.Client(base_url=f'http://127.0.0.1:{args.port}', timeout=280, trust_env=False) as client:
-        status = client.get('/v1/control-plane/model-status').raise_for_status().json()
+        status = client.get('/v1/frontend/model-status').raise_for_status().json()
         if status['provider'] != 'ollama':
             raise RuntimeError('Operator must select a local model; probe never switches it')
         body = dict(user_input=QUESTION, session_id='web-' + str(uuid.uuid4()), request_id=uuid.uuid4().hex)

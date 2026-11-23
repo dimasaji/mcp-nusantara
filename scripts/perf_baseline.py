@@ -1,54 +1,54 @@
-"""Performance baseline for SOP batch processing."""
-import sys, time, os, json, urllib.request, subprocess
+"""Read-only frontend observation for master-contract forensic audit.
 
-TOKEN = 'R4H4Si4.'
-BASE = 'http://127.0.0.1:8000'
+GET endpoints only; no chat, no writes to services. Admin token read from
+.env and used solely as a request header, never printed. Responses are
+status metadata; saved locally as audit evidence.
+"""
+import json
+import urllib.request
+from pathlib import Path
 
-def process_one(pdf_path):
-    name = os.path.basename(pdf_path)
-    raw = open(pdf_path, 'rb').read()
-    t0 = time.perf_counter()
-    # Upload
-    req = urllib.request.Request(BASE+'/v1/knowledge/pipeline/documents', data=raw, headers={'X-Admin-Token':TOKEN, 'X-Document-Name':name, 'Content-Type':'application/pdf'})
-    r = urllib.request.urlopen(req, timeout=120)
-    d = json.loads(r.read())
-    doc_id = d['document_id']
-    status = d['status']
-    if status == 'DUPLICATE':
-        elapsed = time.perf_counter() - t0
-        print('%s: DUPLICATE (%.1fs)' % (name, elapsed))
-        return {'file':name, 'status':'DUPLICATE', 'time_s':round(elapsed,1)}
-    if status == 'FAILED':
-        elapsed = time.perf_counter() - t0
-        print('%s: FAILED at upload (%.1fs): %s' % (name, elapsed, d.get('reason')))
-        return {'file':name, 'status':'FAILED', 'time_s':round(elapsed,1), 'reason':d.get('reason')}
-    # Wait for extraction
-    for i in range(60):
-        time.sleep(10)
-        req2 = urllib.request.Request(BASE+'/v1/knowledge/pipeline/reviews/'+doc_id, headers={'X-Admin-Token':TOKEN})
-        detail = json.loads(urllib.request.urlopen(req2, timeout=60).read())
-        ext = detail.get('extraction', {}).get('status')
-        if ext in ('COMPLETE', 'FAILED'):
-            break
-    elapsed = time.perf_counter() - t0
-    blocks = len(detail.get('extracted_blocks', []))
-    print('%s: %s (%.1fs, %d blocks)' % (name, ext, elapsed, blocks))
-    return {'file':name, 'status':ext, 'time_s':round(elapsed,1), 'blocks':blocks}
+PROJECT = Path(__file__).resolve().parents[1]
+TOKEN = next(l.strip().split('=', 1)[1]
+             for l in (PROJECT / '.env').read_text(encoding='utf-8').splitlines()
+             if l.startswith('NUSANTARA_ADMIN_TOKEN='))
+BASE = 'http://127.0.0.1:8000/v1/frontend/'
+OUT = PROJECT / 'reports' / 'master-001'
+
+
+def get(ep):
+    req = urllib.request.Request(BASE + ep, headers={'x-admin-token': TOKEN})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())
+    except Exception as exc:
+        return {'error': f'{type(exc).__name__}: {exc}'}
+
+
+def main():
+    evidence = {}
+    for ep in ('snapshot', 'model-status', 'knowledge-status',
+               'operations-summary', 'hermes/connection', 'history'):
+        evidence[ep] = get(ep)
+    (OUT / 'control_plane_observation.json').write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False), encoding='utf-8')
+
+    snap = evidence['snapshot']
+    print('SNAPSHOT status:', snap.get('status'))
+    for p in snap.get('phases', []):
+        print(p['id'], '|', p['name'][:46], '|', p['status'], '|', p.get('kind'))
+    ms = evidence['model-status']
+    print('MODEL:', ms.get('provider'), ms.get('model'), ms.get('status'))
+    ks = evidence['knowledge-status']
+    print('KNOWLEDGE keys:', sorted(ks.keys())[:12])
+    print('KNOWLEDGE summary:', json.dumps(
+        {k: ks[k] for k in list(ks)[:6]}, ensure_ascii=False)[:300])
+    hc = evidence['hermes/connection']
+    print('HERMES:', json.dumps(hc, ensure_ascii=False)[:250])
+    ops = evidence['operations-summary']
+    print('OPS:', json.dumps(ops, ensure_ascii=False)[:250])
+    print('SAVED', OUT / 'control_plane_observation.json')
+
 
 if __name__ == '__main__':
-    pdfs = sys.argv[1:]
-    if not pdfs:
-        print('Usage: perf_baseline.py <pdf1> <pdf2> ...')
-        sys.exit(1)
-    results = []
-    t0 = time.perf_counter()
-    for pdf in pdfs:
-        r = process_one(pdf)
-        results.append(r)
-    total = time.perf_counter() - t0
-    print('\n=== BASELINE ===')
-    print('SOPs processed:', len(results))
-    print('Total time: %.1fs (%.1f min)' % (total, total/60))
-    print('Avg time per SOP: %.1fs' % (total/len(results)))
-    print('Peak memory: N/A (psutil not available)')
-    json.dump({'results':results,'total_s':round(total,1),'avg_s':round(total/len(results),1)}, open('C:/Users/dmaza/mcp-starter/output/perf_baseline.json','w'), indent=2)
+    main()

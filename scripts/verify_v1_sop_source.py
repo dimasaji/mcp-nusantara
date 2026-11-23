@@ -1,57 +1,63 @@
-"""Record the review against the supplied PIAK-03 PDF, without changing its text/index."""
-import hashlib
+"""Local V1 evidence probe. Never prints credentials or contacts external providers."""
+import argparse
 import json
-import sqlite3
-from datetime import datetime, timezone
+import time
+import uuid
 from pathlib import Path
 
-from pypdf import PdfReader
-from app.core.config import settings
+import httpx
 
-SOURCE=Path('data/knowledge/sop/original/PERMOHONAN_DATA_PRIBADI.pdf')
-SHA='75d5b40df368e826f8dc5eace35ccc0daaaf26499b241a278962832334e8db50'
-ID='sop_e4d43334bc32fa5a97972fb64bb34e9c'
+OUT = Path('artifacts/v1-six')
+QUESTION = 'Jelaskan singkat mengapa langit terlihat biru.'
 
 
 def main():
-    assert hashlib.sha256(SOURCE.read_bytes()).hexdigest()==SHA, 'Source revision changed; review again'
-    reader=PdfReader(SOURCE)
-    text='\n'.join(page.extract_text() or '' for page in reader.pages)
-    for phrase in ('Nama S.O.P PERMOHONAN DATA PRIBADI','Nomor SOP PIAK-03','Menyampaikan Surat Permohonan',
-                   'Memverifikasi Data Proses dalam Database','Menerima Surat Jawaban Permohonan data dan berkas data',
-                   'Proses pelayanan permohonan data selesai 3 Hari Kerja'):
-        assert phrase in text, phrase
-    configuration,_=settings.configuration_snapshot()
-    database=configuration.knowledge.database
-    conn=sqlite3.connect(database);conn.row_factory=sqlite3.Row
-    row=conn.execute('SELECT * FROM documents WHERE document_id=?',(ID,)).fetchone()
-    assert row is not None
-    original=dict(row)
-    metadata=json.loads(row['metadata_json'])
-    assert metadata['source_sha256']==SHA
-    for phrase in ('Surat Permohonan.','memverifikasi data dalam database','3 Hari Kerja'):
-        assert phrase in row['source'], phrase
-    out=Path('artifacts/v1-six');out.mkdir(parents=True,exist_ok=True)
-    backup=out/'piak03-document-before.json'
-    if not backup.exists():
-        backup.write_text(json.dumps(original,indent=2,ensure_ascii=False),encoding='utf-8')
-    chunks=conn.execute('SELECT COUNT(*) FROM chunks WHERE document_id=?',(ID,)).fetchone()[0]
-    assert chunks==row['chunks_count'] and chunks>0
-    now=datetime.now(timezone.utc).isoformat()
-    metadata.update(official_title='PERMOHONAN DATA PRIBADI',internal_sop_id='PIAK-03',
-        source_verification='MATCHED_PROVIDED_PDF',source_verified_at=now,
-        verification_reason='Judul, persyaratan Surat Permohonan, alur dan 3 Hari Kerja dicocokkan dengan PDF halaman 1–2. Revisi Agustus 2018; keberlakuan saat ini belum dikonfirmasi.',
-        verification_evidence='artifacts/v1-six/PERMOHONAN_DATA_PRIBADI-1.png; artifacts/v1-six/PERMOHONAN_DATA_PRIBADI-2.png')
-    # UPDATE retains chunks and embeddings; INSERT OR REPLACE would cascade-delete them.
-    with conn:
-        conn.execute('UPDATE documents SET title=?,metadata_json=?,updated_at=? WHERE document_id=?',
-                     ('PERMOHONAN DATA PRIBADI',json.dumps(metadata,ensure_ascii=False),now,ID))
-        assert conn.execute('SELECT COUNT(*) FROM chunks WHERE document_id=?',(ID,)).fetchone()[0]==chunks
-    result=dict(document_id=ID,title='PERMOHONAN DATA PRIBADI',sha256=SHA,pages=2,chunks=chunks,
-                status='MATCHED_PROVIDED_PDF',current_revision='NOT_CONFIRMED',verified_at=now)
-    (out/'sop-source-verification.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
-    print(json.dumps(result))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--phase', choices=['before', 'after'], required=True)
+    parser.add_argument('--port', type=int, default=5180)
+    parser.add_argument('--label')
+    args = parser.parse_args()
+    OUT.mkdir(parents=True, exist_ok=True)
+    with httpx.Client(base_url=f'http://127.0.0.1:{args.port}', timeout=280, trust_env=False) as client:
+        status = client.get('/v1/frontend/model-status').raise_for_status().json()
+        if status['provider'] != 'ollama':
+            raise RuntimeError('Operator must select a local model; probe never switches it')
+        body = dict(user_input=QUESTION, session_id='web-' + str(uuid.uuid4()), request_id=uuid.uuid4().hex)
+        if args.phase == 'after':
+            body['stream'] = True
+        start = time.perf_counter()
+        first = None
+        events = []
+        with client.stream('POST', '/v1/chat', json=body) as response:
+            response.raise_for_status()
+            headers_ms = (time.perf_counter() - start) * 1000
+            if 'ndjson' in response.headers.get('content-type', ''):
+                for line in response.iter_lines():
+                    if not line:
+                        continue
+                    event = json.loads(line)
+                    event['received_ms'] = round((time.perf_counter() - start) * 1000, 1)
+                    if event['type'] == 'delta' and first is None:
+                        first = event['received_ms']
+                    events.append(event)
+                final = next((e['answer'] for e in events if e['type'] == 'final'), None)
+                if final is None:
+                    raise RuntimeError(events)
+            else:
+                final = json.loads(response.read())
+                first = (time.perf_counter() - start) * 1000
+        total = (time.perf_counter() - start) * 1000
+        assert final['model'] == status['model']
+        record = dict(phase=args.phase, question=QUESTION, model=status['model'], session_id=body['session_id'],
+                      request_id=body['request_id'], headers_ms=round(headers_ms, 1), first_text_ms=first,
+                      total_ms=round(total, 1), answer=final, events=events,
+                      browser_typing_ms=None, browser_paint_ms=None)
+        record['response_headers'] = dict(response.headers)
+        suffix = '' if args.port == 5180 else f'-{args.port}'
+        label=args.label or f'{args.phase}{suffix}'
+        (OUT / f'{label}.json').write_text(json.dumps(record, indent=2, ensure_ascii=False), encoding='utf-8')
+        print(json.dumps({k: v for k, v in record.items() if k not in ('answer', 'events')}, ensure_ascii=True))
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     main()

@@ -17,5 +17,5 @@ if ($Restart -or -not (Get-NetTCPConnection -State Listen -LocalPort 8766 -Error
 }
 if (-not (Get-NetTCPConnection -State Listen -LocalPort 5180 -ErrorAction SilentlyContinue)) {
  $env:NUSANTARA_BACKEND_URL='http://127.0.0.1:8766'
- Start-Process -FilePath 'C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe' -ArgumentList @('node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','5180') -WorkingDirectory "$root/control-plane" -WindowStyle Hidden -RedirectStandardOutput "$run/isolated-frontend.stdout.log" -RedirectStandardError "$run/isolated-frontend.stderr.log"
+ Start-Process -FilePath 'C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe' -ArgumentList @('node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','5180') -WorkingDirectory "$root/frontend" -WindowStyle Hidden -RedirectStandardOutput "$run/isolated-frontend.stdout.log" -RedirectStandardError "$run/isolated-frontend.stderr.log"
 }

@@ -20,7 +20,7 @@ def main():
     token=os.environ.get('NUSANTARA_ADMIN_TOKEN',dotenv_values('.env').get('NUSANTARA_ADMIN_TOKEN'))
     headers={'X-Admin-Token':token}
     with httpx.Client(base_url='http://127.0.0.1:5180',timeout=280,trust_env=False) as client:
-        model=client.get('/v1/control-plane/model-status').raise_for_status().json()
+        model=client.get('/v1/frontend/model-status').raise_for_status().json()
         assert model['provider']=='ollama', 'Do not send documents to an external provider'
         session='web-'+str(uuid.uuid4());turns=[]
         questions=['Jelaskan rekursi dalam satu kalimat.','Beri contoh sederhana untuk konsep tadi.',
@@ -69,16 +69,16 @@ def main():
         assert 'Surat Permohonan' in sop[0]['answer']['response']
         assert '3 hari kerja' in sop[2]['answer']['response'].lower()
         assert all(e['title']=='PERMOHONAN DATA PRIBADI' for turn in sop for e in turn['answer']['evidence'])
-        status=client.get('/v1/control-plane/model-status').raise_for_status().json()
+        status=client.get('/v1/frontend/model-status').raise_for_status().json()
         assert status['model']==model['model'] and status['provider']=='ollama'
         save('runtime-final.json',status)
         endpoints={}
-        for path in ['/health','/v1/control-plane/models?provider=ollama','/v1/control-plane/operations-summary',
-                     '/v1/control-plane/cost-summary','/v1/control-plane/execution-context','/v1/control-plane/history',
-                     '/v1/control-plane/evidence-package','/v1/knowledge/pipeline/status']:
+        for path in ['/health','/v1/frontend/models?provider=ollama','/v1/frontend/operations-summary',
+                     '/v1/frontend/cost-summary','/v1/frontend/execution-context','/v1/frontend/history',
+                     '/v1/frontend/evidence-package','/v1/knowledge/pipeline/status']:
             response=client.get(path,headers=headers)
             endpoints[path]=dict(status=response.status_code,body=response.json())
-        save('control-plane-endpoints.json',endpoints)
+        save('frontend-endpoints.json',endpoints)
         print('API dialogue, history/replay, upload and SOP probes finished',flush=True)
 
 

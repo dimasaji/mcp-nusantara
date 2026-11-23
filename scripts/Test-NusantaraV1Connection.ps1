@@ -7,7 +7,7 @@ foreach ($probe in @(
     @{name='backend';url='http://127.0.0.1:8000/health'},
     @{name='frontend';url='http://127.0.0.1:5180/'},
     @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/control-plane/model-status'},
+    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
     @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
     @{name='ollama';url='http://127.0.0.1:11434/api/version'}
 )) {

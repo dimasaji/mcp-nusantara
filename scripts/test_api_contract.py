@@ -1,161 +1,37 @@
-import json
-import sys
-from pathlib import Path
-from urllib.request import Request, urlopen
-
-ROOT = Path(__file__).resolve().parents[1]
-
-API_URL = "http://127.0.0.1:8000/v1/chat"
-
-REQUIRED_TOP_LEVEL = [
-    "session_id",
-    "response",
-    "model",
-    "provider_status",
-    "latency_ms",
-    "grounding",
-    "understanding",
-    "problem",
-    "evidence",
-    "timestamp",
-]
-
-REQUIRED_GROUNDING = [
-    "enabled",
-    "grounded",
-    "reason",
-]
-
-REQUIRED_UNDERSTANDING = [
-    "input",
-    "output",
-]
-
-
-def call_api():
-    payload = {
-        "session_id": "contract-test",
-        "user_input": "Apa itu KTP-el?",
-        "model": "llama3.2:1b",
-        "stream": False,
+param([switch]$IncludeChat, [string]$EvidenceDirectory)
+. "$PSScriptRoot/../service/local-services.ps1"
+if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
+New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
+$results = @()
+foreach ($probe in @(
+    @{name='backend';url='http://127.0.0.1:8000/health'},
+    @{name='frontend';url='http://127.0.0.1:5180/'},
+    @{name='proxy';url='http://127.0.0.1:5180/health'},
+    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
+    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
+    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
+)) {
+    $ok = Test-Http $probe.url
+    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+}
+if ($IncludeChat) {
+    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
+    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
+        $session = 'web-' + [Guid]::NewGuid().ToString()
+        try {
+            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
+            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
+            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
+                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
+        } catch {
+            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
+        }
     }
-
-    body = json.dumps(payload).encode("utf-8")
-
-    request = Request(
-        API_URL,
-        data=body,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-
-    with urlopen(request, timeout=120) as response:
-        return response.status, json.loads(
-            response.read().decode("utf-8")
-        )
-
-
-def main():
-    status, data = call_api()
-
-    checks = []
-
-    checks.append(("HTTP 200", status == 200))
-
-    for key in REQUIRED_TOP_LEVEL:
-        checks.append(
-            (f"top-level:{key}", key in data)
-        )
-
-    grounding = data.get("grounding") or {}
-
-    for key in REQUIRED_GROUNDING:
-        checks.append(
-            (f"grounding:{key}", key in grounding)
-        )
-
-    understanding = data.get("understanding") or {}
-
-    for key in REQUIRED_UNDERSTANDING:
-        checks.append(
-            (f"understanding:{key}", key in understanding)
-        )
-
-    output = (
-        understanding.get("output")
-        if isinstance(understanding, dict)
-        else None
-    )
-
-    checks.append(
-        (
-            "understanding.output.metadata",
-            isinstance(output, dict)
-            and isinstance(output.get("metadata"), dict),
-        )
-    )
-
-    intent = (
-        output.get("intent")
-        if isinstance(output, dict)
-        else None
-    )
-
-    checks.append(
-        (
-            "understanding.output.intent",
-            isinstance(intent, dict),
-        )
-    )
-
-    checks.append(
-        (
-            "understanding.output.intent.intent",
-            isinstance(intent, dict)
-            and isinstance(intent.get("intent"), str),
-        )
-    )
-
-    checks.append(
-        (
-            "understanding.output.intent.confidence",
-            isinstance(intent, dict)
-            and isinstance(
-                intent.get("confidence"),
-                (int, float),
-            ),
-        )
-    )
-
-    failed = [
-        name
-        for name, ok in checks
-        if not ok
-    ]
-
-    print("=" * 72)
-    print("NUSANTARA AI API CONTRACT TEST")
-    print("=" * 72)
-
-    for name, ok in checks:
-        print(
-            f"[{'PASS' if ok else 'FAIL'}] {name}"
-        )
-
-    print()
-    print(
-        f"RESULT: {len(checks) - len(failed)}/{len(checks)} PASS"
-    )
-
-    if failed:
-        print("FAILED CONTRACTS:")
-        for item in failed:
-            print(f" - {item}")
-
-        return 1
-
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
+}
+$status = Get-LocalStatus
+$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
+$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
+$results | Format-Table -AutoSize
+if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }

@@ -34,7 +34,7 @@ def finalize(root, folder, before, commands, exits, isolation):
     root,folder=Path(root).resolve(),Path(folder).resolve()
     folder.relative_to(root)
     if (folder/'FINALIZED.json').exists():raise ValueError('RUN_ALREADY_FINALIZED')
-    spec=json.loads((root/'control-plane/evidence-requirements.json').read_text(encoding='utf-8'))
+    spec=json.loads((root/'frontend/evidence-requirements.json').read_text(encoding='utf-8'))
     if before!=snapshot(root,spec):raise ValueError('SOURCE_CHANGED_DURING_TESTS')
     py=folder/'python/python-results.xml';ui=folder/'ui/vitest-results.json'
     doc=ET.parse(py).getroot()
@@ -74,7 +74,7 @@ def publish(root, folder, manifest):
     if digest(_safe_path(root,value['results_path']))!=seal['bundle_sha256']:raise ValueError('FINALIZED_RESULTS_CHANGED')
     for entry in seal['artifacts']:
         if digest(_safe_path(root,entry['path']))!=entry['sha256']:raise ValueError('FINALIZED_ARTIFACT_CHANGED')
-    spec=json.loads((root/'control-plane/evidence-requirements.json').read_text())
+    spec=json.loads((root/'frontend/evidence-requirements.json').read_text())
     if snapshot(root,spec)!=value['source_sha256']:raise ValueError('SOURCE_CHANGED_AFTER_TESTS')
     active=_safe_path(root,spec['test_run_manifest'])
     with _cross_process_lock(active.with_suffix(active.suffix+'.publish.lock')):
@@ -97,12 +97,12 @@ def publish(root, folder, manifest):
 def main():
     folder=ROOT/'artifacts/evidence-runs'/('run-'+datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S')+'-'+uuid4().hex[:10])
     folder.mkdir(parents=True,exist_ok=False)
-    spec=json.loads((ROOT/'control-plane/evidence-requirements.json').read_text())
+    spec=json.loads((ROOT/'frontend/evidence-requirements.json').read_text())
     before=snapshot(ROOT,spec);write_once(folder/'source-before.json',before)
     for sub in ('python','ui'):(folder/sub).mkdir()
     import httpx
     with httpx.Client(timeout=30) as client:
-        response=client.get('http://127.0.0.1:8765/v1/control-plane/snapshot');response.raise_for_status()
+        response=client.get('http://127.0.0.1:8765/v1/frontend/snapshot');response.raise_for_status()
         write_once(folder/'ui/snapshot.json',response.json())
     commands=[];exits=[]
     command=[sys.executable,str(ROOT/'tests/run_evidence_tests_isolated.py'),str(folder/'python')]
@@ -111,10 +111,10 @@ def main():
     env=os.environ.copy()
     env.update(NUSANTARA_TEST_RUN_DIR=str(folder/'ui'),NUSANTARA_VITEST_CACHE_DIR=str(folder/'ui/cache'),
                CPLANE_SNAPSHOT_FILE=str(folder/'ui/snapshot.json'),TEMP=str(folder/'ui'),TMP=str(folder/'ui'),
-               NODE_OPTIONS='--require '+str(ROOT/'control-plane/tests/inspection-preview-network-guard.cjs'))
-    command=['node',str(ROOT/'control-plane/node_modules/vitest/vitest.mjs'),'run','tests/human.test.tsx','tests/acceptance.test.ts','tests/verification-pages.test.tsx','tests/assistant.test.tsx','tests/knowledge-operations.test.tsx',
+               NODE_OPTIONS='--require '+str(ROOT/'frontend/tests/inspection-preview-network-guard.cjs'))
+    command=['node',str(ROOT/'frontend/node_modules/vitest/vitest.mjs'),'run','tests/human.test.tsx','tests/acceptance.test.ts','tests/verification-pages.test.tsx','tests/assistant.test.tsx','tests/knowledge-operations.test.tsx',
              '--config','vitest.config.ts','--configLoader','native','--reporter=json','--outputFile='+str(folder/'ui/vitest-results.json')]
-    result=subprocess.run(command,cwd=ROOT/'control-plane',env=env,capture_output=True)
+    result=subprocess.run(command,cwd=ROOT/'frontend',env=env,capture_output=True)
     (folder/'ui/process.log').write_bytes(result.stdout+result.stderr);commands.append(command);exits.append(result.returncode)
     write_once(folder/'commands.json',{'commands':commands,'exit_codes':exits})
     print('Run:',folder.relative_to(ROOT),flush=True)

@@ -1,58 +1,54 @@
-﻿from pathlib import Path
-import re
+"""Read-only frontend observation for master-contract forensic audit.
 
-p = Path(r".\scripts\test_e2e_grounding_ollama.py")
-s = p.read_text(encoding="utf-8")
+GET endpoints only; no chat, no writes to services. Admin token read from
+.env and used solely as a request header, never printed. Responses are
+status metadata; saved locally as audit evidence.
+"""
+import json
+import urllib.request
+from pathlib import Path
 
-# Cari blok prompt yang dimulai dari system_instruction sampai JAWABAN.
-pattern = re.compile(
-    r'prompt\s*=\s*f"""[\s\S]*?JAWABAN:\s*"""',
-    re.MULTILINE
-)
+PROJECT = Path(__file__).resolve().parents[1]
+TOKEN = next(l.strip().split('=', 1)[1]
+             for l in (PROJECT / '.env').read_text(encoding='utf-8').splitlines()
+             if l.startswith('NUSANTARA_ADMIN_TOKEN='))
+BASE = 'http://127.0.0.1:8000/v1/frontend/'
+OUT = PROJECT / 'reports' / 'master-001'
 
-new_prompt = '''prompt = f"""Jawab pertanyaan hanya berdasarkan EVIDENCE.
 
-EVIDENCE:
-{evidence_context}
+def get(ep):
+    req = urllib.request.Request(BASE + ep, headers={'x-admin-token': TOKEN})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())
+    except Exception as exc:
+        return {'error': f'{type(exc).__name__}: {exc}'}
 
-PERTANYAAN:
-{query}
 
-ATURAN:
-- Jangan menggunakan pengetahuan di luar EVIDENCE.
-- Jangan membuat fakta baru.
-- Jangan membuat prosedur, syarat, angka, atau contoh baru.
-- Jika jawabannya ada di EVIDENCE, gunakan kalimat dari EVIDENCE.
-- Jika jawabannya tidak ada, jawab: "Informasi tersebut belum tersedia dalam EVIDENCE."
+def main():
+    evidence = {}
+    for ep in ('snapshot', 'model-status', 'knowledge-status',
+               'operations-summary', 'hermes/connection', 'history'):
+        evidence[ep] = get(ep)
+    (OUT / 'control_plane_observation.json').write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False), encoding='utf-8')
 
-JAWABAN:
-"""'''
+    snap = evidence['snapshot']
+    print('SNAPSHOT status:', snap.get('status'))
+    for p in snap.get('phases', []):
+        print(p['id'], '|', p['name'][:46], '|', p['status'], '|', p.get('kind'))
+    ms = evidence['model-status']
+    print('MODEL:', ms.get('provider'), ms.get('model'), ms.get('status'))
+    ks = evidence['knowledge-status']
+    print('KNOWLEDGE keys:', sorted(ks.keys())[:12])
+    print('KNOWLEDGE summary:', json.dumps(
+        {k: ks[k] for k in list(ks)[:6]}, ensure_ascii=False)[:300])
+    hc = evidence['hermes/connection']
+    print('HERMES:', json.dumps(hc, ensure_ascii=False)[:250])
+    ops = evidence['operations-summary']
+    print('OPS:', json.dumps(ops, ensure_ascii=False)[:250])
+    print('SAVED', OUT / 'control_plane_observation.json')
 
-m = pattern.search(s)
 
-if not m:
-    print("=" * 70)
-    print("PATCH : FAIL")
-    print("ALASAN: blok prompt f-string tidak ditemukan")
-    print("=" * 70)
-    print()
-    print("STRUKTUR PROMPT AKTUAL:")
-    
-    for i, line in enumerate(s.splitlines(), 1):
-        if "prompt" in line.lower() or "EVIDENCE" in line or "JAWABAN" in line:
-            print(f"{i}: {line}")
-    
-    raise SystemExit(1)
-
-s = s[:m.start()] + new_prompt + s[m.end():]
-
-p.write_text(s, encoding="utf-8")
-
-print("=" * 70)
-print("E2E PROMPT HARDENING")
-print("=" * 70)
-print("PATCH : PASS")
-print("FILE  :", p.resolve())
-print("MODE  : minimal evidence-only")
-print()
-print("Prompt lama berhasil diganti.")
+if __name__ == '__main__':
+    main()

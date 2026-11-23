@@ -1,99 +1,37 @@
-﻿import json
-import urllib.request
-
-BASE_URL = "http://127.0.0.1:8000/v1/chat"
-
-with open("data/test_chat_regression.json", "r", encoding="utf-8-sig") as f:
-    tests = json.load(f)
-
-results = []
-
-for test in tests:
-    payload = {
-        "session_id": "regression-" + test["id"],
-        "user_input": test["input"],
-        "model": "llama3.2:1b",
-        "stream": False,
+param([switch]$IncludeChat, [string]$EvidenceDirectory)
+. "$PSScriptRoot/../service/local-services.ps1"
+if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
+New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
+$results = @()
+foreach ($probe in @(
+    @{name='backend';url='http://127.0.0.1:8000/health'},
+    @{name='frontend';url='http://127.0.0.1:5180/'},
+    @{name='proxy';url='http://127.0.0.1:5180/health'},
+    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
+    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
+    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
+)) {
+    $ok = Test-Http $probe.url
+    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+}
+if ($IncludeChat) {
+    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
+    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
+        $session = 'web-' + [Guid]::NewGuid().ToString()
+        try {
+            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
+            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
+            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
+                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
+        } catch {
+            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
+        }
     }
-
-    request = urllib.request.Request(
-        BASE_URL,
-        data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-
-    try:
-        with urllib.request.urlopen(request, timeout=120) as response:
-            data = json.loads(response.read().decode("utf-8"))
-
-        actual_intent = (
-            data
-            .get("understanding", {})
-            .get("output", {})
-            .get("intent", {})
-            .get("intent")
-        )
-
-        confidence = (
-            data
-            .get("understanding", {})
-            .get("output", {})
-            .get("intent", {})
-            .get("confidence")
-        )
-
-        results.append({
-            "id": test["id"],
-            "input": test["input"],
-            "expected": test["expected_intent"],
-            "actual": actual_intent,
-            "confidence": confidence,
-            "provider": data.get("provider_status"),
-            "grounded": data.get("grounding", {}).get("grounded"),
-            "match": actual_intent == test["expected_intent"],
-        })
-
-    except Exception as exc:
-        results.append({
-            "id": test["id"],
-            "input": test["input"],
-            "expected": test["expected_intent"],
-            "actual": "ERROR",
-            "confidence": 0,
-            "provider": "-",
-            "grounded": False,
-            "match": False,
-            "error": str(exc),
-        })
-
-print()
-print("=" * 100)
-print("NUSANTARA CORE — CHAT REGRESSION TEST")
-print("=" * 100)
-
-for r in results:
-    status = "PASS" if r["match"] else "FAIL"
-
-    print(
-        f"[{status:4}] "
-        f"{r['id']:18} "
-        f"expected={r['expected']:28} "
-        f"actual={str(r['actual']):28} "
-        f"confidence={r['confidence']}"
-    )
-
-passed = sum(1 for r in results if r["match"])
-total = len(results)
-
-print()
-print("=" * 100)
-print(f"RESULT: {passed}/{total} intent tests passed")
-print("=" * 100)
-
-with open(
-    "data/test_chat_regression_result.json",
-    "w",
-    encoding="utf-8",
-) as f:
-    json.dump(results, f, ensure_ascii=False, indent=2)
+}
+$status = Get-LocalStatus
+$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
+$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
+$results | Format-Table -AutoSize
+if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }

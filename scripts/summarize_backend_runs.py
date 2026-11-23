@@ -1,23 +1,21 @@
-"""Print recorded verification outcomes, keeping subtests separate."""
-
-import argparse
-import json
-from pathlib import Path
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("folders", nargs="+", type=Path)
-    parser.add_argument("--failures", action="store_true")
-    args = parser.parse_args()
-    for folder in args.folders:
-        data = json.loads((folder / "results.json").read_text(encoding="utf-8"))
-        print(folder.name, data.get("outcome_counts"), "exit", data["exit_code"])
-        if args.failures:
-            for report in data["reports"]:
-                if report["outcome"] == "failed":
-                    print(report["nodeid"], report["detail"][-450:].replace("\n", " "))
-
-
-if __name__ == "__main__":
-    main()
+param([switch]$Restart)
+$ErrorActionPreference='Stop'
+$root=Split-Path $PSScriptRoot -Parent
+$run=Join-Path $root 'artifacts/nusantara-e2e-20261016-1018'
+$stamp=Get-Date -Format 'yyyyMMdd-HHmmss'
+if($Restart){
+ $listener=Get-NetTCPConnection -State Listen -LocalPort 8766 -ErrorAction SilentlyContinue
+ if($listener){
+  $owned=Get-CimInstance Win32_Process -Filter "ProcessId=$($listener.OwningProcess)"
+  if($owned.CommandLine -notlike '*serve_v1_completion_isolated.py*'){throw 'Port 8766 is not owned by this test launcher.'}
+  Stop-Process -Id $listener.OwningProcess
+  Wait-Process -Id $listener.OwningProcess -Timeout 10 -ErrorAction SilentlyContinue
+ }
+}
+if ($Restart -or -not (Get-NetTCPConnection -State Listen -LocalPort 8766 -ErrorAction SilentlyContinue)) {
+ Start-Process -FilePath "$root/.venv/Scripts/python.exe" -ArgumentList @('scripts/serve_v1_completion_isolated.py') -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput "$run/isolated-backend-$stamp.stdout.log" -RedirectStandardError "$run/isolated-backend-$stamp.stderr.log"
+}
+if (-not (Get-NetTCPConnection -State Listen -LocalPort 5180 -ErrorAction SilentlyContinue)) {
+ $env:NUSANTARA_BACKEND_URL='http://127.0.0.1:8766'
+ Start-Process -FilePath 'C:/Users/dmaza/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe' -ArgumentList @('node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','5180') -WorkingDirectory "$root/frontend" -WindowStyle Hidden -RedirectStandardOutput "$run/isolated-frontend.stdout.log" -RedirectStandardError "$run/isolated-frontend.stderr.log"
+}

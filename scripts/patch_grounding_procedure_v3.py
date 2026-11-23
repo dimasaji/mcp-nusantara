@@ -1,83 +1,54 @@
-﻿from pathlib import Path
+"""Read-only frontend observation for master-contract forensic audit.
 
-p = Path(r".\app\knowledge\grounding.py")
-s = p.read_text(encoding="utf-8")
+GET endpoints only; no chat, no writes to services. Admin token read from
+.env and used solely as a request header, never printed. Responses are
+status metadata; saved locally as audit evidence.
+"""
+import json
+import urllib.request
+from pathlib import Path
 
-old = '''    def _evidence_contains_procedure_claim(
-        self,
-        evidence: str,
-    ) -> bool:
-        lower = evidence.lower()
+PROJECT = Path(__file__).resolve().parents[1]
+TOKEN = next(l.strip().split('=', 1)[1]
+             for l in (PROJECT / '.env').read_text(encoding='utf-8').splitlines()
+             if l.startswith('NUSANTARA_ADMIN_TOKEN='))
+BASE = 'http://127.0.0.1:8000/v1/frontend/'
+OUT = PROJECT / 'reports' / 'master-001'
 
-        return any(
-            marker in lower
-            for marker in self.PROCEDURE_MARKERS
-        )
-'''
 
-if old not in s:
-    raise SystemExit(
-        "ERROR: blok _evidence_contains_procedure_claim tidak ditemukan persis."
-    )
+def get(ep):
+    req = urllib.request.Request(BASE + ep, headers={'x-admin-token': TOKEN})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())
+    except Exception as exc:
+        return {'error': f'{type(exc).__name__}: {exc}'}
 
-new = '''    def _evidence_contains_procedure_claim(
-        self,
-        evidence: str,
-    ) -> bool:
-        """
-        Detect EXPLICIT procedural instructions in evidence.
 
-        Capability/status statements such as:
-            "status dapat diperiksa melalui layanan"
+def main():
+    evidence = {}
+    for ep in ('snapshot', 'model-status', 'knowledge-status',
+               'operations-summary', 'hermes/connection', 'history'):
+        evidence[ep] = get(ep)
+    (OUT / 'control_plane_observation.json').write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False), encoding='utf-8')
 
-        are NOT considered procedural evidence.
+    snap = evidence['snapshot']
+    print('SNAPSHOT status:', snap.get('status'))
+    for p in snap.get('phases', []):
+        print(p['id'], '|', p['name'][:46], '|', p['status'], '|', p.get('kind'))
+    ms = evidence['model-status']
+    print('MODEL:', ms.get('provider'), ms.get('model'), ms.get('status'))
+    ks = evidence['knowledge-status']
+    print('KNOWLEDGE keys:', sorted(ks.keys())[:12])
+    print('KNOWLEDGE summary:', json.dumps(
+        {k: ks[k] for k in list(ks)[:6]}, ensure_ascii=False)[:300])
+    hc = evidence['hermes/connection']
+    print('HERMES:', json.dumps(hc, ensure_ascii=False)[:250])
+    ops = evidence['operations-summary']
+    print('OPS:', json.dumps(ops, ensure_ascii=False)[:250])
+    print('SAVED', OUT / 'control_plane_observation.json')
 
-        Procedural evidence requires explicit action/instruction
-        language such as:
-            langkah, cara, lakukan, klik, buka, pilih, masukkan,
-            unggah, isi, ajukan, datang, bawa, ikuti, tahapan,
-            prosedur.
-        """
 
-        lower = self._normalize_text(evidence).lower()
-
-        explicit_procedure_markers = (
-            "langkah",
-            "cara",
-            "prosedur",
-            "tahapan",
-            "ikuti",
-            "lakukan",
-            "melakukan langkah",
-            "klik",
-            "buka",
-            "pilih",
-            "masukkan",
-            "isi",
-            "unggah",
-            "upload",
-            "ajukan",
-            "mengajukan",
-            "datang",
-            "bawa",
-        )
-
-        return any(
-            marker in lower
-            for marker in explicit_procedure_markers
-        )
-'''
-
-s = s.replace(old, new)
-
-p.write_text(s, encoding="utf-8")
-
-print("=" * 70)
-print("NUSANTARA GROUNDING - PROCEDURE EVIDENCE HARDENING")
-print("=" * 70)
-print("STATUS : PATCHED")
-print("")
-print("Procedure evidence now requires explicit instruction markers.")
-print("Capability/status words such as 'diperiksa' are NOT sufficient.")
-print("")
-print("RUNNING E2E TEST...")
+if __name__ == '__main__':
+    main()

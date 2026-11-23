@@ -1,117 +1,37 @@
-from pathlib import Path
-import json
-
-from app.developer_core.mapper import RuntimeGraphMapper
-from app.developer_core.impact import RuntimeImpactAnalyzer
-
-
-print("=" * 64)
-print("NUSANTARA GATE 14.2 - RUNTIME GRAPH MAPPING")
-print("=" * 64)
-
-graph = Path("graphify-out/graph.json")
-
-print("Graphify :", graph)
-print("Exists   :", graph.exists())
-
-mapper = RuntimeGraphMapper(graph)
-
-runtime_gates = {
-    "language": {
-        "status": "active",
-        "confidence": 0.903062,
-    },
-    "problem": {
-        "status": "active",
-    },
-    "knowledge": {
-        "status": "grounded",
-    },
-    "reasoning": {
-        "status": "grounded",
-        "confidence": 0.755518,
-    },
-    "policy": {
-        "status": "allow",
-    },
-    "memory": {
-        "status": "active",
-    },
-    "action": {
-        "status": "observed",
-    },
-    "orchestration": {
-        "status": "completed",
-    },
-    "developer_core": {
-        "status": "active",
-    },
+param([switch]$IncludeChat, [string]$EvidenceDirectory)
+. "$PSScriptRoot/../service/local-services.ps1"
+if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
+New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
+$results = @()
+foreach ($probe in @(
+    @{name='backend';url='http://127.0.0.1:8000/health'},
+    @{name='frontend';url='http://127.0.0.1:5180/'},
+    @{name='proxy';url='http://127.0.0.1:5180/health'},
+    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
+    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
+    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
+)) {
+    $ok = Test-Http $probe.url
+    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
 }
-
-orchestration = {
-    "stages": [
-        "language",
-        "problem",
-        "reasoning",
-        "policy",
-        "memory",
-    ]
+if ($IncludeChat) {
+    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
+    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
+        $session = 'web-' + [Guid]::NewGuid().ToString()
+        try {
+            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
+            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
+            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
+                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
+        } catch {
+            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
+            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
+        }
+    }
 }
-
-mapping = mapper.map_runtime(
-    gates=runtime_gates,
-    orchestration=orchestration,
-)
-
-print("")
-print("GRAPH")
-print("  Loaded nodes       :", mapping["graph"]["total_nodes"])
-print("  Loaded edges       :", mapping["graph"]["total_edges"])
-print("  Matched nodes      :", mapping["graph"]["matched_nodes"])
-print("  Related edges      :", mapping["graph"]["related_edges"])
-
-print("")
-print("ENGINE MAPPING")
-
-for name, item in mapping["mappings"].items():
-    print(
-        f"  {name:<18} "
-        f"{item['node_count']} node(s)"
-    )
-
-impact = RuntimeImpactAnalyzer(graph)
-impact_result = impact.analyze_mapping(mapping)
-
-print("")
-print("IMPACT")
-print(
-    "  Dependencies       :",
-    impact_result["dependency"]["count"],
-)
-print(
-    "  Dependents         :",
-    impact_result["dependents"]["count"],
-)
-print(
-    "  Impact count       :",
-    impact_result["risk"]["impact_count"],
-)
-print(
-    "  Risk               :",
-    impact_result["risk"]["level"],
-)
-
-print("")
-print("MODE")
-print("  Mapper             : read-only")
-print("  Impact             : read-only")
-print("  Existing graph     : preserved")
-
-if mapping["mapper"]["graph_loaded"]:
-    print("")
-    print("GATE 14.2 : PASS")
-else:
-    print("")
-    print("GATE 14.2 : DEGRADED")
-
-print("=" * 64)
+$status = Get-LocalStatus
+$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
+$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
+$results | Format-Table -AutoSize
+if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
