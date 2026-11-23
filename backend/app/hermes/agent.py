@@ -878,25 +878,8 @@ class HermesAgent:
             rebind = getattr(_knowledge, 'reuse_prior_citation', None)
             try:
                 if rebind is None:
-                    raise AttributeError('CHAT_SOURCE_VERSION_UNAVAILABLE')
+                    raise HTTPException(409, 'CHAT_SOURCE_VERSION_UNAVAILABLE')
                 rebind(reused_document_id)
-            except AttributeError:
-                if rebind is not None:
-                    raise
-                response_text = snapshot.get('text') or previous.get('topic', '')
-                grounding_result = GroundingResult(response_text, True, 'grounded', [])
-                pages = [p for p in snapshot.get('pages', []) if isinstance(p, int)]
-                answer_evidence = [SimpleNamespace(
-                    document_id=reused_document_id,
-                    title=snapshot.get('title') or previous.get('title', ''),
-                    source=snapshot.get('source', ''),
-                    chunk=snapshot.get('chunk', ''),
-                    score=snapshot.get('score', 0),
-                    metadata={'citation_pages': pages, 'block_ids': []})]
-                service_context = previous
-                model_status = 'evidence_fast_path'
-                model_used = provider.model
-                latency_ms = int((time.perf_counter() - started) * 1000)
             except HTTPException:
                 response_text = 'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.'
                 grounding_result = GroundingResult(response_text, False, 'no_evidence', [])
