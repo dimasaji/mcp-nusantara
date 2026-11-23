@@ -226,7 +226,8 @@ def test_reuse_fails_closed_when_source_cannot_be_rebound():
 
 def test_reuse_fails_closed_when_rebind_method_missing():
     """Missing boundary rebind method must abstain, never cite the old snapshot."""
-    agent, services, projector, provider, observed, gates = _parts_with_pages([2, 3])
+    parts = _parts_with_pages([2, 3])
+    agent, services = parts[0], parts[1]
     session = "web-f0000000-0000-0000-0000-000000000016"
     _run(agent, services, "Apa persyaratan permohonan data pribadi?", session)
 
