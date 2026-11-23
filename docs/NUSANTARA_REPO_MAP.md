@@ -1,24 +1,39 @@
 # Nusantara repository map
 
-Updated 2026-10-07. Existing repository retained; no replacement V1.
+Updated 2026-11-23 against primary PC repository baseline 71b1e1bf.
+Approved physical target: [folder addendum](contracts/NUSANTARA-V1-FOLDER-TARGET-ADDENDUM-20261123.md).
+The supplied [NUS-CONTRACT-RECON-001](contracts/NUS-CONTRACT-RECON-001.md) remains DRAFT;
+its conceptual tree does not itself authorize new services or data migrations.
 
-| Area | Role / evidence |
+| Area | Role and boundary |
 | --- | --- |
-| developer.py | Local control entrypoint; inspect/inventory/status/health/test/architecture-check/cleanup --dry-run/validate/report |
-| app/main.py, app/api/routes.py, app/api/v2_routes.py | Existing API entrypoints and response contracts; no wiring/schema edits in FULLROOT task |
-| app/v2/orchestrator.py | Existing policy/trust/context budget/stage failure orchestration; callback injection retained |
-| app/context/context_builder.py | Existing bounded context construction; existing tests preserved |
-| app/models | Existing providers/router; gateway.py bridges sync/async generation using existing router |
-| app/execution | Optional structural tool/agent contracts; native adapter delegates to governed registry |
-| app/v2/hermes_adapter.py | Existing optional Hermes adapter; structural protocol test uses injected fixture, not worker |
-| app/knowledge, app/rag | Existing canonical/production/experimental RAG implementations; ownership/behavior differences remain documented |
-| app/governance, app/policy, app/trust | Existing authoritative governance; no policy edits or generic shell tools added |
-| scripts/nusantara_master_engine.py | Existing broader engineering engine preserved; not run in --apply or provider mode |
-| scripts/release_check.py | Existing readiness engine; not overwritten by control static validation |
-| tests | Existing contracts/behavior plus new control/router/boundary tests |
-| .dev | Scoped inventory, test evidence, state/tasks/decisions, recovery checkpoint |
-| graphify-out | AST knowledge graph; clustering/wiki/report may be older than current no-cluster graph |
-| data, nusantara-models | Persistent data/model assets excluded from control content inspection |
-| archive, backup, integration, app_backup_* | Historical/experimental candidates; UNKNOWN retained pending actual dependency/recoverability proof |
+| backend/app/main.py, backend/app/api | Existing FastAPI/V1 API owners; namespace app.* remains |
+| backend/app/hermes | Existing orchestration; external ACP connection remains permission-blocked |
+| backend/app/knowledge, backend/app/rag | Existing document ingestion, retrieval, stores and RAG owners |
+| backend/app/developer_core, backend/app/devcore | Both existing trees retained; no merge without equivalence evidence |
+| backend/app/core | Configuration, identity, evidence and runtime owners |
+| backend/app/models, backend/app/execution | Existing provider and governed execution adapters |
+| backend/app/context, governance, policy, trust | Existing context/governance owners; no bypass authorized |
+| backend/app/v2 | Retained for dependency/tests; no permission to build or enable V2 |
+| frontend | React/TypeScript source, component tests, e2e; dist is generated |
+| deploy/docker | Dockerfile, Compose, Dockerfile-specific input exclusions |
+| config | Non-secret runtime configuration; .env stays private at root |
+| service | Windows lifecycle dependency used by supported launchers |
+| scripts, developer.py | Operational/evaluation/release tools and local control entrypoint |
+| tests, tools | Existing regression fixtures, verification and conversion tooling |
+| docs, reports | Documentation, contracts and evidence; test-dependent historical inputs retained |
+| data | Persistent data; no database/index migration implied |
+| backend/data | Tracked evidence; not automatically duplicate runtime storage |
+| nusantara-models | Source worker and local model assets; only intended source belongs in Git |
+| model, ollama, .venv* | Runtime/model environments; preserve pending path-aware relocation approval |
+| .dev, graphify-out, .tmp-build, pytest-of-* | Checkpoints/graph/test outputs; not additional application source roots |
+| mcp-nusantara, mcp-nusantara-upstream, nusantara | Nested Git metadata/local changes; preserve without reset/delete |
+| integration, graph-viewer, patch/legacy folders | KEEP_PENDING_REVIEW; names do not authorize deletion |
 
-.dev/repo_inventory.json contains source/import/hash metadata. KEEP means preserve, not verified runtime authority. Duplicate hashes and filename suffixes do not authorize deletion. Dynamic/external imports and storage assets remain scoped limits. .env contents are never inspected by developer.py.
+Directory/root classifications: [folder audit](audit/folder-contract-20261123/RECONCILIATION.md).
+The primary repository is C:\Users\dmaza\mcp-starter. pc-final-verification is a
+separate worktree with an older baseline and independent changes.
+
+Approved core layout is distinct from completion of all reconstruction and
+functional acceptance. Full inventory/dependency proof and pending folders are
+not declared complete. Runtime blockers: [PC verification](audit/pc-final-20261123/REPORT.md).
