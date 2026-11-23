@@ -30,8 +30,42 @@ Baseline: PR #16 — Final Consolidation
 ## Catatan deep-dive
 
 - Baseline `b268da1e` di tree terpisah: `119 failed / 1434 passed / 62 skipped / 49 errors`; head PR #16: `89 failed / 1466 passed / 62 skipped / 49 errors`. 30 instance perbaikan, 0 ID regresi baru.
-- Satu actual code defect terbukti tetapi **pre-existing**: `official_knowledge_ingestion.py:42` meng-import `app.knowledge.sqlite_backup` yang tidak ada di base maupun head. Tidak diperbaiki tanpa approval.
+- Satu actual code defect terbukti tetapi **pre-existing**: `official_knowledge_ingestion.py:42` meng-import `app.knowledge.sqlite_backup` yang tidak ada di base maupun head. Awalnya tidak diperbaiki tanpa approval.
 - Validator SOP tidak bisa dijalankan karena defect tersebut; PDF, manifest, `.venv-docling`, `nusantara-models/docling`, dan `production_knowledge.db` semuanya tidak ada. Satu file `.txt` sintetis tidak digunakan sebagai bukti.
+
+## Tindak lanjut defect `sqlite_backup` (setelah approval user)
+
+- User menyetujui "Perbaikan kode dulu": hanya perbaikan code defect `app.knowledge.sqlite_backup`, tanpa merge/restart/deploy/perubahan data.
+- **Graphify**: query dilewati karena `graphify-out/graph.json` tidak ada. `graphify update .` juga dicoba setelah perubahan kode tetapi gagal dengan `graphify: command not found`; dicatat sebagai skip terpaksa, bukan skip sukarela.
+- **Diagnosing Bugs**: loop sempit `PYTHONPATH=backend python -m pytest -q -p no:cacheprovider tests/test_v1_operational_data.py` gagal di koleksi dengan `ModuleNotFoundError: No module named 'app.knowledge.sqlite_backup'` dari `backend/app/knowledge/official_knowledge_ingestion.py:42`.
+- **Seam TDD**: kontrak publik `app.knowledge.sqlite_backup.backup_sqlite_database(source, destination) -> Path`, dipakai oleh 3 modul existing (`production_kb.py`, `production_embedding_bridge.py`, `official_knowledge_ingestion.py`); test eksisting `tests/test_sqlite_backup_wal.py` diperluas.
+- **TDD RED**: RED awal sebelum test collision ditambahkan = 4 failed. Dengan test final dan modul dihapus di tree sementara, 5 test di `tests/test_sqlite_backup_wal.py` gagal karena modul belum ada.
+- **TDD GREEN**: modul dipulihkan dari versi `3a361c03:app/knowledge/sqlite_backup.py`; 12 targeted test lulus (`tests/test_sqlite_backup_wal.py` + `tests/test_v1_operational_data.py`).
+- **Regression after fix**: `86 failed / 1478 passed / 62 skipped / 48 errors` di `/tmp/vps-fix-full-final.log`; improved dari `89 failed / 1466 passed / 62 skipped / 49 errors`, 0 collection error tersisa dari `sqlite_backup`.
+- **Quality gates**: `ruff check` lulus pada modul dan test; `mypy` lulus pada modul; `ruff format --check` lulus pada modul baru. File test lama sengaja tidak di-format ulang agar diff tetap minimal.
+- **Codebase Design**: perbaikan dibatasi sebagai modul dangkal yang memulihkan satu boundary yang hilang; tidak ada abstraksi, dependency, atau struktur folder baru.
+- **Code Review**: hasil review dua axis dicatat terpisah di bawah.
+
+## Review sqlite_backup fix
+
+Fixed point `HEAD` (perubahan staged; commit list kosong). Standards sources: `AGENTS.md`, `CLAUDE.md`, `pyproject.toml`, dan gaya test eksisting. Spec source: approval user, bagian `Tindak lanjut defect sqlite_backup` di atas, dan referensi `3a361c03:app/knowledge/sqlite_backup.py`.
+
+### Standards
+
+- **HARD — `AGENTS.md:9` / `CLAUDE.md:9`**: "After modifying code, run `graphify update .` ...". Status: `graphify update .` dicoba tetapi `graphify: command not found`; blocker tool, tidak bisa diperbaiki di sesi ini.
+- **Duplicated Code (judgement)**: setup WAL (`journal_mode`, `wal_autocheckpoint`, `CREATE TABLE`, `wal_checkpoint`) dan assertion `integrity_check` / `SELECT value FROM proof` mirip di test eksisting dan test baru. Status: dibiarkan agar refactor test eksisting tidak melebar.
+- **Mysterious Name (judgement)**: `backup`, `before`, `snapshot`. Status: diperbaiki menjadi `backup_path`, `source_mtime_ns`, `snapshot_connection`.
+- **Message Chains (minor judgement)**: `execute().fetchone()[0]` pada integrity check. Status: dibiarkan karena idiom SQLite yang sudah ada di test.
+- Tidak ada Feature Envy, Data Clumps, Primitive Obsession, Repeated Switches, Shotgun Surgery, Divergent Change, Speculative Generality, Middle Man, atau Refused Bequest. Tooling-enforced items tidak dinilai ulang.
+
+### Spec
+
+- **Missing**: bagian ini sebelumnya hanya berisi "Menunggu aggregasi review Standards dan Spec." Status: diisi dengan review ini.
+- **Scope creep**: tidak ada. Diff hanya modul, test, dan evidence report; tidak ada merge/restart/deploy/DB/data change.
+- **Implemented but wrong — RED count**: laporan awal mencatat 4 failed, padahal test final menghasilkan 5 failed. Status: dikoreksi di atas; RED awal 4 dicatat sebagai riwayat.
+- **Implemented but wrong — restoration fidelity**: docstring modul dan fungsi belum dipulihkan dari `3a361c03`. Status: docstring dipulihkan; komentar implementasi Windows sengaja tidak ditambahkan karena aturan no-comments.
+
+Standards: 4 findings (1 hard tool-blocked, 3 judgement: 1 fixed, 2 accepted); worst = `graphify update .` tidak tersedia. Spec: 3 findings (all addressed); worst = RED count sudah dikoreksi dari 4 ke 5.
 
 ## Keputusan
 
