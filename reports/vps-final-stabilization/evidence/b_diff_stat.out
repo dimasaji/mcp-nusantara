@@ -1,0 +1,12 @@
+ backend/app/api/routes.py                          |   3 +-
+ backend/app/knowledge/sop_review.py                |   9 +-
+ backend/app/main.py                                |   1 +
+ .../INDEPENDENT_VERIFICATION_REPORT.md             |  99 ++++++++++++++++++
+ .../KNOWLEDGE_SYNTHETIC_E2E_REPORT.md              |  75 ++++++++++++++
+ .../final-consolidation/POST_MERGE_VERIFICATION.md | 113 +++++++++++++++++++++
+ .../REGRESSION_REMEDIATION_REPORT.md               |  84 +++++++++++++++
+ .../V1_VPS_ENGINEERING_HANDOFF.md                  |  84 +++++++++++++++
+ tests/test_approval_boundary.py                    |  18 +++-
+ tests/test_audit_regressions.py                    |  22 +++-
+ tests/test_readyz_contract.py                      |  34 +++++++
+ 11 files changed, 532 insertions(+), 10 deletions(-)
