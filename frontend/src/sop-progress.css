@@ -1,0 +1,10 @@
+.sop-progress-counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin:20px 0}
+.sop-progress-counts>div{border:1px solid var(--border,#dce5dc);border-radius:10px;padding:12px;background:var(--panel,#fff)}
+.sop-progress-counts dt{font-size:12px}.sop-progress-counts dd{font-size:25px;font-weight:700;margin:5px 0 0}
+.sop-progress-search{display:grid;gap:5px;max-width:440px;margin-bottom:16px}
+.sop-progress-table{width:100%;border-collapse:collapse}.sop-progress-table th,.sop-progress-table td{text-align:left;padding:14px;border-bottom:1px solid var(--border,#dce5dc);vertical-align:top}
+.sop-progress-state{display:inline-block;border-radius:12px;padding:2px 10px;background:#eef1f2;color:#3c4850;font-weight:600}
+.sop-progress-state.ACTIVE{background:#dfefdf;color:#245333}.sop-progress-state.BLOCKED{background:#fbe6dd;color:#793d26}
+.sop-progress-state.PROCESSING,.sop-progress-state.QUEUED{background:#e2edf6;color:#25536e}
+.sop-progress-table dl>div{display:flex;justify-content:space-between;gap:16px;max-width:420px}.sop-progress-table dd{margin:0}
+.sop-progress-failures{margin:18px 0}.sop-progress-table td{overflow-wrap:anywhere}

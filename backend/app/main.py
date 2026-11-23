@@ -33,8 +33,8 @@ from app.core.runtime_identity import BUILD_ID
 from app.core.runtime_attestation import install_runtime_attestation
 
 UI_FILE = Path(__file__).parent / "ui" / "index.html"
-CONTROL_PLANE_BUNDLE = Path(__file__).resolve().parents[3] / 'control-plane' / 'dist'
-_LOCAL_SERVICES_FILE = Path(__file__).resolve().parents[3] / 'config' / 'local-services.json'
+CONTROL_PLANE_BUNDLE = Path(__file__).resolve().parents[2] / 'frontend' / 'dist'
+_LOCAL_SERVICES_FILE = Path(__file__).resolve().parents[2] / 'config' / 'local-services.json'
 _LOCAL_SERVICES = json.loads(_LOCAL_SERVICES_FILE.read_text(encoding='utf-8')) if _LOCAL_SERVICES_FILE.exists() else {'frontendPort': 5180}
 
 

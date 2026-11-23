@@ -1,0 +1,739 @@
+export default {
+  "blockers": [
+    "CC05 consent/session ownership/retention remains open under approved temporary legacy preservation",
+    "CC06 official oracle: two REVIEW_REQUIRED cases, one MISSING passport case; issuer/jurisdiction/validity/ingest authorization needed",
+    "Approved filter grammar/authority metadata absent; nonempty filter safely rejected, not implemented",
+    "Full native semantic-worker plus production RAG/store/model UI integration not verified",
+    "Native Windows symlink privilege/security operational enforcement not reverified",
+    "Production deployment, provisioned credentials/resources and launch-worker consistency unverified; no deployment authorized",
+    "Current user runtime port8000 missing final model-control routes; explicit controlled restart/replacement authorization required",
+    "Conversation recall memory-read semantics not defined/implemented; preserve legacy capture until CC05 decision"
+  ],
+  "preservation": {
+    "status": "REVIEW_REQUIRED",
+    "databaseInspectedNow": false,
+    "explanation": "Bukti historis mencatat WAL/SHM tidak ditemukan pada pemeriksaan akhir. Penyebab dan pelaku tidak terbukti. Hash database utama saat itu tetap sama; ini tidak membuktikan keadaan logis database tetap sama.",
+    "attribution": "NOT_VERIFIED",
+    "reference": "docs/reports/weip-completion-20261009T104250Z/CHANGE_AUDIT.json",
+    "id": "WEIP-COMP-DB-01"
+  },
+  "v1": "FAIL / HOLD",
+  "gates": [
+    {
+      "status": "PASS",
+      "detail": "Fixture registry and URL rejection tests; real official authority remains separately unverified.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Source registry/allowlist",
+      "id": "WEIP-01"
+    },
+    {
+      "status": "PASS",
+      "detail": "Mock API acquisition/JSON/timeout tests; real official API NOT_RUN.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "API fetcher",
+      "id": "WEIP-02"
+    },
+    {
+      "status": "PASS",
+      "detail": "Mock MIME, size, redirect, retry tests; no real source acquisition.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Web/PDF acquisition",
+      "id": "WEIP-03"
+    },
+    {
+      "status": "PASS",
+      "detail": "Non-public/mixed/rebinding/redirect rejection and bounded-DNS regression; live TLS behavior NOT_RUN.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "SSRF/DNS",
+      "id": "WEIP-04"
+    },
+    {
+      "status": "REVIEW_REQUIRED",
+      "detail": "API/web and PDF fail-closed controls tested. pypdf/PyPDF2/fitz unavailable; native extraction/resource isolation NOT_RUN.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Parsing/resources",
+      "id": "WEIP-05"
+    },
+    {
+      "status": "PASS",
+      "detail": "Hash, metadata, binding and explicit owner-declared assurance tests; source authority not attested.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Provenance",
+      "id": "WEIP-06"
+    },
+    {
+      "status": "PASS",
+      "detail": "Existing and new version/metadata/expiry tests passed.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Versions/expiry/conflict",
+      "id": "WEIP-07"
+    },
+    {
+      "status": "PASS",
+      "detail": "Isolated directory and tamper/lifecycle tests; single writer only, not tamper-proof against a privileged malicious writer.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Staging/quarantine/audit",
+      "id": "WEIP-08"
+    },
+    {
+      "status": "REVIEW_REQUIRED",
+      "detail": "Default deny, principal/binding/legacy rejection PASS offline; trusted production authorizer and approved official fixture absent.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Approval",
+      "id": "WEIP-09"
+    },
+    {
+      "status": "PASS",
+      "detail": "Scoped offline PASS: approval/provenance rejection, temporary RAG ingestion, transaction failure injection and preservation of older documents. Latest targeted: 29 PASS; related regression: 208 PASS, 6 deselected. Active-store integration and runtime recovery NOT_VERIFIED.",
+      "reference": "docs/reports/v1-remaining-20261009T182840/EXECUTION_RESULTS.json",
+      "name": "V1 adapter",
+      "id": "WEIP-10"
+    },
+    {
+      "status": "NOT_AUTHORIZED",
+      "detail": "No active integration. Preservation finding WEIP-COMP-DB-01 remains REVIEW_REQUIRED.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Active store",
+      "id": "WEIP-11"
+    },
+    {
+      "status": "DEFERRED",
+      "detail": "Not executed or implemented.",
+      "reference": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "name": "Crawling/deployment/V2",
+      "id": "WEIP-12"
+    }
+  ],
+  "v2": "DEFERRED",
+  "capturedAt": "2026-10-09T13:07:04.106Z",
+  "branch": "codex/fullroot-control-20261007",
+  "head": "8f86bed38aca8e6b5a0bd365f3351ac9c0825eab",
+  "weip": "PARTIAL / REVIEW_REQUIRED",
+  "diskFingerprint": "sha256:0600d86dc183eb21052085c53ef5a26e3b273d27676c8f56e5af2c3bce06fc7b",
+  "fingerprintScope": "SHA256 sorted app Python paths normalized to / + NUL + file SHA256 + newline; on-disk only, not loaded-process identity",
+  "sources": [
+    {
+      "path": "docs/reports/v1-functional-closure-20261009-101736/REMAINING_GATES.json",
+      "sha256": "ec43e8ca0dae362d85f17c3091be672b61bb2eb43d1bb9f3c2527dddbcf3152c"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/BASELINE.json",
+      "sha256": "0fafd9f33aed67a5f91459d2e0664590c136e4d428e552dd67d617f622b8f0b0"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/CHANGE_AUDIT.json",
+      "sha256": "b517aeeacc7a713ec8eafcf422fea8773616bf8bab62a3f5a117aac0915eac93"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/IMPLEMENTATION_REPORT.md",
+      "sha256": "cebfbc4e5c9a66b4166706228ae210a0eaf6ac94e5a09fe7323e9089c804a394"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/regression-20261009-174852/guards.json",
+      "sha256": "32f090a44ad8df0bd9263b43d27c903bdae13e41ab82061d7b5d49b1fef00861"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/regression-20261009-174852/results.xml",
+      "sha256": "ce94485021bdce9a7a92b489c9c4c994a3ae421d584e4ca695a8e6bcf13af863"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/SCOPED_CHANGES.patch",
+      "sha256": "e2e6bccf5b5c5ed49220fd7a585799815b859fcf2be2f6e96646cdf71e1871e6"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174413/guards.json",
+      "sha256": "b8d8dcd8100fc98b8ff4755aa8c7f9c27e8f48ba188b3984337514129514d752"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174413/results.xml",
+      "sha256": "a320698312a64f871c9956b9b79da82c9d144a5668603bf6e1ee46f0f951031e"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174735/guards.json",
+      "sha256": "7ce138f087d859bf225ef1f8d9fd603c88d47b4ed27713b0e2a5324a8ba37fad"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174735/results.xml",
+      "sha256": "d5d702a6805dc23db55b121461a51b7199e246695ce67f4d82f63fd7276d4ee3"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174841/guards.json",
+      "sha256": "7ce138f087d859bf225ef1f8d9fd603c88d47b4ed27713b0e2a5324a8ba37fad"
+    },
+    {
+      "path": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174841/results.xml",
+      "sha256": "68cff133c6b9cf511011d231beb159e5a77d86a6fcab4fffac4a228c4fce58b0"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/EXECUTION_RESULTS.json",
+      "sha256": "dcf8aec413f11f37f401d79fc7336fd14644d11aafb3ccaa43f0696e1f29cd92"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/IMPLEMENTATION_REPORT.json",
+      "sha256": "da5a799f0a2a350e70ddcecc50da140aec7457f77ccb1eb208dc39cfe722bf7b"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/regression-20261009-183245/results.xml",
+      "sha256": "e47818db8f4f239fb98a5f7bec533498d9d44153a8d63388d2954736f039594f"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/regression-20261009-183245/guards.json",
+      "sha256": "cc72f66138ea2bdaa1671420f0696dc19ec0bcad3497eafd623d4dfd843c51b0"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/regression-20261009-183418/results.xml",
+      "sha256": "1b6dc61d83159b2df7043cfe72a0131cfe817700f7f6cf518981d6b57b862dd0"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/regression-20261009-183418/guards.json",
+      "sha256": "32f090a44ad8df0bd9263b43d27c903bdae13e41ab82061d7b5d49b1fef00861"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/targeted-20261009-183120/results.xml",
+      "sha256": "5e5087a17bd546d5fc2934a55dd4119a6ef79a4c620478cc4dab3d7c4b926384"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/targeted-20261009-183120/guards.json",
+      "sha256": "489cb83a1d2bc8c3e86122d95f469a0963dd3d92fbf5ef930068a01fffad79e7"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/targeted-20261009-183201/results.xml",
+      "sha256": "536fdef9baa9f2e8b3d15278898c05264b11cf058a386632ddc8d2df76cfde43"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/targeted-20261009-183201/guards.json",
+      "sha256": "005cf8ff24c8ae600617a8bf4dde678fd7ee6470965ba94993d4bc1888ab5785"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/targeted-20261009-183345/results.xml",
+      "sha256": "fbab6829114c3aa22c7804c075cbfa0db8289d0eb4c86f91813914603d86f19e"
+    },
+    {
+      "path": "docs/reports/v1-remaining-20261009T182840/targeted-20261009-183345/guards.json",
+      "sha256": "005cf8ff24c8ae600617a8bf4dde678fd7ee6470965ba94993d4bc1888ab5785"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185424/results.xml",
+      "sha256": "18ba2aac335046d464433cc7f7b2f79721843f0c26c016c3ad7cd7c13bec3288"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185424/guards.json",
+      "sha256": "295f1aa33c9c787516c306749328e516cdd5a158534ffc72d5e9dc95948203c6"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185632/results.xml",
+      "sha256": "64b4f39d7818bf2e48f19bf0d64a1aaf91cd1b91633275ed5b1180ddd3c14a78"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185632/guards.json",
+      "sha256": "47b4316671ddfdca27afddca7a88a34adc7f8e4d2baea78d625968ef140fd28b"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185646/results.xml",
+      "sha256": "f6ecc91672b7600d39f28969642bc63dc50184aded049e6a4199c1b8a4023769"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185646/guards.json",
+      "sha256": "0f7a3e634fbceaad7cdb29f45b5cff40f6fb9925bc4da91fa052722ad670e246"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185807/results.xml",
+      "sha256": "85c2c9a0e579ae7fc1ee6657f9c89f5770d49b54c130cfba5e3ddb345cd0b0b0"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185807/guards.json",
+      "sha256": "295f1aa33c9c787516c306749328e516cdd5a158534ffc72d5e9dc95948203c6"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185830/results.xml",
+      "sha256": "dbb0aec6757b5a126d66bc3fa657f4d895a0b3a28acade17290de22a496ef29f"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185830/guards.json",
+      "sha256": "295f1aa33c9c787516c306749328e516cdd5a158534ffc72d5e9dc95948203c6"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185852/results.xml",
+      "sha256": "76e96d803ed17021bb040847f01cf4907bba2d2588cbc37246d083a2ec4c6d31"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185852/guards.json",
+      "sha256": "0f7a3e634fbceaad7cdb29f45b5cff40f6fb9925bc4da91fa052722ad670e246"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-190056/results.xml",
+      "sha256": "0f03a866746453337a818b291ed64c491db407a5be5f857000d095e10762e26b"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-190056/guards.json",
+      "sha256": "0f7a3e634fbceaad7cdb29f45b5cff40f6fb9925bc4da91fa052722ad670e246"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/stage1-20261009-184852/results.xml",
+      "sha256": "67b985985703cbd69e441afbbfc56532e818ec344bd6cefc8e323f0094b5a103"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/stage1-20261009-184852/guards.json",
+      "sha256": "427427f575f2fbc057b54fc619d6ce6bc50711f1e5ad9073ae07346589a1c822"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/stage1-final-20261009-184945/results.xml",
+      "sha256": "03c1091be5e7d1ffa62d0bc55fa986a529423b7d05eab6c5ec55f391681200c8"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/stage1-final-20261009-184945/guards.json",
+      "sha256": "8bde6fa99a1653a3642a80957eda1f3d669ab62209fe9be6cee8658e99b3bb84"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/stage1-fixed-20261009-184918/results.xml",
+      "sha256": "5d4fff45af1ff81ee8c721291d9a42ec79ae3ecfe159272e4f2ed3e4fb3ed231"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/stage1-fixed-20261009-184918/guards.json",
+      "sha256": "427427f575f2fbc057b54fc619d6ce6bc50711f1e5ad9073ae07346589a1c822"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/workflow-20261009-185310/results.xml",
+      "sha256": "0d3047b5f3f3244e24516286e40361e2a4d8879dfb2fb4c16031fb94ac3103d0"
+    },
+    {
+      "path": "docs/reports/openrouter-workflow-20261009T184538/workflow-20261009-185310/guards.json",
+      "sha256": "0f7a3e634fbceaad7cdb29f45b5cff40f6fb9925bc4da91fa052722ad670e246"
+    },
+    {
+      "path": "docs/reports/human-console-recovery-20261009T200537/OWNER_DECISION.json",
+      "sha256": "96b37c6007bda2de326567fd4057260e04e8a20acada0c4385f18e5d4346bc46"
+    }
+  ],
+  "tests": [
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 6,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-174852",
+      "tests": 154,
+      "reference": "docs/reports/weip-completion-20261009T104250Z/regression-20261009-174852/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 1,
+      "historical": true,
+      "deselected": 53,
+      "skipped": 0,
+      "violations": [],
+      "id": "targeted-20261009-174413",
+      "tests": 9,
+      "reference": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174413/results.xml",
+      "failures": 9,
+      "errors": 0,
+      "status": "FAIL"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 53,
+      "skipped": 0,
+      "violations": [],
+      "id": "targeted-20261009-174735",
+      "tests": 9,
+      "reference": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174735/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 53,
+      "skipped": 0,
+      "violations": [],
+      "id": "targeted-20261009-174841",
+      "tests": 16,
+      "reference": "docs/reports/weip-completion-20261009T104250Z/targeted-20261009-174841/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 1,
+      "historical": true,
+      "deselected": 6,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-183245",
+      "tests": 205,
+      "reference": "docs/reports/v1-remaining-20261009T182840/regression-20261009-183245/results.xml",
+      "failures": 1,
+      "errors": 0,
+      "status": "FAIL"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 6,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-183418",
+      "tests": 208,
+      "reference": "docs/reports/v1-remaining-20261009T182840/regression-20261009-183418/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 1,
+      "historical": true,
+      "deselected": 94,
+      "skipped": 0,
+      "violations": [],
+      "id": "targeted-20261009-183120",
+      "tests": 26,
+      "reference": "docs/reports/v1-remaining-20261009T182840/targeted-20261009-183120/results.xml",
+      "failures": 1,
+      "errors": 0,
+      "status": "FAIL"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 94,
+      "skipped": 0,
+      "violations": [],
+      "id": "targeted-20261009-183201",
+      "tests": 26,
+      "reference": "docs/reports/v1-remaining-20261009T182840/targeted-20261009-183201/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 94,
+      "skipped": 0,
+      "violations": [],
+      "id": "targeted-20261009-183345",
+      "tests": 29,
+      "reference": "docs/reports/v1-remaining-20261009T182840/targeted-20261009-183345/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 1,
+      "historical": true,
+      "deselected": 3,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-185424",
+      "tests": 157,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185424/results.xml",
+      "failures": 1,
+      "errors": 0,
+      "status": "FAIL"
+    },
+    {
+      "exitCode": 2,
+      "historical": true,
+      "deselected": 3,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-185632",
+      "tests": 1,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185632/results.xml",
+      "failures": 0,
+      "errors": 1,
+      "status": "ERROR"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 3,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-185646",
+      "tests": 166,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185646/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 1,
+      "historical": true,
+      "deselected": 3,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-185807",
+      "tests": 169,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185807/results.xml",
+      "failures": 2,
+      "errors": 0,
+      "status": "FAIL"
+    },
+    {
+      "exitCode": 1,
+      "historical": true,
+      "deselected": 3,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-185830",
+      "tests": 169,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185830/results.xml",
+      "failures": 2,
+      "errors": 0,
+      "status": "FAIL"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 3,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-185852",
+      "tests": 169,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-185852/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 3,
+      "skipped": 0,
+      "violations": [],
+      "id": "regression-20261009-190056",
+      "tests": 169,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/regression-20261009-190056/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 1,
+      "historical": true,
+      "deselected": 0,
+      "skipped": 0,
+      "violations": [],
+      "id": "stage1-20261009-184852",
+      "tests": 40,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/stage1-20261009-184852/results.xml",
+      "failures": 1,
+      "errors": 0,
+      "status": "FAIL"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 0,
+      "skipped": 0,
+      "violations": [],
+      "id": "stage1-final-20261009-184945",
+      "tests": 40,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/stage1-final-20261009-184945/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    },
+    {
+      "exitCode": 1,
+      "historical": true,
+      "deselected": 0,
+      "skipped": 0,
+      "violations": [],
+      "id": "stage1-fixed-20261009-184918",
+      "tests": 40,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/stage1-fixed-20261009-184918/results.xml",
+      "failures": 1,
+      "errors": 0,
+      "status": "FAIL"
+    },
+    {
+      "exitCode": 0,
+      "historical": true,
+      "deselected": 0,
+      "skipped": 0,
+      "violations": [],
+      "id": "workflow-20261009-185310",
+      "tests": 57,
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/workflow-20261009-185310/results.xml",
+      "failures": 0,
+      "errors": 0,
+      "status": "PASS"
+    }
+  ],
+  "activeIntegration": "NOT_AUTHORIZED",
+  "mode": "HISTORICAL_ARTIFACT_SNAPSHOT",
+  "runtimeIdentity": "NOT_VERIFIED",
+  "phases": [
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 0
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 1
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 2
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 3
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 4
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 5
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 6
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 7
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 8
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 9
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 10
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 11
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 12
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 13
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 14
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 15
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 16
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 17
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 18
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 19
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 20
+    },
+    {
+      "status": "NOT_VERIFIED",
+      "detail": "Bukti penerimaan yang terikat ke fase dan target build belum dipetakan. Status WEIP tidak mengesahkan fase ini.",
+      "id": 21
+    }
+  ],
+  "unavailableRuns": [
+    {
+      "name": "regression-20261009-185326",
+      "status": "NOT_VERIFIED",
+      "detail": "JUnit tidak lengkap setelah pemeriksaan subprocess platform diblokir. Exit 1; tidak dihitung sebagai PASS.",
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/IMPLEMENTATION_REPORT.json"
+    }
+  ],
+  "verifiedCapabilities": [
+    {
+      "id": "WEIP-TEMP",
+      "name": "WEIP ↔ RAG temporary store",
+      "status": "IMPLEMENTED_VERIFIED_SCOPED",
+      "detail": "Validasi dokumen, penolakan retrieval, transaksi dan rollback diuji pada store sementara. Integrasi aktif tetap NOT_AUTHORIZED.",
+      "fingerprint": "",
+      "fingerprintScope": "Source knowledge pada laporan diperiksa cocok; bukan identitas runtime.",
+      "reference": "docs/reports/v1-remaining-20261009T182840/EXECUTION_RESULTS.json"
+    },
+    {
+      "id": "OPENROUTER-LANGGRAPH",
+      "name": "OpenRouter dan workflow LangGraph",
+      "status": "IMPLEMENTED_VERIFIED_SCOPED_OFFLINE",
+      "detail": "169 PASS, 0 FAIL, 0 SKIP, 3 deselected. Provider mock; Ollama tetap default. Workflow opsional nonaktif. Biaya aktual dan panggilan cloud nyata UNKNOWN.",
+      "fingerprint": "sha256:11ced101d161a692fc7bcce289465e2d83b6462b6f9d282a79b3d056a4b1909f",
+      "fingerprintScope": "Scoped source bytes, not full code closure or user-runtime identity.",
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/IMPLEMENTATION_REPORT.json"
+    }
+  ],
+  "exclusionGroups": [
+    {
+      "name": "WEIP regression awal dan lanjutan",
+      "detail": "6 deselected: actual_v2, dev_endpoint, consumers_correlation, empty_result, bootstrap_layers, owner_reads. Targeted selection memiliki jumlah tersendiri pada setiap run.",
+      "reference": "docs/reports/v1-remaining-20261009T182840/EXECUTION_RESULTS.json"
+    },
+    {
+      "name": "OpenRouter/LangGraph regression",
+      "detail": "3 deselected: runtime_instances_differ_in_real_subprocesses, bootstrap_layers_preserve_provenance_and_secrets, owner_reads_dotenv_once_and_process_environment_wins. Membutuhkan subprocess atau bootstrap di luar scope offline.",
+      "reference": "docs/reports/openrouter-workflow-20261009T184538/IMPLEMENTATION_REPORT.json"
+    }
+  ],
+  "fixtureApproval": {
+    "status": "OWNER_APPROVED_OFFLINE_FIXTURE_SCOPE",
+    "verificationStatus": "NOT_RUN",
+    "paths": [
+      "C:/Users/dmaza/mcp-starter/data/knowledge/official_sources/ktp_el/tng-ktpel-001.md",
+      "C:/Users/dmaza/mcp-starter/data/knowledge/official_sources/ktp_el/tng-ktpel-002.md",
+      "C:/Users/dmaza/mcp-starter/data/knowledge/official_sources/ktp_el/tng-ktpel-003.md",
+      "C:/Users/dmaza/mcp-starter/data/knowledge/official_sources/ktp_el/tng-ktpel-004.md"
+    ],
+    "reference": "docs/reports/human-console-recovery-20261009T200537/OWNER_DECISION.json",
+    "sourceAuthentication": "NOT_VERIFIED",
+    "operatorIdentity": "NOT_VERIFIED",
+    "activeIntegration": "NOT_AUTHORIZED"
+  }
+};
