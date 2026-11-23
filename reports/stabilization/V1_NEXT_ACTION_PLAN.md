@@ -12,7 +12,7 @@
 - **C — Ollama runtime: PASS.** Ollama `0.40.17`, model `llama3.2:1b`, inferensi langsung dan lewat backend menghasilkan HTTP `200`.
 - **D — Knowledge SOP E2E: BLOCKED.** PDF PIAK-03, worker, admin token, dan data DB tidak tersedia; hanya component test sintetis yang PASS.
 - **E — Regression triage: PARTIAL.** Tidak ada regresi baru setelah perbaikan cost-ledger, tetapi suite tetap merah oleh 69 failure + 30 error baseline/environment/design.
-- **F — Deliverables: PASS saat bundle laporan di-commit dan di-push.** PR baru harus dibuat tanpa merge ke PR #14.
+- **F — Deliverables: PASS.** Bundle laporan di-commit sebagai `8c464050d82f901f0b4c5f04d89dc69b98b22d7c`, di-push, dan PR #15 dibuat tanpa merge ke PR #14: https://github.com/dimasaji/mcp-nusantara/pull/15.
 
 ## Root cause dan corrective action — ringkasan
 
