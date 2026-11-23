@@ -1,7 +1,11 @@
 # Nusantara repository map
 
 Updated 2026-11-23 against primary PC repository baseline 71b1e1bf.
-Approved physical target: [folder addendum](contracts/NUSANTARA-V1-FOLDER-TARGET-ADDENDUM-20261123.md).
+Current source locations below describe the existing layout, not the newly requested final target.
+The user has superseded the previous folder addendum with the contract Pasal 3.2 target:
+[target decision and migration checkpoint](audit/contract-physical-target-20261123/TARGET_DECISION.md).
+The previous [folder addendum](contracts/NUSANTARA-V1-FOLDER-TARGET-ADDENDUM-20261123.md) remains historical evidence.
+No application source has been migrated to that new target yet.
 The supplied [NUS-CONTRACT-RECON-001](contracts/NUS-CONTRACT-RECON-001.md) remains DRAFT;
 its conceptual tree does not itself authorize new services or data migrations.
 
