@@ -27,3 +27,11 @@ Penghapusan 16 sumber belum dijalankan dan membutuhkan approval terpisah menurut
 ## Verifikasi pekerjaan
 
 Skrip operasi lolos pemeriksaan parser PowerShell; eksekusi exit 0 dan seluruh perbandingan hash lolos. Workflow aplikasi: Graphify dijalankan; diagnosis bug, TDD, desain modul, review kode aplikasi, regression dan graph update tidak berlaku karena tidak ada perubahan kode/fitur Nusantara. Skrip salinan hanya alat operasi sementara di worktree. Perubahan yang dilacak adalah bukti audit ini, manifest dan hasil. Tidak ada klaim release siap produksi.
+
+## Finalisasi setelah approval pengguna
+
+Pada 23 November 2026 10:00:40 UTC pengguna telah menyetujui penghapusan hanya 16 folder snapshot Oktober. Semua 79 file sumber dan arsip diverifikasi ulang terhadap manifest SHA256 dan ukuran sebelum penghapusan. Daftar isi sumber diperiksa tepat sesuai manifest, tanpa reparse point maupun subdirektori tambahan. Tidak ada file target terlacak Git.
+
+Status FINALIZED: 16 sumber telah dihapus, mengurangi ukuran logis repository sebesar 448747040 byte. Salinan arsip tetap tersedia di tujuan yang disebutkan di atas. Hash graph aktif sebelum/sesudah identik; daftar entri akar lainnya dipertahankan. Cache dan snapshot November tidak dihapus. Pengurangan ini bukan penghematan total drive C karena arsip berada di drive yang sama. Bukti mesin: FINALIZATION_RESULT.json. Bagian laporan sebelumnya mendokumentasikan tahap salinan sebelum approval dan tidak menggantikan status final ini.
+
+Tidak menjalankan regression backend/UI karena kode aplikasi tidak diubah. Validasi pengarsipan berupa verifikasi file/hash, target, dan graph aktif; bukan bukti runtime aplikasi lulus.
