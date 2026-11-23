@@ -10,9 +10,9 @@ Checked at: `2026-11-23T00:25:36Z`
 - Branch remediation: `codex/remediation-v1-20261122`.
 - Base/head saat ini: `30ae77f3d9b15296c18e30d96589dac8c3d29680`.
 - Patch remediation SHA-256: `226a262956782a337968fd57f0bc14b3f38b1268e8ee27259ad7980fa157e6bd`.
-- Commit remediation: PENDING.
-- Push: PENDING.
-- PR baru: PENDING.
+- Commit remediation: `e9786bb8`.
+- Push: DONE (`origin/codex/remediation-v1-20261122`).
+- PR baru: https://github.com/dimasaji/mcp-nusantara/pull/13
 - `mcp-nusantara/` untracked dan tidak boleh di-commit.
 - `reports/` diabaikan oleh `.gitignore`; laporan harus di-force-add.
 

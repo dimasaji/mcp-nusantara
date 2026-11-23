@@ -47,13 +47,12 @@ Perubahan:
 
 `REMEDIATION_PARTIAL`. Tidak boleh diklaim `PRODUCTION_READY`.
 
-Commit remediation: PENDING.
-Push: PENDING.
-PR: PENDING.
+Commit remediation: `e9786bb8`.
+Push: DONE (`origin/codex/remediation-v1-20261122`).
+PR: https://github.com/dimasaji/mcp-nusantara/pull/13
 PR lama terkait: https://github.com/dimasaji/mcp-nusantara/pull/12.
 
 ## Langkah berikutnya
 
-1. Commit patch dan 9 laporan dengan identity `Dimas Aji Kurnia <mail.dimasajikurnia@gmail.com>`, force-add laporan karena `reports/` diabaikan.
-2. Push branch `codex/remediation-v1-20261122`, buat PR baru tanpa merge otomatis.
-3. Update laporan final dengan commit SHA dan URL PR setelah keduanya tersedia.
+1. Review PR #13 dan PR #12 oleh owner; jangan merge otomatis.
+2. Tutup blocker runtime, SOP PDF, Windows/R2 attestation, artifact historis, dan keputusan top-k sebelum klaim `PRODUCTION_READY`.

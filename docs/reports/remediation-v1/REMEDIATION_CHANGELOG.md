@@ -34,7 +34,7 @@ Working tree patch SHA-256: `226a262956782a337968fd57f0bc14b3f38b1268e8ee27259ad
 
 ## Status commit/PR
 
-- Commit remediation: PENDING.
-- Push: PENDING.
-- PR: PENDING.
+- Commit remediation: `e9786bb8`.
+- Push: DONE (`origin/codex/remediation-v1-20261122`).
+- PR: https://github.com/dimasaji/mcp-nusantara/pull/13
 - `mcp-nusantara/` tetap untracked dan tidak boleh di-stage.
