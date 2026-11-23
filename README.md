@@ -48,7 +48,7 @@ Tanpa Ollama, dashboard/API tetap hidup dan menampilkan status `Ollama OFFLINE`;
 ## Docker
 
 ```bash
-docker compose up --build
+docker compose -f deploy/docker/docker-compose.yml up --build
 ```
 
 API Docker dipublikasikan hanya pada loopback host. Volume `apidata` menyimpan
