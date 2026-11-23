@@ -2,6 +2,7 @@
 
 Branch: `codex/final-consolidation-20261123`
 HEAD saat verifikasi: `8f51d50e` (setelah normalisasi manifest)
+HEAD setelah cleanup: `d6fce599`
 Python: `/data/workspace/nus-v1-integration-20261123/env/bin/python` (sama dengan bukti RC)
 
 ## Perintah dan hasil
@@ -30,4 +31,5 @@ Tiga ID tambahan di branch final hanyalah error koleksi di atas.
 ## Status
 
 Verifikasi **PASS** relatif terhadap baseline: 30 perbaikan dipertahankan, 0 regresi baru.
-Cleanup, push, dan PR masih **PENDING APPROVAL** sesuai `FINAL_CONSOLIDATION_MANIFEST.csv`.
+Cleanup sudah dijalankan dan ditandai `DELETED` di `FINAL_CONSOLIDATION_MANIFEST.csv`.
+Push dan PR final masih **PENDING EXECUTION**.
