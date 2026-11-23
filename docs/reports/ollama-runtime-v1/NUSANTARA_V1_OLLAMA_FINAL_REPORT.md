@@ -5,8 +5,8 @@
 - Tanggal: `2026-11-23`
 - Branch pekerjaan: `codex/ollama-runtime-v1-20261123`
 - Baseline: `5ebe32b347139a0578b4908efffb3cb0aa90b038`
-- Commit deliveri: dicatat pada metadata PR setelah commit laporan ini.
-- PR: dicatat pada metadata PR setelah push.
+- Commit deliveri: `7162b91dbd8f54d09ecedd6c9f5633dbbd9a3b5f` (`docs: add Ollama runtime verification reports`).
+- PR: https://github.com/dimasaji/mcp-nusantara/pull/14 (OPEN, base `codex/remediation-v1-20261122`, head `codex/ollama-runtime-v1-20261123`, mergeable `MERGEABLE`).
 
 ## Command
 
@@ -72,7 +72,7 @@ Status keseluruhan: **PASS untuk runtime dan integrasi chat**, **BLOCKED untuk K
 
 - `git rev-parse` baseline exit `0`; `git diff --check` exit `0`.
 - `secret_pattern_hits=0`; `report_files=10`; tidak ada file log, model, binary, secret, atau data pribadi yang di-commit.
-- Commit dan PR belum dibuat pada saat timestamp ini; SHA/branch/URL akan ditambahkan saat delivery.
+- Delivery commit `7162b91dbd8f54d09ecedd6c9f5633dbbd9a3b5f` pada branch `codex/ollama-runtime-v1-20261123`; PR #14 OPEN dan tidak di-merge.
 
 ## Bukti
 
