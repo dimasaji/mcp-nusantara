@@ -1,0 +1,176 @@
+{
+    "schema": 1,
+    "generated_at": "2026-11-23T22:24:30Z",
+    "repository": "git@github-nusantara:dimasaji/mcp-nusantara.git",
+    "branch": "codex/vps-final-stabilization-20261123",
+    "code_under_review": "d2cfc60a0d88c93ce561f40c01d67e5f53910770",
+    "base_commit": "b44b01e7d24efbd5ff7f4830cc71624b5aa4bf7f",
+    "final_verdict": "GO FOR REVIEW",
+    "deployment_authorized": false,
+    "gates": [
+        {
+            "id": "A",
+            "name": "forensic_baseline",
+            "result": "COMPLETE"
+        },
+        {
+            "id": "B",
+            "name": "git_pr_reconciliation",
+            "result": "PASS"
+        },
+        {
+            "id": "C",
+            "name": "isolated_runtime_recovery",
+            "result": "PASS"
+        },
+        {
+            "id": "D",
+            "name": "regression_and_root_cause",
+            "result": "PASS_NO_NEW_REGRESSION",
+            "full_suite_green": false
+        },
+        {
+            "id": "E",
+            "name": "security_and_data_integrity",
+            "result": "PASS"
+        },
+        {
+            "id": "F",
+            "name": "knowledge_boundary",
+            "result": "BOUNDARY_VERIFIED",
+            "official_acceptance": "PC_REQUIRED"
+        },
+        {
+            "id": "G",
+            "name": "release_and_rollback",
+            "result": "PLAN_COMPLETE",
+            "deploy": "NOT_AUTHORIZED"
+        },
+        {
+            "id": "H",
+            "name": "final_acceptance",
+            "result": "GO FOR REVIEW"
+        }
+    ],
+    "tests": {
+        "readiness_red": {
+            "exit": 1,
+            "output": "assert 404 == 200",
+            "at": "2026-11-23T22:10:33Z"
+        },
+        "readiness_green": {
+            "exit": 0,
+            "output": "6 passed in 0.36s",
+            "at": "2026-11-23T22:10:46Z"
+        },
+        "full_regression": {
+            "exit": 1,
+            "failed": 85,
+            "passed": 1482,
+            "skipped": 62,
+            "warnings": 1076,
+            "errors": 48,
+            "duration": "22.72s"
+        },
+        "targeted_python": {
+            "exit": 1,
+            "failed": 5,
+            "passed": 238,
+            "warnings": 459,
+            "duration": "6.75s"
+        },
+        "synthetic_langchain": {
+            "exit": 0,
+            "passed": 3,
+            "warnings": 24,
+            "duration": "0.13s"
+        },
+        "frontend_unit": {
+            "exit": 1,
+            "failed": 3,
+            "passed": 218,
+            "total": 221,
+            "failed_files": 1,
+            "passed_files": 28
+        },
+        "frontend_build": {
+            "exit": 0,
+            "output": "built in 2.19s",
+            "modules": 451
+        },
+        "ruff_scoped": {
+            "exit": 1,
+            "current": 2097,
+            "baseline": 2097,
+            "new_findings": 0
+        },
+        "mypy_app": {
+            "exit": 1,
+            "current": 1370,
+            "baseline": 1370,
+            "files": 179,
+            "new_findings": 0
+        },
+        "security_audit_subset": {
+            "exit": 1,
+            "failed": 4,
+            "passed": 65,
+            "warnings": 12,
+            "duration": "0.96s"
+        }
+    },
+    "regression_delta": {
+        "current_ids": 134,
+        "baseline_ids": 134,
+        "new_ids": 0,
+        "fixed_ids": 0
+    },
+    "live_probes": {
+        "isolated_backend_port": 18211,
+        "isolated_frontend_port": 15284,
+        "health": "HTTP 200",
+        "readyz": "HTTP 200 degraded, documents=0",
+        "model_status": "HTTP 200 INFERENCE_VERIFIED, knowledge=NOT_VERIFIED, official_oracle=REVIEW_REQUIRED",
+        "chat": "HTTP 200 PONG, provider=ollama, model=llama3.2:1b",
+        "ingest": "HTTP 400 missing IndoBERT worker",
+        "search": "HTTP 500 missing IndoBERT worker",
+        "grounded_chat": "HTTP 422 DOCUMENT_NOT_INDEXED",
+        "admin_ingest_no_token": "HTTP 403",
+        "admin_ingest_invalid_token": "HTTP 403",
+        "cost_summary_no_token": "HTTP 403"
+    },
+    "data_integrity": {
+        "active_db": "/data/workspace/nus-v1-postmerge-ec76a9ed/runtime/verify-final/staging-db/verify.db",
+        "active_db_size": 94208,
+        "active_db_mtime": "2026-11-23 17:53:05.461642521 +0000",
+        "active_db_sha256": "32eb169f79dfe021e5dd4fd007e43e816369dcd80685c7b8dc4375df7b9cf122",
+        "quick_check": "ok",
+        "tables": 9,
+        "active_db_written": false
+    },
+    "blockers": [
+        "Official PIAK-03 E2E requires owner PC artifacts and approval",
+        "IndoBERT/Docling worker artifacts are absent from VPS",
+        "Docker healthcheck script is empty",
+        "Dockerfile lacks IndoBERT worker copy/mount and has mostly unpinned pip installs",
+        "Compose port 8000 differs from active ports 18201/15274",
+        "Full regression retains 134 baseline failures/errors with 2 collection errors"
+    ],
+    "forbidden_actions_taken": false,
+    "reports": [
+        "VPS_FORENSIC_BASELINE.md",
+        "GIT_RELEASE_RECONCILIATION.md",
+        "VPS_RUNTIME_RECOVERY_REPORT.md",
+        "REGRESSION_ROOT_CAUSE_AND_FIX_REPORT.md",
+        "VPS_SECURITY_AND_DATA_INTEGRITY_REPORT.md",
+        "KNOWLEDGE_VPS_BOUNDARY_REPORT.md",
+        "PC_PIAK03_ACCEPTANCE_HANDOFF.md",
+        "VPS_RELEASE_AND_ROLLBACK_PLAN.md",
+        "V1_VPS_FINAL_ACCEPTANCE_REPORT.md",
+        "TEST_RESULTS.json"
+    ],
+    "evidence_root": "reports/vps-final-stabilization/evidence",
+    "evidence_source_root": "/data/workspace/nus-v1-vps-final-20261123/evidence",
+    "evidence_file_count": 294,
+    "command_log": "reports/vps-final-stabilization/evidence/commands.tsv"
+}

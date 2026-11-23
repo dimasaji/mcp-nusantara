@@ -1,0 +1,52 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0
+rootdir: /data/workspace/nus-v1-vps-final-20261123/worktrees/release
+configfile: pyproject.toml
+plugins: langsmith-0.16.0, anyio-4.16.0, cov-7.1.0, asyncio-1.5.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 3 items
+
+tests/test_synthetic_rag_fixture.py ...                                  [100%]
+
+=============================== warnings summary ===============================
+tests/test_synthetic_rag_fixture.py::test_synthetic_retrieval_is_grounded_and_citable
+tests/test_synthetic_rag_fixture.py::test_synthetic_retrieval_is_grounded_and_citable
+tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+tests/test_synthetic_rag_fixture.py::test_synthetic_answer_context_keeps_verified_requirements
+tests/test_synthetic_rag_fixture.py::test_synthetic_answer_context_keeps_verified_requirements
+  /data/workspace/nus-v1-postmerge-ec76a9ed/env-langchain/lib/python3.13/site-packages/pydantic/main.py:280: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/test_synthetic_rag_fixture.py::test_synthetic_retrieval_is_grounded_and_citable
+tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+tests/test_synthetic_rag_fixture.py::test_synthetic_answer_context_keeps_verified_requirements
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:260: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    datetime.utcnow(),
+
+tests/test_synthetic_rag_fixture.py::test_synthetic_retrieval_is_grounded_and_citable
+tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+tests/test_synthetic_rag_fixture.py::test_synthetic_answer_context_keeps_verified_requirements
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:262: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    datetime.utcnow().isoformat(),
+
+tests/test_synthetic_rag_fixture.py::test_synthetic_retrieval_is_grounded_and_citable
+tests/test_synthetic_rag_fixture.py::test_synthetic_retrieval_is_grounded_and_citable
+tests/test_synthetic_rag_fixture.py::test_synthetic_retrieval_is_grounded_and_citable
+tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+tests/test_synthetic_rag_fixture.py::test_synthetic_answer_context_keeps_verified_requirements
+tests/test_synthetic_rag_fixture.py::test_synthetic_answer_context_keeps_verified_requirements
+tests/test_synthetic_rag_fixture.py::test_synthetic_answer_context_keeps_verified_requirements
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:221: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    getattr(chunk, "stored_at", datetime.utcnow()).isoformat(),
+
+tests/test_synthetic_rag_fixture.py::test_synthetic_retrieval_is_grounded_and_citable
+tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+tests/test_synthetic_rag_fixture.py::test_synthetic_answer_context_keeps_verified_requirements
+  /data/workspace/nus-v1-vps-final-20261123/worktrees/release/backend/app/knowledge/store.py:272: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    (int(count), datetime.utcnow().isoformat(), document_id),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 3 passed, 24 warnings in 0.13s ========================
