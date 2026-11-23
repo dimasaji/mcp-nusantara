@@ -1,7 +1,7 @@
 services:
   nusantara-api:
     build:
-      context: .
+      context: ../..
       dockerfile: deploy/docker/Dockerfile
     ports: ["127.0.0.1:8000:8000"]
     environment:
@@ -9,7 +9,7 @@ services:
       NUSANTARA_KNOWLEDGE_DB: /app/data/knowledge/nusantara_knowledge.db
     volumes: [apidata:/app/data, apphome:/home/appuser]
     env_file:
-      - path: .env
+      - path: ../../.env
         required: false
     restart: unless-stopped
     read_only: true

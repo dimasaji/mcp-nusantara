@@ -1,37 +1,141 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+﻿import json
+import urllib.request
+from pathlib import Path
+from datetime import datetime
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "graphify-out"
+
+URL_BASIC = "http://127.0.0.1:8000/v1/health"
+URL_DETAIL = "http://127.0.0.1:8000/v1/health/detail"
+
+
+def get_json(url):
+    with urllib.request.urlopen(url, timeout=10) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+print("=" * 68)
+print("NUSANTARA GATE 15.1 - RUNTIME HEALTH TRUTH")
+print("=" * 68)
+
+checks = {}
+
+try:
+    basic = get_json(URL_BASIC)
+    basic_ok = (
+        basic.get("status") == "ok"
+        and basic.get("service") == "nusantara-core"
+    )
+except Exception as exc:
+    basic = {"error": str(exc)}
+    basic_ok = False
+
+checks["basic_health"] = basic_ok
+
+try:
+    detail = get_json(URL_DETAIL)
+    detail_ok = detail.get("status") == "ok"
+except Exception as exc:
+    detail = {"error": str(exc)}
+    detail_ok = False
+
+checks["detail_health"] = detail_ok
+
+components = detail.get("components", {}) if detail_ok else {}
+
+expected_components = [
+    "api",
+    "language_engine",
+    "problem_engine",
+    "knowledge_engine",
+    "reasoning_engine",
+    "workflow_engine",
+    "policy_engine",
+    "trust_engine",
+    "memory",
+    "tools",
+    "mcp",
+    "handoff",
+]
+
+component_results = {}
+
+for name in expected_components:
+    component_results[name] = (
+        components.get(name) == "available"
+    )
+
+checks["components"] = all(component_results.values())
+
+llm = detail.get("llm", {}) if detail_ok else {}
+
+checks["llm"] = (
+    llm.get("status") == "ok"
+    and llm.get("available") is True
+    and bool(llm.get("model"))
+)
+
+passed = sum(
+    1 for value in checks.values()
+    if value
+)
+
+total = len(checks)
+
+status = "PASS" if passed == total else "FAIL"
+
+result = {
+    "gate": "15.1",
+    "name": "Runtime Health Truth",
+    "version": "15.1.0",
+    "timestamp": datetime.now().isoformat(),
+
+    "status": status,
+
+    "checks": {
+        "basic_health": checks["basic_health"],
+        "detail_health": checks["detail_health"],
+        "components": checks["components"],
+        "llm": checks["llm"],
+    },
+
+    "component_results": component_results,
+
+    "runtime": {
+        "basic": basic,
+        "detail": detail,
+    },
+
+    "contract": {
+        "api_must_be_healthy": True,
+        "detail_endpoint_must_be_healthy": True,
+        "required_components_must_be_available": True,
+        "llm_must_be_available": True,
+        "no_chat_generation_required": True,
+    },
 }
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
-    }
-}
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+output = OUT / "gate15_1_runtime_health_truth.json"
+
+output.write_text(
+    json.dumps(result, indent=2, ensure_ascii=False),
+    encoding="utf-8",
+)
+
+print()
+print("Basic health        :", "PASS" if checks["basic_health"] else "FAIL")
+print("Detail health       :", "PASS" if checks["detail_health"] else "FAIL")
+print(
+    "Components          :",
+    "PASS" if checks["components"] else "FAIL"
+)
+print("LLM                 :", "PASS" if checks["llm"] else "FAIL")
+
+print()
+print("Checks              :", f"{passed} / {total}")
+print("GATE 15.1 STATUS    :", status)
+print("Output              :", output)
+
+if status != "PASS":
+    raise SystemExit(1)

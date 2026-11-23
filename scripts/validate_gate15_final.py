@@ -1,37 +1,111 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+﻿import json
+from pathlib import Path
+from datetime import datetime
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "graphify-out"
+
+def load(name):
+    path = OUT / name
+    if not path.exists():
+        raise FileNotFoundError(path)
+    return json.loads(path.read_text(encoding="utf-8"))
+
+gate14 = load("gate14_final_contract.json")
+gate151 = load("gate15_1_runtime_health_truth.json")
+gate152 = load("gate15_2_engine_runtime_truth.json")
+gate153 = load("gate15_3_graph_operational_truth.json")
+gate154 = load("gate15_4_operational_truth.json")
+
+checks = {
+    "gate14_final": gate14.get("status") == "PASS",
+    "gate15_1_runtime_health": gate151.get("status") == "PASS",
+    "gate15_2_engine_runtime": gate152.get("status") == "PASS",
+    "gate15_3_graph_operational": gate153.get("status") == "PASS",
+    "gate15_4_operational_synthesis": gate154.get("status") == "PASS",
 }
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
-    }
+
+passed = sum(checks.values())
+total = len(checks)
+status = "PASS" if passed == total else "FAIL"
+
+graph = gate153.get("graph", {})
+operational = gate154.get("operational_truth", {})
+
+result = {
+    "gate": "15",
+    "name": "Nusantara Operational Intelligence",
+    "version": "15.0.0-final",
+    "timestamp": datetime.now().isoformat(),
+    "status": status,
+
+    "checks": {
+        "passed": passed,
+        "total": total,
+        "results": checks,
+    },
+
+    "foundation": {
+        "gate14": "PASS" if checks["gate14_final"] else "FAIL",
+        "runtime_health": "PASS" if checks["gate15_1_runtime_health"] else "FAIL",
+        "engine_runtime": "PASS" if checks["gate15_2_engine_runtime"] else "FAIL",
+        "graph_operational": "PASS" if checks["gate15_3_graph_operational"] else "FAIL",
+        "operational_synthesis": "PASS" if checks["gate15_4_operational_synthesis"] else "FAIL",
+    },
+
+    "system": {
+        "status": operational.get("system_status"),
+        "graph_nodes": graph.get("nodes", 0),
+        "graph_links": graph.get("links", 0),
+        "llm": operational.get("llm", {}),
+    },
+
+    "capabilities": {
+        "runtime_health_truth": True,
+        "engine_runtime_truth": True,
+        "graph_operational_truth": True,
+        "operational_synthesis": True,
+        "developer_core": checks["gate14_final"],
+        "self_analysis": True,
+        "impact_analysis": True,
+        "deterministic_change_query": True,
+        "llm_required_for_validation": False,
+    },
+
+    "contract": {
+        "gate14_must_remain_pass": True,
+        "all_gate15_layers_must_pass": True,
+        "operational_truth_must_be_deterministic": True,
+        "validation_must_not_require_llm": True,
+        "graph_schema": "nodes + links",
+        "runtime_status_must_be_traceable": True,
+    },
 }
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+output = OUT / "gate15_final_contract.json"
+
+output.write_text(
+    json.dumps(result, indent=2, ensure_ascii=False),
+    encoding="utf-8"
+)
+
+print("=" * 70)
+print("NUSANTARA GATE 15 - FINAL CONTRACT")
+print("=" * 70)
+print()
+
+for name, value in checks.items():
+    print(f"{name:<35}", "PASS" if value else "FAIL")
+
+print()
+print("Validation checks :", f"{passed} / {total}")
+print("System status     :", operational.get("system_status"))
+print("Graph nodes       :", graph.get("nodes", 0))
+print("Graph links       :", graph.get("links", 0))
+print("LLM               :", operational.get("llm", {}).get("model"))
+print()
+print("GATE 15 FINAL     :", status)
+print("Output            :", output)
+
+if status != "PASS":
+    raise SystemExit(1)

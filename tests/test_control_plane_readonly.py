@@ -73,7 +73,7 @@ def test_missing_evidence_is_not_pass(tmp_path):
 
 def test_tampered_r3_evidence_rejected(tmp_path):
     root=Path(__file__).parents[1]
-    sources=json.loads((root/'control-plane/evidence-sources.json').read_text(encoding='utf-8-sig'))
+    sources=json.loads((root/'frontend/evidence-sources.json').read_text(encoding='utf-8-sig'))
     (tmp_path/'control-plane').mkdir()
     sources['r3_audit']=str(tmp_path/'fake-audit')
     (tmp_path/'fake-audit').mkdir()

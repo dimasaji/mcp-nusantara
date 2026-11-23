@@ -1,9 +1,11 @@
 from app.core.runtime_identity import BUILD_ID, source_build_id
+import pytest
 
 
-def test_identity_changes_with_source_and_excludes_environment(tmp_path):
-    app = tmp_path / "app"
-    app.mkdir()
+@pytest.mark.parametrize('layout', ['app', 'backend/app'])
+def test_identity_changes_with_source_and_excludes_environment(tmp_path, layout):
+    app = tmp_path / layout
+    app.mkdir(parents=True)
     source = app / "main.py"
     source.write_text("value = 1\n", encoding="utf-8")
     before = source_build_id(tmp_path)

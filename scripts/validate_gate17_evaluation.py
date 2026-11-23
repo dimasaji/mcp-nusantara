@@ -1,37 +1,391 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
-}
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
+﻿from __future__ import annotations
+
+import json
+import sys
+from dataclasses import replace
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app.research.experiment import (
+    ControlledExperiment,
+)
+from app.research.experiment_evaluator import (
+    EvaluationError,
+    ExperimentEvaluator,
+)
+
+
+ENGINE = ControlledExperiment()
+EVALUATOR = ExperimentEvaluator()
+
+passed = 0
+failed = 0
+
+
+def check(name: str, fn) -> None:
+    global passed, failed
+
+    try:
+        fn()
+        print(f"[PASS] {name}")
+        passed += 1
+    except Exception as exc:
+        print(f"[FAIL] {name}: {exc}")
+        failed += 1
+
+
+def experiment_kwargs():
+    return {
+        "proposal_id": "PROP-GAP-0001",
+        "hypothesis": (
+            "Peningkatan retrieval meningkatkan "
+            "relevansi evidence."
+        ),
+        "baseline": {
+            "relevance": 0.70,
+            "grounding": 0.80,
+        },
+        "candidate": {
+            "relevance": 0.85,
+            "grounding": 0.90,
+        },
+        "evidence": [
+            "EVD-001",
+            "EVD-002",
+        ],
     }
-}
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+
+def valid_result():
+    return ENGINE.run(
+        **experiment_kwargs()
+    )
+
+
+def valid_evaluation():
+    result = EVALUATOR.evaluate(
+        valid_result()
+    )
+
+    assert result.evaluation_id.startswith(
+        "EVAL-"
+    )
+    assert result.experiment_id
+    assert result.proposal_id
+    assert result.verdict == "IMPROVEMENT"
+    assert result.evidence_valid is True
+    assert result.metrics_valid is True
+    assert result.eligible_for_next_gate is True
+
+
+def experiment_binding():
+    result = valid_result()
+
+    evaluation = EVALUATOR.evaluate(
+        result
+    )
+
+    assert evaluation.experiment_id == (
+        result.experiment_id
+    )
+
+    assert evaluation.proposal_id == (
+        result.proposal_id
+    )
+
+
+def improvement_accepted():
+    result = valid_result()
+
+    evaluation = EVALUATOR.evaluate(
+        result
+    )
+
+    assert evaluation.verdict == "IMPROVEMENT"
+    assert evaluation.eligible_for_next_gate is True
+
+
+def no_change_rejected():
+    kwargs = experiment_kwargs()
+
+    kwargs["candidate"] = (
+        kwargs["baseline"].copy()
+    )
+
+    result = ENGINE.run(**kwargs)
+    evaluation = EVALUATOR.evaluate(
+        result
+    )
+
+    assert evaluation.verdict == "NO_CHANGE"
+    assert evaluation.eligible_for_next_gate is False
+
+
+def regression_rejected():
+    kwargs = experiment_kwargs()
+
+    kwargs["candidate"] = {
+        "relevance": 0.50,
+        "grounding": 0.60,
+    }
+
+    result = ENGINE.run(**kwargs)
+    evaluation = EVALUATOR.evaluate(
+        result
+    )
+
+    assert evaluation.verdict == "REGRESSION"
+    assert evaluation.eligible_for_next_gate is False
+
+
+def inconclusive_rejected():
+    kwargs = experiment_kwargs()
+
+    kwargs["candidate"] = {
+        "relevance": 0.90,
+        "grounding": 0.70,
+    }
+
+    result = ENGINE.run(**kwargs)
+    evaluation = EVALUATOR.evaluate(
+        result
+    )
+
+    assert evaluation.verdict == "INCONCLUSIVE"
+    assert evaluation.eligible_for_next_gate is False
+
+
+def invalid_delta_blocked():
+    result = valid_result()
+
+    broken = replace(
+        result,
+        delta={
+            "relevance": 999.0,
+            "grounding": 999.0,
+        },
+    )
+
+    try:
+        EVALUATOR.evaluate(broken)
+    except EvaluationError:
+        return
+
+    raise AssertionError(
+        "delta invalid diterima"
+    )
+
+
+def invalid_evidence_blocked():
+    result = valid_result()
+
+    broken = replace(
+        result,
+        evidence=(),
+    )
+
+    try:
+        EVALUATOR.evaluate(broken)
+    except EvaluationError:
+        return
+
+    raise AssertionError(
+        "evidence kosong diterima"
+    )
+
+
+def duplicate_evidence_blocked():
+    result = valid_result()
+
+    broken = replace(
+        result,
+        evidence=(
+            "EVD-001",
+            "EVD-001",
+        ),
+    )
+
+    try:
+        EVALUATOR.evaluate(broken)
+    except EvaluationError:
+        return
+
+    raise AssertionError(
+        "duplicate evidence diterima"
+    )
+
+
+def invalid_verdict_blocked():
+    result = valid_result()
+
+    broken = replace(
+        result,
+        verdict="INVALID",
+    )
+
+    try:
+        EVALUATOR.evaluate(broken)
+    except EvaluationError:
+        return
+
+    raise AssertionError(
+        "verdict invalid diterima"
+    )
+
+
+def deterministic_evaluation_id():
+    result = valid_result()
+
+    a = EVALUATOR.evaluate(result)
+    b = EVALUATOR.evaluate(result)
+
+    assert a.evaluation_id == (
+        b.evaluation_id
+    )
+
+
+def payload_serializable():
+    result = valid_result()
+
+    evaluation = EVALUATOR.evaluate(
+        result
+    )
+
+    payload = EVALUATOR.to_payload(
+        evaluation
+    )
+
+    encoded = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+
+    assert encoded
+    assert evaluation.evaluation_id in encoded
+
+
+def production_mutation_blocked():
+    source = (
+        ROOT
+        / "app"
+        / "research"
+        / "experiment_evaluator.py"
+    ).read_text(
+        encoding="utf-8"
+    )
+
+    forbidden = [
+        "import subprocess",
+        "from subprocess import",
+        "subprocess.run(",
+        "subprocess.Popen(",
+        "subprocess.call(",
+        "os.system(",
+        "os.popen(",
+        "os.spawn",
+        "os.exec",
+        "os.replace(",
+        "write_text(",
+        "write_bytes(",
+        "unlink(",
+        "rmtree(",
+    ]
+
+    for pattern in forbidden:
+        assert pattern not in source, (
+            "Forbidden mutation primitive: "
+            + pattern
+        )
+
+
+print("=" * 72)
+print("NUSANTARA GATE 17.6")
+print("EXPERIMENT EVALUATION CONTRACT")
+print("=" * 72)
+
+check(
+    "17.6.1 Valid evaluation",
+    valid_evaluation,
+)
+
+check(
+    "17.6.2 Experiment binding",
+    experiment_binding,
+)
+
+check(
+    "17.6.3 IMPROVEMENT accepted",
+    improvement_accepted,
+)
+
+check(
+    "17.6.4 NO_CHANGE rejected",
+    no_change_rejected,
+)
+
+check(
+    "17.6.5 REGRESSION rejected",
+    regression_rejected,
+)
+
+check(
+    "17.6.6 INCONCLUSIVE rejected",
+    inconclusive_rejected,
+)
+
+check(
+    "17.6.7 Invalid delta blocked",
+    invalid_delta_blocked,
+)
+
+check(
+    "17.6.8 Empty evidence blocked",
+    invalid_evidence_blocked,
+)
+
+check(
+    "17.6.9 Duplicate evidence blocked",
+    duplicate_evidence_blocked,
+)
+
+check(
+    "17.6.10 Invalid verdict blocked",
+    invalid_verdict_blocked,
+)
+
+check(
+    "17.6.11 Deterministic evaluation ID",
+    deterministic_evaluation_id,
+)
+
+check(
+    "17.6.12 Payload serializable",
+    payload_serializable,
+)
+
+check(
+    "17.6.13 Production mutation blocked",
+    production_mutation_blocked,
+)
+
+print("-" * 72)
+print(f"VALIDATION CHECKS : {passed + failed}")
+print(f"PASS              : {passed}")
+print(f"FAIL              : {failed}")
+print("-" * 72)
+
+if failed == 0:
+    print("GATE 17.6 FINAL   : PASS")
+    print("PRODUCTION WRITE  : NOT ENABLED")
+    print("EXECUTION         : NOT ENABLED")
+    print("EVALUATION        : DETERMINISTIC")
+else:
+    print("GATE 17.6 FINAL   : FAIL")
+    raise SystemExit(1)
+
+print("=" * 72)

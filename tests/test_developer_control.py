@@ -15,6 +15,9 @@ def test_inspection_ignores_runtime_data_and_secrets(tmp_path):
     (tmp_path / "app/main.py").write_text("from app.models import provider\n")
     (tmp_path / "data").mkdir()
     (tmp_path / "data/private.py").write_text("not valid python credential-sentinel")
+    for folder in ('.venv-docling', '.tmp-build', 'model', 'ollama'):
+        (tmp_path / folder).mkdir()
+        (tmp_path / folder / 'private.py').write_text('not valid python credential-sentinel')
     (tmp_path / ".env").write_text("KEY=credential-sentinel")
     result = developer.DeveloperControl(tmp_path).inventory()
     assert [v["path"] for v in result["files"]] == ["app/main.py"]

@@ -1,0 +1,134 @@
+{
+  "tests.test_audit_regressions": [
+    {
+      "test": "test_privileged_api_denies_before_access",
+      "message": "assert 404 == 403\n +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "test": "test_privileged_api_denies_before_access",
+      "message": "assert 404 == 403\n +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "test": "test_privileged_api_denies_before_access",
+      "message": "assert 404 == 403\n +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "test": "test_authorized_developer_lists_workspace",
+      "message": "assert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code"
+    }
+  ],
+  "tests.test_configuration_integration": [
+    {
+      "test": "test_rag_actual_query_and_ingestion_use_config",
+      "message": "AssertionError: assert 1 == 3\n +  where 1 = len([Evidence(document_id='DOC-44C164D7-2bab', title='Fixture', source='nusantara configuration nusantara configuration nu...ages': [], 'citation_pages': [], 'retrieval_rank_sc"
+    },
+    {
+      "test": "test_r1_preserves_out_of_scope_protected_sources",
+      "message": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\dmaza\\\\mcp-starter\\\\.tmp-build\\\\pc-final\\\\source\\\\reports\\\\configuration\\\\CONFIGURATION_PROGRESS.json'"
+    }
+  ],
+  "tests.test_control_plane_attestation_binding": [
+    {
+      "test": "test_guarded_application_composition_no_network_or_protected_state",
+      "message": "subprocess.CalledProcessError: Command '['C:\\\\Users\\\\dmaza\\\\mcp-starter\\\\.venv\\\\Scripts\\\\python.exe', '-B', '-c', \"\\nimport builtins, io, json, socket, sqlite3, sys, importlib.abc\\nclass Boundary(importlib.abc.MetaPathFi"
+    }
+  ],
+  "tests.test_control_plane_readonly": [
+    {
+      "test": "test_real_projection_no_database_worker_or_mutating_git",
+      "message": "AssertionError: assert 'NOT_VERIFIED' == 'CLOSED_PASS'\n  \n  - CLOSED_PASS\n  + NOT_VERIFIED"
+    }
+  ],
+  "tests.test_developer_core_engine_contract": [
+    {
+      "test": "test_vps_data_root_allowed_without_allowing_relative_data",
+      "message": "AssertionError: assert False\n +  where False = DeveloperAnalysis(status='degraded', graph_loaded=False, node_count=0, edge_count=0, gates={'8': {'name': 'Reasoning E...ssage': 'Some engine directories are absent.'}]}, ev"
+    }
+  ],
+  "tests.test_langchain_e2e": [
+    {
+      "test": "test_retriever_e2e",
+      "message": "assert None is not None"
+    },
+    {
+      "test": "test_llm_e2e",
+      "message": "assert None is not None"
+    },
+    {
+      "test": "test_chain_e2e",
+      "message": "assert None is not None"
+    }
+  ],
+  "tests.test_langchain_hardening": [
+    {
+      "test": "test_knowledge_search_still_works",
+      "message": "assert 500 == 200\n +  where 500 = <Response [500 Internal Server Error]>.status_code"
+    }
+  ],
+  "tests.test_phase3_metrics_integration": [
+    {
+      "test": "test_metrics_endpoint_returns_observability_snapshot",
+      "message": "assert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "test": "test_request_generates_metrics_counter",
+      "message": "KeyError: 'counters'"
+    },
+    {
+      "test": "test_metrics_endpoint_has_request_id",
+      "message": "assert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code"
+    }
+  ],
+  "tests.test_provider_identity": [
+    {
+      "test": "test_public_request_response_models_and_routes_unchanged",
+      "message": "AssertionError: assert 'Call(func=Na...tx=Load()))])' == 'Call(func=Na...value=128))])'\n  \n  Skipping 335 identical leading characters in diff, use -v to show\n  - alue=128))])\n  + alue=128)), keyword(arg='pattern', value"
+    }
+  ],
+  "tests.test_review_publication_v1": [
+    {
+      "test": "test_pending_candidates_cannot_displace_approved_knowledge_at_topk",
+      "message": "AssertionError: assert ['DOC-SHA256-...5626a6410ffe'] == ['DOC-SHA256-...293d3f212cc3']\n  \n  At index 0 diff: 'DOC-SHA256-16249230a6a6a63dd76bd73dd944d14c223ba696bdfb40885e6c5626a6410ffe' != 'DOC-SHA256-9e567c631a89319cd"
+    }
+  ],
+  "tests.test_runtime_attestation": [
+    {
+      "test": "test_new_processes_have_distinct_instances_and_actual_main_integration",
+      "message": "subprocess.CalledProcessError: Command '['C:\\\\Users\\\\dmaza\\\\mcp-starter\\\\.venv\\\\Scripts\\\\python.exe', '-B', '-c', \"\\nimport json, os, sys\\nfrom fastapi.testclient import TestClient\\nfrom app.main import app\\nfrom app.cor"
+    },
+    {
+      "test": "test_main_change_only_installs_attestation_and_preserves_existing_handlers",
+      "message": "FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\dmaza\\\\mcp-starter\\\\.tmp-build\\\\pc-final\\\\source\\\\reports\\\\configuration\\\\CONFIGURATION_PROGRESS.json'"
+    }
+  ],
+  "tests.test_runtime_verification": [
+    {
+      "test": "test_normal_app_composition_preserves_existing_routers_and_caller_ids",
+      "message": "subprocess.CalledProcessError: Command '['C:\\\\Users\\\\dmaza\\\\mcp-starter\\\\.venv\\\\Scripts\\\\python.exe', '-B', '-c', \"\\nimport json, sys, types\\nfrom fastapi import APIRouter\\nfor module_name, paths in [('app.api.routes', ["
+    }
+  ],
+  "tests.test_session_memory": [
+    {
+      "test": "test_http_opt_in_and_delete",
+      "message": "KeyError: 'session_id'"
+    }
+  ],
+  "tests.test_sop_source_pages": [
+    {
+      "test": "test_review_counts_original_pdf_pages_without_ocr_offsets",
+      "message": "AssertionError: assert 'FAILED' == 'READY'\n  \n  - READY\n  + FAILED"
+    }
+  ],
+  "tests.test_v1_langgraph": [
+    {
+      "test": "test_existing_grounding_rejects_missing_evidence_and_unsupported_claim",
+      "message": "app.workflow.v1_langgraph.V1WorkflowError: V1 workflow: UNGROUNDED_RESULT\nDuring task with name 'evidence' and id 'af81c522-9173-357a-ffe6-51883baaea12'"
+    }
+  ],
+  "tests.v2.test_phases_7_21.TestSecurity": [
+    {
+      "test": "test_project_has_no_secrets",
+      "message": "AssertionError: '' is not true"
+    }
+  ]
+}

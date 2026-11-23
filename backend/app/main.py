@@ -8,6 +8,7 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 os.environ['HAYSTACK_TELEMETRY_ENABLED'] = 'False'
 
@@ -32,10 +33,14 @@ from app.exceptions import register_exception_handlers
 from app.core.runtime_identity import BUILD_ID
 from app.core.runtime_attestation import install_runtime_attestation
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if PROJECT_ROOT.name == 'backend':
+    PROJECT_ROOT = PROJECT_ROOT.parent
 UI_FILE = Path(__file__).parent / "ui" / "index.html"
-CONTROL_PLANE_BUNDLE = Path(__file__).resolve().parents[2] / 'frontend' / 'dist'
-_LOCAL_SERVICES_FILE = Path(__file__).resolve().parents[2] / 'config' / 'local-services.json'
+CONTROL_PLANE_BUNDLE = Path(os.getenv('NUSANTARA_FRONTEND_DIST', str(PROJECT_ROOT / 'frontend' / 'dist')))
+_LOCAL_SERVICES_FILE = PROJECT_ROOT / 'config' / 'local-services.json'
 _LOCAL_SERVICES = json.loads(_LOCAL_SERVICES_FILE.read_text(encoding='utf-8')) if _LOCAL_SERVICES_FILE.exists() else {'frontendPort': 5180}
+_SERVE_BUNDLE = os.environ.get('NUSANTARA_SERVE_BUNDLE') == '1'
 
 
 @asynccontextmanager
@@ -74,6 +79,10 @@ app = FastAPI(
 app.state.effective_configuration = _configuration
 app.state.configuration_owner = settings if not _READ_ONLY_EVIDENCE and not _ATTESTATION else None
 app.state.runtime_profile = 'ATTESTATION' if _ATTESTATION else 'NORMAL'
+if _SERVE_BUNDLE:
+    if not (CONTROL_PLANE_BUNDLE / 'index.html').is_file():
+        raise RuntimeError('FRONTEND_BUNDLE_MISSING')
+    app.mount('/assets', StaticFiles(directory=CONTROL_PLANE_BUNDLE / 'assets'), name='frontend-assets')
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8765", "http://127.0.0.1:8765",
@@ -189,6 +198,8 @@ async def dashboard(request: Request):
         raise HTTPException(404, 'Legacy runtime UI is unavailable in evidence-only mode')
     if _ATTESTATION:
         return FileResponse(UI_FILE)
+    if _SERVE_BUNDLE:
+        return FileResponse(CONTROL_PLANE_BUNDLE / 'index.html')
     target = request.url.replace(scheme='http', netloc=f"{_LOCAL_SERVICES.get('host', '127.0.0.1')}:{_LOCAL_SERVICES['frontendPort']}")
     return RedirectResponse(str(target), status_code=307)
 

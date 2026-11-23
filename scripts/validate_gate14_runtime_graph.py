@@ -1,37 +1,137 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+﻿from pathlib import Path
+import json
+
+ROOT = Path(__file__).resolve().parents[1]
+GRAPH = ROOT / "graphify-out" / "graph.json"
+RUNTIME = ROOT / "graphify-out" / "runtime_object_truth.json"
+E2E = ROOT / "graphify-out" / "runtime_e2e_lite.json"
+OUT = ROOT / "graphify-out" / "gate14_runtime_graph_truth.json"
+
+graph = json.loads(GRAPH.read_text(encoding="utf-8"))
+runtime = json.loads(RUNTIME.read_text(encoding="utf-8"))
+e2e = json.loads(E2E.read_text(encoding="utf-8"))
+
+nodes = graph.get("nodes", [])
+edges = graph.get("links", graph.get("edges", []))
+
+node_text = []
+
+for n in nodes:
+    text = " ".join(
+        str(n.get(k, ""))
+        for k in ["id", "name", "label", "file", "path", "module", "type"]
+    ).lower()
+    node_text.append((n, text))
+
+targets = [
+    "routes.py",
+    "language/engine.py",
+    "problem/engine.py",
+    "knowledge/engine.py",
+    "reasoning/engine.py",
+    "graph_bridge.py",
+    "gate_integration.py",
+    "rag.py",
+    "developer_core/engine.py",
+]
+
+matches = {}
+
+for target in targets:
+    found = []
+
+    for node, text in node_text:
+        if target.lower() in text:
+            found.append({
+                "id": node.get("id"),
+                "name": node.get("name"),
+                "label": node.get("label"),
+                "file": node.get("file"),
+                "path": node.get("path"),
+                "module": node.get("module"),
+                "type": node.get("type")
+            })
+
+    matches[target] = found
+
+runtime_modules = []
+
+for module, data in runtime.get("results", {}).items():
+    if isinstance(data, dict):
+        runtime_modules.append({
+            "module": module,
+            "file": data.get("file"),
+            "objects": list(
+                (data.get("objects") or {}).keys()
+            )
+        })
+
+e2e_status = e2e.get("status")
+e2e_http = e2e.get("http_status")
+e2e_latency = e2e.get("latency_ms")
+
+resolved = sum(
+    1 for target, found in matches.items()
+    if found
+)
+
+output = {
+    "gate": "14.2",
+    "engine": "Developer Core Runtime Graph Truth",
+    "version": "14.2.0",
+    "source_of_truth": str(ROOT),
+    "graph": {
+        "nodes": len(nodes),
+        "edges": len(edges)
+    },
+    "runtime": {
+        "modules": runtime_modules
+    },
+    "e2e": {
+        "status": e2e_status,
+        "http_status": e2e_http,
+        "latency_ms": e2e_latency
+    },
+    "runtime_graph_targets": matches,
+    "targets_total": len(targets),
+    "targets_resolved": resolved,
+    "status": "PASS" if resolved == len(targets) and e2e_status == "PASS" else "NEEDS_INVESTIGATION"
 }
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
-    }
-}
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+OUT.write_text(
+    json.dumps(output, indent=2, ensure_ascii=False),
+    encoding="utf-8"
+)
+
+print("=" * 72)
+print("NUSANTARA GATE 14.2 — RUNTIME GRAPH TRUTH")
+print("=" * 72)
+
+print()
+print(f"Graph nodes       : {len(nodes)}")
+print(f"Graph edges       : {len(edges)}")
+print(f"E2E status        : {e2e_status}")
+print(f"E2E HTTP          : {e2e_http}")
+print(f"E2E latency       : {e2e_latency} ms")
+
+print()
+print("RUNTIME GRAPH TARGETS")
+print("-" * 72)
+
+for target, found in matches.items():
+    status = "RESOLVED" if found else "MISSING"
+    print(f"{target:<32} {status:<10} matches={len(found)}")
+
+print()
+print("-" * 72)
+print(f"RESOLVED          : {resolved}/{len(targets)}")
+
+status = (
+    "PASS"
+    if resolved == len(targets) and e2e_status == "PASS"
+    else "NEEDS INVESTIGATION"
+)
+
+print(f"GATE 14.2 STATUS  : {status}")
+print(f"Output            : {OUT}")
+print("GATE 14.2 RUNTIME GRAPH TRUTH: COMPLETE")

@@ -7,7 +7,7 @@ from app.core import evidence_registry as registry
 
 
 def test_registry_covers_all_acceptance_criteria():
-    manifest = json.loads((registry.DEFAULT_ROOT / "control-plane/evidence-requirements.json").read_text())
+    manifest = json.loads((registry.DEFAULT_ROOT / "frontend/evidence-requirements.json").read_text())
     assert {item["id"] for item in manifest["criteria"]} == {f"AC{i}" for i in range(1, 16)}
     assert all(item["sources"] and item["tests"] for item in manifest["criteria"])
 
@@ -24,7 +24,7 @@ def test_collector_records_real_artifact_references():
     package = registry.collect_review_package()
     paths = {item["path"] for item in package["evidence"]}
     assert "backend/app/core/evidence_registry.py" in paths
-    assert "control-plane/evidence-requirements.json" in paths
+    assert "frontend/evidence-requirements.json" in paths
     assert all(item["path"] and item["classification"] in registry.SOURCE_CLASSES for item in package["evidence"])
 
 
@@ -71,7 +71,7 @@ def test_audit_chain_detects_tampering_and_appends(tmp_path):
 
 def test_missing_test_run_blocks_pass(tmp_path):
     source_manifest = (
-        registry.DEFAULT_ROOT / "control-plane" / "evidence-requirements.json"
+        registry.DEFAULT_ROOT / "frontend" / "evidence-requirements.json"
     )
     manifest = json.loads(source_manifest.read_text(encoding="utf-8"))
     manifest["test_run_manifest"] = "missing-test-run.json"

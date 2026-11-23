@@ -1,37 +1,117 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+﻿import json
+import importlib
+from pathlib import Path
+from datetime import datetime
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "graphify-out"
+
+ENGINES = {
+    "language_engine": (
+        "app.language.engine",
+        "LanguageEngine",
+    ),
+    "problem_engine": (
+        "app.problem.engine",
+        "ProblemEngine",
+    ),
+    "knowledge_engine": (
+        "app.knowledge.engine",
+        "KnowledgeEngine",
+    ),
+    "reasoning_engine": (
+        "app.reasoning.engine",
+        "ReasoningEngine",
+    ),
 }
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
+
+print("=" * 68)
+print("NUSANTARA GATE 15.2 - ENGINE RUNTIME TRUTH")
+print("=" * 68)
+
+results = {}
+
+for name, (module_name, class_name) in ENGINES.items():
+    item = {
+        "module": module_name,
+        "class": class_name,
+        "module_loaded": False,
+        "class_found": False,
+        "file": None,
+        "status": "FAIL",
     }
+
+    try:
+        module = importlib.import_module(module_name)
+
+        item["module_loaded"] = True
+        item["file"] = str(
+            Path(module.__file__).resolve()
+        )
+
+        cls = getattr(module, class_name, None)
+
+        if cls is not None:
+            item["class_found"] = True
+            item["status"] = "PASS"
+
+    except Exception as exc:
+        item["error"] = str(exc)
+
+    results[name] = item
+
+    print(
+        f"{item['status']:<5} "
+        f"{name:<24} "
+        f"{module_name}"
+    )
+
+passed = sum(
+    1
+    for item in results.values()
+    if item["status"] == "PASS"
+)
+
+total = len(results)
+
+status = "PASS" if passed == total else "FAIL"
+
+result = {
+    "gate": "15.2",
+    "name": "Engine Runtime Truth",
+    "version": "15.2.0",
+    "timestamp": datetime.now().isoformat(),
+    "status": status,
+
+    "checks": {
+        "engine_count": total,
+        "passed": passed,
+        "all_loaded": passed == total,
+    },
+
+    "engines": results,
+
+    "contract": {
+        "language_engine": "app.language.engine.LanguageEngine",
+        "problem_engine": "app.problem.engine.ProblemEngine",
+        "knowledge_engine": "app.knowledge.engine.KnowledgeEngine",
+        "reasoning_engine": "app.reasoning.engine.ReasoningEngine",
+        "must_load_from_source": True,
+        "must_resolve_class": True,
+    },
 }
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+output = OUT / "gate15_2_engine_runtime_truth.json"
+
+output.write_text(
+    json.dumps(result, indent=2, ensure_ascii=False),
+    encoding="utf-8",
+)
+
+print()
+print("Engines validated   :", f"{passed} / {total}")
+print("GATE 15.2 STATUS    :", status)
+print("Output              :", output)
+
+if status != "PASS":
+    raise SystemExit(1)

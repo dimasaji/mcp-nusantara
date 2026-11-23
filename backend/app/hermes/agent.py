@@ -50,6 +50,11 @@ _FALSE_VERIFICATION = re.compile(
     r"(?:menurut|sesuai|berdasarkan)\s+(?:knowledge\s*base|database|basis\s+data)", re.IGNORECASE,
 )
 
+_CONTACT_REQUEST = re.compile(
+    r"\b(?:whatsapp|wa|telepon|telp|hp|kontak|hubungi|email|e-mail)\b", re.I,
+)
+
+
 # Names such as KTP describe a topic; substantive official claims still need
 # sources. A definition must not be rejected merely for mentioning that topic.
 _SUBSTANTIVE_CLAIM = re.compile(
@@ -387,6 +392,10 @@ class HermesAgent:
         # intent. A definition can return to general chat without retrieving.
         if getattr(request, 'sop_version', None):
             conversation = False
+            repeated_text = None
+        if (scoped_document_ids and not getattr(request, 'sop_version', None)
+                and _general_definition(request.user_input)):
+            conversation = True
             repeated_text = None
         if scoped_document_ids and (turn.get('facet') or not (conversation and not _CONTEXTUAL_FOLLOWUP.search(
                 re.sub(r'\bapa\s+itu\b', '', request.user_input, flags=re.I)))):
@@ -857,6 +866,7 @@ class HermesAgent:
             model_used=provider.model;latency_ms=int((time.perf_counter()-started)*1000)
 
         elif (previous.get('last_answer') and scoped_document_ids
+              and callable(getattr(_knowledge, 'reuse_prior_citation', None))
               and _contextual_scope_followup(request.user_input, turn)
               and (_CITATION_REQUEST.search(request.user_input)
                    or _SIMPLIFY_REQUEST.search(request.user_input))):
@@ -872,8 +882,6 @@ class HermesAgent:
                     raise HTTPException(409, 'CHAT_SOURCE_VERSION_UNAVAILABLE')
                 rebind(reused_document_id)
             except HTTPException:
-                # The prior source cannot be re-validated this turn; abstain
-                # instead of emitting a citation the boundary cannot bind.
                 response_text = 'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.'
                 grounding_result = GroundingResult(response_text, False, 'no_evidence', [])
                 answer_evidence = []
@@ -1284,17 +1292,18 @@ class HermesAgent:
                     _selection = bool(_meta.get('docling_blocks') or _meta.get('omitted_block_ids'))
                     _src = (getattr(evidence[0], 'chunk', None) or getattr(evidence[0], 'source', None) or '')
                     _src = str(_src).strip()[:400]
-                _rec2 = None
-                if _src and not _selection:
-                    _rec2 = _grounding_guard.validate(answer=_src, evidence=evidence, intent_name=intent_name)
-                if _rec2 is not None and _rec2.grounded:
-                    response_text = _src
-                    grounding_result = _rec2
-                    model_status = 'evidence_fast_path'
-                else:
-                    response_text = ('Sumber dokumen tersedia, tetapi jawaban belum dapat dipastikan sesuai isinya.'
-                                     if evidence and grounding_result.reason != 'no_evidence' else
-                                     'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.')
+                    _rec2 = None
+                    if (_src and not _selection and pilot_chat and '\n' not in _src
+                            and not _CONTACT_REQUEST.search(request.user_input)):
+                        _rec2 = _grounding_guard.validate(answer=_src, evidence=evidence, intent_name=intent_name)
+                    if _rec2 is not None and _rec2.grounded:
+                        response_text = _src
+                        grounding_result = _rec2
+                        model_status = 'evidence_fast_path'
+                    else:
+                        response_text = ('Sumber dokumen tersedia, tetapi jawaban belum dapat dipastikan sesuai isinya.'
+                                         if evidence and grounding_result.reason != 'no_evidence' else
+                                         'Informasi tersebut tidak ditemukan dalam dokumen yang dipilih.')
         # Pilot SOP: for missing-contact questions, ensure the answer is an
         # abstention; otherwise fall back to the verified abstention text.
         if (pilot_chat and service_facts is not None and service_facts.get('facet') == 'missing'

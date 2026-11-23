@@ -21,8 +21,8 @@
       "id": "AC2",
       "summary": "Collector references existing artifacts",
       "sources": [
-        "app/core/evidence_registry.py",
-        "control-plane/evidence-requirements.json",
+        "backend/app/core/evidence_registry.py",
+        "frontend/evidence-requirements.json",
         "tests/test_evidence_registry.py"
       ],
       "tests": [
@@ -33,7 +33,7 @@
       "id": "AC3",
       "summary": "Validator distinguishes VALID INVALID MISSING BLOCKED and NOT_VERIFIED",
       "sources": [
-        "app/core/evidence_registry.py"
+        "backend/app/core/evidence_registry.py"
       ],
       "tests": [
         "test_validator_distinguishes_all_statuses"
@@ -43,8 +43,8 @@
       "id": "AC4",
       "summary": "Requirements and gates link to relevant evidence",
       "sources": [
-        "control-plane/evidence-requirements.json",
-        "app/core/evidence_registry.py",
+        "frontend/evidence-requirements.json",
+        "backend/app/core/evidence_registry.py",
         "tests/test_evidence_registry.py"
       ],
       "tests": [
@@ -55,8 +55,8 @@
       "id": "AC5",
       "summary": "Tests remain within authorization",
       "sources": [
-        "control-plane/vitest.config.ts",
-        "control-plane/tests/inspection-preview-network-guard.cjs",
+        "frontend/vitest.config.ts",
+        "frontend/tests/inspection-preview-network-guard.cjs",
         "tests/run_evidence_tests_isolated.py",
         "tests/pytest-evidence.ini",
         "tests/test_evidence_decision_api.py",
@@ -72,7 +72,7 @@
       "id": "AC6",
       "summary": "Test results and failures are traceable",
       "sources": [
-        "app/core/evidence_registry.py",
+        "backend/app/core/evidence_registry.py",
         "tests/test_evidence_registry.py",
         "tests/test_evidence_finalization.py"
       ],
@@ -85,9 +85,9 @@
       "id": "AC7",
       "summary": "Decision UI offers PASS FAIL HOLD and optional notes",
       "sources": [
-        "control-plane/src/human.tsx",
-        "control-plane/src/api.ts",
-        "control-plane/tests/human.test.tsx"
+        "frontend/src/human.tsx",
+        "frontend/src/api.ts",
+        "frontend/tests/human.test.tsx"
       ],
       "tests": [
         "uses only PASS, FAIL and HOLD with optional notes and keeps PASS blocked"
@@ -97,9 +97,9 @@
       "id": "AC8",
       "summary": "Decision binds to server-issued evidence package",
       "sources": [
-        "app/core/evidence_registry.py",
-        "app/api/control_plane.py",
-        "control-plane/src/api.ts",
+        "backend/app/core/evidence_registry.py",
+        "backend/app/api/control_plane.py",
+        "frontend/src/api.ts",
         "tests/test_evidence_decision_api.py"
       ],
       "tests": [
@@ -110,8 +110,8 @@
       "id": "AC9",
       "summary": "Unauthorized reviewer cannot record a decision",
       "sources": [
-        "app/api/control_plane.py",
-        "app/security/auth.py"
+        "backend/app/api/control_plane.py",
+        "backend/app/security/auth.py"
       ],
       "tests": [
         "test_decision_api_requires_authorized_admin"
@@ -121,10 +121,10 @@
       "id": "AC10",
       "summary": "No automatic promotion to PASS",
       "sources": [
-        "app/api/control_plane.py",
-        "app/core/evidence_registry.py",
+        "backend/app/api/control_plane.py",
+        "backend/app/core/evidence_registry.py",
         "tests/test_evidence_decision_api.py",
-        "app/developer_core/controlled_write.py",
+        "backend/app/developer_core/controlled_write.py",
         "tests/test_normal_plan.py",
         "docs/operational/NUSANTARA-V1-OPERATOR.md",
         "scripts/prepare_v1_operator_plan.py",
@@ -146,7 +146,7 @@
       "id": "AC11",
       "summary": "Evidence changes invalidate a reviewed package",
       "sources": [
-        "app/core/evidence_registry.py",
+        "backend/app/core/evidence_registry.py",
         "tests/test_evidence_registry.py"
       ],
       "tests": [
@@ -157,8 +157,8 @@
       "id": "AC12",
       "summary": "Decision audit is append-only and tamper-evident",
       "sources": [
-        "app/core/evidence_registry.py",
-        "app/api/control_plane.py",
+        "backend/app/core/evidence_registry.py",
+        "backend/app/api/control_plane.py",
         "tests/test_evidence_registry.py"
       ],
       "tests": [
@@ -169,35 +169,35 @@
       "id": "AC13",
       "summary": "Unavailable service does not create false runtime evidence",
       "sources": [
-        "control-plane/src/api.ts",
-        "app/core/evidence_registry.py",
-        "control-plane/tests/human.test.tsx",
-        "control-plane/src/verification.tsx",
-        "control-plane/tests/verification-pages.test.tsx",
-        "control-plane/src/readiness.ts",
-        "control-plane/src/router.tsx",
-        "control-plane/src/overview.tsx",
-        "control-plane/src/ui.tsx",
-        "control-plane/src/human.tsx",
-        "control-plane/src/api.ts",
-        "app/knowledge/engine.py",
-        "app/api/routes.py",
-        "app/main.py",
+        "frontend/src/api.ts",
+        "backend/app/core/evidence_registry.py",
+        "frontend/tests/human.test.tsx",
+        "frontend/src/verification.tsx",
+        "frontend/tests/verification-pages.test.tsx",
+        "frontend/src/readiness.ts",
+        "frontend/src/router.tsx",
+        "frontend/src/overview.tsx",
+        "frontend/src/ui.tsx",
+        "frontend/src/human.tsx",
+        "frontend/src/api.ts",
+        "backend/app/knowledge/engine.py",
+        "backend/app/api/routes.py",
+        "backend/app/main.py",
         "tests/test_knowledge_pipeline.py",
-        "control-plane/tests/knowledge-operations.test.tsx",
-        "app/knowledge/rag.py",
-        "app/knowledge/grounding.py",
-        "app/hermes/agent.py",
+        "frontend/tests/knowledge-operations.test.tsx",
+        "backend/app/knowledge/rag.py",
+        "backend/app/knowledge/grounding.py",
+        "backend/app/hermes/agent.py",
         "tests/test_sop_ingestion.py",
         "scripts/ingest_v1_sops.py",
         "docs/operational/SOP-REVIEWED-EXCERPTS.json",
         "pyproject.toml",
-        "control-plane/src/assistant.tsx",
-        "app/language/engine.py",
-        "app/memory/engine.py",
-        "app/core/gate_integration.py",
+        "frontend/src/assistant.tsx",
+        "backend/app/language/engine.py",
+        "backend/app/memory/engine.py",
+        "backend/app/core/gate_integration.py",
         "tests/test_v1_service_dialogue.py",
-        "control-plane/tests/assistant.test.tsx"
+        "frontend/tests/assistant.test.tsx"
       ],
       "tests": [
         "uses only PASS, FAIL and HOLD with optional notes and keeps PASS blocked",
@@ -219,7 +219,7 @@
       "summary": "Scoped regression coverage is traced",
       "sources": [
         "tests/test_evidence_decision_api.py",
-        "control-plane/tests/acceptance.test.ts"
+        "frontend/tests/acceptance.test.ts"
       ],
       "tests": [
         "test_legacy_snapshot_route_is_unchanged"
@@ -229,11 +229,11 @@
       "id": "AC15",
       "summary": "Every blocker is visible with a reason",
       "sources": [
-        "app/core/evidence_registry.py",
-        "control-plane/src/human.tsx",
+        "backend/app/core/evidence_registry.py",
+        "frontend/src/human.tsx",
         "tests/test_evidence_registry.py",
-        "control-plane/src/readiness.ts",
-        "control-plane/src/verification.tsx"
+        "frontend/src/readiness.ts",
+        "frontend/src/verification.tsx"
       ],
       "tests": [
         "test_missing_test_run_blocks_pass",
