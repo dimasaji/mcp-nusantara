@@ -117,12 +117,13 @@ class KnowledgeEngine:
                     # Fallback: assign based on start position even if not unique
                     evidence.metadata['citation_pages'] = [p['page'] for p in metadata.get('source_pages', [])
                         if p['start'] <= start < p['end']]
+            base_score = float(getattr(evidence, 'score', 0.0) or 0.0)
+            rank_score = base_score
             # Hybrid boost: combine vector score with keyword overlap so exact
             # term matches are not drowned by semantic-only neighbours.
             if query_terms:
                 haystack = (getattr(evidence, 'chunk', '') or '').casefold()
                 title = (getattr(evidence, 'title', '') or '').casefold()
-                # TF-IDF-like lexical scoring
                 overlap = 0.0
                 for t in query_terms:
                     if t in haystack:
@@ -131,32 +132,28 @@ class KnowledgeEngine:
                         overlap += idf * min(tf, 3)
                 title_overlap = sum(1 for t in query_terms if t in title)
                 if overlap > 0 or title_overlap > 0:
-                    base = float(getattr(evidence, 'score', 0.0) or 0.0)
                     boost = 0.05 * overlap + 0.40 * title_overlap
-                    # Exact title/number match: if the query (case-insensitive) is a
-                    # substring of the document title, add a large relevance bonus
-                    # so the correct document ranks first.
                     q_lower = (query or '').casefold()
                     title_lower = title
                     if q_lower and q_lower in title_lower:
                         boost += 0.50
-                    evidence.score = min(1.0, base + boost)
-        # Filter out low-relevance noise so nonsense queries do not return spurious results.
-        # Use a threshold of 0.40 to remove low-confidence matches while keeping
-        # relevant documents.  This improves precision by reducing the number of
-        # irrelevant results in the top-K.
-        filtered = [e for e in result.evidence_pack.evidence if float(getattr(e, 'score', 0.0) or 0.0) >= 0.50]
-        # Document-level grouping: keep only the best chunk per document so one
-        # document cannot occupy many result positions.
-        best = {}
-        for e in filtered:
-            did = getattr(e, 'document_id', None)
-            if did not in best or float(getattr(e, 'score', 0.0) or 0.0) > float(getattr(best[did], 'score', 0.0) or 0.0):
-                best[did] = e
-        grouped = sorted(best.values(), key=lambda e: float(getattr(e, 'score', 0.0) or 0.0), reverse=True)
+                    rank_score = min(1.0, base_score + boost)
+            evidence.metadata['retrieval_rank_score'] = rank_score
+            evidence.score = base_score
+        filtered = list(result.evidence_pack.evidence)
+        def rank(item):
+            return (float((item.metadata or {}).get('retrieval_rank_score', getattr(item, 'score', 0.0)) or 0.0),
+                    float(getattr(item, 'score', 0.0) or 0.0))
         if top_k:
-            grouped = grouped[:top_k]
-        return RetrievalEvidenceList(grouped, getattr(result, 'effective_profile', None))
+            best = {}
+            for item in filtered:
+                did = getattr(item, 'document_id', None)
+                if did not in best or rank(item) > rank(best[did]):
+                    best[did] = item
+            filtered = sorted(best.values(), key=rank, reverse=True)[:top_k]
+        else:
+            filtered.sort(key=rank, reverse=True)
+        return RetrievalEvidenceList(filtered, getattr(result, 'effective_profile', None))
 
     def search(self, query: str, top_k: int | None = None):
         return self.search_knowledge(query, top_k=top_k)
@@ -351,22 +348,14 @@ class KnowledgeEngine:
         try:
             pdf_pages = self._extract_pdf_pages(raw) if Path(safe_name).suffix.lower() == '.pdf' else None
             text = '\n'.join(pdf_pages) if pdf_pages is not None else self._extract_pipeline_text(safe_name, raw)
+            from .preparation import normalize_knowledge_text, prepare_knowledge_text
             from .text_cleaning import clean_text, persist_intake_text
             raw_text, raw_pages = text, pdf_pages
-            if pdf_pages is not None:
-                pdf_pages = [clean_text(page) for page in pdf_pages]
-                text = '\n'.join(pdf_pages)
-            else:
-                text = clean_text(text)
-            normalized=' '.join(text.split())
-            if len(normalized)<40:
-                raise ValueError('EXTRACTED_TEXT_TOO_SHORT_OR_SCANNED; OCR_REQUIRED')
-            # Character diversity is only a low-information screen, not an OCR
-            # accuracy score. Bound the sample so long, readable SOPs are not
-            # rejected merely because their alphabet stays the same.
-            quality_sample = normalized[:2048]
-            if len(set(quality_sample))/len(quality_sample)<0.015:
-                raise ValueError('EXTRACTED_TEXT_QUALITY_CHECK_FAILED')
+            cleaned_pages = [clean_text(page) for page in pdf_pages] if pdf_pages is not None else None
+            joined = '\n'.join(cleaned_pages) if cleaned_pages is not None else clean_text(text)
+            text, preparation = prepare_knowledge_text(joined)
+            if cleaned_pages is not None:
+                pdf_pages = [normalize_knowledge_text(page) for page in cleaned_pages]
             digest_id=document_id or 'DOC-SHA256-'+digest
             from .store import SQLiteVectorStore
             if isinstance(self.rag._store,SQLiteVectorStore):
@@ -382,7 +371,7 @@ class KnowledgeEngine:
                     raise ValueError('DOCUMENT_ID_CONFLICT_OR_INCOMPLETE; existing knowledge preserved')
             metadata={**(source_metadata or {}),'pipeline_status':'READY','source_sha256':digest,'source_filename':safe_name,
                       'source_authority':'UNVERIFIED','revision_status':'NOT_CONFIRMED_CURRENT',
-                      'knowledge_preparation':None,
+                      'knowledge_preparation':preparation,
                       'source_pages':[],
                       'indexed_at':datetime.now(timezone.utc).isoformat()}
             metadata['text_cleaning'] = persist_intake_text(
