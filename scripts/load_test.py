@@ -1,119 +1,57 @@
-# Nusantara V1 - safe local diagnostic and targeted verification
-# Run from repository root: powershell -ExecutionPolicy Bypass -File .\Invoke-NusantaraV1-AutoPilot.ps1
-[CmdletBinding()]
-param(
-    [string]$Root = 'C:\Users\dmaza\mcp-starter',
-    [switch]$ProbeHermes,
-    [switch]$RunTests
-)
-$ErrorActionPreference = 'Stop'
-$ProgressPreference = 'SilentlyContinue'
-if (-not (Test-Path -LiteralPath $Root -PathType Container)) { throw "Repository not found: $Root" }
-Set-Location -LiteralPath $Root
-$stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
-$reportDir = Join-Path $Root 'docs\reports'
-New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
-$reportPath = Join-Path $reportDir "NUSANTARA-V1-AUTOPILOT-$stamp.json"
-$results = [ordered]@{ timestamp=(Get-Date).ToString('o'); root=$Root; checks=@(); summary='HOLD'; note='Checks are observations, not evidence of full E2E readiness.' }
-function Add-Check([string]$Name,[string]$Status,[string]$Detail) {
-    $results.checks += [ordered]@{name=$Name;status=$Status;detail=$Detail}
-    Write-Host ('[{0}] {1}: {2}' -f $Status,$Name,$Detail)
-}
-function Request-Local([string]$Url,[string]$Method='GET',[hashtable]$Headers=@{},[string]$Body='') {
-    try {
-        $params = @{Uri=$Url;Method=$Method;Headers=$Headers;TimeoutSec=12;UseBasicParsing=$true;ErrorAction='Stop'}
-        if ($Method -eq 'POST') { $params.ContentType='application/json'; $params.Body=$Body }
-        $r = Invoke-WebRequest @params
-        return @{code=[int]$r.StatusCode;body=[string]$r.Content}
-    } catch {
-        $code = 'NO_RESPONSE'; $body=''
-        if ($_.Exception.Response) {
-            try { $code = [int]$_.Exception.Response.StatusCode } catch {}
-            try {
-                $stream=$_.Exception.Response.GetResponseStream()
-                if ($stream) { $reader=New-Object System.IO.StreamReader($stream); $body=$reader.ReadToEnd();$reader.Dispose() }
-            } catch {}
-        }
-        return @{code=$code;body=$body}
-    }
-}
-try {
-    $who = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-    Add-Check 'Windows account' 'INFO' $who
-    foreach($port in @(8000,5180,8765)) {
-        $conn = @(Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue)
-        if($conn.Count -gt 0) {
-            $ids = ($conn | Select-Object -ExpandProperty OwningProcess -Unique) -join ','
-            Add-Check "Port $port" 'PASS' "LISTEN; PID=$ids"
-        } else { Add-Check "Port $port" 'HOLD' 'Not listening' }
-    }
-    $api = Request-Local 'http://127.0.0.1:8000/openapi.json'
-    if ($api.code -eq 200) { Add-Check 'Backend OpenAPI' 'PASS' 'HTTP 200' }
-    else { Add-Check 'Backend OpenAPI' 'HOLD' "HTTP $($api.code)" }
-    $ui = Request-Local 'http://127.0.0.1:5180/'
-    if ($ui.code -eq 200) { Add-Check 'Frontend' 'PASS' 'HTTP 200' }
-    else { Add-Check 'Frontend' 'HOLD' "HTTP $($ui.code)" }
-    $hermesExe = Join-Path $env:LOCALAPPDATA 'hermes\bin\hermes-acp.exe'
-    if (Test-Path -LiteralPath $hermesExe) { Add-Check 'Hermes executable' 'PASS' 'Found under current Windows user LOCALAPPDATA' }
-    else { Add-Check 'Hermes executable' 'HOLD' 'Not found under current Windows user LOCALAPPDATA' }
-    $python = Join-Path $Root '.venv\Scripts\python.exe'
-    $envFile = Join-Path $Root '.env'
-    $token = ''
-    if ((Test-Path -LiteralPath $python) -and (Test-Path -LiteralPath $envFile)) {
-        # Read token with existing python-dotenv, never write it to console or report.
-        try {
-            $token = (& $python -c "from dotenv import dotenv_values; print(dotenv_values('.env', interpolate=False).get('NUSANTARA_ADMIN_TOKEN') or '')" 2>$null | Select-Object -Last 1).Trim()
-        } catch { $token='' }
-    }
-    if ([string]::IsNullOrWhiteSpace($token)) { Add-Check 'Admin token configured' 'HOLD' 'Token could not be loaded; value not logged' }
-    else {
-        Add-Check 'Admin token configured' 'PASS' 'Token present; value not logged'
-        $headers = @{'X-Admin-Token'=$token}
-        $get = Request-Local 'http://127.0.0.1:8000/v1/frontend/hermes/connection' 'GET' $headers
-        if ($get.code -eq 200) {
-            $state = 'UNKNOWN'
-            try { $state = ([string](ConvertFrom-Json -InputObject $get.body).status) } catch {}
-            Add-Check 'Hermes GET' 'PASS' "HTTP 200; status=$state"
-        } else { Add-Check 'Hermes GET' 'HOLD' "HTTP $($get.code)" }
-        if ($ProbeHermes) {
-            $post = Request-Local 'http://127.0.0.1:8000/v1/frontend/hermes/connection' 'POST' $headers '{}'
-            $state = 'UNKNOWN'; $reason = ''
-            try { $j = ConvertFrom-Json -InputObject $post.body; $state=[string]$j.status; $reason=[string]$j.reason } catch {}
-            if ($reason.Length -gt 200) { $reason = $reason.Substring(0,200) }
-            if ($post.code -eq 200 -and $state -eq 'CONNECTED') { Add-Check 'Hermes live handshake' 'PASS' 'HTTP 200; CONNECTED' }
-            else { Add-Check 'Hermes live handshake' 'HOLD' "HTTP $($post.code); status=$state; reason=$reason" }
-        } else { Add-Check 'Hermes live handshake' 'SKIP' 'Run with -ProbeHermes for real local ACP initialize' }
-    }
-    $chatFiles = @('frontend\src\hermes-connection.tsx','app\developer_core\hermes_acp_connection.py','frontend\vite.config.ts')
-    foreach($file in $chatFiles) {
-        if(Test-Path -LiteralPath (Join-Path $Root $file)) { Add-Check "File $file" 'PASS' 'Exists' }
-        else { Add-Check "File $file" 'HOLD' 'Missing' }
-    }
-    if ($RunTests) {
-        if(Test-Path -LiteralPath $python) {
-            $testPath = 'tests\test_hermes_acp_connection.py'
-            if(Test-Path -LiteralPath $testPath) {
-                & $python -m pytest -q $testPath
-                if($LASTEXITCODE -eq 0) { Add-Check 'ACP targeted pytest' 'PASS' 'Tests passed' }
-                else { Add-Check 'ACP targeted pytest' 'HOLD' "Exit code $LASTEXITCODE" }
-            } else { Add-Check 'ACP targeted pytest' 'SKIP' 'Known test path not present; no test names guessed' }
-        }
-        $frontend = Join-Path $Root 'frontend'
-        if((Test-Path -LiteralPath (Join-Path $frontend 'package.json')) -and (Get-Command npm.cmd -ErrorAction SilentlyContinue)) {
-            Push-Location $frontend
-            try {
-                & npm.cmd run build
-                if($LASTEXITCODE -eq 0) { Add-Check 'Frontend build' 'PASS' 'Build passed' }
-                else { Add-Check 'Frontend build' 'HOLD' "Exit code $LASTEXITCODE" }
-            } finally { Pop-Location }
-        } else { Add-Check 'Frontend build' 'SKIP' 'npm or package.json not found' }
-    } else { Add-Check 'Tests' 'SKIP' 'Run with -RunTests to execute targeted tests and build' }
-    $hold = @($results.checks | Where-Object { $_.status -eq 'HOLD' })
-    if ($hold.Count -eq 0) { $results.summary='CHECKS_PASS_NOT_FULL_E2E' }
-    $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $reportPath -Encoding UTF8
-    Write-Host "`nReport: $reportPath"
-    Write-Host "Summary: $($results.summary)"
-    Write-Host 'Note: Chat 504 root cause requires trace/log evidence; this script does not send paid model requests.'
-} finally {
-    $token = $null; $headers = $null
-}
+"""Bounded HTTP load measurement; default health only, chat is explicit."""
+from __future__ import annotations
+import argparse
+import json
+import sys
+import time
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
+from pathlib import Path
+from urllib.request import Request, urlopen
+from urllib.parse import urlsplit
+
+
+def run(base_url: str, requests: int, concurrency: int, timeout: float, chat: bool = False) -> dict:
+    origin = urlsplit(base_url)
+    if origin.scheme not in {"http", "https"} or not origin.hostname or origin.username or origin.password:
+        raise ValueError("invalid base URL")
+    if not 1 <= requests <= 200 or not 1 <= concurrency <= 8 or not 0 < timeout <= 120:
+        raise ValueError("load limits: requests<=200, concurrency<=8, timeout<=120")
+    def call(index):
+        start = time.perf_counter()
+        try:
+            data = json.dumps({"user_input": "Halo", "session_id": f"load-{index}", "stream": False}).encode() if chat else None
+            req = Request(base_url.rstrip("/") + ("/v1/chat" if chat else "/v1/health"), data=data,
+                          headers={"Content-Type": "application/json"})
+            with urlopen(req, timeout=timeout) as response:
+                payload = json.loads(response.read(2_000_000))
+                ok = response.status == 200 and (bool(payload.get("response")) if chat else payload.get("status") == "ok")
+            error = None
+        except Exception as exc:
+            ok, error = False, type(exc).__name__
+        return {"ok": ok, "latency_ms": round((time.perf_counter() - start) * 1000, 2), "error_type": error}
+    started = time.perf_counter()
+    with ThreadPoolExecutor(max_workers=concurrency) as pool:
+        results = list(pool.map(call, range(requests)))
+    latency = sorted(r["latency_ms"] for r in results)
+    return {"captured_at": datetime.now(timezone.utc).isoformat(), "base_url": base_url,
+            "scope": "chat" if chat else "health", "requests": requests, "concurrency": concurrency,
+            "failures": sum(not r["ok"] for r in results), "elapsed_s": round(time.perf_counter() - started, 2),
+            "p50_ms": latency[len(latency)//2], "p95_ms": latency[min(len(latency)-1,int(len(latency)*.95))],
+            "records": results, "limitations": "Measurement only; no production SLA or answer quality inferred."}
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--base-url", default="http://127.0.0.1:8002")
+    parser.add_argument("--requests", type=int, default=20)
+    parser.add_argument("--concurrency", type=int, default=4)
+    parser.add_argument("--timeout", type=float, default=20)
+    parser.add_argument("--chat", action="store_true")
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    result = run(args.base_url, args.requests, args.concurrency, args.timeout, args.chat)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(result, indent=2), "utf-8")
+    print(json.dumps({k:v for k,v in result.items() if k != "records"},indent=2))
+    sys.exit(bool(result["failures"]))

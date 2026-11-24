@@ -1,0 +1,42 @@
+[
+  {
+    "module": "tests.test_configuration_integration",
+    "test": "test_r1_preserves_out_of_scope_protected_sources",
+    "status": "FAIL",
+    "classification": "PROTECTED_SOURCE_BASELINE_DRIFT",
+    "message": "AssertionError: app/developer_core/engine.py",
+    "next_action": "Helper resolves backend/app, but the original protected-source pin does not match. Keep the pin unchanged pending per-change provenance review."
+  },
+  {
+    "module": "tests.test_control_plane_readonly",
+    "test": "test_real_projection_no_database_worker_or_mutating_git",
+    "status": "FAIL",
+    "classification": "HISTORICAL_EVIDENCE_ACCEPTANCE_GAP",
+    "message": "AssertionError: assert 'NOT_VERIFIED' == 'CLOSED_PASS'\n  \n  - CLOSED_PASS\n  + NOT_VERIFIED",
+    "next_action": "Layout lookup is fixed; historical phase acceptance still requires valid pinned evidence. Do not force CLOSED_PASS."
+  },
+  {
+    "module": "tests.test_developer_core_engine_contract",
+    "test": "test_vps_data_root_allowed_without_allowing_relative_data",
+    "status": "FAIL",
+    "classification": "PLATFORM_FIXTURE_MISMATCH",
+    "message": "AssertionError: assert False\n +  where False = DeveloperAnalysis(status='degraded', graph_loaded=False, node_count=0, edge_count=0, gates={'8': {'name': 'Reasoning Engine', 'status': 'known'}, '9': {'name': 'Decision / Policy Engine', 'status': 'known'}, '10': {'name': 'Memory / Context Engine', 'status': 'known'}, '11': {'name': 'Tool / Action Engine', 'status': 'known'}, '12': {'name': 'Existing Tools', 'status': 'known'}, '13': {'name': 'Workflow / Orchestration', 'status': 'known'}, '14': {'name': 'Developer Core / Graph', 'status': 'known'}}, engines=[{'name': 'Language Engine', 'path': 'app/language', 'exists': False, 'python_files': 0, 'status': 'missing'}, {'name': 'Problem Engine', ",
+    "next_action": "A Windows temporary directory named data does not represent the explicitly allowed Linux /data workspace. Do not broaden the production read boundary to satisfy the fixture."
+  },
+  {
+    "module": "tests.test_provider_identity",
+    "test": "test_public_request_response_models_and_routes_unchanged",
+    "status": "FAIL",
+    "classification": "HISTORICAL_API_SURFACE_EXPECTATION",
+    "message": "assert \"Call(func=Name(id='Field', ctx=Load()), keywords=[keyword(arg='default_factory', value=Lambda(args=arguments(), body=JoinedStr(values=[Constant(value='web-'), FormattedValue(value=Call(func=Name(id='uuid4', ctx=Load())), conversion=-1)]))), keyword(arg='min_length', value=Constant(value=1)), keyword(arg='max_length', value=Constant(value=128)), keyword(arg='pattern', value=Name(id='CHAT_SESSION_PATTERN', ctx=Load()))])\" == \"Call(func=Name(id='Field', ctx=Load()), keywords=[keyword(arg='default_factory', value=Lambda(args=arguments(), body=JoinedStr(values=[Constant(value='web-'), FormattedValue(value=Call(func=Name(id='uuid4', ctx=Load())), conversion=-1)]))), keyword(arg='min_length",
+    "next_action": "The old expected session field omits the current UUID pattern. Reconcile explicitly authorized API/security deltas rather than remove the guard."
+  },
+  {
+    "module": "tests.test_runtime_attestation",
+    "test": "test_main_change_only_installs_attestation_and_preserves_existing_handlers",
+    "status": "FAIL",
+    "classification": "HISTORICAL_HANDLER_AST_EXPECTATION",
+    "message": "assert [\"AsyncFunctionDef(name='lifespan', args=arguments(args=[arg(arg='app', annotation=Name(id='FastAPI', ctx=Load()))]), body=[Assign(targets=[Name(id='watcher', ctx=Store())], value=Constant(value=None)), If(test=BoolOp(op=And(), values=[UnaryOp(op=Not(), operand=Name(id='_READ_ONLY_EVIDENCE', ctx=Load())), UnaryOp(op=Not(), operand=Name(id='_ATTESTATION', ctx=Load()))]), body=[Import(names=[alias(name='asyncio')]), Import(names=[alias(name='logging')]), ImportFrom(module='app.api.routes', names=[alias(name='_knowledge')], level=0), Assign(targets=[Name(id='logger', ctx=Store())], value=Call(func=Attribute(value=Name(id='logging', ctx=Load()), attr='getLogger', ctx=Load()), args=[Name(i",
+    "next_action": "Expected handler source predates bundle, readiness/metrics and lifecycle changes. Audit these deltas before updating acceptance fixtures."
+  }
+]

@@ -163,7 +163,7 @@ assert 'app.api.routes' not in sys.modules and 'app.api.v2_routes' not in sys.mo
 print(json.dumps(first.json()))
 '''
     environment = {**os.environ, 'NUSANTARA_CONTROL_PLANE_READ_ONLY': '1',
-                   'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONPATH': str(root)}
+                   'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONPATH': str(root / 'backend')}
     results = [json.loads(subprocess.check_output([sys.executable, '-B', '-c', script],
                 cwd=tmp_path, env=environment, text=True)) for _ in range(2)]
     first, second = [result['attestation'] for result in results]

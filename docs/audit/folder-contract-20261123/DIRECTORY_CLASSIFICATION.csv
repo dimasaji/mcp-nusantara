@@ -1,0 +1,41 @@
+current_path,approved_target_or_retention_path,status,action,dependency_or_limit,reparse_point
+.agents,.agents,REPOSITORY_METADATA_KEEP,KEEP,Git/agent/checkpoint workflow,False
+.claude,.claude,REPOSITORY_METADATA_KEEP,KEEP,Git/agent/checkpoint workflow,False
+.dev,.dev,REPOSITORY_METADATA_KEEP,KEEP,Git/agent/checkpoint workflow,False
+.git,.git,REPOSITORY_METADATA_KEEP,KEEP,Git/agent/checkpoint workflow,False
+.pytest_cache,.pytest_cache,GENERATED_LOCAL_ONLY,KEEP_WHILE_IN_USE,test/cache/graph outputs may be regenerated; unique evidence retained,False
+.tmp-build,.tmp-build,GENERATED_LOCAL_ONLY,KEEP_WHILE_IN_USE,test/cache/graph outputs may be regenerated; unique evidence retained,False
+.venv,.venv,RUNTIME_ASSET_KEEP,KEEP_NO_MOVE,worker/model/data/environment; relocation needs separate mapping,False
+.venv-docling,.venv-docling,RUNTIME_ASSET_KEEP,KEEP_NO_MOVE,worker/model/data/environment; relocation needs separate mapping,False
+.venv-laya,.venv-laya,RUNTIME_ASSET_KEEP,KEEP_NO_MOVE,worker/model/data/environment; relocation needs separate mapping,False
+__pycache__,__pycache__,GENERATED_LOCAL_ONLY,KEEP_WHILE_IN_USE,test/cache/graph outputs may be regenerated; unique evidence retained,False
+artifacts,artifacts,KEEP_PENDING_REVIEW,NO_MOVE_NO_DELETE,dependency/unique-file review required,False
+backend,backend,APPROVED_ACTIVE_LOCATION,KEEP,source/config/launcher/test mapping; preserve interfaces,False
+backups,backups,KEEP_PENDING_REVIEW,NO_MOVE_NO_DELETE,dependency/unique-file review required,False
+config,config,APPROVED_ACTIVE_LOCATION,KEEP,source/config/launcher/test mapping; preserve interfaces,False
+data,data,RUNTIME_ASSET_KEEP,KEEP_NO_MOVE,worker/model/data/environment; relocation needs separate mapping,False
+deploy,deploy,APPROVED_ACTIVE_LOCATION,KEEP,source/config/launcher/test mapping; preserve interfaces,False
+docs,docs,APPROVED_ACTIVE_LOCATION,KEEP,source/config/launcher/test mapping; preserve interfaces,False
+downloads,downloads,KEEP_PENDING_REVIEW,NO_MOVE_NO_DELETE,dependency/unique-file review required,False
+frontend,frontend,APPROVED_ACTIVE_LOCATION,KEEP,source/config/launcher/test mapping; preserve interfaces,False
+graph-viewer,graph-viewer,KEEP_PENDING_REVIEW,NO_MOVE_NO_DELETE,dependency/unique-file review required,False
+graphify-out,graphify-out,GENERATED_LOCAL_ONLY,KEEP_WHILE_IN_USE,test/cache/graph outputs may be regenerated; unique evidence retained,False
+integration,integration,KEEP_PENDING_REVIEW,NO_MOVE_NO_DELETE,dependency/unique-file review required,False
+laya-hf-7er9jqah,laya-hf-7er9jqah,RUNTIME_ASSET_KEEP,KEEP_NO_MOVE,worker/model/data/environment; relocation needs separate mapping,False
+mcp-nusantara,mcp-nusantara,NESTED_REPO_KEEP,NO_RESET_NO_DELETE,unique Git metadata or local changes; not canonical application root,False
+mcp-nusantara-upstream,mcp-nusantara-upstream,NESTED_REPO_KEEP,NO_RESET_NO_DELETE,unique Git metadata or local changes; not canonical application root,False
+model,model,RUNTIME_ASSET_KEEP,KEEP_NO_MOVE,worker/model/data/environment; relocation needs separate mapping,False
+nusantara,nusantara,NESTED_REPO_KEEP,NO_RESET_NO_DELETE,unique Git metadata or local changes; not canonical application root,False
+Nusantara-Hermes-ACP-Connection-Patch,Nusantara-Hermes-ACP-Connection-Patch,KEEP_PENDING_REVIEW,NO_MOVE_NO_DELETE,dependency/unique-file review required,False
+nusantara-models,nusantara-models,RUNTIME_ASSET_KEEP,KEEP_NO_MOVE,worker/model/data/environment; relocation needs separate mapping,False
+nusantara-piak03-local-l7jxt5wz,nusantara-piak03-local-l7jxt5wz,KEEP_PENDING_REVIEW,NO_MOVE_NO_DELETE,dependency/unique-file review required,False
+ollama,ollama,RUNTIME_ASSET_KEEP,KEEP_NO_MOVE,worker/model/data/environment; relocation needs separate mapping,False
+perbaikanbukti,perbaikanbukti,KEEP_PENDING_REVIEW,NO_MOVE_NO_DELETE,dependency/unique-file review required,False
+pytest-of-dmaza,pytest-of-dmaza,GENERATED_LOCAL_ONLY,KEEP_WHILE_IN_USE,test/cache/graph outputs may be regenerated; unique evidence retained,False
+reports,reports,APPROVED_ACTIVE_LOCATION,KEEP,source/config/launcher/test mapping; preserve interfaces,False
+scripts,scripts,APPROVED_ACTIVE_LOCATION,KEEP,source/config/launcher/test mapping; preserve interfaces,False
+service,service,APPROVED_ACTIVE_LOCATION,KEEP,source/config/launcher/test mapping; preserve interfaces,False
+tests,tests,APPROVED_ACTIVE_LOCATION,KEEP,source/config/launcher/test mapping; preserve interfaces,False
+tmp_test,tmp_test,KEEP_PENDING_REVIEW,NO_MOVE_NO_DELETE,dependency/unique-file review required,False
+tools,tools,APPROVED_ACTIVE_LOCATION,KEEP,source/config/launcher/test mapping; preserve interfaces,False
+torchinductor_dmaza,torchinductor_dmaza,GENERATED_LOCAL_ONLY,KEEP_WHILE_IN_USE,test/cache/graph outputs may be regenerated; unique evidence retained,False

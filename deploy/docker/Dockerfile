@@ -7,14 +7,19 @@ COPY pyproject.toml .
 # major version inside the image than the one the test suite exercises.
 RUN pip install --no-cache-dir fastapi uvicorn[standard] pydantic pydantic-settings python-dotenv httpx haystack-ai==3.4.1
 ENV HAYSTACK_TELEMETRY_ENABLED=False
+ENV NUSANTARA_SERVE_BUNDLE=1
 RUN python -m venv /opt/indobert \
     && /opt/indobert/bin/pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
     && /opt/indobert/bin/pip install --no-cache-dir transformers
 ENV NUSANTARA_INDOBERT_PYTHON=/opt/indobert/bin/python \
     NUSANTARA_INDOBERT_WORKER=/opt/indobert-worker/indobert_worker.py \
     HF_HOME=/app/data/huggingface
+# SOP PDF inspection/rendering dependencies match requirements-lock.txt.
+RUN pip install --no-cache-dir pypdf==6.20.1 pymupdf==1.28.2 Pillow==12.3.0
 COPY backend/app ./app
+COPY nusantara-models/indobert_worker.py /opt/indobert-worker/indobert_worker.py
 COPY frontend/dist ./frontend/dist
+COPY config ./config
 COPY docs ./docs
 COPY .env.example ./
 COPY scripts/healthcheck.py ./scripts/healthcheck.py

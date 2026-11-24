@@ -1,0 +1,21 @@
+# Only image inputs are sent from the repository root build context.
+**
+!pyproject.toml
+!.env.example
+!backend/
+!backend/app/
+!backend/app/**
+!frontend/
+!frontend/dist/
+!frontend/dist/**
+!config/
+!config/**
+!docs/
+!docs/**
+!scripts/
+!scripts/healthcheck.py
+!nusantara-models/
+!nusantara-models/indobert_worker.py
+**/__pycache__/
+**/*.pyc
+docs/reports/

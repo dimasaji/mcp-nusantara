@@ -1,37 +1,121 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+﻿import json
+from pathlib import Path
+from datetime import datetime
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "graphify-out"
+
+graph = json.loads((OUT / "graph.json").read_text(encoding="utf-8"))
+truth = json.loads((OUT / "gate14_runtime_graph_truth.json").read_text(encoding="utf-8"))
+
+nodes = graph.get("nodes", [])
+node_map = {
+    str(n.get("id")): n
+    for n in nodes
+    if n.get("id") is not None
 }
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
-    }
+
+runtime_modules = truth.get("runtime", {}).get("modules", [])
+
+results = []
+
+for module in runtime_modules:
+    module_name = module.get("module", "")
+    file_path = module.get("file", "")
+
+    filename = Path(file_path).name if file_path else ""
+
+    matches = []
+
+    for node_id, node in node_map.items():
+        text = " ".join(
+            str(node.get(k, "") or "")
+            for k in (
+                "id",
+                "name",
+                "label",
+                "path",
+                "file",
+                "module"
+            )
+        ).lower()
+
+        if (
+            module_name.lower() in text
+            or filename.lower() in text
+        ):
+            matches.append({
+                "id": node_id,
+                "label": node.get("label"),
+                "type": node.get("type")
+            })
+
+    status = "PASS" if matches else "FAIL"
+
+    results.append({
+        "runtime_module": module_name,
+        "runtime_file": file_path,
+        "graph_matches": matches[:20],
+        "match_count": len(matches),
+        "status": status
+    })
+
+passed = sum(
+    1 for r in results
+    if r["status"] == "PASS"
+)
+
+total = len(results)
+
+result = {
+    "gate": "14.7",
+    "engine": "Runtime Static Consistency",
+    "version": "14.7.0",
+    "timestamp": datetime.now().isoformat(),
+    "source_of_truth": str(ROOT),
+
+    "graph": {
+        "nodes": len(nodes),
+        "links": len(graph.get("links", []))
+    },
+
+    "runtime": {
+        "modules": total
+    },
+
+    "consistency": {
+        "passed": passed,
+        "total": total,
+        "results": results
+    },
+
+    "status": "PASS" if passed == total else "FAIL"
 }
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+output = OUT / "gate14_7_runtime_static_consistency.json"
+
+output.write_text(
+    json.dumps(result, indent=2, ensure_ascii=False),
+    encoding="utf-8"
+)
+
+print("=" * 64)
+print("NUSANTARA GATE 14.7 - RUNTIME <-> STATIC CONSISTENCY")
+print("=" * 64)
+print("Graph nodes          :", len(nodes))
+print("Graph links          :", len(graph.get("links", [])))
+print("Runtime modules      :", total)
+print("Consistency          :", passed, "/", total)
+
+print()
+
+for item in results:
+    print(
+        f"{item['status']:<5} "
+        f"{item['runtime_module']:<42} "
+        f"matches={item['match_count']}"
+    )
+
+print()
+print("GATE 14.7 STATUS     :", result["status"])
+print("Output               :", output)

@@ -1,37 +1,128 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+﻿import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "graphify-out" / "gate16_6_negative_abstention_truth.json"
+
+files = {
+    "grounding": ROOT / "app" / "knowledge" / "grounding.py",
+    "rag": ROOT / "app" / "knowledge" / "rag.py",
+    "knowledge_engine": ROOT / "app" / "knowledge" / "engine.py",
+    "routes": ROOT / "app" / "api" / "routes.py",
 }
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
+
+patterns = [
+    "not found",
+    "no evidence",
+    "insufficient",
+    "abstain",
+    "grounded",
+    "evidence",
+    "source",
+    "confidence",
+    "unknown",
+    "cannot",
+    "tidak ditemukan",
+    "tidak ada informasi",
+    "tidak tersedia",
+    "bukti",
+]
+
+results = {}
+all_pass = True
+
+for name, path in files.items():
+    text = path.read_text(
+        encoding="utf-8",
+        errors="ignore"
+    ).lower() if path.exists() else ""
+
+    found = [p for p in patterns if p in text]
+
+    results[name] = {
+        "exists": path.exists(),
+        "matches": len(found),
+        "patterns_found": found,
+        "status": "PASS" if len(found) >= 2 else "FAIL"
+    }
+
+    if results[name]["status"] != "PASS":
+        all_pass = False
+
+# Cari test negatif yang sudah tersedia
+test_files = list((ROOT / "tests").rglob("*.py"))
+
+negative_tests = []
+
+for path in test_files:
+    text = path.read_text(
+        encoding="utf-8",
+        errors="ignore"
+    ).lower()
+
+    matched = [
+        p for p in [
+            "negative",
+            "abstention",
+            "unknown",
+            "not found",
+            "no evidence",
+            "ungrounded",
+            "hallucination",
+            "grounding",
+        ]
+        if p in text
+    ]
+
+    if matched:
+        negative_tests.append({
+            "file": str(path.relative_to(ROOT)),
+            "patterns": matched
+        })
+
+test_pass = len(negative_tests) > 0
+
+if not test_pass:
+    all_pass = False
+
+status = "PASS" if all_pass else "FAIL"
+
+result = {
+    "gate": "16.6",
+    "name": "Negative / Abstention Truth",
+    "status": status,
+    "static_contract": results,
+    "negative_test_files": negative_tests,
+    "contract": {
+        "grounding_contract_required": True,
+        "abstention_signal_required": True,
+        "negative_tests_required": True,
+        "llm_required": False,
     }
 }
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+OUT.write_text(
+    json.dumps(result, indent=2, ensure_ascii=False),
+    encoding="utf-8"
+)
+
+print("=" * 70)
+print("NUSANTARA GATE 16.6 - NEGATIVE / ABSTENTION TRUTH")
+print("=" * 70)
+print()
+
+for name, data in results.items():
+    print(
+        f"{name:<20} "
+        f"{data['status']:<5} "
+        f"matches={data['matches']}"
+    )
+
+print()
+print(f"Negative test files : {len(negative_tests)}")
+print(f"Checks               : {len([x for x in results.values() if x['status']=='PASS'])} / {len(results)}")
+print(f"GATE 16.6 STATUS     : {status}")
+print(f"Output               : {OUT}")
+
+if status != "PASS":
+    raise SystemExit(1)

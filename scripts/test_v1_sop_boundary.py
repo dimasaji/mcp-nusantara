@@ -1,37 +1,61 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
-}
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
-    }
-}
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+"""Run the P0 offline regression without production dotenv or home-directory I/O.
+
+Package-level app.models imports Settings even when importing streaming/mock.
+Suppress both dotenv and process-environment settings sources before collection;
+use a temporary home for legacy memory singletons. No app startup is performed.
+"""
+from pathlib import Path
+import os
+import sys
+import tempfile
+from unittest.mock import patch
+
+
+ROOT = Path(__file__).resolve().parents[1]
+TESTS = [
+    'tests/test_v1_sop_boundary.py',
+    'tests/test_v1_service_dialogue.py',
+    'tests/test_sop_ingestion.py',
+    'tests/test_phase2_hardening.py',
+    'tests/test_v1_chat_history.py',
+    'tests/test_effective_rag_profile.py',
+    'tests/test_document_scope_v1.py',
+]
+
+
+def main():
+    os.chdir(ROOT)
+    sys.path.insert(0, str(ROOT))
+    os.environ['PYTEST_DISABLE_PLUGIN_AUTOLOAD'] = '1'
+    sys.dont_write_bytecode = True
+    from pydantic_settings.sources.providers.dotenv import DotEnvSettingsSource
+    from pydantic_settings.sources.providers.env import EnvSettingsSource
+    import dotenv
+    import pytest
+
+    def no_environment(_self):
+        return {}
+
+    protected_data = os.path.normcase(str(ROOT / 'data'))
+    def prevent_production_reads(event, arguments):
+        if event not in {'open', 'sqlite3.connect'} or not arguments or not isinstance(arguments[0], (str, bytes, os.PathLike)):
+            return
+        path = Path(os.fsdecode(arguments[0]))
+        normalized = os.path.normcase(os.path.abspath(path))
+        if path.name == '.env' or path.name.startswith('.env.'):
+            raise RuntimeError('PRODUCTION_DOTENV_READ_FORBIDDEN')
+        if normalized == protected_data or normalized.startswith(protected_data + os.sep):
+            raise RuntimeError('PRODUCTION_DATA_ACCESS_FORBIDDEN')
+    sys.addaudithook(prevent_production_reads)
+
+    with tempfile.TemporaryDirectory(prefix='nusantara-p0-offline-') as temporary:
+        with (patch.object(Path, 'home', return_value=Path(temporary)),
+              patch.object(DotEnvSettingsSource, '_read_env_files', no_environment),
+              patch.object(EnvSettingsSource, '_load_env_vars', no_environment),
+              patch.object(dotenv, 'dotenv_values', return_value={})):
+            return pytest.main(['-p', 'no:cacheprovider', '-o', 'addopts=',
+                                '-q', '--tb=short', *TESTS])
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

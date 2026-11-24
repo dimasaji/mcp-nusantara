@@ -866,6 +866,7 @@ class HermesAgent:
             model_used=provider.model;latency_ms=int((time.perf_counter()-started)*1000)
 
         elif (previous.get('last_answer') and scoped_document_ids
+              and callable(getattr(_knowledge, 'reuse_prior_citation', None))
               and _contextual_scope_followup(request.user_input, turn)
               and (_CITATION_REQUEST.search(request.user_input)
                    or _SIMPLIFY_REQUEST.search(request.user_input))):

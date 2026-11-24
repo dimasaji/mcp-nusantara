@@ -48,6 +48,7 @@ def test_lifecycle_ownership_and_recovery(tmp_path):
     result = subprocess.run(
         [str(powershell), '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', str(tmp_path / 'tests/local-services-contract.ps1')],
         cwd=tmp_path, capture_output=True, text=True, timeout=45,
+        env={key: value for key, value in os.environ.items() if key.upper() != 'PSMODULEPATH'},
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert 'ALL LIFECYCLE CONTRACT TESTS PASS' in result.stdout

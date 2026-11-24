@@ -1,0 +1,56 @@
+"""Read-only Git provenance lookup. Emits hashes and symbol names, never source."""
+import ast
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+repo = Path(r'C:\Users\dmaza\mcp-starter')
+output = repo / 'docs/audit/pc-stabilization-20261123/PROTECTED_BASELINE_TRACE.json'
+fixture = json.loads((repo / 'tests/fixtures/v1-current-contract/source-contract.json').read_text())
+expected = fixture['current_sources']
+names = list(expected) + ['backend/' + name for name in expected]
+raw = subprocess.check_output(['git', '-C', str(repo), 'rev-list', '--objects', '--all', '--', *names], text=True)
+candidates = {}
+for line in raw.splitlines():
+    object_id, _, name = line.partition(' ')
+    if name in names:
+        candidates[object_id] = name
+result = subprocess.run(['git', '-C', str(repo), 'cat-file', '--batch'],
+                        input=''.join(key + '\n' for key in candidates).encode(), capture_output=True, check=True)
+data = result.stdout
+position = 0
+matches = {name: [] for name in expected}
+for object_id, name in candidates.items():
+    end = data.index(b'\n', position)
+    header = data[position:end].split()
+    size = int(header[2])
+    blob = data[end + 1:end + 1 + size]
+    position = end + 1 + size + 1
+    original = name.removeprefix('backend/')
+    normalized = blob.replace(b'\r\n', b'\n')
+    variants = {'GIT_BYTES': blob, 'LF': normalized, 'CRLF': normalized.replace(b'\n', b'\r\n')}
+    for encoding, content in variants.items():
+        if hashlib.sha256(content).hexdigest() == expected[original]:
+            current = (repo / 'backend' / original).read_bytes()
+            def symbols(value):
+                try:
+                    tree = ast.parse(value.decode('utf-8-sig'))
+                    return {node.name: ast.dump(node, include_attributes=False) for node in tree.body
+                            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))}
+                except (UnicodeError, SyntaxError):
+                    return {}
+            before, after = symbols(content), symbols(current)
+            matches[original].append({'git_object': object_id, 'historical_path': name, 'encoding_match': encoding,
+                'added_symbols': sorted(after.keys() - before.keys()),
+                'removed_symbols': sorted(before.keys() - after.keys()),
+                'changed_symbols': sorted(key for key in before.keys() & after.keys() if before[key] != after[key])})
+            break
+rows = [{'source': name, 'expected_sha256': wanted,
+         'current_sha256': hashlib.sha256((repo / 'backend' / name).read_bytes()).hexdigest(),
+         'historical_matches': matches[name]} for name, wanted in expected.items()]
+report = {'scope': 'All locally cached Git refs only; no fetch or VPS', 'candidate_blobs': len(candidates),
+          'rows': rows, 'baseline_pins_changed': False}
+output.write_text(json.dumps(report, indent=2), encoding='utf-8')
+print(json.dumps({'candidate_blobs': len(candidates), 'matched_sources': sum(bool(row['historical_matches']) for row in rows),
+                  'sources': len(rows), 'report': str(output)}))

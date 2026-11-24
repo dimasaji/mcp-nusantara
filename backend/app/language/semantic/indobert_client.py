@@ -26,6 +26,8 @@ class IndoBERTClient:
     ) -> None:
 
         project_root = Path(__file__).resolve().parents[3]
+        if project_root.name == 'backend':
+            project_root = project_root.parent
 
         if python_executable is None:
             python_executable = os.getenv(

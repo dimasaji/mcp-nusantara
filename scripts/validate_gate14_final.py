@@ -1,37 +1,189 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+﻿import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "graphify-out"
+
+FILES = {
+    "graph": OUT / "graph.json",
+    "impact_truth": OUT / "gate14_6_2_impact_truth.json",
+    "self_analysis": OUT / "gate14_5_self_analysis_runtime.json",
+    "consistency": OUT / "gate14_7_runtime_static_consistency.json",
+    "change_query": OUT / "gate14_8_change_query_last.json",
 }
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
-    }
+
+def load_json(path):
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+print("=" * 72)
+print("NUSANTARA GATE 14 FINAL CONTRACT")
+print("DEVELOPER CORE ENGINE")
+print("=" * 72)
+
+graph = load_json(FILES["graph"])
+impact = load_json(FILES["impact_truth"])
+self_analysis = load_json(FILES["self_analysis"])
+consistency = load_json(FILES["consistency"])
+change_query = load_json(FILES["change_query"])
+
+nodes = graph.get("nodes", [])
+links = graph.get("links", [])
+
+checks = {}
+
+# 1. Graph truth
+checks["graph_truth"] = (
+    FILES["graph"].exists()
+    and len(nodes) > 0
+    and len(links) > 0
+)
+
+# 2. Self-analysis
+checks["self_analysis"] = (
+    FILES["self_analysis"].exists()
+    and str(self_analysis.get("status", "")).upper() == "PASS"
+)
+
+# 3. Impact analysis
+checks["impact_analysis"] = (
+    FILES["impact_truth"].exists()
+    and str(impact.get("status", "")).upper() == "PASS"
+)
+
+# 4. Runtime/static consistency
+checks["runtime_static_consistency"] = (
+    FILES["consistency"].exists()
+    and str(consistency.get("status", "")).upper() == "PASS"
+)
+
+# 5. Deterministic change query
+query_source = change_query.get("source", {})
+
+checks["deterministic_change_query"] = (
+    FILES["change_query"].exists()
+    and str(change_query.get("status", "")).upper() == "PASS"
+    and query_source.get("deterministic") is True
+    and query_source.get("llm_used") is False
+)
+
+# 6. Traceability
+checks["traceability"] = (
+    bool(query_source.get("graph"))
+    and Path(query_source.get("graph", "")).resolve()
+    == FILES["graph"].resolve()
+)
+
+print(
+    "01 Graph Truth                  :",
+    "PASS" if checks["graph_truth"] else "FAIL"
+)
+
+print(
+    "02 Self Analysis                :",
+    "PASS" if checks["self_analysis"] else "FAIL"
+)
+
+print(
+    "03 Impact Analysis              :",
+    "PASS" if checks["impact_analysis"] else "FAIL"
+)
+
+print(
+    "04 Runtime <-> Static           :",
+    "PASS" if checks["runtime_static_consistency"] else "FAIL"
+)
+
+print(
+    "05 Deterministic Change Query   :",
+    "PASS" if checks["deterministic_change_query"] else "FAIL"
+)
+
+print(
+    "06 Evidence Traceability        :",
+    "PASS" if checks["traceability"] else "FAIL"
+)
+
+passed = sum(checks.values())
+total = len(checks)
+
+status = "PASS" if passed == total else "FAIL"
+
+contract = {
+    "gate": "14-FINAL",
+    "name": "Nusantara Developer Core Engine Contract",
+    "version": "14.0-final",
+    "status": status,
+
+    "capabilities": {
+        "self_analysis": checks["self_analysis"],
+        "impact_analysis": checks["impact_analysis"],
+        "deterministic_change_query":
+            checks["deterministic_change_query"],
+        "runtime_static_consistency":
+            checks["runtime_static_consistency"],
+        "graph_truth":
+            checks["graph_truth"],
+        "evidence_traceability":
+            checks["traceability"],
+    },
+
+    "validation": {
+        "passed": passed,
+        "total": total,
+        "checks": checks,
+    },
+
+    "graph": {
+        "nodes": len(nodes),
+        "links": len(links),
+    },
+
+    "last_change_query": {
+        "query": change_query.get("query"),
+        "target": change_query.get("target"),
+        "impact_count": (
+            change_query
+            .get("analysis", {})
+            .get("impact_count", 0)
+        ),
+        "deterministic":
+            query_source.get("deterministic"),
+        "llm_used":
+            query_source.get("llm_used"),
+    },
+
+    "contract_rules": [
+        "Developer Core uses runtime and static truth.",
+        "Self-analysis is based on actual system structure.",
+        "Impact analysis preserves SOURCE -> TARGET direction.",
+        "Impact analysis uses approved dependency relations.",
+        "Change queries are deterministic.",
+        "Change queries do not require LLM inference.",
+        "Results are traceable to graph.json.",
+        "Runtime and static representations remain consistent.",
+    ],
 }
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+output = OUT / "gate14_final_contract.json"
+
+output.write_text(
+    json.dumps(contract, indent=2, ensure_ascii=False),
+    encoding="utf-8"
+)
+
+print()
+print("-" * 72)
+print("VALIDATION CHECKS :", f"{passed} / {total}")
+print("GRAPH NODES       :", len(nodes))
+print("GRAPH LINKS       :", len(links))
+print("LAST QUERY        :", change_query.get("query"))
+print("IMPACT COUNT      :", contract["last_change_query"]["impact_count"])
+print("LLM USED          :", query_source.get("llm_used"))
+print()
+print("GATE 14 FINAL     :", status)
+print("OUTPUT            :", output)
+
+if status != "PASS":
+    raise SystemExit(1)

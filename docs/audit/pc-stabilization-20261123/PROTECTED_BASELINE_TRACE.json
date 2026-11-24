@@ -1,0 +1,121 @@
+{
+  "scope": "All locally cached Git refs only; no fetch or VPS",
+  "candidate_blobs": 41,
+  "rows": [
+    {
+      "source": "app/api/routes.py",
+      "expected_sha256": "fabec5bc263597f4b6b0d6dd2d17100d23d966a1066b535c2fe6e78a7afa68b7",
+      "current_sha256": "aa2a0038f435fc187266b4e037260f9f4b6790046af70c2045fade5ea20825fe",
+      "historical_matches": []
+    },
+    {
+      "source": "app/api/v2_routes.py",
+      "expected_sha256": "f5f83de5795a03c968c95aa1ae86fcfe7245d189a85aa081a52405f676fe406f",
+      "current_sha256": "73f357dcaabc6892fffe161efebf0fc63a659b08672abadbb240417b604c8f23",
+      "historical_matches": [
+        {
+          "git_object": "f3995bced9e5f1bcce39f0eef203a60d873a2cb8",
+          "historical_path": "app/api/v2_routes.py",
+          "encoding_match": "CRLF",
+          "added_symbols": [],
+          "removed_symbols": [],
+          "changed_symbols": [
+            "review_page"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "app/core/config.py",
+      "expected_sha256": "4b5d1ee6acb6d75c5b4806fa8d7f3e1b3ee5794c8936b811f9bc569f7f1290be",
+      "current_sha256": "eca6942ed82cfab808331fc81cb7116be90fdf07aedb48071319efafa474d591",
+      "historical_matches": [
+        {
+          "git_object": "262674146a52670cc10a7899e293d148178c6d4f",
+          "historical_path": "app/core/config.py",
+          "encoding_match": "CRLF",
+          "added_symbols": [],
+          "removed_symbols": [],
+          "changed_symbols": [
+            "Settings"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "app/core/runtime_identity.py",
+      "expected_sha256": "f60d05f67c6db97d021798665763023bed92d5540509ded19cb68fcea9bbdeb4",
+      "current_sha256": "6056717134827674a35cc4aee63bd4b20c205de8ef63f199bc2eceeb37adabfd",
+      "historical_matches": [
+        {
+          "git_object": "261106f2f13ebe1c25f3bc61aeb43d675385f5c2",
+          "historical_path": "app/core/runtime_identity.py",
+          "encoding_match": "CRLF",
+          "added_symbols": [],
+          "removed_symbols": [],
+          "changed_symbols": [
+            "source_build_id"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "app/core/control_plane_projection.py",
+      "expected_sha256": "d2e865ecd142f647d983eb1ed56851d32e6ccfb2c2d392397ead5a0a0a98a58f",
+      "current_sha256": "1927c1e964ed2a71efa78f3feb2ca398087858dad26fc31d8373a110bdd77743",
+      "historical_matches": [
+        {
+          "git_object": "847a357164ec73282543dc8fd67958548f7b2b01",
+          "historical_path": "app/core/control_plane_projection.py",
+          "encoding_match": "CRLF",
+          "added_symbols": [
+            "git_executable"
+          ],
+          "removed_symbols": [],
+          "changed_symbols": [
+            "project"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "app/developer_core/engine.py",
+      "expected_sha256": "5f6bdc41cf7cd6960dcac84d5aea24a630952d54b6f323aa254c0d286c38e885",
+      "current_sha256": "ab7bac5be010cb8a177622df60b8757f987d1ae58df198c6d71518e5e0c41e98",
+      "historical_matches": [
+        {
+          "git_object": "9a9420de94c00670382fd360e53f03e538bdbe18",
+          "historical_path": "backend/app/developer_core/engine.py",
+          "encoding_match": "CRLF",
+          "added_symbols": [],
+          "removed_symbols": [],
+          "changed_symbols": [
+            "DeveloperCoreEngine"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "app/trust/engine.py",
+      "expected_sha256": "3808ddb21c78f1fbf72581254c9097485f49c86c02dee4dbb54809e8b8aea735",
+      "current_sha256": "3808ddb21c78f1fbf72581254c9097485f49c86c02dee4dbb54809e8b8aea735",
+      "historical_matches": [
+        {
+          "git_object": "fef5ca05b0a44559901448ea734cb2b884145a03",
+          "historical_path": "backend/app/trust/engine.py",
+          "encoding_match": "CRLF",
+          "added_symbols": [],
+          "removed_symbols": [],
+          "changed_symbols": []
+        }
+      ]
+    },
+    {
+      "source": "app/policy/engine.py",
+      "expected_sha256": "88587046801d0315a038d85d441030149ff97bcd9a16a9e937a99e755a0d2ffc",
+      "current_sha256": "e3c3f8b193acdd7a452ed2c91e56efed62629a2b334faf9ff9ffa481f17350b3",
+      "historical_matches": []
+    }
+  ],
+  "baseline_pins_changed": false
+}

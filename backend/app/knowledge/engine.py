@@ -144,15 +144,11 @@ class KnowledgeEngine:
         def rank(item):
             return (float((item.metadata or {}).get('retrieval_rank_score', getattr(item, 'score', 0.0)) or 0.0),
                     float(getattr(item, 'score', 0.0) or 0.0))
+        # Retrieval top-k counts evidence chunks for both explicit and configured
+        # limits. Multiple relevant passages from one source remain available.
+        filtered.sort(key=rank, reverse=True)
         if top_k:
-            best = {}
-            for item in filtered:
-                did = getattr(item, 'document_id', None)
-                if did not in best or rank(item) > rank(best[did]):
-                    best[did] = item
-            filtered = sorted(best.values(), key=rank, reverse=True)[:top_k]
-        else:
-            filtered.sort(key=rank, reverse=True)
+            filtered = filtered[:top_k]
         return RetrievalEvidenceList(filtered, getattr(result, 'effective_profile', None))
 
     def search(self, query: str, top_k: int | None = None):

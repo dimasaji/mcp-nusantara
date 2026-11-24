@@ -1,0 +1,32 @@
+{
+  "/health": {
+    "status": 200,
+    "type": "application/json",
+    "body": {
+      "status": "ok",
+      "version": "0.1.0",
+      "build_id": "sha256:b340e05b9fa8b35aa75f02a756573bfb43ee57438784584e4f77ccecb588aa22"
+    }
+  },
+  "/": {
+    "status": 200,
+    "type": "text/html; charset=utf-8"
+  },
+  "/v1/health/ready": {
+    "status": 200,
+    "type": "application/json",
+    "body": {
+      "status": "ready",
+      "components": {
+        "knowledge_database": {
+          "status": "ok",
+          "documents": 1
+        },
+        "provider": {
+          "status": "ok",
+          "http_status": 200
+        }
+      }
+    }
+  }
+}

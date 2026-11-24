@@ -359,7 +359,7 @@ def test_gateway_does_not_silently_failover_or_rewrite_foreign_receipt():
         asyncio.run(ModelGateway(ModelRouter().register(Unavailable())).generate({'prompt': 'fixture'}))
 
 
-def test_public_request_response_models_and_routes_unchanged():
+def test_public_surface_preserves_baseline_except_explicit_v1_additions():
     root = Path(__file__).parents[1]
     baseline = root / '.dev/checkpoints/r2-20261007/source-before'
     for name in ['backend/app/api/routes.py', 'backend/app/api/v2_routes.py']:
@@ -367,27 +367,41 @@ def test_public_request_response_models_and_routes_unchanged():
             module = ast.parse(path.read_text(encoding='utf-8-sig'))
             current = path == root/name
             approved = ast.parse('''class Approved:
+    sop_version: str | None = Field(default=None, pattern="^[a-f0-9]{64}$")
+    sop_case: Literal['requirements', 'procedure', 'time_cost', 'followup', 'missing'] | None = None
     request_id: str | None = Field(default=None, pattern="^[a-f0-9]{32}$")
     retry_of: str | None = Field(default=None, pattern="^[a-f0-9]{32}$")
     document_ids: list[str] = Field(default_factory=list, max_length=20)
 ''').body[0]
             approved_fields = {field.target.id: field for field in approved.body}
+            # Optional bounded citation coordinates support the existing V1 SOP viewer.
+            approved_evidence = ast.parse('''class ApprovedEvidence:
+    pages: list[int] = Field(default_factory=list, max_length=100)
+    block_ids: list[str] = Field(default_factory=list, max_length=200)
+''').body[0]
+            evidence_fields = {field.target.id: field for field in approved_evidence.body}
             token_args = ast.parse('def allowed(x_admin_token: str | None = Header(default=None)): pass').body[0].args
             for node in module.body:
-                if current and isinstance(node, ast.ClassDef) and node.name == 'ChatRequest':
+                if current and name == 'backend/app/api/routes.py' and isinstance(node, ast.ClassDef) and node.name == 'ChatRequest':
                     retained = []
                     for field in node.body:
                         key = field.target.id if isinstance(field, ast.AnnAssign) else None
                         if key in approved_fields:
                             assert ast.dump(field) == ast.dump(approved_fields[key])
                             continue
-                        if key == 'session_id':
-                            expected = ast.parse("Field(default_factory=lambda: f'web-{uuid4()}', min_length=1, max_length=128)", mode='eval').body
+                        if key == 'session_id' and name == 'backend/app/api/routes.py':
+                            expected = ast.parse("Field(default_factory=lambda: f'web-{uuid4()}', min_length=1, max_length=128, pattern=CHAT_SESSION_PATTERN)", mode='eval').body
                             assert ast.dump(field.value) == ast.dump(expected)
                             field.value = ast.parse("Field(default='web', min_length=1, max_length=128)", mode='eval').body
                         retained.append(field)
                     assert approved_fields.keys() <= {field.target.id for field in node.body if isinstance(field, ast.AnnAssign)}
                     node.body = retained
+                if current and name == 'backend/app/api/routes.py' and isinstance(node, ast.ClassDef) and node.name == '_PublicChatEvidence':
+                    present = {field.target.id: field for field in node.body if isinstance(field, ast.AnnAssign)}
+                    assert evidence_fields.keys() <= present.keys()
+                    for key, approved_field in evidence_fields.items():
+                        assert ast.dump(present[key]) == ast.dump(approved_field)
+                    node.body = [field for field in node.body if not (isinstance(field, ast.AnnAssign) and field.target.id in evidence_fields)]
                 if current and name == 'backend/app/api/routes.py' and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in {
                     'chat', 'search_knowledge', 'list_knowledge_documents'}:
                     assert ast.dump(node.args.args[-1]) == ast.dump(token_args.args[0])
@@ -419,7 +433,8 @@ def test_public_request_response_models_and_routes_unchanged():
                               and isinstance(d.func.value, ast.Name) and d.func.value.id == 'router'
                               for d in node.decorator_list)]
             return classes, routes
-        assert surface(root/name) == surface(baseline/name)
+        historical_name = Path(name).relative_to("backend")
+        assert surface(root/name) == surface(baseline/historical_name)
 
 
 def _health_endpoint_client(source, provider):

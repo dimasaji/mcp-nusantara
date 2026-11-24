@@ -91,6 +91,30 @@ def test_backend_process_ingestion_retrieval_chat_and_history(tmp_path):
                 search = client.post("/v1/knowledge/search", json={"query": "Surat Permohonan"}, headers=token)
                 assert search.status_code == 200, search.text
                 assert search.json()["results"]
+                # Approve this synthetic fixture through the real operator HTTP interface.
+                # Production documents are never approved by this test.
+                identifier = first.json()["document_id"]
+                review_url = "/v1/knowledge/pipeline/reviews/" + identifier
+                detail_response = client.get(review_url, headers=token)
+                assert detail_response.status_code == 200, detail_response.text
+                detail = detail_response.json()
+                version = detail["version_id"]
+                decision = client.post(review_url + "/decision", headers=token,
+                    json={"version_id": version, "action": "content_ok"})
+                assert decision.status_code == 200, decision.text
+                absent = {"status": "not_stated", "note": "Tidak tercantum pada sumber fixture."}
+                metadata = {"logical_sop_id": identifier,
+                    "official_title": {"status": "present", "value": detail["title"]},
+                    **{key: dict(absent) for key in ("institution", "unit", "sop_number", "jurisdiction",
+                        "issued_on", "effective_on", "expires_on", "revision")},
+                    "validity": "not_confirmed", "validity_note": "Fixture pengujian terisolasi."}
+                confirmed = client.post(review_url + "/metadata", headers=token,
+                    json={"version_id": version, "metadata": metadata})
+                assert confirmed.status_code == 200, confirmed.text
+                approved = client.post(review_url + "/decision", headers=token,
+                    json={"version_id": version, "action": "approve"})
+                assert approved.status_code == 200, approved.text
+                assert approved.json()["status"] == "Aktif"
                 session = "web-" + str(uuid4())
                 answer = client.post("/v1/chat", json={"session_id": session,
                     "user_input": "Apa persyaratan layanan fixture?"}, headers=token)

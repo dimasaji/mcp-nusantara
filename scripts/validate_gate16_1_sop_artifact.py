@@ -1,37 +1,79 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
-}
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
+﻿import json
+from pathlib import Path
+from datetime import datetime
+
+ROOT = Path(__file__).resolve().parents[1]
+SOP = ROOT / "data" / "knowledge" / "sop"
+
+checks = {}
+
+original = list((SOP / "original").glob("*.pdf"))
+parsed = list((SOP / "parsed").rglob("*.json"))
+semantic_master = list((SOP / "semantic_master").rglob("*.json"))
+semantic_output = list((SOP / "semantic_output").rglob("*.json"))
+engine_output = list((SOP / "engine_output").rglob("*.json"))
+quality = list((SOP / "engine_output").rglob("quality_gate.json"))
+
+checks["original_pdf"] = len(original) > 0
+checks["parsed_artifacts"] = len(parsed) > 0
+checks["semantic_master"] = len(semantic_master) > 0
+checks["semantic_output"] = len(semantic_output) > 0
+checks["engine_output"] = len(engine_output) > 0
+checks["quality_gates"] = len(quality) > 0
+
+passed = sum(checks.values())
+total = len(checks)
+
+status = "PASS" if passed == total else "FAIL"
+
+result = {
+    "gate": "16.1",
+    "name": "SOP Artifact Truth",
+    "version": "16.1.0",
+    "timestamp": datetime.now().isoformat(),
+    "status": status,
+    "checks": {
+        "passed": passed,
+        "total": total,
+        "results": checks
+    },
+    "artifacts": {
+        "original_pdf": len(original),
+        "parsed_json": len(parsed),
+        "semantic_master_json": len(semantic_master),
+        "semantic_output_json": len(semantic_output),
+        "engine_output_json": len(engine_output),
+        "quality_gate_json": len(quality)
+    },
+    "contract": {
+        "pdf_source_must_exist": True,
+        "parsed_representation_must_exist": True,
+        "semantic_representation_must_exist": True,
+        "engine_output_must_exist": True,
+        "quality_gate_must_exist": True
     }
 }
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+OUT = ROOT / "graphify-out" / "gate16_1_sop_artifact_truth.json"
+OUT.write_text(
+    json.dumps(result, indent=2, ensure_ascii=False),
+    encoding="utf-8"
+)
+
+print("=" * 70)
+print("NUSANTARA GATE 16.1 - SOP ARTIFACT TRUTH")
+print("=" * 70)
+print()
+print(f"Original PDF       : {len(original)}")
+print(f"Parsed JSON        : {len(parsed)}")
+print(f"Semantic Master    : {len(semantic_master)}")
+print(f"Semantic Output    : {len(semantic_output)}")
+print(f"Engine Output      : {len(engine_output)}")
+print(f"Quality Gates      : {len(quality)}")
+print()
+print(f"Checks             : {passed} / {total}")
+print(f"GATE 16.1 STATUS   : {status}")
+print(f"Output             : {OUT}")
+
+if status != "PASS":
+    raise SystemExit(1)

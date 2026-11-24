@@ -11,7 +11,7 @@ from typing import Any, Callable, TypedDict
 
 from app.core.nusantara_config import NusantaraConfig
 from app.hermes.agent import (HermesAgent, V1CoreResult, _conversation_request,
-                              _conversation_answer_safe, _repeat_text)
+                              _conversation_answer_safe, _general_definition, _repeat_text)
 
 
 class V1WorkflowError(RuntimeError):
@@ -109,8 +109,13 @@ class V1LangGraphWorkflow:
             # grounded evidence. This wrapper remains opt-in and in-memory.
             user_input = state["request"].user_input
             response = core.payload.get("response", "")
+            # Hermes permits a plain definition after retrieval finds no source.
+            # Reuse that policy without claiming grounding or escaping document scope.
+            definition_fallback = (_general_definition(user_input)
+                and not getattr(state["request"], "document_ids", None)
+                and not getattr(state["request"], "sop_version", None))
             if (assessment.get("reason") == "not_evaluated" and not core.payload.get("evidence") and
-                    ((core.response_policy == "conversation" and _conversation_request(user_input)
+                    ((core.response_policy == "conversation" and (_conversation_request(user_input) or definition_fallback)
                       and _conversation_answer_safe(response)) or
                      (core.response_policy == "repeat" and _repeat_text(user_input) == response))):
                 return {}

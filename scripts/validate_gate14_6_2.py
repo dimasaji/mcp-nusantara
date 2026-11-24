@@ -1,37 +1,108 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
+﻿import json
+from pathlib import Path
+from collections import Counter
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "graphify-out"
+
+p = OUT / "gate14_6_directional_impact.json"
+d = json.loads(p.read_text(encoding="utf-8"))
+
+impact = d.get("impact", [])
+targets = d.get("targets", [])
+
+checks = []
+
+# 1. Semua impact harus directional
+checks.append(
+    d.get("impact_policy", {}).get("directional") is True
+)
+
+# 2. Semua relation harus termasuk allowed relation
+allowed = set(
+    d.get("impact_policy", {}).get("allowed_relations", [])
+)
+
+checks.append(
+    all(x.get("relation") in allowed for x in impact)
+)
+
+# 3. Tidak boleh ada self-impact
+checks.append(
+    all(
+        x.get("source_node") != x.get("affected_node")
+        for x in impact
+    )
+)
+
+# 4. Depth harus valid
+checks.append(
+    all(
+        isinstance(x.get("depth"), int)
+        and 1 <= x.get("depth") <= 3
+        for x in impact
+    )
+)
+
+# 5. Runtime targets harus ada
+checks.append(len(targets) > 0)
+
+# 6. Impact harus mempunyai sumber runtime
+checks.append(
+    all(
+        x.get("source_module")
+        and x.get("source_file")
+        for x in impact
+    )
+)
+
+relation_counts = Counter(
+    x.get("relation")
+    for x in impact
+)
+
+result = {
+    "gate": "14.6.2",
+    "engine": "Developer Core Impact Truth Validator",
+    "source": str(p),
+    "checks": {
+        "passed": sum(checks),
+        "total": len(checks)
+    },
+    "validation": {
+        "directional": checks[0],
+        "allowed_relations_only": checks[1],
+        "no_self_impact": checks[2],
+        "valid_depth": checks[3],
+        "runtime_targets_present": checks[4],
+        "runtime_source_present": checks[5]
+    },
+    "statistics": {
+        "targets": len(targets),
+        "impact_records": len(impact),
+        "relations": dict(relation_counts)
+    },
+    "status": "PASS" if all(checks) else "FAIL"
 }
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
-    }
-}
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+output = OUT / "gate14_6_2_impact_truth.json"
+
+output.write_text(
+    json.dumps(result, indent=2, ensure_ascii=False),
+    encoding="utf-8"
+)
+
+print("=" * 64)
+print("NUSANTARA GATE 14.6.2 - IMPACT TRUTH VALIDATION")
+print("=" * 64)
+print("Targets              :", len(targets))
+print("Impact records       :", len(impact))
+print("Validation checks    :", sum(checks), "/", len(checks))
+print("Directional          :", checks[0])
+print("Allowed relations    :", checks[1])
+print("No self-impact       :", checks[2])
+print("Valid depth          :", checks[3])
+print("Runtime targets      :", checks[4])
+print("Runtime source       :", checks[5])
+print("STATUS               :", result["status"])
+print("Output               :", output)

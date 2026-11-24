@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 import subprocess
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -119,19 +120,23 @@ def test_protected_root_denied(project):
     assert all(not item["exists"] for item in result.engines)
 
 
-def test_vps_data_root_allowed_without_allowing_relative_data(project):
-    root = project / "data"
-    root.mkdir()
-    for relative in DeveloperCoreEngine.ENGINE_PATHS.values():
-        directory = root / relative
-        directory.mkdir(parents=True)
-        (directory / "engine.py").write_text("# fixture\n", encoding="utf-8")
-    graph = root / "graphify-out/graph.json"
-    graph.parent.mkdir()
-    graph.write_text(json.dumps({"nodes": [], "links": []}), encoding="utf-8")
-    result = DeveloperCoreEngine(project_root=root).analyze()
-    assert result.graph_loaded
-    assert engine(root, graph_path="data/knowledge.db").analyze().graph_loaded is False
+def test_ordinary_directory_named_data_is_protected():
+    # Keep Linux fixtures outside the explicitly allowed /data/ mount.
+    with tempfile.TemporaryDirectory(dir="/tmp" if os.name == "posix" else None) as parent:
+        root = Path(parent) / "data"
+        root.mkdir()
+        for relative in DeveloperCoreEngine.ENGINE_PATHS.values():
+            directory = root / relative
+            directory.mkdir(parents=True)
+            (directory / "engine.py").write_text("# fixture\n", encoding="utf-8")
+        graph = root / "graphify-out/graph.json"
+        graph.parent.mkdir()
+        graph.write_text(json.dumps({"nodes": [], "links": []}), encoding="utf-8")
+        result = DeveloperCoreEngine(project_root=root).analyze()
+        # Only an absolute Linux /data/ workspace is exempt from the data-root guard.
+        assert result.graph_loaded is False
+        assert "graph_path_blocked" in {item["type"] for item in result.risks}
+        assert engine(root, graph_path="data/knowledge.db").analyze().graph_loaded is False
 
 
 def test_junction_or_symlink_denied_before_enumeration(project, monkeypatch):

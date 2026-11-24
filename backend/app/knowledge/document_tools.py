@@ -252,6 +252,10 @@ class DocumentTools:
             self._validate_request(path, detail, digest, configuration)
             env = {**os.environ, 'HF_HUB_OFFLINE': '1', 'OMP_NUM_THREADS': '2', 'CUDA_VISIBLE_DEVICES': '',
                    'NUSANTARA_DOCLING_CONFIG': json.dumps(configuration)}
+            # Uvicorn's --app-dir changes sys.path only in the parent process.
+            # The conversion interpreter must resolve the same source layout.
+            application_root = project / 'backend' if (project / 'backend/app').is_dir() else project
+            env['PYTHONPATH'] = str(application_root)
             payload = None
             if not force:
                 with self.engine._pipeline_db() as conn:
