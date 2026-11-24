@@ -23,6 +23,8 @@ from app.core.nusantara_config import load_nusantara_config
 from app.core.runtime_correlation import ResponseObservationMiddleware
 from app.security.local_operator import Windows, OperatorPolicy, LocalOperatorChannel, operator_exchange, VerifiedPeer, ActorError
 
+windows_only = pytest.mark.skipif(sys.platform != 'win32', reason='WINDOWS_NATIVE_IPC_REQUIRED')
+
 
 def native_proof():
     api = Windows()
@@ -57,9 +59,13 @@ def fixture(tmp_path, *, response=None, live_locked=False):
     app = FastAPI()
     app.state.runtime_profile = 'ATTESTATION'
     controller = install_runtime_verification(app, config)
-    own = Windows().current_actor()
+    if sys.platform == 'win32':
+        own = Windows().current_actor()
+        policy = OperatorPolicy(own.sid, own.logon_id, own.session)
+    else:
+        policy = OperatorPolicy('TEST-SID', 'TEST-LOGON', 1)
     owner = install_authorization_foundation(app, controller,
-        policy=OperatorPolicy(own.sid, own.logon_id, own.session),
+        policy=policy,
         isolated_transport=None if live_locked else httpx.MockTransport(respond))
     install_runtime_attestation(app, entrypoint='isolated:foundation')
     return app, owner, controller, calls
@@ -74,6 +80,7 @@ async def act(owner, review, operation, **changes):
     return await owner.handle_verified(native_proof(), command(review, operation, **changes))
 
 
+@windows_only
 @pytest.mark.asyncio
 async def test_native_decision_arm_execute_receipt_private_and_one_use(tmp_path):
     app, owner, controller, calls = fixture(tmp_path)
@@ -107,6 +114,7 @@ async def test_native_decision_arm_execute_receipt_private_and_one_use(tmp_path)
     assert len(calls) == 1
 
 
+@windows_only
 @pytest.mark.asyncio
 async def test_proof_cannot_be_client_actor_or_replayed(tmp_path):
     _, owner, controller, calls = fixture(tmp_path)
@@ -122,6 +130,7 @@ async def test_proof_cannot_be_client_actor_or_replayed(tmp_path):
     assert not calls and controller.authorization.state == 'DISARMED'
 
 
+@windows_only
 @pytest.mark.asyncio
 async def test_live_owner_cannot_issue_permit_even_with_os_proof(tmp_path):
     _, owner, controller, calls = fixture(tmp_path, live_locked=True)
@@ -133,6 +142,7 @@ async def test_live_owner_cannot_issue_permit_even_with_os_proof(tmp_path):
     assert owner.evidence()['live_actions'] == 'LOCKED'
 
 
+@windows_only
 @pytest.mark.parametrize('operation', ['REJECT', 'HOLD', 'ABORT'])
 @pytest.mark.asyncio
 async def test_negative_decisions_never_arm(tmp_path, operation):
@@ -145,6 +155,7 @@ async def test_negative_decisions_never_arm(tmp_path, operation):
     assert not calls and owner._permit is None
 
 
+@windows_only
 @pytest.mark.parametrize('phase', ['APPROVED', 'ARMED'])
 @pytest.mark.asyncio
 async def test_abort_revokes_before_dispatch(tmp_path, phase):
@@ -160,6 +171,7 @@ async def test_abort_revokes_before_dispatch(tmp_path, phase):
     assert not calls
 
 
+@windows_only
 @pytest.mark.parametrize('field', ['pid', 'process_start', 'runtime_instance', 'source_snapshot', 'scoped_loaded_code', 'configuration_digest'])
 @pytest.mark.asyncio
 async def test_stale_process_runtime_or_material_rejected(tmp_path, monkeypatch, field):
@@ -176,6 +188,7 @@ async def test_stale_process_runtime_or_material_rejected(tmp_path, monkeypatch,
     assert controller.authorization.state == 'TERMINAL' and not calls
 
 
+@windows_only
 @pytest.mark.asyncio
 async def test_real_scoped_code_drift_rejected(tmp_path, monkeypatch):
     _, owner, controller, calls = fixture(tmp_path)
@@ -186,6 +199,7 @@ async def test_real_scoped_code_drift_rejected(tmp_path, monkeypatch):
     assert not calls
 
 
+@windows_only
 @pytest.mark.asyncio
 async def test_expiry_actor_session_and_peer_freshness(tmp_path):
     _, owner, controller, calls = fixture(tmp_path)
@@ -210,6 +224,7 @@ async def test_expiry_actor_session_and_peer_freshness(tmp_path):
     assert not calls
 
 
+@windows_only
 @pytest.mark.parametrize('change', [{'scope': 'WRONG'}, {'evidence_version': 'FORGED'},
     {'reviewer': 'CLIENT'}, {'provider': 'alternate'}, {'reason': 'PRIVATE_PROMPT_SECRET'}, {'operation': 'VERIFIED'}])
 @pytest.mark.asyncio
@@ -221,6 +236,7 @@ async def test_forged_scope_evidence_status_sensitive_reason_rejected(tmp_path, 
     assert not calls and 'PRIVATE_PROMPT_SECRET' not in json.dumps(owner._audit.entries())
 
 
+@windows_only
 @pytest.mark.parametrize('failure', ['submit', 'decide', 'consume', 'post_grant_audit', 'tampered_queue', 'tampered_audit'])
 @pytest.mark.asyncio
 async def test_queue_audit_failures_poison_and_revoke(tmp_path, monkeypatch, failure):
@@ -271,6 +287,7 @@ def test_redaction_safe_fields_round_trip_capacity_and_no_alias(tmp_path):
         owner.intention()
 
 
+@windows_only
 @pytest.mark.asyncio
 async def test_concurrency_dispatch_uncertainty_terminal_no_retry(tmp_path):
     entered, release = asyncio.Event(), asyncio.Event()
@@ -294,6 +311,7 @@ async def test_concurrency_dispatch_uncertainty_terminal_no_retry(tmp_path):
     assert 'PRIVATE_PROVIDER_ERROR' not in json.dumps(owner.evidence())
 
 
+@windows_only
 @pytest.mark.parametrize('fail_send', [True, False])
 @pytest.mark.asyncio
 async def test_final_send_distinct_from_provider_observation(tmp_path, fail_send):
@@ -345,6 +363,7 @@ def test_normal_profile_cannot_install_foundation(tmp_path):
         install_authorization_foundation(app, controller)
 
 
+@windows_only
 def test_direct_native_ipc_to_foundation_decision_without_activation(tmp_path):
     _, owner, controller, calls = fixture(tmp_path, live_locked=True)
     review = owner.intention()
@@ -379,6 +398,7 @@ def test_expiry_is_rechecked_at_actual_dispatch(tmp_path, monkeypatch):
         permit.grant()
 
 
+@windows_only
 @pytest.mark.parametrize('stage', ['arm', 'execute'])
 @pytest.mark.asyncio
 async def test_false_queue_result_and_post_claim_failure_no_release(tmp_path, monkeypatch, stage):
@@ -402,6 +422,7 @@ async def test_false_queue_result_and_post_claim_failure_no_release(tmp_path, mo
     assert not calls and owner._permit is None and controller.authorization.state == 'TERMINAL'
 
 
+@windows_only
 @pytest.mark.asyncio
 async def test_abort_after_dispatch_records_uncertainty_without_second_dispatch(tmp_path):
     entered, release = asyncio.Event(), asyncio.Event()

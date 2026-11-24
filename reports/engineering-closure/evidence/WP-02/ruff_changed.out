@@ -1,0 +1,672 @@
+I001 [*] Import block is un-sorted or un-formatted
+  --> backend/app/approval/runtime_authorization.py:6:1
+   |
+ 4 |   No HTTP mutation, file sink, auto-policy, automatic grant or actor JSON authority.
+ 5 |   """
+ 6 | / from __future__ import annotations
+ 7 | |
+ 8 | | from dataclasses import asdict, dataclass, replace
+ 9 | | import asyncio
+10 | | from datetime import datetime, timezone, timedelta
+11 | | import hashlib
+12 | | import json
+13 | | import os
+14 | | import threading
+15 | | import time
+16 | | from uuid import uuid4
+17 | |
+18 | | import httpx
+19 | |
+20 | | from app.approval.audit_trail import AuditTrail
+21 | | from app.approval.queue import ApprovalQueue, payload_hash
+22 | | from app.core.runtime_identity import BUILD_ID, current_runtime_instance
+23 | | from app.observability.logging import redact
+24 | | from app.security.local_operator import (VerifiedPeer, OperatorPolicy, LocalOperatorChannel,
+25 | |     Windows, Actor, ActorError, process_start)
+   | |______________________________________________^
+26 |
+27 |   SCOPE = 'R2-A8:ATTESTATION:ONE_GENERATION'
+   |
+help: Organize imports
+   |
+7  |
+   - from dataclasses import asdict, dataclass, replace
+8  | import asyncio
+   - from datetime import datetime, timezone, timedelta
+9  | import hashlib
+--------------------------------------------------------------------------------
+13 | import time
+14 + from dataclasses import asdict, dataclass, replace
+15 + from datetime import datetime, timedelta, timezone
+16 | from uuid import uuid4
+17 |
+18 | import httpx
+   -
+19 | from app.approval.audit_trail import AuditTrail
+20 | from app.approval.queue import ApprovalQueue, payload_hash
+21 | from app.core.runtime_identity import BUILD_ID, current_runtime_instance
+22 | from app.observability.logging import redact
+   - from app.security.local_operator import (VerifiedPeer, OperatorPolicy, LocalOperatorChannel,
+   -     Windows, Actor, ActorError, process_start)
+23 + from app.security.local_operator import (
+24 +     Actor,
+25 +     ActorError,
+26 +     LocalOperatorChannel,
+27 +     OperatorPolicy,
+28 +     VerifiedPeer,
+29 +     Windows,
+30 +     process_start,
+31 + )
+32 |
+   |
+
+F401 [*] `app.security.local_operator.Actor` imported but unused
+  --> backend/app/approval/runtime_authorization.py:25:14
+   |
+23 | from app.observability.logging import redact
+24 | from app.security.local_operator import (VerifiedPeer, OperatorPolicy, LocalOperatorChannel,
+25 |     Windows, Actor, ActorError, process_start)
+   |              ^^^^^
+26 |
+27 | SCOPE = 'R2-A8:ATTESTATION:ONE_GENERATION'
+   |
+help: Remove unused import
+   |
+24 | from app.security.local_operator import (VerifiedPeer, OperatorPolicy, LocalOperatorChannel,
+   -     Windows, Actor, ActorError, process_start)
+25 +     Windows, process_start)
+26 |
+   |
+
+F401 [*] `app.security.local_operator.ActorError` imported but unused
+  --> backend/app/approval/runtime_authorization.py:25:21
+   |
+23 | from app.observability.logging import redact
+24 | from app.security.local_operator import (VerifiedPeer, OperatorPolicy, LocalOperatorChannel,
+25 |     Windows, Actor, ActorError, process_start)
+   |                     ^^^^^^^^^^
+26 |
+27 | SCOPE = 'R2-A8:ATTESTATION:ONE_GENERATION'
+   |
+help: Remove unused import
+   |
+24 | from app.security.local_operator import (VerifiedPeer, OperatorPolicy, LocalOperatorChannel,
+   -     Windows, Actor, ActorError, process_start)
+25 +     Windows, process_start)
+26 |
+   |
+
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/approval/runtime_authorization.py:139:44
+    |
+137 |                 'projection_contract': 'ATTESTATION_FOUNDATION_V1',
+138 |                 'source': 'ATTESTATION authorization foundation', 'scope': SCOPE,
+139 |                 'created_at': datetime.now(timezone.utc).isoformat(), 'status': 'NOT_VERIFIED',
+    |                                            ^^^^^^^^^^^^
+140 |                 'evidence_version': hashlib.sha256(encoded.encode()).hexdigest(),
+141 |                 'binding': json.loads(encoded), 'live_actions': 'LOCKED',
+    |
+help: Convert to `datetime.UTC` alias
+    |
+9   | import asyncio
+    - from datetime import datetime, timezone, timedelta
+10  + from datetime import datetime, timezone, timedelta, UTC
+11  | import hashlib
+--------------------------------------------------------------------------------
+138 |                 'source': 'ATTESTATION authorization foundation', 'scope': SCOPE,
+    -                 'created_at': datetime.now(timezone.utc).isoformat(), 'status': 'NOT_VERIFIED',
+139 +                 'created_at': datetime.now(UTC).isoformat(), 'status': 'NOT_VERIFIED',
+140 |                 'evidence_version': hashlib.sha256(encoded.encode()).hexdigest(),
+    |
+
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/approval/runtime_authorization.py:162:41
+    |
+160 |                 review = self._reviews[existing]
+161 |                 if (review.state != 'PENDING' or time.monotonic() >= review.deadline
+162 |                         or datetime.now(timezone.utc) >= datetime.fromisoformat(review.binding.expires_at)):
+    |                                         ^^^^^^^^^^^^
+163 |                     raise AuthorizationError('BROWSER_CONTEXT_CLOSED')
+164 |                 return {'review_id': review.review_id, 'scope': review.binding.scope,
+    |
+help: Convert to `datetime.UTC` alias
+    |
+9   | import asyncio
+    - from datetime import datetime, timezone, timedelta
+10  + from datetime import datetime, timezone, timedelta, UTC
+11  | import hashlib
+--------------------------------------------------------------------------------
+161 |                 if (review.state != 'PENDING' or time.monotonic() >= review.deadline
+    -                         or datetime.now(timezone.utc) >= datetime.fromisoformat(review.binding.expires_at)):
+162 +                         or datetime.now(UTC) >= datetime.fromisoformat(review.binding.expires_at)):
+163 |                     raise AuthorizationError('BROWSER_CONTEXT_CLOSED')
+    |
+
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/approval/runtime_authorization.py:184:59
+    |
+182 |             binding = Binding(scope, hashlib.sha256(material.encode()).hexdigest(), material,
+183 |                 data['pid'], data['process_start'], data['runtime_instance'], data['source_snapshot'],
+184 |                 data['scoped_loaded_code'], (datetime.now(timezone.utc) + timedelta(seconds=ttl)).isoformat())
+    |                                                           ^^^^^^^^^^^^
+185 |             try:
+186 |                 request = self._queue.submit('R2-A9-AUTH', asdict(binding), risk='LEVEL_C',
+    |
+help: Convert to `datetime.UTC` alias
+    |
+9   | import asyncio
+    - from datetime import datetime, timezone, timedelta
+10  + from datetime import datetime, timezone, timedelta, UTC
+11  | import hashlib
+--------------------------------------------------------------------------------
+183 |                 data['pid'], data['process_start'], data['runtime_instance'], data['source_snapshot'],
+    -                 data['scoped_loaded_code'], (datetime.now(timezone.utc) + timedelta(seconds=ttl)).isoformat())
+184 +                 data['scoped_loaded_code'], (datetime.now(UTC) + timedelta(seconds=ttl)).isoformat())
+185 |             try:
+    |
+
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/approval/runtime_authorization.py:229:33
+    |
+227 |             raise AuthorizationError('EVIDENCE_REFERENCE_REJECTED')
+228 |         if (time.monotonic() >= review.deadline
+229 |                 or datetime.now(timezone.utc) >= datetime.fromisoformat(review.binding.expires_at)
+    |                                 ^^^^^^^^^^^^
+230 |                 or canonical(self._material()) != review.binding.material):
+231 |             raise AuthorizationError('STALE_OR_EXPIRED_BINDING')
+    |
+help: Convert to `datetime.UTC` alias
+    |
+9   | import asyncio
+    - from datetime import datetime, timezone, timedelta
+10  + from datetime import datetime, timezone, timedelta, UTC
+11  | import hashlib
+--------------------------------------------------------------------------------
+228 |         if (time.monotonic() >= review.deadline
+    -                 or datetime.now(timezone.utc) >= datetime.fromisoformat(review.binding.expires_at)
+229 +                 or datetime.now(UTC) >= datetime.fromisoformat(review.binding.expires_at)
+230 |                 or canonical(self._material()) != review.binding.material):
+    |
+
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/approval/runtime_authorization.py:281:91
+    |
+279 |                                  binding=canonical(asdict(review.binding)))
+280 |                     remaining = min(review.deadline - time.monotonic(),
+281 |                         (datetime.fromisoformat(review.binding.expires_at) - datetime.now(timezone.utc)).total_seconds())
+    |                                                                                           ^^^^^^^^^^^^
+282 |                     self._permit = self._controller.authorization.grant(ttl_s=min(120, remaining))
+283 |                     self._armed_review = review.review_id
+    |
+help: Convert to `datetime.UTC` alias
+    |
+9   | import asyncio
+    - from datetime import datetime, timezone, timedelta
+10  + from datetime import datetime, timezone, timedelta, UTC
+11  | import hashlib
+--------------------------------------------------------------------------------
+280 |                     remaining = min(review.deadline - time.monotonic(),
+    -                         (datetime.fromisoformat(review.binding.expires_at) - datetime.now(timezone.utc)).total_seconds())
+281 +                         (datetime.fromisoformat(review.binding.expires_at) - datetime.now(UTC)).total_seconds())
+282 |                     self._permit = self._controller.authorization.grant(ttl_s=min(120, remaining))
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> backend/app/approval/runtime_authorization.py:335:9
+    |
+334 |     def code_functions(self):
+335 |         from app.api.control_plane import snapshot, intention
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+336 |         return (canonical, safe_string, audit_projection, RuntimeAuthorization.__init__,
+337 |             RuntimeAuthorization._record, RuntimeAuthorization._material, RuntimeAuthorization.evidence,
+    |
+help: Organize imports
+    |
+334 |     def code_functions(self):
+    -         from app.api.control_plane import snapshot, intention
+335 +         from app.api.control_plane import intention, snapshot
+336 |         return (canonical, safe_string, audit_projection, RuntimeAuthorization.__init__,
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> backend/app/security/local_operator.py:5:1
+   |
+ 3 |   No HTTP credentials, client reviewer field, application imports or storage access.
+ 4 |   """
+ 5 | / from __future__ import annotations
+ 6 | |
+ 7 | | import ctypes as c
+ 8 | | from ctypes import wintypes as w
+ 9 | | from dataclasses import dataclass
+10 | | import json
+11 | | import os
+12 | | from pathlib import Path
+13 | | import re
+14 | | import sys
+15 | | import secrets
+16 | | import threading
+17 | | import time
+18 | | from contextlib import contextmanager
+   | |_____________________________________^
+help: Organize imports
+   |
+7  | import ctypes as c
+   - from ctypes import wintypes as w
+   - from dataclasses import dataclass
+8  | import json
+9  | import os
+   - from pathlib import Path
+10 | import re
+11 + import secrets
+12 | import sys
+   - import secrets
+13 | import threading
+14 | import time
+15 | from contextlib import contextmanager
+16 + from ctypes import wintypes as w
+17 + from dataclasses import dataclass
+18 + from pathlib import Path
+19 |
+   |
+
+RUF023 [*] `VerifiedPeer.__slots__` is not sorted
+  --> backend/app/security/local_operator.py:30:17
+   |
+28 | class VerifiedPeer:
+29 |     """Internal capability minted only after native IPC proof; never serialized."""
+30 |     __slots__ = ('_actor', '_server_pid', '_server_start', '_deadline', '_identity', '_seal')
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+31 |
+32 |     def __init__(self, actor, seal):
+   |
+help: Apply a natural sort to `VerifiedPeer.__slots__`
+   |
+29 |     """Internal capability minted only after native IPC proof; never serialized."""
+   -     __slots__ = ('_actor', '_server_pid', '_server_start', '_deadline', '_identity', '_seal')
+30 +     __slots__ = ('_actor', '_deadline', '_identity', '_seal', '_server_pid', '_server_start')
+31 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_control_plane_attestation_binding.py:2:1
+   |
+ 1 |   """PENDING-only integration: in-process ASGI, no socket/provider/IPC activation."""
+ 2 | / import asyncio
+ 3 | | from concurrent.futures import ThreadPoolExecutor
+ 4 | | from dataclasses import replace
+ 5 | | import json
+ 6 | | import os
+ 7 | | from pathlib import Path
+ 8 | | import subprocess
+ 9 | | import sys
+10 | |
+11 | | from fastapi.testclient import TestClient
+12 | | import pytest
+13 | |
+14 | | from app.api.control_plane import router
+15 | | from app.approval.runtime_authorization import AuthorizationError, SCOPE
+16 | | from test_runtime_authorization import fixture, command
+   | |_______________________________________________________^
+17 |
+18 |   windows_only = pytest.mark.skipif(sys.platform != 'win32', reason='WINDOWS_NATIVE_IPC_REQUIRED')
+   |
+help: Organize imports
+   |
+2  | import asyncio
+   - from concurrent.futures import ThreadPoolExecutor
+   - from dataclasses import replace
+3  | import json
+4  | import os
+   - from pathlib import Path
+5  | import subprocess
+6  | import sys
+7  + from concurrent.futures import ThreadPoolExecutor
+8  + from dataclasses import replace
+9  + from pathlib import Path
+10 |
+   - from fastapi.testclient import TestClient
+11 | import pytest
+   -
+12 | from app.api.control_plane import router
+   - from app.approval.runtime_authorization import AuthorizationError, SCOPE
+   - from test_runtime_authorization import fixture, command
+13 + from app.approval.runtime_authorization import SCOPE, AuthorizationError
+14 + from fastapi.testclient import TestClient
+15 + from test_runtime_authorization import command, fixture
+16 |
+   |
+
+RUF059 Unpacked variable `controller` is never used
+   --> tests/test_control_plane_attestation_binding.py:124:15
+    |
+123 | def test_atomic_material_change_and_storage_failure(isolated, monkeypatch):
+124 |     _, owner, controller, calls = isolated
+    |               ^^^^^^^^^^
+125 |     data = body(owner)
+126 |     original = owner._material
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+123 | def test_atomic_material_change_and_storage_failure(isolated, monkeypatch):
+    -     _, owner, controller, calls = isolated
+124 +     _, owner, _controller, calls = isolated
+125 |     data = body(owner)
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_runtime_authorization.py:2:1
+   |
+ 1 |   """Native IPC proofs + existing provider/queue/audit, isolated mock-only bridge."""
+ 2 | / import asyncio
+ 3 | | import ctypes
+ 4 | | from dataclasses import asdict, FrozenInstanceError, replace
+ 5 | | import hashlib
+ 6 | | import json
+ 7 | | import os
+ 8 | | from pathlib import Path
+ 9 | | import subprocess
+10 | | import sys
+11 | | import threading
+12 | | from uuid import uuid4
+13 | |
+14 | | import httpx
+15 | | from fastapi import FastAPI
+16 | | from fastapi.testclient import TestClient
+17 | | import pytest
+18 | |
+19 | | from app.approval.runtime_authorization import RuntimeAuthorization, AuthorizationError, SCOPE, install_authorization_foundation
+20 | | from app.api.runtime_verification import install_runtime_verification, VERIFICATION_PATH
+21 | | from app.core.runtime_attestation import install_runtime_attestation
+22 | | from app.core.nusantara_config import load_nusantara_config
+23 | | from app.core.runtime_correlation import ResponseObservationMiddleware
+24 | | from app.security.local_operator import Windows, OperatorPolicy, LocalOperatorChannel, operator_exchange, VerifiedPeer, ActorError
+   | |__________________________________________________________________________________________________________________________________^
+25 |
+26 |   windows_only = pytest.mark.skipif(sys.platform != 'win32', reason='WINDOWS_NATIVE_IPC_REQUIRED')
+   |
+help: Organize imports
+   |
+3  | import ctypes
+   - from dataclasses import asdict, FrozenInstanceError, replace
+4  | import hashlib
+5  | import json
+6  | import os
+   - from pathlib import Path
+7  | import subprocess
+8  | import sys
+9  | import threading
+10 + from dataclasses import FrozenInstanceError, asdict, replace
+11 + from pathlib import Path
+12 | from uuid import uuid4
+13 |
+14 | import httpx
+   - from fastapi import FastAPI
+   - from fastapi.testclient import TestClient
+15 | import pytest
+   -
+   - from app.approval.runtime_authorization import RuntimeAuthorization, AuthorizationError, SCOPE, install_authorization_foundation
+   - from app.api.runtime_verification import install_runtime_verification, VERIFICATION_PATH
+   - from app.core.runtime_attestation import install_runtime_attestation
+16 + from app.api.runtime_verification import VERIFICATION_PATH, install_runtime_verification
+17 + from app.approval.runtime_authorization import (
+18 +     SCOPE,
+19 +     AuthorizationError,
+20 +     RuntimeAuthorization,
+21 +     install_authorization_foundation,
+22 + )
+23 | from app.core.nusantara_config import load_nusantara_config
+24 + from app.core.runtime_attestation import install_runtime_attestation
+25 | from app.core.runtime_correlation import ResponseObservationMiddleware
+   - from app.security.local_operator import Windows, OperatorPolicy, LocalOperatorChannel, operator_exchange, VerifiedPeer, ActorError
+26 + from app.security.local_operator import (
+27 +     ActorError,
+28 +     LocalOperatorChannel,
+29 +     OperatorPolicy,
+30 +     VerifiedPeer,
+31 +     Windows,
+32 +     operator_exchange,
+33 + )
+34 + from fastapi import FastAPI
+35 + from fastapi.testclient import TestClient
+36 |
+   |
+
+F401 [*] `ctypes` imported but unused
+ --> tests/test_runtime_authorization.py:3:8
+  |
+1 | """Native IPC proofs + existing provider/queue/audit, isolated mock-only bridge."""
+2 | import asyncio
+3 | import ctypes
+  |        ^^^^^^
+4 | from dataclasses import asdict, FrozenInstanceError, replace
+5 | import hashlib
+  |
+help: Remove unused import: `ctypes`
+  |
+2 | import asyncio
+  - import ctypes
+3 | from dataclasses import asdict, FrozenInstanceError, replace
+  |
+
+F401 [*] `dataclasses.asdict` imported but unused
+ --> tests/test_runtime_authorization.py:4:25
+  |
+2 | import asyncio
+3 | import ctypes
+4 | from dataclasses import asdict, FrozenInstanceError, replace
+  |                         ^^^^^^
+5 | import hashlib
+6 | import json
+  |
+help: Remove unused import: `dataclasses.asdict`
+  |
+3 | import ctypes
+  - from dataclasses import asdict, FrozenInstanceError, replace
+4 + from dataclasses import FrozenInstanceError, replace
+5 | import hashlib
+  |
+
+F401 [*] `hashlib` imported but unused
+ --> tests/test_runtime_authorization.py:5:8
+  |
+3 | import ctypes
+4 | from dataclasses import asdict, FrozenInstanceError, replace
+5 | import hashlib
+  |        ^^^^^^^
+6 | import json
+7 | import os
+  |
+help: Remove unused import: `hashlib`
+  |
+4 | from dataclasses import asdict, FrozenInstanceError, replace
+  - import hashlib
+5 | import json
+  |
+
+F401 [*] `pathlib.Path` imported but unused
+  --> tests/test_runtime_authorization.py:8:21
+   |
+ 6 | import json
+ 7 | import os
+ 8 | from pathlib import Path
+   |                     ^^^^
+ 9 | import subprocess
+10 | import sys
+   |
+help: Remove unused import: `pathlib.Path`
+  |
+7 | import os
+  - from pathlib import Path
+8 | import subprocess
+  |
+
+F401 [*] `subprocess` imported but unused
+  --> tests/test_runtime_authorization.py:9:8
+   |
+ 7 | import os
+ 8 | from pathlib import Path
+ 9 | import subprocess
+   |        ^^^^^^^^^^
+10 | import sys
+11 | import threading
+   |
+help: Remove unused import: `subprocess`
+  |
+8 | from pathlib import Path
+  - import subprocess
+9 | import sys
+  |
+
+RUF059 Unpacked variable `app` is never used
+  --> tests/test_runtime_authorization.py:86:5
+   |
+84 | @pytest.mark.asyncio
+85 | async def test_native_decision_arm_execute_receipt_private_and_one_use(tmp_path):
+86 |     app, owner, controller, calls = fixture(tmp_path)
+   |     ^^^
+87 |     review = owner.intention()
+88 |     assert review['state'] == 'PENDING' and controller.authorization.state == 'DISARMED'
+   |
+help: Prefix it with an underscore or any other dummy variable pattern
+   |
+85 | async def test_native_decision_arm_execute_receipt_private_and_one_use(tmp_path):
+   -     app, owner, controller, calls = fixture(tmp_path)
+86 +     _app, owner, controller, calls = fixture(tmp_path)
+87 |     review = owner.intention()
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+RUF059 Unpacked variable `controller` is never used
+   --> tests/test_runtime_authorization.py:149:15
+    |
+147 | @pytest.mark.asyncio
+148 | async def test_negative_decisions_never_arm(tmp_path, operation):
+149 |     _, owner, controller, calls = fixture(tmp_path)
+    |               ^^^^^^^^^^
+150 |     review = owner.intention()
+151 |     result = await act(owner, review, operation)
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+148 | async def test_negative_decisions_never_arm(tmp_path, operation):
+    -     _, owner, controller, calls = fixture(tmp_path)
+149 +     _, owner, _controller, calls = fixture(tmp_path)
+150 |     review = owner.intention()
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+RUF059 Unpacked variable `controller` is never used
+   --> tests/test_runtime_authorization.py:194:15
+    |
+192 | @pytest.mark.asyncio
+193 | async def test_real_scoped_code_drift_rejected(tmp_path, monkeypatch):
+194 |     _, owner, controller, calls = fixture(tmp_path)
+    |               ^^^^^^^^^^
+195 |     review = owner.intention()
+196 |     monkeypatch.setattr(RuntimeAuthorization, '_actor_reference', staticmethod(lambda actor: 'changed'))
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+193 | async def test_real_scoped_code_drift_rejected(tmp_path, monkeypatch):
+    -     _, owner, controller, calls = fixture(tmp_path)
+194 +     _, owner, _controller, calls = fixture(tmp_path)
+195 |     review = owner.intention()
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+RUF059 Unpacked variable `controller` is never used
+   --> tests/test_runtime_authorization.py:212:15
+    |
+210 |         await act(owner, review, 'APPROVE')
+211 |     assert not calls
+212 |     _, owner, controller, calls = fixture(tmp_path)
+    |               ^^^^^^^^^^
+213 |     review = owner.intention()
+214 |     owner._policy = replace(owner._policy, session=999)
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+211 |     assert not calls
+    -     _, owner, controller, calls = fixture(tmp_path)
+212 +     _, owner, _controller, calls = fixture(tmp_path)
+213 |     review = owner.intention()
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+RUF059 Unpacked variable `controller` is never used
+   --> tests/test_runtime_authorization.py:232:15
+    |
+230 | @pytest.mark.asyncio
+231 | async def test_forged_scope_evidence_status_sensitive_reason_rejected(tmp_path, change):
+232 |     _, owner, controller, calls = fixture(tmp_path)
+    |               ^^^^^^^^^^
+233 |     review = owner.intention()
+234 |     with pytest.raises(AuthorizationError):
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+231 | async def test_forged_scope_evidence_status_sensitive_reason_rejected(tmp_path, change):
+    -     _, owner, controller, calls = fixture(tmp_path)
+232 +     _, owner, _controller, calls = fixture(tmp_path)
+233 |     review = owner.intention()
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+RUF059 Unpacked variable `owner` is never used
+   --> tests/test_runtime_authorization.py:344:10
+    |
+342 | def test_atttestation_projection_no_legacy_digest_and_normal_preserved(tmp_path, monkeypatch):
+343 |     from app.api import control_plane
+344 |     app, owner, controller, calls = fixture(tmp_path)
+    |          ^^^^^
+345 |     app.include_router(control_plane.router)
+346 |     def forbidden():
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+343 |     from app.api import control_plane
+    -     app, owner, controller, calls = fixture(tmp_path)
+344 +     app, _owner, controller, calls = fixture(tmp_path)
+345 |     app.include_router(control_plane.router)
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+RUF059 Unpacked variable `owner` is never used
+   --> tests/test_runtime_authorization.py:360:10
+    |
+359 | def test_normal_profile_cannot_install_foundation(tmp_path):
+360 |     app, owner, controller, calls = fixture(tmp_path)
+    |          ^^^^^
+361 |     app.state.runtime_profile = 'NORMAL'
+362 |     with pytest.raises(AuthorizationError):
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+359 | def test_normal_profile_cannot_install_foundation(tmp_path):
+    -     app, owner, controller, calls = fixture(tmp_path)
+360 +     app, _owner, controller, calls = fixture(tmp_path)
+361 |     app.state.runtime_profile = 'NORMAL'
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+RUF059 Unpacked variable `calls` is never used
+   --> tests/test_runtime_authorization.py:360:29
+    |
+359 | def test_normal_profile_cannot_install_foundation(tmp_path):
+360 |     app, owner, controller, calls = fixture(tmp_path)
+    |                             ^^^^^
+361 |     app.state.runtime_profile = 'NORMAL'
+362 |     with pytest.raises(AuthorizationError):
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+359 | def test_normal_profile_cannot_install_foundation(tmp_path):
+    -     app, owner, controller, calls = fixture(tmp_path)
+360 +     app, owner, controller, _calls = fixture(tmp_path)
+361 |     app.state.runtime_profile = 'NORMAL'
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+Found 27 errors.
+[*] 18 fixable with `--fix` (9 unsafe fixes available with `--fix --unsafe-fixes`).

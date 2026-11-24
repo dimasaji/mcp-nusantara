@@ -1,0 +1,32 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0
+rootdir: /data/workspace/nus-v1-engineering-closure-20261124/worktrees/closure
+configfile: pyproject.toml
+plugins: anyio-4.16.0, cov-7.1.0, asyncio-1.5.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 86 items
+
+tests/test_runtime_authorization.py ssssssssssssssssssssssssssss.sss..s. [ 41%]
+sss                                                                      [ 45%]
+tests/test_control_plane_attestation_binding.py ........................ [ 73%]
+....ss.                                                                  [ 81%]
+tests/test_runtime_attestation.py ...............F                       [100%]
+
+=================================== FAILURES ===================================
+__ test_main_change_only_installs_attestation_and_preserves_existing_handlers __
+tests/test_runtime_attestation.py:185: in test_main_change_only_installs_attestation_and_preserves_existing_handlers
+    before = ast.parse((root/'docs/reports/r2-a7-runtime-attestation-20261008/main.py.before').read_text(encoding='utf-8-sig'))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/pathlib/_local.py:548: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/pathlib/_local.py:539: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/data/workspace/nus-v1-engineering-closure-20261124/worktrees/closure/docs/reports/r2-a7-runtime-attestation-20261008/main.py.before'
+=========================== short test summary info ============================
+FAILED tests/test_runtime_attestation.py::test_main_change_only_installs_attestation_and_preserves_existing_handlers
+=================== 1 failed, 48 passed, 37 skipped in 1.60s ===================

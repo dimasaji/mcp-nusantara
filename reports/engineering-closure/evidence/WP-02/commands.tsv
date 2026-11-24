@@ -1,0 +1,13 @@
+2026-11-24T00:44:56Z	diff_check	0	git diff --check
+2026-11-24T00:44:56Z	compileall	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m compileall -q backend/app/security/local_operator.py backend/app/approval/runtime_authorization.py
+2026-11-24T00:44:56Z	auth_admin	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q -p no:cacheprovider tests/test_admin_token_source.py
+2026-11-24T00:44:57Z	auth_runtime	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q -p no:cacheprovider tests/test_runtime_authorization.py::test_expiry_is_rechecked_at_actual_dispatch tests/test_runtime_attestation.py::test_attestation_is_stable_and_uses_current_process_os_identity tests/test_runtime_attestation.py::test_nonlocal_or_nonruntime_access_is_denied tests/test_runtime_attestation.py::test_new_processes_have_distinct_instances_and_actual_main_integration tests/test_runtime_portability.py
+2026-11-24T00:44:58Z	control_plane_readonly	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q -p no:cacheprovider tests/test_control_plane_readonly.py -k not\ real_projection
+2026-11-24T00:44:58Z	operator_control	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q -p no:cacheprovider tests/test_v1_operator_control.py
+2026-11-24T00:44:59Z	authorization_full	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q -p no:cacheprovider tests/test_runtime_authorization.py tests/test_control_plane_attestation_binding.py tests/test_runtime_attestation.py
+2026-11-24T00:45:20Z	control_plane_readonly_pythonpath	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q -p no:cacheprovider tests/test_control_plane_readonly.py -k not\ real_projection
+2026-11-24T00:45:20Z	frontend_ci	0	npm --prefix frontend ci --no-audit --no-fund
+2026-11-24T00:45:22Z	frontend_build	0	npm --prefix frontend run build
+2026-11-24T00:45:28Z	backend_startup_check	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:45:39Z	ruff_changed	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/ruff check backend/app/security/local_operator.py backend/app/approval/runtime_authorization.py tests/test_runtime_authorization.py tests/test_control_plane_attestation_binding.py
+2026-11-24T00:45:39Z	mypy_changed	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m mypy backend/app/security/local_operator.py backend/app/approval/runtime_authorization.py
