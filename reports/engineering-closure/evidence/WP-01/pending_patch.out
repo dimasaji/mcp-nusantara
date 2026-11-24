@@ -1,0 +1,26 @@
+diff --git a/tests/test_control_plane_attestation_binding.py b/tests/test_control_plane_attestation_binding.py
+index 310299d5..552eb933 100644
+--- a/tests/test_control_plane_attestation_binding.py
++++ b/tests/test_control_plane_attestation_binding.py
+@@ -220,7 +220,7 @@ assert owner._permit is None and owner.evidence()['live_actions'] == 'LOCKED'
+ print(json.dumps({'isolated_in_process':True,'live_http':False,'dispatch_count':0,'state':'PENDING','live_actions':'LOCKED',
+     'snapshot':state,'intention':response.json()}))
+ '''
+-    env = {**os.environ,'PYTHONPATH':str(root),'PYTHONDONTWRITEBYTECODE':'1',
++    env = {**os.environ,'PYTHONPATH':str(root / 'backend'),'PYTHONDONTWRITEBYTECODE':'1',
+         'NUSANTARA_RUNTIME_PROFILE':'ATTESTATION','NUSANTARA_CONTROL_PLANE_READ_ONLY':'0','PORT':'8000'}
+     env.pop('NUSANTARA_RUNTIME_PORT', None)
+     result = json.loads(subprocess.check_output([sys.executable,'-B','-c',script],cwd=tmp_path,env=env,text=True))
+diff --git a/tests/test_runtime_attestation.py b/tests/test_runtime_attestation.py
+index 6d7709f9..e7e1cf79 100644
+--- a/tests/test_runtime_attestation.py
++++ b/tests/test_runtime_attestation.py
+@@ -163,7 +163,7 @@ assert 'app.api.routes' not in sys.modules and 'app.api.v2_routes' not in sys.mo
+ print(json.dumps(first.json()))
+ '''
+     environment = {**os.environ, 'NUSANTARA_CONTROL_PLANE_READ_ONLY': '1',
+-                   'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONPATH': str(root)}
++                   'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONPATH': str(root / 'backend')}
+     results = [json.loads(subprocess.check_output([sys.executable, '-B', '-c', script],
+                 cwd=tmp_path, env=environment, text=True)) for _ in range(2)]
+     first, second = [result['attestation'] for result in results]

@@ -1,0 +1,15 @@
+2026-11-24T00:37:18Z	baseline_head	0	git rev-parse HEAD
+2026-11-24T00:37:18Z	baseline_log	0	git log -1 --format=%H%n%ad%n%s --date=iso-strict
+2026-11-24T00:37:18Z	baseline_status	0	git status --short --branch
+2026-11-24T00:37:18Z	baseline_remote	0	git remote -v
+2026-11-24T00:37:18Z	pr19	0	gh pr view 19 --repo dimasaji/mcp-nusantara --json number\,state\,mergeable\,headRefName\,baseRefName\,headRefOid\,url
+2026-11-24T00:37:19Z	pr_list	0	gh pr list --repo dimasaji/mcp-nusantara --state all --limit 30 --json number\,state\,title\,headRefName\,baseRefName\,url
+2026-11-24T00:37:19Z	ancestry_rc	0	git merge-base --is-ancestor f4f8b7f5b99f6fbd034d21149675fb625881a788 HEAD
+2026-11-24T00:37:19Z	ancestry_release_reports	0	git merge-base --is-ancestor b5214ce21c5a8f2dabebe6d190e47c18147ff4ec HEAD
+2026-11-24T00:37:19Z	conflicts	0	git diff --name-only --diff-filter=U
+2026-11-24T00:37:19Z	unmerged_index	0	git ls-files -u
+2026-11-24T00:37:19Z	dependency_drift	0	git diff --name-status origin/codex/restructure-20261123..HEAD -- pyproject.toml package.json package-lock.json requirements.txt requirements-dev.txt deploy/docker/requirements.txt deploy/docker/requirements-indobert.txt
+2026-11-24T00:37:19Z	branch_diff	0	git diff --stat origin/codex/restructure-20261123..HEAD
+2026-11-24T00:37:19Z	rollback_refs	0	git rev-parse b5214ce21c5a8f2dabebe6d190e47c18147ff4ec f4f8b7f5b99f6fbd034d21149675fb625881a788 545137e8cfbec737488246492d59837df303cc4d
+2026-11-24T00:37:19Z	worktrees	0	git worktree list --porcelain
+2026-11-24T00:37:19Z	pending_patch	0	git diff -- tests/test_control_plane_attestation_binding.py tests/test_runtime_attestation.py
