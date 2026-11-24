@@ -1,0 +1,72 @@
+baseline_ids 62
+current_ids 3
+new_ids 0
+fixed_ids 59
+
+new:
+
+remaining:
+  ERROR tests/evaluation/test_live_harness.py
+  FAILED tests/test_langchain_e2e.py::test_retriever_e2e
+  FAILED tests/test_langchain_hardening.py::test_knowledge_search_still_works
+
+fixed:
+  ERROR tests/test_developer_control.py
+  ERROR tests/test_v1_review_execution_api.py::test_changed_plan_cannot_receive_stale_ui_approval
+  ERROR tests/test_v1_review_execution_api.py::test_copy_failure_is_persisted_and_cannot_reuse_approval
+  ERROR tests/test_v1_review_execution_api.py::test_latest_hold_revokes_pass_without_erasing_history
+  ERROR tests/test_v1_review_execution_api.py::test_operation_summary_stops_requesting_review_after_completion
+  ERROR tests/test_v1_review_execution_api.py::test_other_runtime_profiles_cannot_reach_v1_mutation[ATTESTATION]
+  ERROR tests/test_v1_review_execution_api.py::test_other_runtime_profiles_cannot_reach_v1_mutation[EVIDENCE_ONLY]
+  ERROR tests/test_v1_review_execution_api.py::test_plan_changed_after_approval_is_rejected_and_recorded
+  ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[FAIL]
+  ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[HOLD]
+  ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[PASS]
+  ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[changed_source]
+  ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[different_evidence]
+  ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[expired]
+  ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[none]
+  ERROR tests/test_v1_review_execution_api.py::test_unauthorized_execution_does_not_write
+  ERROR tests/test_v1_review_execution_api.py::test_unbound_pass_does_not_authorize_action
+  FAILED tests/test_audit_regressions.py::test_authorized_developer_lists_workspace
+  FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[False-None-/v2/dev-payload0]
+  FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[True-None-/v2/dev-payload0]
+  FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[True-invalid-/v2/dev-payload0]
+  FAILED tests/test_configuration_integration.py::test_r1_preserves_out_of_scope_protected_sources
+  FAILED tests/test_configuration_integration.py::test_rag_actual_query_and_ingestion_use_config
+  FAILED tests/test_control_plane_readonly.py::test_real_projection_no_database_worker_or_mutating_git
+  FAILED tests/test_control_plane_readonly.py::test_tampered_r3_evidence_rejected
+  FAILED tests/test_evidence_finalization.py::test_finalization_rejects_source_change_and_failed_command
+  FAILED tests/test_evidence_finalization.py::test_finalized_leaf_result_mutation_is_rejected
+  FAILED tests/test_evidence_finalization.py::test_finalized_results_mutation_is_rejected
+  FAILED tests/test_evidence_finalization.py::test_finalized_run_cannot_be_replaced_or_reference_itself
+  FAILED tests/test_evidence_registry.py::test_collector_records_real_artifact_references
+  FAILED tests/test_evidence_registry.py::test_each_criterion_links_sources_and_tests
+  FAILED tests/test_evidence_registry.py::test_missing_test_run_blocks_pass
+  FAILED tests/test_evidence_registry.py::test_registry_covers_all_acceptance_criteria
+  FAILED tests/test_evidence_runner_subprocess.py::test_evidence_guards_in_their_own_runner
+  FAILED tests/test_langchain_adapter.py::test_create_llm
+  FAILED tests/test_langchain_adapter.py::test_create_retriever
+  FAILED tests/test_langchain_e2e.py::test_chain_e2e
+  FAILED tests/test_langchain_e2e.py::test_llm_e2e
+  FAILED tests/test_langchain_hardening.py::test_langchain_flag_on
+  FAILED tests/test_langchain_hardening.py::test_langgraph_flag_on
+  FAILED tests/test_langgraph_workflow.py::test_create_workflow
+  FAILED tests/test_langgraph_workflow.py::test_workflow_invoke
+  FAILED tests/test_phase3_metrics_integration.py::test_metrics_endpoint_has_request_id
+  FAILED tests/test_phase3_metrics_integration.py::test_metrics_endpoint_returns_observability_snapshot
+  FAILED tests/test_phase3_metrics_integration.py::test_request_generates_metrics_counter
+  FAILED tests/test_provider_identity.py::test_public_health_distinguishes_inventory_identity_and_preserves_legacy_fields[degraded-False]
+  FAILED tests/test_provider_identity.py::test_public_health_distinguishes_inventory_identity_and_preserves_legacy_fields[ok-True]
+  FAILED tests/test_provider_identity.py::test_public_health_distinguishes_inventory_identity_and_preserves_legacy_fields[unavailable-False]
+  FAILED tests/test_provider_identity.py::test_public_request_response_models_and_routes_unchanged
+  FAILED tests/test_runtime_attestation.py::test_main_change_only_installs_attestation_and_preserves_existing_handlers
+  FAILED tests/test_runtime_verification.py::test_existing_public_v1_v2_configuration_and_control_plane_sources_untouched
+  FAILED tests/test_runtime_verification.py::test_normal_app_composition_preserves_existing_routers_and_caller_ids
+  FAILED tests/test_session_memory.py::test_http_opt_in_and_delete
+  FAILED tests/test_sop_source_pages.py::test_review_counts_original_pdf_pages_without_ocr_offsets
+  FAILED tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+  FAILED tests/test_web_evidence_pipeline.py::test_remediation_four_manifest_text_representations[1]
+  FAILED tests/test_web_evidence_pipeline.py::test_remediation_four_manifest_text_representations[2]
+  FAILED tests/test_web_evidence_pipeline.py::test_remediation_four_manifest_text_representations[3]
+  FAILED tests/test_web_evidence_pipeline.py::test_remediation_four_manifest_text_representations[4]

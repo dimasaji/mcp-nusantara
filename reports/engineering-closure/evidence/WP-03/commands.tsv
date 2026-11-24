@@ -1,0 +1,11 @@
+2026-11-24T00:46:31Z	regression_after_wp02	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=no --continue-on-collection-errors
+2026-11-24T00:47:12Z	regression_tb_line	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=line --continue-on-collection-errors
+2026-11-24T09:36:27Z	targeted_regression_final	0	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=short -o addopts='' -p no:cacheprovider --basetemp=/data/tmp/wp03-targeted-final <18 WP-03 files>
+2026-11-24T09:36:27Z	regression_final	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=no --continue-on-collection-errors
+2026-11-24T09:36:27Z	regression_final_tb_line	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=line --continue-on-collection-errors
+2026-11-24T09:36:27Z	diff_check_final	0	git diff --check
+2026-11-24T09:36:27Z	compileall_final	0	python -m compileall -q <4 changed backend files>
+2026-11-24T09:36:27Z	ruff_final	1	ruff check <19 changed backend/test files>
+2026-11-24T09:36:27Z	mypy_final	1	python -m mypy <4 changed backend files>
+2026-11-24T09:39:17Z	secret_scan_staged	0	git diff --cached --name-only -z | staged secret pattern scan; staged_files=64 real_credentials=0
+2026-11-24T09:39:30Z	targeted_final_reason_update	0	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=short -o addopts='' -p no:cacheprovider --basetemp=/data/tmp/wp03-final-targeted tests/test_configuration_integration.py tests/test_provider_identity.py tests/test_runtime_attestation.py tests/test_control_plane_readonly.py tests/test_evidence_registry.py	113 passed

@@ -8,11 +8,11 @@ from app.core.evidence_registry import collect_review_package
 
 def prepared(tmp_path):
     root=tmp_path/'project';root.mkdir()
-    (root/'control-plane').mkdir()
+    (root/'frontend').mkdir()
     (root/'source.txt').write_text('tested source')
     spec={'schema_version':1,'test_run_manifest':'current.json','criteria':[
         {'id':f'AC{i}','summary':'unit fixture only','sources':['source.txt'],'tests':['test_actual']} for i in range(1,16)]}
-    (root/'control-plane/evidence-requirements.json').write_text(json.dumps(spec))
+    (root/'frontend/evidence-requirements.json').write_text(json.dumps(spec))
     folder=root/'runs/run-one';(folder/'python').mkdir(parents=True);(folder/'ui').mkdir()
     (folder/'python/python-results.xml').write_text('<testsuite tests="1" failures="0" errors="0" skipped="0"><testcase name="test_actual"/></testsuite>')
     write_once(folder/'ui/vitest-results.json',{'numTotalTests':1,'testResults':[{'assertionResults':[{'title':'ui_actual','status':'passed'}]}]})

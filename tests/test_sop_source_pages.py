@@ -14,7 +14,7 @@ def test_review_counts_original_pdf_pages_without_ocr_offsets(tmp_path, monkeypa
     output = io.BytesIO()
     writer.write(output)
     engine = engine_at(tmp_path / 'chat.db')
-    # Simulate the OCR adapter returning text with unknown physical offsets.
+    monkeypatch.setattr(engine, '_extract_pdf_pages', lambda raw: ['', '', ''])
     monkeypatch.setattr(engine, '_extract_pipeline_text',
                         lambda name, raw: 'Persyaratan surat permohonan. Petugas memeriksa kelengkapan berkas.')
     run = engine.process_knowledge_source('scan.pdf', output.getvalue())

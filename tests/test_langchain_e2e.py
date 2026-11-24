@@ -1,11 +1,13 @@
 """E2E test for LangChain adapter with real Ollama + retriever."""
-import os
-os.environ['NUS_LANGCHAIN_ENABLED'] = 'true'
-os.environ['NUS_LANGGRAPH_ENABLED'] = 'true'
-
 import pytest
 from app.knowledge.engine import KnowledgeEngine
 from app.knowledge.langchain_adapter import create_retriever, create_llm, create_chain
+
+
+@pytest.fixture(autouse=True)
+def enabled_optional_flags(monkeypatch):
+    monkeypatch.setenv('NUS_LANGCHAIN_ENABLED', 'true')
+    monkeypatch.setenv('NUS_LANGGRAPH_ENABLED', 'true')
 
 
 def test_retriever_e2e():

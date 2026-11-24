@@ -2,11 +2,11 @@
   "schema_version": 1,
   "authorization": "User continuation contract 2026-10-15: preserve V1 changes, reconcile historical baseline tests against current intended behavior; user continuation 2026-10-22: P0 audience/knowledge guards and runtime fixture alignment",
   "historical_reports": {
-    "docs/reports/r2-a8-remediation-20261008/PROFILE_BEFORE.json": "f8c4ebc4aaa5fe0e06b4939aaf36d312929057e4241e0006b06fe6855bd6cc71",
-    "docs/reports/r2-a7-runtime-attestation-20261008/main.py.before": "64b1137c743a4e9a92518a4a167d218974f2a7360097f50d96808c050856e13c",
-    "reports/CONFIGURATION_BASELINE_20261006.json": "8b6809bbca8d2e7f812e26f7686464732ae9018eb8b488bc3c0174686cc7eb2c",
-    "reports/configuration/CONFIGURATION_PROGRESS.json": "4a8e1dd9be2e84dded33f9990434f805f434658128233c84e2db7fe45b4b104f",
-    ".dev/checkpoints/r1-local-001-20261007/BASELINE.json": "172eea85a5cbadcd57c1af0f3cfc33cc8285067180a751965e2c20e51ce8500a"
+    "docs/reports/r2-a8-remediation-20261008/PROFILE_BEFORE.json": "62f7b67575d4b6ee201cc357ba324da5cc8a40086c4f7b04c162ad62e78fcd30",
+    "docs/reports/r2-a7-runtime-attestation-20261008/main.py.before": "9377c0169912a5428e04c69f385c52ca7e1ee4b715a0d078ecea4268dea44e45",
+    "reports/CONFIGURATION_BASELINE_20261006.json": "c45dcaa2ca86d88bb53398b839424ea712191e5cf10fa369631ec6f313aae34a",
+    "reports/configuration/CONFIGURATION_PROGRESS.json": "3e941eae73e7179f22b2ee1aec952521a45aef90f0ffbc990f8108a9643de69d",
+    ".dev/checkpoints/r1-local-001-20261007/BASELINE.json": "54dfa9d04290902251d919e1b1f486417a0bbf862d04319fc999e91312296692"
   },
   "current_sources": {
     "app/api/routes.py": "fabec5bc263597f4b6b0d6dd2d17100d23d966a1066b535c2fe6e78a7afa68b7",
@@ -16,7 +16,15 @@
     "app/core/control_plane_projection.py": "d2e865ecd142f647d983eb1ed56851d32e6ccfb2c2d392397ead5a0a0a98a58f",
     "app/developer_core/engine.py": "5f6bdc41cf7cd6960dcac84d5aea24a630952d54b6f323aa254c0d286c38e885",
     "app/trust/engine.py": "3808ddb21c78f1fbf72581254c9097485f49c86c02dee4dbb54809e8b8aea735",
-    "app/policy/engine.py": "88587046801d0315a038d85d441030149ff97bcd9a16a9e937a99e755a0d2ffc"
+    "app/policy/engine.py": "88587046801d0315a038d85d441030149ff97bcd9a16a9e937a99e755a0d2ffc",
+    "backend/app/api/routes.py": "288cca51dfaccc0ab9c22d7e8c3072387635031b7dabb0def6e9918e8e406df7",
+    "backend/app/api/v2_routes.py": "79a4f27199d2b925bfc8be35689de806780be32a941807523c04c43bfb96c358",
+    "backend/app/core/config.py": "964fafc3201f57ea89715a185dfef8538a883f34683b8093772281a6f48ef852",
+    "backend/app/core/runtime_identity.py": "fcf35f4cedb6a679e20fd852e07b55293b785db240838a4614a611dff5a32c1c",
+    "backend/app/core/control_plane_projection.py": "b9dbcd57ac8ba94b10fbbeee72945b76d85ef56ae0e2709b06947298a212000d",
+    "backend/app/developer_core/engine.py": "7503bdf7102b8137e448b0e97a9644434e96e0bc8f8ff075e3370a97af5e12c2",
+    "backend/app/trust/engine.py": "e2be1feb7009dab30681b01211c2d0bd4f247eecf28410c8d79e19b61ef0b0fb",
+    "backend/app/policy/engine.py": "0b2aab1f44eb6babb94a1dcee73fbaf78cda4e3a69680e28ddaf3e0061b38e64"
   },
   "reasons": {
     "runtime_sources": "Provider configuration, response projection, evidence and query-parity changes are authorized V1 implementation, not an unchanged R2-A8 patch.",
@@ -24,6 +32,9 @@
     "trust": "Existing V1 canonical evidence score integration superseded the earlier frozen R1 source boundary; trust integration behavior remains tested.",
     "ports": "User requested persistent NORMAL V1 ports: backend 8765/frontend 5179. Both configuration owners and startup scripts now agree; sealed ATTESTATION retains 8000.",
     "p0_knowledge_boundary": "Authenticated knowledge endpoints, audience-specific history, redacted citations and UUID session defaults; independently covered by P0 and subprocess runtime HTTP fixtures.",
-    "operator_runtime": "Existing committed operator provider/model CAS, immutable bootstrap selection and bounded inference receipt freshness; covered by model-control and runtime identity tests. Historical reports remain pinned."
+    "operator_runtime": "Existing committed operator provider/model CAS, immutable bootstrap selection and bounded inference receipt freshness; covered by model-control and runtime identity tests. Historical reports remain pinned.",
+    "historical_reports": "Pins were reconciled from the authoritative restored git blobs; the previously recorded digests had no matching blob in repository history. Assertions still verify byte-exact artifacts.",
+    "source_paths": "Canonical backend/ paths were added with digests from the committed restructured tree; legacy app/ pins remain for historical comparison.",
+    "public_surface": "Evidence page/block citations and provider-status additions are authorized V1 response projection changes; unaffected public fields remain AST-pinned."
   }
 }
