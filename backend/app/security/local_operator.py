@@ -9,6 +9,7 @@ from ctypes import wintypes as w
 from dataclasses import dataclass
 import json
 import os
+from pathlib import Path
 import re
 import sys
 import secrets
@@ -435,3 +436,14 @@ def operator_exchange(name, expected_pid, expected_start, body):
         return api.read(handle)
     finally:
         api.k.CloseHandle(handle)
+
+
+def process_start(pid):
+    if sys.platform == 'win32':
+        return Windows().process_start(pid)
+    if sys.platform.startswith('linux'):
+        stat = Path(f'/proc/{pid}/stat').read_text().rsplit(')', 1)[1].split()
+        boot = next(int(line.split()[1]) for line in Path('/proc/stat').read_text().splitlines()
+                    if line.startswith('btime '))
+        return boot * os.sysconf('SC_CLK_TCK') + int(stat[19])
+    raise ActorError('PROCESS_START_UNAVAILABLE')

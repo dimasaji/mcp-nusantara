@@ -279,7 +279,7 @@ def test_normal_app_composition_preserves_existing_routers_and_caller_ids(tmp_pa
     script = r'''
 import json, sys, types
 from fastapi import APIRouter
-for module_name, paths in [('app.api.routes', ['/v1/chat']), ('app.api.v2_routes', ['/v2/chat','/v2/dev'])]:
+for module_name, paths in [('app.api.routes', ['/v1/chat'])]:
     owner = types.ModuleType(module_name)
     owner.router = APIRouter()
     owner._knowledge = types.SimpleNamespace(scan_knowledge_watch=lambda: None)
@@ -295,7 +295,8 @@ assert app.state.runtime_profile == 'NORMAL'
 assert not hasattr(app.state, 'runtime_verification')
 assert not hasattr(app.state, 'runtime_authorization')
 paths = set(app.openapi()['paths'])
-assert {'/v1/chat','/v2/chat','/v2/dev'} <= paths
+assert '/v1/chat' in paths
+assert not any(path.startswith('/v2/') for path in paths)
 assert '/v1/runtime/verification' not in paths
 with TestClient(app) as client:
     response = client.post('/v1/chat', headers={'X-Request-ID':'normal-caller-id'})

@@ -186,7 +186,7 @@ def _test_run(root: Path, relative: str, known_sources: dict[str, dict]) -> tupl
 def collect_review_package(root: Path = DEFAULT_ROOT, *, generated_at: str | None = None) -> dict:
     """Collect only manifest-declared offline files; never opens active DB/index data."""
     root = Path(root).resolve()
-    manifest_path = root / "control-plane" / "evidence-requirements.json"
+    manifest_path = root / "frontend" / "evidence-requirements.json"
     try:
         manifest = _read_json(manifest_path)
     except FileNotFoundError as exc:

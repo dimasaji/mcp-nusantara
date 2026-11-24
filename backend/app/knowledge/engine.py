@@ -347,11 +347,12 @@ class KnowledgeEngine:
         processing=self._record_pipeline(safe_name,digest,'PROCESSING',source_path=str(stored))
         try:
             pdf_pages = self._extract_pdf_pages(raw) if Path(safe_name).suffix.lower() == '.pdf' else None
-            text = '\n'.join(pdf_pages) if pdf_pages is not None else self._extract_pipeline_text(safe_name, raw)
+            native_pages = pdf_pages if pdf_pages is not None and any(page.strip() for page in pdf_pages) else None
+            text = '\n'.join(native_pages) if native_pages is not None else self._extract_pipeline_text(safe_name, raw)
             from .preparation import normalize_knowledge_text, prepare_knowledge_text
             from .text_cleaning import clean_text, persist_intake_text
             raw_text, raw_pages = text, pdf_pages
-            cleaned_pages = [clean_text(page) for page in pdf_pages] if pdf_pages is not None else None
+            cleaned_pages = [clean_text(page) for page in native_pages] if native_pages is not None else None
             joined = '\n'.join(cleaned_pages) if cleaned_pages is not None else clean_text(text)
             text, preparation = prepare_knowledge_text(joined)
             if cleaned_pages is not None:
@@ -372,15 +373,17 @@ class KnowledgeEngine:
             metadata={**(source_metadata or {}),'pipeline_status':'READY','source_sha256':digest,'source_filename':safe_name,
                       'source_authority':'UNVERIFIED','revision_status':'NOT_CONFIRMED_CURRENT',
                       'knowledge_preparation':preparation,
-                      'source_pages':[],
-                      'indexed_at':datetime.now(timezone.utc).isoformat()}
+                       'source_pages':[],
+                       'source_page_count':len(pdf_pages) if pdf_pages is not None else None,
+                       'indexed_at':datetime.now(timezone.utc).isoformat()}
+
             metadata['text_cleaning'] = persist_intake_text(
                 stored, digest_id, digest, raw_text, text, raw_pages, pdf_pages)
             title = self._source_title(text, safe_name)
             metadata['source_title'] = title
             # Offsets refer to the exact native/OCR text indexed above. Retain
             # physical page provenance for scans without re-extracting the PDF.
-            if pdf_pages is not None:
+            if cleaned_pages is not None:
                 offset = 0
                 metadata['source_pages'] = []
                 for number, page_text in enumerate(pdf_pages, 1):

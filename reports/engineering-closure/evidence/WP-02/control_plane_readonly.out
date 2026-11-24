@@ -1,0 +1,39 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0
+rootdir: /data/workspace/nus-v1-engineering-closure-20261124/worktrees/closure
+configfile: pyproject.toml
+plugins: anyio-4.16.0, cov-7.1.0, asyncio-1.5.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 24 items / 1 deselected / 23 selected
+
+tests/test_control_plane_readonly.py .........FF............             [100%]
+
+=================================== FAILURES ===================================
+______________________ test_tampered_r3_evidence_rejected ______________________
+tests/test_control_plane_readonly.py:76: in test_tampered_r3_evidence_rejected
+    sources=json.loads((root/'control-plane/evidence-sources.json').read_text(encoding='utf-8-sig'))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/pathlib/_local.py:548: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/pathlib/_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/pathlib/_local.py:539: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/data/workspace/nus-v1-engineering-closure-20261124/worktrees/closure/control-plane/evidence-sources.json'
+__________ test_evidence_only_real_entrypoint_skips_production_owners __________
+tests/test_control_plane_readonly.py:124: in test_evidence_only_real_entrypoint_skips_production_owners
+    assert result.returncode == 0, result.stdout + result.stderr
+E   AssertionError: Traceback (most recent call last):
+E       File "<string>", line 9, in <module>
+E         import app.core.control_plane_projection as projection
+E     ModuleNotFoundError: No module named 'app'
+E
+E   assert 1 == 0
+E    +  where 1 = CompletedProcess(args=['/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python', '-B', '-c', "\nimport importlib.abc... <module>\n    import app.core.control_plane_projection as projection\nModuleNotFoundError: No module named \'app\'\n').returncode
+=========================== short test summary info ============================
+FAILED tests/test_control_plane_readonly.py::test_tampered_r3_evidence_rejected
+FAILED tests/test_control_plane_readonly.py::test_evidence_only_real_entrypoint_skips_production_owners
+================== 2 failed, 21 passed, 1 deselected in 0.33s ==================

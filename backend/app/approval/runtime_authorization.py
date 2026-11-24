@@ -22,7 +22,7 @@ from app.approval.queue import ApprovalQueue, payload_hash
 from app.core.runtime_identity import BUILD_ID, current_runtime_instance
 from app.observability.logging import redact
 from app.security.local_operator import (VerifiedPeer, OperatorPolicy, LocalOperatorChannel,
-    Windows, Actor, ActorError)
+    Windows, Actor, ActorError, process_start)
 
 SCOPE = 'R2-A8:ATTESTATION:ONE_GENERATION'
 REASONS = frozenset({'REVIEWED', 'INSUFFICIENT_EVIDENCE', 'HOLD_FOR_REVIEW', 'OPERATOR_ABORT'})
@@ -121,7 +121,7 @@ class RuntimeAuthorization:
             raise AuthorizationError('SCOPED_CODE_NOT_BOUND')
         instance = current_runtime_instance()
         return {'scope': SCOPE, 'target': '127.0.0.1:8000', 'pid': os.getpid(),
-            'process_start': Windows().process_start(os.getpid()),
+            'process_start': process_start(os.getpid()),
             'runtime_instance': instance.runtime_instance_id, 'source_snapshot': BUILD_ID,
             'scoped_loaded_code': controller._code_hash,
             'configuration_digest': hashlib.sha256(controller.configuration.canonical_json().encode()).hexdigest(),

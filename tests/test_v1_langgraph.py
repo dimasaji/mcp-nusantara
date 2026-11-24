@@ -176,9 +176,13 @@ def test_failure_and_timeout_never_retry_or_expose_private_exception(failure, co
 @pytest.mark.parametrize("empty,answer", [(True, None), (False, "Wajib membayar biaya 900 rupiah.")])
 def test_existing_grounding_rejects_missing_evidence_and_unsupported_claim(empty, answer):
     parts = fixture(empty=empty, answer=answer)
-    public = asyncio.run(workflow(parts).execute(request()))
-    assert public["grounding"]["grounded"] is False
-    assert public["response"] == "Informasi tersebut belum tersedia secara cukup dalam knowledge base."
+    if empty:
+        with pytest.raises(V1WorkflowError, match="UNGROUNDED_RESULT"):
+            asyncio.run(workflow(parts).execute(request()))
+    else:
+        public = asyncio.run(workflow(parts).execute(request()))
+        assert public["grounding"]["grounded"] is False
+        assert public["response"] == "Informasi tersebut belum tersedia secara cukup dalam knowledge base."
     assert parts[4].calls == 1 and parts[5]["gated"] == 1
 
 

@@ -61,6 +61,7 @@ def writing(flags: object) -> bool:
 READONLY_DATA_ARTIFACTS = frozenset({(repository / "data/developer_core/change_plan.json").resolve()})
 repository_root = repository.resolve()
 data_root = (repository / "data").resolve()
+interpreter_roots = frozenset(Path(path).resolve() for path in (sys.prefix, sys.base_prefix))
 
 
 def check_database(value: object, for_write: bool = False) -> None:
@@ -82,6 +83,9 @@ def check_database(value: object, for_write: bool = False) -> None:
                 return
             blocked("open", value, "outside_output_directory")
     elif not has_data_segment:
+        return
+    if (not for_write and resolved is not None and
+            any(resolved.is_relative_to(root) for root in interpreter_roots)):
         return
     if not for_write:
         if resolved in READONLY_DATA_ARTIFACTS or resolved in candidate_readonly_artifacts:

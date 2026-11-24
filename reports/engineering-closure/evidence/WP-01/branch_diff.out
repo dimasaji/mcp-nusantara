@@ -1,0 +1,102 @@
+ .dockerignore                                      |   22 +
+ deploy/docker/.dockerignore                        |    3 +-
+ deploy/docker/Dockerfile                           |   15 +-
+ deploy/docker/docker-compose.audit.yml             |    7 +-
+ deploy/docker/docker-compose.indobert.yml          |    7 +
+ deploy/docker/docker-compose.yml                   |   24 +-
+ deploy/docker/requirements-indobert.txt            |    1 +
+ deploy/docker/requirements.txt                     |   98 ++
+ .../CRITICAL_REGRESSION_TRIAGE.md                  |   69 +
+ .../RELEASE_AND_ROLLBACK_CHECKLIST.md              |   66 +
+ .../RELEASE_INTEGRATION_REPORT.md                  |   70 +
+ .../STAGING_ACCEPTANCE_REPORT.md                   |   56 +
+ .../evidence/active_health_after.out               |    2 +
+ .../evidence/active_ports_after.out                |    9 +
+ .../evidence/active_ports_before.out               |    8 +
+ .../evidence/active_ready_after.out                |    2 +
+ .../release-integration-rc/evidence/ancestors.out  |    4 +
+ .../evidence/backend_build_root.out                |   13 +
+ .../release-integration-rc/evidence/branches.out   |   35 +
+ .../evidence/build_outputs.out                     |    8 +
+ .../release-integration-rc/evidence/commands.tsv   |  132 ++
+ .../evidence/compose_audit_config.err              |    0
+ .../evidence/compose_audit_config.out              |    0
+ .../evidence/compose_config.err                    |    0
+ .../evidence/compose_config.out                    |    0
+ .../evidence/compose_indobert_config.err           |    0
+ .../evidence/compose_indobert_config.out           |    0
+ .../release-integration-rc/evidence/diff_check.out |    0
+ .../evidence/docker_build.err                      |   67 +
+ .../evidence/docker_build.out                      |    0
+ .../evidence/frontend_build.out                    |   15 +
+ .../evidence/frontend_install.out                  |    2 +
+ .../release-integration-rc/evidence/git_diff.out   |   26 +
+ .../evidence/git_reconciliation.md                 |   28 +
+ .../evidence/history_after_restart.out             |    2 +
+ .../evidence/history_before_restart.out            |    2 +
+ .../evidence/model_status_after_chat.out           |    2 +
+ .../evidence/mypy_fixed_module.out                 |   94 ++
+ .../evidence/persistence_compare.out               |    3 +
+ reports/release-integration-rc/evidence/pr16.out   |    1 +
+ reports/release-integration-rc/evidence/pr17.out   |    1 +
+ reports/release-integration-rc/evidence/pr18.out   |    1 +
+ reports/release-integration-rc/evidence/pr19.out   |    1 +
+ .../evidence/provider_failure_chat.out             |    2 +
+ .../evidence/provider_failure_logs.err             |    4 +
+ .../evidence/provider_failure_ready.out            |    2 +
+ .../evidence/provider_failure_start.out            |    1 +
+ .../evidence/provider_failure_wait.out             |    1 +
+ .../release-integration-rc/evidence/rc_head.out    |    1 +
+ .../evidence/rc_image_digest.out                   |    1 +
+ reports/release-integration-rc/evidence/rc_log.out |    5 +
+ .../release-integration-rc/evidence/rc_status.out  |    1 +
+ .../evidence/rc_vs_integration.out                 |   31 +
+ .../evidence/regression_after_fix.out              |  477 +++++++
+ .../evidence/regression_full.out                   |  478 +++++++
+ .../evidence/regression_tb_line.out                | 1358 ++++++++++++++++++++
+ .../evidence/regression_triage.md                  |   53 +
+ .../evidence/rollback_hc.out                       |    0
+ .../evidence/rollback_health.out                   |    2 +
+ .../evidence/rollback_history.out                  |    2 +
+ .../evidence/rollback_image_check.out              |    1 +
+ .../evidence/rollback_start.out                    |    1 +
+ .../evidence/rollback_wait.out                     |    1 +
+ .../release-integration-rc/evidence/ruff_fixed.out |  174 +++
+ .../evidence/secret_scan_final.out                 |    5 +
+ .../evidence/staging_cleanup.out                   |    0
+ .../evidence/staging_healthcheck.out               |    0
+ .../evidence/staging_healthy_wait.out              |    1 +
+ .../evidence/staging_inspect.out                   |    1 +
+ .../evidence/staging_ports_absent.out              |    1 +
+ .../evidence/staging_restart.out                   |    1 +
+ .../evidence/staging_smoke.out                     |   18 +
+ .../evidence/staging_smoke.sh                      |   34 +
+ .../evidence/staging_start.out                     |    1 +
+ .../evidence/staging_wait.out                      |    1 +
+ .../evidence/staging_wait_after_restart.out        |    1 +
+ .../evidence/subprocess_path_after.out             |  271 ++++
+ .../evidence/subprocess_path_before.out            |   30 +
+ reports/release-integration-rc/evidence/tools.out  |    3 +
+ .../VPS_DOCKER_READINESS_FINAL_REPORT.md           |  118 ++
+ .../evidence/active_health_after.out               |    2 +
+ .../evidence/active_ready_after.out                |    2 +
+ .../evidence/baseline_head.out                     |    1 +
+ reports/vps-docker-readiness/evidence/commands.tsv |   53 +
+ .../evidence/compose_version.out                   |    1 +
+ .../vps-docker-readiness/evidence/docker_build.err |  499 +++++++
+ .../evidence/docker_version.out                    |    1 +
+ .../evidence/full_regression.out                   |   14 +
+ .../evidence/full_regression_pythonpath.out        |  478 +++++++
+ .../evidence/healthcheck_direct.out                |    0
+ .../vps-docker-readiness/evidence/image_digest.out |    1 +
+ .../evidence/mypy_changed_rerun.out                |    2 +
+ .../evidence/ports_after_cleanup.out               |    9 +
+ reports/vps-docker-readiness/evidence/pr18.out     |    1 +
+ .../evidence/ruff_changed_rerun.out                |    1 +
+ .../evidence/staging_inspect_healthy.out           |    1 +
+ .../evidence/staging_logs_final.err                |    7 +
+ .../evidence/staging_smoke_final.out               |   15 +
+ .../evidence/targeted_tests_final.out              |   12 +
+ scripts/healthcheck.py                             |   21 +
+ tests/test_docker_deployment_readiness.py          |   59 +
+ 101 files changed, 5129 insertions(+), 29 deletions(-)

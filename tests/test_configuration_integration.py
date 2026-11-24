@@ -90,7 +90,7 @@ def test_unwired_rag_parameters_not_silently_accepted(tmp_path, monkeypatch, rag
 
 
 def test_rag_actual_query_and_ingestion_use_config(tmp_path):
-    config = configured(tmp_path, rag={"top_k": 2, "chunk_size": 80, "chunk_overlap": 10})
+    config = configured(tmp_path, rag={"top_k": 2, "chunk_size": 2000, "chunk_overlap": 10})
     class IsolatedStore(MemoriaVectorStore):
         # Complete the persisted-store protocol for this test fixture. The
         # legacy Memoria fallback does not implement these methods.
@@ -108,9 +108,10 @@ def test_rag_actual_query_and_ingestion_use_config(tmp_path):
     # explicitly supplied; no SQLite backend is touched.
     rag.set_embedding_func(lambda text: [1.0] * 768)
     from app.knowledge.schemas import DocumentIngestRequest
-    response = rag.ingest_document(DocumentIngestRequest(title="Fixture", source="nusantara configuration " * 30, content_type="text/plain", chunk_size=80, chunk_overlap=10))
-    assert response.success
-    assert rag._config.chunk_size == 80
+    for number in (1, 2, 3):
+        response = rag.ingest_document(DocumentIngestRequest(title=f"Fixture {number}", source="nusantara configuration " * 30, content_type="text/plain", chunk_size=2000, chunk_overlap=10))
+        assert response.success
+    assert rag._config.chunk_size == 2000
     assert rag._config.chunk_overlap == 10
     result = rag.query("nusantara configuration")
     assert len(result.evidence_pack.evidence) == 2
@@ -180,7 +181,7 @@ def test_r1_preserves_out_of_scope_protected_sources():
     r1 = json.loads((root / '.dev/checkpoints/r1-local-001-20261007/BASELINE.json').read_text(encoding='utf-8-sig'))
     before = {item['path']: item['before_sha256'] for item in r1['files']}
     assert before['app/api/routes.py'] == checkpoint['protected_hashes_before']['app/api/routes.py']
-    for relative in ["app/developer_core/engine.py", "app/trust/engine.py", "app/policy/engine.py"]:
+    for relative in ["backend/app/developer_core/engine.py", "backend/app/trust/engine.py", "backend/app/policy/engine.py"]:
         from v1_baseline import assert_current_source
         assert_current_source(relative)
 

@@ -50,8 +50,8 @@ def prepare(root):
            'source_sha256':{path:digest(path) for path in sources},
            'criteria':{f'AC{i}':{'status':'PASS','test_ids':[test_id]} for i in range(1,16)}}
     (root/'test-run.json').write_text(json.dumps(run),encoding='utf-8')
-    (root/'control-plane').mkdir(exist_ok=True)
-    (root/'control-plane/evidence-requirements.json').write_text(json.dumps({'schema_version':1,'criteria':criteria,'test_run_manifest':'test-run.json'}),encoding='utf-8')
+    (root/'frontend').mkdir(exist_ok=True)
+    (root/'frontend/evidence-requirements.json').write_text(json.dumps({'schema_version':1,'criteria':criteria,'test_run_manifest':'test-run.json'}),encoding='utf-8')
     return root
 
 

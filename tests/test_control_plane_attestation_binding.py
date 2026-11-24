@@ -15,6 +15,8 @@ from app.api.control_plane import router
 from app.approval.runtime_authorization import AuthorizationError, SCOPE
 from test_runtime_authorization import fixture, command
 
+windows_only = pytest.mark.skipif(sys.platform != 'win32', reason='WINDOWS_NATIVE_IPC_REQUIRED')
+
 
 @pytest.fixture
 def isolated(tmp_path, monkeypatch):
@@ -158,6 +160,7 @@ def test_capacity_rejects_without_poisoning(isolated):
     assert not owner._poisoned and not owner._audit.entries()
 
 
+@windows_only
 @pytest.mark.parametrize('operation', ['ARM', 'EXECUTE'])
 def test_live_lock_even_after_trusted_peer_validation(isolated, monkeypatch, operation):
     _, owner, controller, calls = isolated
@@ -220,7 +223,7 @@ assert owner._permit is None and owner.evidence()['live_actions'] == 'LOCKED'
 print(json.dumps({'isolated_in_process':True,'live_http':False,'dispatch_count':0,'state':'PENDING','live_actions':'LOCKED',
     'snapshot':state,'intention':response.json()}))
 '''
-    env = {**os.environ,'PYTHONPATH':str(root),'PYTHONDONTWRITEBYTECODE':'1',
+    env = {**os.environ,'PYTHONPATH':str(root / 'backend'),'PYTHONDONTWRITEBYTECODE':'1',
         'NUSANTARA_RUNTIME_PROFILE':'ATTESTATION','NUSANTARA_CONTROL_PLANE_READ_ONLY':'0','PORT':'8000'}
     env.pop('NUSANTARA_RUNTIME_PORT', None)
     result = json.loads(subprocess.check_output([sys.executable,'-B','-c',script],cwd=tmp_path,env=env,text=True))

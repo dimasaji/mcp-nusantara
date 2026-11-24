@@ -1,0 +1,1879 @@
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/core/control_plane_projection.py:138:57
+    |
+136 |                      'Runtime identity is historical; current live process/model is NOT_VERIFIED.',
+137 |                      'R3 artifacts are in temporary storage; missing evidence remains NOT_VERIFIED.'])
+138 |     return {'schema_version':1,'timestamp':datetime.now(timezone.utc).isoformat(),'status':'PARTIAL' if warnings else 'READY',
+    |                                                         ^^^^^^^^^^^^
+139 |             'system':'NUSANTARA CORE + HERMES','phases':phases,'current_phase':r3.get('status','UNKNOWN').split('_')[0],'contract':{'…
+140 |             'gates':gates,'evidence':evidence,'verification':verification,'runtime':runtime_view,
+    |
+help: Convert to `datetime.UTC` alias
+    |
+8   | import subprocess
+    - from datetime import datetime, timezone
+9   + from datetime import datetime, timezone, UTC
+10  | from pathlib import Path
+--------------------------------------------------------------------------------
+137 |                      'R3 artifacts are in temporary storage; missing evidence remains NOT_VERIFIED.'])
+    -     return {'schema_version':1,'timestamp':datetime.now(timezone.utc).isoformat(),'status':'PARTIAL' if warnings else 'READY',
+138 +     return {'schema_version':1,'timestamp':datetime.now(UTC).isoformat(),'status':'PARTIAL' if warnings else 'READY',
+139 |             'system':'NUSANTARA CORE + HERMES','phases':phases,'current_phase':r3.get('status','UNKNOWN').split('_')[0],'contract':{'id':authorization.get('contract','UNKNOWN'),'status':authorization.get('status','NOT_AUTHORIZED'),'evidence':['cplane-owner','cplane-contract']},
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> backend/app/core/evidence_registry.py:7:1
+   |
+ 5 |   it does not certify the truth of its contents or a live system state.
+ 6 |   """
+ 7 | / from __future__ import annotations
+ 8 | |
+ 9 | | from contextlib import contextmanager
+10 | | from datetime import datetime, timezone
+11 | | import hashlib
+12 | | import json
+13 | | import os
+14 | | from pathlib import Path
+15 | | import threading
+16 | | from uuid import uuid4
+17 | | from app.core.work_approval_contract import APPROVAL_VALIDITY_SECONDS
+   | |_____________________________________________________________________^
+help: Organize imports
+   |
+8  |
+   - from contextlib import contextmanager
+   - from datetime import datetime, timezone
+9  | import hashlib
+10 | import json
+11 | import os
+12 + import threading
+13 + from contextlib import contextmanager
+14 + from datetime import datetime, timezone
+15 | from pathlib import Path
+   - import threading
+16 | from uuid import uuid4
+17 +
+18 | from app.core.work_approval_contract import APPROVAL_VALIDITY_SECONDS
+   -
+19 |
+   |
+
+UP017 [*] Use `datetime.UTC` alias
+  --> backend/app/core/evidence_registry.py:41:25
+   |
+40 | def _utc_now() -> str:
+41 |     return datetime.now(timezone.utc).isoformat()
+   |                         ^^^^^^^^^^^^
+help: Convert to `datetime.UTC` alias
+   |
+9  | from contextlib import contextmanager
+   - from datetime import datetime, timezone
+10 + from datetime import datetime, timezone, UTC
+11 | import hashlib
+--------------------------------------------------------------------------------
+40 | def _utc_now() -> str:
+   -     return datetime.now(timezone.utc).isoformat()
+41 +     return datetime.now(UTC).isoformat()
+42 |
+   |
+
+UP017 [*] Use `datetime.UTC` alias
+  --> backend/app/core/evidence_registry.py:83:75
+   |
+81 |         data = path.read_bytes()
+82 |         record.update(validation_status="VALID", sha256=_sha256(data), bytes=len(data),
+83 |                        collected_at=datetime.fromtimestamp(info.st_mtime, timezone.utc).isoformat())
+   |                                                                           ^^^^^^^^^^^^
+84 |     except FileNotFoundError:
+85 |         record.update(classification="MISSING", validation_status="MISSING", reason="REQUIRED_ARTIFACT_NOT_FOUND")
+   |
+help: Convert to `datetime.UTC` alias
+   |
+9  | from contextlib import contextmanager
+   - from datetime import datetime, timezone
+10 + from datetime import datetime, timezone, UTC
+11 | import hashlib
+--------------------------------------------------------------------------------
+82 |         record.update(validation_status="VALID", sha256=_sha256(data), bytes=len(data),
+   -                        collected_at=datetime.fromtimestamp(info.st_mtime, timezone.utc).isoformat())
+83 +                        collected_at=datetime.fromtimestamp(info.st_mtime, UTC).isoformat())
+84 |     except FileNotFoundError:
+   |
+
+RUF005 Consider iterable unpacking instead of concatenation
+   --> backend/app/core/evidence_registry.py:223:16
+    |
+221 |         raise EvidenceRegistryError("TEST_RUN_MANIFEST_PATH_INVALID")
+222 |     test_evidence, test_run = _test_run(root, test_path, sources)
+223 |     evidence = list(sources.values()) + [{"id": "current-test-run", **test_evidence}]
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+224 |
+225 |     criteria = []
+    |
+help: Replace with iterable unpacking
+    |
+222 |     test_evidence, test_run = _test_run(root, test_path, sources)
+    -     evidence = list(sources.values()) + [{"id": "current-test-run", **test_evidence}]
+223 +     evidence = [*list(sources.values()), {"id": "current-test-run", **test_evidence}]
+224 |
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/core/evidence_registry.py:423:37
+    |
+421 |     try:
+422 |         created = datetime.fromisoformat(decision['timestamp'].replace('Z', '+00:00'))
+423 |         age = ((now or datetime.now(timezone.utc)) - created).total_seconds()
+    |                                     ^^^^^^^^^^^^
+424 |     except (ValueError, TypeError, KeyError):
+425 |         raise EvidenceRegistryError('EXECUTION_DECISION_TIMESTAMP_INVALID') from None
+    |
+help: Convert to `datetime.UTC` alias
+    |
+9   | from contextlib import contextmanager
+    - from datetime import datetime, timezone
+10  + from datetime import datetime, timezone, UTC
+11  | import hashlib
+--------------------------------------------------------------------------------
+422 |         created = datetime.fromisoformat(decision['timestamp'].replace('Z', '+00:00'))
+    -         age = ((now or datetime.now(timezone.utc)) - created).total_seconds()
+423 +         age = ((now or datetime.now(UTC)) - created).total_seconds()
+424 |     except (ValueError, TypeError, KeyError):
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> backend/app/knowledge/engine.py:2:1
+   |
+ 1 |   """Knowledge Engine facade used by the API and Hermes."""
+ 2 | / from __future__ import annotations
+ 3 | |
+ 4 | | from typing import Any, Optional
+ 5 | | import hashlib
+ 6 | | import html
+ 7 | | import sqlite3
+ 8 | | import os
+ 9 | | import re
+10 | | import subprocess
+11 | | import zipfile
+12 | | from contextlib import contextmanager
+13 | | from threading import Lock
+14 | | from datetime import datetime, timezone
+15 | | from pathlib import Path
+16 | |
+17 | | from .docling_config import tesseract_command
+18 | | from .rag import RAG, create_rag
+19 | | from app.core.nusantara_config import NusantaraConfig
+20 | | from .schemas import RetrievalEvidenceList
+   | |__________________________________________^
+help: Organize imports
+   |
+3  |
+   - from typing import Any, Optional
+4  | import hashlib
+5  | import html
+   - import sqlite3
+6  | import os
+7  | import re
+8  + import sqlite3
+9  | import subprocess
+10 | import zipfile
+11 | from contextlib import contextmanager
+   - from threading import Lock
+12 | from datetime import datetime, timezone
+13 | from pathlib import Path
+14 + from threading import Lock
+15 + from typing import Any, Optional
+16 +
+17 + from app.core.nusantara_config import NusantaraConfig
+18 |
+19 | from .docling_config import tesseract_command
+20 | from .rag import RAG, create_rag
+   - from app.core.nusantara_config import NusantaraConfig
+21 | from .schemas import RetrievalEvidenceList
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> backend/app/knowledge/engine.py:37:29
+   |
+35 |         return match.group(1).strip()[:1024] if match else fallback
+36 |
+37 |     def __init__(self, rag: Optional[RAG] = None, *, nusantara_config: NusantaraConfig | None = None):
+   |                             ^^^^^^^^^^^^^
+38 |         self.configuration = nusantara_config
+39 |         self._pipeline_initialized = False
+   |
+help: Convert to `X | None`
+   |
+36 |
+   -     def __init__(self, rag: Optional[RAG] = None, *, nusantara_config: NusantaraConfig | None = None):
+37 +     def __init__(self, rag: RAG | None = None, *, nusantara_config: NusantaraConfig | None = None):
+38 |         self.configuration = nusantara_config
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> backend/app/knowledge/engine.py:85:78
+   |
+83 |         return scope
+84 |
+85 |     def search_knowledge(self, query: str, top_k: int | None = None, filter: Optional[dict] = None):
+   |                                                                              ^^^^^^^^^^^^^^
+86 |         scope = self.document_scope(filter)
+87 |         result = self.rag.query(query_text=query, top_k=top_k,
+   |
+help: Convert to `X | None`
+   |
+84 |
+   -     def search_knowledge(self, query: str, top_k: int | None = None, filter: Optional[dict] = None):
+85 +     def search_knowledge(self, query: str, top_k: int | None = None, filter: dict | None = None):
+86 |         scope = self.document_scope(filter)
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> backend/app/knowledge/engine.py:163:9
+    |
+161 |       def selected_document_evidence(self, document_id: str):
+162 |           """Exact operator selection can read the verified PDF table, without reindexing."""
+163 | /         from .sop_review import SOPReview
+164 | |         from .pdf_sop import activity_rows, rows_text
+165 | |         from .schemas import Evidence
+    | |_____________________________________^
+166 |
+167 |           doc = self.rag.get_document_info(document_id)
+    |
+help: Organize imports
+    |
+162 |         """Exact operator selection can read the verified PDF table, without reindexing."""
+    -         from .sop_review import SOPReview
+163 |         from .pdf_sop import activity_rows, rows_text
+164 |         from .schemas import Evidence
+165 +         from .sop_review import SOPReview
+166 |
+    |
+
+E702 Multiple statements on one line (semicolon)
+   --> backend/app/knowledge/engine.py:232:55
+    |
+230 |             from html.parser import HTMLParser
+231 |             class TextOnly(HTMLParser):
+232 |                 def __init__(self): super().__init__(); self.parts=[]
+    |                                                       ^
+233 |                 def handle_data(self, data): self.parts.append(data)
+234 |             parser=TextOnly(); parser.feed(raw.decode('utf-8-sig'))
+    |
+
+E702 Multiple statements on one line (semicolon)
+   --> backend/app/knowledge/engine.py:234:30
+    |
+232 |                 def __init__(self): super().__init__(); self.parts=[]
+233 |                 def handle_data(self, data): self.parts.append(data)
+234 |             parser=TextOnly(); parser.feed(raw.decode('utf-8-sig'))
+    |                              ^
+235 |             return html.unescape(' '.join(parser.parts))
+236 |         if suffix == '.pdf':
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> backend/app/knowledge/engine.py:248:9
+    |
+246 |       def _extract_pdf_pages(raw: bytes) -> list[str]:
+247 |           """Read each physical page independently; native text cannot hide a scan."""
+248 | /         import io
+249 | |         from pypdf import PdfReader
+    | |___________________________________^
+250 |
+251 |           pages = [page.extract_text() or '' for page in PdfReader(io.BytesIO(raw)).pages]
+    |
+help: Organize imports
+    |
+248 |         import io
+249 +
+250 |         from pypdf import PdfReader
+    |
+
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/knowledge/engine.py:279:26
+    |
+277 |     def _record_pipeline(self, filename: str, digest: str, status: str, reason: str | None = None,
+278 |                          document_id: str | None = None, source_path: str | None = None) -> dict[str, Any]:
+279 |         now=datetime.now(timezone.utc).isoformat()
+    |                          ^^^^^^^^^^^^
+280 |         run_id='kpr_'+hashlib.sha256(f'{digest}:{now}'.encode()).hexdigest()[:32]
+281 |         with self._pipeline_db() as conn:
+    |
+help: Convert to `datetime.UTC` alias
+    |
+13  | from threading import Lock
+    - from datetime import datetime, timezone
+14  + from datetime import datetime, timezone, UTC
+15  | from pathlib import Path
+--------------------------------------------------------------------------------
+278 |                          document_id: str | None = None, source_path: str | None = None) -> dict[str, Any]:
+    -         now=datetime.now(timezone.utc).isoformat()
+279 +         now=datetime.now(UTC).isoformat()
+280 |         run_id='kpr_'+hashlib.sha256(f'{digest}:{now}'.encode()).hexdigest()[:32]
+    |
+
+B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   --> backend/app/knowledge/engine.py:306:17
+    |
+304 |         except FileExistsError:
+305 |             if hashlib.sha256(target.read_bytes()).hexdigest()!=digest:
+306 |                 raise ValueError('STORED_SOURCE_INTEGRITY_MISMATCH')
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+307 |         except OSError as exc:
+308 |             raise ValueError(f'ORIGINAL_FILE_SAVE_FAILED:{type(exc).__name__}') from exc
+    |
+
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/knowledge/engine.py:378:50
+    |
+376 |                        'source_pages':[],
+377 |                        'source_page_count':len(pdf_pages) if pdf_pages is not None else None,
+378 |                        'indexed_at':datetime.now(timezone.utc).isoformat()}
+    |                                                  ^^^^^^^^^^^^
+379 |
+380 |             metadata['text_cleaning'] = persist_intake_text(
+    |
+help: Convert to `datetime.UTC` alias
+    |
+13  | from threading import Lock
+    - from datetime import datetime, timezone
+14  + from datetime import datetime, timezone, UTC
+15  | from pathlib import Path
+--------------------------------------------------------------------------------
+377 |                        'source_page_count':len(pdf_pages) if pdf_pages is not None else None,
+    -                        'indexed_at':datetime.now(timezone.utc).isoformat()}
+378 +                        'indexed_at':datetime.now(UTC).isoformat()}
+379 |
+    |
+
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/knowledge/engine.py:425:26
+    |
+423 |         folder=(Path(self.rag._store.db_path).resolve().parent/'inbox').resolve()
+424 |         folder.mkdir(parents=True,exist_ok=True)
+425 |         now=datetime.now(timezone.utc).isoformat()
+    |                          ^^^^^^^^^^^^
+426 |         with self._pipeline_db() as conn:
+427 |             conn.execute('UPDATE knowledge_pipeline_config SET watch_enabled=?, watch_folder=?, updated_at=? WHERE singleton=1',
+    |
+help: Convert to `datetime.UTC` alias
+    |
+13  | from threading import Lock
+    - from datetime import datetime, timezone
+14  + from datetime import datetime, timezone, UTC
+15  | from pathlib import Path
+--------------------------------------------------------------------------------
+424 |         folder.mkdir(parents=True,exist_ok=True)
+    -         now=datetime.now(timezone.utc).isoformat()
+425 +         now=datetime.now(UTC).isoformat()
+426 |         with self._pipeline_db() as conn:
+    |
+
+E701 Multiple statements on one line (colon)
+   --> backend/app/knowledge/engine.py:446:59
+    |
+444 |         for path in sorted(folder.iterdir()):
+445 |             try:
+446 |                 if path.is_symlink() or not path.is_file(): continue
+    |                                                           ^
+447 |                 if path.stat().st_size>20*1024*1024:
+448 |                     digest=hashlib.sha256(f'{path.name}:{path.stat().st_size}'.encode()).hexdigest()
+    |
+
+E701 Multiple statements on one line (colon)
+   --> backend/app/knowledge/engine.py:451:32
+    |
+449 |                     with self._pipeline_db() as conn:
+450 |                         seen=conn.execute('SELECT 1 FROM knowledge_pipeline_runs WHERE source_sha256=?',(digest,)).fetchone()
+451 |                     if not seen:self._record_pipeline(path.name,digest,'FAILED','FILE_TOO_LARGE_MAX_20MB')
+    |                                ^
+452 |                     continue
+453 |                 raw=path.read_bytes(); digest=hashlib.sha256(raw).hexdigest()
+    |
+
+E702 Multiple statements on one line (semicolon)
+   --> backend/app/knowledge/engine.py:453:38
+    |
+451 |                     if not seen:self._record_pipeline(path.name,digest,'FAILED','FILE_TOO_LARGE_MAX_20MB')
+452 |                     continue
+453 |                 raw=path.read_bytes(); digest=hashlib.sha256(raw).hexdigest()
+    |                                      ^
+454 |                 with self._pipeline_db() as conn:
+455 |                     seen=conn.execute('SELECT 1 FROM knowledge_pipeline_runs WHERE source_sha256=?',(digest,)).fetchone()
+    |
+
+UP017 [*] Use `datetime.UTC` alias
+   --> backend/app/knowledge/engine.py:484:99
+    |
+482 |                 'documents_indexed':document_count,'pipeline_ready_documents':ready,'documents':inventory,
+483 |                 'watch':{'enabled':bool(config['watch_enabled']),'folder':config['watch_folder'],
+484 |                          'updated_at':config['updated_at']},'runs':runs,'checked_at':datetime.now(timezone.utc).isoformat()})
+    |                                                                                                   ^^^^^^^^^^^^
+help: Convert to `datetime.UTC` alias
+    |
+13  | from threading import Lock
+    - from datetime import datetime, timezone
+14  + from datetime import datetime, timezone, UTC
+15  | from pathlib import Path
+--------------------------------------------------------------------------------
+483 |                 'watch':{'enabled':bool(config['watch_enabled']),'folder':config['watch_folder'],
+    -                          'updated_at':config['updated_at']},'runs':runs,'checked_at':datetime.now(timezone.utc).isoformat()})
+484 +                          'updated_at':config['updated_at']},'runs':runs,'checked_at':datetime.now(UTC).isoformat()})
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> backend/app/knowledge/sop_review.py:282:17
+    |
+280 |                   if detail['extraction_status'] not in ('COMPLETE', 'PARTIAL'):
+281 |                       raise ValueError('Selesaikan ekstraksi sebelum mengonfirmasi metadata PDF.')
+282 | /                 from pypdf import PdfReader
+283 | |                 import io
+    | |_________________________^
+284 |                   _, raw, _ = self.source(document_id)
+285 |                   pages = len(PdfReader(io.BytesIO(raw)).pages)
+    |
+help: Organize imports
+    |
+281 |                     raise ValueError('Selesaikan ekstraksi sebelum mengonfirmasi metadata PDF.')
+    -                 from pypdf import PdfReader
+282 |                 import io
+283 +
+284 +                 from pypdf import PdfReader
+285 |                 _, raw, _ = self.source(document_id)
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/run_evidence_tests_isolated.py:2:1
+   |
+ 1 |   """Run only the offline evidence tests with external effects denied."""
+ 2 | / from __future__ import annotations
+ 3 | |
+ 4 | | import builtins
+ 5 | | import os
+ 6 | | import platform
+ 7 | | from pathlib import Path
+ 8 | | import socket
+ 9 | | import sys
+   | |__________^
+10 |
+11 |   output = Path(sys.argv[1] if len(sys.argv) > 1 else os.environ.get("EVIDENCE_TEST_OUTPUT", Path(__file__).resolve().parent / "test_o…
+   |
+help: Organize imports
+   |
+6  | import platform
+   - from pathlib import Path
+7  | import socket
+8  | import sys
+9  + from pathlib import Path
+10 |
+   |
+
+F401 [*] `platform` imported but unused
+ --> tests/run_evidence_tests_isolated.py:6:8
+  |
+4 | import builtins
+5 | import os
+6 | import platform
+  |        ^^^^^^^^
+7 | from pathlib import Path
+8 | import socket
+  |
+help: Remove unused import: `platform`
+  |
+5 | import os
+  - import platform
+6 | from pathlib import Path
+  |
+
+E402 Module level import not at top of file
+   --> tests/run_evidence_tests_isolated.py:247:1
+    |
+245 | os.environ["TEMP"] = str(output)
+246 | os.environ["TMPDIR"] = str(output)
+247 | import pytest
+    | ^^^^^^^^^^^^^
+248 |
+249 | original_connect = socket.socket.connect
+    |
+help: Move module level imports to top of file
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_audit_regressions.py:10:5
+   |
+ 8 |   def knowledge_api():
+ 9 |       """Compose real knowledge HTTP functions without application startup/storage."""
+10 | /     import ast
+11 | |     import asyncio
+12 | |     import threading
+13 | |     import time
+14 | |     from pathlib import Path
+15 | |     from typing import Any, Dict
+16 | |
+17 | |     from fastapi import APIRouter, FastAPI, Header, HTTPException
+18 | |     from pydantic import BaseModel, Field
+19 | |
+20 | |     from app.knowledge.schemas import capture_retrieval
+21 | |     from app.security.auth import require_admin
+22 | |     from app.exceptions import internal_error
+   | |_____________________________________________^
+23 |
+24 |       source = Path(__file__).resolve().parents[1] / "backend/app/api/routes.py"
+   |
+help: Organize imports
+   |
+16 |
+   -     from fastapi import APIRouter, FastAPI, Header, HTTPException
+   -     from pydantic import BaseModel, Field
+   -
+17 +     from app.exceptions import internal_error
+18 |     from app.knowledge.schemas import capture_retrieval
+19 |     from app.security.auth import require_admin
+   -     from app.exceptions import internal_error
+20 +     from fastapi import APIRouter, FastAPI, Header, HTTPException
+21 +     from pydantic import BaseModel, Field
+22 |
+   |
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+  --> tests/test_audit_regressions.py:15:5
+   |
+13 |     import time
+14 |     from pathlib import Path
+15 |     from typing import Any, Dict
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+16 |
+17 |     from fastapi import APIRouter, FastAPI, Header, HTTPException
+   |
+
+C408 Unnecessary `dict()` call (rewrite as a literal)
+  --> tests/test_audit_regressions.py:31:17
+   |
+29 |                if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef))
+30 |                and node.name in names]
+31 |       namespace = dict(BaseModel=BaseModel, Field=Field, Any=Any, Dict=Dict,
+   |  _________________^
+32 | |                      Header=Header, HTTPException=HTTPException, asyncio=asyncio,
+33 | |                      router=APIRouter(prefix="/v1"), require_admin=require_admin,
+34 | |                      capture_retrieval=capture_retrieval, internal_error=internal_error,
+35 | |                      time=time,
+36 | |                      _sync_slots=threading.BoundedSemaphore(2))
+   | |_______________________________________________________________^
+37 |
+38 |       def unexpected_backend(*args, **kwargs):
+   |
+help: Rewrite as a literal
+   |
+30 |              and node.name in names]
+   -     namespace = dict(BaseModel=BaseModel, Field=Field, Any=Any, Dict=Dict,
+   -                      Header=Header, HTTPException=HTTPException, asyncio=asyncio,
+   -                      router=APIRouter(prefix="/v1"), require_admin=require_admin,
+   -                      capture_retrieval=capture_retrieval, internal_error=internal_error,
+   -                      time=time,
+   -                      _sync_slots=threading.BoundedSemaphore(2))
+31 +     namespace = {"BaseModel": BaseModel, "Field": Field, "Any": Any, "Dict": Dict,
+32 +                      "Header": Header, "HTTPException": HTTPException, "asyncio": asyncio,
+33 +                      "router": APIRouter(prefix="/v1"), "require_admin": require_admin,
+34 +                      "capture_retrieval": capture_retrieval, "internal_error": internal_error,
+35 +                      "time": time,
+36 +                      "_sync_slots": threading.BoundedSemaphore(2)}
+37 |
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+UP006 [*] Use `dict` instead of `Dict` for type annotation
+  --> tests/test_audit_regressions.py:31:70
+   |
+29 |              if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef))
+30 |              and node.name in names]
+31 |     namespace = dict(BaseModel=BaseModel, Field=Field, Any=Any, Dict=Dict,
+   |                                                                      ^^^^
+32 |                      Header=Header, HTTPException=HTTPException, asyncio=asyncio,
+33 |                      router=APIRouter(prefix="/v1"), require_admin=require_admin,
+   |
+help: Replace with `dict`
+   |
+30 |              and node.name in names]
+   -     namespace = dict(BaseModel=BaseModel, Field=Field, Any=Any, Dict=Dict,
+31 +     namespace = dict(BaseModel=BaseModel, Field=Field, Any=Any, Dict=dict,
+32 |                      Header=Header, HTTPException=HTTPException, asyncio=asyncio,
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_audit_regressions.py:77:5
+   |
+75 |       (True, "invalid"), (True, "invalid-\u2603")])
+76 |   def test_privileged_api_denies_before_access(monkeypatch, endpoint, payload, configured, header):
+77 | /     from fastapi import FastAPI
+78 | |     from fastapi.testclient import TestClient
+79 | |     from app.api import routes, v2_routes
+   | |_________________________________________^
+80 |
+81 |       app = FastAPI()
+   |
+help: Organize imports
+   |
+76 | def test_privileged_api_denies_before_access(monkeypatch, endpoint, payload, configured, header):
+77 +     from app.api import routes, v2_routes
+78 |     from fastapi import FastAPI
+79 |     from fastapi.testclient import TestClient
+   -     from app.api import routes, v2_routes
+80 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> tests/test_audit_regressions.py:153:5
+    |
+152 |   def test_authorized_developer_lists_workspace(monkeypatch, tmp_path):
+153 | /     from fastapi import FastAPI
+154 | |     from fastapi.testclient import TestClient
+155 | |     from app.api import v2_routes
+156 | |     from app.approval import AuditTrail
+    | |_______________________________________^
+157 |
+158 |       app = FastAPI()
+    |
+help: Organize imports
+    |
+152 | def test_authorized_developer_lists_workspace(monkeypatch, tmp_path):
+153 +     from app.api import v2_routes
+154 +     from app.approval import AuditTrail
+155 |     from fastapi import FastAPI
+156 |     from fastapi.testclient import TestClient
+    -     from app.api import v2_routes
+    -     from app.approval import AuditTrail
+157 |
+    |
+
+B023 Function definition does not bind loop variable `results`
+   --> tests/test_audit_regressions.py:182:90
+    |
+180 |     with TestClient(knowledge_api.app) as client:
+181 |         for results in ([], [evidence]):
+182 |             monkeypatch.setattr(knowledge_api.backend, "search_knowledge", lambda *args: results)
+    |                                                                                          ^^^^^^^
+183 |             response = client.post("/v1/knowledge/search", json={"query": "audit"},
+184 |                                    headers={"X-Admin-Token": "fixture-admin"})
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_configuration_integration.py:2:1
+   |
+ 1 |   """Consumer integration with isolated stores/transports; no production access."""
+ 2 | / import asyncio
+ 3 | | import hashlib
+ 4 | | from pathlib import Path
+ 5 | | from types import SimpleNamespace
+ 6 | |
+ 7 | | import httpx
+ 8 | | import pytest
+ 9 | |
+10 | | from app.core.nusantara_config import ConfigurationError, load_nusantara_config
+11 | | from app.models.ollama import OllamaProvider
+12 | | from app.knowledge.engine import KnowledgeEngine
+13 | | from app.knowledge.rag import RAG, MemoriaVectorStore, create_rag
+14 | | from app.knowledge.schemas import KnowledgeBaseConfig
+15 | | from app.knowledge.indobert_embedding import IndoBERTEmbeddingAdapter
+   | |_____________________________________________________________________^
+help: Organize imports
+   |
+8  | import pytest
+   -
+9  | from app.core.nusantara_config import ConfigurationError, load_nusantara_config
+   - from app.models.ollama import OllamaProvider
+10 | from app.knowledge.engine import KnowledgeEngine
+11 + from app.knowledge.indobert_embedding import IndoBERTEmbeddingAdapter
+12 | from app.knowledge.rag import RAG, MemoriaVectorStore, create_rag
+13 | from app.knowledge.schemas import KnowledgeBaseConfig
+   - from app.knowledge.indobert_embedding import IndoBERTEmbeddingAdapter
+14 + from app.models.ollama import OllamaProvider
+15 |
+   |
+
+F401 [*] `hashlib` imported but unused
+ --> tests/test_configuration_integration.py:3:8
+  |
+1 | """Consumer integration with isolated stores/transports; no production access."""
+2 | import asyncio
+3 | import hashlib
+  |        ^^^^^^^
+4 | from pathlib import Path
+5 | from types import SimpleNamespace
+  |
+help: Remove unused import: `hashlib`
+  |
+2 | import asyncio
+  - import hashlib
+3 | from pathlib import Path
+  |
+
+E731 Do not assign a `lambda` expression, use a `def`
+   --> tests/test_configuration_integration.py:130:5
+    |
+128 |     store = MemoriaVectorStore()
+129 |     legacy_config = KnowledgeBaseConfig(retrieval_top_k=7)
+130 |     function = lambda text: [0.0] * 768
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+131 |     rag = RAG(config=legacy_config, vector_store=store, embedding_func=function, nusantara_config=config)
+132 |     assert rag._store is store
+    |
+help: Rewrite `function` as a `def`
+    |
+129 |     legacy_config = KnowledgeBaseConfig(retrieval_top_k=7)
+    -     function = lambda text: [0.0] * 768
+130 +     def function(text):
+131 +         return [0.0] * 768
+132 |     rag = RAG(config=legacy_config, vector_store=store, embedding_func=function, nusantara_config=config)
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_control_plane_readonly.py:2:1
+   |
+ 1 |   """Local-only projection and guarded evidence-only startup tests."""
+ 2 | / import json
+ 3 | | from pathlib import Path
+ 4 | | from unittest.mock import patch
+ 5 | |
+ 6 | | import pytest
+ 7 | | from fastapi import FastAPI
+ 8 | | from fastapi.testclient import TestClient
+ 9 | | from app.api.control_plane import router
+10 | | from app.core.control_plane_projection import project
+   | |_____________________________________________________^
+help: Organize imports
+   |
+6  | import pytest
+7  + from app.api.control_plane import router
+8  + from app.core.control_plane_projection import project
+9  | from fastapi import FastAPI
+10 | from fastapi.testclient import TestClient
+   - from app.api.control_plane import router
+   - from app.core.control_plane_projection import project
+11 |
+   |
+
+E702 Multiple statements on one line (semicolon)
+  --> tests/test_control_plane_readonly.py:25:18
+   |
+24 | def client(host='127.0.0.1',base_url='http://127.0.0.1'):
+25 |     app=FastAPI();app.include_router(router)
+   |                  ^
+26 |     return TestClient(app,base_url=base_url,client=(host,12345))
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_evidence_finalization.py:2:1
+  |
+1 |   """Finalization is byte-exact, source-bound, write-once and does not approve humans."""
+2 | / import json
+3 | | from pathlib import Path
+4 | | import pytest
+5 | | from scripts.refresh_v1_evidence import finalize, publish, snapshot, write_once
+6 | | from app.core.evidence_registry import collect_review_package
+  | |_____________________________________________________________^
+help: Organize imports
+  |
+3 | from pathlib import Path
+4 +
+5 | import pytest
+6 + from app.core.evidence_registry import collect_review_package
+7 +
+8 | from scripts.refresh_v1_evidence import finalize, publish, snapshot, write_once
+  - from app.core.evidence_registry import collect_review_package
+9 |
+  |
+
+F401 [*] `pathlib.Path` imported but unused
+ --> tests/test_evidence_finalization.py:3:21
+  |
+1 | """Finalization is byte-exact, source-bound, write-once and does not approve humans."""
+2 | import json
+3 | from pathlib import Path
+  |                     ^^^^
+4 | import pytest
+5 | from scripts.refresh_v1_evidence import finalize, publish, snapshot, write_once
+  |
+help: Remove unused import: `pathlib.Path`
+  |
+2 | import json
+  - from pathlib import Path
+3 | import pytest
+  |
+
+E702 Multiple statements on one line (semicolon)
+  --> tests/test_evidence_finalization.py:10:28
+   |
+ 9 | def prepared(tmp_path):
+10 |     root=tmp_path/'project';root.mkdir()
+   |                            ^
+11 |     (root/'frontend').mkdir()
+12 |     (root/'source.txt').write_text('tested source')
+   |
+
+E702 Multiple statements on one line (semicolon)
+  --> tests/test_evidence_finalization.py:16:31
+   |
+14 |         {'id':f'AC{i}','summary':'unit fixture only','sources':['source.txt'],'tests':['test_actual']} for i in range(1,16)]}
+15 |     (root/'frontend/evidence-requirements.json').write_text(json.dumps(spec))
+16 |     folder=root/'runs/run-one';(folder/'python').mkdir(parents=True);(folder/'ui').mkdir()
+   |                               ^
+17 |     (folder/'python/python-results.xml').write_text('<testsuite tests="1" failures="0" errors="0" skipped="0"><testcase name="test_act…
+18 |     write_once(folder/'ui/vitest-results.json',{'numTotalTests':1,'testResults':[{'assertionResults':[{'title':'ui_actual','status':'p…
+   |
+
+E702 Multiple statements on one line (semicolon)
+  --> tests/test_evidence_finalization.py:16:69
+   |
+14 |         {'id':f'AC{i}','summary':'unit fixture only','sources':['source.txt'],'tests':['test_actual']} for i in range(1,16)]}
+15 |     (root/'frontend/evidence-requirements.json').write_text(json.dumps(spec))
+16 |     folder=root/'runs/run-one';(folder/'python').mkdir(parents=True);(folder/'ui').mkdir()
+   |                                                                     ^
+17 |     (folder/'python/python-results.xml').write_text('<testsuite tests="1" failures="0" errors="0" skipped="0"><testcase name="test_act…
+18 |     write_once(folder/'ui/vitest-results.json',{'numTotalTests':1,'testResults':[{'assertionResults':[{'title':'ui_actual','status':'p…
+   |
+
+C420 [*] Unnecessary dict comprehension for iterable; use `dict.fromkeys` instead
+  --> tests/test_evidence_finalization.py:22:15
+   |
+20 | …_once(folder/'source-before.json',before)
+21 | …_once(folder/'commands.json',{'commands':['unit-fixture'],'exit_codes':[0]})
+22 | …tion={k:True for k in ('network_blocked','filesystem_writes_scoped','active_data_blocked','subprocess_blocked','cache_isolated')}
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+23 | …n root,folder,before,isolation
+   |
+help: Replace with `dict.fromkeys(iterable)`)
+   |
+21 |     write_once(folder/'commands.json',{'commands':['unit-fixture'],'exit_codes':[0]})
+   -     isolation={k:True for k in ('network_blocked','filesystem_writes_scoped','active_data_blocked','subprocess_blocked','cache_isolated')}
+22 +     isolation=dict.fromkeys(('network_blocked', 'filesystem_writes_scoped', 'active_data_blocked', 'subprocess_blocked', 'cache_isolated'), True)
+23 |     return root,folder,before,isolation
+   |
+
+E702 Multiple statements on one line (semicolon)
+  --> tests/test_evidence_finalization.py:44:43
+   |
+42 |     manifest=finalize(root,folder,before,['unit-fixture'],[0],isolation)
+43 |     publish(root,folder,manifest)
+44 |     xml=folder/'python/python-results.xml';xml.write_bytes(xml.read_bytes()+b'\n')
+   |                                           ^
+45 |     invalid=collect_review_package(root)
+46 |     assert all(b['reason']=='TEST_RESULT_ARTIFACT_HASH_MISMATCH' for b in invalid['blockers'])
+   |
+
+E701 Multiple statements on one line (colon)
+  --> tests/test_evidence_finalization.py:47:70
+   |
+45 |     invalid=collect_review_package(root)
+46 |     assert all(b['reason']=='TEST_RESULT_ARTIFACT_HASH_MISMATCH' for b in invalid['blockers'])
+47 |     with pytest.raises(ValueError,match='FINALIZED_ARTIFACT_CHANGED'):publish(root,folder,manifest)
+   |                                                                      ^
+
+E701 Multiple statements on one line (colon)
+  --> tests/test_evidence_finalization.py:52:67
+   |
+50 | def test_finalization_rejects_source_change_and_failed_command(tmp_path):
+51 |     root,folder,before,isolation=prepared(tmp_path)
+52 |     with pytest.raises(ValueError,match='TEST_RUN_NOT_SUCCESSFUL'):finalize(root,folder,before,['unit-fixture'],[1],isolation)
+   |                                                                   ^
+53 |     (root/'source.txt').write_text('not the tested source')
+54 |     with pytest.raises(ValueError,match='SOURCE_CHANGED_DURING_TESTS'):finalize(root,folder,before,['unit-fixture'],[0],isolation)
+   |
+
+E701 Multiple statements on one line (colon)
+  --> tests/test_evidence_finalization.py:54:71
+   |
+52 |     with pytest.raises(ValueError,match='TEST_RUN_NOT_SUCCESSFUL'):finalize(root,folder,before,['unit-fixture'],[1],isolation)
+53 |     (root/'source.txt').write_text('not the tested source')
+54 |     with pytest.raises(ValueError,match='SOURCE_CHANGED_DURING_TESTS'):finalize(root,folder,before,['unit-fixture'],[0],isolation)
+   |                                                                       ^
+55 |     assert not (root/'current.json').exists()
+   |
+
+E701 Multiple statements on one line (colon)
+  --> tests/test_evidence_finalization.py:62:65
+   |
+60 |     manifest=finalize(root,folder,before,['unit-fixture'],[0],isolation)
+61 |     original=manifest.read_bytes()
+62 |     with pytest.raises(ValueError,match='RUN_ALREADY_FINALIZED'):finalize(root,folder,before,['unit-fixture'],[0],isolation)
+   |                                                                 ^
+63 |     assert manifest.read_bytes()==original
+64 |     bundle=json.loads((folder/'results-bundle.json').read_text())
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_evidence_registry.py:1:1
+  |
+1 | / import hashlib
+2 | | import json
+3 | |
+4 | | import pytest
+5 | |
+6 | | from app.core import evidence_registry as registry
+  | |__________________________________________________^
+help: Organize imports
+  |
+4 | import pytest
+  -
+5 | from app.core import evidence_registry as registry
+  |
+
+C420 [*] Unnecessary dict comprehension for iterable; use `dict.fromkeys` instead
+   --> tests/test_evidence_registry.py:123:22
+    |
+121 | …"schema_version": 1, "run_id": "run-fixture", "timestamp": "2026-10-10T00:00:00Z",
+122 | …": ["isolated-test-runner"], "exit_code": 0, "scope": "offline unit test fixture",
+123 | …on": {key: True for key in ("network_blocked", "filesystem_writes_scoped", "active_data_blocked", "subprocess_blocked", "cache_isolated")},
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+124 | …_path": "results-bundle.json", "results_sha256": hashlib.sha256(bundle_raw).hexdigest(),
+125 | …: {"passed": 1, "failed": 0}, "source_sha256": {}, "criteria": {}}
+    |
+help: Replace with `dict.fromkeys(iterable)`)
+    |
+122 |         "command": ["isolated-test-runner"], "exit_code": 0, "scope": "offline unit test fixture",
+    -         "isolation": {key: True for key in ("network_blocked", "filesystem_writes_scoped", "active_data_blocked", "subprocess_blocked", "cache_isolated")},
+123 +         "isolation": dict.fromkeys(("network_blocked", "filesystem_writes_scoped", "active_data_blocked", "subprocess_blocked", "cache_isolated"), True),
+124 |         "results_path": "results-bundle.json", "results_sha256": hashlib.sha256(bundle_raw).hexdigest(),
+    |
+
+C420 [*] Unnecessary dict comprehension for iterable; use `dict.fromkeys` instead
+   --> tests/test_evidence_registry.py:153:22
+    |
+151 | …ma_version': 1, 'run_id': 'fixture', 'timestamp': '2026-10-15T00:00:00Z',
+152 | …': ['fixture-runner'], 'exit_code': 0, 'scope': 'offline fixture',
+153 | …on': {key: True for key in ('network_blocked', 'filesystem_writes_scoped', 'active_data_blocked', 'subprocess_blocked', 'cache_isolated')},
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+154 | …_path': 'bundle.json', 'results_sha256': hashlib.sha256(raw).hexdigest(),
+155 | …: counts, 'source_sha256': {} if source_mode == 'missing' else {'source.py': '0' * 64 if source_mode == 'stale' else current['sha256']}, 'crite…
+    |
+help: Replace with `dict.fromkeys(iterable)`)
+    |
+152 |         'command': ['fixture-runner'], 'exit_code': 0, 'scope': 'offline fixture',
+    -         'isolation': {key: True for key in ('network_blocked', 'filesystem_writes_scoped', 'active_data_blocked', 'subprocess_blocked', 'cache_isolated')},
+153 +         'isolation': dict.fromkeys(('network_blocked', 'filesystem_writes_scoped', 'active_data_blocked', 'subprocess_blocked', 'cache_isolated'), True),
+154 |         'results_path': 'bundle.json', 'results_sha256': hashlib.sha256(raw).hexdigest(),
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_langchain_e2e.py:2:1
+  |
+1 |   """E2E test for LangChain adapter with real Ollama + retriever."""
+2 | / import pytest
+3 | | from app.knowledge.engine import KnowledgeEngine
+4 | | from app.knowledge.langchain_adapter import create_retriever, create_llm, create_chain
+  | |______________________________________________________________________________________^
+help: Organize imports
+  |
+3 | from app.knowledge.engine import KnowledgeEngine
+  - from app.knowledge.langchain_adapter import create_retriever, create_llm, create_chain
+4 + from app.knowledge.langchain_adapter import create_chain, create_llm, create_retriever
+5 |
+  |
+
+UP031 Use format specifiers instead of percent format
+  --> tests/test_langchain_e2e.py:20:11
+   |
+18 |     assert len(docs) >= 1
+19 |     assert any('permohonan' in d.page_content.lower() or 'data pribadi' in d.page_content.lower() for d in docs)
+20 |     print('PASS: retriever returned %d docs' % len(docs))
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: Replace with format specifiers
+
+UP031 Use format specifiers instead of percent format
+  --> tests/test_langchain_e2e.py:29:11
+   |
+27 |     assert resp is not None
+28 |     assert len(str(resp.content)) > 0
+29 |     print('PASS: LLM responded: %s' % str(resp.content)[:80])
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: Replace with format specifiers
+   |
+28 |     assert len(str(resp.content)) > 0
+   -     print('PASS: LLM responded: %s' % str(resp.content)[:80])
+29 +     print('PASS: LLM responded: {}'.format(str(resp.content)[:80]))
+30 |
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+UP031 Use format specifiers instead of percent format
+  --> tests/test_langchain_e2e.py:39:11
+   |
+37 |     assert answer is not None
+38 |     assert len(str(answer)) > 0
+39 |     print('PASS: chain answered: %s' % str(answer)[:120])
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: Replace with format specifiers
+   |
+38 |     assert len(str(answer)) > 0
+   -     print('PASS: chain answered: %s' % str(answer)[:120])
+39 +     print('PASS: chain answered: {}'.format(str(answer)[:120]))
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_phase3_metrics_integration.py:1:1
+  |
+1 | / import pytest
+2 | | from fastapi import FastAPI
+3 | | from fastapi.testclient import TestClient
+4 | |
+5 | | from app.api import v2_routes
+6 | | from app.main import request_id_middleware
+  | |__________________________________________^
+help: Organize imports
+  |
+1 | �import pytest
+  - from fastapi import FastAPI
+  - from fastapi.testclient import TestClient
+  -
+2 | from app.api import v2_routes
+3 | from app.main import request_id_middleware
+4 + from fastapi import FastAPI
+5 + from fastapi.testclient import TestClient
+6 |
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_provider_identity.py:2:1
+   |
+ 1 |   """R2 invocation identity: isolated HTTP transports, no database or model workers."""
+ 2 | / import asyncio
+ 3 | | import ast
+ 4 | | import dataclasses
+ 5 | | import json
+ 6 | | import os
+ 7 | | import sys
+ 8 | | import subprocess
+ 9 | | from pathlib import Path
+10 | |
+11 | | import httpx
+12 | | import pytest
+13 | |
+14 | | from app.core.nusantara_config import load_nusantara_config
+15 | | from app.core.runtime_identity import BUILD_ID, capture_model_identity
+16 | | from app.models.gateway import ModelGateway
+17 | | from app.models.mock import MockProvider
+18 | | from app.models.ollama import OllamaProvider
+19 | | from app.models.openai_compatible import OpenAICompatibleProvider
+20 | | from app.models.router import ModelRouter
+21 | | from app.observability.context import request_context
+   | |_____________________________________________________^
+help: Organize imports
+   |
+1  | """R2 invocation identity: isolated HTTP transports, no database or model workers."""
+2  + import ast
+3  | import asyncio
+   - import ast
+4  | import dataclasses
+5  | import json
+6  | import os
+   - import sys
+7  | import subprocess
+8  + import sys
+9  | from pathlib import Path
+10 |
+11 | import httpx
+12 | import pytest
+   -
+13 | from app.core.nusantara_config import load_nusantara_config
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_provider_identity.py:94:5
+   |
+92 |   @pytest.mark.parametrize('incoming', ['http-fixture-id', 'invalid!id', ''])
+93 |   def test_actual_http_middleware_binds_header_to_fixture_provider_receipt(incoming):
+94 | /     import time
+95 | |     from types import SimpleNamespace
+96 | |     from fastapi import FastAPI
+97 | |     from fastapi.testclient import TestClient
+   | |_____________________________________________^
+98 |       source = Path(__file__).parents[1] / 'backend/app/main.py'
+99 |       module = ast.parse(source.read_text(encoding='utf-8-sig'))
+   |
+help: Organize imports
+   |
+95 |     from types import SimpleNamespace
+96 +
+97 |     from fastapi import FastAPI
+   |
+
+B023 Function definition does not bind loop variable `name`
+   --> tests/test_provider_identity.py:368:46
+    |
+366 |         def surface(path):
+367 |             module = ast.parse(path.read_text(encoding='utf-8-sig'))
+368 |             current = path == root/'backend'/name
+    |                                              ^^^^
+369 |             approved = ast.parse('''class Approved:
+370 |     sop_version: str | None = Field(default=None, pattern="^[a-f0-9]{64}$")
+    |
+
+B023 Function definition does not bind loop variable `name`
+   --> tests/test_provider_identity.py:393:32
+    |
+391 | …         assert approved_fields.keys() <= {field.target.id for field in node.body if isinstance(field, ast.AnnAssign)}
+392 | …         node.body = retained
+393 | …     if current and name == 'app/api/routes.py' and isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in {
+    |                      ^^^^
+394 | …         'chat', 'search_knowledge', 'list_knowledge_documents'}:
+395 | …         assert ast.dump(node.args.args[-1]) == ast.dump(token_args.args[0])
+    |
+
+B023 Function definition does not bind loop variable `name`
+   --> tests/test_provider_identity.py:400:28
+    |
+398 |                     node.args.defaults.pop()
+399 |             history = [node for node in module.body if isinstance(node, ast.FunctionDef) and node.name == 'chat_history']
+400 |             if current and name == 'app/api/routes.py':
+    |                            ^^^^
+401 |                 assert len(history) == 1
+402 |                 assert ast.unparse(history[0].decorator_list[0]) == "router.get('/chat/history')"
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> tests/test_provider_identity.py:433:5
+    |
+431 |   def _health_endpoint_client(source, provider):
+432 |       """Execute the actual endpoint AST without importing database/worker owners."""
+433 | /     from types import SimpleNamespace
+434 | |     from fastapi import APIRouter, FastAPI
+435 | |     from fastapi.testclient import TestClient
+    | |_____________________________________________^
+436 |
+437 |       module = ast.parse(source.read_text(encoding='utf-8-sig'))
+    |
+help: Organize imports
+    |
+433 |     from types import SimpleNamespace
+434 +
+435 |     from fastapi import APIRouter, FastAPI
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_runtime_attestation.py:2:1
+   |
+ 1 |   """R2-A7 isolated observation tests: no live service or model generation."""
+ 2 | / import ast
+ 3 | | import builtins
+ 4 | | from datetime import datetime, timezone
+ 5 | | import json
+ 6 | | import os
+ 7 | | from pathlib import Path
+ 8 | | import socket
+ 9 | | import sqlite3
+10 | | import subprocess
+11 | | import sys
+12 | |
+13 | | from fastapi import FastAPI
+14 | | from fastapi.testclient import TestClient
+15 | | import httpx
+16 | | import pytest
+17 | |
+18 | | from app.core.runtime_attestation import ATTESTATION_PATH, install_runtime_attestation
+19 | | from app.core.runtime_identity import BUILD_ID, current_runtime_instance
+   | |________________________________________________________________________^
+help: Organize imports
+   |
+3  | import builtins
+   - from datetime import datetime, timezone
+4  | import json
+5  | import os
+   - from pathlib import Path
+6  | import socket
+7  | import sqlite3
+8  | import subprocess
+9  | import sys
+10 + from datetime import datetime, timezone
+11 + from pathlib import Path
+12 |
+   - from fastapi import FastAPI
+   - from fastapi.testclient import TestClient
+13 | import httpx
+14 | import pytest
+   -
+15 | from app.core.runtime_attestation import ATTESTATION_PATH, install_runtime_attestation
+16 | from app.core.runtime_identity import BUILD_ID, current_runtime_instance
+17 + from fastapi import FastAPI
+18 + from fastapi.testclient import TestClient
+19 |
+   |
+
+UP017 [*] Use `datetime.UTC` alias
+  --> tests/test_runtime_attestation.py:56:50
+   |
+54 |         start = datetime.fromisoformat(process['process_start_time'])
+55 |         captured = datetime.fromisoformat(evidence['instance_captured_at'])
+56 |         assert start <= captured <= datetime.now(timezone.utc)
+   |                                                  ^^^^^^^^^^^^
+57 |     assert evidence['runtime_instance_id'] == current_runtime_instance().runtime_instance_id
+58 |     assert evidence['build']['loaded_code_binding'] == 'MATCH'
+   |
+help: Convert to `datetime.UTC` alias
+   |
+3  | import builtins
+   - from datetime import datetime, timezone
+4  + from datetime import datetime, timezone, UTC
+5  | import json
+--------------------------------------------------------------------------------
+55 |         captured = datetime.fromisoformat(evidence['instance_captured_at'])
+   -         assert start <= captured <= datetime.now(timezone.utc)
+56 +         assert start <= captured <= datetime.now(UTC)
+57 |     assert evidence['runtime_instance_id'] == current_runtime_instance().runtime_instance_id
+   |
+
+F841 Local variable `before` is assigned to but never used
+   --> tests/test_runtime_attestation.py:185:5
+    |
+183 | def test_main_change_only_installs_attestation_and_preserves_existing_handlers():
+184 |     root = Path(__file__).parents[1]
+185 |     before = ast.parse((root/'docs/reports/r2-a7-runtime-attestation-20261008/main.py.before').read_text(encoding='utf-8-sig'))
+    |     ^^^^^^
+186 |     after_text = (root/'backend/app/main.py').read_text(encoding='utf-8-sig')
+187 |     after = ast.parse(after_text)
+    |
+help: Remove assignment to unused variable `before`
+    |
+184 |     root = Path(__file__).parents[1]
+    -     before = ast.parse((root/'docs/reports/r2-a7-runtime-attestation-20261008/main.py.before').read_text(encoding='utf-8-sig'))
+185 +     ast.parse((root/'docs/reports/r2-a7-runtime-attestation-20261008/main.py.before').read_text(encoding='utf-8-sig'))
+186 |     after_text = (root/'backend/app/main.py').read_text(encoding='utf-8-sig')
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> tests/test_runtime_attestation.py:229:5
+    |
+227 |         return {name: ast.dump(node) for name, node in functions.items()}
+228 |
+229 |     from v1_baseline import current_contract, FIXTURE
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+230 |     current_contract()  # Exact archive hashes remain pinned and unchanged.
+231 |     expected = ast.parse((FIXTURE/'main.expected.py').read_text(encoding='utf-8-sig'))
+    |
+help: Organize imports
+    |
+228 |
+    -     from v1_baseline import current_contract, FIXTURE
+229 +     from v1_baseline import FIXTURE, current_contract
+230 |     current_contract()  # Exact archive hashes remain pinned and unchanged.
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_runtime_verification.py:2:1
+   |
+ 1 |   """Real provider code behind mock HTTP transports; no live application/provider request."""
+ 2 | / import asyncio
+ 3 | | import ast
+ 4 | | import hashlib
+ 5 | | import json
+ 6 | | import os
+ 7 | | from pathlib import Path
+ 8 | | import subprocess
+ 9 | | import sys
+10 | |
+11 | | from fastapi import FastAPI
+12 | | from fastapi.testclient import TestClient
+13 | | import httpx
+14 | | import pytest
+15 | |
+16 | | from app.api.runtime_verification import install_runtime_verification, VERIFICATION_PATH
+17 | | from app.core.nusantara_config import load_nusantara_config
+18 | | from app.core.runtime_attestation import install_runtime_attestation, ATTESTATION_PATH
+19 | | from app.models.ollama import OllamaProvider
+   | |____________________________________________^
+help: Organize imports
+   |
+1  | """Real provider code behind mock HTTP transports; no live application/provider request."""
+2  + import ast
+3  | import asyncio
+   - import ast
+4  | import hashlib
+5  | import json
+6  | import os
+   - from pathlib import Path
+7  | import subprocess
+8  | import sys
+9  + from pathlib import Path
+10 |
+   - from fastapi import FastAPI
+   - from fastapi.testclient import TestClient
+11 | import httpx
+12 | import pytest
+   -
+   - from app.api.runtime_verification import install_runtime_verification, VERIFICATION_PATH
+13 + from app.api.runtime_verification import VERIFICATION_PATH, install_runtime_verification
+14 | from app.core.nusantara_config import load_nusantara_config
+   - from app.core.runtime_attestation import install_runtime_attestation, ATTESTATION_PATH
+15 + from app.core.runtime_attestation import ATTESTATION_PATH, install_runtime_attestation
+16 | from app.models.ollama import OllamaProvider
+17 + from fastapi import FastAPI
+18 + from fastapi.testclient import TestClient
+19 |
+   |
+
+F401 [*] `ast` imported but unused
+ --> tests/test_runtime_verification.py:3:8
+  |
+1 | """Real provider code behind mock HTTP transports; no live application/provider request."""
+2 | import asyncio
+3 | import ast
+  |        ^^^
+4 | import hashlib
+5 | import json
+  |
+help: Remove unused import: `ast`
+  |
+2 | import asyncio
+  - import ast
+3 | import hashlib
+  |
+
+F401 [*] `hashlib` imported but unused
+ --> tests/test_runtime_verification.py:4:8
+  |
+2 | import asyncio
+3 | import ast
+4 | import hashlib
+  |        ^^^^^^^
+5 | import json
+6 | import os
+  |
+help: Remove unused import: `hashlib`
+  |
+3 | import ast
+  - import hashlib
+4 | import json
+  |
+
+RUF059 Unpacked variable `app` is never used
+  --> tests/test_runtime_verification.py:50:5
+   |
+48 | def test_receipt_assessment_missing_unbound_and_conflicting_storage(tmp_path, monkeypatch):
+49 |     from app.core.runtime_correlation import CorrelationReceipt
+50 |     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+   |     ^^^
+51 |     assert not controller.receipt_assessment()['correlation_valid']
+52 |     receipt = CorrelationReceipt('request', 'invocation', 'fixture-instance', os.getpid(),
+   |
+help: Prefix it with an underscore or any other dummy variable pattern
+   |
+49 |     from app.core.runtime_correlation import CorrelationReceipt
+   -     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+50 +     _app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+51 |     assert not controller.receipt_assessment()['correlation_valid']
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_runtime_verification.py:66:5
+   |
+65 |   def test_receipt_assessment_controller_checks_current_os_code_and_fixture(tmp_path, monkeypatch):
+66 | /     from dataclasses import replace
+67 | |     from datetime import datetime, timedelta, timezone
+68 | |     import app.api.runtime_verification as owner
+69 | |     from app.core.runtime_correlation import CorrelationReceipt
+   | |_______________________________________________________________^
+70 |       app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+71 |       current = datetime.now(timezone.utc)
+   |
+help: Organize imports
+   |
+67 |     from datetime import datetime, timedelta, timezone
+68 +
+69 |     import app.api.runtime_verification as owner
+   |
+
+F401 [*] `datetime.timedelta` imported but unused
+  --> tests/test_runtime_verification.py:67:36
+   |
+65 | def test_receipt_assessment_controller_checks_current_os_code_and_fixture(tmp_path, monkeypatch):
+66 |     from dataclasses import replace
+67 |     from datetime import datetime, timedelta, timezone
+   |                                    ^^^^^^^^^
+68 |     import app.api.runtime_verification as owner
+69 |     from app.core.runtime_correlation import CorrelationReceipt
+   |
+help: Remove unused import: `datetime.timedelta`
+   |
+66 |     from dataclasses import replace
+   -     from datetime import datetime, timedelta, timezone
+67 +     from datetime import datetime, timezone
+68 |     import app.api.runtime_verification as owner
+   |
+
+RUF059 Unpacked variable `app` is never used
+  --> tests/test_runtime_verification.py:70:5
+   |
+68 |     import app.api.runtime_verification as owner
+69 |     from app.core.runtime_correlation import CorrelationReceipt
+70 |     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+   |     ^^^
+71 |     current = datetime.now(timezone.utc)
+72 |     stamp = current.isoformat()  # A valid fixture must not predate this process start.
+   |
+help: Prefix it with an underscore or any other dummy variable pattern
+   |
+69 |     from app.core.runtime_correlation import CorrelationReceipt
+   -     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+70 +     _app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+71 |     current = datetime.now(timezone.utc)
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+UP017 [*] Use `datetime.UTC` alias
+  --> tests/test_runtime_verification.py:71:28
+   |
+69 |     from app.core.runtime_correlation import CorrelationReceipt
+70 |     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+71 |     current = datetime.now(timezone.utc)
+   |                            ^^^^^^^^^^^^
+72 |     stamp = current.isoformat()  # A valid fixture must not predate this process start.
+73 |     process = owner._process_identity()
+   |
+help: Convert to `datetime.UTC` alias
+   |
+19 | from app.models.ollama import OllamaProvider
+20 + from datetime import UTC
+21 |
+--------------------------------------------------------------------------------
+71 |     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+   -     current = datetime.now(timezone.utc)
+72 +     current = datetime.now(UTC)
+73 |     stamp = current.isoformat()  # A valid fixture must not predate this process start.
+   |
+
+RUF059 Unpacked variable `app` is never used
+  --> tests/test_runtime_verification.py:95:5
+   |
+94 | def test_receipt_assessment_observer_failure_is_fail_closed(tmp_path, monkeypatch):
+95 |     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+   |     ^^^
+96 |     def unavailable(): raise RuntimeError('PRIVATE_CONTEXT_FAILURE')
+97 |     monkeypatch.setattr(controller, '_code_observer', unavailable)
+   |
+help: Prefix it with an underscore or any other dummy variable pattern
+   |
+94 | def test_receipt_assessment_observer_failure_is_fail_closed(tmp_path, monkeypatch):
+   -     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+95 +     _app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+96 |     def unavailable(): raise RuntimeError('PRIVATE_CONTEXT_FAILURE')
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> tests/test_runtime_verification.py:107:5
+    |
+105 | @pytest.mark.asyncio
+106 | async def test_receipt_assessment_send_success_failure_never_creates_provider_evidence(tmp_path, monkeypatch):
+107 |     from app.core.runtime_correlation import ResponseObservationMiddleware, CorrelationReceipt
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+108 |     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+109 |     receipt = CorrelationReceipt('request', 'invocation', 'fixture', os.getpid(),
+    |
+help: Organize imports
+    |
+106 | async def test_receipt_assessment_send_success_failure_never_creates_provider_evidence(tmp_path, monkeypatch):
+    -     from app.core.runtime_correlation import ResponseObservationMiddleware, CorrelationReceipt
+107 +     from app.core.runtime_correlation import CorrelationReceipt, ResponseObservationMiddleware
+108 |     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+    |
+
+RUF059 Unpacked variable `app` is never used
+   --> tests/test_runtime_verification.py:108:5
+    |
+106 | async def test_receipt_assessment_send_success_failure_never_creates_provider_evidence(tmp_path, monkeypatch):
+107 |     from app.core.runtime_correlation import ResponseObservationMiddleware, CorrelationReceipt
+108 |     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+    |     ^^^
+109 |     receipt = CorrelationReceipt('request', 'invocation', 'fixture', os.getpid(),
+110 |         'source', 'scoped', 'ollama', controller.endpoint, 'fixture-model',
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+107 |     from app.core.runtime_correlation import ResponseObservationMiddleware, CorrelationReceipt
+    -     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+108 +     _app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+109 |     receipt = CorrelationReceipt('request', 'invocation', 'fixture', os.getpid(),
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+E701 Multiple statements on one line (colon)
+   --> tests/test_runtime_verification.py:117:49
+    |
+115 |         await send({'type':'http.response.body','body':b'','more_body':False})
+116 |     async def failed_send(message):
+117 |         if message['type']=='http.response.body': raise RuntimeError('isolated-send-failed')
+    |                                                 ^
+118 |     async def sent(message): pass
+119 |     wrapped = ResponseObservationMiddleware(response_app, controller)
+    |
+
+E701 Multiple statements on one line (colon)
+   --> tests/test_runtime_verification.py:121:37
+    |
+119 |     wrapped = ResponseObservationMiddleware(response_app, controller)
+120 |     scope={'type':'http','path':VERIFICATION_PATH}
+121 |     with pytest.raises(RuntimeError): await wrapped(scope, None, failed_send)
+    |                                     ^
+122 |     assert not controller.receipt.application_response_sent
+123 |     await wrapped(scope, None, sent)
+    |
+
+RUF059 Unpacked variable `app` is never used
+   --> tests/test_runtime_verification.py:261:5
+    |
+259 | async def test_failed_final_asgi_send_is_not_recorded_as_delivery(tmp_path, monkeypatch):
+260 |     from app.core.runtime_correlation import ResponseObservationMiddleware
+261 |     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+    |     ^^^
+262 |     receipt = await controller.invoke(controller.authorization.grant())
+263 |     async def response_app(scope, receive, send):
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+260 |     from app.core.runtime_correlation import ResponseObservationMiddleware
+    -     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+261 +     _app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+262 |     receipt = await controller.invoke(controller.authorization.grant())
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+RUF059 Unpacked variable `calls` is never used
+   --> tests/test_runtime_verification.py:261:22
+    |
+259 | async def test_failed_final_asgi_send_is_not_recorded_as_delivery(tmp_path, monkeypatch):
+260 |     from app.core.runtime_correlation import ResponseObservationMiddleware
+261 |     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+    |                      ^^^^^
+262 |     receipt = await controller.invoke(controller.authorization.grant())
+263 |     async def response_app(scope, receive, send):
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+260 |     from app.core.runtime_correlation import ResponseObservationMiddleware
+    -     app, controller, calls, _ = app_fixture(tmp_path, monkeypatch)
+261 +     app, controller, _calls, _ = app_fixture(tmp_path, monkeypatch)
+262 |     receipt = await controller.invoke(controller.authorization.grant())
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+RUF059 Unpacked variable `app` is never used
+   --> tests/test_runtime_verification.py:322:5
+    |
+320 |         await blocked.wait()
+321 |         return httpx.Response(200, json={'model': 'fixture-model', 'done': True, 'response': 'x'})
+322 |     app, controller, _, _ = app_fixture(tmp_path, monkeypatch, responder=respond)
+    |     ^^^
+323 |     # Async handler must be awaited by MockTransport, not returned by a sync fixture wrapper.
+324 |     monkeypatch.setattr(httpx, 'AsyncHTTPTransport', lambda **kw: httpx.MockTransport(respond))
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+321 |         return httpx.Response(200, json={'model': 'fixture-model', 'done': True, 'response': 'x'})
+    -     app, controller, _, _ = app_fixture(tmp_path, monkeypatch, responder=respond)
+322 +     _app, controller, _, _ = app_fixture(tmp_path, monkeypatch, responder=respond)
+323 |     # Async handler must be awaited by MockTransport, not returned by a sync fixture wrapper.
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_session_memory.py:1:1
+  |
+1 | / from pathlib import Path
+2 | |
+3 | | import pytest
+4 | |
+5 | | from app.memory.session_adapter import SessionMemory
+  | |____________________________________________________^
+help: Organize imports
+  |
+3 | import pytest
+  -
+4 | from app.memory.session_adapter import SessionMemory
+  |
+
+F401 [*] `pathlib.Path` imported but unused
+ --> tests/test_session_memory.py:1:21
+  |
+1 | from pathlib import Path
+  |                     ^^^^
+2 |
+3 | import pytest
+  |
+help: Remove unused import: `pathlib.Path`
+  |
+  - from pathlib import Path
+1 |
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_session_memory.py:69:5
+   |
+68 |   def test_http_opt_in_and_delete(monkeypatch, tmp_path):
+69 | /     from fastapi import FastAPI
+70 | |     from fastapi.testclient import TestClient
+71 | |     from app.api import v2_routes as routes
+   | |___________________________________________^
+72 |
+73 |       app = FastAPI()
+   |
+help: Organize imports
+   |
+68 | def test_http_opt_in_and_delete(monkeypatch, tmp_path):
+69 +     from app.api import v2_routes as routes
+70 |     from fastapi import FastAPI
+71 |     from fastapi.testclient import TestClient
+   -     from app.api import v2_routes as routes
+72 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_sop_source_pages.py:2:1
+  |
+1 |   """Physical pages remain navigable when OCR has no source-text offsets."""
+2 | / import io
+3 | |
+4 | | from pypdf import PdfWriter
+5 | | from test_sop_review import engine_at
+6 | |
+7 | | from app.knowledge.sop_review import SOPReview
+  | |______________________________________________^
+help: Organize imports
+  |
+3 |
+4 + from app.knowledge.sop_review import SOPReview
+5 | from pypdf import PdfWriter
+6 | from test_sop_review import engine_at
+  -
+  - from app.knowledge.sop_review import SOPReview
+7 |
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_v1_langgraph.py:2:1
+   |
+ 1 |   """Real optional StateGraph, existing Hermes, synthetic offline V1 services."""
+ 2 | / import asyncio
+ 3 | | import ast
+ 4 | | import importlib.util
+ 5 | | import json
+ 6 | | from pathlib import Path
+ 7 | | from types import SimpleNamespace
+ 8 | | import typing
+ 9 | |
+10 | | import pytest
+11 | | from pydantic import BaseModel, ConfigDict, Field
+12 | |
+13 | | from app.core.nusantara_config import load_nusantara_config
+14 | | from app.hermes.agent import HermesAgent
+15 | | from app.knowledge.grounding import EvidenceGroundingGuard
+16 | | from app.trust.engine import TrustEngine
+17 | | from app.workflow.v1_langgraph import V1LangGraphWorkflow, V1WorkflowError
+   | |__________________________________________________________________________^
+help: Organize imports
+   |
+1  | """Real optional StateGraph, existing Hermes, synthetic offline V1 services."""
+2  + import ast
+3  | import asyncio
+   - import ast
+4  | import importlib.util
+5  | import json
+6  + import typing
+7  | from pathlib import Path
+8  | from types import SimpleNamespace
+   - import typing
+9  |
+10 | import pytest
+   - from pydantic import BaseModel, ConfigDict, Field
+   -
+11 | from app.core.nusantara_config import load_nusantara_config
+--------------------------------------------------------------------------------
+15 | from app.workflow.v1_langgraph import V1LangGraphWorkflow, V1WorkflowError
+16 + from pydantic import BaseModel, ConfigDict, Field
+17 |
+   |
+
+F401 [*] `json` imported but unused
+ --> tests/test_v1_langgraph.py:5:8
+  |
+3 | import ast
+4 | import importlib.util
+5 | import json
+  |        ^^^^
+6 | from pathlib import Path
+7 | from types import SimpleNamespace
+  |
+help: Remove unused import: `json`
+  |
+4 | import importlib.util
+  - import json
+5 | from pathlib import Path
+  |
+
+UP006 [*] Use `dict` instead of `typing.Dict` for type annotation
+  --> tests/test_v1_langgraph.py:29:72
+   |
+27 |              (node.name in names or node.name.startswith("_Public"))]
+28 |     namespace = {"BaseModel": BaseModel, "ConfigDict": ConfigDict, "Field": Field,
+29 |                  "Any": typing.Any, "Literal": typing.Literal, "Dict": typing.Dict}
+   |                                                                        ^^^^^^^^^^^
+30 |     exec(compile(ast.Module(body=nodes, type_ignores=[]), "v1-pure-helpers", "exec"), namespace)
+31 |     return namespace["_project_v1_chat_response"], {name: namespace[name] for name in helpers}
+   |
+help: Replace with `dict`
+   |
+28 |     namespace = {"BaseModel": BaseModel, "ConfigDict": ConfigDict, "Field": Field,
+   -                  "Any": typing.Any, "Literal": typing.Literal, "Dict": typing.Dict}
+29 +                  "Any": typing.Any, "Literal": typing.Literal, "Dict": dict}
+30 |     exec(compile(ast.Module(body=nodes, type_ignores=[]), "v1-pure-helpers", "exec"), namespace)
+   |
+
+RUF059 Unpacked variable `configuration` is never used
+   --> tests/test_v1_langgraph.py:195:5
+    |
+193 |     req.user_input = "Halo"
+194 |     output = asyncio.run(workflow(wrapped).execute(req))
+195 |     configuration, agent, services, projector, model, observed = legacy
+    |     ^^^^^^^^^^^^^
+196 |     core = asyncio.run(agent.execute_v1(req, **services))
+197 |     direct = projector(core.payload, intent_name=core.intent_name)
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+194 |     output = asyncio.run(workflow(wrapped).execute(req))
+    -     configuration, agent, services, projector, model, observed = legacy
+195 +     _configuration, agent, services, projector, model, observed = legacy
+196 |     core = asyncio.run(agent.execute_v1(req, **services))
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+RUF059 Unpacked variable `observed` is never used
+   --> tests/test_v1_langgraph.py:195:55
+    |
+193 |     req.user_input = "Halo"
+194 |     output = asyncio.run(workflow(wrapped).execute(req))
+195 |     configuration, agent, services, projector, model, observed = legacy
+    |                                                       ^^^^^^^^
+196 |     core = asyncio.run(agent.execute_v1(req, **services))
+197 |     direct = projector(core.payload, intent_name=core.intent_name)
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+194 |     output = asyncio.run(workflow(wrapped).execute(req))
+    -     configuration, agent, services, projector, model, observed = legacy
+195 +     configuration, agent, services, projector, model, _observed = legacy
+196 |     core = asyncio.run(agent.execute_v1(req, **services))
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/v1_execution_fixture.py:2:1
+  |
+1 |   """Build real isolated candidate evidence. Never reads or changes operational data."""
+2 | / import hashlib
+3 | | import json
+4 | | from pathlib import Path
+5 | | import subprocess
+6 | | import sys
+7 | | from datetime import datetime, timezone
+  | |_______________________________________^
+8 |
+9 |   REPO = Path(__file__).resolve().parents[1]
+  |
+help: Organize imports
+  |
+3 | import json
+  - from pathlib import Path
+4 | import subprocess
+5 | import sys
+6 | from datetime import datetime, timezone
+7 + from pathlib import Path
+8 |
+  |
+
+E731 Do not assign a `lambda` expression, use a `def`
+  --> tests/v1_execution_fixture.py:41:5
+   |
+39 |     assert int(suite.get('failures'))==int(suite.get('errors'))==int(suite.get('skipped'))==0
+40 |     sources = ['data/developer_core/change_plan.json','.developer_staging/safe-action/safe-result.txt','safe-result.txt','verification…
+41 |     digest = lambda path: hashlib.sha256((root/path).read_bytes()).hexdigest()
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+42 |     bundle = {'artifacts':[{'path':'verification/python-results.xml','sha256':digest('verification/python-results.xml')}]}
+43 |     (root/'results.json').write_text(json.dumps(bundle),encoding='utf-8')
+   |
+help: Rewrite `digest` as a `def`
+   |
+40 |     sources = ['data/developer_core/change_plan.json','.developer_staging/safe-action/safe-result.txt','safe-result.txt','verification/test_safe_candidate.py']
+   -     digest = lambda path: hashlib.sha256((root/path).read_bytes()).hexdigest()
+41 +     def digest(path):
+42 +         return hashlib.sha256((root/path).read_bytes()).hexdigest()
+43 |     bundle = {'artifacts':[{'path':'verification/python-results.xml','sha256':digest('verification/python-results.xml')}]}
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+UP017 [*] Use `datetime.UTC` alias
+  --> tests/v1_execution_fixture.py:46:88
+   |
+44 |     test_id = 'test_safe_candidate'
+45 |     criteria = [{'id':f'AC{i}','summary':f'Isolated candidate check {i}; not operational V1 readiness','sources':sources,'tests':[test…
+46 |     run = {'schema_version':1,'run_id':'isolated-safe-action','timestamp':datetime.now(timezone.utc).isoformat(),
+   |                                                                                        ^^^^^^^^^^^^
+47 |            'command':command,'exit_code':result.returncode,'scope':'ISOLATED_CANDIDATE_ONLY',
+48 |            'isolation':{key:True for key in ('network_blocked','filesystem_writes_scoped','active_data_blocked','subprocess_blocked','…
+   |
+help: Convert to `datetime.UTC` alias
+   |
+6  | import sys
+   - from datetime import datetime, timezone
+7  + from datetime import datetime, timezone, UTC
+8  |
+--------------------------------------------------------------------------------
+45 |     criteria = [{'id':f'AC{i}','summary':f'Isolated candidate check {i}; not operational V1 readiness','sources':sources,'tests':[test_id]} for i in range(1,16)]
+   -     run = {'schema_version':1,'run_id':'isolated-safe-action','timestamp':datetime.now(timezone.utc).isoformat(),
+46 +     run = {'schema_version':1,'run_id':'isolated-safe-action','timestamp':datetime.now(UTC).isoformat(),
+47 |            'command':command,'exit_code':result.returncode,'scope':'ISOLATED_CANDIDATE_ONLY',
+   |
+
+C420 [*] Unnecessary dict comprehension for iterable; use `dict.fromkeys` instead
+  --> tests/v1_execution_fixture.py:48:24
+   |
+46 | …_version':1,'run_id':'isolated-safe-action','timestamp':datetime.now(timezone.utc).isoformat(),
+47 | …d':command,'exit_code':result.returncode,'scope':'ISOLATED_CANDIDATE_ONLY',
+48 | …ion':{key:True for key in ('network_blocked','filesystem_writes_scoped','active_data_blocked','subprocess_blocked','cache_isolated')},
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+49 | …s_path':'results.json','results_sha256':digest('results.json'),'counts':{'passed':1,'failed':0,'errors':0},
+50 | …_sha256':{path:digest(path) for path in sources},
+   |
+help: Replace with `dict.fromkeys(iterable)`)
+   |
+47 |            'command':command,'exit_code':result.returncode,'scope':'ISOLATED_CANDIDATE_ONLY',
+   -            'isolation':{key:True for key in ('network_blocked','filesystem_writes_scoped','active_data_blocked','subprocess_blocked','cache_isolated')},
+48 +            'isolation':dict.fromkeys(('network_blocked', 'filesystem_writes_scoped', 'active_data_blocked', 'subprocess_blocked', 'cache_isolated'), True),
+49 |            'results_path':'results.json','results_sha256':digest('results.json'),'counts':{'passed':1,'failed':0,'errors':0},
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/v1_execution_fixture.py:59:5
+   |
+58 |   def application(root):
+59 | /     from fastapi import FastAPI
+60 | |     from app.api.control_plane import router
+61 | |     from app.developer_core.controlled_write import ExecutionPaths
+   | |__________________________________________________________________^
+62 |       app=FastAPI()
+63 |       app.state.runtime_profile='NORMAL'
+   |
+help: Organize imports
+   |
+58 | def application(root):
+   -     from fastapi import FastAPI
+59 |     from app.api.control_plane import router
+60 |     from app.developer_core.controlled_write import ExecutionPaths
+61 +     from fastapi import FastAPI
+62 |     app=FastAPI()
+   |
+
+Found 96 errors.
+[*] 56 fixable with `--fix` (16 unsafe fixes available with `--fix --unsafe-fixes`).
