@@ -93,8 +93,9 @@
 
 Repository action authorized by owner: commit and push this engineering report set to the feature branch only.
 
-- Delivery commit: `PENDING`
-- Push result: `PENDING`
+- Delivery commit: `bbae40b7bccd1365a9e78ea8fdfe64802b478715`
+- Push result: PASS — new remote branch `codex/vps-master-engineering-20261124` created and tracking configured
+- Workflow push: BLOCKED — GitHub rejected `.github/workflows/ci.yml` and `.github/workflows/staging.yml` because the OAuth App lacks `workflow` scope; both files remain local and untracked
 - Merge: `NOT PERFORMED`
 - Production deploy: `NOT PERFORMED`
 

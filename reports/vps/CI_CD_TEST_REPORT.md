@@ -54,7 +54,7 @@
 | `npm run build` in `frontend/` | PASS; `451 modules transformed`, chunk-size warning only |
 | `docker compose -f deploy/docker/docker-compose.yml config --quiet` | PASS |
 | `rg -n --glob '*.py' --glob '*.ts' --glob '*.tsx' --glob '*.json' --glob '*.yml' --glob '*.yaml' --glob '*.md' --glob '*.env*' '(AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,}|-----BEGIN (RSA|EC|OPENSSH) PRIVATE KEY-----)' .` | PASS, no match |
-| GitHub Actions run on GitHub | NOT RUN — no push performed, workflow files not present on remote |
+| GitHub Actions run on GitHub | NOT RUN — report commit pushed, but workflow files could not be pushed because the OAuth App lacks `workflow` scope |
 
 ## Known CI Failure On Current Base
 

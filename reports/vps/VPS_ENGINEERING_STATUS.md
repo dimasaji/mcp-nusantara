@@ -5,7 +5,7 @@
 - Repository: `https://github.com/dimasaji/mcp-nusantara`
 - Branch: `codex/vps-master-engineering-20261124`
 - Local Commit Before Delivery: `cfd46391` (`docs(vps): add engineering reconciliation and sync controls`)
-- Delivery State: Phase 2–6 files are uncommitted until the authorized delivery commit is created
+- Delivery State: `bbae40b7bccd1365a9e78ea8fdfe64802b478715` pushed to `origin/codex/vps-master-engineering-20261124`; workflow files remain local only due missing OAuth `workflow` scope
 - Remote Commit: `origin/codex/restructure-20261123` = `545137e8`; GitHub default `codex/fullroot-control-20261007` = `8b7f9b78`; PR #21 head = `f1586983`
 
 ## Completed
@@ -26,11 +26,11 @@
 
 ## In Progress
 
-- Authorized delivery commit and push of this report set to `codex/vps-master-engineering-20261124`.
+- Workflow files `.github/workflows/ci.yml` and `.github/workflows/staging.yml` need an authorized credential with GitHub `workflow` scope before they can be pushed.
 
 ## Pending
 
-- Real GitHub Actions execution after push.
+- Push of two workflow files after `workflow`-scope authorization; GitHub Actions execution after that.
 - Owner decision on the 3 frontend engineering-console fixture cases.
 - Owner-supplied PIAK-03 artifacts, IndoBERT/Docling worker, and operator credential.
 - Windows `sync-local.ps1` execution and 37 native IPC cases.
@@ -55,18 +55,18 @@
 - `scripts/sync/sync-local.ps1` (new, committed at `cfd46391`)
 - `reports/vps/SYNC_VERIFICATION_REPORT.md` (new, committed at `cfd46391`)
 - `.gitignore` (unignored `reports/vps/`, committed at `cfd46391`)
-- `contracts/vps/VPS_MASTER_CONTRACT.md` (new, uncommitted)
-- `contracts/vps/VPS_ENGINEERING_RUNBOOK.md` (new, uncommitted)
-- `contracts/vps/VPS_ACCEPTANCE_CRITERIA.md` (new, uncommitted)
-- `reports/vps/PORTABILITY_TEST_REPORT.md` (new, uncommitted)
-- `reports/vps/DOCKER_RUNTIME_REPORT.md` (new, uncommitted)
-- `reports/vps/REGRESSION_TEST_REPORT.md` (new, uncommitted)
-- `.github/workflows/ci.yml` (new, uncommitted)
-- `.github/workflows/staging.yml` (new, uncommitted)
-- `reports/vps/CI_CD_TEST_REPORT.md` (new, uncommitted)
-- `reports/vps/KNOWLEDGE_FIXTURE_HANDOFF.md` (new, uncommitted)
-- `reports/vps/VPS_SECURITY_REPORT.md` (new, uncommitted)
-- `reports/vps/VPS_FINAL_READINESS_REPORT.md` (new, uncommitted)
+- `contracts/vps/VPS_MASTER_CONTRACT.md` (new, pushed in `bbae40b7`)
+- `contracts/vps/VPS_ENGINEERING_RUNBOOK.md` (new, pushed in `bbae40b7`)
+- `contracts/vps/VPS_ACCEPTANCE_CRITERIA.md` (new, pushed in `bbae40b7`)
+- `reports/vps/PORTABILITY_TEST_REPORT.md` (new, pushed in `bbae40b7`)
+- `reports/vps/DOCKER_RUNTIME_REPORT.md` (new, pushed in `bbae40b7`)
+- `reports/vps/REGRESSION_TEST_REPORT.md` (new, pushed in `bbae40b7`)
+- `.github/workflows/ci.yml` (new, LOCAL ONLY — OAuth `workflow` scope blocked)
+- `.github/workflows/staging.yml` (new, LOCAL ONLY — OAuth `workflow` scope blocked)
+- `reports/vps/CI_CD_TEST_REPORT.md` (new, pushed in `bbae40b7`)
+- `reports/vps/KNOWLEDGE_FIXTURE_HANDOFF.md` (new, pushed in `bbae40b7`)
+- `reports/vps/VPS_SECURITY_REPORT.md` (new, pushed in `bbae40b7`)
+- `reports/vps/VPS_FINAL_READINESS_REPORT.md` (new, pushed in `bbae40b7`)
 
 ## Tests Executed
 
@@ -99,7 +99,7 @@
 ## Known Issues
 
 - Official integration branch is 30+ commits ahead of several local work branches.
-- No `.github/workflows` exists on any inspected V1 remote branch; Phase 4 workflows exist only on this unmerged feature branch.
+- Remote feature branch contains the reports but no `.github/workflows`; push was rejected because the OAuth App lacks `workflow` scope.
 - First real GitHub CI run on this branch is expected to fail at the `frontend` job until the fixture decision is made.
 - Root filesystem at 82% use with 2.7 GB free.
 - Current service ports `18201`/`15274` differ from configured `8000`/`5180`.
@@ -115,7 +115,8 @@
 
 ## Approval Required
 
-- Push of this feature branch: authorized by owner in this session.
+- Push of this feature branch: authorized and completed for reports in `bbae40b7`.
+- Workflow-scope credential or GitHub App permission to push `.github/workflows/*`.
 - Merge or rebase of official integration branch.
 - Merge of PR #19, #20, or #21.
 - Any production deployment or service restart.
@@ -125,4 +126,4 @@
 
 ## Next Action
 
-Create the authorized delivery commit for Phase 2–6 files, push only `codex/vps-master-engineering-20261124` to GitHub, then record the resulting SHA and push result. Do not merge, deploy, restart services, or perform operator actions without separate owner approval.
+Report delivery is complete at `bbae40b7` on `origin/codex/vps-master-engineering-20261124`. Next, obtain a credential with GitHub `workflow` scope to push the two local workflow files, then let GitHub Actions run. Do not merge, deploy, restart services, or perform operator actions without separate owner approval.
