@@ -1,0 +1,477 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0
+rootdir: /data/workspace/nus-v1-release-rc-20261123/worktrees/rc
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0, cov-7.1.0, asyncio-1.5.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 1681 items / 2 errors
+
+tests/evaluation/test_smoke.py .....                                     [  0%]
+tests/test_admin_token_source.py ...                                     [  0%]
+tests/test_approval_boundary.py ..........                               [  1%]
+tests/test_approval_persistence.py ..                                    [  1%]
+tests/test_audit_file_writers.py ..                                      [  1%]
+tests/test_audit_regressions.py ......F.F.F.....F........                [  2%]
+tests/test_backend_runtime_fixture.py .                                  [  2%]
+tests/test_backup_restore.py .....                                       [  3%]
+tests/test_capil01_knowledge.py ......s                                  [  3%]
+tests/test_chat_citation_source.py ...........                           [  4%]
+tests/test_chat_identity_greeting.py ........                            [  4%]
+tests/test_chat_openrouter_route_wiring_v1.py .                          [  4%]
+tests/test_chat_policy_handoff_regression.py .....                       [  5%]
+tests/test_chat_request_idempotency.py ...                               [  5%]
+tests/test_chat_source_recovery.py ...................                   [  6%]
+tests/test_configuration_contract.py ................................... [  8%]
+.....................                                                    [  9%]
+tests/test_configuration_integration.py .......F...F.                    [ 10%]
+tests/test_control_plane_attestation_binding.py EEEEEEEEEEEEEEEEEEEEEEEE [ 11%]
+EEEEEEF                                                                  [ 12%]
+tests/test_control_plane_readonly.py F.........F.............            [ 13%]
+tests/test_cost_governance_reference.py ........                         [ 14%]
+tests/test_cost_ledger_initialization_race.py .                          [ 14%]
+tests/test_cost_ledger_v1.py .......                                     [ 14%]
+tests/test_cost_summary_api.py ..                                        [ 14%]
+tests/test_developer_core_engine_contract.py .......................     [ 16%]
+tests/test_docker_deployment_readiness.py ......                         [ 16%]
+tests/test_docling_layout.py sss....s                                    [ 17%]
+tests/test_document_answers.py ......                                    [ 17%]
+tests/test_document_context.py ...                                       [ 17%]
+tests/test_document_scope_v1.py ..                                       [ 17%]
+tests/test_document_tools.py ..                                          [ 17%]
+tests/test_effective_rag_profile.py .............................        [ 19%]
+tests/test_evidence_decision_api.py .....                                [ 19%]
+tests/test_evidence_finalization.py FFFF                                 [ 20%]
+tests/test_evidence_registry.py FFF..F......                             [ 20%]
+tests/test_evidence_runner_guards.py sssssssss                           [ 21%]
+tests/test_evidence_runner_subprocess.py F                               [ 21%]
+tests/test_executable_skills.py ....                                     [ 21%]
+tests/test_executable_skills_api.py ....                                 [ 21%]
+tests/test_executable_skills_native.py s                                 [ 21%]
+tests/test_fullroot_boundaries.py ......                                 [ 22%]
+tests/test_gate14_developer_core.py .....                                [ 22%]
+tests/test_gate14_mapper_impact.py .....                                 [ 22%]
+tests/test_gate_integration.py ...                                       [ 23%]
+tests/test_gates_8_16.py ......                                          [ 23%]
+tests/test_golden_sop_chat.py .                                          [ 23%]
+tests/test_hermes_acp_connection.py .....                                [ 23%]
+tests/test_hermes_v1_arithmetic.py ..............                        [ 24%]
+tests/test_hermes_v1_context_persistence.py ...                          [ 24%]
+tests/test_hermes_v1_context_preservation.py ..                          [ 24%]
+tests/test_hermes_v1_contextual_followup.py ..................           [ 25%]
+tests/test_hermes_v1_conversation.py ................................... [ 28%]
+.................ss.                                                     [ 29%]
+tests/test_indobert_timeout.py .                                         [ 29%]
+tests/test_indobert_unicode.py .                                         [ 29%]
+tests/test_indobert_worker_proxy_env.py .                                [ 29%]
+tests/test_ingestion_atomic_profiles.py ....                             [ 29%]
+tests/test_inspection_preview_api.py ................................... [ 31%]
+.                                                                        [ 31%]
+tests/test_knowledge_cleaning.py ......                                  [ 32%]
+tests/test_knowledge_pipeline.py .....                                   [ 32%]
+tests/test_knowledge_pipeline_api.py ............                        [ 33%]
+tests/test_knowledge_preparation.py .........                            [ 33%]
+tests/test_langchain_adapter.py .FF.                                     [ 33%]
+tests/test_langchain_e2e.py FFF                                          [ 34%]
+tests/test_langchain_hardening.py .FF.........F                          [ 34%]
+tests/test_langgraph_workflow.py .FF.                                    [ 35%]
+tests/test_language_normalizer.py ..............                         [ 35%]
+tests/test_language_service_turn_facets.py ...............               [ 36%]
+tests/test_laya_intent.py ...................                            [ 37%]
+tests/test_local_operator_identity.py ssssssssssssssssssssssss           [ 39%]
+tests/test_local_services_contract.py s.s                                [ 39%]
+tests/test_mcp_stdio.py .                                                [ 39%]
+tests/test_model_inventory_provider_boundary.py ..                       [ 39%]
+tests/test_model_router_configuration.py ..............                  [ 40%]
+tests/test_model_status_inference_v1.py ..                               [ 40%]
+tests/test_ncp_v1_chat_contract.py ...........................           [ 42%]
+tests/test_normal_plan.py ..                                             [ 42%]
+tests/test_ollama_provider_proxy_env.py ..                               [ 42%]
+tests/test_ollama_timing.py ..                                           [ 42%]
+tests/test_openrouter_cancellation_v1.py .                               [ 42%]
+tests/test_openrouter_cost_guard_v1.py .                                 [ 42%]
+tests/test_openrouter_cost_integration_v1.py .....                       [ 43%]
+tests/test_openrouter_cost_policy_v1.py ....                             [ 43%]
+tests/test_openrouter_failure_safety_v1.py ..                            [ 43%]
+tests/test_openrouter_provider.py .....................................  [ 45%]
+tests/test_openwebui_adapt.py ......                                     [ 45%]
+tests/test_pdf_preview.py .                                              [ 46%]
+tests/test_phase2_hardening.py ..........                                [ 46%]
+tests/test_phase3_http_integration.py ..                                 [ 46%]
+tests/test_phase3_metrics_integration.py FFF                             [ 46%]
+tests/test_phase3_observability.py ..........                            [ 47%]
+tests/test_phase3_v1_metrics_integration.py ...                          [ 47%]
+tests/test_phase4_trust_contract.py ...........                          [ 48%]
+tests/test_phase4_v1_chat_runtime.py ..                                  [ 48%]
+tests/test_phase4_v1_trust_integration.py .....                          [ 48%]
+tests/test_policy_engine.py ........                                     [ 49%]
+tests/test_provider_failure.py ........                                  [ 49%]
+tests/test_provider_identity.py ........................................ [ 52%]
+....FFFF                                                                 [ 52%]
+tests/test_pytest_collection.py .                                        [ 52%]
+tests/test_readyz_contract.py .                                          [ 52%]
+tests/test_research_persistence.py .                                     [ 52%]
+tests/test_restart_recovery.py ......                                    [ 53%]
+tests/test_retrieval_evidence_persistence.py ...                         [ 53%]
+tests/test_review_branch.py .                                            [ 53%]
+tests/test_review_publication_v1.py ....                                 [ 53%]
+tests/test_review_replay_v1.py ...                                       [ 53%]
+tests/test_runtime_attestation.py ...............F                       [ 54%]
+tests/test_runtime_authorization.py FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF. [ 56%]
+FFF                                                                      [ 57%]
+tests/test_runtime_build_provenance.py ........................          [ 58%]
+tests/test_runtime_correlation.py ...................................... [ 60%]
+.......                                                                  [ 61%]
+tests/test_runtime_identity.py ..                                        [ 61%]
+tests/test_runtime_portability.py ......                                 [ 61%]
+tests/test_runtime_readiness.py ........                                 [ 62%]
+tests/test_runtime_verification.py ........................F.FF          [ 63%]
+tests/test_selected_pdf_chat.py .........                                [ 64%]
+tests/test_semantic_cold_start.py .                                      [ 64%]
+tests/test_service_facts_table_multipath.py ...                          [ 64%]
+tests/test_session_memory.py ......F                                     [ 64%]
+tests/test_sop_dashboard.py ......                                       [ 65%]
+tests/test_sop_fields.py .........                                       [ 65%]
+tests/test_sop_ingestion.py ...                                          [ 66%]
+tests/test_sop_metadata.py ............                                  [ 66%]
+tests/test_sop_review.py .............                                   [ 67%]
+tests/test_sop_source_pages.py F                                         [ 67%]
+tests/test_sop_table_core.py .............                               [ 68%]
+tests/test_source_fetcher.py .......                                     [ 68%]
+tests/test_sqlite_backup_wal.py .....                                    [ 69%]
+tests/test_synthetic_rag_fixture.py .F.                                  [ 69%]
+tests/test_trace_retention.py ..                                         [ 69%]
+tests/test_v1_chat_history.py ....                                       [ 69%]
+tests/test_v1_chat_rag_regression.py ......................              [ 70%]
+tests/test_v1_current_ui_contract.py ...                                 [ 71%]
+tests/test_v1_execution_evidence.py .......                              [ 71%]
+tests/test_v1_global_search.py .......                                   [ 71%]
+tests/test_v1_hydration_failsafe.py ...                                  [ 72%]
+tests/test_v1_knowledge_reuse_rebind.py ....                             [ 72%]
+tests/test_v1_langgraph.py ...sssssssssssssss                            [ 73%]
+tests/test_v1_laya_integration.py ...                                    [ 73%]
+tests/test_v1_live_smoke.py sss                                          [ 73%]
+tests/test_v1_operational_data.py .......                                [ 74%]
+tests/test_v1_operator_control.py ..........................             [ 75%]
+tests/test_v1_post_generation_timeout.py .                               [ 75%]
+tests/test_v1_recovery_context_dump.py ..                                [ 75%]
+tests/test_v1_response_projection.py ...........................         [ 77%]
+tests/test_v1_review_execution_api.py EEEEEEEEEEEEEEEE                   [ 78%]
+tests/test_v1_search_candidate_window.py ...                             [ 78%]
+tests/test_v1_service_dialogue.py .......................                [ 80%]
+tests/test_v1_session_contract.py ......                                 [ 80%]
+tests/test_v1_shared_hardening.py ........                               [ 80%]
+tests/test_v1_smoke.py ...                                               [ 81%]
+tests/test_v1_sop_boundary.py ...................                        [ 82%]
+tests/test_v1_stage_budget.py .                                          [ 82%]
+tests/test_v1_stage_timing.py ......                                     [ 82%]
+tests/test_v1_stream_transport.py ..                                     [ 82%]
+tests/test_v1_targeted_boundaries.py .............                       [ 83%]
+tests/test_v1_twenty_turns.py .                                          [ 83%]
+tests/test_v2_disabled.py ..                                             [ 83%]
+tests/test_web_evidence_pipeline.py .................................... [ 85%]
+.................................FFFF.....................               [ 89%]
+tests/test_weip_rag_adapter.py .............................             [ 90%]
+tests/test_work_approval_contract.py ...                                 [ 91%]
+tests/test_worker_process.py s                                           [ 91%]
+tests/v2/test_context_budget.py .......                                  [ 91%]
+tests/v2/test_devcore.py ....................                            [ 92%]
+tests/v2/test_devcore_grounding_response.py ..........................   [ 94%]
+tests/v2/test_devcore_inspection.py ...........................          [ 95%]
+tests/v2/test_devcore_integration.py ......                              [ 96%]
+tests/v2/test_devcore_routes.py ......                                   [ 96%]
+tests/v2/test_phases_7_21.py ...............................             [ 98%]
+tests/v2/test_v2_core.py .........................                       [100%]
+
+=============================== warnings summary ===============================
+tests/test_capil01_knowledge.py: 10 warnings
+tests/test_chat_citation_source.py: 22 warnings
+tests/test_chat_source_recovery.py: 2 warnings
+tests/test_configuration_integration.py: 2 warnings
+tests/test_document_scope_v1.py: 50 warnings
+tests/test_document_tools.py: 4 warnings
+tests/test_effective_rag_profile.py: 54 warnings
+tests/test_executable_skills.py: 10 warnings
+tests/test_executable_skills_api.py: 6 warnings
+tests/test_ingestion_atomic_profiles.py: 14 warnings
+tests/test_knowledge_cleaning.py: 6 warnings
+tests/test_knowledge_pipeline.py: 2 warnings
+tests/test_knowledge_pipeline_api.py: 20 warnings
+tests/test_knowledge_preparation.py: 10 warnings
+tests/test_langchain_adapter.py: 2 warnings
+tests/test_pdf_preview.py: 2 warnings
+tests/test_review_publication_v1.py: 10 warnings
+tests/test_review_replay_v1.py: 6 warnings
+tests/test_runtime_readiness.py: 6 warnings
+tests/test_selected_pdf_chat.py: 14 warnings
+tests/test_sop_dashboard.py: 16 warnings
+tests/test_sop_ingestion.py: 4 warnings
+tests/test_sop_metadata.py: 26 warnings
+tests/test_sop_review.py: 28 warnings
+tests/test_sop_table_core.py: 4 warnings
+tests/test_synthetic_rag_fixture.py: 6 warnings
+tests/test_v1_sop_boundary.py: 4 warnings
+tests/test_v1_twenty_turns.py: 2 warnings
+tests/test_web_evidence_pipeline.py: 2 warnings
+tests/test_weip_rag_adapter.py: 30 warnings
+  /data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/pydantic/main.py:280: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/test_capil01_knowledge.py: 5 warnings
+tests/test_chat_citation_source.py: 12 warnings
+tests/test_document_scope_v1.py: 25 warnings
+tests/test_document_tools.py: 2 warnings
+tests/test_executable_skills.py: 5 warnings
+tests/test_executable_skills_api.py: 3 warnings
+tests/test_ingestion_atomic_profiles.py: 5 warnings
+tests/test_knowledge_cleaning.py: 3 warnings
+tests/test_knowledge_pipeline_api.py: 10 warnings
+tests/test_knowledge_preparation.py: 5 warnings
+tests/test_langchain_adapter.py: 1 warning
+tests/test_pdf_preview.py: 1 warning
+tests/test_review_publication_v1.py: 5 warnings
+tests/test_review_replay_v1.py: 3 warnings
+tests/test_runtime_readiness.py: 3 warnings
+tests/test_selected_pdf_chat.py: 7 warnings
+tests/test_sop_dashboard.py: 8 warnings
+tests/test_sop_ingestion.py: 1 warning
+tests/test_sop_metadata.py: 14 warnings
+tests/test_sop_review.py: 15 warnings
+tests/test_sop_table_core.py: 2 warnings
+tests/test_synthetic_rag_fixture.py: 3 warnings
+tests/test_v1_sop_boundary.py: 2 warnings
+tests/test_v1_twenty_turns.py: 1 warning
+tests/test_web_evidence_pipeline.py: 1 warning
+tests/test_weip_rag_adapter.py: 14 warnings
+  /data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/knowledge/store.py:260: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    datetime.utcnow(),
+
+tests/test_capil01_knowledge.py: 5 warnings
+tests/test_chat_citation_source.py: 12 warnings
+tests/test_document_scope_v1.py: 25 warnings
+tests/test_document_tools.py: 2 warnings
+tests/test_executable_skills.py: 5 warnings
+tests/test_executable_skills_api.py: 3 warnings
+tests/test_ingestion_atomic_profiles.py: 5 warnings
+tests/test_knowledge_cleaning.py: 3 warnings
+tests/test_knowledge_pipeline_api.py: 10 warnings
+tests/test_knowledge_preparation.py: 5 warnings
+tests/test_langchain_adapter.py: 1 warning
+tests/test_pdf_preview.py: 1 warning
+tests/test_review_publication_v1.py: 5 warnings
+tests/test_review_replay_v1.py: 3 warnings
+tests/test_runtime_readiness.py: 3 warnings
+tests/test_selected_pdf_chat.py: 7 warnings
+tests/test_sop_dashboard.py: 8 warnings
+tests/test_sop_ingestion.py: 1 warning
+tests/test_sop_metadata.py: 14 warnings
+tests/test_sop_review.py: 15 warnings
+tests/test_sop_table_core.py: 2 warnings
+tests/test_synthetic_rag_fixture.py: 3 warnings
+tests/test_v1_sop_boundary.py: 2 warnings
+tests/test_v1_twenty_turns.py: 1 warning
+tests/test_web_evidence_pipeline.py: 1 warning
+tests/test_weip_rag_adapter.py: 14 warnings
+  /data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/knowledge/store.py:262: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    datetime.utcnow().isoformat(),
+
+tests/test_capil01_knowledge.py: 29 warnings
+tests/test_chat_citation_source.py: 11 warnings
+tests/test_document_scope_v1.py: 25 warnings
+tests/test_document_tools.py: 2 warnings
+tests/test_executable_skills.py: 5 warnings
+tests/test_executable_skills_api.py: 3 warnings
+tests/test_ingestion_atomic_profiles.py: 5 warnings
+tests/test_knowledge_cleaning.py: 3 warnings
+tests/test_knowledge_pipeline_api.py: 10 warnings
+tests/test_knowledge_preparation.py: 22 warnings
+tests/test_langchain_adapter.py: 3 warnings
+tests/test_pdf_preview.py: 1 warning
+tests/test_review_publication_v1.py: 5 warnings
+tests/test_review_replay_v1.py: 3 warnings
+tests/test_runtime_readiness.py: 3 warnings
+tests/test_selected_pdf_chat.py: 7 warnings
+tests/test_sop_dashboard.py: 8 warnings
+tests/test_sop_ingestion.py: 1 warning
+tests/test_sop_metadata.py: 13 warnings
+tests/test_sop_review.py: 14 warnings
+tests/test_sop_table_core.py: 2 warnings
+tests/test_synthetic_rag_fixture.py: 9 warnings
+tests/test_v1_sop_boundary.py: 2 warnings
+tests/test_v1_twenty_turns.py: 1 warning
+tests/test_web_evidence_pipeline.py: 1 warning
+tests/test_weip_rag_adapter.py: 13 warnings
+  /data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/knowledge/store.py:221: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    getattr(chunk, "stored_at", datetime.utcnow()).isoformat(),
+
+tests/test_capil01_knowledge.py: 5 warnings
+tests/test_chat_citation_source.py: 11 warnings
+tests/test_document_scope_v1.py: 25 warnings
+tests/test_document_tools.py: 2 warnings
+tests/test_executable_skills.py: 5 warnings
+tests/test_executable_skills_api.py: 3 warnings
+tests/test_ingestion_atomic_profiles.py: 5 warnings
+tests/test_knowledge_cleaning.py: 3 warnings
+tests/test_knowledge_pipeline_api.py: 10 warnings
+tests/test_knowledge_preparation.py: 5 warnings
+tests/test_langchain_adapter.py: 1 warning
+tests/test_pdf_preview.py: 1 warning
+tests/test_review_publication_v1.py: 5 warnings
+tests/test_review_replay_v1.py: 3 warnings
+tests/test_runtime_readiness.py: 3 warnings
+tests/test_selected_pdf_chat.py: 7 warnings
+tests/test_sop_dashboard.py: 8 warnings
+tests/test_sop_ingestion.py: 1 warning
+tests/test_sop_metadata.py: 13 warnings
+tests/test_sop_review.py: 14 warnings
+tests/test_sop_table_core.py: 2 warnings
+tests/test_synthetic_rag_fixture.py: 3 warnings
+tests/test_v1_sop_boundary.py: 2 warnings
+tests/test_v1_twenty_turns.py: 1 warning
+tests/test_web_evidence_pipeline.py: 1 warning
+tests/test_weip_rag_adapter.py: 12 warnings
+  /data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/knowledge/store.py:272: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    (int(count), datetime.utcnow().isoformat(), document_id),
+
+tests/test_langchain_hardening.py: 9 warnings
+tests/test_phase4_v1_chat_runtime.py: 2 warnings
+tests/test_v1_operator_control.py: 14 warnings
+tests/test_v1_response_projection.py: 13 warnings
+  /data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/mcp/mcp.py:89: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "created_at": datetime.utcnow().isoformat(),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[False-None-/v2/dev-payload0]
+FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[True-None-/v2/dev-payload0]
+FAILED tests/test_audit_regressions.py::test_privileged_api_denies_before_access[True-invalid-/v2/dev-payload0]
+FAILED tests/test_audit_regressions.py::test_authorized_developer_lists_workspace
+FAILED tests/test_configuration_integration.py::test_rag_actual_query_and_ingestion_use_config
+FAILED tests/test_configuration_integration.py::test_r1_preserves_out_of_scope_protected_sources
+FAILED tests/test_control_plane_attestation_binding.py::test_guarded_application_composition_no_network_or_protected_state
+FAILED tests/test_control_plane_readonly.py::test_real_projection_no_database_worker_or_mutating_git
+FAILED tests/test_control_plane_readonly.py::test_tampered_r3_evidence_rejected
+FAILED tests/test_evidence_finalization.py::test_finalized_results_mutation_is_rejected
+FAILED tests/test_evidence_finalization.py::test_finalized_leaf_result_mutation_is_rejected
+FAILED tests/test_evidence_finalization.py::test_finalization_rejects_source_change_and_failed_command
+FAILED tests/test_evidence_finalization.py::test_finalized_run_cannot_be_replaced_or_reference_itself
+FAILED tests/test_evidence_registry.py::test_registry_covers_all_acceptance_criteria
+FAILED tests/test_evidence_registry.py::test_each_criterion_links_sources_and_tests
+FAILED tests/test_evidence_registry.py::test_collector_records_real_artifact_references
+FAILED tests/test_evidence_registry.py::test_missing_test_run_blocks_pass - F...
+FAILED tests/test_evidence_runner_subprocess.py::test_evidence_guards_in_their_own_runner
+FAILED tests/test_langchain_adapter.py::test_create_retriever - assert None i...
+FAILED tests/test_langchain_adapter.py::test_create_llm - assert None is not ...
+FAILED tests/test_langchain_e2e.py::test_retriever_e2e - assert None is not None
+FAILED tests/test_langchain_e2e.py::test_llm_e2e - assert None is not None
+FAILED tests/test_langchain_e2e.py::test_chain_e2e - assert None is not None
+FAILED tests/test_langchain_hardening.py::test_langchain_flag_on - assert Non...
+FAILED tests/test_langchain_hardening.py::test_langgraph_flag_on - assert Non...
+FAILED tests/test_langchain_hardening.py::test_knowledge_search_still_works
+FAILED tests/test_langgraph_workflow.py::test_create_workflow - assert None i...
+FAILED tests/test_langgraph_workflow.py::test_workflow_invoke - AttributeErro...
+FAILED tests/test_phase3_metrics_integration.py::test_metrics_endpoint_returns_observability_snapshot
+FAILED tests/test_phase3_metrics_integration.py::test_request_generates_metrics_counter
+FAILED tests/test_phase3_metrics_integration.py::test_metrics_endpoint_has_request_id
+FAILED tests/test_provider_identity.py::test_public_request_response_models_and_routes_unchanged
+FAILED tests/test_provider_identity.py::test_public_health_distinguishes_inventory_identity_and_preserves_legacy_fields[ok-True]
+FAILED tests/test_provider_identity.py::test_public_health_distinguishes_inventory_identity_and_preserves_legacy_fields[degraded-False]
+FAILED tests/test_provider_identity.py::test_public_health_distinguishes_inventory_identity_and_preserves_legacy_fields[unavailable-False]
+FAILED tests/test_runtime_attestation.py::test_main_change_only_installs_attestation_and_preserves_existing_handlers
+FAILED tests/test_runtime_authorization.py::test_native_decision_arm_execute_receipt_private_and_one_use
+FAILED tests/test_runtime_authorization.py::test_proof_cannot_be_client_actor_or_replayed
+FAILED tests/test_runtime_authorization.py::test_live_owner_cannot_issue_permit_even_with_os_proof
+FAILED tests/test_runtime_authorization.py::test_negative_decisions_never_arm[REJECT]
+FAILED tests/test_runtime_authorization.py::test_negative_decisions_never_arm[HOLD]
+FAILED tests/test_runtime_authorization.py::test_negative_decisions_never_arm[ABORT]
+FAILED tests/test_runtime_authorization.py::test_abort_revokes_before_dispatch[APPROVED]
+FAILED tests/test_runtime_authorization.py::test_abort_revokes_before_dispatch[ARMED]
+FAILED tests/test_runtime_authorization.py::test_stale_process_runtime_or_material_rejected[pid]
+FAILED tests/test_runtime_authorization.py::test_stale_process_runtime_or_material_rejected[process_start]
+FAILED tests/test_runtime_authorization.py::test_stale_process_runtime_or_material_rejected[runtime_instance]
+FAILED tests/test_runtime_authorization.py::test_stale_process_runtime_or_material_rejected[source_snapshot]
+FAILED tests/test_runtime_authorization.py::test_stale_process_runtime_or_material_rejected[scoped_loaded_code]
+FAILED tests/test_runtime_authorization.py::test_stale_process_runtime_or_material_rejected[configuration_digest]
+FAILED tests/test_runtime_authorization.py::test_real_scoped_code_drift_rejected
+FAILED tests/test_runtime_authorization.py::test_expiry_actor_session_and_peer_freshness
+FAILED tests/test_runtime_authorization.py::test_forged_scope_evidence_status_sensitive_reason_rejected[change0]
+FAILED tests/test_runtime_authorization.py::test_forged_scope_evidence_status_sensitive_reason_rejected[change1]
+FAILED tests/test_runtime_authorization.py::test_forged_scope_evidence_status_sensitive_reason_rejected[change2]
+FAILED tests/test_runtime_authorization.py::test_forged_scope_evidence_status_sensitive_reason_rejected[change3]
+FAILED tests/test_runtime_authorization.py::test_forged_scope_evidence_status_sensitive_reason_rejected[change4]
+FAILED tests/test_runtime_authorization.py::test_forged_scope_evidence_status_sensitive_reason_rejected[change5]
+FAILED tests/test_runtime_authorization.py::test_queue_audit_failures_poison_and_revoke[submit]
+FAILED tests/test_runtime_authorization.py::test_queue_audit_failures_poison_and_revoke[decide]
+FAILED tests/test_runtime_authorization.py::test_queue_audit_failures_poison_and_revoke[consume]
+FAILED tests/test_runtime_authorization.py::test_queue_audit_failures_poison_and_revoke[post_grant_audit]
+FAILED tests/test_runtime_authorization.py::test_queue_audit_failures_poison_and_revoke[tampered_queue]
+FAILED tests/test_runtime_authorization.py::test_queue_audit_failures_poison_and_revoke[tampered_audit]
+FAILED tests/test_runtime_authorization.py::test_redaction_safe_fields_round_trip_capacity_and_no_alias
+FAILED tests/test_runtime_authorization.py::test_concurrency_dispatch_uncertainty_terminal_no_retry
+FAILED tests/test_runtime_authorization.py::test_final_send_distinct_from_provider_observation[True]
+FAILED tests/test_runtime_authorization.py::test_final_send_distinct_from_provider_observation[False]
+FAILED tests/test_runtime_authorization.py::test_atttestation_projection_no_legacy_digest_and_normal_preserved
+FAILED tests/test_runtime_authorization.py::test_normal_profile_cannot_install_foundation
+FAILED tests/test_runtime_authorization.py::test_direct_native_ipc_to_foundation_decision_without_activation
+FAILED tests/test_runtime_authorization.py::test_false_queue_result_and_post_claim_failure_no_release[arm]
+FAILED tests/test_runtime_authorization.py::test_false_queue_result_and_post_claim_failure_no_release[execute]
+FAILED tests/test_runtime_authorization.py::test_abort_after_dispatch_records_uncertainty_without_second_dispatch
+FAILED tests/test_runtime_verification.py::test_normal_app_composition_preserves_existing_routers_and_caller_ids
+FAILED tests/test_runtime_verification.py::test_existing_public_v1_v2_configuration_and_control_plane_sources_untouched
+FAILED tests/test_runtime_verification.py::test_attestation_real_app_boot_request_response_shutdown_avoid_protected_state
+FAILED tests/test_session_memory.py::test_http_opt_in_and_delete - KeyError: ...
+FAILED tests/test_sop_source_pages.py::test_review_counts_original_pdf_pages_without_ocr_offsets
+FAILED tests/test_synthetic_rag_fixture.py::test_synthetic_retriever_exposes_evidence_to_langchain
+FAILED tests/test_web_evidence_pipeline.py::test_remediation_four_manifest_text_representations[1]
+FAILED tests/test_web_evidence_pipeline.py::test_remediation_four_manifest_text_representations[2]
+FAILED tests/test_web_evidence_pipeline.py::test_remediation_four_manifest_text_representations[3]
+FAILED tests/test_web_evidence_pipeline.py::test_remediation_four_manifest_text_representations[4]
+ERROR tests/evaluation/test_live_harness.py - AssertionError: Configured oper...
+ERROR tests/test_developer_control.py - FileNotFoundError: [Errno 2] No such ...
+ERROR tests/test_control_plane_attestation_binding.py::test_pending_snapshot_and_duplicate_no_authority
+ERROR tests/test_control_plane_attestation_binding.py::test_stale_or_asserted_fields_rejected_before_mutation[change0]
+ERROR tests/test_control_plane_attestation_binding.py::test_stale_or_asserted_fields_rejected_before_mutation[change1]
+ERROR tests/test_control_plane_attestation_binding.py::test_stale_or_asserted_fields_rejected_before_mutation[change2]
+ERROR tests/test_control_plane_attestation_binding.py::test_stale_or_asserted_fields_rejected_before_mutation[change3]
+ERROR tests/test_control_plane_attestation_binding.py::test_stale_or_asserted_fields_rejected_before_mutation[change4]
+ERROR tests/test_control_plane_attestation_binding.py::test_stale_or_asserted_fields_rejected_before_mutation[change5]
+ERROR tests/test_control_plane_attestation_binding.py::test_stale_or_asserted_fields_rejected_before_mutation[change6]
+ERROR tests/test_control_plane_attestation_binding.py::test_stale_or_asserted_fields_rejected_before_mutation[change7]
+ERROR tests/test_control_plane_attestation_binding.py::test_stale_or_asserted_fields_rejected_before_mutation[change8]
+ERROR tests/test_control_plane_attestation_binding.py::test_stale_or_asserted_fields_rejected_before_mutation[change9]
+ERROR tests/test_control_plane_attestation_binding.py::test_origin_rejected_before_mutation[]
+ERROR tests/test_control_plane_attestation_binding.py::test_origin_rejected_before_mutation[null]
+ERROR tests/test_control_plane_attestation_binding.py::test_origin_rejected_before_mutation[http://localhost:5173]
+ERROR tests/test_control_plane_attestation_binding.py::test_origin_rejected_before_mutation[http://evil.example]
+ERROR tests/test_control_plane_attestation_binding.py::test_origin_rejected_before_mutation[http://127.0.0.1:5174]
+ERROR tests/test_control_plane_attestation_binding.py::test_bounded_json[{"scope":"x","scope":"y"}]
+ERROR tests/test_control_plane_attestation_binding.py::test_bounded_json[[]
+ERROR tests/test_control_plane_attestation_binding.py::test_bounded_json[[]]
+ERROR tests/test_control_plane_attestation_binding.py::test_bounded_json["x"]
+ERROR tests/test_control_plane_attestation_binding.py::test_bounded_json[raw4]
+ERROR tests/test_control_plane_attestation_binding.py::test_wrong_host_peer_normal_and_missing_owner
+ERROR tests/test_control_plane_attestation_binding.py::test_concurrency_expiry_capacity_and_detached_projection
+ERROR tests/test_control_plane_attestation_binding.py::test_browser_cannot_reach_arm_execute[ARM]
+ERROR tests/test_control_plane_attestation_binding.py::test_browser_cannot_reach_arm_execute[EXECUTE]
+ERROR tests/test_control_plane_attestation_binding.py::test_atomic_material_change_and_storage_failure
+ERROR tests/test_control_plane_attestation_binding.py::test_binding_changes_between_validation_and_creation
+ERROR tests/test_control_plane_attestation_binding.py::test_capacity_rejects_without_poisoning
+ERROR tests/test_control_plane_attestation_binding.py::test_live_lock_even_after_trusted_peer_validation[ARM]
+ERROR tests/test_control_plane_attestation_binding.py::test_live_lock_even_after_trusted_peer_validation[EXECUTE]
+ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[PASS]
+ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[FAIL]
+ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[HOLD]
+ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[none]
+ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[expired]
+ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[different_evidence]
+ERROR tests/test_v1_review_execution_api.py::test_review_governance_executor_history[changed_source]
+ERROR tests/test_v1_review_execution_api.py::test_unauthorized_execution_does_not_write
+ERROR tests/test_v1_review_execution_api.py::test_operation_summary_stops_requesting_review_after_completion
+ERROR tests/test_v1_review_execution_api.py::test_unbound_pass_does_not_authorize_action
+ERROR tests/test_v1_review_execution_api.py::test_changed_plan_cannot_receive_stale_ui_approval
+ERROR tests/test_v1_review_execution_api.py::test_plan_changed_after_approval_is_rejected_and_recorded
+ERROR tests/test_v1_review_execution_api.py::test_copy_failure_is_persisted_and_cannot_reuse_approval
+ERROR tests/test_v1_review_execution_api.py::test_latest_hold_revokes_pass_without_erasing_history
+ERROR tests/test_v1_review_execution_api.py::test_other_runtime_profiles_cannot_reach_v1_mutation[ATTESTATION]
+ERROR tests/test_v1_review_execution_api.py::test_other_runtime_profiles_cannot_reach_v1_mutation[EVIDENCE_ONLY]
+==== 84 failed, 1489 passed, 62 skipped, 1076 warnings, 48 errors in 20.91s ====

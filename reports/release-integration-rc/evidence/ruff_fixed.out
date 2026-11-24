@@ -1,0 +1,174 @@
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_control_plane_attestation_binding.py:2:1
+   |
+ 1 |   """PENDING-only integration: in-process ASGI, no socket/provider/IPC activation."""
+ 2 | / import asyncio
+ 3 | | from concurrent.futures import ThreadPoolExecutor
+ 4 | | from dataclasses import replace
+ 5 | | import json
+ 6 | | import os
+ 7 | | from pathlib import Path
+ 8 | | import subprocess
+ 9 | | import sys
+10 | |
+11 | | from fastapi.testclient import TestClient
+12 | | import pytest
+13 | |
+14 | | from app.api.control_plane import router
+15 | | from app.approval.runtime_authorization import AuthorizationError, SCOPE
+16 | | from test_runtime_authorization import fixture, command
+   | |_______________________________________________________^
+help: Organize imports
+   |
+2  | import asyncio
+   - from concurrent.futures import ThreadPoolExecutor
+   - from dataclasses import replace
+3  | import json
+4  | import os
+   - from pathlib import Path
+5  | import subprocess
+6  | import sys
+7  + from concurrent.futures import ThreadPoolExecutor
+8  + from dataclasses import replace
+9  + from pathlib import Path
+10 |
+   - from fastapi.testclient import TestClient
+11 | import pytest
+   -
+12 | from app.api.control_plane import router
+   - from app.approval.runtime_authorization import AuthorizationError, SCOPE
+   - from test_runtime_authorization import fixture, command
+13 + from app.approval.runtime_authorization import SCOPE, AuthorizationError
+14 + from fastapi.testclient import TestClient
+15 + from test_runtime_authorization import command, fixture
+16 |
+   |
+
+RUF059 Unpacked variable `controller` is never used
+   --> tests/test_control_plane_attestation_binding.py:122:15
+    |
+121 | def test_atomic_material_change_and_storage_failure(isolated, monkeypatch):
+122 |     _, owner, controller, calls = isolated
+    |               ^^^^^^^^^^
+123 |     data = body(owner)
+124 |     original = owner._material
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+    |
+121 | def test_atomic_material_change_and_storage_failure(isolated, monkeypatch):
+    -     _, owner, controller, calls = isolated
+122 +     _, owner, _controller, calls = isolated
+123 |     data = body(owner)
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/test_runtime_attestation.py:2:1
+   |
+ 1 |   """R2-A7 isolated observation tests: no live service or model generation."""
+ 2 | / import ast
+ 3 | | import builtins
+ 4 | | from datetime import datetime, timezone
+ 5 | | import json
+ 6 | | import os
+ 7 | | from pathlib import Path
+ 8 | | import socket
+ 9 | | import sqlite3
+10 | | import subprocess
+11 | | import sys
+12 | |
+13 | | from fastapi import FastAPI
+14 | | from fastapi.testclient import TestClient
+15 | | import httpx
+16 | | import pytest
+17 | |
+18 | | from app.core.runtime_attestation import ATTESTATION_PATH, install_runtime_attestation
+19 | | from app.core.runtime_identity import BUILD_ID, current_runtime_instance
+   | |________________________________________________________________________^
+help: Organize imports
+   |
+3  | import builtins
+   - from datetime import datetime, timezone
+4  | import json
+5  | import os
+   - from pathlib import Path
+6  | import socket
+7  | import sqlite3
+8  | import subprocess
+9  | import sys
+10 + from datetime import datetime, timezone
+11 + from pathlib import Path
+12 |
+   - from fastapi import FastAPI
+   - from fastapi.testclient import TestClient
+13 | import httpx
+14 | import pytest
+   -
+15 | from app.core.runtime_attestation import ATTESTATION_PATH, install_runtime_attestation
+16 | from app.core.runtime_identity import BUILD_ID, current_runtime_instance
+17 + from fastapi import FastAPI
+18 + from fastapi.testclient import TestClient
+19 |
+   |
+
+UP017 [*] Use `datetime.UTC` alias
+  --> tests/test_runtime_attestation.py:56:50
+   |
+54 |         start = datetime.fromisoformat(process['process_start_time'])
+55 |         captured = datetime.fromisoformat(evidence['instance_captured_at'])
+56 |         assert start <= captured <= datetime.now(timezone.utc)
+   |                                                  ^^^^^^^^^^^^
+57 |     assert evidence['runtime_instance_id'] == current_runtime_instance().runtime_instance_id
+58 |     assert evidence['build']['loaded_code_binding'] == 'MATCH'
+   |
+help: Convert to `datetime.UTC` alias
+   |
+3  | import builtins
+   - from datetime import datetime, timezone
+4  + from datetime import datetime, timezone, UTC
+5  | import json
+--------------------------------------------------------------------------------
+55 |         captured = datetime.fromisoformat(evidence['instance_captured_at'])
+   -         assert start <= captured <= datetime.now(timezone.utc)
+56 +         assert start <= captured <= datetime.now(UTC)
+57 |     assert evidence['runtime_instance_id'] == current_runtime_instance().runtime_instance_id
+   |
+
+F841 Local variable `before` is assigned to but never used
+   --> tests/test_runtime_attestation.py:185:5
+    |
+183 | def test_main_change_only_installs_attestation_and_preserves_existing_handlers():
+184 |     root = Path(__file__).parents[1]
+185 |     before = ast.parse((root/'docs/reports/r2-a7-runtime-attestation-20261008/main.py.before').read_text(encoding='utf-8-sig'))
+    |     ^^^^^^
+186 |     after = ast.parse((root/'backend/app/main.py').read_text(encoding='utf-8-sig'))
+    |
+help: Remove assignment to unused variable `before`
+    |
+184 |     root = Path(__file__).parents[1]
+    -     before = ast.parse((root/'docs/reports/r2-a7-runtime-attestation-20261008/main.py.before').read_text(encoding='utf-8-sig'))
+185 +     ast.parse((root/'docs/reports/r2-a7-runtime-attestation-20261008/main.py.before').read_text(encoding='utf-8-sig'))
+186 |     after = ast.parse((root/'backend/app/main.py').read_text(encoding='utf-8-sig'))
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> tests/test_runtime_attestation.py:202:5
+    |
+200 |         return [ast.dump(node) for node in functions]
+201 |
+202 |     from v1_baseline import current_contract, FIXTURE
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+203 |     current_contract()  # Exact archive hashes remain pinned and unchanged.
+204 |     expected = ast.parse((FIXTURE/'main.expected.py').read_text(encoding='utf-8-sig'))
+    |
+help: Organize imports
+    |
+201 |
+    -     from v1_baseline import current_contract, FIXTURE
+202 +     from v1_baseline import FIXTURE, current_contract
+203 |     current_contract()  # Exact archive hashes remain pinned and unchanged.
+    |
+
+Found 6 errors.
+[*] 4 fixable with `--fix` (2 unsafe fixes available with `--fix --unsafe-fixes`).

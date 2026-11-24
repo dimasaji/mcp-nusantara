@@ -1,0 +1,132 @@
+2026-11-24T00:07:44Z	rc_head	RUN	git rev-parse HEAD
+2026-11-24T00:07:44Z	rc_head	0	git rev-parse HEAD
+2026-11-24T00:07:44Z	rc_status	RUN	git status --short --branch
+2026-11-24T00:07:44Z	rc_status	0	git status --short --branch
+2026-11-24T00:07:44Z	rc_log	RUN	git log -1 --format=%H%n%P%n%an <%ae>%n%ad%n%s --date=iso-strict
+2026-11-24T00:07:44Z	rc_log	0	git log -1 --format=%H%n%P%n%an <%ae>%n%ad%n%s --date=iso-strict
+2026-11-24T00:07:44Z	pr16	RUN	gh pr view 16 --repo dimasaji/mcp-nusantara --json number,title,state,mergedAt,mergeCommit,headRefName,headRefOid,baseRefName,url
+2026-11-24T00:07:44Z	pr16	0	gh pr view 16 --repo dimasaji/mcp-nusantara --json number,title,state,mergedAt,mergeCommit,headRefName,headRefOid,baseRefName,url
+2026-11-24T00:07:44Z	pr17	RUN	gh pr view 17 --repo dimasaji/mcp-nusantara --json number,title,state,mergedAt,mergeCommit,headRefName,headRefOid,baseRefName,url
+2026-11-24T00:07:45Z	pr17	0	gh pr view 17 --repo dimasaji/mcp-nusantara --json number,title,state,mergedAt,mergeCommit,headRefName,headRefOid,baseRefName,url
+2026-11-24T00:07:45Z	pr18	RUN	gh pr view 18 --repo dimasaji/mcp-nusantara --json number,title,state,mergedAt,mergeCommit,headRefName,headRefOid,baseRefName,url
+2026-11-24T00:07:45Z	pr18	0	gh pr view 18 --repo dimasaji/mcp-nusantara --json number,title,state,mergedAt,mergeCommit,headRefName,headRefOid,baseRefName,url
+2026-11-24T00:07:45Z	pr19	RUN	gh pr view 19 --repo dimasaji/mcp-nusantara --json number,title,state,mergedAt,mergeCommit,headRefName,headRefOid,baseRefName,url,mergeable
+2026-11-24T00:07:45Z	pr19	0	gh pr view 19 --repo dimasaji/mcp-nusantara --json number,title,state,mergedAt,mergeCommit,headRefName,headRefOid,baseRefName,url,mergeable
+2026-11-24T00:07:45Z	ancestors	RUN	bash -lc for sha in ec76a9ed01f160a28d1cbe34e263b3bbe9ccb075 3e3eedcf82f326bc609df25056c50536d487807f b77c9c6e3d547b1d5a34c633abd0fb01e5aef046 545137e8cfbec737488246492d59837df303cc4d; do git merge-base --is-ancestor "$sha" HEAD && echo "$sha ancestor-of-rc PASS" || echo "$sha ancestor-of-rc FAIL"; done
+2026-11-24T00:07:45Z	ancestors	0	bash -lc for sha in ec76a9ed01f160a28d1cbe34e263b3bbe9ccb075 3e3eedcf82f326bc609df25056c50536d487807f b77c9c6e3d547b1d5a34c633abd0fb01e5aef046 545137e8cfbec737488246492d59837df303cc4d; do git merge-base --is-ancestor "$sha" HEAD && echo "$sha ancestor-of-rc PASS" || echo "$sha ancestor-of-rc FAIL"; done
+2026-11-24T00:07:45Z	rc_vs_integration	RUN	git diff --stat origin/codex/restructure-20261123..HEAD
+2026-11-24T00:07:45Z	rc_vs_integration	0	git diff --stat origin/codex/restructure-20261123..HEAD
+2026-11-24T00:07:45Z	branches	RUN	git branch -a --no-color
+2026-11-24T00:07:45Z	branches	0	git branch -a --no-color
+2026-11-24T00:08:02Z	tools	RUN	bash -lc node --version; npm --version; /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python --version; /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pip show hatchling build 2>/dev/null | grep -E "^(Name|Version):" || true
+2026-11-24T00:08:02Z	tools	0	bash -lc node --version; npm --version; /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python --version; /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pip show hatchling build 2>/dev/null | grep -E "^(Name|Version):" || true
+2026-11-24T00:08:17Z	backend_build	RUN	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pip wheel . --no-deps -w /data/workspace/nus-v1-release-rc-20261123/build/backend
+2026-11-24T00:08:17Z	backend_build	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pip wheel . --no-deps -w /data/workspace/nus-v1-release-rc-20261123/build/backend
+2026-11-24T00:08:17Z	frontend_install	RUN	bash -lc npm ci --no-audit --no-fund
+2026-11-24T00:08:18Z	frontend_install	0	bash -lc npm ci --no-audit --no-fund
+2026-11-24T00:08:18Z	frontend_build	RUN	bash -lc npm run build
+2026-11-24T00:08:25Z	frontend_build	0	bash -lc npm run build
+2026-11-24T00:08:25Z	frontend_dist_copy	RUN	bash -lc cp -a frontend/dist/. /data/workspace/nus-v1-release-rc-20261123/build/frontend-dist/
+2026-11-24T00:08:25Z	frontend_dist_copy	1	bash -lc cp -a frontend/dist/. /data/workspace/nus-v1-release-rc-20261123/build/frontend-dist/
+2026-11-24T00:08:30Z	backend_build_root	RUN	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pip wheel . --no-deps -w /data/workspace/nus-v1-release-rc-20261123/build/backend
+2026-11-24T00:08:31Z	backend_build_root	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pip wheel . --no-deps -w /data/workspace/nus-v1-release-rc-20261123/build/backend
+2026-11-24T00:08:31Z	frontend_dist_copy	RUN	bash -lc cp -a frontend/dist/. /data/workspace/nus-v1-release-rc-20261123/build/frontend-dist/
+2026-11-24T00:08:31Z	frontend_dist_copy	0	bash -lc cp -a frontend/dist/. /data/workspace/nus-v1-release-rc-20261123/build/frontend-dist/
+2026-11-24T00:08:31Z	build_outputs	RUN	bash -lc ls -lh /data/workspace/nus-v1-release-rc-20261123/build/backend; printf "%s\n" "--- frontend ---"; find /data/workspace/nus-v1-release-rc-20261123/build/frontend-dist -maxdepth 2 -type f | sort
+2026-11-24T00:08:31Z	build_outputs	0	bash -lc ls -lh /data/workspace/nus-v1-release-rc-20261123/build/backend; printf "%s\n" "--- frontend ---"; find /data/workspace/nus-v1-release-rc-20261123/build/frontend-dist -maxdepth 2 -type f | sort
+2026-11-24T00:08:39Z	docker_build	RUN	bash -lc DOCKER_BUILDKIT=1 docker build --progress=plain -f deploy/docker/Dockerfile -t nusantara-v1:rc-f4f8b7f5 .
+2026-11-24T00:08:40Z	docker_build	0	bash -lc DOCKER_BUILDKIT=1 docker build --progress=plain -f deploy/docker/Dockerfile -t nusantara-v1:rc-f4f8b7f5 .
+2026-11-24T00:08:40Z	compose_config	RUN	bash -lc docker compose -f deploy/docker/docker-compose.yml config --quiet
+2026-11-24T00:08:40Z	compose_config	0	bash -lc docker compose -f deploy/docker/docker-compose.yml config --quiet
+2026-11-24T00:08:40Z	compose_audit_config	RUN	bash -lc docker compose -f deploy/docker/docker-compose.yml -f deploy/docker/docker-compose.audit.yml config --quiet
+2026-11-24T00:08:40Z	compose_audit_config	0	bash -lc docker compose -f deploy/docker/docker-compose.yml -f deploy/docker/docker-compose.audit.yml config --quiet
+2026-11-24T00:08:40Z	compose_indobert_config	RUN	bash -lc NUSANTARA_INDOBERT_WORKER_DIR=/data/workspace/nus-v1-release-rc-20261123/evidence/worker docker compose -f deploy/docker/docker-compose.yml -f deploy/docker/docker-compose.indobert.yml config --quiet
+2026-11-24T00:08:40Z	compose_indobert_config	0	bash -lc NUSANTARA_INDOBERT_WORKER_DIR=/data/workspace/nus-v1-release-rc-20261123/evidence/worker docker compose -f deploy/docker/docker-compose.yml -f deploy/docker/docker-compose.indobert.yml config --quiet
+2026-11-24T00:08:40Z	rc_image_digest	RUN	docker image inspect nusantara-v1:rc-f4f8b7f5 --format {{.Id}} {{json .RepoTags}}
+2026-11-24T00:08:40Z	rc_image_digest	0	docker image inspect nusantara-v1:rc-f4f8b7f5 --format {{.Id}} {{json .RepoTags}}
+2026-11-24T00:09:27Z	active_ports_before	RUN	ss -ltnp
+2026-11-24T00:09:27Z	active_ports_before	0	ss -ltnp
+2026-11-24T00:09:27Z	staging_start	RUN	bash -lc docker rm -f nusantara-rc-staging >/dev/null 2>&1 || true; /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -c 'import secrets; print(secrets.token_hex(16))' > '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.token'; chmod 600 '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.token'; printf 'NUSANTARA_ADMIN_TOKEN=%s\n' "$(cat '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.token')" > '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.env'; chmod 600 '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.env'; docker run -d --name nusantara-rc-staging --network host --read-only --tmpfs /tmp -v nusantara-rc-data:/app/data -v nusantara-rc-home:/home/appuser --env-file '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.env' -e NUSANTARA_DATA_DIR=/app/data -e NUSANTARA_KNOWLEDGE_DB=/app/data/knowledge/nusantara_knowledge.db -e NUSANTARA_HEALTHCHECK_PORT=18214 -e LLM_BASE_URL=http://127.0.0.1:11434 -e OLLAMA_BASE_URL=http://127.0.0.1:11434 nusantara-v1:rc-f4f8b7f5 uvicorn app.main:app --host 127.0.0.1 --port 18214 --log-level info
+2026-11-24T00:09:27Z	staging_start	0	bash -lc docker rm -f nusantara-rc-staging >/dev/null 2>&1 || true; /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -c 'import secrets; print(secrets.token_hex(16))' > '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.token'; chmod 600 '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.token'; printf 'NUSANTARA_ADMIN_TOKEN=%s\n' "$(cat '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.token')" > '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.env'; chmod 600 '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.env'; docker run -d --name nusantara-rc-staging --network host --read-only --tmpfs /tmp -v nusantara-rc-data:/app/data -v nusantara-rc-home:/home/appuser --env-file '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.env' -e NUSANTARA_DATA_DIR=/app/data -e NUSANTARA_KNOWLEDGE_DB=/app/data/knowledge/nusantara_knowledge.db -e NUSANTARA_HEALTHCHECK_PORT=18214 -e LLM_BASE_URL=http://127.0.0.1:11434 -e OLLAMA_BASE_URL=http://127.0.0.1:11434 nusantara-v1:rc-f4f8b7f5 uvicorn app.main:app --host 127.0.0.1 --port 18214 --log-level info
+2026-11-24T00:09:27Z	staging_wait	RUN	bash -lc for i in $(seq 1 60); do if curl --noproxy "*" -fsS --max-time 3 http://127.0.0.1:18214/health >/dev/null 2>&1; then echo WAIT_OK attempts=$i; exit 0; fi; sleep 1; done; echo WAIT_TIMEOUT; exit 1
+2026-11-24T00:09:28Z	staging_wait	0	bash -lc for i in $(seq 1 60); do if curl --noproxy "*" -fsS --max-time 3 http://127.0.0.1:18214/health >/dev/null 2>&1; then echo WAIT_OK attempts=$i; exit 0; fi; sleep 1; done; echo WAIT_TIMEOUT; exit 1
+2026-11-24T00:09:28Z	staging_smoke	RUN	bash /data/workspace/nus-v1-release-rc-20261123/evidence/staging_smoke.sh
+2026-11-24T00:09:31Z	staging_smoke	0	bash /data/workspace/nus-v1-release-rc-20261123/evidence/staging_smoke.sh
+2026-11-24T00:09:31Z	staging_healthcheck	RUN	docker exec -e NUSANTARA_HEALTHCHECK_PORT=18214 nusantara-rc-staging python scripts/healthcheck.py
+2026-11-24T00:09:31Z	staging_healthcheck	0	docker exec -e NUSANTARA_HEALTHCHECK_PORT=18214 nusantara-rc-staging python scripts/healthcheck.py
+2026-11-24T00:09:31Z	staging_inspect	RUN	docker inspect nusantara-rc-staging --format {{.State.Status}} {{.State.Health.Status}} {{.Config.User}}
+2026-11-24T00:09:31Z	staging_inspect	0	docker inspect nusantara-rc-staging --format {{.State.Status}} {{.State.Health.Status}} {{.Config.User}}
+2026-11-24T00:09:31Z	history_before_restart	RUN	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} -H X-Admin-Token: <STAGING_TOKEN_REDACTED> -H X-Chat-Session: web-11111111-2222-4333-8444-555555555555 http://127.0.0.1:18214/v1/chat/history
+2026-11-24T00:09:31Z	history_before_restart	0	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} -H X-Admin-Token: <STAGING_TOKEN_REDACTED> -H X-Chat-Session: web-11111111-2222-4333-8444-555555555555 http://127.0.0.1:18214/v1/chat/history
+2026-11-24T00:09:40Z	model_status_after_chat	RUN	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} -H X-Admin-Token: <STAGING_TOKEN_REDACTED> http://127.0.0.1:18214/v1/control-plane/model-status
+2026-11-24T00:09:40Z	model_status_after_chat	0	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} -H X-Admin-Token: <STAGING_TOKEN_REDACTED> http://127.0.0.1:18214/v1/control-plane/model-status
+2026-11-24T00:09:40Z	staging_healthy_wait	RUN	bash -lc for i in $(seq 1 60); do state=$(docker inspect nusantara-rc-staging --format "{{.State.Health.Status}}"); if [ "$state" = healthy ]; then echo HEALTHY attempts=$i; exit 0; fi; sleep 1; done; echo HEALTH_TIMEOUT state=$state; exit 1
+2026-11-24T00:09:58Z	staging_healthy_wait	0	bash -lc for i in $(seq 1 60); do state=$(docker inspect nusantara-rc-staging --format "{{.State.Health.Status}}"); if [ "$state" = healthy ]; then echo HEALTHY attempts=$i; exit 0; fi; sleep 1; done; echo HEALTH_TIMEOUT state=$state; exit 1
+2026-11-24T00:09:58Z	staging_restart	RUN	docker restart nusantara-rc-staging
+2026-11-24T00:09:59Z	staging_restart	0	docker restart nusantara-rc-staging
+2026-11-24T00:09:59Z	staging_wait_after_restart	RUN	bash -lc for i in $(seq 1 60); do if curl --noproxy "*" -fsS --max-time 3 http://127.0.0.1:18214/health >/dev/null 2>&1; then echo WAIT_OK attempts=$i; exit 0; fi; sleep 1; done; echo WAIT_TIMEOUT; exit 1
+2026-11-24T00:10:00Z	staging_wait_after_restart	0	bash -lc for i in $(seq 1 60); do if curl --noproxy "*" -fsS --max-time 3 http://127.0.0.1:18214/health >/dev/null 2>&1; then echo WAIT_OK attempts=$i; exit 0; fi; sleep 1; done; echo WAIT_TIMEOUT; exit 1
+2026-11-24T00:10:00Z	history_after_restart	RUN	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} -H X-Admin-Token: <STAGING_TOKEN_REDACTED> -H X-Chat-Session: web-11111111-2222-4333-8444-555555555555 http://127.0.0.1:18214/v1/chat/history
+2026-11-24T00:10:00Z	history_after_restart	0	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} -H X-Admin-Token: <STAGING_TOKEN_REDACTED> -H X-Chat-Session: web-11111111-2222-4333-8444-555555555555 http://127.0.0.1:18214/v1/chat/history
+2026-11-24T00:10:00Z	persistence_compare	RUN	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:10:00Z	persistence_compare	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:10:10Z	provider_failure_start	RUN	bash -lc docker rm -f nusantara-rc-provider-failure >/dev/null 2>&1 || true; docker run -d --name nusantara-rc-provider-failure --network host --read-only --tmpfs /tmp -v nusantara-rc-provider-data:/app/data -v nusantara-rc-provider-home:/home/appuser --env-file '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.env' -e NUSANTARA_DATA_DIR=/app/data -e NUSANTARA_KNOWLEDGE_DB=/app/data/knowledge/nusantara_knowledge.db -e NUSANTARA_HEALTHCHECK_PORT=18215 -e LLM_BASE_URL=http://127.0.0.1:19999 -e OLLAMA_BASE_URL=http://127.0.0.1:19999 nusantara-v1:rc-f4f8b7f5 uvicorn app.main:app --host 127.0.0.1 --port 18215 --log-level info
+2026-11-24T00:10:11Z	provider_failure_start	0	bash -lc docker rm -f nusantara-rc-provider-failure >/dev/null 2>&1 || true; docker run -d --name nusantara-rc-provider-failure --network host --read-only --tmpfs /tmp -v nusantara-rc-provider-data:/app/data -v nusantara-rc-provider-home:/home/appuser --env-file '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.env' -e NUSANTARA_DATA_DIR=/app/data -e NUSANTARA_KNOWLEDGE_DB=/app/data/knowledge/nusantara_knowledge.db -e NUSANTARA_HEALTHCHECK_PORT=18215 -e LLM_BASE_URL=http://127.0.0.1:19999 -e OLLAMA_BASE_URL=http://127.0.0.1:19999 nusantara-v1:rc-f4f8b7f5 uvicorn app.main:app --host 127.0.0.1 --port 18215 --log-level info
+2026-11-24T00:10:11Z	provider_failure_wait	RUN	bash -lc for i in $(seq 1 60); do if curl --noproxy "*" -fsS --max-time 3 http://127.0.0.1:18215/health >/dev/null 2>&1; then echo WAIT_OK attempts=$i; exit 0; fi; sleep 1; done; echo WAIT_TIMEOUT; exit 1
+2026-11-24T00:10:12Z	provider_failure_wait	0	bash -lc for i in $(seq 1 60); do if curl --noproxy "*" -fsS --max-time 3 http://127.0.0.1:18215/health >/dev/null 2>&1; then echo WAIT_OK attempts=$i; exit 0; fi; sleep 1; done; echo WAIT_TIMEOUT; exit 1
+2026-11-24T00:10:12Z	provider_failure_ready	RUN	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} http://127.0.0.1:18215/readyz
+2026-11-24T00:10:12Z	provider_failure_ready	0	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} http://127.0.0.1:18215/readyz
+2026-11-24T00:10:12Z	provider_failure_chat	RUN	curl --noproxy * -sS --max-time 60 -w \nHTTP %{http_code} -X POST -H Content-Type: application/json -H X-Admin-Token: <STAGING_TOKEN_REDACTED> -d {"session_id":"web-99999999-9999-4999-8999-999999999999","user_input":"Balas PONG"} http://127.0.0.1:18215/v1/chat
+2026-11-24T00:10:12Z	provider_failure_chat	0	curl --noproxy * -sS --max-time 60 -w \nHTTP %{http_code} -X POST -H Content-Type: application/json -H X-Admin-Token: <STAGING_TOKEN_REDACTED> -d {"session_id":"web-99999999-9999-4999-8999-999999999999","user_input":"Balas PONG"} http://127.0.0.1:18215/v1/chat
+2026-11-24T00:10:12Z	provider_failure_logs	RUN	docker logs --tail 40 nusantara-rc-provider-failure
+2026-11-24T00:10:12Z	provider_failure_logs	0	docker logs --tail 40 nusantara-rc-provider-failure
+2026-11-24T00:10:24Z	rollback_image_check	RUN	docker image inspect nusantara-v1:docker-readiness-545137e8 --format {{.Id}}
+2026-11-24T00:10:24Z	rollback_image_check	0	docker image inspect nusantara-v1:docker-readiness-545137e8 --format {{.Id}}
+2026-11-24T00:10:24Z	rollback_start	RUN	bash -lc docker rm -f nusantara-rc-staging >/dev/null 2>&1 || true; docker rm -f nusantara-rc-rollback >/dev/null 2>&1 || true; docker run -d --name nusantara-rc-rollback --network host --read-only --tmpfs /tmp -v nusantara-rc-data:/app/data -v nusantara-rc-home:/home/appuser --env-file '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.env' -e NUSANTARA_DATA_DIR=/app/data -e NUSANTARA_KNOWLEDGE_DB=/app/data/knowledge/nusantara_knowledge.db -e NUSANTARA_HEALTHCHECK_PORT=18216 -e LLM_BASE_URL=http://127.0.0.1:11434 -e OLLAMA_BASE_URL=http://127.0.0.1:11434 nusantara-v1:docker-readiness-545137e8 uvicorn app.main:app --host 127.0.0.1 --port 18216 --log-level info
+2026-11-24T00:10:24Z	rollback_start	0	bash -lc docker rm -f nusantara-rc-staging >/dev/null 2>&1 || true; docker rm -f nusantara-rc-rollback >/dev/null 2>&1 || true; docker run -d --name nusantara-rc-rollback --network host --read-only --tmpfs /tmp -v nusantara-rc-data:/app/data -v nusantara-rc-home:/home/appuser --env-file '/data/workspace/nus-v1-release-rc-20261123/evidence/staging.env' -e NUSANTARA_DATA_DIR=/app/data -e NUSANTARA_KNOWLEDGE_DB=/app/data/knowledge/nusantara_knowledge.db -e NUSANTARA_HEALTHCHECK_PORT=18216 -e LLM_BASE_URL=http://127.0.0.1:11434 -e OLLAMA_BASE_URL=http://127.0.0.1:11434 nusantara-v1:docker-readiness-545137e8 uvicorn app.main:app --host 127.0.0.1 --port 18216 --log-level info
+2026-11-24T00:10:24Z	rollback_wait	RUN	bash -lc for i in $(seq 1 60); do if curl --noproxy "*" -fsS --max-time 3 http://127.0.0.1:18216/health >/dev/null 2>&1; then echo WAIT_OK attempts=$i; exit 0; fi; sleep 1; done; echo WAIT_TIMEOUT; exit 1
+2026-11-24T00:10:25Z	rollback_wait	0	bash -lc for i in $(seq 1 60); do if curl --noproxy "*" -fsS --max-time 3 http://127.0.0.1:18216/health >/dev/null 2>&1; then echo WAIT_OK attempts=$i; exit 0; fi; sleep 1; done; echo WAIT_TIMEOUT; exit 1
+2026-11-24T00:10:25Z	rollback_health	RUN	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} http://127.0.0.1:18216/health
+2026-11-24T00:10:25Z	rollback_health	0	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} http://127.0.0.1:18216/health
+2026-11-24T00:10:25Z	rollback_history	RUN	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} -H X-Admin-Token: <STAGING_TOKEN_REDACTED> -H X-Chat-Session: web-11111111-2222-4333-8444-555555555555 http://127.0.0.1:18216/v1/chat/history
+2026-11-24T00:10:25Z	rollback_history	0	curl --noproxy * -sS --max-time 30 -w \nHTTP %{http_code} -H X-Admin-Token: <STAGING_TOKEN_REDACTED> -H X-Chat-Session: web-11111111-2222-4333-8444-555555555555 http://127.0.0.1:18216/v1/chat/history
+2026-11-24T00:10:25Z	rollback_hc	RUN	docker exec -e NUSANTARA_HEALTHCHECK_PORT=18216 nusantara-rc-rollback python scripts/healthcheck.py
+2026-11-24T00:10:25Z	rollback_hc	0	docker exec -e NUSANTARA_HEALTHCHECK_PORT=18216 nusantara-rc-rollback python scripts/healthcheck.py
+2026-11-24T00:10:36Z	secret_scan	RUN	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:10:37Z	secret_scan	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:10:57Z	secret_scan_classified	RUN	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:10:57Z	secret_scan_classified	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:11:15Z	secret_scan_verdict	RUN	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:11:15Z	secret_scan_verdict	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:11:33Z	secret_scan_final	RUN	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:11:33Z	secret_scan_final	0	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -
+2026-11-24T00:11:40Z	staging_cleanup	RUN	bash -lc docker rm -f nusantara-rc-rollback nusantara-rc-provider-failure nusantara-rc-staging >/dev/null 2>&1; docker volume rm nusantara-rc-data nusantara-rc-home nusantara-rc-provider-data nusantara-rc-provider-home >/dev/null 2>&1; exit 0
+2026-11-24T00:11:40Z	staging_cleanup	0	bash -lc docker rm -f nusantara-rc-rollback nusantara-rc-provider-failure nusantara-rc-staging >/dev/null 2>&1; docker volume rm nusantara-rc-data nusantara-rc-home nusantara-rc-provider-data nusantara-rc-provider-home >/dev/null 2>&1; exit 0
+2026-11-24T00:11:40Z	active_ports_after	RUN	ss -ltnp
+2026-11-24T00:11:40Z	active_ports_after	0	ss -ltnp
+2026-11-24T00:11:40Z	active_health_after	RUN	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/health
+2026-11-24T00:11:40Z	active_health_after	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/health
+2026-11-24T00:11:40Z	active_ready_after	RUN	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/readyz
+2026-11-24T00:11:40Z	active_ready_after	0	curl --noproxy * -sS --max-time 20 -w \nHTTP %{http_code}\n http://127.0.0.1:18201/readyz
+2026-11-24T00:11:40Z	staging_ports_absent	RUN	bash -lc if ss -ltn | grep -Eq ":1821[456]\\b"; then echo STAGING_PORT_STILL_PRESENT; exit 1; fi; echo STAGING_PORTS_ABSENT
+2026-11-24T00:11:40Z	staging_ports_absent	0	bash -lc if ss -ltn | grep -Eq ":1821[456]\\b"; then echo STAGING_PORT_STILL_PRESENT; exit 1; fi; echo STAGING_PORTS_ABSENT
+2026-11-24T00:11:49Z	regression_full	RUN	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=no --continue-on-collection-errors
+2026-11-24T00:12:13Z	regression_full	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=no --continue-on-collection-errors
+2026-11-24T00:12:22Z	regression_tb_line	RUN	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=line --continue-on-collection-errors
+2026-11-24T00:12:44Z	regression_tb_line	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=line --continue-on-collection-errors
+2026-11-24T00:19:53Z	subprocess_path_before	RUN	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=line tests/test_control_plane_attestation_binding.py::test_guarded_application_composition_no_network_or_protected_state tests/test_runtime_attestation.py::test_new_processes_have_distinct_instances_and_actual_main_integration
+2026-11-24T00:19:53Z	subprocess_path_before	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=line tests/test_control_plane_attestation_binding.py::test_guarded_application_composition_no_network_or_protected_state tests/test_runtime_attestation.py::test_new_processes_have_distinct_instances_and_actual_main_integration
+2026-11-24T00:20:10Z	subprocess_path_after	RUN	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=line tests/test_control_plane_attestation_binding.py::test_guarded_application_composition_no_network_or_protected_state tests/test_runtime_attestation.py::test_new_processes_have_distinct_instances_and_actual_main_integration
+2026-11-24T00:20:11Z	subprocess_path_after	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=line tests/test_control_plane_attestation_binding.py::test_guarded_application_composition_no_network_or_protected_state tests/test_runtime_attestation.py::test_new_processes_have_distinct_instances_and_actual_main_integration
+2026-11-24T00:20:11Z	ruff_fixed	RUN	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/ruff check tests/test_control_plane_attestation_binding.py tests/test_runtime_attestation.py
+2026-11-24T00:20:11Z	ruff_fixed	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/ruff check tests/test_control_plane_attestation_binding.py tests/test_runtime_attestation.py
+2026-11-24T00:20:11Z	mypy_fixed	RUN	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/mypy tests/test_control_plane_attestation_binding.py tests/test_runtime_attestation.py
+2026-11-24T00:20:11Z	mypy_fixed	127	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/mypy tests/test_control_plane_attestation_binding.py tests/test_runtime_attestation.py
+2026-11-24T00:20:36Z	mypy_fixed_module	RUN	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m mypy tests/test_control_plane_attestation_binding.py tests/test_runtime_attestation.py
+2026-11-24T00:20:38Z	mypy_fixed_module	1	/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m mypy tests/test_control_plane_attestation_binding.py tests/test_runtime_attestation.py
+2026-11-24T00:20:38Z	diff_check	RUN	git diff --check
+2026-11-24T00:20:38Z	diff_check	0	git diff --check
+2026-11-24T00:20:38Z	git_diff	RUN	git diff -- tests/test_control_plane_attestation_binding.py tests/test_runtime_attestation.py
+2026-11-24T00:20:38Z	git_diff	0	git diff -- tests/test_control_plane_attestation_binding.py tests/test_runtime_attestation.py
+2026-11-24T00:20:48Z	regression_after_fix	RUN	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=no --continue-on-collection-errors
+2026-11-24T00:21:10Z	regression_after_fix	1	env PYTHONPATH=backend /data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python -m pytest -q --tb=no --continue-on-collection-errors

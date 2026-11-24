@@ -1,0 +1,271 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.2.0, pluggy-1.7.0
+rootdir: /data/workspace/nus-v1-release-rc-20261123/worktrees/rc
+configfile: pyproject.toml
+plugins: anyio-4.16.0, cov-7.1.0, asyncio-1.5.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 2 items
+
+tests/test_control_plane_attestation_binding.py F                        [ 50%]
+tests/test_runtime_attestation.py .                                      [100%]
+
+=================================== FAILURES ===================================
+E   subprocess.CalledProcessError: Command '['/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python', '-B', '-c', "\nimport builtins, io, json, socket, sqlite3, sys, importlib.abc\nclass Boundary(importlib.abc.MetaPathFinder):\n    def find_spec(self, fullname, path=None, target=None):\n        if fullname.startswith(('app.knowledge','app.rag','app.language')) or fullname in ('app.api.routes','app.api.v2_routes'):\n            raise AssertionError('protected import')\nsys.meta_path.insert(0, Boundary())\ndef forbidden(*a, **k): raise AssertionError('forbidden operation')\nsqlite3.connect = forbidden\noriginal_connect = socket.socket.connect\ndef no_application_connect(sock, address):\n    # Windows asyncio uses stdlib socketpair internally; this is not application HTTP.\n    if sys._getframe(1).f_code is socket._fallback_socketpair.__code__:\n        return original_connect(sock, address)\n    return forbidden()\nsocket.socket.connect = no_application_connect\ndef guard(original):\n    def opened(file, mode='r', *a, **k):\n        name = str(file).lower().replace('\\\\','/')\n        assert not name.endswith(('.db','.db-wal','.db-shm')) and '/data/knowledge/' not in name\n        assert not any(flag in mode for flag in ('w','a','x','+'))\n        return original(file, mode, *a, **k)\n    return opened\nbuiltins.open, io.open = guard(builtins.open), guard(io.open)\nimport httpx\nhttpx.HTTPTransport.handle_request = forbidden\nhttpx.AsyncHTTPTransport.handle_async_request = forbidden\nfrom app.security.local_operator import LocalOperatorChannel\nLocalOperatorChannel.__enter__ = forbidden\nfrom app.models.ollama import OllamaProvider\nOllamaProvider.health_check = forbidden\nOllamaProvider.list_models = forbidden\nfrom app.main import app\nimport app.api.control_plane as routes\nroutes.project = forbidden\nfrom fastapi.testclient import TestClient\nowner = app.state.runtime_authorization\nwith TestClient(app,base_url='http://127.0.0.1:8000',client=('127.0.0.1',1)) as client:\n    state = client.get('/v1/control-plane/snapshot').json()\n    response = client.post('/v1/control-plane/intention',json={'scope':state['scope'],'evidence_version':state['evidence_version']},headers={'Origin':'http://127.0.0.1:5173'})\n    assert response.status_code == 200 and response.json()['state'] == 'PENDING'\nassert owner._policy is None and owner._isolated_transport is None and owner._audit.path is None\nassert app.state.runtime_verification.authorization.state == 'DISARMED'\nassert app.state.runtime_verification.authorization.dispatch_count == 0\nassert owner._permit is None and owner.evidence()['live_actions'] == 'LOCKED'\nprint(json.dumps({'isolated_in_process':True,'live_http':False,'dispatch_count':0,'state':'PENDING','live_actions':'LOCKED',\n    'snapshot':state,'intention':response.json()}))\n"]' returned non-zero exit status 1.
+----------------------------- Captured stderr call -----------------------------
+Unhandled exception: GET /v1/control-plane/snapshot
+Traceback (most recent call last):
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/telemetry/_asgi.py", line 151, in __call__
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/_body_limit.py", line 80, in __call__
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/core/runtime_correlation.py", line 271, in __call__
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/base.py", line 203, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/main.py", line 103, in request_id_middleware
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/base.py", line 179, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/cors.py", line 149, in simple_response
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/routing.py", line 683, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 2929, in app
+    await route.handle(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 1916, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 3015, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 1945, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 1373, in handle
+    await effective_context.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 175, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 161, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 762, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 383, in run_endpoint_function
+    return await run_in_threadpool(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+        _run_sync_endpoint, function=dependant.call, arguments=values
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 2779, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 1124, in run
+    result = context.run(func, *args)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/telemetry/_api.py", line 244, in _run_sync_endpoint
+    return function(**arguments)
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/api/control_plane.py", line 196, in snapshot
+    return owner.evidence()  # Never execute legacy DB/WAL/SHM digest projection.
+           ~~~~~~~~~~~~~~^^
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/approval/runtime_authorization.py", line 134, in evidence
+    material = self._material()
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/approval/runtime_authorization.py", line 124, in _material
+    'process_start': Windows().process_start(os.getpid()),
+                     ~~~~~~~^^
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/security/local_operator.py", line 118, in __init__
+    raise ActorError('WINDOWS_REQUIRED')
+app.security.local_operator.ActorError: WINDOWS_REQUIRED
+Traceback (most recent call last):
+  File "<string>", line 39, in <module>
+    state = client.get('/v1/control-plane/snapshot').json()
+            ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/httpx2/_client.py", line 1107, in get
+    return self.request(
+           ~~~~~~~~~~~~^
+        "GET",
+        ^^^^^^
+    ...<7 lines>...
+        extensions=extensions,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/testclient.py", line 518, in request
+    return super().request(
+           ~~~~~~~~~~~~~~~^
+        method,
+        ^^^^^^^
+    ...<11 lines>...
+        extensions=extensions,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/httpx2/_client.py", line 791, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/httpx2/_client.py", line 988, in send
+    raise exc
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/httpx2/_client.py", line 982, in send
+    response.read()
+    ~~~~~~~~~~~~~^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/httpx2/_models.py", line 890, in read
+    self._content = b"".join(self.iter_bytes())
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/httpx2/_models.py", line 906, in iter_bytes
+    for raw_bytes in self.iter_raw():
+                     ~~~~~~~~~~~~~^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/httpx2/_models.py", line 961, in iter_raw
+    for raw_stream_bytes in self.stream:
+                            ^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/httpx2/_client.py", line 138, in __iter__
+    yield from self._stream
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/testclient.py", line 384, in iter_body
+    exit_stack.close()
+    ~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.13/contextlib.py", line 627, in close
+    self.__exit__(None, None, None)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/contextlib.py", line 619, in __exit__
+    raise exc
+  File "/usr/lib/python3.13/contextlib.py", line 604, in __exit__
+    if cb(*exc_details):
+       ~~^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/testclient.py", line 399, in close_app
+    raise exception
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/anyio/from_thread.py", line 272, in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/testclient.py", line 366, in run_app
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/applications.py", line 1224, in __call__
+    await super().__call__(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/applications.py", line 96, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/telemetry/_asgi.py", line 151, in __call__
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/_body_limit.py", line 80, in __call__
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/core/runtime_correlation.py", line 271, in __call__
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/base.py", line 203, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/main.py", line 103, in request_id_middleware
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/base.py", line 179, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/base.py", line 149, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/cors.py", line 91, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/cors.py", line 149, in simple_response
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/routing.py", line 683, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 2929, in app
+    await route.handle(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 1916, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 3015, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 1945, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 1373, in handle
+    await effective_context.app(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 175, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 161, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 762, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/routing.py", line 383, in run_endpoint_function
+    return await run_in_threadpool(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+        _run_sync_endpoint, function=dependant.call, arguments=values
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 2779, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 1124, in run
+    result = context.run(func, *args)
+  File "/data/workspace/nus-v1-postmerge-ec76a9ed/env/lib/python3.13/site-packages/fastapi/telemetry/_api.py", line 244, in _run_sync_endpoint
+    return function(**arguments)
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/api/control_plane.py", line 196, in snapshot
+    return owner.evidence()  # Never execute legacy DB/WAL/SHM digest projection.
+           ~~~~~~~~~~~~~~^^
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/approval/runtime_authorization.py", line 134, in evidence
+    material = self._material()
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/approval/runtime_authorization.py", line 124, in _material
+    'process_start': Windows().process_start(os.getpid()),
+                     ~~~~~~~^^
+  File "/data/workspace/nus-v1-release-rc-20261123/worktrees/rc/backend/app/security/local_operator.py", line 118, in __init__
+    raise ActorError('WINDOWS_REQUIRED')
+app.security.local_operator.ActorError: WINDOWS_REQUIRED
+/usr/lib/python3.13/subprocess.py:577: subprocess.CalledProcessError: Command '['/data/workspace/nus-v1-postmerge-ec76a9ed/env/bin/python', '-B', '-c', "\nimport builtins, io, json, socket, sqlite3, sys, importlib.abc\nclass Boundary(importlib.abc.MetaPathFinder):\n    def find_spec(self, fullname, path=None, target=None):\n        if fullname.startswith(('app.knowledge','app.rag','app.language')) or fullname in ('app.api.routes','app.api.v2_routes'):\n            raise AssertionError('protected import')\nsys.meta_path.insert(0, Boundary())\ndef forbidden(*a, **k): raise AssertionError('forbidden operation')\nsqlite3.connect = forbidden\noriginal_connect = socket.socket.connect\ndef no_application_connect(sock, address):\n    # Windows asyncio uses stdlib socketpair internally; this is not application HTTP.\n    if sys._getframe(1).f_code is socket._fallback_socketpair.__code__:\n        return original_connect(sock, address)\n    return forbidden()\nsocket.socket.connect = no_application_connect\ndef guard(original):\n    def opened(file, mode='r', *a, **k):\n        name = str(file).lower().replace('\\\\','/')\n        assert not name.endswith(('.db','.db-wal','.db-shm')) and '/data/knowledge/' not in name\n        assert not any(flag in mode for flag in ('w','a','x','+'))\n        return original(file, mode, *a, **k)\n    return opened\nbuiltins.open, io.open = guard(builtins.open), guard(io.open)\nimport httpx\nhttpx.HTTPTransport.handle_request = forbidden\nhttpx.AsyncHTTPTransport.handle_async_request = forbidden\nfrom app.security.local_operator import LocalOperatorChannel\nLocalOperatorChannel.__enter__ = forbidden\nfrom app.models.ollama import OllamaProvider\nOllamaProvider.health_check = forbidden\nOllamaProvider.list_models = forbidden\nfrom app.main import app\nimport app.api.control_plane as routes\nroutes.project = forbidden\nfrom fastapi.testclient import TestClient\nowner = app.state.runtime_authorization\nwith TestClient(app,base_url='http://127.0.0.1:8000',client=('127.0.0.1',1)) as client:\n    state = client.get('/v1/control-plane/snapshot').json()\n    response = client.post('/v1/control-plane/intention',json={'scope':state['scope'],'evidence_version':state['evidence_version']},headers={'Origin':'http://127.0.0.1:5173'})\n    assert response.status_code == 200 and response.json()['state'] == 'PENDING'\nassert owner._policy is None and owner._isolated_transport is None and owner._audit.path is None\nassert app.state.runtime_verification.authorization.state == 'DISARMED'\nassert app.state.runtime_verification.authorization.dispatch_count == 0\nassert owner._permit is None and owner.evidence()['live_actions'] == 'LOCKED'\nprint(json.dumps({'isolated_in_process':True,'live_http':False,'dispatch_count':0,'state':'PENDING','live_actions':'LOCKED',\n    'snapshot':state,'intention':response.json()}))\n"]' returned non-zero exit status 1.
+=========================== short test summary info ============================
+FAILED tests/test_control_plane_attestation_binding.py::test_guarded_application_composition_no_network_or_protected_state
+========================= 1 failed, 1 passed in 0.92s ==========================

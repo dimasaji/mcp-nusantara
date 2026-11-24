@@ -1,0 +1,18 @@
+=== health ===
+{"status":"ok","version":"0.1.0","build_id":"sha256:8a3d91c35bdae736db381974588fb2f09b3674919debb160755071dc6240fc8f"}
+HTTP 200
+=== readyz ===
+{"status":"degraded","components":{"knowledge_database":{"status":"empty","documents":0},"provider":{"status":"ok","http_status":200}}}
+HTTP 200
+=== model_status ===
+{"provider":"ollama","model":"llama3.2:1b","selectable_providers":["ollama"],"revision":0,"selected_at":null,"selection_source":"BOOTSTRAP","consistency_scope":"CURRENT_PROCESS_ONLY","process_id":1,"availability":"NOT_VERIFIED","status":"NOT_VERIFIED","checked_at":"2026-11-24T00:09:28.913064+00:00","verified_at":null,"verification_scope":"CURRENT_MODEL_REVISION_PROCESS_300_SECONDS","selection_enabled":true,"last_request":null,"source_build_id":"sha256:8a3d91c35bdae736db381974588fb2f09b3674919debb160755071dc6240fc8f","memory":"LEGACY_BEHAVIOR_PRESERVED_TEMPORARILY","memory_governance":"REVIEW_REQUIRED","knowledge":"NOT_VERIFIED","official_oracle":"REVIEW_REQUIRED","approval":"REVIEW_REQUIRED","execution_mode":"V1_DEFAULT"}
+HTTP 200
+=== admin_negative ===
+{"detail":"admin token diperlukan"}
+HTTP 403
+=== ollama_chat ===
+{"session_id":"web-11111111-2222-4333-8444-555555555555","response":"PONG","trust":{"supports_claim":false,"confidence":0.0,"risk_level":"high","requires_human":true,"evidence_count":0,"evidence_available":false},"model":"llama3.2:1b","provider_status":"ollama","latency_ms":2110,"grounding":{"enabled":true,"grounded":false,"reason":"not_evaluated"},"understanding":{"intent":"unknown"},"problem":{"goal":"Membantu permintaan percakapan pengguna; tidak diverifikasi oleh knowledge base."},"evidence":[],"timestamp":"2026-11-24T00:09:31.035367+00:00"}
+HTTP 200
+=== chat_history ===
+{"session_id":"web-11111111-2222-4333-8444-555555555555","turns":[{"question":"Balas tepat PONG","answer":{"session_id":"web-11111111-2222-4333-8444-555555555555","response":"PONG","trust":{"supports_claim":false,"confidence":0.0,"risk_level":"high","requires_human":true,"evidence_count":0,"evidence_available":false},"model":"llama3.2:1b","provider_status":"ollama","latency_ms":2110,"grounding":{"enabled":true,"grounded":false,"reason":"not_evaluated"},"understanding":{"intent":"unknown"},"problem":{"goal":"Membantu permintaan percakapan pengguna; tidak diverifikasi oleh knowledge base."},"evidence":[],"timestamp":"2026-11-24T00:09:31.035367+00:00"},"error":null,"status":"SUCCEEDED","timestamp":"2026-11-24T00:09:31.035556+00:00"}]}
+HTTP 200
