@@ -34,10 +34,12 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
   const [messages,setMessages]=useState<{question:string;answer:PublicChat;requestId?:string}[]>([]);
   const [pending,setPending]=useState(false);
   const [partial,setPartial]=useState('');
-  const [documents,setDocuments]=useState<{document_id:string;title:string}[]>([]);
+  const [documents,setDocuments]=useState<{document_id:string;title:string;source_type?:string|null}[]>([]);
   const [selectedDocument,setSelectedDocument]=useState('');
   const [trialVersion,setTrialVersion]=useState('');
-  const [activeDocument,setActiveDocument]=useState<{title:string;status:string;version_id:string;source_type?:string|null;extraction?:{status:string}}|null>(null);
+  const [documentDetail,setActiveDocument]=useState<{selectedId:string;operatorToken:string;title:string;status:string;version_id:string;source_type?:string|null;extraction?:{status:string}}|null>(null);
+  const activeDocument=documentDetail?.selectedId===selectedDocument&&documentDetail.operatorToken===token?documentDetail:null;
+  const isNonPdf=!!activeDocument?.source_type&&activeDocument.source_type!=='.pdf';
   const documentBlocked=!!selectedDocument&&(!activeDocument||(activeDocument.status!=='Aktif'&&!trialVersion));
   const activeRequest=useRef<AbortController|null>(null);
   const [error,setError]=useState('');
@@ -60,7 +62,7 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
     void refreshHistory(()=>active);
     return ()=>{active=false;};},[session,selectedDocument,token]);
   useEffect(()=>{void fetchModelStatus().then(setModel).catch(()=>setModel(null));},[]);
-  useEffect(()=>{let live=true;setActiveDocument(null);if(selectedDocument&&token)void fetch(`/v1/knowledge/pipeline/reviews/${encodeURIComponent(selectedDocument)}`,{headers:{'X-Admin-Token':token},cache:'no-store'}).then(async r=>{if(!r.ok)throw new Error('Status dokumen tidak dapat dibaca');return r.json();}).then(d=>{if(live)setActiveDocument(d);}).catch(e=>{if(live)setError(e.message);});return()=>{live=false;};},[selectedDocument,token]);
+  useEffect(()=>{let live=true;setActiveDocument(null);if(selectedDocument&&token)void fetch(`/v1/knowledge/pipeline/reviews/${encodeURIComponent(selectedDocument)}`,{headers:{'X-Admin-Token':token},cache:'no-store'}).then(async r=>{if(!r.ok)throw new Error('Status dokumen tidak dapat dibaca');return r.json();}).then(d=>{if(live)setActiveDocument({...d,selectedId:selectedDocument,operatorToken:token});}).catch(e=>{if(live)setError(e.message);});return()=>{live=false;};},[selectedDocument,token]);
   useEffect(()=>{
     if(!token){setSelectedDocument('');setTrialVersion('');return;}
     const pendingDocument=sessionStorage.getItem('nusantara-chat-document-pending');
@@ -78,6 +80,7 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
   async function send(){
     if(activeRequest.current||!question.trim())return;
     if(selectedDocument&&!token.trim()){setError('Token operator diperlukan untuk chat dokumen. Verifikasi akses melalui Lampirkan dokumen.');return;}
+    if(selectedDocument&&!activeDocument)return;
     if(documentBlocked){setError('SOP belum disetujui. Pilih Uji SOP ini (belum disetujui) untuk percobaan operator.');return;}
     const controller=new AbortController();activeRequest.current=controller;
     const submitted=question.trim();setPartial('');setPending(true);setError('');
@@ -107,11 +110,11 @@ function ChatSession({embedded,token,uploadPanelOpen,setUploadPanelOpen}:{embedd
   function beginTrial(){if(!token||!activeDocument||!/^[a-f0-9]{64}$/.test(activeDocument.version_id))return;openDocumentSession(selectedDocument,activeDocument.version_id);}
   async function submitUpload(){if(!uploadReady||!uploadFile||!token.trim())return;setUploadBusy(true);setUploadError('');setUploadStatus('Menyimpan, mengekstrak, dan mengindeks dokumen…');try{const result=await uploadKnowledgeDocument(uploadFile,token);if(!['READY','DUPLICATE'].includes(result.status)||!result.document_id)throw new Error(`Dokumen belum siap ditanyakan. ${result.reason??'Periksa History Knowledge.'}`);setDocuments(old=>[...old.filter(d=>d.document_id!==result.document_id),{document_id:result.document_id!,title:result.filename}]);chooseDocument(result.document_id);setUploadStatus(`Dokumen ${result.filename} siap ditanyakan dan dipilih sebagai sumber. Otoritas sumber belum disahkan.`);setUploadFile(null);}catch(e){setUploadStatus('');setUploadError(e instanceof Error?e.message:'Dokumen belum berhasil diproses.');}finally{setUploadBusy(false);}}
   const uniqueEvidence=(items:PublicChat['evidence'])=>items.filter((e,i,all)=>all.findIndex(x=>x.document_id===e.document_id)===i);
-  const Composer= <form className="message-composer" onSubmit={e=>{e.preventDefault();void send();}}>    <label className="chat-document-scope">Sumber dokumen <select aria-label="Sumber dokumen" disabled={pending} value={selectedDocument} onChange={e=>chooseDocument(e.target.value)}><option value="">Semua knowledge</option>{selectedDocument&&!documents.some(d=>d.document_id===selectedDocument)&&<option value={selectedDocument}>Dokumen sesi ini — verifikasi akses untuk membaca judul</option>}{documents.map(d=><option key={d.document_id} value={d.document_id}>{d.title}</option>)}</select></label>
-    {selectedDocument&&<small>Dokumen aktif: {activeDocument?.title??'Memuat judul resmi'} · Ekstraksi: {activeDocument?.extraction?.status??'Belum diverifikasi'} · {activeDocument?.status??''}</small>}
+  const Composer= <form className="message-composer" onSubmit={e=>{e.preventDefault();void send();}}>    <label className="chat-document-scope">Sumber dokumen <select aria-label="Sumber dokumen" disabled={pending} value={selectedDocument} onChange={e=>chooseDocument(e.target.value)}><option value="">Semua knowledge</option>{selectedDocument&&!documents.some(d=>d.document_id===selectedDocument)&&<option value={selectedDocument}>Dokumen sesi ini — verifikasi akses untuk membaca judul</option>}{documents.map(d=><option key={d.document_id} value={d.document_id}>{d.title}{d.source_type?` · ${d.source_type.slice(1).toUpperCase()}`:''}</option>)}</select></label>
+    {selectedDocument&&<small>Dokumen aktif: {activeDocument?.title??'Memuat judul resmi'} · Ekstraksi: {isNonPdf?'Tidak diperlukan':activeDocument?.extraction?.status??'Belum diverifikasi'} · {activeDocument?.status??''}</small>}
     {!token&&<small>Chat umum belum membaca SOP internal. <Link to="/knowledge">Verifikasi akses operator dan pilih SOP</Link>.</small>}
     {trialVersion&&<p role="status">Mode uji operator: SOP belum disetujui. Sesi terikat pada versi {trialVersion.slice(0,12)}; persetujuan isi tidak berubah.</p>}
-    {documentBlocked&&activeDocument&&<div><p>SOP ini belum disetujui untuk penggunaan biasa. Operator dapat menguji hasil pembacaannya.</p><button type="button" disabled={pending||!(activeDocument.extraction?.status==='COMPLETE'||(activeDocument.source_type&&activeDocument.source_type!=='.pdf'))} onClick={beginTrial}>Uji SOP ini (belum disetujui)</button><Link to="/knowledge">Buka pemeriksaan SOP</Link></div>}
+    {documentBlocked&&activeDocument&&<div><p>SOP ini belum disetujui untuk penggunaan biasa. Operator dapat menguji hasil pembacaannya.</p><button type="button" disabled={pending||!(activeDocument.extraction?.status==='COMPLETE'||isNonPdf)} onClick={beginTrial}>Uji SOP ini (belum disetujui)</button><Link to="/knowledge">Buka pemeriksaan SOP</Link></div>}
 <div className="composer-box">
     <details className="chat-upload" open={uploadPanelOpen} onToggle={event=>{const open=event.currentTarget.open;setUploadPanelOpen(open);if(open&&token.trim()&&!uploadReady&&!uploadBusy)void verifyUpload();}}><summary aria-label="Lampirkan dokumen" title="Lampirkan dokumen"><PaperclipIcon/></summary><div className="composer-upload-panel"><strong>Unggah dokumen</strong>{!token.trim()?<><p>Upload memerlukan akses operator.</p><Link className="chat-upload-settings" to="/knowledge">Buka Knowledge untuk mengatur akses</Link></>:<>{uploadBusy?<p role="status">Memeriksa akses Knowledge…</p>:uploadError?<p role="alert">{uploadError}</p>:uploadStatus&&<p role="status">{uploadStatus}</p>}<input aria-label="Dokumen untuk knowledge" type="file" accept=".pdf,.docx,.txt,.md,.html,.htm" disabled={!uploadReady||uploadBusy} onChange={e=>setUploadFile(e.target.files?.[0]??null)}/><button type="button" disabled={!uploadReady||!uploadFile||uploadBusy} onClick={()=>void submitUpload()}>{uploadBusy?'Memproses…':'Upload dan proses'}</button><small>Dokumen diproses melalui Knowledge lokal dan mengikuti pemeriksaan akses yang berlaku.</small></>}</div></details>
     <textarea aria-label="Pertanyaan Anda" id={embedded?'embedded-question':'question'} value={question} onChange={e=>setQuestion(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();void send();}}} maxLength={20000} disabled={pending} required placeholder="Tanyakan sesuatu atau lampirkan dokumen…"/>
