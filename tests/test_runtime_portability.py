@@ -52,14 +52,21 @@ def test_hermes_command_uses_linux_default(monkeypatch, tmp_path):
 
 
 def test_hermes_patch_payload_matches_linux_default():
-    patch = (Path(__file__).resolve().parents[1]
-             / 'Nusantara-Hermes-ACP-Connection-Patch/payload/app/developer_core/hermes_acp_connection.py')
-
+    root = Path(__file__).resolve().parents[1]
+    candidates = [
+        root / 'Nusantara-Hermes-ACP-Connection-Patch/payload/app/developer_core/hermes_acp_connection.py',
+        root / 'backend/app/developer_core/hermes_acp_connection.py',
+    ]
+    patch = next((p for p in candidates if p.exists()), None)
+    assert patch is not None, f'No Hermes ACP reference found: {candidates}'
     assert '.local/share/hermes/hermes-agent' in patch.read_text(encoding='utf-8')
 
 
 def test_dockerfile_does_not_copy_missing_indobert_worker():
-    dockerfile = Path(__file__).resolve().parents[1] / 'Dockerfile'
+    root = Path(__file__).resolve().parents[1]
+    candidates = [root / 'Dockerfile', root / 'deploy/docker/Dockerfile']
+    dockerfile = next((p for p in candidates if p.exists()), None)
+    assert dockerfile is not None, f'No Dockerfile found: {candidates}'
 
     text = dockerfile.read_text(encoding='utf-8')
 
