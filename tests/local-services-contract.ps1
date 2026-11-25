@@ -40,7 +40,7 @@ Assert-That ($script:Started.Count -eq 3) 'Recovery limited to three starts per 
 Assert-That ($script:Started[0].arguments -match '--host 127.0.0.1 --port 8000') 'Backend launch uses contract binding'
 Start-LocalService frontend
 Assert-That ($script:Started[-1].arguments -match '--port 5180 --strictPort') 'Frontend launch fixes port and refuses fallback'
-Assert-That ($script:Started[-1].directory -like '*control-plane') 'Frontend directory spelling is correct'
+Assert-That ($script:Started[-1].directory -like '*frontend') 'Frontend directory spelling is correct'
 Assert-That ($script:Stopped.Count -eq 1) 'Recovery never kills any process'
 # Exercise actual task-registration orchestration in a disposable repository.
 $fixtureRoot = Join-Path $script:StateDirectory 'registration-fixture'

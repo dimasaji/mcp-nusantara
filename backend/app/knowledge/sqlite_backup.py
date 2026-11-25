@@ -30,7 +30,10 @@ def backup_sqlite_database(source: Path, destination: Path) -> Path:
                     raise sqlite3.DatabaseError("SQLite backup integrity check failed")
         with temporary.open("rb+") as stream:
             os.fsync(stream.fileno())
-        temporary.rename(destination)
+        if os.name == 'nt':
+            temporary.rename(destination)
+        else:
+            os.link(temporary, destination)
         return destination
     finally:
         temporary.unlink(missing_ok=True)

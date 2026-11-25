@@ -168,10 +168,23 @@ class SOPReview:
 
     def detail(self, document_id, *, check_lineage=True):
         doc = self._document(document_id)
-        path, _, digest = self.source(document_id)
+        path, raw, digest = self.source(document_id)
         source_version = hashlib.sha256(json.dumps([doc.title, doc.source, digest, doc.metadata.get('source_pages', [])],
             ensure_ascii=False, sort_keys=True).encode()).hexdigest()
         is_pdf = bool(path and path.suffix.lower() == '.pdf')
+        source_page_count = None
+        if is_pdf:
+            import io
+            try:
+                from pypdf import PdfReader
+            except ImportError:
+                pass
+            else:
+                from pypdf.errors import PdfReadError
+                try:
+                    source_page_count = len(PdfReader(io.BytesIO(raw)).pages)
+                except (OSError, ValueError, PdfReadError):
+                    source_page_count = None
         extraction = self._extraction_state(document_id, source_version) if is_pdf else None
         version = extraction['version'] if extraction else source_version
         with self._db() as conn:
@@ -254,7 +267,7 @@ class SOPReview:
                 'extraction_status': extraction['status'] if extraction else None,
                 'extraction_job_id': extraction['job_id'] if extraction else None,
                 'source_available': bool(path), 'source_type': path.suffix if path else None,
-                'text': doc.source, 'pages': doc.metadata.get('source_pages', []), 'status': status,
+                'text': doc.source, 'pages': doc.metadata.get('source_pages', []), 'source_page_count': source_page_count, 'status': status,
                 'content_ok': content_ok, 'required_cases': REQUIRED_CASES, 'trials': trials,
                 'events': events, 'problems': problems, 'can_approve': ready, 'approval': approval,
                 'publication_decision': publication_decision,

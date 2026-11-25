@@ -1,0 +1,39 @@
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+repo = Path(r'C:\Users\dmaza\mcp-starter')
+root = repo / '.tmp-build/pc-stabilization-20261123/restored-application'
+sys.path.insert(0, str(repo / 'backend'))
+from app.knowledge.engine import KnowledgeEngine
+from app.knowledge.rag import RAG
+from app.knowledge.schemas import KnowledgeBaseConfig
+from app.knowledge.sop_review import SOPReview
+from app.knowledge.store import SQLiteVectorStore
+
+def no_embedding(_text):
+    raise RuntimeError('Restore-source validation must not generate embeddings')
+
+engine = KnowledgeEngine(rag=RAG(config=KnowledgeBaseConfig(),
+    vector_store=SQLiteVectorStore(str(root / 'knowledge/nusantara_knowledge.db')), embedding_func=no_embedding))
+review = SOPReview(engine)
+documents = engine.list_documents().documents
+expected = resolved = 0
+for document in documents:
+    digest = document.metadata.get('source_sha256')
+    if not digest:
+        continue
+    expected += 1
+    path, raw, actual = review.source(document.document_id)
+    if (path is not None and path.resolve().parent == (root / 'knowledge/source-documents').resolve()
+            and actual == digest and hashlib.sha256(raw).hexdigest() == digest):
+        resolved += 1
+result = {'status': 'PASS' if expected > 0 and resolved == expected else 'PARTIAL',
+          'documents_in_restored_database': len(documents), 'documents_with_source_hash': expected,
+          'sources_resolved_inside_restore': resolved, 'missing_or_mismatched_sources': expected - resolved,
+          'live_source_fallback_allowed': False, 'embedding_or_provider_called': False,
+          'application_boot_from_restore_exercised': False}
+(repo / 'docs/audit/pc-stabilization-20261123/RESTORED_SOURCE_RESOLUTION.json').write_text(
+    json.dumps(result, indent=2), encoding='utf-8')
+print(json.dumps(result))

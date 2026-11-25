@@ -78,7 +78,7 @@ def check_database(value: object, for_write: bool = False) -> None:
         pass
     if resolved is not None and resolved.is_relative_to(repository_root):
         if not resolved.is_relative_to(data_root):
-            if not for_write:
+            if not for_write or within_output(raw):
                 return
             blocked("open", value, "outside_output_directory")
     elif not has_data_segment:

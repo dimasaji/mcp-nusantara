@@ -40,7 +40,10 @@ def synthetic_engine(tmp_path):
 
 def test_synthetic_retrieval_is_grounded_and_citable(synthetic_engine):
     results = synthetic_engine.search_knowledge(REQUIREMENT_QUERY, top_k=3)
-    assert len(results) == 1
+    assert len(results) == 3
+    assert len({item.chunk_id for item in results}) == 3
+    assert {item.document_id for item in results} == {'synthetic-sop-1'}
+    assert all(item.source.find(item.chunk) >= 0 and item.metadata['citation_pages'] == [1] for item in results)
     item = results[0]
     assert item.document_id == 'synthetic-sop-1'
     assert 'Surat permohonan' in item.chunk
@@ -55,7 +58,9 @@ def test_synthetic_retriever_exposes_evidence_to_langchain(monkeypatch, syntheti
     retriever = create_retriever(synthetic_engine, top_k=3)
     assert retriever is not None
     docs = retriever.invoke(REQUIREMENT_QUERY)
-    assert len(docs) == 1
+    assert len(docs) == 3
+    assert len({doc.page_content for doc in docs}) == 3
+    assert all(doc.metadata['document_id'] == 'synthetic-sop-1' and doc.metadata['pages'] == [1] for doc in docs)
     assert docs[0].metadata['document_id'] == 'synthetic-sop-1'
     assert 'Surat permohonan' in docs[0].page_content
 

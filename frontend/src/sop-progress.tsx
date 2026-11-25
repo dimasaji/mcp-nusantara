@@ -15,14 +15,14 @@ export function SOPProgressPanel({data,onSelect,onRetry,busy=false}:{data:Knowle
  const summary=data.sop_summary;
  if(!summary)return <p>Ringkasan SOP belum disediakan backend. Muat ulang setelah backend diperbarui.</p>;
  const counts=summary.counts;
- const documents=(data.documents??[]).filter(doc=>`${doc.title} ${doc.review_status??''}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+ const documents=(data.documents??[]).filter(doc=>`${doc.title} ${doc.source_type??''} ${doc.review_status??''}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
  return <>
   <p>Jumlah dokumen menurut status versi saat ini. Aktif berarti disetujui untuk digunakan; ketepatan seluruh jawaban model perlu diuji terpisah.</p>
   <dl className="sop-progress-counts">{[['Dokumen tersimpan',summary.total],['Aktif',counts.ACTIVE],['Mengantre / diproses',counts.QUEUED+counts.PROCESSING],['Perlu diperiksa',counts.REVIEW_REQUIRED],['Siap disetujui',counts.APPROVAL_REQUIRED],['Perlu ditangani',counts.BLOCKED],['Belum terbaca',counts.UNKNOWN]].map(([label,count])=><div key={label}><dt>{label}</dt><dd>{count}</dd></div>)}</dl>
   <label className="sop-progress-search">Cari SOP tersimpan<input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Judul atau status SOP"/></label>
   {!summary.total?<p>Belum ada dokumen tersimpan. Tambahkan dokumen melalui Kelola dokumen.</p>:!documents.length?<p>Tidak ada SOP yang cocok.</p>:<div className="table-scroll"><table className="sop-progress-table"><thead><tr><th>Dokumen</th><th>Progres saat ini</th><th>Langkah berikutnya</th></tr></thead><tbody>{documents.map(doc=>{
    const workflow=doc.workflow;
-   return <tr key={doc.document_id}><td><strong>{doc.title}</strong></td><td><span className={`sop-progress-state ${workflow?.state??'UNKNOWN'}`}>{states[workflow?.state??'UNKNOWN']}</span><p>{doc.review_status??'Status belum tersedia'}</p>
+   return <tr key={doc.document_id}><td><strong>{doc.title}</strong>{doc.source_type&&<small> · {doc.source_type.slice(1).toUpperCase()}</small>}</td><td><span className={`sop-progress-state ${workflow?.state??'UNKNOWN'}`}>{states[workflow?.state??'UNKNOWN']}</span><p>{doc.review_status??'Status belum tersedia'}</p>
     {workflow&&<details><summary>Detail tahapan</summary><dl>{Object.entries(steps).map(([key,label])=><div key={key}><dt>{label}</dt><dd>{readings[workflow.stages[key]]??'Belum diverifikasi'}</dd></div>)}</dl><p>Pembersihan: {workflow.cleaning_profile??'Profil belum tercatat; tidak diasumsikan sudah dijalankan.'}</p><p>{workflow.reason}</p></details>}
    </td><td>{workflow?.next_action==='chat'?<Link to="/" onClick={()=>{sessionStorage.setItem('nusantara-chat-document-pending',doc.document_id);sessionStorage.removeItem('nusantara-chat-sop-version-pending');}}>Buka chat</Link>:<>
     {workflow?.next_action==='wait'&&<p>Pemrosesan berjalan otomatis. Tidak perlu unggah ulang.</p>}

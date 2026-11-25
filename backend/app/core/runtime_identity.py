@@ -16,13 +16,16 @@ from app.core.runtime_build_provenance import (
     assess_untrusted_build_provenance,
 )
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
+if ROOT.name == 'backend':
+    ROOT = ROOT.parent
 
 
 def source_build_id(root: Path = ROOT) -> str:
     """Hash executable source/assets, never environment files or runtime data."""
     root = root.resolve()
-    files = [p for p in (root / "app").rglob("*")
+    application = root / 'backend/app' if (root / 'backend/app').is_dir() else root / 'app'
+    files = [p for p in application.rglob("*")
              if p.is_file() and p.suffix in {".py", ".json", ".html", ".css", ".js"}]
     files += [root / "pyproject.toml", root / "nusantara-models/indobert_worker.py"]
     digest = hashlib.sha256()

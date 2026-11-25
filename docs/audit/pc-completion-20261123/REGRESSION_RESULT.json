@@ -1,0 +1,72 @@
+{
+  "status": "PARTIAL",
+  "main_tests": 1697,
+  "subtests_passed": 28,
+  "runs": [
+    {
+      "label": "focused",
+      "exit_code": 0,
+      "main_passed": 86,
+      "xml_counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "86",
+        "time": "2.941",
+        "timestamp": "2026-11-23T19:17:47.618652+07:00",
+        "hostname": "DESKTOP-GJHS3LR"
+      },
+      "failed_tests": [],
+      "xml_sha256": "5be0f904461edb0115e9487f736428b167617f0f4e9135674c38ac814031f70e"
+    },
+    {
+      "label": "initial_missing_model",
+      "exit_code": 1,
+      "main_passed": 1669,
+      "xml_counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "9",
+        "skipped": "19",
+        "tests": "1725",
+        "time": "301.629",
+        "timestamp": "2026-11-23T19:18:13.423330+07:00",
+        "hostname": "DESKTOP-GJHS3LR"
+      },
+      "failed_tests": [
+        "tests.test_configuration_integration::test_r1_preserves_out_of_scope_protected_sources",
+        "tests.test_control_plane_readonly::test_real_projection_no_database_worker_or_mutating_git",
+        "tests.test_langchain_e2e::test_llm_e2e",
+        "tests.test_langchain_e2e::test_chain_e2e",
+        "tests.test_langchain_hardening::test_empty_retrieval_abstention",
+        "tests.test_langchain_hardening::test_request_contract_unchanged",
+        "tests.test_phase4_v1_chat_runtime::test_phase4_v1_chat_exposes_trust_assessment",
+        "tests.test_phase4_v1_chat_runtime::test_phase4_v1_chat_trust_confidence_is_bounded",
+        "tests.test_runtime_attestation::test_main_change_only_installs_attestation_and_preserves_existing_handlers"
+      ],
+      "xml_sha256": "d2110f06632862d40e4c67c34fa36e275b4667ceb8ab7082e9112f0b6c3b150a"
+    },
+    {
+      "label": "model_ready",
+      "exit_code": 1,
+      "main_passed": 1675,
+      "xml_counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "3",
+        "skipped": "19",
+        "tests": "1725",
+        "time": "293.688",
+        "timestamp": "2026-11-23T19:24:08.094834+07:00",
+        "hostname": "DESKTOP-GJHS3LR"
+      },
+      "failed_tests": [
+        "tests.test_configuration_integration::test_r1_preserves_out_of_scope_protected_sources",
+        "tests.test_control_plane_readonly::test_real_projection_no_database_worker_or_mutating_git",
+        "tests.test_runtime_attestation::test_main_change_only_installs_attestation_and_preserves_existing_handlers"
+      ],
+      "xml_sha256": "659183bffe7548bc19ab3a43b64c990b6ee3acdd11eaa2006ba8ababd5d88074"
+    }
+  ]
+}

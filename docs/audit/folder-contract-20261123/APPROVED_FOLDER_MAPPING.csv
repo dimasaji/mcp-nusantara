@@ -1,0 +1,7 @@
+historical_path,approved_target,dependency,target_present,status
+app/,backend/app/,app.* namespace; pyproject; uvicorn --app-dir backend,True,APPROVED_CURRENT_TARGET
+control-plane/,frontend/,Vite/package; service lifecycle; bundle paths; API /v1/control-plane unchanged,True,APPROVED_CURRENT_TARGET
+Dockerfile,deploy/docker/Dockerfile,Compose build.context ../..; explicit -f,True,APPROVED_CURRENT_TARGET
+docker-compose.yml,deploy/docker/docker-compose.yml,relative paths context/env/volumes,True,APPROVED_CURRENT_TARGET
+docker-compose.audit.yml,deploy/docker/docker-compose.audit.yml,separate project and volumes,True,APPROVED_CURRENT_TARGET
+.dockerignore,deploy/docker/Dockerfile.dockerignore,Dockerfile-specific context exclusions,True,APPROVED_CURRENT_TARGET

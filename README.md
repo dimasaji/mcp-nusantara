@@ -1,5 +1,7 @@
 # Nusantara Core + Hermes — Local Starter
 
+Panduan struktur lokal, penggunaan disk, dan penataan aman: [LOCAL_FOLDER_PLAN](docs/LOCAL_FOLDER_PLAN.md).
+
 Local-first AI Core Engine + Hermes Agent/Orchestrator. Arsitektur mengikuti blueprint 18 fase yang diberikan: LLM hanyalah salah satu komponen; tool, policy, trust, workflow, knowledge dan human handoff tetap memiliki interface sendiri.
 
 Struktur kanonik: `backend/app/` (API/core), `frontend/` (control plane),

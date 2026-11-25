@@ -63,7 +63,8 @@ def _document_progress(engine, document, review, tools):
         }
         action = ('chat' if active else 'wait' if extracting else
                   'prepare' if is_pdf and extraction['status'] == 'NOT_PROCESSED' else 'review')
-        return {'review_status': detail['status'], 'title': detail['title'], 'workflow': {
+        return {'review_status': detail['status'], 'title': detail['title'],
+                'source_type': detail.get('source_type'), 'workflow': {
             'state': state, 'version_id': detail['version_id'], 'stages': stages,
             'extraction_status': extraction['status'] if is_pdf else 'NOT_REQUIRED',
             'cleaning_profile': (clean_profile or {}).get('profile'),

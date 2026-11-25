@@ -102,7 +102,7 @@ def main():
     for sub in ('python','ui'):(folder/sub).mkdir()
     import httpx
     with httpx.Client(timeout=30) as client:
-        response=client.get('http://127.0.0.1:8765/v1/frontend/snapshot');response.raise_for_status()
+        response=client.get('http://127.0.0.1:8765/v1/control-plane/snapshot');response.raise_for_status()
         write_once(folder/'ui/snapshot.json',response.json())
     commands=[];exits=[]
     command=[sys.executable,str(ROOT/'tests/run_evidence_tests_isolated.py'),str(folder/'python')]

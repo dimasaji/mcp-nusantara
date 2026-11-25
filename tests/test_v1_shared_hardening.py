@@ -18,7 +18,8 @@ def test_v1_normalizes_control_characters_before_history_and_generation(api):
     assert result['response'] == 'Halo'
 
 
-@pytest.mark.parametrize('response', ['', '   ', 'x' * 50001, None, {'command': 'fixture'}])
+@pytest.mark.parametrize('response', ['', '   ', 'x' * 50001, None, {'command': 'fixture'}],
+                         ids=['empty', 'whitespace', 'oversized', 'null', 'object'])
 def test_invalid_output_is_rejected_without_truncating_or_coercing(api, response):
     with pytest.raises(HTTPException) as failure:
         api.ns['_project_v1_chat_response'](payload(response=response), intent_name='general')

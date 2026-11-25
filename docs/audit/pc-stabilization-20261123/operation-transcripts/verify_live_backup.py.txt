@@ -1,0 +1,93 @@
+"""Local backup/restore drill. Never restores into the source application."""
+import hashlib
+import json
+import shutil
+import sqlite3
+import sys
+from contextlib import closing
+from pathlib import Path
+
+repo = Path(r'C:\Users\dmaza\mcp-starter')
+sys.path.insert(0, str(repo / 'backend'))
+from app.knowledge.sqlite_backup import backup_sqlite_database
+
+destination = Path(sys.argv[1])
+if not destination.is_dir() or any(destination.iterdir()):
+    raise RuntimeError('Expected new empty private backup directory')
+manifest = []
+
+
+def digest(path):
+    with path.open('rb') as handle:
+        return hashlib.file_digest(handle, 'sha256').hexdigest()
+
+
+def copy_verified(source, target, category):
+    if source.is_symlink() or source.is_junction() or target.exists():
+        raise RuntimeError('Unsafe source or existing backup target')
+    before = digest(source)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, target)
+    if digest(source) != before or digest(target) != before:
+        raise RuntimeError('Source changed or backup copy differs')
+    manifest.append({'path': target.relative_to(destination).as_posix(), 'sha256': before,
+                     'bytes': target.stat().st_size, 'category': category})
+
+
+def check_database(path):
+    with closing(sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)) as connection:
+        if connection.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
+            raise RuntimeError('Database integrity failed')
+        tables = connection.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name").fetchall()
+        return {name: connection.execute('SELECT COUNT(*) FROM "' + name.replace('"', '""') + '"').fetchone()[0]
+                for (name,) in tables}
+
+
+database_results = []
+for name in ['nusantara_knowledge.db', 'production_knowledge.db']:
+    source = repo / 'data/knowledge' / name
+    backup = backup_sqlite_database(source, destination / 'databases' / name)
+    before = digest(backup)
+    restored = destination / 'restore-drill/databases' / name
+    copy_verified(backup, restored, 'DATABASE_RESTORE_COPY')
+    counts = check_database(backup)
+    if check_database(restored) != counts or digest(backup) != before:
+        raise RuntimeError('Restore differs from backup')
+    manifest.append({'path': backup.relative_to(destination).as_posix(), 'sha256': before,
+                     'bytes': backup.stat().st_size, 'category': 'SQLITE_BACKUP_API'})
+    database_results.append({'database': name, 'integrity': 'ok', 'restore': 'PASS', 'tables': len(counts)})
+
+documents = repo / 'data/knowledge/source-documents'
+document_count = 0
+for source in sorted(documents.iterdir()):
+    if not source.is_file():
+        raise RuntimeError('Unexpected source-document directory; explicit review required')
+    copy_verified(source, destination / 'source-documents' / source.name, 'SOURCE_DOCUMENT')
+    document_count += 1
+configuration_count = 0
+for source in sorted((repo / 'config').rglob('*')):
+    if source.is_symlink() or source.is_junction():
+        raise RuntimeError('Reparse config path rejected')
+    if source.is_file():
+        copy_verified(source, destination / 'configuration/config' / source.relative_to(repo / 'config'), 'CONFIGURATION')
+        configuration_count += 1
+for name in ['.env', '.env.example']:
+    source = repo / name
+    if source.is_file():
+        copy_verified(source, destination / 'configuration' / name, 'PRIVATE_CONFIGURATION')
+        configuration_count += 1
+# Exercise document/config restore into an isolated tree, never the live paths.
+for row in list(manifest):
+    if row['category'] not in {'SOURCE_DOCUMENT', 'CONFIGURATION', 'PRIVATE_CONFIGURATION'}:
+        continue
+    source = destination / row['path']
+    copy_verified(source, destination / 'restore-drill' / row['path'], 'RESTORE_COPY')
+(destination / 'PRIVATE_HASH_MANIFEST.json').write_text(json.dumps(manifest, indent=2), encoding='utf-8')
+result = {'status': 'PASS', 'backup_directory': str(destination), 'databases': database_results,
+          'source_documents': document_count, 'configuration_files': configuration_count,
+          'restore_scope': 'DATABASE_INTEGRITY_ROW_COUNTS_AND_DOCUMENT_CONFIG_HASHES',
+          'live_restore_performed': False, 'live_database_replaced': False,
+          'cross_resource_atomic_snapshot': False,
+          'limitations': 'Online sequential backup; not an atomic database/document/config checkpoint; service boot from restore not exercised.'}
+(destination / 'RESULT.json').write_text(json.dumps(result, indent=2), encoding='utf-8')
+print(json.dumps(result))

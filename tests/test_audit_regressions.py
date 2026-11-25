@@ -75,8 +75,12 @@ def test_binary_parsers_reject_file_path(tmp_path, content_type):
     (True, "invalid"), (True, "invalid-\u2603")])
 def test_privileged_api_denies_before_access(monkeypatch, endpoint, payload, configured, header):
     from fastapi.testclient import TestClient
-    from app.main import app
+    from fastapi import FastAPI
     from app.api import routes, v2_routes
+    # Retained route contracts are tested in isolation, not enabled in V1.
+    app = FastAPI()
+    app.include_router(routes.router)
+    app.include_router(v2_routes.router)
 
     # The transport's headers are ASCII; exercise non-ASCII via the shared guard below.
     if header and not header.isascii():
@@ -147,8 +151,10 @@ def test_admin_ingest_metadata_cannot_spoof_channel(monkeypatch, tmp_path, knowl
 
 def test_authorized_developer_lists_workspace(monkeypatch, tmp_path):
     from fastapi.testclient import TestClient
-    from app.main import app
+    from fastapi import FastAPI
     from app.api import v2_routes
+    app = FastAPI()
+    app.include_router(v2_routes.router)
     from app.approval import AuditTrail
 
     (tmp_path / "example.py").write_text("value = 1", encoding="utf-8")

@@ -13,4 +13,8 @@ def current_contract():
 
 def assert_current_source(relative):
     fixture=current_contract()
-    assert hashlib.sha256((ROOT/relative).read_bytes()).hexdigest()==fixture['current_sources'][relative],relative
+    # Historical contract keys retain app/; only resolve the current physical layout.
+    path = ROOT/relative
+    if relative.startswith('app/') and (ROOT/'backend/app').is_dir():
+        path = ROOT/'backend'/relative
+    assert hashlib.sha256(path.read_bytes()).hexdigest()==fixture['current_sources'][relative],relative

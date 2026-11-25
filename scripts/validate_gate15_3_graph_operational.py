@@ -1,37 +1,181 @@
-param([switch]$IncludeChat, [string]$EvidenceDirectory)
-. "$PSScriptRoot/../service/local-services.ps1"
-if (-not $EvidenceDirectory) { $EvidenceDirectory = Join-Path $script:Repository ('artifacts/NCP-V1-AUTOSTART-001/live-' + (Get-Date -Format yyyyMMdd-HHmmss)) }
-New-Item -ItemType Directory -Path $EvidenceDirectory -Force | Out-Null
-$results = @()
-foreach ($probe in @(
-    @{name='backend';url='http://127.0.0.1:8000/health'},
-    @{name='frontend';url='http://127.0.0.1:5180/'},
-    @{name='proxy';url='http://127.0.0.1:5180/health'},
-    @{name='model-api';url='http://127.0.0.1:5180/v1/frontend/model-status'},
-    @{name='knowledge-documents';url='http://127.0.0.1:8000/v1/knowledge/documents'},
-    @{name='ollama';url='http://127.0.0.1:11434/api/version'}
-)) {
-    $ok = Test-Http $probe.url
-    $results += [pscustomobject]@{name=$probe.name;status=$(if($ok){'PASS'}else{'FAIL'});url=$probe.url}
-}
-if ($IncludeChat) {
-    # Dedicated new session: appends test history only, never edits existing conversations/SOPs.
-    foreach ($question in @('Apa fungsi Nusantara?', 'Apa itu KTP-el?')) {
-        $session = 'web-' + [Guid]::NewGuid().ToString()
-        try {
-            $body = @{user_input=$question;session_id=$session;request_id=[Guid]::NewGuid().ToString('N')} | ConvertTo-Json
-            $reply = Invoke-RestMethod -Uri 'http://127.0.0.1:5180/v1/chat' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 120
-            $valid = -not [string]::IsNullOrWhiteSpace($reply.response)
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status=$(if($valid){'PASS'}else{'FAIL'});
-                provider=$reply.provider_status;evidenceCount=@($reply.evidence).Count;grounded=$reply.grounding.grounded}
-        } catch {
-            $httpStatus = if ($_.Exception -is [Net.WebException] -and $_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { $null }
-            $results += [pscustomobject]@{name='chat';question=$question;session=$session;status='FAIL';errorType=$_.Exception.GetType().Name;httpStatus=$httpStatus}
-        }
+﻿import json
+from pathlib import Path
+from datetime import datetime
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "graphify-out"
+
+GRAPH_FILE = OUT / "graph.json"
+ENGINE_FILE = OUT / "gate15_2_engine_runtime_truth.json"
+HEALTH_FILE = OUT / "gate15_1_runtime_health_truth.json"
+
+
+def load(path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+print("=" * 68)
+print("NUSANTARA GATE 15.3 - GRAPH OPERATIONAL TRUTH")
+print("=" * 68)
+
+graph = load(GRAPH_FILE)
+engines = load(ENGINE_FILE)
+health = load(HEALTH_FILE)
+
+nodes = graph.get("nodes", [])
+links = graph.get("links", [])
+
+node_text = {}
+
+for node in nodes:
+    node_id = str(node.get("id", ""))
+    node_text[node_id] = " ".join(
+        str(node.get(k, "") or "")
+        for k in (
+            "id",
+            "name",
+            "label",
+            "module",
+            "path",
+            "file",
+        )
+    ).lower()
+
+results = {}
+
+for name, engine in engines.get("engines", {}).items():
+
+    module_name = engine.get("module", "")
+    class_name = engine.get("class", "")
+
+    candidates = [
+        module_name.lower(),
+        class_name.lower(),
+        Path(
+            engine.get("file", "")
+        ).name.lower(),
+    ]
+
+    matches = []
+
+    for node_id, text in node_text.items():
+        if any(
+            candidate
+            and candidate in text
+            for candidate in candidates
+        ):
+            matches.append(node_id)
+
+    results[name] = {
+        "module": module_name,
+        "class": class_name,
+        "graph_matches": matches[:20],
+        "match_count": len(matches),
+        "status": "PASS" if matches else "FAIL",
     }
+
+    print(
+        f"{results[name]['status']:<5} "
+        f"{name:<24} "
+        f"matches={len(matches)}"
+    )
+
+# Validate graph structure itself.
+graph_truth = (
+    isinstance(nodes, list)
+    and isinstance(links, list)
+    and len(nodes) > 0
+    and len(links) > 0
+)
+
+print()
+print(
+    "Graph nodes          :",
+    len(nodes)
+)
+
+print(
+    "Graph links          :",
+    len(links)
+)
+
+print(
+    "Graph structure      :",
+    "PASS" if graph_truth else "FAIL"
+)
+
+engine_pass = sum(
+    1
+    for item in results.values()
+    if item["status"] == "PASS"
+)
+
+engine_total = len(results)
+
+all_engines = engine_pass == engine_total
+
+checks = {
+    "graph_structure": graph_truth,
+    "engine_representation": all_engines,
+    "runtime_health": (
+        health.get("status") == "PASS"
+    ),
+    "engine_runtime_truth": (
+        engines.get("status") == "PASS"
+    ),
 }
-$status = Get-LocalStatus
-$status | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'runtime.json') -Encoding UTF8
-$results | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $EvidenceDirectory 'checks.json') -Encoding UTF8
-$results | Format-Table -AutoSize
-if (@($results | Where-Object status -eq 'FAIL').Count) { exit 1 }
+
+passed = sum(
+    1
+    for value in checks.values()
+    if value
+)
+
+total = len(checks)
+
+status = "PASS" if passed == total else "FAIL"
+
+result = {
+    "gate": "15.3",
+    "name": "Graph Operational Truth",
+    "version": "15.3.0",
+    "timestamp": datetime.now().isoformat(),
+    "status": status,
+
+    "checks": {
+        "passed": passed,
+        "total": total,
+        "results": checks,
+    },
+
+    "graph": {
+        "nodes": len(nodes),
+        "links": len(links),
+        "schema": "nodes + links",
+    },
+
+    "engines": results,
+
+    "contract": {
+        "graph_must_use_links": True,
+        "graph_must_contain_nodes": True,
+        "runtime_engines_must_have_graph_representation": True,
+        "runtime_health_must_be_pass": True,
+        "engine_runtime_truth_must_be_pass": True,
+    },
+}
+
+output = OUT / "gate15_3_graph_operational_truth.json"
+
+output.write_text(
+    json.dumps(result, indent=2, ensure_ascii=False),
+    encoding="utf-8",
+)
+
+print()
+print("Validation checks   :", f"{passed} / {total}")
+print("GATE 15.3 STATUS    :", status)
+print("Output              :", output)
+
+if status != "PASS":
+    raise SystemExit(1)

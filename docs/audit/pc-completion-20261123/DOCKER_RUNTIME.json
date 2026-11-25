@@ -1,0 +1,41 @@
+{
+  "/health": {
+    "http_status": 200,
+    "sha256": "1576100f6d2f25fb114d24f997354536639b7b6b9ba35f7e4b84c61d0830ff34"
+  },
+  "/v1/health/ready": {
+    "http_status": 200,
+    "sha256": "f21108820d7e005a8387c8e641a3a66d6f1a05d2a0a366cb5147fff454b94381"
+  },
+  "/": {
+    "http_status": 200,
+    "sha256": "1d33e71be14bedc8d1530d523a2efa85973a9daf5647c8d832a21f01e6b6ebf7"
+  },
+  "frontend_assets": [
+    {
+      "path": "/assets/index-DakS-EPN.js",
+      "status": 200,
+      "sha256": "b7965218669bd65351e2569225f29dca47c5dc87db0b9c7e35ee73331940a39b",
+      "bytes": 690490,
+      "matches_local_bundle": true
+    },
+    {
+      "path": "/assets/index-USRHoMw1.css",
+      "status": 200,
+      "sha256": "eb2d3c70d34b35c213f773b45772a78defc007c8d1a5a5cda229798dc8ecb1d9",
+      "bytes": 78630,
+      "matches_local_bundle": true
+    }
+  ],
+  "v1_chat_present": true,
+  "v2_routes_absent": true,
+  "image_id": "sha256:70625ceb3f6a12b747d4d16441a658ea9ecb7e5d5ebd250ff9d58f2e1a792da1",
+  "source_revision": "6975930a",
+  "purpose": "LOCAL_VERIFICATION_NOT_RELEASE",
+  "network": "none",
+  "active_data_mounted": false,
+  "persistence_verified": false,
+  "build_exit_code": 0,
+  "offline_build_exit_code": 1,
+  "offline_failure": "Dependency download required; subsequent network-enabled build succeeded"
+}
