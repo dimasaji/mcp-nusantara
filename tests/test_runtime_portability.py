@@ -77,9 +77,13 @@ def test_hermes_command_uses_platform_default(monkeypatch, tmp_path, platform):
 
 
 def test_hermes_patch_payload_matches_linux_default():
-    patch = (Path(__file__).resolve().parents[1]
-             / 'Nusantara-Hermes-ACP-Connection-Patch/payload/app/developer_core/hermes_acp_connection.py')
-
+    root = Path(__file__).resolve().parents[1]
+    candidates = [
+        root / 'Nusantara-Hermes-ACP-Connection-Patch/payload/app/developer_core/hermes_acp_connection.py',
+        root / 'backend/app/developer_core/hermes_acp_connection.py',
+    ]
+    patch = next((p for p in candidates if p.exists()), None)
+    assert patch is not None, f'No Hermes ACP reference found: {candidates}'
     assert '.local/share/hermes/hermes-agent' in patch.read_text(encoding='utf-8')
 
 

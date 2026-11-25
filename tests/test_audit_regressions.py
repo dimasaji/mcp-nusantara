@@ -125,8 +125,28 @@ def test_authorized_ingest_keeps_path_literal(monkeypatch, tmp_path, knowledge_a
             json={"title": "audit", "content": str(path)},
             headers={"X-Admin-Token": "fixture-admin"})
     assert response.status_code == 200
-    assert observed == [("audit.txt", str(path).encode("utf-8"), None, {})]
+    assert observed == [("audit.txt", str(path).encode("utf-8"), None,
+                         {"ingest_channel": "admin_api"})]
     assert response.json()["document_id"] == "audit-id"
+
+
+def test_admin_ingest_metadata_cannot_spoof_channel(monkeypatch, tmp_path, knowledge_api):
+    from fastapi.testclient import TestClient
+
+    observed = []
+
+    def ingest(filename, content, document_id, metadata):
+        observed.append(metadata)
+        return {"status": "READY", "document_id": "audit-id"}
+
+    monkeypatch.setenv("NUSANTARA_ADMIN_TOKEN", "fixture-admin")
+    monkeypatch.setattr(knowledge_api.backend, "process_knowledge_source", ingest)
+    with TestClient(knowledge_api.app) as client:
+        response = client.post("/v1/documents/ingest",
+            json={"title": "audit", "content": "isi", "metadata": {"ingest_channel": "upload"}},
+            headers={"X-Admin-Token": "fixture-admin"})
+    assert response.status_code == 200
+    assert observed == [{"ingest_channel": "admin_api"}]
 
 
 def test_authorized_developer_lists_workspace(monkeypatch, tmp_path):

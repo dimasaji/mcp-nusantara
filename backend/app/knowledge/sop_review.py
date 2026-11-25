@@ -175,13 +175,16 @@ class SOPReview:
         source_page_count = None
         if is_pdf:
             import io
-            from pypdf import PdfReader
-            from pypdf.errors import PdfReadError
             try:
-                source_page_count = len(PdfReader(io.BytesIO(raw)).pages)
-            except (OSError, ValueError, PdfReadError):
-                # Missing/invalid physical provenance never invents page numbers.
-                source_page_count = None
+                from pypdf import PdfReader
+            except ImportError:
+                pass
+            else:
+                from pypdf.errors import PdfReadError
+                try:
+                    source_page_count = len(PdfReader(io.BytesIO(raw)).pages)
+                except (OSError, ValueError, PdfReadError):
+                    source_page_count = None
         extraction = self._extraction_state(document_id, source_version) if is_pdf else None
         version = extraction['version'] if extraction else source_version
         with self._db() as conn:
@@ -435,7 +438,8 @@ class SOPReview:
         # pipeline_status) is operator knowledge that requires review before
         # Chat use, regardless of authority level.  Only legacy knowledge
         # ingested manually (no pipeline metadata) is exempt.
-        if metadata.get('source_filename') or metadata.get('pipeline_status'):
+        admin_ingest = metadata.get('ingest_channel') == 'admin_api'
+        if not admin_ingest and (metadata.get('source_filename') or metadata.get('pipeline_status')):
             return True
         # Legacy knowledge with verified authority requires review.
         authority = (metadata.get('source_authority') or metadata.get('authority') or '').strip()

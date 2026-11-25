@@ -1,13 +1,13 @@
 # KONTRAK TEKNIS PEKERJAAN
 # REKONSTRUKSI REPOSITORY NUSANTARA DAN SINKRONISASI VPS INSTABOX
 
-**Nomor Dokumen:** NUS-CONTRACT-RECON-001  
-**Versi:** 1.0  
-**Tanggal:** 23 November 2026  
-**Status:** DRAFT — Menunggu Persetujuan  
-**Proyek:** Nusantara V1/V2  
-**Repository:** `C:\Users\dmaza\mcp-starter`  
-**Branch acuan:** `codex/fullroot-control-20261007`  
+**Nomor Dokumen:** NUS-CONTRACT-RECON-001<br>
+**Versi:** 1.0<br>
+**Tanggal:** 23 November 2026<br>
+**Status:** DRAFT — Menunggu Persetujuan<br>
+**Proyek:** Nusantara V1/V2<br>
+**Repository:** `C:\Users\dmaza\mcp-starter`<br>
+**Branch acuan:** `codex/fullroot-control-20261007`<br>
 **Target infrastruktur:** VPS Instabox
 
 ---

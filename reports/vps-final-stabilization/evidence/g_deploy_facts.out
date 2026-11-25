@@ -1,0 +1,61 @@
+--- compose ---
+     1	services:
+     2	  nusantara-api:
+     3	    build:
+     4	      context: .
+     5	      dockerfile: deploy/docker/Dockerfile
+     6	    ports: ["127.0.0.1:8000:8000"]
+     7	    environment:
+     8	      NUSANTARA_DATA_DIR: /app/data
+     9	      NUSANTARA_KNOWLEDGE_DB: /app/data/knowledge/nusantara_knowledge.db
+    10	    volumes: [apidata:/app/data, apphome:/home/appuser]
+    11	    env_file:
+    12	      - path: .env
+    13	        required: false
+    14	    restart: unless-stopped
+    15	    read_only: true
+    16	    tmpfs: [/tmp]
+    17	    networks: [nusantara]
+    18	    depends_on: [redis, database]
+    19	  database:
+    20	    image: postgres:16-alpine
+    21	    environment:
+    22	      POSTGRES_DB: nusantara
+    23	      POSTGRES_USER: nusantara
+    24	      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    25	    volumes: [pgdata:/var/lib/postgresql/data]
+    26	    networks: [nusantara]
+    27	  redis:
+    28	    image: redis:7-alpine
+    29	    restart: unless-stopped
+    30	    networks: [nusantara]
+    31	volumes: {pgdata: {}, apidata: {}, apphome: {}}
+    32	networks: {nusantara: {}}
+--- dockerfile ---
+     1	FROM python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+     2	ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+     3	WORKDIR /app
+     4	COPY pyproject.toml .
+     5	# Runtime dependencies, aligned with the tested environment (requirements-lock.txt,
+     6	# haystack-ai 3.4.1). The previous pin (haystack-ai==2.31.1) installed a different
+     7	# major version inside the image than the one the test suite exercises.
+     8	RUN pip install --no-cache-dir fastapi uvicorn[standard] pydantic pydantic-settings python-dotenv httpx haystack-ai==3.4.1
+     9	ENV HAYSTACK_TELEMETRY_ENABLED=False
+    10	RUN python -m venv /opt/indobert \
+    11	    && /opt/indobert/bin/pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
+    12	    && /opt/indobert/bin/pip install --no-cache-dir transformers
+    13	ENV NUSANTARA_INDOBERT_PYTHON=/opt/indobert/bin/python \
+    14	    NUSANTARA_INDOBERT_WORKER=/opt/indobert-worker/indobert_worker.py \
+    15	    HF_HOME=/app/data/huggingface
+    16	COPY backend/app ./app
+    17	COPY frontend/dist ./frontend/dist
+    18	COPY docs ./docs
+    19	COPY .env.example ./
+    20	COPY scripts/healthcheck.py ./scripts/healthcheck.py
+    21	RUN useradd -r -u 10001 appuser && mkdir -p /app/data /home/appuser && chown -R appuser:appuser /app /home/appuser
+    22	USER appuser
+    23	EXPOSE 8000
+    24	HEALTHCHECK --interval=30s --timeout=5s CMD python scripts/healthcheck.py
+    25	CMD ["uvicorn","app.main:app","--host","0.0.0.0","--port","8000"]
+--- healthcheck bytes ---
+0 scripts/healthcheck.py

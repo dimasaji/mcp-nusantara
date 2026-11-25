@@ -124,7 +124,6 @@ class KnowledgeEngine:
             if query_terms:
                 haystack = (getattr(evidence, 'chunk', '') or '').casefold()
                 title = (getattr(evidence, 'title', '') or '').casefold()
-                # TF-IDF-like lexical scoring
                 overlap = 0.0
                 for t in query_terms:
                     if t in haystack:
@@ -134,9 +133,6 @@ class KnowledgeEngine:
                 title_overlap = sum(1 for t in query_terms if t in title)
                 if overlap > 0 or title_overlap > 0:
                     boost = 0.05 * overlap + 0.40 * title_overlap
-                    # Exact title/number match: if the query (case-insensitive) is a
-                    # substring of the document title, add a large relevance bonus
-                    # so the correct document ranks first.
                     q_lower = (query or '').casefold()
                     title_lower = title
                     if q_lower and q_lower in title_lower:

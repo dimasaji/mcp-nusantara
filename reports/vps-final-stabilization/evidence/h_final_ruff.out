@@ -1,0 +1,191 @@
+I001 [*] Import block is un-sorted or un-formatted
+  --> backend/app/main.py:2:1
+   |
+ 1 |   """FastAPI application - Nusantara Core + Hermes."""
+ 2 | / from contextlib import asynccontextmanager
+ 3 | | import time
+ 4 | | import os
+ 5 | | import json
+ 6 | | from pathlib import Path
+ 7 | |
+ 8 | | from fastapi import FastAPI, Request
+ 9 | | from fastapi.middleware.cors import CORSMiddleware
+10 | | from fastapi.responses import FileResponse, RedirectResponse
+   | |____________________________________________________________^
+11 |
+12 |   os.environ['HAYSTACK_TELEMETRY_ENABLED'] = 'False'
+   |
+help: Organize imports
+  |
+1 | """FastAPI application - Nusantara Core + Hermes."""
+2 + import json
+3 + import os
+4 + import time
+5 | from contextlib import asynccontextmanager
+  - import time
+  - import os
+  - import json
+6 | from pathlib import Path
+  |
+
+E402 Module level import not at top of file
+  --> backend/app/main.py:29:1
+   |
+27 |         # V1-only runtime: keep V2 code archived in place without importing its
+28 |         # model/index services or registering any /v2 endpoints.
+29 | from app.api.control_plane import router as control_plane_router
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+30 | from app.observability import configure_logging, request_context, metrics
+31 | from app.exceptions import register_exception_handlers
+   |
+help: Move module level imports to top of file
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> backend/app/main.py:29:1
+   |
+27 |           # V1-only runtime: keep V2 code archived in place without importing its
+28 |           # model/index services or registering any /v2 endpoints.
+29 | / from app.api.control_plane import router as control_plane_router
+30 | | from app.observability import configure_logging, request_context, metrics
+31 | | from app.exceptions import register_exception_handlers
+32 | | from app.core.runtime_identity import BUILD_ID
+33 | | from app.core.runtime_attestation import install_runtime_attestation
+   | |____________________________________________________________________^
+34 |
+35 |   UI_FILE = Path(__file__).parent / "ui" / "index.html"
+   |
+help: Organize imports
+   |
+29 | from app.api.control_plane import router as control_plane_router
+   - from app.observability import configure_logging, request_context, metrics
+30 + from app.core.runtime_attestation import install_runtime_attestation
+31 + from app.core.runtime_identity import BUILD_ID
+32 | from app.exceptions import register_exception_handlers
+   - from app.core.runtime_identity import BUILD_ID
+   - from app.core.runtime_attestation import install_runtime_attestation
+33 + from app.observability import configure_logging, metrics, request_context
+34 |
+   |
+
+E402 Module level import not at top of file
+  --> backend/app/main.py:30:1
+   |
+28 |         # model/index services or registering any /v2 endpoints.
+29 | from app.api.control_plane import router as control_plane_router
+30 | from app.observability import configure_logging, request_context, metrics
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+31 | from app.exceptions import register_exception_handlers
+32 | from app.core.runtime_identity import BUILD_ID
+   |
+help: Move module level imports to top of file
+
+E402 Module level import not at top of file
+  --> backend/app/main.py:31:1
+   |
+29 | from app.api.control_plane import router as control_plane_router
+30 | from app.observability import configure_logging, request_context, metrics
+31 | from app.exceptions import register_exception_handlers
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+32 | from app.core.runtime_identity import BUILD_ID
+33 | from app.core.runtime_attestation import install_runtime_attestation
+   |
+help: Move module level imports to top of file
+
+E402 Module level import not at top of file
+  --> backend/app/main.py:32:1
+   |
+30 | from app.observability import configure_logging, request_context, metrics
+31 | from app.exceptions import register_exception_handlers
+32 | from app.core.runtime_identity import BUILD_ID
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+33 | from app.core.runtime_attestation import install_runtime_attestation
+   |
+help: Move module level imports to top of file
+
+E402 Module level import not at top of file
+  --> backend/app/main.py:33:1
+   |
+31 | from app.exceptions import register_exception_handlers
+32 | from app.core.runtime_identity import BUILD_ID
+33 | from app.core.runtime_attestation import install_runtime_attestation
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+34 |
+35 | UI_FILE = Path(__file__).parent / "ui" / "index.html"
+   |
+help: Move module level imports to top of file
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> backend/app/main.py:45:9
+   |
+43 |       watcher = None
+44 |       if not _READ_ONLY_EVIDENCE and not _ATTESTATION:
+45 | /         import asyncio
+46 | |         import logging
+47 | |         from app.api.routes import _knowledge
+   | |_____________________________________________^
+48 |           logger=logging.getLogger(__name__)
+49 |           async def monitor():
+   |
+help: Organize imports
+   |
+46 |         import logging
+47 +
+48 |         from app.api.routes import _knowledge
+   |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `BLE001`)
+   --> backend/app/main.py:167:31
+    |
+165 |             "documents": int(total),
+166 |         }
+167 |     except Exception as exc:  # noqa: BLE001 - probe reports, never raises
+    |                               ^^^^^^^^^^^^^^
+168 |         database = {"status": "error", "error": type(exc).__name__}
+169 |     components["knowledge_database"] = database
+    |
+help: Remove unused `noqa` directive
+    |
+166 |         }
+    -     except Exception as exc:  # noqa: BLE001 - probe reports, never raises
+167 +     except Exception as exc:
+168 |         database = {"status": "error", "error": type(exc).__name__}
+    |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `S310`)
+   --> backend/app/main.py:174:86
+    |
+172 |     provider: dict[str, object] = {"status": "unknown"}
+173 |     try:
+174 |         with urllib.request.urlopen(f"{base_url}/api/tags", timeout=2) as response:  # noqa: S310 - fixed loopback URL
+    |                                                                                      ^^^^^^^^^^^^
+175 |             provider = {"status": "ok" if response.status == 200 else "error", "http_status": response.status}
+176 |     except Exception as exc:  # noqa: BLE001
+    |
+help: Remove unused `noqa` directive
+    |
+173 |     try:
+    -         with urllib.request.urlopen(f"{base_url}/api/tags", timeout=2) as response:  # noqa: S310 - fixed loopback URL
+174 +         with urllib.request.urlopen(f"{base_url}/api/tags", timeout=2) as response:
+175 |             provider = {"status": "ok" if response.status == 200 else "error", "http_status": response.status}
+    |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `BLE001`)
+   --> backend/app/main.py:176:31
+    |
+174 |         with urllib.request.urlopen(f"{base_url}/api/tags", timeout=2) as response:  # noqa: S310 - fixed loopback URL
+175 |             provider = {"status": "ok" if response.status == 200 else "error", "http_status": response.status}
+176 |     except Exception as exc:  # noqa: BLE001
+    |                               ^^^^^^^^^^^^^^
+177 |         provider = {"status": "unavailable", "error": type(exc).__name__}
+178 |     components["provider"] = provider
+    |
+help: Remove unused `noqa` directive
+    |
+175 |             provider = {"status": "ok" if response.status == 200 else "error", "http_status": response.status}
+    -     except Exception as exc:  # noqa: BLE001
+176 +     except Exception as exc:
+177 |         provider = {"status": "unavailable", "error": type(exc).__name__}
+    |
+
+Found 11 errors.
+[*] 6 fixable with `--fix`.
