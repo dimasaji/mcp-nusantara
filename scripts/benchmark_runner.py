@@ -246,7 +246,7 @@ def run_benchmark(dataset: List[Dict[str, Any]], mode: str = "mock",
 
     for i, scenario in enumerate(dataset, 1):
         question = scenario["question"]
-        session_id = f"bench-{scenario['test_id']}-{uuid.uuid4().hex[:8]}"
+        session_id = f"web-{uuid.uuid4().hex[:8]}-{uuid.uuid4().hex[:4]}-{uuid.uuid4().hex[:4]}-{uuid.uuid4().hex[:4]}-{uuid.uuid4().hex[:12]}"
         start = time.time()
 
         # Check if scenario should be blocked
