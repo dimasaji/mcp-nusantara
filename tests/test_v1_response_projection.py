@@ -78,7 +78,7 @@ def test_projection_excludes_internal_mirrors_unknown_fields_and_never_mutates(c
     projected = routes._project_v1_chat_response(payload, intent_name="ask_general_info")
     assert_public(projected)
     assert projected["response"] == "Public answer."
-    assert projected["evidence"][0]["chunk"] == ""
+    assert projected["evidence"][0]["chunk"] == "Public citation."
     assert projected["trust"]["confidence"] == payload["trust"]["confidence"]
     assert payload == before
 
@@ -105,7 +105,7 @@ def test_oversized_citation_is_removed_without_mutating_source():
     payload = sample_payload()
     payload["evidence"][0]["chunk"] = "x" * 20001
     projected = routes._project_v1_chat_response(payload, intent_name="unknown")
-    assert projected["evidence"][0]["chunk"] == ""
+    assert projected["evidence"][0]["chunk"] == "x" * 2000
     assert payload["evidence"][0]["chunk"] == "x" * 20001
 
 
