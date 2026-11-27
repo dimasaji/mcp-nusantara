@@ -1,0 +1,19 @@
+# wrangler.toml — Konfigurasi Cloudflare Pages untuk Nusantara V1 Frontend
+# Struktur: repositori root = /data/home/nusantara-frontend, frontend di control-plane/
+name = "nusantara-v1-frontend"
+compatibility_date = "2026-11-27"
+
+[build]
+command = "npm run build"
+functions = ""
+destination = "dist"
+
+[env.production]
+name = "nusantara-v1-frontend"
+destination = "dist"
+vars = { NUSANTARA_GIT_CMD = "git" }
+
+# Variabel lingkungan wajib diatur melalui dashboard Cloudflare Pages
+# (Settings > Environment variables), bukan disimpan di repositori:
+#   NUSANTARA_BACKEND_URL = https://backend-pc-windows.nusantara.internal (contoh, diisi admin)
+# Jangan menyimpan API key, credential, atau data SOP internal di sini.
