@@ -268,8 +268,11 @@ def _project_v1_chat_response(payload: dict, *, intent_name: str) -> dict:
         problem=_PublicChatProblem(goal=goal),
         evidence=[_PublicChatEvidence(
             document_id=item["document_id"], title=item["title"],
-            # Keep the V1 citation shape compatible without releasing source text.
-            chunk="", score=item["score"], pages=item.get('pages', []), block_ids=item.get('block_ids', []),
+            # Include chunk content truncated to a safe length for grounded answers.
+            # The full source text remains in the knowledge engine; this projection
+            # only exposes enough context for the model to cite and ground answers.
+            chunk=(item.get("chunk") or "")[:2000], score=item["score"],
+            pages=item.get('pages', []), block_ids=item.get('block_ids', []),
         ) for item in payload["evidence"]],
         timestamp=payload["timestamp"],
     )
