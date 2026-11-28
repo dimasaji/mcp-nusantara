@@ -131,7 +131,7 @@ Status akhir E2E: **PASS**.
 ## 8. Git
 
 Branch: `engineering/frontend-linux-instabox2`
-Commit SHA: `<diisi setelah commit>`
+Commit SHA: `d7be88b`
 Push: ke `origin engineering/frontend-linux-instabox2` (GitHub `dimasaji/mcp-nusantara`).
 
 Tidak ada force push, tidak ada API key/data pribadi yang diunggah, komit modular.
