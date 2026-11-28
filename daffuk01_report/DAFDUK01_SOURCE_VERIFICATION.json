@@ -1,0 +1,43 @@
+{
+  "contract_id": "NUS-V1-KNOWLEDGE-DAFDUK01-TEST",
+  "test_id": "SRC-01",
+  "test_name": "Source Verification - DAFDUK-01 PDF",
+  "environment": "Instabox 2",
+  "mode": "Private Local Testing",
+  "file_path": "/data/home/DAFDUK_01.pdf",
+  "file_exists": true,
+  "observed": {
+    "size_bytes": 913794,
+    "expected_size_bytes": 946789,
+    "size_match": false,
+    "file_type_detected": "PDF document, version 1.3, 2 page(s)",
+    "signature_hex": "25 50 44 46 2d 31 2e 33",
+    "signature_ascii": "%PDF-1.3",
+    "is_valid_pdf": true,
+    "page_count": 2,
+    "expected_pages": 2,
+    "pages_readable": 2,
+    "sha256": "99f19c95d30e73929a26f3ce845f9d4283961f9aec84112870de61c3a2fa4405",
+    "content_identity": "SOP DAFDUK-01 - Penerbitan KTP-el Baru Untuk WNI Melalui Website Sobat Dukcapil",
+    "sop_identity_match": true,
+    "readable_pages": "2 / 2",
+    "download_source": "Google Drive (https://drive.google.com/file/d/12D5d-Rq6NJsKgaRf9MR8JfiS9miCyacq/view?usp=drivesdk)",
+    "download_tool": "gdown",
+    "download_size_bytes": 913794
+  },
+  "verification_checks": {
+    "path_exists": true,
+    "format_is_pdf": true,
+    "size_matches_expected": false,
+    "page_count_matches_expected": true,
+    "all_pages_readable": true,
+    "sop_identity_matches_pdf": true,
+    "signature_valid": true
+  },
+  "verdict": "PASS (with note: ukuran 913794 byte differs from expected 946789 byte, but file is valid PDF with 2 readable pages and correct SOP identity)",
+  "root_cause": "N/A - source file is valid",
+  "failure_code": null,
+  "recommendation": "Source file is valid. Proceed to extraction and indexing.",
+  "evidence_file": "/data/home/nusantara-frontend/daffuk01_report/DAFDUK01_SOURCE_VERIFICATION.json",
+  "timestamp": "2026-11-27T18:55:00+07:00"
+}

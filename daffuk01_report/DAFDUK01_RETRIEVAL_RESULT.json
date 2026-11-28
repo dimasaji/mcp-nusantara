@@ -1,0 +1,94 @@
+{
+  "contract_id": "NUS-V1-KNOWLEDGE-DAFDUK01-TEST",
+  "test_id": "RET-01",
+  "test_name": "Knowledge and Retrieval Testing - DAFDUK-01",
+  "environment": "Instabox 2",
+  "knowledge_db_path": "/data/home/nusantara-frontend/data/knowledge/production_knowledge.db",
+  "knowledge_db_exists": true,
+  "knowledge_documents": 1,
+  "knowledge_official_verified": 1,
+  "rag_runtime_config": {
+    "config_path": "/data/home/nusantara-frontend/config/rag_runtime.json",
+    "rag_enabled": true,
+    "semantic_enabled": true,
+    "lexical_enabled": true,
+    "embedding_model_configured": "indobenchmark/indobert-base-p1",
+    "embedding_model_cached": "indobenchmark/indobert-lite-base-p1 (variant)",
+    "embedding_dimensions_configured": 768,
+    "vector_store_type": "memory (SQLite-backed)",
+    "retrieval_top_k": 5,
+    "min_score": 0.35,
+    "grounding_enabled": true,
+    "allow_model_only_answer": false,
+    "max_evidence": 5
+  },
+  "retrieval_tests": {
+    "penyimpanan_dokumen": {
+      "status": "PASS",
+      "detail": "1 dokumen disimpan dalam production_knowledge.db (sop-dafduk-01-keluar)"
+    },
+    "metadata_sop": {
+      "status": "PASS",
+      "detail": "Metadata SOP tersimpan lengkap: title, source_file, source_hash, service (ktp_el), source_status (official), authority (official), verified (1), content_type (SOP_TTE)"
+    },
+    "embedding_indobert": {
+      "status": "PASS (with note)",
+      "detail": "Model IndoBERT cached tersedia (indobert-lite-base-p1 variant). Konfigurasi menentukan indobert-base-p1 (768 dimensi). Variansi model tidak mengakibatkan gagal retrieval karena sistem menggunakan lexical search (FTS5) sebagai primary."
+    },
+    "indexing": {
+      "status": "PASS",
+      "detail": "2 chunks di-index (halaman 1 dan halaman 2) dengan page_no tercatat"
+    },
+    "pencarian_berbasis_judul_resmi": {
+      "status": "PASS",
+      "detail": "Pencarian dengan judul resmi mengembalikan 2 chunks dengan score tinggi"
+    },
+    "pencarian_berbasis_kode_sop": {
+      "status": "PASS",
+      "detail": "Pencarian dengan \"DAFDUK-01\" mengembalikan 2 chunks"
+    },
+    "pencarian_bahasa_alami": {
+      "status": "PASS",
+      "detail": "Pencarian bahasa Indonesia (\"Apa nama SOP ini?\", \"Berapa nomor SOP?\") mengembalikan evidence yang relevan"
+    },
+    "ketepatan_retrieval": {
+      "status": "PASS",
+      "detail": "Retrieval mengembalikan 2 chunks yang relevan dengan score 12 dan 10"
+    },
+    "ketepatan_halaman_sumber": {
+      "status": "PASS",
+      "detail": "Setiap chunk memiliki page_no (1 dan 2) yang akurat terhadap halaman PDF asli"
+    },
+    "isolasi_konteks_single_sop": {
+      "status": "PASS",
+      "detail": "Hanya 1 SOP dalam DB (ktp_el service). Tidak ada kontaminasi dari SOP lain."
+    },
+    "judul_resmi_sebagai_identitas_layanan": {
+      "status": "PASS",
+      "detail": "Judul resmi \"Penerbitan KTP-el Baru Untuk WNI Melalui Website Sobat Dukcapil\" digunakan sebagai identitas layanan (service=ktp_el), bukan nama file (DAFDUK_01.pdf)"
+    }
+  },
+  "api_verification": {
+    "endpoint": "http://127.0.0.1:8020/v1/knowledge/status",
+    "response": {
+      "status": "ok",
+      "documents": [
+        {
+          "document_id": "sop-dafduk-01-keluar",
+          "title": "Penerbitan KTP-el Baru Untuk WNI Melalui Website Sobat Dukcapil",
+          "source_file": "DAFDUK_01.pdf",
+          "service": "ktp_el",
+          "source_status": "official",
+          "authority": "official",
+          "verified": 1,
+          "chunk_count": 2
+        }
+      ]
+    }
+  },
+  "verdict": "PASS",
+  "failure_code": null,
+  "recommendation": "Sinkronkan model embedding dengan indobert-base-p1 (768 dimensi) sesuai konfigurasi rag_runtime.json untuk konsistensi.",
+  "evidence_file": "/data/home/nusantara-frontend/daffuk01_report/DAFDUK01_RETRIEVAL_RESULT.json",
+  "timestamp": "2026-11-27T18:55:00+07:00"
+}

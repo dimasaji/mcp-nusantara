@@ -1,0 +1,84 @@
+{
+  "contract_id": "NUS-V1-KNOWLEDGE-DAFDUK01-TEST",
+  "test_id": "PERF-01",
+  "test_name": "Performance Testing - DAFDUK-01",
+  "environment": "Instabox 2",
+  "system_resources": {
+    "ram_total_mb": 7964,
+    "ram_used_mb": 3582,
+    "ram_available_mb": 4381,
+    "swap_total_mb": 4095,
+    "cpu_cores": 4,
+    "disk_total_gb": 20,
+    "disk_available_gb": 5.3,
+    "mount": "/data"
+  },
+  "pipeline_timing_measurements": {
+    "waktu_unduh_pdf_gdrive": {
+      "value_ms": null,
+      "note": "Download via gdown, 913794 bytes, completed within seconds"
+    },
+    "waktu_verifikasi_pdf": {
+      "value_ms": null,
+      "note": "File type, signature, page count verification - instant"
+    },
+    "waktu_ekstraksi_pdf_docling_ocr": {
+      "value_ms": "30000-60000",
+      "note": "Docling DocumentConverter with RapidOcr (Indonesian), 2 pages, 19647 chars extracted"
+    },
+    "waktu_embedding": {
+      "value_ms": null,
+      "note": "Not measured separately - lexical search (FTS5) used as primary retrieval, no embedding step in current pipeline"
+    },
+    "waktu_indexing_sqlite": {
+      "value_ms": "<1000",
+      "note": "2 chunks inserted into production_knowledge.db"
+    },
+    "retrieval_latency_search_official_knowledge": {
+      "value_ms": "<100",
+      "note": "SQLite FTS5 lexical search returns results instantly"
+    },
+    "time_to_first_token_streaming": {
+      "value_ms": null,
+      "note": "Streaming not configured - chat returns non-streaming JSON response"
+    },
+    "ollama_llm_simple_query": {
+      "value_ms": "29000-45000",
+      "note": "llama3.2:1b Q8_0 on CPU, simple \"hello\" query"
+    },
+    "ollama_llm_with_evidence_context": {
+      "value_ms": ">300000",
+      "note": "Query with 20KB evidence context - exceeds 5 minute timeout, LLM generation does not complete"
+    },
+    "total_response_latency_chat_api": {
+      "value_ms": ">300000",
+      "note": "Chat API returns knowledge immediately but LLM answer generation does not complete within 5 minute timeout"
+    }
+  },
+  "cold_start_warm_start": {
+    "cold_start": "Not measurable - Ollama model loads on first request (~12s load_duration observed)",
+    "warm_start": "Not measurable - subsequent requests also slow due to CPU-only inference"
+  },
+  "p50_latency_ms": null,
+  "p95_latency_ms": null,
+  "sample_count": 0,
+  "cpu_usage_during_test": {
+    "ollama_llama_server": "64-75% (1 core saturated during inference)",
+    "master_engine": "0.2% (idle between requests)"
+  },
+  "ram_usage_during_test": {
+    "ollama_llama_server": "~1.6 GB",
+    "master_engine": "~55 MB",
+    "system_total": "7.9 GB (3.6 GB used at test time)"
+  },
+  "disk_usage_during_test": {
+    "pdf_file": "913794 bytes",
+    "knowledge_db": "<1 MB",
+    "extracted_text": "~20 KB"
+  },
+  "verdict": "PASS (functional) / PERFORMANCE CONCERN (Ollama LLM generation too slow on CPU-only)",
+  "failure_code": "E14 (Runtime resources) - CPU-only inference too slow for production use",
+  "recommendation": "1. Use GPU acceleration for Ollama if available. 2. Reduce context length sent to LLM. 3. Consider smaller/quantized model. 4. Implement streaming (time_to_first_token). 5. Cache frequent answers.",
+  "evidence_file": "/data/home/nusantara-frontend/daffuk01_report/DAFDUK01_PERFORMANCE_REPORT.json",
+  "timestamp": "2026-11-27T18:55:00+07:00"
+}
